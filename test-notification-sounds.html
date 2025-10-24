@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>اختبار نظام الإشعارات الصوتية</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    .pulse-animation {
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-cyan-50 min-h-screen p-8">
+  <div class="max-w-4xl mx-auto">
+    <!-- Header -->
+    <div class="bg-white rounded-3xl shadow-2xl p-8 mb-6">
+      <div class="flex items-center gap-4 mb-4">
+        <div class="w-16 h-16 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-2xl flex items-center justify-center">
+          <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-4xl font-black text-gray-900">اختبار الإشعارات الصوتية</h1>
+          <p class="text-gray-600">تحقق من عمل جميع الأصوات والمراقبة المباشرة</p>
+        </div>
+      </div>
+
+      <!-- حالة النظام -->
+      <div id="systemStatus" class="mt-6 p-4 bg-gray-100 rounded-xl">
+        <div class="flex items-center justify-between">
+          <span class="font-bold text-gray-900">حالة النظام:</span>
+          <span id="statusText" class="text-gray-600">جاري التحميل...</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- اختبار الأصوات الأساسية -->
+    <div class="bg-white rounded-3xl shadow-2xl p-8 mb-6">
+      <h2 class="text-2xl font-black text-gray-900 mb-6">🎵 اختبار الأصوات</h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- حجز جديد -->
+        <button
+          onclick="testNewBookingSound()"
+          class="group p-6 bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 rounded-2xl hover:border-green-400 transition-all hover:shadow-lg"
+        >
+          <div class="flex items-center gap-3 mb-2">
+            <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+              <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+              </svg>
+            </div>
+            <div class="text-right flex-1">
+              <div class="font-bold text-gray-900 text-lg">حجز جديد</div>
+              <div class="text-sm text-gray-600">نغمة ثلاثية صاعدة</div>
+            </div>
+          </div>
+          <div class="text-xs text-green-600 font-medium">اضغط للتجربة ▶</div>
+        </button>
+
+        <!-- دفعة مستلمة -->
+        <button
+          onclick="testPaymentSound()"
+          class="group p-6 bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-200 rounded-2xl hover:border-blue-400 transition-all hover:shadow-lg"
+        >
+          <div class="flex items-center gap-3 mb-2">
+            <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+              <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            </div>
+            <div class="text-right flex-1">
+              <div class="font-bold text-gray-900 text-lg">دفعة مستلمة</div>
+              <div class="text-sm text-gray-600">نغمة كاشينج</div>
+            </div>
+          </div>
+          <div class="text-xs text-blue-600 font-medium">اضغط للتجربة ▶</div>
+        </button>
+
+        <!-- تنبيه عاجل -->
+        <button
+          onclick="testUrgentSound()"
+          class="group p-6 bg-gradient-to-r from-red-50 to-orange-50 border-2 border-red-200 rounded-2xl hover:border-red-400 transition-all hover:shadow-lg"
+        >
+          <div class="flex items-center gap-3 mb-2">
+            <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
+              <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+              </svg>
+            </div>
+            <div class="text-right flex-1">
+              <div class="font-bold text-gray-900 text-lg">تنبيه عاجل</div>
+              <div class="text-sm text-gray-600">نغمة تحذيرية متكررة</div>
+            </div>
+          </div>
+          <div class="text-xs text-red-600 font-medium">اضغط للتجربة ▶</div>
+        </button>
+
+        <!-- نجاح -->
+        <button
+          onclick="testSuccessSound()"
+          class="group p-6 bg-gradient-to-r from-purple-50 to-pink-50 border-2 border-purple-200 rounded-2xl hover:border-purple-400 transition-all hover:shadow-lg"
+        >
+          <div class="flex items-center gap-3 mb-2">
+            <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
+              <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+            </div>
+            <div class="text-right flex-1">
+              <div class="font-bold text-gray-900 text-lg">نجاح</div>
+              <div class="text-sm text-gray-600">نغمة تأكيد قصيرة</div>
+            </div>
+          </div>
+          <div class="text-xs text-purple-600 font-medium">اضغط للتجربة ▶</div>
+        </button>
+      </div>
+    </div>
+
+    <!-- اختبار المراقبة المباشرة -->
+    <div class="bg-white rounded-3xl shadow-2xl p-8 mb-6">
+      <h2 class="text-2xl font-black text-gray-900 mb-6">📡 اختبار المراقبة المباشرة</h2>
+
+      <!-- حالة المراقبة -->
+      <div id="monitoringStatus" class="p-6 bg-gray-50 rounded-2xl mb-6">
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center gap-3">
+            <div id="monitoringIndicator" class="w-4 h-4 rounded-full bg-gray-400"></div>
+            <span class="font-bold text-gray-900">حالة المراقبة:</span>
+          </div>
+          <span id="monitoringText" class="text-gray-600">متوقف</span>
+        </div>
+
+        <button
+          id="toggleMonitoring"
+          onclick="toggleMonitoring()"
+          class="w-full py-4 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-xl font-bold hover:from-blue-600 hover:to-cyan-600 transition-all shadow-lg hover:shadow-xl"
+        >
+          بدء المراقبة
+        </button>
+      </div>
+
+      <!-- محاكاة حجز جديد -->
+      <div class="p-6 bg-gradient-to-r from-yellow-50 to-orange-50 border-2 border-yellow-200 rounded-2xl">
+        <h3 class="font-bold text-gray-900 mb-4 flex items-center gap-2">
+          <svg class="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+          </svg>
+          محاكاة حجز جديد (اختبار)
+        </h3>
+        <p class="text-sm text-gray-600 mb-4">
+          هذا الزر يحاكي عملية حجز جديد في قاعدة البيانات. استخدمه لاختبار النظام.
+        </p>
+        <button
+          onclick="simulateNewBooking()"
+          class="w-full py-4 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-xl font-bold hover:from-green-600 hover:to-emerald-600 transition-all shadow-lg hover:shadow-xl"
+        >
+          إنشاء حجز تجريبي
+        </button>
+      </div>
+    </div>
+
+    <!-- سجل الأحداث -->
+    <div class="bg-white rounded-3xl shadow-2xl p-8">
+      <h2 class="text-2xl font-black text-gray-900 mb-6">📝 سجل الأحداث</h2>
+      <div id="eventLog" class="space-y-2 max-h-96 overflow-y-auto">
+        <div class="text-sm text-gray-500 text-center py-8">
+          لا توجد أحداث بعد...
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+    // تهيئة Supabase
+    const SUPABASE_URL = 'https://xdjeygiadqavkmwarkfz.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhkamV5Z2lhZHFhdmttd2Fya2Z6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjk0MjExNzMsImV4cCI6MjA0NDk5NzE3M30.lGb6hUUhAHMIK1iy9yQfwkKM7f90WwqFfqY7c9x8LAg';
+
+    const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    // AudioContext للأصوات
+    let audioContext = null;
+    let isMonitoring = false;
+    let subscription = null;
+
+    function initAudioContext() {
+      if (!audioContext) {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      return audioContext;
+    }
+
+    function playBeep(frequency, duration, volume, type = 'sine') {
+      const ctx = initAudioContext();
+      const oscillator = ctx.createOscillator();
+      const gainNode = ctx.createGain();
+
+      oscillator.connect(gainNode);
+      gainNode.connect(ctx.destination);
+
+      oscillator.frequency.value = frequency;
+      oscillator.type = type;
+
+      gainNode.gain.setValueAtTime(volume, ctx.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + duration);
+
+      oscillator.start(ctx.currentTime);
+      oscillator.stop(ctx.currentTime + duration);
+    }
+
+    // اختبار الأصوات
+    window.testNewBookingSound = function() {
+      logEvent('🔔 تشغيل صوت حجز جديد', 'green');
+      setTimeout(() => playBeep(523.25, 0.15, 0.7, 'sine'), 0);
+      setTimeout(() => playBeep(659.25, 0.15, 0.7, 'sine'), 150);
+      setTimeout(() => playBeep(783.99, 0.3, 0.7, 'sine'), 300);
+    };
+
+    window.testPaymentSound = function() {
+      logEvent('💰 تشغيل صوت دفعة مستلمة', 'blue');
+      setTimeout(() => playBeep(800, 0.1, 0.6, 'square'), 0);
+      setTimeout(() => playBeep(1000, 0.1, 0.6, 'square'), 80);
+      setTimeout(() => playBeep(1200, 0.2, 0.6, 'sine'), 160);
+    };
+
+    window.testUrgentSound = function() {
+      logEvent('⚠️ تشغيل صوت تنبيه عاجل', 'red');
+      for (let i = 0; i < 3; i++) {
+        setTimeout(() => playBeep(880, 0.2, 0.8, 'square'), i * 400);
+      }
+    };
+
+    window.testSuccessSound = function() {
+      logEvent('✅ تشغيل صوت نجاح', 'purple');
+      playBeep(659.25, 0.15, 0.5, 'sine');
+    };
+
+    // المراقبة المباشرة
+    window.toggleMonitoring = async function() {
+      if (isMonitoring) {
+        stopMonitoring();
+      } else {
+        await startMonitoring();
+      }
+    };
+
+    async function startMonitoring() {
+      logEvent('📡 بدء المراقبة المباشرة...', 'blue');
+
+      // طلب إذن الإشعارات
+      if ('Notification' in window && Notification.permission === 'default') {
+        const permission = await Notification.requestPermission();
+        logEvent(`🔔 إذن الإشعارات: ${permission}`, permission === 'granted' ? 'green' : 'orange');
+      }
+
+      // الاشتراك في التحديثات
+      subscription = supabase
+        .channel('test_booking_notifications')
+        .on(
+          'postgres_changes',
+          {
+            event: 'INSERT',
+            schema: 'public',
+            table: 'reservations'
+          },
+          (payload) => {
+            logEvent('🎉 حجز جديد اكتُشف!', 'green');
+            console.log('New booking:', payload);
+            testNewBookingSound();
+
+            if (Notification.permission === 'granted') {
+              new Notification('حجز جديد!', {
+                body: 'تم استلام حجز جديد من مستثمر',
+                icon: '/logo.png',
+                tag: 'new-booking'
+              });
+            }
+          }
+        )
+        .subscribe((status) => {
+          logEvent(`📡 حالة الاتصال: ${status}`, 'blue');
+          if (status === 'SUBSCRIBED') {
+            isMonitoring = true;
+            updateMonitoringUI();
+          }
+        });
+    }
+
+    function stopMonitoring() {
+      if (subscription) {
+        supabase.removeChannel(subscription);
+        subscription = null;
+        isMonitoring = false;
+        updateMonitoringUI();
+        logEvent('⏸️ تم إيقاف المراقبة', 'orange');
+      }
+    }
+
+    function updateMonitoringUI() {
+      const indicator = document.getElementById('monitoringIndicator');
+      const text = document.getElementById('monitoringText');
+      const button = document.getElementById('toggleMonitoring');
+
+      if (isMonitoring) {
+        indicator.className = 'w-4 h-4 rounded-full bg-green-500 pulse-animation';
+        text.textContent = 'نشط - جاري المراقبة';
+        button.textContent = 'إيقاف المراقبة';
+        button.className = 'w-full py-4 bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-xl font-bold hover:from-red-600 hover:to-orange-600 transition-all shadow-lg hover:shadow-xl';
+      } else {
+        indicator.className = 'w-4 h-4 rounded-full bg-gray-400';
+        text.textContent = 'متوقف';
+        button.textContent = 'بدء المراقبة';
+        button.className = 'w-full py-4 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-xl font-bold hover:from-blue-600 hover:to-cyan-600 transition-all shadow-lg hover:shadow-xl';
+      }
+    }
+
+    // محاكاة حجز جديد
+    window.simulateNewBooking = async function() {
+      logEvent('⚡ جاري إنشاء حجز تجريبي...', 'yellow');
+
+      try {
+        const { data, error } = await supabase
+          .from('reservations')
+          .insert({
+            customer_name: 'مستثمر تجريبي',
+            customer_phone: '0500000000',
+            reserved_trees: 10,
+            total_amount: 1000,
+            status: 'pending',
+            booking_status: 'pending'
+          })
+          .select();
+
+        if (error) throw error;
+
+        logEvent('✅ تم إنشاء الحجز التجريبي بنجاح!', 'green');
+        logEvent(`📦 البيانات: ${JSON.stringify(data[0], null, 2)}`, 'gray');
+      } catch (error) {
+        logEvent(`❌ خطأ: ${error.message}`, 'red');
+      }
+    };
+
+    // سجل الأحداث
+    function logEvent(message, color = 'gray') {
+      const log = document.getElementById('eventLog');
+      const time = new Date().toLocaleTimeString('ar-SA');
+
+      const colors = {
+        green: 'bg-green-50 border-green-200 text-green-800',
+        blue: 'bg-blue-50 border-blue-200 text-blue-800',
+        red: 'bg-red-50 border-red-200 text-red-800',
+        yellow: 'bg-yellow-50 border-yellow-200 text-yellow-800',
+        orange: 'bg-orange-50 border-orange-200 text-orange-800',
+        purple: 'bg-purple-50 border-purple-200 text-purple-800',
+        gray: 'bg-gray-50 border-gray-200 text-gray-800'
+      };
+
+      const entry = document.createElement('div');
+      entry.className = `p-3 border-l-4 rounded ${colors[color]} text-sm`;
+      entry.innerHTML = `
+        <div class="flex items-start gap-2">
+          <span class="text-xs opacity-70 font-mono">${time}</span>
+          <span class="flex-1">${message}</span>
+        </div>
+      `;
+
+      // إزالة رسالة "لا توجد أحداث"
+      if (log.children.length === 1 && log.children[0].textContent.includes('لا توجد أحداث')) {
+        log.innerHTML = '';
+      }
+
+      log.insertBefore(entry, log.firstChild);
+
+      // الحد من عدد الأحداث
+      if (log.children.length > 50) {
+        log.removeChild(log.lastChild);
+      }
+    }
+
+    // التحقق من حالة النظام عند التحميل
+    window.addEventListener('load', async () => {
+      logEvent('🚀 بدء اختبار النظام...', 'blue');
+
+      // التحقق من AudioContext
+      try {
+        initAudioContext();
+        logEvent('✅ AudioContext جاهز', 'green');
+        document.getElementById('statusText').textContent = '✅ النظام جاهز';
+        document.getElementById('systemStatus').className = 'mt-6 p-4 bg-green-50 border-2 border-green-200 rounded-xl';
+      } catch (error) {
+        logEvent('❌ خطأ في AudioContext: ' + error.message, 'red');
+        document.getElementById('statusText').textContent = '❌ خطأ في النظام';
+        document.getElementById('systemStatus').className = 'mt-6 p-4 bg-red-50 border-2 border-red-200 rounded-xl';
+      }
+
+      // التحقق من اتصال Supabase
+      try {
+        const { data, error } = await supabase.from('reservations').select('count').limit(1);
+        if (error) throw error;
+        logEvent('✅ الاتصال بقاعدة البيانات ناجح', 'green');
+      } catch (error) {
+        logEvent('❌ خطأ في الاتصال بقاعدة البيانات: ' + error.message, 'red');
+      }
+
+      // التحقق من إذن الإشعارات
+      if ('Notification' in window) {
+        logEvent(`🔔 حالة إذن الإشعارات: ${Notification.permission}`,
+          Notification.permission === 'granted' ? 'green' : 'orange');
+      }
+    });
+  </script>
+</body>
+</html>
