@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>اختبار قائمة زر التاج</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .demo-container {
+      background: white;
+      border-radius: 24px;
+      padding: 40px;
+      max-width: 800px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 36px;
+      font-weight: 900;
+      color: #1f2937;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #6b7280;
+      font-size: 18px;
+      margin-bottom: 40px;
+    }
+
+    .status-box {
+      background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+      border: 2px solid #22c55e;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 30px;
+    }
+
+    .status-title {
+      font-size: 20px;
+      font-weight: 900;
+      color: #166534;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .status-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .status-list li {
+      padding: 8px 0;
+      color: #15803d;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .visual-demo {
+      background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+      border: 2px solid #e5e7eb;
+      border-radius: 16px;
+      padding: 40px;
+      margin-bottom: 30px;
+      position: relative;
+      min-height: 400px;
+    }
+
+    .demo-title {
+      text-align: center;
+      font-size: 24px;
+      font-weight: 900;
+      color: #1f2937;
+      margin-bottom: 30px;
+    }
+
+    /* Crown Button */
+    .crown-button {
+      position: absolute;
+      bottom: 30px;
+      right: 30px;
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #d4af37, #b48c1e);
+      border: 3px solid rgba(255, 255, 255, 0.4);
+      box-shadow: 0 8px 40px rgba(212, 175, 55, 0.6), 0 0 60px rgba(212, 175, 55, 0.3);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+      z-index: 100;
+    }
+
+    .crown-button:hover {
+      transform: scale(1.1) rotate(12deg);
+    }
+
+    .crown-button:active {
+      transform: scale(0.9);
+    }
+
+    .crown-icon {
+      font-size: 36px;
+    }
+
+    .ping {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #d4af37;
+      animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+    }
+
+    @keyframes ping {
+      0% {
+        transform: scale(1);
+        opacity: 1;
+      }
+      75%, 100% {
+        transform: scale(2);
+        opacity: 0;
+      }
+    }
+
+    /* Menu */
+    .menu {
+      position: absolute;
+      bottom: 110px;
+      right: 30px;
+      width: 280px;
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(212, 175, 55, 0.2);
+      overflow: hidden;
+      display: none;
+      animation: slideUp 0.3s ease-out;
+      z-index: 99;
+    }
+
+    .menu.active {
+      display: block;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .menu-header {
+      background: linear-gradient(135deg, #d4af37, #b48c1e);
+      padding: 16px;
+      text-align: center;
+      color: white;
+      font-size: 18px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .menu-items {
+      padding: 12px;
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-bottom: 8px;
+    }
+
+    .menu-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .menu-item.farm-owner {
+      background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(22, 163, 74, 0.1));
+    }
+
+    .menu-item.farm-owner:hover {
+      background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(22, 163, 74, 0.2));
+      box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+      transform: scale(1.05);
+    }
+
+    .menu-item.admin {
+      background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(180, 140, 30, 0.1));
+    }
+
+    .menu-item.admin:hover {
+      background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), rgba(180, 140, 30, 0.2));
+      box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+      transform: scale(1.05);
+    }
+
+    .menu-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    .menu-icon.green {
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+    }
+
+    .menu-icon.gold {
+      background: linear-gradient(135deg, #d4af37, #b48c1e);
+    }
+
+    .menu-text {
+      flex: 1;
+      text-align: right;
+    }
+
+    .menu-title {
+      font-size: 18px;
+      font-weight: 900;
+      color: #1f2937;
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .menu-desc {
+      font-size: 12px;
+      color: #6b7280;
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.2);
+      display: none;
+      z-index: 98;
+    }
+
+    .overlay.active {
+      display: block;
+    }
+
+    .instructions {
+      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+      border: 2px solid #3b82f6;
+      border-radius: 16px;
+      padding: 24px;
+    }
+
+    .instructions h3 {
+      font-size: 20px;
+      font-weight: 900;
+      color: #1e40af;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .instructions ol {
+      margin-right: 20px;
+      color: #1e3a8a;
+    }
+
+    .instructions li {
+      padding: 8px 0;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .arrow {
+      position: absolute;
+      bottom: 90px;
+      right: 110px;
+      font-size: 48px;
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+  </style>
+</head>
+<body>
+  <div class="demo-container">
+    <h1>👑 اختبار قائمة زر التاج</h1>
+    <p class="subtitle">عرض تفاعلي للزر الجديد</p>
+
+    <div class="status-box">
+      <div class="status-title">
+        <span>✅</span>
+        <span>التحديثات المطبقة:</span>
+      </div>
+      <ul class="status-list">
+        <li><span>✓</span> زر التاج محدّث بقائمة منبثقة</li>
+        <li><span>✓</span> خيار صاحب المزرعة (أخضر)</li>
+        <li><span>✓</span> خيار لوحة الإدارة (ذهبي)</li>
+        <li><span>✓</span> Animations وHover Effects</li>
+        <li><span>✓</span> Overlay للإغلاق</li>
+        <li><span>✓</span> البناء نجح: ✓ built in 7.11s</li>
+      </ul>
+    </div>
+
+    <div class="visual-demo">
+      <div class="demo-title">تجربة تفاعلية</div>
+
+      <div class="arrow">⬇️</div>
+
+      <div class="overlay" id="overlay"></div>
+
+      <div class="menu" id="menu">
+        <div class="menu-header">
+          <span>👑</span>
+          <span>لوحات التحكم</span>
+        </div>
+        <div class="menu-items">
+          <div class="menu-item farm-owner" onclick="selectOption('farm-owner')">
+            <div class="menu-icon green">🏢</div>
+            <div class="menu-text">
+              <span class="menu-title">صاحب المزرعة</span>
+              <span class="menu-desc">إدارة مزرعتك</span>
+            </div>
+          </div>
+          <div class="menu-item admin" onclick="selectOption('admin')">
+            <div class="menu-icon gold">🛡️</div>
+            <div class="menu-text">
+              <span class="menu-title">لوحة الإدارة</span>
+              <span class="menu-desc">إدارة النظام الكامل</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="crown-button" onclick="toggleMenu()">
+        <span class="crown-icon">👑</span>
+        <div class="ping"></div>
+      </div>
+    </div>
+
+    <div class="instructions">
+      <h3>
+        <span>📋</span>
+        <span>كيفية الاستخدام:</span>
+      </h3>
+      <ol>
+        <li>اضغط على زر التاج الذهبي 👑 (أسفل يمين الشاشة)</li>
+        <li>ستظهر قائمة بخيارين</li>
+        <li>اختر <strong>صاحب المزرعة</strong> (أخضر) أو <strong>لوحة الإدارة</strong> (ذهبي)</li>
+        <li>للإغلاق: اضغط خارج القائمة أو اختر خياراً</li>
+      </ol>
+    </div>
+  </div>
+
+  <script>
+    let menuOpen = false;
+
+    function toggleMenu() {
+      menuOpen = !menuOpen;
+      const menu = document.getElementById('menu');
+      const overlay = document.getElementById('overlay');
+
+      if (menuOpen) {
+        menu.classList.add('active');
+        overlay.classList.add('active');
+      } else {
+        menu.classList.remove('active');
+        overlay.classList.remove('active');
+      }
+    }
+
+    function selectOption(type) {
+      if (type === 'farm-owner') {
+        alert('🏢 تم اختيار: صاحب المزرعة\n\nسيتم نقلك لصفحة تسجيل دخول صاحب المزرعة');
+      } else {
+        alert('🛡️ تم اختيار: لوحة الإدارة\n\nسيتم نقلك لصفحة تسجيل دخول الإدارة');
+      }
+      toggleMenu();
+    }
+
+    document.getElementById('overlay').addEventListener('click', () => {
+      if (menuOpen) toggleMenu();
+    });
+
+    console.log('✅ اختبار قائمة زر التاج جاهز!');
+    console.log('👑 اضغط على زر التاج لرؤية القائمة المنبثقة');
+  </script>
+</body>
+</html>
