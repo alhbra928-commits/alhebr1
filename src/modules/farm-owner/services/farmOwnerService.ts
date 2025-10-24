@@ -64,10 +64,100 @@ export interface FarmStatus {
 
 class FarmOwnerService {
   /**
-   * تسجيل دخول أو إنشاء حساب جديد
+   * توليد رمز OTP عشوائي (6 أرقام)
    */
-  async loginOrCreate(mobileNumber: string) {
+  private generateOTP(): string {
+    return Math.floor(100000 + Math.random() * 900000).toString();
+  }
+
+  /**
+   * التحقق من وجود الحساب
+   */
+  async checkAccount(mobileNumber: string) {
     try {
+      const { data, error } = await supabase
+        .from('farm_owner_profiles')
+        .select('id, mobile_number, status')
+        .eq('mobile_number', mobileNumber)
+        .is('deleted_at', null)
+        .maybeSingle();
+
+      if (error) throw error;
+
+      return {
+        exists: !!data,
+        profile: data
+      };
+    } catch (error: any) {
+      console.error('خطأ في التحقق من الحساب:', error);
+      return { exists: false, profile: null };
+    }
+  }
+
+  /**
+   * إرسال OTP
+   */
+  async sendOTP(mobileNumber: string): Promise<{ success: boolean; otp?: string; is_new?: boolean; error?: string }> {
+    try {
+      const { exists } = await this.checkAccount(mobileNumber);
+      const otp = this.generateOTP();
+
+      // حفظ OTP في localStorage للاختبار
+      const otpData = {
+        mobile_number: mobileNumber,
+        otp,
+        timestamp: Date.now(),
+        expires_at: Date.now() + (5 * 60 * 1000) // 5 دقائق
+      };
+      localStorage.setItem('farm_owner_otp', JSON.stringify(otpData));
+
+      // في المستقبل: إرسال OTP عبر واتساب هنا
+      console.log(`📱 OTP للرقم ${mobileNumber}: ${otp}`);
+
+      return {
+        success: true,
+        otp, // للاختبار فقط - في الإنتاج نحذف هذا
+        is_new: !exists
+      };
+    } catch (error: any) {
+      console.error('خطأ في إرسال OTP:', error);
+      return { success: false, error: error.message };
+    }
+  }
+
+  /**
+   * التحقق من OTP وتسجيل الدخول
+   */
+  async verifyOTPAndLogin(mobileNumber: string, otp: string) {
+    try {
+      // التحقق من OTP
+      const savedOTP = localStorage.getItem('farm_owner_otp');
+      if (!savedOTP) {
+        return { success: false, error: 'لم يتم إرسال رمز التحقق' };
+      }
+
+      const otpData = JSON.parse(savedOTP);
+
+      // التحقق من الرقم
+      if (otpData.mobile_number !== mobileNumber) {
+        return { success: false, error: 'رقم الجوال غير صحيح' };
+      }
+
+      // التحقق من انتهاء الصلاحية
+      if (Date.now() > otpData.expires_at) {
+        localStorage.removeItem('farm_owner_otp');
+        return { success: false, error: 'انتهت صلاحية الرمز. الرجاء طلب رمز جديد' };
+      }
+
+      // التحقق من الرمز
+      if (otpData.otp !== otp) {
+        return { success: false, error: 'رمز التحقق غير صحيح' };
+      }
+
+      // حذف OTP بعد الاستخدام
+      localStorage.removeItem('farm_owner_otp');
+
+      // تسجيل الدخول أو إنشاء حساب
       const { data, error } = await supabase.rpc('farm_owner_login_or_create', {
         p_mobile_number: mobileNumber
       });
@@ -93,7 +183,48 @@ class FarmOwnerService {
 
       return { success: false, error: data?.error || 'فشل تسجيل الدخول' };
     } catch (error: any) {
-      console.error('خطأ في تسجيل الدخول:', error);
+      console.error('خطأ في التحقق من OTP:', error);
+      return { success: false, error: error.message };
+    }
+  }
+
+  /**
+   * تسجيل دخول مباشر (للمرة الأولى فقط)
+   */
+  async directLogin(mobileNumber: string) {
+    try {
+      // التحقق من أن الحساب غير موجود
+      const { exists } = await this.checkAccount(mobileNumber);
+      if (exists) {
+        return { success: false, error: 'الحساب موجود مسبقاً. يرجى استخدام رمز التحقق' };
+      }
+
+      // إنشاء حساب جديد
+      const { data, error } = await supabase.rpc('farm_owner_login_or_create', {
+        p_mobile_number: mobileNumber
+      });
+
+      if (error) throw error;
+
+      if (data?.success) {
+        localStorage.setItem('farm_owner_session', JSON.stringify({
+          profile_id: data.profile_id,
+          session_token: data.session_token,
+          mobile_number: mobileNumber,
+          status: data.status
+        }));
+
+        return {
+          success: true,
+          profile_id: data.profile_id,
+          status: data.status,
+          is_new: true
+        };
+      }
+
+      return { success: false, error: data?.error || 'فشل تسجيل الدخول' };
+    } catch (error: any) {
+      console.error('خطأ في التسجيل المباشر:', error);
       return { success: false, error: error.message };
     }
   }
