@@ -396,33 +396,265 @@ export function OwnersView({ onBack }: OwnersViewProps) {
         {/* Owners Grid */}
         {filteredOwners.length === 0 ? (
           <div className="text-center py-16">
-            <p className="text-xl">لا يوجد ملاك</p>
+            <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br from-[#C9A962]/20 to-[#D4B574]/20 mb-6">
+              <Users className="h-12 w-12 text-[#C9A962]" />
+            </div>
+            <h3 className="text-2xl font-black text-[#2C2C2C] mb-2">لا يوجد ملاك</h3>
+            <p className="text-[#2C2C2C]/60 mb-6">ابدأ بإضافة أول مالك مزرعة</p>
+            <button
+              onClick={handleCreateOwner}
+              className="px-8 py-3 bg-gradient-to-br from-[#C9A962] to-[#D4B574] text-white rounded-xl font-bold hover:shadow-xl transform hover:-translate-y-0.5 transition-all"
+            >
+              <Plus className="h-5 w-5 inline-block ml-2" />
+              إضافة مالك جديد
+            </button>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredOwners.map((owner) => (
-              <Card3D key={owner.id}>
-                <div className="bg-white rounded-2xl p-6">
-                  <h3 className="text-xl font-bold mb-2">{owner.full_name}</h3>
-                  <p className="text-sm text-gray-600">{owner.mobile_number}</p>
-                  <p className="text-sm">{owner.region} - {owner.city}</p>
-                  <div className="flex gap-2 mt-4">
-                    <button
-                      onClick={() => handleEditOwner(owner, null as any)}
-                      className="px-4 py-2 bg-blue-500 text-white rounded-lg"
-                    >
-                      تعديل
-                    </button>
-                    <button
-                      onClick={() => handleDeleteOwner(owner, null as any)}
-                      className="px-4 py-2 bg-red-500 text-white rounded-lg"
-                    >
-                      حذف
-                    </button>
+            {filteredOwners.map((owner) => {
+              const statusConfig = {
+                active: {
+                  bg: 'from-green-500 to-emerald-600',
+                  badge: 'bg-green-100 text-green-800 border-green-300',
+                  icon: CheckCircle,
+                  label: 'نشط',
+                  dot: 'bg-green-500'
+                },
+                frozen: {
+                  bg: 'from-blue-400 to-blue-600',
+                  badge: 'bg-blue-100 text-blue-800 border-blue-300',
+                  icon: Snowflake,
+                  label: 'مجمد',
+                  dot: 'bg-blue-500'
+                },
+                under_review: {
+                  bg: 'from-yellow-400 to-amber-500',
+                  badge: 'bg-yellow-100 text-yellow-800 border-yellow-300',
+                  icon: Clock,
+                  label: 'تحت المراجعة',
+                  dot: 'bg-yellow-500'
+                }
+              };
+
+              const config = statusConfig[owner.status as keyof typeof statusConfig] || statusConfig.active;
+              const StatusIcon = config.icon;
+
+              return (
+                <Card3D key={owner.id}>
+                  <div className="bg-white rounded-2xl overflow-hidden border-2 border-gray-100 hover:border-[#C9A962] transition-all duration-300 group">
+                    {/* Header with Gradient */}
+                    <div className={`bg-gradient-to-br ${config.bg} p-6 relative overflow-hidden`}>
+                      <div className="absolute top-0 left-0 w-full h-full opacity-10">
+                        <div className="absolute top-4 left-4 w-32 h-32 bg-white rounded-full blur-2xl"></div>
+                        <div className="absolute bottom-4 right-4 w-24 h-24 bg-white rounded-full blur-2xl"></div>
+                      </div>
+
+                      <div className="relative flex items-start justify-between">
+                        <div className="flex items-center gap-3">
+                          <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center border-2 border-white/30">
+                            <Users className="h-7 w-7 text-white" />
+                          </div>
+                          <div>
+                            <h3 className="text-xl font-black text-white mb-1 line-clamp-1">
+                              {owner.full_name}
+                            </h3>
+                            <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-lg border-2 ${config.badge}`}>
+                              <div className={`w-2 h-2 rounded-full ${config.dot} animate-pulse`}></div>
+                              <span className="text-xs font-bold">{config.label}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Content */}
+                    <div className="p-5 space-y-4">
+                      {/* Contact Info */}
+                      <div className="space-y-2.5">
+                        <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl hover:bg-[#F5F1E8] transition-colors">
+                          <div className="w-9 h-9 bg-gradient-to-br from-[#C9A962] to-[#D4B574] rounded-lg flex items-center justify-center flex-shrink-0">
+                            <Phone className="h-4 w-4 text-white" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-xs text-[#2C2C2C]/60 mb-0.5">رقم الجوال</p>
+                            <a
+                              href={`tel:${owner.mobile_number}`}
+                              className="font-mono font-bold text-[#2C2C2C] hover:text-[#C9A962] transition-colors"
+                              dir="ltr"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              {owner.mobile_number}
+                            </a>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl hover:bg-[#F5F1E8] transition-colors">
+                          <div className="w-9 h-9 bg-gradient-to-br from-[#3D5B4B] to-[#4A6F5C] rounded-lg flex items-center justify-center flex-shrink-0">
+                            <MapPin className="h-4 w-4 text-white" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-xs text-[#2C2C2C]/60 mb-0.5">الموقع</p>
+                            <p className="font-bold text-[#2C2C2C] truncate">{owner.region} - {owner.city}</p>
+                          </div>
+                        </div>
+
+                        {owner.national_id && (
+                          <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl hover:bg-[#F5F1E8] transition-colors">
+                            <div className="w-9 h-9 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                              <FileText className="h-4 w-4 text-white" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-xs text-[#2C2C2C]/60 mb-0.5">الهوية الوطنية</p>
+                              <p className="font-mono font-bold text-[#2C2C2C]" dir="ltr">{owner.national_id}</p>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Stats Grid */}
+                      <div className="grid grid-cols-2 gap-2">
+                        <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-3 rounded-xl border-2 border-blue-100">
+                          <div className="flex items-center gap-2 mb-1">
+                            <Home className="h-4 w-4 text-blue-600" />
+                            <span className="text-xs text-blue-900/70">المزارع</span>
+                          </div>
+                          <p className="text-2xl font-black text-blue-600">
+                            {owner.farms_count || 0}
+                          </p>
+                        </div>
+
+                        <div className="bg-gradient-to-br from-green-50 to-emerald-50 p-3 rounded-xl border-2 border-green-100">
+                          <div className="flex items-center gap-2 mb-1">
+                            <DollarSign className="h-4 w-4 text-green-600" />
+                            <span className="text-xs text-green-900/70">الإيرادات</span>
+                          </div>
+                          <p className="text-sm font-black text-green-600">
+                            {owner.total_revenue ? `${(owner.total_revenue / 1000).toFixed(0)}k` : '0'}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Quick Actions */}
+                      <div className="pt-3 border-t-2 border-gray-100 space-y-2">
+                        {/* Primary Actions */}
+                        <div className="grid grid-cols-2 gap-2">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleViewDetails(owner, e);
+                            }}
+                            className="flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-br from-[#C9A962] to-[#D4B574] text-white rounded-xl font-bold hover:shadow-lg transform hover:-translate-y-0.5 transition-all"
+                          >
+                            <Eye className="h-4 w-4" />
+                            <span>عرض</span>
+                          </button>
+
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleEditOwner(owner, e);
+                            }}
+                            className="flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-xl font-bold hover:shadow-lg transform hover:-translate-y-0.5 transition-all"
+                          >
+                            <Edit className="h-4 w-4" />
+                            <span>تعديل</span>
+                          </button>
+                        </div>
+
+                        {/* Secondary Actions */}
+                        <div className="grid grid-cols-3 gap-2">
+                          {owner.status === 'active' ? (
+                            <button
+                              onClick={async (e) => {
+                                e.stopPropagation();
+                                if (confirm(`هل تريد تجميد حساب ${owner.full_name}؟`)) {
+                                  try {
+                                    await OwnersService.updateOwner(owner.id, { status: 'frozen' });
+                                    alert('✅ تم تجميد الحساب');
+                                    loadData();
+                                  } catch (err) {
+                                    alert('❌ حدث خطأ');
+                                  }
+                                }
+                              }}
+                              className="flex items-center justify-center gap-1.5 px-3 py-2 bg-blue-100 text-blue-700 rounded-lg font-bold hover:bg-blue-200 transition-all text-sm"
+                              title="تجميد الحساب"
+                            >
+                              <Snowflake className="h-3.5 w-3.5" />
+                              <span>تجميد</span>
+                            </button>
+                          ) : owner.status === 'frozen' ? (
+                            <button
+                              onClick={async (e) => {
+                                e.stopPropagation();
+                                if (confirm(`هل تريد تفعيل حساب ${owner.full_name}؟`)) {
+                                  try {
+                                    await OwnersService.updateOwner(owner.id, { status: 'active' });
+                                    alert('✅ تم تفعيل الحساب');
+                                    loadData();
+                                  } catch (err) {
+                                    alert('❌ حدث خطأ');
+                                  }
+                                }
+                              }}
+                              className="flex items-center justify-center gap-1.5 px-3 py-2 bg-green-100 text-green-700 rounded-lg font-bold hover:bg-green-200 transition-all text-sm"
+                              title="تفعيل الحساب"
+                            >
+                              <CheckCircle className="h-3.5 w-3.5" />
+                              <span>تفعيل</span>
+                            </button>
+                          ) : (
+                            <div className="flex items-center justify-center px-3 py-2 bg-gray-100 text-gray-400 rounded-lg text-sm">
+                              <Clock className="h-3.5 w-3.5" />
+                            </div>
+                          )}
+
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              window.open(`tel:${owner.mobile_number}`, '_self');
+                            }}
+                            className="flex items-center justify-center gap-1.5 px-3 py-2 bg-green-100 text-green-700 rounded-lg font-bold hover:bg-green-200 transition-all text-sm"
+                            title="اتصال مباشر"
+                          >
+                            <Phone className="h-3.5 w-3.5" />
+                            <span>اتصال</span>
+                          </button>
+
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDeleteOwner(owner, e);
+                            }}
+                            className="flex items-center justify-center gap-1.5 px-3 py-2 bg-red-100 text-red-700 rounded-lg font-bold hover:bg-red-200 transition-all text-sm"
+                            title="حذف المالك"
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                            <span>حذف</span>
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Footer Info */}
+                      {owner.created_at && (
+                        <div className="pt-2 border-t border-gray-100">
+                          <div className="flex items-center justify-between text-xs text-[#2C2C2C]/50">
+                            <div className="flex items-center gap-1.5">
+                              <Calendar className="h-3 w-3" />
+                              <span>مضاف منذ: {new Date(owner.created_at).toLocaleDateString('ar-SA')}</span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div>
+                              <span>متصل</span>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
-              </Card3D>
-            ))}
+                </Card3D>
+              );
+            })}
           </div>
         )}
 
