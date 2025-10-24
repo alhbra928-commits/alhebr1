@@ -12,6 +12,7 @@ export function UltraModernTemplatesManager() {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [showQuickActions, setShowQuickActions] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
+  const [showCreateModal, setShowCreateModal] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState<WhatsAppTemplate | null>(null);
   const [favoriteTemplates, setFavoriteTemplates] = useState<string[]>([]);
 
@@ -73,10 +74,49 @@ export function UltraModernTemplatesManager() {
     { id: 'greeting', label: 'ترحيب', icon: Sparkles, color: 'from-pink-500 to-fuchsia-600', count: templates.filter(t => t.template_category === 'greeting').length },
   ];
 
+  const handleExportJSON = () => {
+    const dataStr = JSON.stringify(templates, null, 2);
+    const blob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `whatsapp-templates-${new Date().toISOString().split('T')[0]}.json`;
+    link.click();
+    notificationSoundService.playSuccess();
+  };
+
+  const handleImportJSON = () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
+    input.onchange = async (e: any) => {
+      const file = e.target?.files?.[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = async (event) => {
+        try {
+          const importedTemplates = JSON.parse(event.target?.result as string);
+          for (const template of importedTemplates) {
+            const { id, created_at, updated_at, usage_count, last_used_at, ...templateData } = template;
+            await whatsappService.createTemplate(templateData);
+          }
+          await loadData();
+          notificationSoundService.playSuccess();
+        } catch (error) {
+          console.error('Error importing templates:', error);
+          notificationSoundService.playError();
+        }
+      };
+      reader.readAsText(file);
+    };
+    input.click();
+  };
+
   const quickActions = [
-    { icon: Plus, label: 'قالب جديد', color: 'from-blue-500 to-cyan-600', action: () => console.log('create') },
-    { icon: Download, label: 'تصدير', color: 'from-green-500 to-emerald-600', action: () => console.log('export') },
-    { icon: Upload, label: 'استيراد', color: 'from-purple-500 to-pink-600', action: () => console.log('import') },
+    { icon: Plus, label: 'قالب جديد', color: 'from-blue-500 to-cyan-600', action: () => setShowCreateModal(true) },
+    { icon: Download, label: 'تصدير', color: 'from-green-500 to-emerald-600', action: handleExportJSON },
+    { icon: Upload, label: 'استيراد', color: 'from-purple-500 to-pink-600', action: handleImportJSON },
     { icon: BarChart3, label: 'إحصائيات', color: 'from-amber-500 to-orange-600', action: () => console.log('stats') },
   ];
 
@@ -349,6 +389,18 @@ export function UltraModernTemplatesManager() {
           onClose={() => {
             setShowPreview(false);
             setSelectedTemplate(null);
+          }}
+        />
+      )}
+
+      {/* Create Template Modal */}
+      {showCreateModal && (
+        <CreateTemplateModal
+          onClose={() => setShowCreateModal(false)}
+          onSave={async () => {
+            await loadData();
+            setShowCreateModal(false);
+            notificationSoundService.playSuccess();
           }}
         />
       )}
@@ -677,6 +729,229 @@ function UltraModernPreviewModal({
           </button>
           <button className="px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white rounded-2xl font-bold transition-all shadow-lg">
             تعديل القالب
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+// Create Template Modal Component
+function CreateTemplateModal({
+  onClose,
+  onSave
+}: {
+  onClose: () => void;
+  onSave: () => void;
+}) {
+  const [formData, setFormData] = useState({
+    template_code: '',
+    template_name_ar: '',
+    template_category: 'general',
+    message_content_ar: '',
+    message_content_en: '',
+    variables: [] as string[],
+    target_audience: ['investor'] as string[],
+    event_trigger: '',
+    priority: 50,
+    status: 'draft' as const,
+    is_active: true
+  });
+
+  const [saving, setSaving] = useState(false);
+
+  const detectVariables = () => {
+    const regex = /\{\{([^}]+)\}\}/g;
+    const matches = formData.message_content_ar.matchAll(regex);
+    const variables = Array.from(matches).map(match => match[1].trim());
+    setFormData({ ...formData, variables: [...new Set(variables)] });
+  };
+
+  const handleSave = async () => {
+    try {
+      setSaving(true);
+      await whatsappService.createTemplate(formData as any);
+      onSave();
+    } catch (error) {
+      console.error('Error creating template:', error);
+      notificationSoundService.playError();
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fadeIn">
+      <div className="absolute inset-0 bg-black/50 backdrop-blur-md" onClick={onClose}></div>
+
+      <div className="relative bg-white rounded-3xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden animate-slideUp">
+        {/* Header */}
+        <div className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 p-8 text-white">
+          <div className="flex items-start justify-between">
+            <div>
+              <h3 className="text-3xl font-black mb-2">قالب جديد</h3>
+              <p className="text-white/90">إنشاء قالب رسالة ذكي جديد</p>
+            </div>
+            <button
+              onClick={onClose}
+              className="p-2 hover:bg-white/20 rounded-xl transition-colors"
+            >
+              <X className="h-6 w-6" />
+            </button>
+          </div>
+        </div>
+
+        {/* Body */}
+        <div className="p-8 max-h-[calc(90vh-250px)] overflow-y-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Form Section */}
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-bold text-gray-700 mb-2">
+                  كود القالب *
+                </label>
+                <input
+                  type="text"
+                  value={formData.template_code}
+                  onChange={(e) => setFormData({ ...formData, template_code: e.target.value })}
+                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:outline-none"
+                  placeholder="BOOKING_CONFIRMED"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-bold text-gray-700 mb-2">
+                  اسم القالب *
+                </label>
+                <input
+                  type="text"
+                  value={formData.template_name_ar}
+                  onChange={(e) => setFormData({ ...formData, template_name_ar: e.target.value })}
+                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:outline-none"
+                  placeholder="تأكيد الحجز"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-bold text-gray-700 mb-2">
+                  الفئة *
+                </label>
+                <select
+                  value={formData.template_category}
+                  onChange={(e) => setFormData({ ...formData, template_category: e.target.value })}
+                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:outline-none font-bold"
+                >
+                  <option value="general">عام</option>
+                  <option value="booking">حجوزات</option>
+                  <option value="payment">مدفوعات</option>
+                  <option value="certificate">شهادات</option>
+                  <option value="settlement">تسويات</option>
+                  <option value="notification">إشعارات</option>
+                  <option value="greeting">ترحيب</option>
+                  <option value="reminder">تذكير</option>
+                </select>
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <label className="block text-sm font-bold text-gray-700">
+                    نص الرسالة *
+                  </label>
+                  <button
+                    onClick={detectVariables}
+                    className="text-xs font-bold text-blue-600 hover:text-blue-700"
+                  >
+                    استخراج المتغيرات
+                  </button>
+                </div>
+                <textarea
+                  value={formData.message_content_ar}
+                  onChange={(e) => setFormData({ ...formData, message_content_ar: e.target.value })}
+                  rows={6}
+                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:outline-none resize-none"
+                  placeholder="مرحباً {{اسم_العميل}}، تم تأكيد حجزكم..."
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  استخدم {`{{اسم_المتغير}}`} لإضافة متغيرات ديناميكية
+                </p>
+              </div>
+
+              {formData.variables.length > 0 && (
+                <div>
+                  <label className="block text-sm font-bold text-gray-700 mb-2">
+                    المتغيرات المكتشفة ({formData.variables.length})
+                  </label>
+                  <div className="flex flex-wrap gap-2">
+                    {formData.variables.map((variable) => (
+                      <span
+                        key={variable}
+                        className="px-3 py-1 bg-blue-100 text-blue-700 rounded-lg font-mono text-sm"
+                      >
+                        {`{{${variable}}}`}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Preview Section */}
+            <div>
+              <h4 className="text-lg font-black text-gray-900 mb-4 flex items-center gap-2">
+                <Eye className="h-5 w-5 text-purple-600" />
+                معاينة مباشرة
+              </h4>
+
+              <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-6 border-2 border-green-200">
+                <div className="bg-white rounded-xl p-5 shadow-lg">
+                  <div className="flex items-start gap-3">
+                    <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full flex items-center justify-center flex-shrink-0">
+                      <MessageCircle className="h-5 w-5 text-white" />
+                    </div>
+                    <div className="flex-1">
+                      <div className="text-xs text-gray-500 mb-2 font-bold">
+                        WhatsApp Business • الآن
+                      </div>
+                      <p className="text-gray-900 whitespace-pre-wrap leading-relaxed">
+                        {formData.message_content_ar || 'اكتب نص الرسالة لمعاينتها...'}
+                      </p>
+                      <div className="flex items-center justify-end gap-1 mt-3 text-gray-400">
+                        <span className="text-xs">
+                          {new Date().toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' })}
+                        </span>
+                        <CheckCheck className="h-4 w-4 text-blue-500" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="border-t p-6 bg-gray-50 flex items-center justify-end gap-3">
+          <button
+            onClick={onClose}
+            className="px-8 py-3 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-2xl font-bold transition-all"
+          >
+            إلغاء
+          </button>
+          <button
+            onClick={handleSave}
+            disabled={saving || !formData.template_code || !formData.template_name_ar || !formData.message_content_ar}
+            className="px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white rounded-2xl font-bold transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+          >
+            {saving ? (
+              <>
+                <RefreshCw className="h-5 w-5 animate-spin" />
+                جاري الحفظ...
+              </>
+            ) : (
+              <>
+                <Save className="h-5 w-5" />
+                حفظ القالب
+              </>
+            )}
           </button>
         </div>
       </div>
