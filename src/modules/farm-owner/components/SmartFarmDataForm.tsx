@@ -321,15 +321,10 @@ export const SmartFarmDataForm: React.FC<SmartFarmDataFormProps> = ({ profileId,
                 </div>
               ))}
 
-              <div className="mt-4 p-4 rounded-xl space-y-2" style={{ background: 'rgba(139, 195, 74, 0.1)' }}>
+              <div className="mt-4 p-4 rounded-xl" style={{ background: 'rgba(139, 195, 74, 0.1)' }}>
                 <p className="font-bold" style={{ color: '#689F38' }}>
                   إجمالي الأشجار: {getTotalTrees()}
                 </p>
-                {totalPrice > 0 && getTotalTrees() > 0 && (
-                  <p className="text-sm" style={{ color: '#558B2F' }}>
-                    السعر التلقائي لكل شجرة: {(totalPrice / getTotalTrees()).toFixed(2)} ريال
-                  </p>
-                )}
               </div>
             </div>
           )}
