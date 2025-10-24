@@ -72,9 +72,14 @@ export function SmartFloatingWhatsApp({ context }: SmartFloatingWhatsAppProps) {
 
   return (
     <>
+      {/* Decorative Connecting Line */}
+      <div className="fixed bottom-20 right-[38px] w-1 h-8 z-30 pointer-events-none">
+        <div className="w-full h-full bg-gradient-to-b from-[#D4AF37]/0 via-[#D4AF37]/30 to-[#556B2F]/20 rounded-full" />
+      </div>
+
       {/* Main Button */}
       <div
-        className="fixed bottom-6 right-6 z-50"
+        className="fixed bottom-24 right-6 z-40"
         onMouseEnter={() => setShowTooltip(true)}
         onMouseLeave={() => setShowTooltip(false)}
       >
@@ -87,8 +92,8 @@ export function SmartFloatingWhatsApp({ context }: SmartFloatingWhatsAppProps) {
             <div className="absolute inset-0 bg-gradient-to-r from-[#556B2F] to-[#D4AF37] rounded-full blur-xl opacity-75 animate-pulse" />
 
             {/* Button */}
-            <div className="relative w-16 h-16 bg-gradient-to-br from-[#556B2F] via-[#6B8E23] to-[#D4AF37] rounded-full flex items-center justify-center shadow-2xl transform transition-all duration-300 hover:scale-110 cursor-pointer border-4 border-white/30">
-              <MessageCircle className="h-8 w-8 text-white" />
+            <div className="relative w-14 h-14 bg-gradient-to-br from-[#556B2F] via-[#6B8E23] to-[#D4AF37] rounded-full flex items-center justify-center shadow-2xl transform transition-all duration-300 hover:scale-110 cursor-pointer border-3 border-white/30">
+              <MessageCircle className="h-7 w-7 text-white" />
 
               {/* Pulse Ring */}
               {settings?.pulse_enabled && (

@@ -26,8 +26,8 @@ export function AdminCrownButton({ onAdminLogin, onFarmOwnerLogin }: AdminCrownB
         onClick={() => setShowMenu(!showMenu)}
         className="fixed bottom-6 right-6 z-50 group touch-manipulation active:scale-90 transition-all duration-300"
       style={{
-        width: '70px',
-        height: '70px',
+        width: '64px',
+        height: '64px',
         borderRadius: '50%',
       }}
       aria-label="دخول الإدارة"
@@ -49,7 +49,7 @@ export function AdminCrownButton({ onAdminLogin, onFarmOwnerLogin }: AdminCrownB
         }}
       >
         <Crown
-          className="h-9 w-9 text-white drop-shadow-lg transform transition-transform duration-300 group-hover:scale-125"
+          className="h-8 w-8 text-white drop-shadow-lg transform transition-transform duration-300 group-hover:scale-125"
           strokeWidth={2.5}
           fill="rgba(255, 255, 255, 0.3)"
         />
