@@ -509,135 +509,232 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
           </div>
         )}
 
-        {/* 🟪 زر الحجز الفاخر ثلاثي الأبعاد */}
+        {/* 🎯 زر الحجز المبتكر - تصميم جذري جديد */}
         <div className="text-center mb-6 sm:mb-8 md:mb-10 lg:mb-12 px-3 sm:px-4">
           <button
             onClick={onStartBooking}
             disabled={reservationPercentage === 100}
-            className="group relative w-full max-w-md mx-auto sm:max-w-lg md:max-w-2xl px-8 sm:px-10 md:px-14 py-6 sm:py-7 md:py-9 rounded-2xl sm:rounded-3xl font-black text-white transition-all duration-700 active:scale-[0.97] active:translate-y-2 sm:hover:scale-[1.03] sm:hover:-translate-y-2 overflow-hidden touch-manipulation disabled:cursor-not-allowed disabled:active:scale-100"
+            className="group relative w-full max-w-md mx-auto sm:max-w-lg md:max-w-2xl overflow-hidden touch-manipulation disabled:cursor-not-allowed disabled:active:scale-100 transition-all duration-700 active:scale-[0.96] sm:hover:scale-[1.02]"
             style={{
-              background: reservationPercentage === 100
-                ? 'linear-gradient(145deg, #9CA3AF 0%, #6B7280 100%)'
-                : !farm.farm_type || farm.farm_type === 'نخيل'
-                  ? 'linear-gradient(145deg, #FFD700 0%, #FFA500 35%, #FF8C00 70%, #D4AF37 100%)'
-                  : 'linear-gradient(145deg, #9ACD32 0%, #6B8E23 35%, #556B2F 70%, #8B9C5B 100%)',
-              boxShadow: reservationPercentage === 100
-                ? '0 12px 35px rgba(0, 0, 0, 0.25), inset 0 -5px 10px rgba(0, 0, 0, 0.2)'
-                : !farm.farm_type || farm.farm_type === 'نخيل'
-                  ? '0 25px 70px rgba(255, 165, 0, 0.6), 0 10px 35px rgba(255, 215, 0, 0.5), 0 0 50px rgba(255, 215, 0, 0.3), inset 0 -8px 16px rgba(184, 134, 11, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.5)'
-                  : '0 25px 70px rgba(107, 142, 35, 0.6), 0 10px 35px rgba(139, 165, 116, 0.5), 0 0 50px rgba(139, 165, 116, 0.3), inset 0 -8px 16px rgba(85, 107, 47, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.5)',
-              border: reservationPercentage === 100
-                ? '3px solid rgba(156, 163, 175, 0.5)'
-                : '3px solid rgba(255, 255, 255, 0.6)',
-              opacity: reservationPercentage === 100 ? 0.7 : 1,
-              textShadow: '0 3px 10px rgba(0, 0, 0, 0.4), 0 6px 18px rgba(0, 0, 0, 0.3)',
-              transform: 'perspective(1200px) rotateX(3deg)',
-              transformStyle: 'preserve-3d',
+              background: 'transparent',
+              border: 'none',
+              padding: 0,
             }}
           >
-            {/* طبقة التوهج المتحرك */}
+            {/* الخلفية الرئيسية المبتكرة */}
             <div
-              className="absolute inset-0 opacity-0 group-active:opacity-100 sm:group-hover:opacity-100 transition-opacity duration-700"
-              style={{
-                background: 'linear-gradient(120deg, transparent 0%, rgba(255, 255, 255, 0.5) 40%, transparent 80%)',
-                backgroundSize: '200% 200%',
-                animation: 'shimmer-sweep 3s ease-in-out infinite',
-              }}
-            />
-
-            {/* طبقة النبض الخارجي */}
-            <div
-              className="absolute -inset-1 rounded-2xl sm:rounded-3xl opacity-0 group-active:opacity-100 sm:group-hover:opacity-70 transition-all duration-700"
+              className="relative px-8 sm:px-10 md:px-14 py-8 sm:py-9 md:py-11 rounded-3xl transition-all duration-700"
               style={{
                 background: reservationPercentage === 100
-                  ? 'linear-gradient(145deg, #9CA3AF, #6B7280)'
+                  ? 'linear-gradient(135deg, #4B5563 0%, #374151 50%, #1F2937 100%)'
                   : !farm.farm_type || farm.farm_type === 'نخيل'
-                    ? 'linear-gradient(145deg, #FFD700, #FFA500)'
-                    : 'linear-gradient(145deg, #9ACD32, #6B8E23)',
-                filter: 'blur(15px)',
-                animation: 'pulse-glow 2s ease-in-out infinite',
+                    ? 'linear-gradient(135deg, #2D1B00 0%, #1A0F00 20%, #000000 40%, #1A0F00 60%, #2D1B00 80%, #4A2F00 100%)'
+                    : 'linear-gradient(135deg, #1C2E0F 0%, #0F1A08 20%, #000000 40%, #0F1A08 60%, #1C2E0F 80%, #2D4519 100%)',
+                boxShadow: reservationPercentage === 100
+                  ? '0 20px 60px rgba(0, 0, 0, 0.5), inset 0 0 40px rgba(255, 255, 255, 0.05)'
+                  : !farm.farm_type || farm.farm_type === 'نخيل'
+                    ? '0 25px 80px rgba(218, 165, 32, 0.7), 0 10px 40px rgba(255, 215, 0, 0.5), 0 0 60px rgba(255, 215, 0, 0.4), inset 0 0 60px rgba(218, 165, 32, 0.15)'
+                    : '0 25px 80px rgba(139, 195, 74, 0.7), 0 10px 40px rgba(139, 195, 74, 0.5), 0 0 60px rgba(139, 195, 74, 0.4), inset 0 0 60px rgba(139, 195, 74, 0.15)',
+                border: reservationPercentage === 100
+                  ? '2px solid rgba(156, 163, 175, 0.3)'
+                  : !farm.farm_type || farm.farm_type === 'نخيل'
+                    ? '2px solid rgba(218, 165, 32, 0.6)'
+                    : '2px solid rgba(139, 195, 74, 0.6)',
+                transform: 'perspective(1500px) rotateX(2deg)',
+                transformStyle: 'preserve-3d',
               }}
-            />
+            >
+              {/* شبكة الخلفية المضيئة */}
+              <div
+                className="absolute inset-0 opacity-30"
+                style={{
+                  background: reservationPercentage === 100
+                    ? 'none'
+                    : !farm.farm_type || farm.farm_type === 'نخيل'
+                      ? `repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(218, 165, 32, 0.1) 2px, rgba(218, 165, 32, 0.1) 4px),
+                         repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(218, 165, 32, 0.1) 2px, rgba(218, 165, 32, 0.1) 4px)`
+                      : `repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(139, 195, 74, 0.1) 2px, rgba(139, 195, 74, 0.1) 4px),
+                         repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(139, 195, 74, 0.1) 2px, rgba(139, 195, 74, 0.1) 4px)`,
+                  backgroundSize: '40px 40px',
+                }}
+              />
+              {/* موجة ضوئية متحركة */}
+              <div
+                className="absolute inset-0 opacity-0 group-active:opacity-100 sm:group-hover:opacity-100 transition-opacity duration-700"
+                style={{
+                  background: reservationPercentage === 100
+                    ? 'none'
+                    : !farm.farm_type || farm.farm_type === 'نخيل'
+                      ? 'linear-gradient(90deg, transparent 0%, rgba(218, 165, 32, 0.4) 50%, transparent 100%)'
+                      : 'linear-gradient(90deg, transparent 0%, rgba(139, 195, 74, 0.4) 50%, transparent 100%)',
+                  backgroundSize: '200% 100%',
+                  animation: 'wave-slide 2s ease-in-out infinite',
+                }}
+              />
 
-            {/* المحتوى الرئيسي */}
-            <div className="relative z-10 flex flex-col items-center justify-center gap-3 sm:gap-4 md:gap-5" style={{ transform: 'translateZ(20px)' }}>
-              {reservationPercentage === 100 ? (
-                <>
-                  <span className="text-4xl sm:text-5xl md:text-6xl drop-shadow-2xl">🔒</span>
-                  <div className="flex flex-col items-center">
-                    <span className="leading-tight text-lg sm:text-2xl md:text-3xl font-black tracking-wide">
-                      تم اكتمال الحجز بالكامل
-                    </span>
+              {/* طبقة التوهج الخارجي النابض */}
+              <div
+                className="absolute -inset-2 rounded-3xl opacity-0 group-active:opacity-100 sm:group-hover:opacity-100 transition-all duration-700"
+                style={{
+                  background: reservationPercentage === 100
+                    ? 'radial-gradient(circle, rgba(156, 163, 175, 0.3) 0%, transparent 70%)'
+                    : !farm.farm_type || farm.farm_type === 'نخيل'
+                      ? 'radial-gradient(circle, rgba(218, 165, 32, 0.6) 0%, transparent 70%)'
+                      : 'radial-gradient(circle, rgba(139, 195, 74, 0.6) 0%, transparent 70%)',
+                  filter: 'blur(25px)',
+                  animation: 'outer-pulse 2.5s ease-in-out infinite',
+                }}
+              />
+
+              {/* المحتوى */}
+              <div className="relative z-10" style={{ transform: 'translateZ(30px)' }}>
+                {reservationPercentage === 100 ? (
+                  <div className="flex flex-col items-center gap-4">
+                    <div className="text-5xl sm:text-6xl md:text-7xl opacity-70">🔒</div>
+                    <div className="text-xl sm:text-2xl md:text-3xl font-black text-gray-300">
+                      اكتملت المقاعد
+                    </div>
                   </div>
-                </>
-              ) : (
-                <>
-                  {/* الأيقونة ثلاثية الأبعاد */}
-                  <div
-                    className="relative"
-                    style={{
-                      transform: 'translateZ(30px)',
-                      animation: 'float-bounce 3s ease-in-out infinite'
-                    }}
-                  >
-                    <span className="text-5xl sm:text-6xl md:text-7xl drop-shadow-2xl block">
-                      {getTreeEmoji(farm.farm_type)}
-                    </span>
-                    {/* هالة متوهجة حول الأيقونة */}
+                ) : (
+                  <div className="flex flex-col items-center gap-4 sm:gap-5">
+                    {/* الأيقونة الرئيسية */}
+                    <div className="relative">
+                      <div
+                        className="text-6xl sm:text-7xl md:text-8xl"
+                        style={{
+                          filter: 'drop-shadow(0 0 30px currentColor)',
+                          color: !farm.farm_type || farm.farm_type === 'نخيل'
+                            ? '#DAA520'
+                            : '#8BC34A',
+                          animation: 'icon-glow 3s ease-in-out infinite',
+                        }}
+                      >
+                        {getTreeEmoji(farm.farm_type)}
+                      </div>
+
+                      {/* حلقات متوهجة دوارة */}
+                      <div
+                        className="absolute inset-0 rounded-full"
+                        style={{
+                          border: !farm.farm_type || farm.farm_type === 'نخيل'
+                            ? '3px solid rgba(218, 165, 32, 0.4)'
+                            : '3px solid rgba(139, 195, 74, 0.4)',
+                          animation: 'rotate-ring 4s linear infinite',
+                          transform: 'scale(1.3)',
+                        }}
+                      />
+                      <div
+                        className="absolute inset-0 rounded-full"
+                        style={{
+                          border: !farm.farm_type || farm.farm_type === 'نخيل'
+                            ? '2px solid rgba(218, 165, 32, 0.3)'
+                            : '2px solid rgba(139, 195, 74, 0.3)',
+                          animation: 'rotate-ring-reverse 3s linear infinite',
+                          transform: 'scale(1.5)',
+                        }}
+                      />
+                    </div>
+
+                    {/* خط فاصل مضيء */}
                     <div
-                      className="absolute inset-0 rounded-full opacity-60"
+                      className="w-20 sm:w-24 md:w-32 h-0.5 rounded-full"
                       style={{
-                        background: 'radial-gradient(circle, rgba(255, 255, 255, 0.6) 0%, transparent 70%)',
-                        filter: 'blur(20px)',
+                        background: !farm.farm_type || farm.farm_type === 'نخيل'
+                          ? 'linear-gradient(90deg, transparent, #DAA520, transparent)'
+                          : 'linear-gradient(90deg, transparent, #8BC34A, transparent)',
+                        boxShadow: !farm.farm_type || farm.farm_type === 'نخيل'
+                          ? '0 0 20px rgba(218, 165, 32, 0.8)'
+                          : '0 0 20px rgba(139, 195, 74, 0.8)',
                         animation: 'pulse 2s infinite',
                       }}
                     />
-                  </div>
 
-                  {/* النصوص */}
-                  <div className="flex flex-col items-center text-center space-y-2 sm:space-y-3">
-                    <span
-                      className="text-sm sm:text-base md:text-lg font-bold tracking-[0.2em] uppercase"
-                      style={{
-                        textShadow: '0 2px 6px rgba(0, 0, 0, 0.3), 0 0 20px rgba(255, 255, 255, 0.4)',
-                        transform: 'translateZ(15px)',
-                      }}
-                    >
-                      ✨ ابدأ رحلتك الآن
-                    </span>
-                    <span
-                      className="leading-none text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black"
-                      style={{
-                        fontFamily: 'system-ui, -apple-system, sans-serif',
-                        letterSpacing: '-0.02em',
-                        textShadow: '0 4px 8px rgba(0, 0, 0, 0.4), 0 8px 16px rgba(0, 0, 0, 0.3), 0 0 30px rgba(255, 255, 255, 0.3)',
-                        transform: 'translateZ(25px)',
-                      }}
-                    >
-                      امتلك {getTreeName(farm.farm_type)}
-                    </span>
-                    <span
-                      className="text-xs sm:text-sm md:text-base font-semibold opacity-95 tracking-wide"
-                      style={{
-                        textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)',
-                        transform: 'translateZ(10px)',
-                      }}
-                    >
-                      واحصد الخير مدى الحياة 🌿
-                    </span>
+                    {/* النصوص المبتكرة */}
+                    <div className="flex flex-col items-center gap-2 sm:gap-3">
+                      {/* النص العلوي */}
+                      <div
+                        className="text-sm sm:text-base md:text-lg font-bold tracking-[0.3em] uppercase"
+                        style={{
+                          color: !farm.farm_type || farm.farm_type === 'نخيل'
+                            ? '#DAA520'
+                            : '#8BC34A',
+                          textShadow: !farm.farm_type || farm.farm_type === 'نخيل'
+                            ? '0 0 20px rgba(218, 165, 32, 0.8), 0 0 40px rgba(218, 165, 32, 0.5)'
+                            : '0 0 20px rgba(139, 195, 74, 0.8), 0 0 40px rgba(139, 195, 74, 0.5)',
+                        }}
+                      >
+                        ✦ ابدأ الآن ✦
+                      </div>
+
+                      {/* النص الرئيسي الضخم */}
+                      <div
+                        className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black leading-none"
+                        style={{
+                          background: !farm.farm_type || farm.farm_type === 'نخيل'
+                            ? 'linear-gradient(135deg, #FFD700 0%, #DAA520 50%, #B8860B 100%)'
+                            : 'linear-gradient(135deg, #A4D65E 0%, #8BC34A 50%, #689F38 100%)',
+                          WebkitBackgroundClip: 'text',
+                          WebkitTextFillColor: 'transparent',
+                          backgroundClip: 'text',
+                          filter: 'drop-shadow(0 4px 12px rgba(0, 0, 0, 0.5))',
+                          textShadow: 'none',
+                        }}
+                      >
+                        امتلك {getTreeName(farm.farm_type)}
+                      </div>
+
+                      {/* النص السفلي */}
+                      <div
+                        className="flex items-center gap-2 text-xs sm:text-sm md:text-base font-semibold"
+                        style={{
+                          color: !farm.farm_type || farm.farm_type === 'نخيل'
+                            ? '#DAA520'
+                            : '#8BC34A',
+                          opacity: 0.9,
+                        }}
+                      >
+                        <span
+                          className="inline-block w-8 sm:w-12 h-px"
+                          style={{
+                            background: !farm.farm_type || farm.farm_type === 'نخيل'
+                              ? '#DAA520'
+                              : '#8BC34A',
+                          }}
+                        />
+                        <span>استثمر في الطبيعة</span>
+                        <span
+                          className="inline-block w-8 sm:w-12 h-px"
+                          style={{
+                            background: !farm.farm_type || farm.farm_type === 'نخيل'
+                              ? '#DAA520'
+                              : '#8BC34A',
+                          }}
+                        />
+                      </div>
+                    </div>
+
+                    {/* نجوم متلألئة */}
+                    <div className="flex gap-1 sm:gap-2">
+                      {[...Array(5)].map((_, i) => (
+                        <span
+                          key={i}
+                          className="text-lg sm:text-xl md:text-2xl"
+                          style={{
+                            color: !farm.farm_type || farm.farm_type === 'نخيل'
+                              ? '#DAA520'
+                              : '#8BC34A',
+                            animation: `twinkle ${1.5 + i * 0.2}s ease-in-out infinite`,
+                            animationDelay: `${i * 0.2}s`,
+                          }}
+                        >
+                          ✦
+                        </span>
+                      ))}
+                    </div>
                   </div>
-                </>
-              )}
+                )}
+              </div>
             </div>
-
-            {/* تأثير الضوء المتحرك */}
-            <div
-              className="absolute inset-0 rounded-2xl sm:rounded-3xl opacity-0 group-active:opacity-100 sm:group-hover:opacity-100 transition-all duration-500 pointer-events-none"
-              style={{
-                background: 'radial-gradient(circle at center, rgba(255, 255, 255, 0.4) 0%, transparent 60%)',
-                animation: 'pulse-light 2.5s infinite',
-              }}
-            />
           </button>
 
           {reservationPercentage < 100 && (
