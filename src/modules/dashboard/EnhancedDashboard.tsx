@@ -53,6 +53,16 @@ export function EnhancedDashboard({ onModuleSelect, onLogout, onGoToPublic, onSh
     };
   }, []);
 
+  // الاستماع لتغيرات وضع ملء الشاشة
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+  }, []);
+
   const loadStats = async () => {
     try {
       setLoading(true);
@@ -62,6 +72,17 @@ export function EnhancedDashboard({ onModuleSelect, onLogout, onGoToPublic, onSh
       console.error(err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  // التحكم في وضع ملء الشاشة
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen();
+      setIsFullscreen(true);
+    } else {
+      document.exitFullscreen();
+      setIsFullscreen(false);
     }
   };
 
@@ -168,27 +189,6 @@ export function EnhancedDashboard({ onModuleSelect, onLogout, onGoToPublic, onSh
       </div>
     );
   }
-
-  // التحكم في وضع ملء الشاشة
-  const toggleFullscreen = () => {
-    if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen();
-      setIsFullscreen(true);
-    } else {
-      document.exitFullscreen();
-      setIsFullscreen(false);
-    }
-  };
-
-  // الاستماع لتغيرات وضع ملء الشاشة
-  useEffect(() => {
-    const handleFullscreenChange = () => {
-      setIsFullscreen(!!document.fullscreenElement);
-    };
-
-    document.addEventListener('fullscreenchange', handleFullscreenChange);
-    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
-  }, []);
 
   return (
     <div className="min-h-screen bg-[#F9F8F6]" dir="rtl">
