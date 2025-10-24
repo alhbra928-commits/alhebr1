@@ -3,6 +3,7 @@ import { farmOwnerService, FarmOwnerProfile, FarmStatus, FarmOwnerNotification }
 import { Bell, LogOut, FileText, DollarSign, Home, HelpCircle, Phone } from 'lucide-react';
 import { FarmOwnerWelcome } from './FarmOwnerWelcome';
 import { AdvancedFinanceTab } from './AdvancedFinanceTab';
+import { ModernHomeTab } from './ModernHomeTab';
 
 interface FarmOwnerDashboardProps {
   profileId: string;
@@ -27,7 +28,16 @@ export const FarmOwnerDashboard: React.FC<FarmOwnerDashboardProps> = ({ profileI
       setUnreadCount(prev => prev + 1);
     });
 
-    return () => unsubscribe();
+    // الاستماع لأحداث تبديل التبويبات
+    const handleSwitchTab = (event: any) => {
+      setActiveTab(event.detail);
+    };
+    window.addEventListener('switchTab', handleSwitchTab);
+
+    return () => {
+      unsubscribe();
+      window.removeEventListener('switchTab', handleSwitchTab);
+    };
   }, [profileId]);
 
   const loadData = async () => {
@@ -94,49 +104,66 @@ export const FarmOwnerDashboard: React.FC<FarmOwnerDashboardProps> = ({ profileI
 
   return (
     <div className="min-h-screen" style={{
-      background: 'linear-gradient(135deg, #F5F5F5 0%, #E8E8E8 100%)'
+      background: 'linear-gradient(to bottom, #F9FAFB 0%, #F3F4F6 50%, #E5E7EB 100%)'
     }}>
-      {/* الهيدر */}
-      <header className="sticky top-0 z-50 backdrop-blur-md" style={{
-        background: 'linear-gradient(135deg, rgba(28, 46, 15, 0.95) 0%, rgba(15, 26, 8, 0.95) 100%)',
-        borderBottom: '2px solid rgba(139, 195, 74, 0.3)',
-        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)'
+      {/* الهيدر العصري */}
+      <header className="sticky top-0 z-50 backdrop-blur-xl" style={{
+        background: 'rgba(255, 255, 255, 0.9)',
+        borderBottom: '1px solid rgba(139, 195, 74, 0.2)',
+        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05), 0 10px 30px rgba(139, 195, 74, 0.1)'
       }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            {/* الشعار */}
-            <div className="flex items-center gap-3">
-              <div className="text-3xl" style={{ filter: 'drop-shadow(0 0 10px #8BC34A)' }}>
-                🌳
+          <div className="flex items-center justify-between h-20">
+            {/* الشعار العصري */}
+            <div className="flex items-center gap-4">
+              <div
+                className="w-14 h-14 rounded-2xl flex items-center justify-center relative overflow-hidden group"
+                style={{
+                  background: 'linear-gradient(135deg, #8BC34A 0%, #689F38 100%)',
+                  boxShadow: '0 4px 12px rgba(139, 195, 74, 0.3)'
+                }}
+              >
+                <span className="text-3xl group-hover:scale-110 transition-transform">🌳</span>
+                <div
+                  className="absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity"
+                  style={{ background: 'radial-gradient(circle, white 0%, transparent 70%)' }}
+                />
               </div>
               <div>
-                <h1 className="text-lg font-black" style={{ color: '#8BC34A' }}>
+                <h1 className="text-2xl font-black bg-gradient-to-r from-green-600 to-green-800 bg-clip-text text-transparent">
                   بوابة البائع
                 </h1>
-                <p className="text-xs opacity-70" style={{ color: '#A4D65E' }}>
+                <p className="text-sm text-gray-600 font-semibold">
                   {profile?.full_name || profile?.mobile_number}
                 </p>
               </div>
             </div>
 
-            {/* الإجراءات */}
-            <div className="flex items-center gap-3">
+            {/* الإجراءات العصرية */}
+            <div className="flex items-center gap-2">
               {/* جرس الإشعارات */}
               <button
                 onClick={() => setActiveTab('notifications')}
-                className="relative p-2 rounded-xl transition-all duration-300 hover:scale-110"
+                className="relative p-3 rounded-2xl transition-all duration-300 hover:scale-105 hover:shadow-lg group"
                 style={{
-                  background: activeTab === 'notifications' ? 'rgba(139, 195, 74, 0.2)' : 'transparent',
-                  border: '2px solid rgba(139, 195, 74, 0.3)'
+                  background: activeTab === 'notifications'
+                    ? 'linear-gradient(135deg, #8BC34A 0%, #689F38 100%)'
+                    : 'white',
+                  border: '2px solid',
+                  borderColor: activeTab === 'notifications' ? 'transparent' : '#E5E7EB'
                 }}
               >
-                <Bell size={20} style={{ color: '#8BC34A' }} />
+                <Bell
+                  size={20}
+                  style={{ color: activeTab === 'notifications' ? 'white' : '#6B7280' }}
+                  className="group-hover:scale-110 transition-transform"
+                />
                 {unreadCount > 0 && (
                   <span
-                    className="absolute -top-1 -right-1 w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold text-white"
+                    className="absolute -top-1 -right-1 min-w-[20px] h-5 px-1 rounded-full flex items-center justify-center text-xs font-bold text-white animate-pulse"
                     style={{
                       background: 'linear-gradient(135deg, #EF4444, #DC2626)',
-                      boxShadow: '0 2px 8px rgba(239, 68, 68, 0.5)'
+                      boxShadow: '0 2px 8px rgba(239, 68, 68, 0.4)'
                     }}
                   >
                     {unreadCount}
@@ -147,43 +174,35 @@ export const FarmOwnerDashboard: React.FC<FarmOwnerDashboardProps> = ({ profileI
               {/* زر العودة للمنصة */}
               <button
                 onClick={() => window.location.href = '/'}
-                className="p-2 rounded-xl transition-all duration-300 hover:scale-110 group"
-                style={{
-                  background: 'rgba(139, 195, 74, 0.1)',
-                  border: '2px solid rgba(139, 195, 74, 0.3)'
-                }}
+                className="p-3 rounded-2xl transition-all duration-300 hover:scale-105 hover:shadow-lg bg-white border-2 border-gray-200 group"
                 title="العودة للمنصة الرئيسية"
               >
-                <Home size={20} style={{ color: '#8BC34A' }} className="group-hover:scale-110 transition-transform" />
+                <Home size={20} className="text-gray-600 group-hover:text-green-600 group-hover:scale-110 transition-all" />
               </button>
 
               {/* زر الخروج */}
               <button
                 onClick={handleLogout}
-                className="p-2 rounded-xl transition-all duration-300 hover:scale-110"
-                style={{
-                  background: 'rgba(239, 68, 68, 0.1)',
-                  border: '2px solid rgba(239, 68, 68, 0.3)'
-                }}
+                className="p-3 rounded-2xl transition-all duration-300 hover:scale-105 hover:shadow-lg bg-white border-2 border-gray-200 group"
                 title="تسجيل الخروج"
               >
-                <LogOut size={20} style={{ color: '#EF4444' }} />
+                <LogOut size={20} className="text-gray-600 group-hover:text-red-600 group-hover:scale-110 transition-all" />
               </button>
             </div>
           </div>
         </div>
       </header>
 
-      {/* التبويبات */}
+      {/* التبويبات العصرية */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
-        <div className="flex gap-2 overflow-x-auto pb-2">
+        <div className="bg-white rounded-2xl p-2 shadow-sm border border-gray-200 flex gap-1 overflow-x-auto">
           {[
-            { id: 'home', label: 'الصفحة الرئيسية', icon: Home },
-            { id: 'form', label: 'بياناتي الزراعية', icon: FileText },
-            { id: 'finance', label: 'الحالة المالية', icon: DollarSign },
+            { id: 'home', label: 'الرئيسية', icon: Home },
+            { id: 'form', label: 'بياناتي', icon: FileText },
+            { id: 'finance', label: 'المالية', icon: DollarSign },
             { id: 'notifications', label: 'الإشعارات', icon: Bell, badge: unreadCount },
-            { id: 'support', label: 'تواصل معنا', icon: Phone },
-            { id: 'faq', label: 'الأسئلة الشائعة', icon: HelpCircle }
+            { id: 'support', label: 'تواصل', icon: Phone },
+            { id: 'faq', label: 'الأسئلة', icon: HelpCircle }
           ].map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
@@ -192,29 +211,33 @@ export const FarmOwnerDashboard: React.FC<FarmOwnerDashboardProps> = ({ profileI
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as any)}
-                className="relative flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm whitespace-nowrap transition-all duration-300"
+                className="relative flex items-center gap-2 px-5 py-3 rounded-xl font-bold text-sm whitespace-nowrap transition-all duration-300 group"
                 style={{
                   background: isActive
                     ? 'linear-gradient(135deg, #8BC34A 0%, #689F38 100%)'
-                    : 'white',
-                  color: isActive ? 'white' : '#4B5563',
-                  border: isActive ? 'none' : '2px solid #E5E7EB',
-                  boxShadow: isActive ? '0 4px 12px rgba(139, 195, 74, 0.4)' : 'none',
-                  transform: isActive ? 'translateY(-2px)' : 'none'
+                    : 'transparent',
+                  color: isActive ? 'white' : '#6B7280',
+                  boxShadow: isActive ? '0 2px 8px rgba(139, 195, 74, 0.3)' : 'none'
                 }}
               >
-                <Icon size={18} />
+                <Icon size={18} className={isActive ? '' : 'group-hover:scale-110 transition-transform'} />
                 {tab.label}
                 {tab.badge && tab.badge > 0 && (
                   <span
-                    className="w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold"
+                    className="min-w-[20px] h-5 px-1.5 rounded-full flex items-center justify-center text-xs font-bold animate-pulse"
                     style={{
-                      background: isActive ? 'rgba(255, 255, 255, 0.3)' : '#EF4444',
+                      background: isActive ? 'rgba(255, 255, 255, 0.25)' : 'linear-gradient(135deg, #EF4444, #DC2626)',
                       color: 'white'
                     }}
                   >
                     {tab.badge}
                   </span>
+                )}
+                {isActive && (
+                  <div
+                    className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1/2 h-1 rounded-t-full"
+                    style={{ background: 'rgba(255, 255, 255, 0.5)' }}
+                  />
                 )}
               </button>
             );
@@ -225,7 +248,7 @@ export const FarmOwnerDashboard: React.FC<FarmOwnerDashboardProps> = ({ profileI
       {/* المحتوى */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {activeTab === 'home' && (
-          <HomeTab profile={profile} farmStatus={farmStatus} />
+          <ModernHomeTab profile={profile} farmStatus={farmStatus} />
         )}
         {activeTab === 'form' && (
           <FormTab profile={profile} profileId={profileId} onUpdate={loadData} />
@@ -250,153 +273,6 @@ export const FarmOwnerDashboard: React.FC<FarmOwnerDashboardProps> = ({ profileI
           <FAQTab />
         )}
       </div>
-    </div>
-  );
-};
-
-// تبويب الصفحة الرئيسية
-const HomeTab: React.FC<{ profile: FarmOwnerProfile | null; farmStatus: FarmStatus | null }> = ({ profile, farmStatus }) => {
-  const getStatusInfo = () => {
-    if (!profile) return { emoji: '⏳', title: 'جاري التحميل...', message: '', color: '#9CA3AF' };
-
-    switch (profile.status) {
-      case 'pending':
-        return {
-          emoji: '🟡',
-          title: 'بانتظار المراجعة',
-          message: 'تم رفع المزرعة بنجاح، بانتظار مراجعة الإدارة.',
-          color: '#F59E0B'
-        };
-      case 'approved':
-        return {
-          emoji: '🟢',
-          title: 'تم الاعتماد',
-          message: 'تم اعتماد المزرعة وجاهزة للعرض على المستثمرين.',
-          color: '#10B981'
-        };
-      case 'rejected':
-        return {
-          emoji: '🔴',
-          title: 'تم الرفض',
-          message: profile.rejection_reason || 'تم رفض طلب المزرعة. يرجى مراجعة البيانات.',
-          color: '#EF4444'
-        };
-      default:
-        return {
-          emoji: '🌿',
-          title: 'نشط',
-          message: 'مزرعتك معروضة الآن للمستثمرين – تابع التقدم من التبويب المالي.',
-          color: '#8BC34A'
-        };
-    }
-  };
-
-  const statusInfo = getStatusInfo();
-  const progress = farmStatus?.progress_percentage || 0;
-
-  return (
-    <div className="space-y-6">
-      {/* الشاشة الأولى: حالة المزرعة */}
-      <div
-        className="rounded-3xl p-8 relative overflow-hidden"
-        style={{
-          background: 'linear-gradient(135deg, white 0%, #F9FAFB 100%)',
-          border: `3px solid ${statusInfo.color}33`,
-          boxShadow: `0 8px 32px ${statusInfo.color}22`
-        }}
-      >
-        <div className="relative z-10">
-          <div className="text-6xl mb-4 text-center">{statusInfo.emoji}</div>
-          <h3 className="text-2xl font-black text-center mb-2" style={{ color: statusInfo.color }}>
-            {statusInfo.title}
-          </h3>
-          <p className="text-center text-gray-600 text-lg">
-            {statusInfo.message}
-          </p>
-        </div>
-      </div>
-
-      {/* الشاشة الثانية: نسبة التقدم */}
-      {farmStatus?.is_published && (
-        <div
-          className="rounded-3xl p-8 relative overflow-hidden"
-          style={{
-            background: 'linear-gradient(135deg, white 0%, #FFFBEB 100%)',
-            border: '3px solid rgba(245, 158, 11, 0.3)',
-            boxShadow: '0 8px 32px rgba(245, 158, 11, 0.2)'
-          }}
-        >
-          <h3 className="text-xl font-black text-center mb-4" style={{ color: '#F59E0B' }}>
-            📊 نسبة تقدم الاستثمار
-          </h3>
-
-          {/* شريط التقدم */}
-          <div className="relative w-full h-8 rounded-full overflow-hidden mb-4" style={{
-            background: 'rgba(245, 158, 11, 0.1)'
-          }}>
-            <div
-              className="h-full transition-all duration-1000 ease-out"
-              style={{
-                width: `${progress}%`,
-                background: 'linear-gradient(90deg, #F59E0B 0%, #D97706 100%)',
-                boxShadow: '0 0 20px rgba(245, 158, 11, 0.5)'
-              }}
-            />
-            <div
-              className="absolute inset-0 flex items-center justify-center text-sm font-black"
-              style={{ color: progress > 50 ? 'white' : '#F59E0B' }}
-            >
-              {progress.toFixed(1)}%
-            </div>
-          </div>
-
-          <div className="text-center space-y-2">
-            <p className="text-gray-600">
-              محجوز: {farmStatus.reserved_trees} من أصل {farmStatus.total_trees} شجرة
-            </p>
-            {progress >= 60 && progress < 100 && (
-              <p className="text-lg font-bold animate-pulse" style={{ color: '#F59E0B' }}>
-                ✨ اقترب اكتمال بيع مزرعتك – بإذن الله قريباً!
-              </p>
-            )}
-            {progress === 100 && (
-              <p className="text-lg font-bold" style={{ color: '#10B981' }}>
-                🌟 تم بيع جميع الأشجار – انتظر تحويل المبلغ الكامل
-              </p>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* الشاشة الثالثة: إتمام البيع */}
-      {farmStatus?.sales_status === 'completed' && (
-        <div
-          className="rounded-3xl p-8 relative overflow-hidden"
-          style={{
-            background: 'linear-gradient(135deg, white 0%, #ECFDF5 100%)',
-            border: '3px solid rgba(16, 185, 129, 0.3)',
-            boxShadow: '0 8px 32px rgba(16, 185, 129, 0.2)'
-          }}
-        >
-          <div className="text-6xl mb-4 text-center">🏆</div>
-          <h3 className="text-2xl font-black text-center mb-2" style={{ color: '#10B981' }}>
-            مبروك! تم بيع المزرعة بنجاح
-          </h3>
-          <p className="text-center text-gray-600 text-lg mb-4">
-            سيتم التواصل معك للتسوية النهائية
-          </p>
-          <div
-            className="text-center text-sm font-bold py-2 px-4 rounded-full inline-block"
-            style={{
-              background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
-              color: 'white',
-              boxShadow: '0 4px 12px rgba(16, 185, 129, 0.3)'
-            }}
-          >
-            ✓ معتمد من منصة الحبر للتسويق الزراعي
-          </div>
-        </div>
-      )}
     </div>
   );
 };
