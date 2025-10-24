@@ -10,7 +10,7 @@ import { UltraModernTemplatesManager } from './UltraModernTemplatesManager';
 import { ModernMessagesLog } from './ModernMessagesLog';
 import { ModernBroadcastManager } from './ModernBroadcastManager';
 import { ModernWhatsAppSettings } from './ModernWhatsAppSettings';
-import { AnalyticsReports } from './AnalyticsReports';
+import { AdvancedAnalyticsReports } from './AdvancedAnalyticsReports';
 
 export function ModernWhatsAppDashboard() {
   const [activeView, setActiveView] = useState('dashboard');
@@ -75,7 +75,7 @@ export function ModernWhatsAppDashboard() {
           {activeView === 'messages' && <ModernMessagesLog />}
           {activeView === 'broadcast' && <ModernBroadcastManager />}
           {activeView === 'settings' && <ModernWhatsAppSettings />}
-          {activeView === 'analytics' && <AnalyticsReports />}
+          {activeView === 'analytics' && <AdvancedAnalyticsReports />}
         </div>
       </div>
     );
