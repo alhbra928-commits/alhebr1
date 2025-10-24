@@ -49,6 +49,12 @@ export function OwnersView({ onBack }: OwnersViewProps) {
   const [selectedOwnerDetails, setSelectedOwnerDetails] = useState<any>(null);
   const [ownerFarms, setOwnerFarms] = useState<any[]>([]);
 
+  // Rejection modal state
+  const [showRejectModal, setShowRejectModal] = useState(false);
+  const [submissionToReject, setSubmissionToReject] = useState<any>(null);
+  const [selectedRejectionReason, setSelectedRejectionReason] = useState('');
+  const [customRejectionReason, setCustomRejectionReason] = useState('');
+
   useEffect(() => {
     loadData();
   }, []);
@@ -351,17 +357,11 @@ export function OwnersView({ onBack }: OwnersViewProps) {
                       موافقة
                     </button>
                     <button
-                      onClick={async () => {
-                        const reason = prompt('سبب الرفض:');
-                        if (reason) {
-                          try {
-                            await OwnersService.rejectSubmission(sub.id, reason);
-                            alert('تم الرفض');
-                            loadData();
-                          } catch (e) {
-                            alert('خطأ');
-                          }
-                        }
+                      onClick={() => {
+                        setSubmissionToReject(sub);
+                        setShowRejectModal(true);
+                        setSelectedRejectionReason('');
+                        setCustomRejectionReason('');
                       }}
                       className="px-4 py-2 bg-red-600 text-white rounded-lg font-bold"
                     >
@@ -423,6 +423,159 @@ export function OwnersView({ onBack }: OwnersViewProps) {
                 </div>
               </Card3D>
             ))}
+          </div>
+        )}
+
+        {/* Rejection Reason Modal */}
+        {showRejectModal && submissionToReject && (
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div
+              className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Header */}
+              <div className="bg-gradient-to-br from-red-500 to-red-600 p-6 rounded-t-3xl">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur">
+                      <XCircle className="h-6 w-6 text-white" />
+                    </div>
+                    <div>
+                      <h2 className="text-2xl font-black text-white">رفض الطلب</h2>
+                      <p className="text-red-100 text-sm">اختر سبب الرفض من القائمة أو أدخل سبباً مخصصاً</p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => {
+                      setShowRejectModal(false);
+                      setSubmissionToReject(null);
+                    }}
+                    className="w-10 h-10 rounded-xl bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
+                  >
+                    <X className="h-5 w-5 text-white" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Content */}
+              <div className="p-6 space-y-6">
+                {/* Submission Info */}
+                <div className="bg-red-50 rounded-2xl p-4 border-2 border-red-200">
+                  <h3 className="font-bold text-lg text-[#2C2C2C] mb-2">
+                    {submissionToReject.submitted_data?.full_name}
+                  </h3>
+                  <p className="text-sm text-[#2C2C2C]/70">
+                    {submissionToReject.farm_owner_profiles?.mobile_number}
+                  </p>
+                </div>
+
+                {/* Predefined Reasons */}
+                <div>
+                  <label className="block text-sm font-bold text-[#2C2C2C] mb-3">
+                    اختر سبب الرفض:
+                  </label>
+                  <div className="space-y-2">
+                    {[
+                      'معلومات غير كاملة أو ناقصة',
+                      'بيانات غير صحيحة أو مزورة',
+                      'عدم توافق المزرعة مع الشروط المطلوبة',
+                      'المستندات المرفقة غير واضحة',
+                      'تكرار الطلب',
+                      'موقع المزرعة غير مناسب',
+                      'عدد الأشجار غير مطابق للواقع',
+                      'السعر المطلوب غير معقول',
+                      'سبب آخر (أدخل تفاصيل أدناه)'
+                    ].map((reason, idx) => (
+                      <label
+                        key={idx}
+                        className={`flex items-start gap-3 p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                          selectedRejectionReason === reason
+                            ? 'bg-red-50 border-red-500 shadow-lg'
+                            : 'bg-gray-50 border-gray-200 hover:border-red-300 hover:bg-red-50/50'
+                        }`}
+                      >
+                        <input
+                          type="radio"
+                          name="rejectionReason"
+                          value={reason}
+                          checked={selectedRejectionReason === reason}
+                          onChange={(e) => setSelectedRejectionReason(e.target.value)}
+                          className="mt-1 w-5 h-5 text-red-600"
+                        />
+                        <span className="flex-1 font-medium text-[#2C2C2C]">{reason}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Custom Reason Input */}
+                {selectedRejectionReason === 'سبب آخر (أدخل تفاصيل أدناه)' && (
+                  <div>
+                    <label className="block text-sm font-bold text-[#2C2C2C] mb-2">
+                      تفاصيل سبب الرفض:
+                    </label>
+                    <textarea
+                      value={customRejectionReason}
+                      onChange={(e) => setCustomRejectionReason(e.target.value)}
+                      placeholder="اكتب سبب الرفض بالتفصيل..."
+                      rows={4}
+                      className="w-full px-4 py-3 rounded-xl border-2 border-gray-300 focus:border-red-500 focus:outline-none resize-none"
+                    />
+                  </div>
+                )}
+
+                {/* Actions */}
+                <div className="flex gap-3 pt-4 border-t-2">
+                  <button
+                    onClick={() => {
+                      setShowRejectModal(false);
+                      setSubmissionToReject(null);
+                    }}
+                    className="flex-1 px-6 py-3 bg-gray-200 text-[#2C2C2C] rounded-xl font-bold hover:bg-gray-300 transition-colors"
+                  >
+                    إلغاء
+                  </button>
+                  <button
+                    onClick={async () => {
+                      let finalReason = selectedRejectionReason;
+
+                      if (!finalReason) {
+                        alert('⚠️ الرجاء اختيار سبب الرفض');
+                        return;
+                      }
+
+                      if (finalReason === 'سبب آخر (أدخل تفاصيل أدناه)') {
+                        if (!customRejectionReason.trim()) {
+                          alert('⚠️ الرجاء إدخال تفاصيل سبب الرفض');
+                          return;
+                        }
+                        finalReason = customRejectionReason.trim();
+                      }
+
+                      try {
+                        await OwnersService.rejectSubmission(submissionToReject.id, finalReason);
+                        alert('✅ تم رفض الطلب بنجاح');
+                        setShowRejectModal(false);
+                        setSubmissionToReject(null);
+                        loadData();
+                      } catch (e) {
+                        console.error(e);
+                        alert('❌ حدث خطأ أثناء رفض الطلب');
+                      }
+                    }}
+                    disabled={!selectedRejectionReason}
+                    className={`flex-1 px-6 py-3 rounded-xl font-bold transition-all flex items-center justify-center gap-2 ${
+                      selectedRejectionReason
+                        ? 'bg-gradient-to-br from-red-500 to-red-600 text-white hover:shadow-xl transform hover:-translate-y-0.5'
+                        : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                    }`}
+                  >
+                    <XCircle className="h-5 w-5" />
+                    تأكيد الرفض
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         )}
 

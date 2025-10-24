@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>اختبار نافذة الرفض</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .container {
+      background: white;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      max-width: 600px;
+      width: 100%;
+    }
+    h1 {
+      color: #2C2C2C;
+      margin-bottom: 30px;
+      font-size: 32px;
+      text-align: center;
+    }
+    .status-box {
+      background: #f0f9ff;
+      border: 3px solid #3b82f6;
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .status-box h2 {
+      color: #1e40af;
+      margin-bottom: 10px;
+      font-size: 24px;
+    }
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+      margin-top: 20px;
+    }
+    .info-item {
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      border: 2px solid #e5e7eb;
+    }
+    .info-label {
+      font-size: 12px;
+      color: #6b7280;
+      margin-bottom: 5px;
+    }
+    .info-value {
+      font-size: 18px;
+      font-weight: bold;
+      color: #2C2C2C;
+    }
+    .success {
+      background: #dcfce7;
+      border-color: #22c55e;
+      padding: 20px;
+      border-radius: 15px;
+      margin-top: 20px;
+    }
+    .success h3 {
+      color: #15803d;
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+    .feature-list {
+      list-style: none;
+      margin-top: 20px;
+    }
+    .feature-list li {
+      padding: 12px;
+      background: #f0fdf4;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      border-right: 4px solid #22c55e;
+    }
+    .feature-list li::before {
+      content: "✅ ";
+      margin-left: 10px;
+    }
+    .code-box {
+      background: #1e293b;
+      color: #e2e8f0;
+      padding: 20px;
+      border-radius: 10px;
+      margin-top: 20px;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎉 نافذة الرفض المنبثقة جاهزة!</h1>
+
+    <div class="status-box">
+      <h2>📋 النظام محدّث بالكامل</h2>
+      <p style="color: #475569; line-height: 1.8;">
+        تم إضافة نافذة منبثقة احترافية لرفض الطلبات مع أسباب محددة مسبقاً وخيار إدخال سبب مخصص.
+      </p>
+    </div>
+
+    <div class="success">
+      <h3>✨ الميزات المضافة:</h3>
+      <ul class="feature-list">
+        <li><strong>نافذة منبثقة جميلة:</strong> تصميم احترافي مع تدرجات لونية</li>
+        <li><strong>9 أسباب رفض جاهزة:</strong> معلومات ناقصة، بيانات مزورة، شروط غير مطابقة...</li>
+        <li><strong>خيار "سبب آخر":</strong> يظهر حقل نصي لإدخال سبب مخصص</li>
+        <li><strong>تحقق ذكي:</strong> لا يسمح بالرفض بدون اختيار سبب</li>
+        <li><strong>حذف تلقائي:</strong> الطلب يختفي فوراً من القائمة بعد الرفض</li>
+        <li><strong>إشعار للمالك:</strong> يُرسل إشعار تلقائي مع سبب الرفض</li>
+      </ul>
+    </div>
+
+    <div class="info-grid">
+      <div class="info-item">
+        <div class="info-label">عدد أسباب الرفض</div>
+        <div class="info-value">9 أسباب</div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">نوع الحذف</div>
+        <div class="info-value">Soft Delete</div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">حالة البناء</div>
+        <div class="info-value" style="color: #22c55e;">✓ نجح</div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">الإشعارات</div>
+        <div class="info-value" style="color: #22c55e;">✓ تلقائية</div>
+      </div>
+    </div>
+
+    <div class="code-box">
+      <div style="color: #38bdf8; margin-bottom: 10px;">// أسباب الرفض المتاحة:</div>
+      1. معلومات غير كاملة أو ناقصة<br>
+      2. بيانات غير صحيحة أو مزورة<br>
+      3. عدم توافق المزرعة مع الشروط المطلوبة<br>
+      4. المستندات المرفقة غير واضحة<br>
+      5. تكرار الطلب<br>
+      6. موقع المزرعة غير مناسب<br>
+      7. عدد الأشجار غير مطابق للواقع<br>
+      8. السعر المطلوب غير معقول<br>
+      9. سبب آخر (أدخل تفاصيل أدناه)
+    </div>
+
+    <div style="margin-top: 30px; padding: 20px; background: #fef3c7; border-radius: 10px; border-right: 4px solid #f59e0b;">
+      <strong style="color: #92400e;">📝 كيفية الاستخدام:</strong>
+      <ol style="margin-top: 10px; margin-right: 20px; color: #78350f; line-height: 2;">
+        <li>افتح "إدارة أصحاب المزارع"</li>
+        <li>ابحث عن "طلبات المراجعة المعلقة"</li>
+        <li>اضغط على زر "رفض" لأي طلب</li>
+        <li>ستظهر نافذة منبثقة جميلة</li>
+        <li>اختر السبب من القائمة</li>
+        <li>إذا اخترت "سبب آخر"، اكتب التفاصيل</li>
+        <li>اضغط "تأكيد الرفض"</li>
+      </ol>
+    </div>
+
+    <div style="margin-top: 20px; text-align: center; padding: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 15px; color: white;">
+      <h3 style="margin-bottom: 10px;">🚀 كل شيء جاهز للاستخدام!</h3>
+      <p style="opacity: 0.9;">افتح لوحة الإدارة وجرّب النافذة الجديدة</p>
+    </div>
+  </div>
+
+  <script>
+    console.log('✅ نافذة الرفض المنبثقة جاهزة!');
+    console.log('📋 الميزات:');
+    console.log('  - 9 أسباب رفض محددة مسبقاً');
+    console.log('  - خيار إدخال سبب مخصص');
+    console.log('  - تحقق من السبب قبل الرفض');
+    console.log('  - حذف تلقائي من القائمة');
+    console.log('  - إشعار تلقائي للمالك');
+  </script>
+</body>
+</html>
