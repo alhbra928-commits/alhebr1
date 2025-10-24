@@ -4,7 +4,7 @@ import { PublicFarm } from '../types/farm.types';
 import { PublicFarmService } from '../services/publicFarmService';
 import { FarmDetailService } from '../services/farmDetailService';
 import { PremiumHeader } from './PremiumHeader';
-import { StockTicker } from './StockTicker';
+import { SmartStockTicker } from './SmartStockTicker';
 import { FarmCard3D } from './FarmCard3D';
 import { FixedBottomBar } from './FixedBottomBar';
 import { ConceptIntroModal } from './ConceptIntroModal';
@@ -156,7 +156,7 @@ export function MainPlatformInterface({
         onBackToAdmin={onBackToAdmin}
         onFarmOwnerLogin={onFarmOwnerLogin}
       />
-      <StockTicker />
+      <SmartStockTicker />
 
       <div className="pt-28 md:pt-36">
         <GlowingConceptButton onClick={() => setCurrentView('concept')} />

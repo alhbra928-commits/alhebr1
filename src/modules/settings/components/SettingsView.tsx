@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
-import { Settings, Map, Video, Mail, Key, Globe, Bell, Shield, Database } from 'lucide-react';
+import { Settings, Map, Video, Mail, Key, Globe, Bell, Shield, Database, BarChart3 } from 'lucide-react';
 import { Card3D } from '../../../components/ui/Card3D';
 import { BackButton } from '../../../components/common/BackButton';
 import { BackupCenter } from '../../backups/components/BackupCenter';
+import { TickerSettingsManager } from './TickerSettingsManager';
 
 interface SettingsViewProps {
   onBack?: () => void;
 }
 
 export function SettingsView({ onBack }: SettingsViewProps) {
-  const [activeTab, setActiveTab] = useState<'general' | 'backup'>('general');
+  const [activeTab, setActiveTab] = useState<'general' | 'backup' | 'ticker'>('general');
   const [settings, setSettings] = useState({
     mapApiKey: 'AIza*********************',
     videoService: 'youtube',
@@ -36,7 +37,7 @@ export function SettingsView({ onBack }: SettingsViewProps) {
           <p className="text-[#2C2C2C]/70">إدارة وتخصيص إعدادات المنصة</p>
         </div>
 
-        <div className="mb-8 flex gap-4">
+        <div className="mb-8 flex gap-4 flex-wrap">
           <button
             onClick={() => setActiveTab('general')}
             className={`flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all ${
@@ -47,6 +48,17 @@ export function SettingsView({ onBack }: SettingsViewProps) {
           >
             <Settings className="h-5 w-5" />
             الإعدادات العامة
+          </button>
+          <button
+            onClick={() => setActiveTab('ticker')}
+            className={`flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all ${
+              activeTab === 'ticker'
+                ? 'bg-gradient-to-r from-[#0EA5E9] to-[#06B6D4] text-white shadow-lg'
+                : 'bg-white text-[#2C2C2C] hover:bg-[#F4EBDD]'
+            }`}
+          >
+            <BarChart3 className="h-5 w-5" />
+            الشريط المتحرك
           </button>
           <button
             onClick={() => setActiveTab('backup')}
@@ -63,6 +75,8 @@ export function SettingsView({ onBack }: SettingsViewProps) {
 
         {activeTab === 'backup' ? (
           <BackupCenter />
+        ) : activeTab === 'ticker' ? (
+          <TickerSettingsManager />
         ) : (
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
