@@ -56,15 +56,30 @@ export function OwnersView({ onBack }: OwnersViewProps) {
   const loadData = async () => {
     try {
       setLoading(true);
-      const [ownersData, statsData] = await Promise.all([
-        OwnersService.getOwnersList(),
-        OwnersService.getStatistics()
+      const [ownersData, statsData, pendingData] = await Promise.all([
+        OwnersService.getOwnersList().catch(err => {
+          console.error('Error loading owners:', err);
+          return [];
+        }),
+        OwnersService.getStatistics().catch(err => {
+          console.error('Error loading stats:', err);
+          return { total: 0, active: 0, frozen: 0 };
+        }),
+        OwnersService.getPendingSubmissions().catch(err => {
+          console.error('Error loading pending submissions:', err);
+          return [];
+        })
       ]);
       setOwners(ownersData);
       setStats(statsData);
+      setPendingSubmissions(pendingData);
+      console.log('✅ Loaded data:', {
+        owners: ownersData.length,
+        pending: pendingData.length,
+        stats: statsData
+      });
     } catch (err) {
-      console.error(err);
-      alert('حدث خطأ أثناء تحميل البيانات');
+      console.error('❌ Error loading data:', err);
     } finally {
       setLoading(false);
     }
@@ -277,7 +292,7 @@ export function OwnersView({ onBack }: OwnersViewProps) {
                   <Clock className="h-6 w-6 text-white" />
                 </div>
               </div>
-              <p className="text-3xl font-black text-yellow-600 mb-1">{stats?.under_review || 0}</p>
+              <p className="text-3xl font-black text-yellow-600 mb-1">{pendingSubmissions.length}</p>
               <p className="text-sm text-[#2C2C2C]/70">تحت المراجعة</p>
             </div>
           </Card3D>
