@@ -315,7 +315,7 @@ export function FarmsView({ onBack }: FarmsViewProps) {
 
         {/* Statistics Bar */}
         <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
-          <Card3D>
+          <Card3D interactive={false}>
             <div className="p-6 bg-gradient-to-br from-[#3D5B4B]/10 to-[#4A6F5C]/10">
               <div className="flex items-center justify-between mb-3">
                 <div className="w-12 h-12 bg-gradient-to-br from-[#3D5B4B] to-[#4A6F5C] rounded-xl flex items-center justify-center shadow-lg">
@@ -327,7 +327,7 @@ export function FarmsView({ onBack }: FarmsViewProps) {
             </div>
           </Card3D>
 
-          <Card3D>
+          <Card3D interactive={false}>
             <div className="p-6 bg-gradient-to-br from-green-50 to-emerald-50">
               <div className="flex items-center justify-between mb-3">
                 <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center shadow-lg">
@@ -339,7 +339,7 @@ export function FarmsView({ onBack }: FarmsViewProps) {
             </div>
           </Card3D>
 
-          <Card3D>
+          <Card3D interactive={false}>
             <div className="p-6 bg-gradient-to-br from-blue-50 to-indigo-50">
               <div className="flex items-center justify-between mb-3">
                 <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
@@ -351,7 +351,7 @@ export function FarmsView({ onBack }: FarmsViewProps) {
             </div>
           </Card3D>
 
-          <Card3D>
+          <Card3D interactive={false}>
             <div className="p-6 bg-gradient-to-br from-amber-50 to-orange-50">
               <div className="flex items-center justify-between mb-3">
                 <div className="w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-600 rounded-xl flex items-center justify-center shadow-lg">
@@ -363,7 +363,7 @@ export function FarmsView({ onBack }: FarmsViewProps) {
             </div>
           </Card3D>
 
-          <Card3D>
+          <Card3D interactive={false}>
             <div className="p-6 bg-gradient-to-br from-[#C9A962]/10 to-[#D4B574]/10">
               <div className="flex items-center justify-between mb-3">
                 <div className="w-12 h-12 bg-gradient-to-br from-[#C9A962] to-[#D4B574] rounded-xl flex items-center justify-center shadow-lg">

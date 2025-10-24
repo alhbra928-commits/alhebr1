@@ -103,7 +103,7 @@ export function InvestorsView({ onBack }: InvestorsViewProps) {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <Card3D>
+          <Card3D interactive={false}>
             <div className="p-6 bg-gradient-to-br from-purple-50 to-pink-50">
               <div className="flex items-center justify-between mb-3">
                 <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl flex items-center justify-center">
@@ -115,7 +115,7 @@ export function InvestorsView({ onBack }: InvestorsViewProps) {
             </div>
           </Card3D>
 
-          <Card3D>
+          <Card3D interactive={false}>
             <div className="p-6 bg-gradient-to-br from-green-50 to-emerald-50">
               <div className="flex items-center justify-between mb-3">
                 <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center">
@@ -127,7 +127,7 @@ export function InvestorsView({ onBack }: InvestorsViewProps) {
             </div>
           </Card3D>
 
-          <Card3D>
+          <Card3D interactive={false}>
             <div className="p-6 bg-gradient-to-br from-yellow-50 to-orange-50">
               <div className="flex items-center justify-between mb-3">
                 <div className="w-12 h-12 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-xl flex items-center justify-center">
@@ -139,7 +139,7 @@ export function InvestorsView({ onBack }: InvestorsViewProps) {
             </div>
           </Card3D>
 
-          <Card3D>
+          <Card3D interactive={false}>
             <div className="p-6 bg-gradient-to-br from-red-50 to-pink-50">
               <div className="flex items-center justify-between mb-3">
                 <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-pink-600 rounded-xl flex items-center justify-center">

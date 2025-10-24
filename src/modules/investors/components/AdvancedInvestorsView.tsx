@@ -218,7 +218,7 @@ export function AdvancedInvestorsView({ onBack }: AdvancedInvestorsViewProps) {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
-          <Card3D>
+          <Card3D interactive={false}>
             <div className="p-5 bg-gradient-to-br from-blue-50 to-blue-100 border-2 border-blue-200 rounded-xl">
               <div className="flex items-center justify-between mb-3">
                 <div className="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center shadow-lg">
@@ -230,7 +230,7 @@ export function AdvancedInvestorsView({ onBack }: AdvancedInvestorsViewProps) {
             </div>
           </Card3D>
 
-          <Card3D>
+          <Card3D interactive={false}>
             <div className="p-5 bg-gradient-to-br from-green-50 to-green-100 border-2 border-green-200 rounded-xl">
               <div className="flex items-center justify-between mb-3">
                 <div className="w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center shadow-lg">
@@ -242,7 +242,7 @@ export function AdvancedInvestorsView({ onBack }: AdvancedInvestorsViewProps) {
             </div>
           </Card3D>
 
-          <Card3D>
+          <Card3D interactive={false}>
             <div className="p-5 bg-gradient-to-br from-blue-50 to-cyan-100 border-2 border-cyan-200 rounded-xl">
               <div className="flex items-center justify-between mb-3">
                 <div className="w-12 h-12 bg-cyan-500 rounded-xl flex items-center justify-center shadow-lg">
@@ -254,7 +254,7 @@ export function AdvancedInvestorsView({ onBack }: AdvancedInvestorsViewProps) {
             </div>
           </Card3D>
 
-          <Card3D>
+          <Card3D interactive={false}>
             <div className="p-5 bg-gradient-to-br from-yellow-50 to-yellow-100 border-2 border-yellow-200 rounded-xl">
               <div className="flex items-center justify-between mb-3">
                 <div className="w-12 h-12 bg-yellow-500 rounded-xl flex items-center justify-center shadow-lg">
@@ -266,7 +266,7 @@ export function AdvancedInvestorsView({ onBack }: AdvancedInvestorsViewProps) {
             </div>
           </Card3D>
 
-          <Card3D>
+          <Card3D interactive={false}>
             <div className="p-5 bg-gradient-to-br from-emerald-50 to-emerald-100 border-2 border-emerald-200 rounded-xl">
               <div className="flex items-center justify-between mb-3">
                 <div className="w-12 h-12 bg-emerald-500 rounded-xl flex items-center justify-center shadow-lg">

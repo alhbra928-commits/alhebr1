@@ -72,7 +72,7 @@ export function InvestorCard3D({
   const StatusIcon = statusConfig.icon;
 
   return (
-    <Card3D>
+    <Card3D interactive={false}>
       <div className="group relative">
         <div className={`p-6 ${statusConfig.color} border-2 ${statusConfig.borderColor} rounded-xl transition-all duration-300 hover:shadow-2xl`}>
           <div className="flex items-start justify-between mb-4">

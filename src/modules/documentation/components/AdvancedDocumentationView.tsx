@@ -234,7 +234,7 @@ export function AdvancedDocumentationView({ onBack }: AdvancedDocumentationViewP
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
-          <Card3D>
+          <Card3D interactive={false}>
             <div className="p-5 bg-gradient-to-br from-blue-50 to-blue-100 border-2 border-blue-200 rounded-xl">
               <div className="flex items-center justify-between mb-3">
                 <div className="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center shadow-lg">
@@ -246,7 +246,7 @@ export function AdvancedDocumentationView({ onBack }: AdvancedDocumentationViewP
             </div>
           </Card3D>
 
-          <Card3D>
+          <Card3D interactive={false}>
             <div className="p-5 bg-gradient-to-br from-green-50 to-green-100 border-2 border-green-200 rounded-xl">
               <div className="flex items-center justify-between mb-3">
                 <div className="w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center shadow-lg">
@@ -258,7 +258,7 @@ export function AdvancedDocumentationView({ onBack }: AdvancedDocumentationViewP
             </div>
           </Card3D>
 
-          <Card3D>
+          <Card3D interactive={false}>
             <div className="p-5 bg-gradient-to-br from-emerald-50 to-emerald-100 border-2 border-emerald-200 rounded-xl">
               <div className="flex items-center justify-between mb-3">
                 <div className="w-12 h-12 bg-emerald-500 rounded-xl flex items-center justify-center shadow-lg">
@@ -270,7 +270,7 @@ export function AdvancedDocumentationView({ onBack }: AdvancedDocumentationViewP
             </div>
           </Card3D>
 
-          <Card3D>
+          <Card3D interactive={false}>
             <div className="p-5 bg-gradient-to-br from-gray-50 to-gray-100 border-2 border-gray-200 rounded-xl">
               <div className="flex items-center justify-between mb-3">
                 <div className="w-12 h-12 bg-gray-500 rounded-xl flex items-center justify-center shadow-lg">
@@ -282,7 +282,7 @@ export function AdvancedDocumentationView({ onBack }: AdvancedDocumentationViewP
             </div>
           </Card3D>
 
-          <Card3D>
+          <Card3D interactive={false}>
             <div className="p-5 bg-gradient-to-br from-amber-50 to-amber-100 border-2 border-amber-200 rounded-xl">
               <div className="flex items-center justify-between mb-3">
                 <div className="w-12 h-12 bg-amber-500 rounded-xl flex items-center justify-center shadow-lg">

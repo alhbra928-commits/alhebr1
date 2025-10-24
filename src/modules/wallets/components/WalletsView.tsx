@@ -51,7 +51,7 @@ export function WalletsView({ onBack }: WalletsViewProps) {
         </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-        <Card3D>
+        <Card3D interactive={false}>
           <div className="p-6 bg-gradient-to-br from-emerald-50 to-green-50">
             <div className="flex items-center justify-between mb-4">
               <div className="w-14 h-14 bg-emerald-600 rounded-xl flex items-center justify-center shadow-lg">
@@ -69,7 +69,7 @@ export function WalletsView({ onBack }: WalletsViewProps) {
           </div>
         </Card3D>
 
-        <Card3D>
+        <Card3D interactive={false}>
           <div className="p-6 bg-gradient-to-br from-blue-50 to-indigo-50">
             <div className="flex items-center justify-between mb-4">
               <div className="w-14 h-14 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg">
@@ -87,7 +87,7 @@ export function WalletsView({ onBack }: WalletsViewProps) {
           </div>
         </Card3D>
 
-        <Card3D>
+        <Card3D interactive={false}>
           <div className="p-6 bg-gradient-to-br from-orange-50 to-red-50">
             <div className="flex items-center justify-between mb-4">
               <div className="w-14 h-14 bg-orange-600 rounded-xl flex items-center justify-center shadow-lg">
@@ -107,7 +107,7 @@ export function WalletsView({ onBack }: WalletsViewProps) {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-        <Card3D>
+        <Card3D interactive={false}>
           <div className="p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
               <Activity className="h-5 w-5 text-purple-600" />
@@ -138,7 +138,7 @@ export function WalletsView({ onBack }: WalletsViewProps) {
           </div>
         </Card3D>
 
-        <Card3D>
+        <Card3D interactive={false}>
           <div className="p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
               <CreditCard className="h-5 w-5 text-indigo-600" />
@@ -178,7 +178,7 @@ export function WalletsView({ onBack }: WalletsViewProps) {
         </Card3D>
       </div>
 
-      <Card3D>
+      <Card3D interactive={false}>
         <div className="p-6">
           <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
             <DollarSign className="h-5 w-5 text-green-600" />

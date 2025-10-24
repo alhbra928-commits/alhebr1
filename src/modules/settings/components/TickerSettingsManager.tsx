@@ -145,7 +145,7 @@ export function TickerSettingsManager() {
       {/* الإعدادات الأساسية */}
       {/* ===================================== */}
 
-      <Card3D>
+      <Card3D interactive={false}>
         <div className="p-6 bg-white">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
@@ -279,7 +279,7 @@ export function TickerSettingsManager() {
       {/* إدارة العناصر */}
       {/* ===================================== */}
 
-      <Card3D>
+      <Card3D interactive={false}>
         <div className="p-6 bg-white">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-lg font-black text-gray-900">العناصر المعروضة</h3>

@@ -285,7 +285,7 @@ export function BackupCenter() {
         )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
-          <Card3D>
+          <Card3D interactive={false}>
             <div className="p-6 bg-gradient-to-br from-[#C89B3C]/10 to-[#E8C170]/10">
               <div className="flex items-center justify-between mb-3">
                 <div className="w-12 h-12 bg-gradient-to-br from-[#C89B3C] to-[#E8C170] rounded-xl flex items-center justify-center shadow-lg">
@@ -299,7 +299,7 @@ export function BackupCenter() {
             </div>
           </Card3D>
 
-          <Card3D>
+          <Card3D interactive={false}>
             <div className="p-6 bg-gradient-to-br from-blue-50 to-indigo-50">
               <div className="flex items-center justify-between mb-3">
                 <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
@@ -313,7 +313,7 @@ export function BackupCenter() {
             </div>
           </Card3D>
 
-          <Card3D>
+          <Card3D interactive={false}>
             <div className="p-6 bg-gradient-to-br from-green-50 to-emerald-50">
               <div className="flex items-center justify-between mb-3">
                 <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center shadow-lg">
@@ -327,7 +327,7 @@ export function BackupCenter() {
             </div>
           </Card3D>
 
-          <Card3D>
+          <Card3D interactive={false}>
             <div className="p-6 bg-gradient-to-br from-amber-50 to-orange-50">
               <div className="flex items-center justify-between mb-3">
                 <div className="w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-600 rounded-xl flex items-center justify-center shadow-lg">
@@ -341,7 +341,7 @@ export function BackupCenter() {
             </div>
           </Card3D>
 
-          <Card3D>
+          <Card3D interactive={false}>
             <div className="p-6 bg-gradient-to-br from-purple-50 to-pink-50">
               <div className="flex items-center justify-between mb-3">
                 <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl flex items-center justify-center shadow-lg">
@@ -357,7 +357,7 @@ export function BackupCenter() {
         </div>
 
         {storageStats && (
-          <Card3D>
+          <Card3D interactive={false}>
             <div className="p-6 bg-white mb-6">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-bold text-[#2C2C2C] flex items-center gap-2">
@@ -396,7 +396,7 @@ export function BackupCenter() {
         )}
 
         {showRetentionLogs && retentionLogs.length > 0 && (
-          <Card3D>
+          <Card3D interactive={false}>
             <div className="p-6 bg-white mb-6">
               <h3 className="text-lg font-bold text-[#2C2C2C] mb-4 flex items-center gap-2">
                 <History className="h-5 w-5 text-[#C89B3C]" />
@@ -427,7 +427,7 @@ export function BackupCenter() {
         )}
 
         {backups.length === 0 ? (
-          <Card3D>
+          <Card3D interactive={false}>
             <div className="p-12 text-center bg-white">
               <Database className="h-16 w-16 text-[#C89B3C]/50 mx-auto mb-4" />
               <h3 className="text-xl font-bold text-[#2C2C2C] mb-2">لا توجد نسخ احتياطية</h3>
