@@ -121,6 +121,19 @@ export const FarmOwnerDashboard: React.FC<FarmOwnerDashboardProps> = ({ profileI
                 )}
               </button>
 
+              {/* زر العودة للمنصة */}
+              <button
+                onClick={() => window.location.href = '/'}
+                className="p-2 rounded-xl transition-all duration-300 hover:scale-110 group"
+                style={{
+                  background: 'rgba(139, 195, 74, 0.1)',
+                  border: '2px solid rgba(139, 195, 74, 0.3)'
+                }}
+                title="العودة للمنصة الرئيسية"
+              >
+                <Home size={20} style={{ color: '#8BC34A' }} className="group-hover:scale-110 transition-transform" />
+              </button>
+
               {/* زر الخروج */}
               <button
                 onClick={handleLogout}
@@ -129,6 +142,7 @@ export const FarmOwnerDashboard: React.FC<FarmOwnerDashboardProps> = ({ profileI
                   background: 'rgba(239, 68, 68, 0.1)',
                   border: '2px solid rgba(239, 68, 68, 0.3)'
                 }}
+                title="تسجيل الخروج"
               >
                 <LogOut size={20} style={{ color: '#EF4444' }} />
               </button>

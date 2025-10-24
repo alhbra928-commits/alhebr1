@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { farmOwnerService } from '../services/farmOwnerService';
-import { RefreshCw } from 'lucide-react';
+import { RefreshCw, ArrowRight } from 'lucide-react';
 
 interface FarmOwnerLoginPageProps {
   onLoginSuccess: (profileId: string, status: string) => void;
@@ -108,6 +108,22 @@ export const FarmOwnerLoginPage: React.FC<FarmOwnerLoginPageProps> = ({ onLoginS
     <div className="min-h-screen flex items-center justify-center px-4" style={{
       background: 'linear-gradient(135deg, #1C2E0F 0%, #0F1A08 50%, #1C2E0F 100%)'
     }}>
+      {/* زر العودة */}
+      <button
+        onClick={() => window.location.href = '/'}
+        className="fixed top-6 right-6 flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-300 hover:scale-105 group z-50"
+        style={{
+          background: 'rgba(139, 195, 74, 0.1)',
+          border: '2px solid rgba(139, 195, 74, 0.3)',
+          backdropFilter: 'blur(10px)'
+        }}
+      >
+        <ArrowRight size={20} style={{ color: '#8BC34A' }} className="group-hover:translate-x-1 transition-transform" />
+        <span className="text-sm font-bold" style={{ color: '#8BC34A' }}>
+          العودة للمنصة
+        </span>
+      </button>
+
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <div
