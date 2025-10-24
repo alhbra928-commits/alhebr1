@@ -39,19 +39,17 @@ export const FarmOwnerLoginPage: React.FC<FarmOwnerLoginPageProps> = ({ onLoginS
     const { exists } = await farmOwnerService.checkAccount(cleanMobile);
 
     if (!exists) {
-      // حساب جديد - اطلب الاسم
       setIsNewAccount(true);
       setStep('name');
     } else {
-      // حساب موجود - أرسل OTP
       const result = await farmOwnerService.sendOTP(cleanMobile);
       if (result.success) {
         setDisplayedOTP(result.otp || '');
         setIsNewAccount(false);
         setStep('otp');
-        setCountdown(300);
+        setCountdown(180);
       } else {
-        setError(result.error || 'حدث خطأ في إرسال رمز التحقق');
+        setError(result.error || 'حدث خطأ في إرسال الرمز');
       }
     }
 
@@ -63,18 +61,17 @@ export const FarmOwnerLoginPage: React.FC<FarmOwnerLoginPageProps> = ({ onLoginS
     setError('');
     setLoading(true);
 
-    if (!fullName.trim() || fullName.trim().length < 3) {
-      setError('الرجاء إدخال الاسم الكامل (3 أحرف على الأقل)');
+    if (!fullName.trim()) {
+      setError('الرجاء إدخال الاسم الكامل');
       setLoading(false);
       return;
     }
 
-    // إنشاء حساب جديد مع الاسم
-    const result = await farmOwnerService.directLoginWithName(mobileNumber, fullName.trim());
+    const result = await farmOwnerService.createProfile(mobileNumber, fullName);
     if (result.success) {
-      onLoginSuccess(result.profile_id!, result.status!);
+      onLoginSuccess(result.profileId!, 'pending');
     } else {
-      setError(result.error || 'حدث خطأ في التسجيل');
+      setError(result.error || 'حدث خطأ في إنشاء الحساب');
     }
 
     setLoading(false);
@@ -85,35 +82,11 @@ export const FarmOwnerLoginPage: React.FC<FarmOwnerLoginPageProps> = ({ onLoginS
     setError('');
     setLoading(true);
 
-    if (otp.length !== 6) {
-      setError('رمز التحقق يجب أن يكون 6 أرقام');
-      setLoading(false);
-      return;
-    }
-
-    const result = await farmOwnerService.verifyOTPAndLogin(mobileNumber, otp);
-
+    const result = await farmOwnerService.verifyOTP(mobileNumber, otp);
     if (result.success) {
-      onLoginSuccess(result.profile_id!, result.status!);
+      onLoginSuccess(result.profileId!, result.status!);
     } else {
-      setError(result.error || 'رمز التحقق غير صحيح');
-    }
-
-    setLoading(false);
-  };
-
-  const handleResendOTP = async () => {
-    setError('');
-    setLoading(true);
-
-    const result = await farmOwnerService.sendOTP(mobileNumber);
-    if (result.success) {
-      setDisplayedOTP(result.otp || '');
-      setCountdown(300);
-      setOtp('');
-      setError('');
-    } else {
-      setError(result.error || 'حدث خطأ في إعادة إرسال الرمز');
+      setError(result.error || 'الرمز غير صحيح');
     }
 
     setLoading(false);
@@ -126,29 +99,33 @@ export const FarmOwnerLoginPage: React.FC<FarmOwnerLoginPageProps> = ({ onLoginS
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-3 sm:px-4 py-6" style={{
-      background: 'linear-gradient(135deg, #1C2E0F 0%, #0F1A08 50%, #1C2E0F 100%)'
-    }}>
-      {/* زر العودة */}
+    <div
+      className="min-h-screen flex items-center justify-center p-3 sm:p-4"
+      style={{
+        background: 'linear-gradient(135deg, #1C2E0F 0%, #0F1A08 50%, #1C2E0F 100%)'
+      }}
+    >
+      {/* زر العودة - محسّن للجوال */}
       <button
         onClick={() => window.location.href = '/'}
-        className="fixed top-3 sm:top-6 right-3 sm:right-6 flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-105 group z-50 text-xs sm:text-sm"
+        className="fixed top-2 sm:top-4 right-2 sm:right-4 flex items-center gap-1 sm:gap-2 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-105 z-50 shadow-lg"
         style={{
-          background: 'rgba(139, 195, 74, 0.1)',
-          border: '2px solid rgba(139, 195, 74, 0.3)',
+          background: 'rgba(139, 195, 74, 0.15)',
+          border: '1.5px solid rgba(139, 195, 74, 0.4)',
           backdropFilter: 'blur(10px)'
         }}
       >
-        <ArrowRight size={16} className="sm:w-5 sm:h-5" style={{ color: '#8BC34A' }} />
-        <span className="font-bold" style={{ color: '#8BC34A' }}>
-          العودة للمنصة
+        <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" style={{ color: '#8BC34A' }} />
+        <span className="text-xs sm:text-sm font-bold" style={{ color: '#8BC34A' }}>
+          عودة
         </span>
       </button>
 
-      <div className="w-full max-w-md px-2 sm:px-0">
+      <div className="w-full max-w-md">
+        {/* الشعار - محسّن للجوال */}
         <div className="text-center mb-6 sm:mb-8">
           <div
-            className="inline-block text-4xl sm:text-6xl mb-3 sm:mb-4"
+            className="inline-block text-5xl sm:text-6xl mb-3 sm:mb-4"
             style={{
               filter: 'drop-shadow(0 0 20px #8BC34A)',
               animation: 'float 3s ease-in-out infinite'
@@ -157,7 +134,7 @@ export const FarmOwnerLoginPage: React.FC<FarmOwnerLoginPageProps> = ({ onLoginS
             🌳
           </div>
           <h1
-            className="text-2xl sm:text-3xl font-black mb-1.5 sm:mb-2"
+            className="text-2xl sm:text-3xl font-black mb-1.5 sm:mb-2 px-4"
             style={{
               background: 'linear-gradient(135deg, #A4D65E 0%, #8BC34A 50%, #689F38 100%)',
               WebkitBackgroundClip: 'text',
@@ -167,21 +144,23 @@ export const FarmOwnerLoginPage: React.FC<FarmOwnerLoginPageProps> = ({ onLoginS
           >
             لوحة صاحب المزرعة
           </h1>
-          <p className="text-xs sm:text-sm px-4" style={{ color: '#8BC34A', opacity: 0.8 }}>
+          <p className="text-xs sm:text-sm px-6" style={{ color: '#8BC34A', opacity: 0.8 }}>
             منصة الحبر الزراعية - استثمارك يبدأ من الأرض
           </p>
         </div>
 
+        {/* صندوق النموذج - محسّن للجوال */}
         <div
-          className="relative rounded-2xl sm:rounded-3xl p-5 sm:p-8 transition-all duration-500"
+          className="relative rounded-2xl sm:rounded-3xl p-5 sm:p-6 md:p-8 transition-all duration-500 shadow-2xl"
           style={{
             background: 'linear-gradient(135deg, #2D4519 0%, #1C2E0F 100%)',
-            boxShadow: '0 25px 80px rgba(139, 195, 74, 0.4), inset 0 0 40px rgba(139, 195, 74, 0.1)',
+            boxShadow: '0 20px 60px rgba(139, 195, 74, 0.3), inset 0 0 40px rgba(139, 195, 74, 0.1)',
             border: '2px solid rgba(139, 195, 74, 0.3)'
           }}
         >
+          {/* خلفية منقطة */}
           <div
-            className="absolute inset-0 opacity-20 rounded-3xl"
+            className="absolute inset-0 opacity-10 rounded-2xl sm:rounded-3xl pointer-events-none"
             style={{
               background: `repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(139, 195, 74, 0.1) 2px, rgba(139, 195, 74, 0.1) 4px),
                            repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(139, 195, 74, 0.1) 2px, rgba(139, 195, 74, 0.1) 4px)`,
@@ -194,10 +173,11 @@ export const FarmOwnerLoginPage: React.FC<FarmOwnerLoginPageProps> = ({ onLoginS
               {step === 'mobile' ? '🎩 دخول صاحب المزرعة' : step === 'name' ? '👤 الاسم الكامل' : '🔐 التحقق من الرمز'}
             </h2>
 
-            {step === 'mobile' ? (
-              <form onSubmit={handleMobileSubmit} className="space-y-4 sm:space-y-6">
+            {/* نموذج رقم الجوال */}
+            {step === 'mobile' && (
+              <form onSubmit={handleMobileSubmit} className="space-y-4 sm:space-y-5">
                 <div>
-                  <label className="block text-xs sm:text-sm font-semibold mb-2" style={{ color: '#8BC34A' }}>
+                  <label className="block text-xs sm:text-sm font-semibold mb-2 text-right" style={{ color: '#8BC34A' }}>
                     📱 رقم الجوال
                   </label>
                   <input
@@ -206,26 +186,19 @@ export const FarmOwnerLoginPage: React.FC<FarmOwnerLoginPageProps> = ({ onLoginS
                     onChange={(e) => setMobileNumber(e.target.value)}
                     placeholder="05xxxxxxxx"
                     disabled={loading}
-                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg sm:rounded-xl text-white text-base sm:text-lg font-semibold transition-all duration-300 focus:outline-none focus:ring-2"
+                    dir="ltr"
+                    className="w-full px-3 sm:px-4 py-3 sm:py-3.5 rounded-xl text-white text-base sm:text-lg font-semibold transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-green-500 text-center"
                     style={{
                       background: 'rgba(0, 0, 0, 0.4)',
                       border: '2px solid rgba(139, 195, 74, 0.3)',
                       caretColor: '#8BC34A'
-                    }}
-                    onFocus={(e) => {
-                      e.target.style.borderColor = '#8BC34A';
-                      e.target.style.boxShadow = '0 0 20px rgba(139, 195, 74, 0.5)';
-                    }}
-                    onBlur={(e) => {
-                      e.target.style.borderColor = 'rgba(139, 195, 74, 0.3)';
-                      e.target.style.boxShadow = 'none';
                     }}
                   />
                 </div>
 
                 {error && (
                   <div
-                    className="px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold text-center"
+                    className="px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl text-xs sm:text-sm font-semibold text-center"
                     style={{
                       background: 'rgba(239, 68, 68, 0.1)',
                       border: '2px solid rgba(239, 68, 68, 0.3)',
@@ -239,20 +212,20 @@ export const FarmOwnerLoginPage: React.FC<FarmOwnerLoginPageProps> = ({ onLoginS
                 <button
                   type="submit"
                   disabled={loading || !mobileNumber.trim()}
-                  className="w-full py-3 sm:py-4 rounded-xl sm:rounded-2xl font-black text-base sm:text-lg text-white transition-all duration-500 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full py-3 sm:py-4 rounded-xl sm:rounded-2xl font-black text-base sm:text-lg text-white transition-all duration-500 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
                   style={{
                     background: loading || !mobileNumber.trim()
                       ? 'linear-gradient(135deg, #4B5563 0%, #374151 100%)'
                       : 'linear-gradient(135deg, #A4D65E 0%, #8BC34A 50%, #689F38 100%)',
                     boxShadow: loading || !mobileNumber.trim()
                       ? 'none'
-                      : '0 15px 40px rgba(139, 195, 74, 0.5), inset 0 0 20px rgba(139, 195, 74, 0.2)',
+                      : '0 10px 30px rgba(139, 195, 74, 0.4), inset 0 0 20px rgba(139, 195, 74, 0.2)',
                     border: '2px solid rgba(255, 255, 255, 0.2)',
                     textShadow: '0 2px 8px rgba(0, 0, 0, 0.3)'
                   }}
                 >
                   {loading ? (
-                    <span className="flex items-center justify-center gap-1.5 sm:gap-2">
+                    <span className="flex items-center justify-center gap-2">
                       <span className="inline-block w-4 h-4 sm:w-5 sm:h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                       جاري التحقق...
                     </span>
@@ -261,61 +234,51 @@ export const FarmOwnerLoginPage: React.FC<FarmOwnerLoginPageProps> = ({ onLoginS
                   )}
                 </button>
 
-                <div className="mt-4 text-center text-xs" style={{ color: '#8BC34A', opacity: 0.7 }}>
+                <div className="mt-3 sm:mt-4 text-center text-[10px] sm:text-xs leading-relaxed" style={{ color: '#8BC34A', opacity: 0.7 }}>
                   • دخول مباشر للمرة الأولى<br />
                   • رمز تحقق للمرات التالية
                 </div>
               </form>
-            ) : step === 'name' ? (
-              <form onSubmit={handleNameSubmit} className="space-y-4 sm:space-y-6">
+            )}
+
+            {/* نموذج الاسم */}
+            {step === 'name' && (
+              <form onSubmit={handleNameSubmit} className="space-y-4 sm:space-y-5">
                 <div
-                  className="p-3 sm:p-4 rounded-lg sm:rounded-xl text-center"
+                  className="p-3 sm:p-4 rounded-xl text-center mb-4"
                   style={{
                     background: 'rgba(59, 130, 246, 0.2)',
                     border: '2px solid rgba(59, 130, 246, 0.5)'
                   }}
                 >
-                  <p className="text-sm font-bold" style={{ color: '#93C5FD' }}>
-                    مرحباً بك في منصة الحبر
-                  </p>
-                  <p className="text-xs mt-1" style={{ color: '#93C5FD', opacity: 0.8 }}>
-                    الرجاء إدخال اسمك الكامل لإنشاء حسابك
+                  <p className="text-xs sm:text-sm text-blue-200 font-semibold leading-relaxed">
+                    مرحباً بك! حساب جديد<br />
+                    الرجاء إدخال اسمك الكامل
                   </p>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold mb-2" style={{ color: '#8BC34A' }}>
+                  <label className="block text-xs sm:text-sm font-semibold mb-2 text-right" style={{ color: '#8BC34A' }}>
                     👤 الاسم الكامل
                   </label>
                   <input
                     type="text"
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    placeholder="مثال: أحمد محمد العلي"
+                    placeholder="أدخل اسمك الكامل"
                     disabled={loading}
-                    className="w-full px-4 py-3 rounded-xl text-white text-lg font-semibold transition-all duration-300 focus:outline-none focus:ring-2"
+                    className="w-full px-3 sm:px-4 py-3 sm:py-3.5 rounded-xl text-white text-base sm:text-lg font-semibold transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-green-500 text-center"
                     style={{
                       background: 'rgba(0, 0, 0, 0.4)',
                       border: '2px solid rgba(139, 195, 74, 0.3)',
                       caretColor: '#8BC34A'
                     }}
-                    onFocus={(e) => {
-                      e.target.style.borderColor = '#8BC34A';
-                      e.target.style.boxShadow = '0 0 20px rgba(139, 195, 74, 0.5)';
-                    }}
-                    onBlur={(e) => {
-                      e.target.style.borderColor = 'rgba(139, 195, 74, 0.3)';
-                      e.target.style.boxShadow = 'none';
-                    }}
                   />
-                  <p className="text-xs mt-2" style={{ color: '#8BC34A', opacity: 0.7 }}>
-                    سيتم استخدام اسمك في الشهادات والمراسلات الرسمية
-                  </p>
                 </div>
 
                 {error && (
                   <div
-                    className="px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold text-center"
+                    className="px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl text-xs sm:text-sm font-semibold text-center"
                     style={{
                       background: 'rgba(239, 68, 68, 0.1)',
                       border: '2px solid rgba(239, 68, 68, 0.3)',
@@ -329,102 +292,81 @@ export const FarmOwnerLoginPage: React.FC<FarmOwnerLoginPageProps> = ({ onLoginS
                 <button
                   type="submit"
                   disabled={loading || !fullName.trim()}
-                  className="w-full py-4 rounded-2xl font-black text-lg text-white transition-all duration-500 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full py-3 sm:py-4 rounded-xl sm:rounded-2xl font-black text-base sm:text-lg text-white transition-all duration-500 active:scale-95 disabled:opacity-50 shadow-lg"
                   style={{
                     background: loading || !fullName.trim()
                       ? 'linear-gradient(135deg, #4B5563 0%, #374151 100%)'
                       : 'linear-gradient(135deg, #A4D65E 0%, #8BC34A 50%, #689F38 100%)',
                     boxShadow: loading || !fullName.trim()
                       ? 'none'
-                      : '0 15px 40px rgba(139, 195, 74, 0.5), inset 0 0 20px rgba(139, 195, 74, 0.2)',
-                    border: '2px solid rgba(255, 255, 255, 0.2)',
-                    textShadow: '0 2px 8px rgba(0, 0, 0, 0.3)'
+                      : '0 10px 30px rgba(139, 195, 74, 0.4)',
+                    border: '2px solid rgba(255, 255, 255, 0.2)'
                   }}
                 >
                   {loading ? (
-                    <span className="flex items-center justify-center gap-1.5 sm:gap-2">
+                    <span className="flex items-center justify-center gap-2">
                       <span className="inline-block w-4 h-4 sm:w-5 sm:h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                      جاري إنشاء الحساب...
+                      جاري الإنشاء...
                     </span>
                   ) : (
-                    '✓ إنشاء حسابي'
+                    '✓ إنشاء حساب'
                   )}
                 </button>
-
-                <button
-                  type="button"
-                  onClick={() => {
-                    setStep('mobile');
-                    setFullName('');
-                    setError('');
-                  }}
-                  className="w-full py-3 rounded-xl font-bold transition-all hover:scale-105"
-                  style={{
-                    background: 'rgba(255, 255, 255, 0.1)',
-                    border: '2px solid rgba(255, 255, 255, 0.2)',
-                    color: 'white'
-                  }}
-                >
-                  رجوع
-                </button>
               </form>
-            ) : (
-              <form onSubmit={handleOTPSubmit} className="space-y-4 sm:space-y-6">
-                <div
-                  className="p-3 sm:p-4 rounded-lg sm:rounded-xl text-center animate-pulse"
-                  style={{
-                    background: 'rgba(251, 191, 36, 0.2)',
-                    border: '2px solid rgba(251, 191, 36, 0.5)'
-                  }}
-                >
-                  <p className="text-xs font-bold mb-2" style={{ color: '#FCD34D' }}>
-                    🧪 وضع الاختبار - الرمز الفعلي:
-                  </p>
-                  <p className="text-3xl font-black tracking-widest" style={{ color: '#FBBF24' }}>
-                    {displayedOTP}
-                  </p>
-                  <p className="text-xs mt-2" style={{ color: '#FCD34D', opacity: 0.8 }}>
-                    في الإنتاج: سيتم إرساله عبر واتساب
-                  </p>
-                </div>
+            )}
+
+            {/* نموذج OTP */}
+            {step === 'otp' && (
+              <form onSubmit={handleOTPSubmit} className="space-y-4 sm:space-y-5">
+                {displayedOTP && (
+                  <div
+                    className="p-3 sm:p-4 rounded-xl text-center mb-4"
+                    style={{
+                      background: 'rgba(139, 195, 74, 0.2)',
+                      border: '2px solid rgba(139, 195, 74, 0.5)'
+                    }}
+                  >
+                    <p className="text-xs sm:text-sm text-green-200 mb-2 font-semibold">
+                      🔐 رمز التحقق الخاص بك:
+                    </p>
+                    <p className="text-3xl sm:text-4xl font-black text-white tracking-widest" dir="ltr">
+                      {displayedOTP}
+                    </p>
+                  </div>
+                )}
 
                 <div>
-                  <label className="block text-sm font-semibold mb-2" style={{ color: '#8BC34A' }}>
-                    🔢 رمز التحقق (6 أرقام)
+                  <label className="block text-xs sm:text-sm font-semibold mb-2 text-right" style={{ color: '#8BC34A' }}>
+                    🔢 أدخل رمز التحقق
                   </label>
                   <input
                     type="text"
                     value={otp}
-                    onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                    onChange={(e) => setOtp(e.target.value)}
                     placeholder="000000"
                     disabled={loading}
                     maxLength={6}
-                    className="w-full px-4 py-3 rounded-xl text-white text-2xl font-black text-center tracking-widest transition-all duration-300 focus:outline-none focus:ring-2"
+                    dir="ltr"
+                    className="w-full px-3 sm:px-4 py-3 sm:py-3.5 rounded-xl text-white text-2xl sm:text-3xl font-black transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-green-500 text-center tracking-widest"
                     style={{
                       background: 'rgba(0, 0, 0, 0.4)',
                       border: '2px solid rgba(139, 195, 74, 0.3)',
                       caretColor: '#8BC34A'
                     }}
-                    onFocus={(e) => {
-                      e.target.style.borderColor = '#8BC34A';
-                      e.target.style.boxShadow = '0 0 20px rgba(139, 195, 74, 0.5)';
-                    }}
-                    onBlur={(e) => {
-                      e.target.style.borderColor = 'rgba(139, 195, 74, 0.3)';
-                      e.target.style.boxShadow = 'none';
-                    }}
                   />
                 </div>
 
                 {countdown > 0 && (
-                  <div className="text-center text-sm" style={{ color: '#8BC34A' }}>
-                    ⏱️ صلاحية الرمز: {formatTime(countdown)}
+                  <div className="text-center">
+                    <p className="text-xs sm:text-sm text-yellow-300 font-semibold">
+                      ⏱️ انتهاء الصلاحية: {formatTime(countdown)}
+                    </p>
                   </div>
                 )}
 
                 {error && (
                   <div
-                    className="px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold text-center"
+                    className="px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl text-xs sm:text-sm font-semibold text-center"
                     style={{
                       background: 'rgba(239, 68, 68, 0.1)',
                       border: '2px solid rgba(239, 68, 68, 0.3)',
@@ -437,69 +379,30 @@ export const FarmOwnerLoginPage: React.FC<FarmOwnerLoginPageProps> = ({ onLoginS
 
                 <button
                   type="submit"
-                  disabled={loading || otp.length !== 6}
-                  className="w-full py-4 rounded-2xl font-black text-lg text-white transition-all duration-500 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={loading || !otp.trim() || otp.length !== 6}
+                  className="w-full py-3 sm:py-4 rounded-xl sm:rounded-2xl font-black text-base sm:text-lg text-white transition-all duration-500 active:scale-95 disabled:opacity-50 shadow-lg"
                   style={{
-                    background: loading || otp.length !== 6
+                    background: loading || !otp.trim() || otp.length !== 6
                       ? 'linear-gradient(135deg, #4B5563 0%, #374151 100%)'
                       : 'linear-gradient(135deg, #A4D65E 0%, #8BC34A 50%, #689F38 100%)',
-                    boxShadow: loading || otp.length !== 6
+                    boxShadow: loading || !otp.trim()
                       ? 'none'
-                      : '0 15px 40px rgba(139, 195, 74, 0.5), inset 0 0 20px rgba(139, 195, 74, 0.2)',
-                    border: '2px solid rgba(255, 255, 255, 0.2)',
-                    textShadow: '0 2px 8px rgba(0, 0, 0, 0.3)'
+                      : '0 10px 30px rgba(139, 195, 74, 0.4)',
+                    border: '2px solid rgba(255, 255, 255, 0.2)'
                   }}
                 >
                   {loading ? (
-                    <span className="flex items-center justify-center gap-1.5 sm:gap-2">
+                    <span className="flex items-center justify-center gap-2">
                       <span className="inline-block w-4 h-4 sm:w-5 sm:h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                       جاري التحقق...
                     </span>
                   ) : (
-                    '✓ تحقق ودخول'
+                    '✓ تسجيل الدخول'
                   )}
                 </button>
-
-                <div className="flex gap-2">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setStep('mobile');
-                      setOtp('');
-                      setError('');
-                    }}
-                    className="flex-1 py-3 rounded-xl font-bold transition-all hover:scale-105"
-                    style={{
-                      background: 'rgba(255, 255, 255, 0.1)',
-                      border: '2px solid rgba(255, 255, 255, 0.2)',
-                      color: 'white'
-                    }}
-                  >
-                    رجوع
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={handleResendOTP}
-                    disabled={loading || countdown > 240}
-                    className="flex-1 py-3 rounded-xl font-bold transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                    style={{
-                      background: countdown > 240 ? 'rgba(107, 114, 128, 0.3)' : 'rgba(251, 191, 36, 0.2)',
-                      border: `2px solid ${countdown > 240 ? 'rgba(107, 114, 128, 0.5)' : 'rgba(251, 191, 36, 0.5)'}`,
-                      color: countdown > 240 ? '#9CA3AF' : '#FBBF24'
-                    }}
-                  >
-                    <RefreshCw size={18} />
-                    إعادة إرسال
-                  </button>
-                </div>
               </form>
             )}
           </div>
-        </div>
-
-        <div className="mt-6 text-center text-sm" style={{ color: '#8BC34A', opacity: 0.6 }}>
-          بوابة خاصة بأصحاب المزارع المعتمدين
         </div>
       </div>
     </div>
