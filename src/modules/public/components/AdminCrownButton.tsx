@@ -24,10 +24,10 @@ export function AdminCrownButton({ onAdminLogin, onFarmOwnerLogin }: AdminCrownB
     <>
       <button
         onClick={() => setShowMenu(!showMenu)}
-        className="fixed bottom-6 right-6 z-50 group touch-manipulation active:scale-90 transition-all duration-300"
+        className="fixed bottom-20 right-4 sm:bottom-24 sm:right-6 z-50 group touch-manipulation active:scale-90 transition-all duration-300"
       style={{
-        width: '64px',
-        height: '64px',
+        width: '60px',
+        height: '60px',
         borderRadius: '50%',
       }}
       aria-label="دخول الإدارة"

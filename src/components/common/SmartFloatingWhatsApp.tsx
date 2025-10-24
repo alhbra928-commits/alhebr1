@@ -72,14 +72,9 @@ export function SmartFloatingWhatsApp({ context }: SmartFloatingWhatsAppProps) {
 
   return (
     <>
-      {/* Decorative Connecting Line */}
-      <div className="fixed bottom-20 right-[38px] w-1 h-8 z-30 pointer-events-none">
-        <div className="w-full h-full bg-gradient-to-b from-[#D4AF37]/0 via-[#D4AF37]/30 to-[#556B2F]/20 rounded-full" />
-      </div>
-
       {/* Main Button */}
       <div
-        className="fixed bottom-24 right-6 z-40"
+        className="fixed bottom-20 left-4 sm:bottom-24 sm:left-6 z-40"
         onMouseEnter={() => setShowTooltip(true)}
         onMouseLeave={() => setShowTooltip(false)}
       >
@@ -92,7 +87,7 @@ export function SmartFloatingWhatsApp({ context }: SmartFloatingWhatsAppProps) {
             <div className="absolute inset-0 bg-gradient-to-r from-[#556B2F] to-[#D4AF37] rounded-full blur-xl opacity-75 animate-pulse" />
 
             {/* Button */}
-            <div className="relative w-14 h-14 bg-gradient-to-br from-[#556B2F] via-[#6B8E23] to-[#D4AF37] rounded-full flex items-center justify-center shadow-2xl transform transition-all duration-300 hover:scale-110 cursor-pointer border-3 border-white/30">
+            <div className="relative w-[60px] h-[60px] bg-gradient-to-br from-[#556B2F] via-[#6B8E23] to-[#D4AF37] rounded-full flex items-center justify-center shadow-2xl transform transition-all duration-300 hover:scale-110 cursor-pointer border-3 border-white/30">
               <MessageCircle className="h-7 w-7 text-white" />
 
               {/* Pulse Ring */}
@@ -108,17 +103,17 @@ export function SmartFloatingWhatsApp({ context }: SmartFloatingWhatsAppProps) {
 
         {/* Tooltip */}
         {showTooltip && !isOpen && (
-          <div className="absolute bottom-20 right-0 bg-gradient-to-r from-[#556B2F] to-[#6B8E23] text-white px-4 py-2 rounded-xl shadow-2xl whitespace-nowrap animate-fade-in border-2 border-[#D4AF37]/30">
+          <div className="absolute bottom-20 left-0 bg-gradient-to-r from-[#556B2F] to-[#6B8E23] text-white px-4 py-2 rounded-xl shadow-2xl whitespace-nowrap animate-fade-in border-2 border-[#D4AF37]/30">
             <div className="text-sm font-bold">{settings?.tooltip_text_ar || 'تحدث معنا مباشرة'}</div>
             <div className="text-xs opacity-90">الرد خلال دقائق!</div>
-            <div className="absolute -bottom-2 right-6 w-4 h-4 bg-[#556B2F] transform rotate-45" />
+            <div className="absolute -bottom-2 left-6 w-4 h-4 bg-[#556B2F] transform rotate-45" />
           </div>
         )}
       </div>
 
       {/* Options Modal */}
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-end justify-center md:items-center md:justify-end md:p-6">
+        <div className="fixed inset-0 z-50 flex items-end justify-center md:items-center md:justify-start md:p-6">
           {/* Backdrop */}
           <div
             className="absolute inset-0 bg-black/50 backdrop-blur-sm animate-fade-in"
