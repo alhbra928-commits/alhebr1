@@ -3,7 +3,7 @@ import { Settings, Map, Video, Mail, Key, Globe, Bell, Shield, Database, BarChar
 import { Card3D } from '../../../components/ui/Card3D';
 import { BackButton } from '../../../components/common/BackButton';
 import { BackupCenter } from '../../backups/components/BackupCenter';
-import { TickerSettingsManager } from './TickerSettingsManager';
+import { AdvancedTickerManager } from './AdvancedTickerManager';
 
 interface SettingsViewProps {
   onBack?: () => void;
@@ -76,7 +76,7 @@ export function SettingsView({ onBack }: SettingsViewProps) {
         {activeTab === 'backup' ? (
           <BackupCenter />
         ) : activeTab === 'ticker' ? (
-          <TickerSettingsManager />
+          <AdvancedTickerManager />
         ) : (
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
