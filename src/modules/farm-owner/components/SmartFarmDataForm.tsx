@@ -26,7 +26,6 @@ export const SmartFarmDataForm: React.FC<SmartFarmDataFormProps> = ({ profileId,
 
   // القسم (ج) - التسعير
   const [totalPrice, setTotalPrice] = useState<number>(initialData?.actual_total_price || 0);
-  const [pricePerTree, setPricePerTree] = useState<number>(initialData?.price_per_tree || 0);
   const [gracePeriod, setGracePeriod] = useState<number>(initialData?.payment_grace_period || 6);
   const [additionalNotes, setAdditionalNotes] = useState(initialData?.additional_notes || '');
 
@@ -74,7 +73,7 @@ export const SmartFarmDataForm: React.FC<SmartFarmDataFormProps> = ({ profileId,
       return;
     }
 
-    if (totalArea <= 0 || totalPrice <= 0 || pricePerTree <= 0) {
+    if (totalArea <= 0 || totalPrice <= 0) {
       setError('الأرقام يجب أن تكون أكبر من صفر');
       setLoading(false);
       return;
@@ -103,7 +102,7 @@ export const SmartFarmDataForm: React.FC<SmartFarmDataFormProps> = ({ profileId,
       farm_area_unit: areaUnit,
       farm_type: farmType,
       actual_total_price: totalPrice,
-      price_per_tree: pricePerTree,
+      price_per_tree: totalPrice / getTotalTrees(),
       payment_grace_period: gracePeriod,
       additional_notes: additionalNotes,
       varieties
@@ -322,10 +321,15 @@ export const SmartFarmDataForm: React.FC<SmartFarmDataFormProps> = ({ profileId,
                 </div>
               ))}
 
-              <div className="mt-4 p-4 rounded-xl" style={{ background: 'rgba(139, 195, 74, 0.1)' }}>
+              <div className="mt-4 p-4 rounded-xl space-y-2" style={{ background: 'rgba(139, 195, 74, 0.1)' }}>
                 <p className="font-bold" style={{ color: '#689F38' }}>
                   إجمالي الأشجار: {getTotalTrees()}
                 </p>
+                {totalPrice > 0 && getTotalTrees() > 0 && (
+                  <p className="text-sm" style={{ color: '#558B2F' }}>
+                    السعر التلقائي لكل شجرة: {(totalPrice / getTotalTrees()).toFixed(2)} ريال
+                  </p>
+                )}
               </div>
             </div>
           )}
@@ -338,9 +342,9 @@ export const SmartFarmDataForm: React.FC<SmartFarmDataFormProps> = ({ profileId,
           <span>💰</span> التسعير والشروط
         </h3>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4">
           <div>
-            <label className="block text-sm font-bold mb-2 text-gray-700">السعر الإجمالي (ريال) *</label>
+            <label className="block text-sm font-bold mb-2 text-gray-700">السعر الإجمالي للمزرعة (ريال) *</label>
             <input
               type="number"
               value={totalPrice}
@@ -348,20 +352,7 @@ export const SmartFarmDataForm: React.FC<SmartFarmDataFormProps> = ({ profileId,
               required
               min="1"
               className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-yellow-500 focus:outline-none transition-colors"
-              placeholder="0"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-bold mb-2 text-gray-700">السعر لكل شجرة (ريال) *</label>
-            <input
-              type="number"
-              value={pricePerTree}
-              onChange={(e) => setPricePerTree(Number(e.target.value))}
-              required
-              min="1"
-              className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-yellow-500 focus:outline-none transition-colors"
-              placeholder="0"
+              placeholder="أدخل السعر الإجمالي"
             />
           </div>
 
