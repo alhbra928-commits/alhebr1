@@ -509,77 +509,118 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
           </div>
         )}
 
-        {/* 🟪 زر الحجز الديناميكي الذكي */}
-        <div className="text-center mb-6 sm:mb-8 md:mb-10 lg:mb-12 px-2 sm:px-4">
+        {/* 🟪 زر الحجز الفاخر ثلاثي الأبعاد */}
+        <div className="text-center mb-6 sm:mb-8 md:mb-10 lg:mb-12 px-3 sm:px-4">
           <button
             onClick={onStartBooking}
             disabled={reservationPercentage === 100}
-            className="group relative w-full sm:w-auto px-6 sm:px-8 md:px-12 lg:px-16 py-4 sm:py-5 md:py-6 lg:py-7 rounded-xl sm:rounded-2xl md:rounded-3xl font-black text-white transition-all duration-500 active:scale-95 active:translate-y-1 sm:hover:scale-105 sm:hover:-translate-y-1 overflow-hidden touch-manipulation disabled:cursor-not-allowed"
+            className="group relative w-full max-w-md mx-auto sm:max-w-lg md:max-w-2xl px-8 sm:px-10 md:px-14 py-6 sm:py-7 md:py-9 rounded-2xl sm:rounded-3xl font-black text-white transition-all duration-700 active:scale-[0.97] active:translate-y-2 sm:hover:scale-[1.03] sm:hover:-translate-y-2 overflow-hidden touch-manipulation disabled:cursor-not-allowed disabled:active:scale-100"
             style={{
               background: reservationPercentage === 100
                 ? 'linear-gradient(145deg, #9CA3AF 0%, #6B7280 100%)'
                 : !farm.farm_type || farm.farm_type === 'نخيل'
-                  ? 'linear-gradient(145deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%)'
-                  : 'linear-gradient(145deg, #9ACD32 0%, #6B8E23 50%, #556B2F 100%)',
+                  ? 'linear-gradient(145deg, #FFD700 0%, #FFA500 35%, #FF8C00 70%, #D4AF37 100%)'
+                  : 'linear-gradient(145deg, #9ACD32 0%, #6B8E23 35%, #556B2F 70%, #8B9C5B 100%)',
               boxShadow: reservationPercentage === 100
-                ? '0 10px 30px rgba(0, 0, 0, 0.2), inset 0 -4px 8px rgba(0, 0, 0, 0.15)'
+                ? '0 12px 35px rgba(0, 0, 0, 0.25), inset 0 -5px 10px rgba(0, 0, 0, 0.2)'
                 : !farm.farm_type || farm.farm_type === 'نخيل'
-                  ? '0 20px 60px rgba(255, 165, 0, 0.5), 0 8px 25px rgba(255, 215, 0, 0.4), inset 0 -6px 12px rgba(184, 134, 11, 0.3), inset 0 1px 2px rgba(255, 255, 255, 0.4)'
-                  : '0 20px 60px rgba(107, 142, 35, 0.5), 0 8px 25px rgba(139, 165, 116, 0.4), inset 0 -6px 12px rgba(85, 107, 47, 0.3), inset 0 1px 2px rgba(255, 255, 255, 0.4)',
-              border: '2px solid rgba(255, 255, 255, 0.4)',
+                  ? '0 25px 70px rgba(255, 165, 0, 0.6), 0 10px 35px rgba(255, 215, 0, 0.5), 0 0 50px rgba(255, 215, 0, 0.3), inset 0 -8px 16px rgba(184, 134, 11, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.5)'
+                  : '0 25px 70px rgba(107, 142, 35, 0.6), 0 10px 35px rgba(139, 165, 116, 0.5), 0 0 50px rgba(139, 165, 116, 0.3), inset 0 -8px 16px rgba(85, 107, 47, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.5)',
+              border: reservationPercentage === 100
+                ? '3px solid rgba(156, 163, 175, 0.5)'
+                : '3px solid rgba(255, 255, 255, 0.6)',
               opacity: reservationPercentage === 100 ? 0.7 : 1,
-              textShadow: '0 2px 8px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.2)',
-              transform: 'perspective(1000px) rotateX(2deg)',
+              textShadow: '0 3px 10px rgba(0, 0, 0, 0.4), 0 6px 18px rgba(0, 0, 0, 0.3)',
+              transform: 'perspective(1200px) rotateX(3deg)',
+              transformStyle: 'preserve-3d',
             }}
           >
+            {/* طبقة التوهج المتحرك */}
             <div
-              className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+              className="absolute inset-0 opacity-0 group-active:opacity-100 sm:group-hover:opacity-100 transition-opacity duration-700"
               style={{
-                background: 'linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.4) 50%, transparent 70%)',
+                background: 'linear-gradient(120deg, transparent 0%, rgba(255, 255, 255, 0.5) 40%, transparent 80%)',
                 backgroundSize: '200% 200%',
-                animation: 'shimmer 2s infinite'
+                animation: 'shimmer-sweep 3s ease-in-out infinite',
               }}
             />
 
-            <div className="relative z-10 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 md:gap-5">
+            {/* طبقة النبض الخارجي */}
+            <div
+              className="absolute -inset-1 rounded-2xl sm:rounded-3xl opacity-0 group-active:opacity-100 sm:group-hover:opacity-70 transition-all duration-700"
+              style={{
+                background: reservationPercentage === 100
+                  ? 'linear-gradient(145deg, #9CA3AF, #6B7280)'
+                  : !farm.farm_type || farm.farm_type === 'نخيل'
+                    ? 'linear-gradient(145deg, #FFD700, #FFA500)'
+                    : 'linear-gradient(145deg, #9ACD32, #6B8E23)',
+                filter: 'blur(15px)',
+                animation: 'pulse-glow 2s ease-in-out infinite',
+              }}
+            />
+
+            {/* المحتوى الرئيسي */}
+            <div className="relative z-10 flex flex-col items-center justify-center gap-3 sm:gap-4 md:gap-5" style={{ transform: 'translateZ(20px)' }}>
               {reservationPercentage === 100 ? (
                 <>
-                  <span className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl drop-shadow-lg">🔒</span>
-                  <div className="flex flex-col items-center sm:items-start">
-                    <span className="leading-tight text-base sm:text-xl md:text-2xl lg:text-3xl font-black tracking-wide">
+                  <span className="text-4xl sm:text-5xl md:text-6xl drop-shadow-2xl">🔒</span>
+                  <div className="flex flex-col items-center">
+                    <span className="leading-tight text-lg sm:text-2xl md:text-3xl font-black tracking-wide">
                       تم اكتمال الحجز بالكامل
                     </span>
                   </div>
                 </>
               ) : (
                 <>
-                  <span className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl drop-shadow-2xl animate-bounce">
-                    {getTreeEmoji(farm.farm_type)}
-                  </span>
-                  <div className="flex flex-col items-center sm:items-start text-center sm:text-right space-y-0.5 sm:space-y-1">
-                    <span
-                      className="text-xs sm:text-sm md:text-base lg:text-lg font-bold tracking-widest uppercase opacity-95"
+                  {/* الأيقونة ثلاثية الأبعاد */}
+                  <div
+                    className="relative"
+                    style={{
+                      transform: 'translateZ(30px)',
+                      animation: 'float-bounce 3s ease-in-out infinite'
+                    }}
+                  >
+                    <span className="text-5xl sm:text-6xl md:text-7xl drop-shadow-2xl block">
+                      {getTreeEmoji(farm.farm_type)}
+                    </span>
+                    {/* هالة متوهجة حول الأيقونة */}
+                    <div
+                      className="absolute inset-0 rounded-full opacity-60"
                       style={{
-                        letterSpacing: '0.15em',
-                        textShadow: '0 2px 4px rgba(0, 0, 0, 0.2)'
+                        background: 'radial-gradient(circle, rgba(255, 255, 255, 0.6) 0%, transparent 70%)',
+                        filter: 'blur(20px)',
+                        animation: 'pulse 2s infinite',
+                      }}
+                    />
+                  </div>
+
+                  {/* النصوص */}
+                  <div className="flex flex-col items-center text-center space-y-2 sm:space-y-3">
+                    <span
+                      className="text-sm sm:text-base md:text-lg font-bold tracking-[0.2em] uppercase"
+                      style={{
+                        textShadow: '0 2px 6px rgba(0, 0, 0, 0.3), 0 0 20px rgba(255, 255, 255, 0.4)',
+                        transform: 'translateZ(15px)',
                       }}
                     >
-                      🌟 ابدأ رحلتك الآن
+                      ✨ ابدأ رحلتك الآن
                     </span>
                     <span
-                      className="leading-none text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-black tracking-tight"
+                      className="leading-none text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black"
                       style={{
                         fontFamily: 'system-ui, -apple-system, sans-serif',
                         letterSpacing: '-0.02em',
-                        textShadow: '0 3px 6px rgba(0, 0, 0, 0.3), 0 6px 12px rgba(0, 0, 0, 0.2)'
+                        textShadow: '0 4px 8px rgba(0, 0, 0, 0.4), 0 8px 16px rgba(0, 0, 0, 0.3), 0 0 30px rgba(255, 255, 255, 0.3)',
+                        transform: 'translateZ(25px)',
                       }}
                     >
                       امتلك {getTreeName(farm.farm_type)}
                     </span>
                     <span
-                      className="text-[10px] sm:text-xs md:text-sm lg:text-base font-semibold opacity-90 tracking-wide"
+                      className="text-xs sm:text-sm md:text-base font-semibold opacity-95 tracking-wide"
                       style={{
-                        textShadow: '0 1px 3px rgba(0, 0, 0, 0.2)'
+                        textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)',
+                        transform: 'translateZ(10px)',
                       }}
                     >
                       واحصد الخير مدى الحياة 🌿
@@ -589,11 +630,12 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
               )}
             </div>
 
+            {/* تأثير الضوء المتحرك */}
             <div
-              className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-all duration-300"
+              className="absolute inset-0 rounded-2xl sm:rounded-3xl opacity-0 group-active:opacity-100 sm:group-hover:opacity-100 transition-all duration-500 pointer-events-none"
               style={{
-                background: 'radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%)',
-                animation: 'pulse 2s infinite'
+                background: 'radial-gradient(circle at center, rgba(255, 255, 255, 0.4) 0%, transparent 60%)',
+                animation: 'pulse-light 2.5s infinite',
               }}
             />
           </button>
