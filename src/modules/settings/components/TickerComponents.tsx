@@ -80,7 +80,22 @@ export function SliderSetting({
   unit: string;
   onChange: (value: number) => void;
 }) {
-  const [isDragging, setIsDragging] = useState(false);
+  const handleIncrement = () => {
+    if (value < max) onChange(value + 1);
+  };
+
+  const handleDecrement = () => {
+    if (value > min) onChange(value - 1);
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = parseInt(e.target.value);
+    if (!isNaN(newValue) && newValue >= min && newValue <= max) {
+      onChange(newValue);
+    }
+  };
+
+  const progressPercentage = ((value - min) / (max - min)) * 100;
 
   return (
     <div className="space-y-4">
@@ -90,41 +105,88 @@ export function SliderSetting({
           <div className="font-bold text-gray-900">{label}</div>
           <div className="text-xs text-gray-600">{description}</div>
         </div>
-        <div className={`text-2xl font-black transition-all ${
-          isDragging ? 'text-blue-600 scale-110' : 'text-blue-600'
-        }`}>
-          {value} {unit}
+      </div>
+
+      {/* Control Panel */}
+      <div className="bg-gradient-to-r from-blue-50 to-cyan-50 rounded-2xl p-6 border-2 border-blue-100">
+        <div className="flex items-center justify-between gap-4">
+          {/* Decrement Button */}
+          <button
+            onClick={handleDecrement}
+            disabled={value <= min}
+            className="group w-14 h-14 bg-white rounded-xl border-2 border-blue-200 hover:border-blue-400 hover:bg-blue-50 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm hover:shadow-md flex items-center justify-center"
+          >
+            <span className="text-3xl font-black text-blue-600 group-hover:scale-125 transition-transform">−</span>
+          </button>
+
+          {/* Value Display */}
+          <div className="flex-1">
+            <div className="flex items-center justify-center gap-3 mb-3">
+              <input
+                type="number"
+                value={value}
+                onChange={handleInputChange}
+                min={min}
+                max={max}
+                className="w-24 text-center text-4xl font-black text-blue-600 bg-white rounded-xl border-2 border-blue-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none px-2 py-2"
+              />
+              <span className="text-2xl font-bold text-blue-600">{unit}</span>
+            </div>
+
+            {/* Progress Bar */}
+            <div className="relative h-3 bg-gray-200 rounded-full overflow-hidden">
+              <div
+                className="absolute top-0 left-0 h-full bg-gradient-to-r from-blue-500 via-blue-600 to-cyan-500 rounded-full transition-all duration-300"
+                style={{ width: `${progressPercentage}%` }}
+              />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className="text-xs font-bold text-white drop-shadow-md">
+                  {Math.round(progressPercentage)}%
+                </span>
+              </div>
+            </div>
+
+            {/* Min/Max Labels */}
+            <div className="flex justify-between mt-2 text-xs font-medium text-gray-500">
+              <span className={value === min ? 'text-blue-600 font-bold' : ''}>
+                الحد الأدنى: {min} {unit}
+              </span>
+              <span className={value === max ? 'text-blue-600 font-bold' : ''}>
+                الحد الأقصى: {max} {unit}
+              </span>
+            </div>
+          </div>
+
+          {/* Increment Button */}
+          <button
+            onClick={handleIncrement}
+            disabled={value >= max}
+            className="group w-14 h-14 bg-white rounded-xl border-2 border-blue-200 hover:border-blue-400 hover:bg-blue-50 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm hover:shadow-md flex items-center justify-center"
+          >
+            <span className="text-3xl font-black text-blue-600 group-hover:scale-125 transition-transform">+</span>
+          </button>
         </div>
-      </div>
 
-      <div className="relative">
-        {/* Background Track */}
-        <div className="absolute top-0 left-0 w-full h-2 bg-gray-200 rounded-lg" />
-
-        {/* Progress Bar */}
-        <div
-          className="absolute top-0 left-0 h-2 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg pointer-events-none transition-all shadow-sm"
-          style={{ width: `${((value - min) / (max - min)) * 100}%` }}
-        />
-
-        {/* Slider Input */}
-        <input
-          type="range"
-          min={min}
-          max={max}
-          value={value}
-          onChange={(e) => onChange(parseInt(e.target.value))}
-          onMouseDown={() => setIsDragging(true)}
-          onMouseUp={() => setIsDragging(false)}
-          onTouchStart={() => setIsDragging(true)}
-          onTouchEnd={() => setIsDragging(false)}
-          className="slider-thumb w-full relative z-10"
-        />
-      </div>
-
-      <div className="flex justify-between text-xs font-medium text-gray-500">
-        <span className={value === min ? 'text-blue-600 font-bold' : ''}>{min} {unit}</span>
-        <span className={value === max ? 'text-blue-600 font-bold' : ''}>{max} {unit}</span>
+        {/* Quick Preset Buttons */}
+        <div className="flex gap-2 mt-4">
+          {[
+            { label: 'سريع جداً', value: min },
+            { label: 'متوسط', value: Math.floor((min + max) / 2) },
+            { label: 'بطيء', value: max }
+          ].map((preset) => (
+            <button
+              key={preset.label}
+              onClick={() => onChange(preset.value)}
+              className={`flex-1 px-4 py-2 rounded-lg text-sm font-bold transition-all ${
+                value === preset.value
+                  ? 'bg-blue-500 text-white shadow-md'
+                  : 'bg-white text-blue-600 hover:bg-blue-100 border-2 border-blue-200'
+              }`}
+            >
+              {preset.label}
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   );
