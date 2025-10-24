@@ -6,6 +6,7 @@ import { LoginNotification } from './modules/admin/components/LoginNotification'
 import { AdminSessionService } from './modules/admin/services/adminSessionService';
 
 const PublicPlatformRouter = lazy(() => import('./modules/public/components/PublicPlatformRouter').then(m => ({ default: m.PublicPlatformRouter })));
+const FarmOwnerRouter = lazy(() => import('./modules/farm-owner/components/FarmOwnerRouter').then(m => ({ default: m.FarmOwnerRouter })));
 const EnhancedDashboard = lazy(() => import('./modules/dashboard/EnhancedDashboard').then(m => ({ default: m.EnhancedDashboard })));
 const OwnersView = lazy(() => import('./modules/owners/components/OwnersView').then(m => ({ default: m.OwnersView })));
 const FarmsView = lazy(() => import('./modules/farms/components/FarmsView').then(m => ({ default: m.FarmsView })));
@@ -98,8 +99,11 @@ function App() {
           <PublicPlatformRouter
             onAdminLogin={() => setShowAdminLogin(true)}
             onBackToAdmin={() => setActiveModule('dashboard')}
+            onFarmOwnerLogin={() => setActiveModule('farm-owner')}
           />
         );
+      case 'farm-owner':
+        return <FarmOwnerRouter />;
       case 'dashboard':
         return (
           <EnhancedDashboard

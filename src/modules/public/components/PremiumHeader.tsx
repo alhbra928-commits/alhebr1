@@ -8,9 +8,10 @@ interface PremiumHeaderProps {
   onInvestorLogin?: () => void;
   onVerifyCertificate?: () => void;
   onBackToAdmin?: () => void;
+  onFarmOwnerLogin?: () => void;
 }
 
-export function PremiumHeader({ onAdminLogin, onInvestorLogin, onVerifyCertificate, onBackToAdmin }: PremiumHeaderProps) {
+export function PremiumHeader({ onAdminLogin, onInvestorLogin, onVerifyCertificate, onBackToAdmin, onFarmOwnerLogin }: PremiumHeaderProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [hasActiveSession, setHasActiveSession] = useState(false);
@@ -118,6 +119,19 @@ export function PremiumHeader({ onAdminLogin, onInvestorLogin, onVerifyCertifica
             </button>
 
             <button
+              onClick={onFarmOwnerLogin}
+              className="hidden md:flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold transition-all duration-300 hover:scale-105"
+              style={{
+                background: 'linear-gradient(135deg, #8BC34A 0%, #689F38 100%)',
+                color: 'white',
+                boxShadow: '0 4px 20px rgba(139, 195, 74, 0.5)',
+              }}
+            >
+              <span>🎩</span>
+              <span>لوحة صاحب المزرعة</span>
+            </button>
+
+            <button
               onClick={onInvestorLogin}
               className="hidden md:flex items-center gap-2 px-6 py-3 rounded-2xl font-black text-white transition-all duration-300 hover:scale-105 investor-login-btn"
               style={{
@@ -193,6 +207,22 @@ export function PremiumHeader({ onAdminLogin, onInvestorLogin, onVerifyCertifica
                 <Shield className="h-5 w-5" />
                 <span className="text-base">التحقق من الشهادة</span>
               </button>
+
+              <button
+                onClick={() => {
+                  onFarmOwnerLogin?.();
+                  setMobileMenuOpen(false);
+                }}
+                className="mx-3 flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl font-bold text-white mb-2 touch-manipulation active:scale-95 transition-transform"
+                style={{
+                  background: 'linear-gradient(135deg, #8BC34A 0%, #689F38 100%)',
+                  boxShadow: '0 4px 20px rgba(139, 195, 74, 0.5)',
+                }}
+              >
+                <span>🎩</span>
+                <span className="text-base">لوحة صاحب المزرعة</span>
+              </button>
+
               <button
                 onClick={() => {
                   onInvestorLogin?.();

@@ -2,14 +2,15 @@ import React, { useState } from 'react';
 import { MainPlatformInterface } from './MainPlatformInterface';
 import { PreviewInspectionPage } from './PreviewInspectionPage';
 
-type View = 'main' | 'preview';
+type View = 'main' | 'preview' | 'farm-owner';
 
 interface PublicPlatformRouterProps {
   onAdminLogin?: () => void;
   onBackToAdmin?: () => void;
+  onFarmOwnerLogin?: () => void;
 }
 
-export function PublicPlatformRouter({ onAdminLogin, onBackToAdmin }: PublicPlatformRouterProps) {
+export function PublicPlatformRouter({ onAdminLogin, onBackToAdmin, onFarmOwnerLogin }: PublicPlatformRouterProps) {
   const [currentView, setCurrentView] = useState<View>('main');
   const [selectedBarcode, setSelectedBarcode] = useState<string>('');
 
@@ -46,6 +47,7 @@ export function PublicPlatformRouter({ onAdminLogin, onBackToAdmin }: PublicPlat
           onPreviewSelect={handlePreviewSelect}
           onAdminLogin={onAdminLogin}
           onBackToAdmin={onBackToAdmin}
+          onFarmOwnerLogin={onFarmOwnerLogin}
         />
       );
   }

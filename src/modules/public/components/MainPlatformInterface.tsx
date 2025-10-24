@@ -24,6 +24,7 @@ interface MainPlatformInterfaceProps {
   onPreviewSelect?: (barcode: string) => void;
   onAdminLogin?: () => void;
   onBackToAdmin?: () => void;
+  onFarmOwnerLogin?: () => void;
 }
 
 export function MainPlatformInterface({
@@ -31,6 +32,7 @@ export function MainPlatformInterface({
   onPreviewSelect,
   onAdminLogin,
   onBackToAdmin,
+  onFarmOwnerLogin,
 }: MainPlatformInterfaceProps) {
   const [farms, setFarms] = useState<PublicFarm[]>([]);
   const [showConceptModal, setShowConceptModal] = useState(false);
@@ -152,6 +154,7 @@ export function MainPlatformInterface({
         onInvestorLogin={handleGoToInvestorPanel}
         onVerifyCertificate={() => setCurrentView('verification')}
         onBackToAdmin={onBackToAdmin}
+        onFarmOwnerLogin={onFarmOwnerLogin}
       />
       <StockTicker />
 
