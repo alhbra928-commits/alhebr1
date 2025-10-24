@@ -11,6 +11,7 @@ import { ModernMessagesLog } from './ModernMessagesLog';
 import { ModernBroadcastManager } from './ModernBroadcastManager';
 import { UltraModernWhatsAppSettings } from './UltraModernWhatsAppSettings';
 import { AdvancedAnalyticsReports } from './AdvancedAnalyticsReports';
+import { FloatingWhatsAppSettings } from './FloatingWhatsAppSettings';
 
 interface ModernWhatsAppDashboardProps {
   onBack?: () => void;
@@ -80,6 +81,7 @@ export function ModernWhatsAppDashboard({ onBack }: ModernWhatsAppDashboardProps
           {activeView === 'broadcast' && <ModernBroadcastManager />}
           {activeView === 'settings' && <UltraModernWhatsAppSettings />}
           {activeView === 'analytics' && <AdvancedAnalyticsReports />}
+          {activeView === 'floating-settings' && <FloatingWhatsAppSettings />}
         </div>
       </div>
     );
@@ -224,7 +226,7 @@ export function ModernWhatsAppDashboard({ onBack }: ModernWhatsAppDashboardProps
         </div>
 
         {/* Quick Actions - Modern Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
           <ModernActionCard
             title="القوالب"
             subtitle="إدارة الرسائل"
@@ -261,6 +263,14 @@ export function ModernWhatsAppDashboard({ onBack }: ModernWhatsAppDashboardProps
             icon={Settings}
             gradient="from-yellow-500 via-orange-500 to-red-500"
             onClick={() => setActiveView('settings')}
+          />
+          <ModernActionCard
+            title="الزر العائم"
+            subtitle="إدارة الزر"
+            icon={Zap}
+            gradient="from-[#556B2F] via-[#6B8E23] to-[#D4AF37]"
+            onClick={() => setActiveView('floating-settings')}
+            badge={<Sparkles className="h-4 w-4" />}
           />
         </div>
 

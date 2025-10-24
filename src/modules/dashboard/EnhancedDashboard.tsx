@@ -22,7 +22,8 @@ import { LogoutConfirmationModal } from '../admin/components/LogoutConfirmationM
 import { SessionTerminatedMessage } from '../admin/components/SessionTerminatedMessage';
 import { LiveFinancialSystem } from '../../services/liveFinancialSystem';
 import { NotificationSoundControl } from '../../components/common/NotificationSoundControl';
-import { FloatingWhatsAppButton } from '../../components/common/FloatingWhatsAppButton';
+import { SmartFloatingWhatsApp } from '../../components/common/SmartFloatingWhatsApp';
+import { floatingWhatsAppService } from '../../services/floatingWhatsAppService';
 
 interface EnhancedDashboardProps {
   onModuleSelect: (moduleId: string) => void;
@@ -515,8 +516,14 @@ export function EnhancedDashboard({ onModuleSelect, onLogout, onGoToPublic, onSh
       {/* التحكم في الإشعارات الصوتية */}
       <NotificationSoundControl />
 
-      {/* زر الواتساب العائم */}
-      <FloatingWhatsAppButton />
+      {/* زر الواتساب العائم الذكي */}
+      <SmartFloatingWhatsApp
+        context={{
+          userType: 'admin',
+          currentPage: 'admin-dashboard',
+          sessionId: floatingWhatsAppService.getSessionId()
+        }}
+      />
     </div>
   );
 }
