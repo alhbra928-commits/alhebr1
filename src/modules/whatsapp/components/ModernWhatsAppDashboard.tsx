@@ -6,7 +6,7 @@ import {
 } from 'lucide-react';
 import { whatsappService, DailyStats } from '../services/whatsappService';
 import { AnimatedCounter } from '../../../components/ui/AnimatedCounter';
-import { TemplatesManager } from './TemplatesManager';
+import { SmartTemplatesManager } from './SmartTemplatesManager';
 import { ModernMessagesLog } from './ModernMessagesLog';
 import { BroadcastManager } from './BroadcastManager';
 import { ModernWhatsAppSettings } from './ModernWhatsAppSettings';
@@ -71,7 +71,7 @@ export function ModernWhatsAppDashboard() {
             العودة للرئيسية
           </button>
 
-          {activeView === 'templates' && <TemplatesManager />}
+          {activeView === 'templates' && <SmartTemplatesManager />}
           {activeView === 'messages' && <ModernMessagesLog />}
           {activeView === 'broadcast' && <BroadcastManager />}
           {activeView === 'settings' && <ModernWhatsAppSettings />}

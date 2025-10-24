@@ -39,12 +39,23 @@ export interface WhatsAppTemplate {
   template_code: string;
   template_name_ar: string;
   template_category: string;
+  template_icon?: string;
   message_content_ar: string;
   message_content_en: string | null;
   variables: string[];
   target_audience: string[];
   is_active: boolean;
   usage_count: number;
+  priority?: number;
+  event_trigger?: string | null;
+  has_image?: boolean;
+  has_cta_button?: boolean;
+  cta_button_text?: string | null;
+  cta_button_url?: string | null;
+  last_used_at?: string | null;
+  status?: 'active' | 'inactive' | 'draft' | 'review';
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface BroadcastCampaign {
@@ -178,10 +189,145 @@ class WhatsAppService {
   async updateTemplate(id: string, updates: Partial<WhatsAppTemplate>): Promise<void> {
     const { error } = await supabase
       .from('whatsapp_message_templates')
-      .update(updates)
+      .update({ ...updates, updated_at: new Date().toISOString() })
       .eq('id', id);
 
     if (error) throw error;
+  }
+
+  async deleteTemplate(id: string): Promise<void> {
+    const { error } = await supabase
+      .from('whatsapp_message_templates')
+      .delete()
+      .eq('id', id);
+
+    if (error) throw error;
+  }
+
+  async duplicateTemplate(id: string): Promise<WhatsAppTemplate> {
+    const original = await supabase
+      .from('whatsapp_message_templates')
+      .select('*')
+      .eq('id', id)
+      .single();
+
+    if (original.error) throw original.error;
+
+    const duplicate = {
+      ...original.data,
+      id: undefined,
+      template_code: `${original.data.template_code}_COPY_${Date.now()}`,
+      template_name_ar: `نسخة من ${original.data.template_name_ar}`,
+      usage_count: 0,
+      last_used_at: null,
+      status: 'draft' as const,
+      created_at: undefined,
+      updated_at: undefined
+    };
+
+    const { data, error } = await supabase
+      .from('whatsapp_message_templates')
+      .insert(duplicate)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  }
+
+  async updateTemplatePriority(id: string, priority: number): Promise<void> {
+    const { error } = await supabase
+      .from('whatsapp_message_templates')
+      .update({ priority, updated_at: new Date().toISOString() })
+      .eq('id', id);
+
+    if (error) throw error;
+  }
+
+  async toggleTemplateStatus(id: string): Promise<void> {
+    const template = await supabase
+      .from('whatsapp_message_templates')
+      .select('status')
+      .eq('id', id)
+      .single();
+
+    if (template.error) throw template.error;
+
+    const newStatus = template.data.status === 'active' ? 'inactive' : 'active';
+
+    const { error } = await supabase
+      .from('whatsapp_message_templates')
+      .update({ status: newStatus, updated_at: new Date().toISOString() })
+      .eq('id', id);
+
+    if (error) throw error;
+  }
+
+  async getTemplatesByCategory(category: string): Promise<WhatsAppTemplate[]> {
+    const { data, error } = await supabase
+      .from('whatsapp_message_templates')
+      .select('*')
+      .eq('template_category', category)
+      .order('priority', { ascending: false });
+
+    if (error) throw error;
+    return data || [];
+  }
+
+  async getTemplatesByEvent(event: string): Promise<WhatsAppTemplate | null> {
+    const { data, error } = await supabase
+      .from('whatsapp_message_templates')
+      .select('*')
+      .eq('event_trigger', event)
+      .eq('status', 'active')
+      .maybeSingle();
+
+    if (error) throw error;
+    return data;
+  }
+
+  async getTemplateStats(): Promise<{
+    total: number;
+    active: number;
+    inactive: number;
+    draft: number;
+    mostUsed: WhatsAppTemplate[];
+    recentlyUpdated: WhatsAppTemplate[];
+    byCategory: Record<string, number>;
+  }> {
+    const { data: templates, error } = await supabase
+      .from('whatsapp_message_templates')
+      .select('*');
+
+    if (error) throw error;
+
+    const total = templates?.length || 0;
+    const active = templates?.filter(t => t.status === 'active').length || 0;
+    const inactive = templates?.filter(t => t.status === 'inactive').length || 0;
+    const draft = templates?.filter(t => t.status === 'draft').length || 0;
+
+    const mostUsed = templates
+      ?.sort((a, b) => b.usage_count - a.usage_count)
+      .slice(0, 5) || [];
+
+    const recentlyUpdated = templates
+      ?.sort((a, b) => new Date(b.updated_at || 0).getTime() - new Date(a.updated_at || 0).getTime())
+      .slice(0, 5) || [];
+
+    const byCategory: Record<string, number> = {};
+    templates?.forEach(t => {
+      byCategory[t.template_category] = (byCategory[t.template_category] || 0) + 1;
+    });
+
+    return {
+      total,
+      active,
+      inactive,
+      draft,
+      mostUsed,
+      recentlyUpdated,
+      byCategory
+    };
   }
 
   // =====================================
