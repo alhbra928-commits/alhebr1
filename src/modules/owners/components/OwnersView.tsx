@@ -31,7 +31,9 @@ interface OwnersViewProps {
 }
 
 export function OwnersView({ onBack }: OwnersViewProps) {
+  const [activeTab, setActiveTab] = useState<'approved' | 'pending'>('pending');
   const [owners, setOwners] = useState<FarmOwner[]>([]);
+  const [pendingSubmissions, setPendingSubmissions] = useState<any[]>([]);
   const [filteredOwners, setFilteredOwners] = useState<FarmOwner[]>([]);
   const [stats, setStats] = useState<any>(null);
   const [loading, setLoading] = useState(true);
