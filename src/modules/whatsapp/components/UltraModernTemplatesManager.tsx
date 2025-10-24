@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { FileText, Plus, CreditCard as Edit2, Trash2, Eye, Copy, Search, Sparkles, Save, X, Check, AlertCircle, TrendingUp, BarChart3, Clock, Zap, MessageCircle, DollarSign, Award, Calendar, Bell, Users, GripVertical, ArrowUpDown, Image, ExternalLink, Target, Activity, CheckCircle, XCircle, File as FileEdit, Download, Upload, RefreshCw, Filter, Star, Send, Bookmark, Share2, Settings, ChevronRight, Grid2x2 as Grid, List, PlayCircle, Pause, Layers, Package, Workflow } from 'lucide-react';
+import { FileText, Plus, CreditCard as Edit2, Trash2, Eye, Copy, Search, Sparkles, Save, X, Check, AlertCircle, TrendingUp, BarChart3, Clock, Zap, MessageCircle, DollarSign, Award, Calendar, Bell, Users, GripVertical, ArrowUpDown, Image, ExternalLink, Target, Activity, CheckCircle, XCircle, File as FileEdit, Download, Upload, RefreshCw, Filter, Star, Send, Bookmark, Share2, Settings, ChevronRight, Grid2x2 as Grid, List, PlayCircle, Pause, Layers, Package, Workflow, CheckCheck } from 'lucide-react';
 import { whatsappService, WhatsAppTemplate } from '../services/whatsappService';
 import { notificationSoundService } from '../../../services/notificationSoundService';
 
