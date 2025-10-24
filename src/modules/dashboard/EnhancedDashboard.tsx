@@ -20,6 +20,7 @@ import { AdminSessionService } from '../admin/services/adminSessionService';
 import { LogoutConfirmationModal } from '../admin/components/LogoutConfirmationModal';
 import { SessionTerminatedMessage } from '../admin/components/SessionTerminatedMessage';
 import { LiveFinancialSystem } from '../../services/liveFinancialSystem';
+import { NotificationSoundControl } from '../../components/common/NotificationSoundControl';
 
 interface EnhancedDashboardProps {
   onModuleSelect: (moduleId: string) => void;
@@ -499,6 +500,9 @@ export function EnhancedDashboard({ onModuleSelect, onLogout, onGoToPublic, onSh
           }}
         />
       )}
+
+      {/* التحكم في الإشعارات الصوتية */}
+      <NotificationSoundControl />
     </div>
   );
 }
