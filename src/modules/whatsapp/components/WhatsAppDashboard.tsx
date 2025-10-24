@@ -2,12 +2,17 @@ import { useState, useEffect } from 'react';
 import {
   MessageCircle, Send, CheckCheck, Eye, AlertCircle,
   TrendingUp, Calendar, Users, Settings, Zap, BarChart3,
-  RefreshCw, Bell, Clock, Activity
+  RefreshCw, Bell, Clock, Activity, FileText, ArrowRight
 } from 'lucide-react';
 import { whatsappService, DailyStats } from '../services/whatsappService';
 import { AnimatedCounter } from '../../../components/ui/AnimatedCounter';
+import { TemplatesManager } from './TemplatesManager';
+import { MessagesLog } from './MessagesLog';
+import { BroadcastManager } from './BroadcastManager';
+import { WhatsAppSettings } from './WhatsAppSettings';
 
 export function WhatsAppDashboard() {
+  const [activeView, setActiveView] = useState('dashboard');
   const [todayStats, setTodayStats] = useState<DailyStats | null>(null);
   const [overallStats, setOverallStats] = useState<any>(null);
   const [recentMessages, setRecentMessages] = useState<any[]>([]);
@@ -67,6 +72,26 @@ export function WhatsAppDashboard() {
           <RefreshCw className="h-12 w-12 text-green-600 animate-spin mx-auto mb-4" />
           <p className="text-gray-600 font-bold">جاري تحميل لوحة الواتساب...</p>
         </div>
+      </div>
+    );
+  }
+
+  // عرض الصفحة الفرعية
+  if (activeView !== 'dashboard') {
+    return (
+      <div>
+        <button
+          onClick={() => setActiveView('dashboard')}
+          className="flex items-center gap-2 px-6 py-3 bg-white border-2 border-gray-200 rounded-xl hover:bg-gray-50 transition-colors font-bold text-gray-700 mb-6"
+        >
+          <ArrowRight className="h-5 w-5" />
+          العودة للرئيسية
+        </button>
+
+        {activeView === 'templates' && <TemplatesManager />}
+        {activeView === 'messages' && <MessagesLog />}
+        {activeView === 'broadcast' && <BroadcastManager />}
+        {activeView === 'settings' && <WhatsAppSettings />}
       </div>
     );
   }
@@ -341,12 +366,13 @@ export function WhatsAppDashboard() {
       </div>
 
       {/* روابط سريعة */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <QuickActionCard
           title="إدارة القوالب"
           description="إضافة وتعديل قوالب الرسائل"
-          icon={Settings}
+          icon={FileText}
           color="from-blue-500 to-cyan-600"
+          onClick={() => setActiveView('templates')}
         />
 
         <QuickActionCard
@@ -354,6 +380,7 @@ export function WhatsAppDashboard() {
           description="عرض جميع الرسائل المرسلة"
           icon={MessageCircle}
           color="from-purple-500 to-pink-600"
+          onClick={() => setActiveView('messages')}
         />
 
         <QuickActionCard
@@ -361,6 +388,15 @@ export function WhatsAppDashboard() {
           description="إرسال رسائل لمجموعة"
           icon={Users}
           color="from-green-500 to-emerald-600"
+          onClick={() => setActiveView('broadcast')}
+        />
+
+        <QuickActionCard
+          title="الإعدادات"
+          description="تكوين الاتصال بالواتساب"
+          icon={Settings}
+          color="from-yellow-500 to-orange-600"
+          onClick={() => setActiveView('settings')}
         />
       </div>
     </div>
@@ -400,15 +436,17 @@ function QuickActionCard({
   title,
   description,
   icon: Icon,
-  color
+  color,
+  onClick
 }: {
   title: string;
   description: string;
   icon: any;
   color: string;
+  onClick?: () => void;
 }) {
   return (
-    <button className="bg-white border-2 border-gray-200 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all group text-right w-full">
+    <button onClick={onClick} className="bg-white border-2 border-gray-200 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all group text-right w-full">
       <div className={`w-12 h-12 bg-gradient-to-r ${color} rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
         <Icon className="h-6 w-6 text-white" />
       </div>
