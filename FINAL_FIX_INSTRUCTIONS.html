@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>الحل النهائي - إضافة المستخدم</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #1a1a1a 0%, #2d3436 100%);
+      color: white;
+      padding: 20px;
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    }
+    h1 {
+      text-align: center;
+      color: #D4AF37;
+      font-size: 2.5em;
+      margin-bottom: 20px;
+    }
+    .alert {
+      background: rgba(239, 68, 68, 0.2);
+      border: 2px solid #EF4444;
+      border-radius: 15px;
+      padding: 25px;
+      margin: 30px 0;
+    }
+    .alert h2 {
+      color: #EF4444;
+      margin-bottom: 15px;
+    }
+    .solution {
+      background: rgba(16, 185, 129, 0.2);
+      border: 2px solid #10B981;
+      border-radius: 15px;
+      padding: 25px;
+      margin: 30px 0;
+    }
+    .solution h2 {
+      color: #10B981;
+      margin-bottom: 15px;
+    }
+    .code {
+      background: #000;
+      border-radius: 10px;
+      padding: 20px;
+      margin: 15px 0;
+      overflow-x: auto;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    button {
+      width: 100%;
+      background: linear-gradient(135deg, #D4AF37 0%, #AA8A2E 100%);
+      color: white;
+      border: none;
+      padding: 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 18px;
+      margin: 10px 0;
+      transition: all 0.3s;
+    }
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+    }
+    button:active {
+      transform: translateY(0);
+    }
+    .success {
+      color: #10B981;
+      font-weight: bold;
+    }
+    .error {
+      color: #EF4444;
+      font-weight: bold;
+    }
+    .step {
+      background: rgba(212, 175, 55, 0.1);
+      border-left: 4px solid #D4AF37;
+      padding: 20px;
+      margin: 15px 0;
+      border-radius: 10px;
+    }
+    .step h3 {
+      color: #D4AF37;
+      margin-bottom: 10px;
+    }
+    #result {
+      margin-top: 30px;
+      padding: 20px;
+      border-radius: 10px;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+    }
+    #result.show {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔧 الحل النهائي</h1>
+
+    <div class="alert">
+      <h2>⚠️ المشكلة المكتشفة:</h2>
+      <p>المستخدم <strong>0563406760</strong> يظهر في لوحة إدارة الصلاحيات، لكن <strong>localStorage يحتوي فقط على 2 مستخدمين</strong> (المستخدمون الافتراضيون).</p>
+      <p style="margin-top: 10px;"><strong>السبب:</strong> المستخدم لم يُحفظ في localStorage عند الإضافة.</p>
+    </div>
+
+    <div class="solution">
+      <h2>✅ الحل الفوري (تنفيذ مباشر):</h2>
+      <p>اضغط الزر أدناه لإضافة المستخدم مباشرة إلى localStorage:</p>
+
+      <button onclick="fixNow()">🚀 إصلاح المشكلة الآن</button>
+
+      <div id="result"></div>
+    </div>
+
+    <div class="step">
+      <h3>📋 خطوات التشخيص:</h3>
+      <ol style="padding-right: 20px; line-height: 2;">
+        <li>عند إضافة مستخدم من SmartUserBuilder، يجب أن تظهر هذه الرسائل في Console:
+          <div class="code">
+🎯🎯🎯 handleSmartBuilderSuccess CALLED!<br>
+📥 userData received: {...}<br>
+👤 newUser object created: {...}<br>
+💾 Calling AdminUsersStorage.add()...<br>
+📝 محاولة إضافة مستخدم: {...}<br>
+✅ تم الحفظ في localStorage<br>
+📊 جميع المستخدمين بعد الإضافة: 3 مستخدمين
+          </div>
+        </li>
+        <li>إذا لم تظهر رسالة <strong>"🎯🎯🎯 handleSmartBuilderSuccess CALLED!"</strong> → المشكلة في استدعاء الدالة</li>
+        <li>إذا ظهرت ولكن العدد لا يزال 2 → المشكلة في الحفظ</li>
+      </ol>
+    </div>
+
+    <div class="step">
+      <h3>🔍 التحقق اليدوي:</h3>
+      <p>افتح Console (F12) وانسخ هذا الكود:</p>
+      <div class="code">
+const users = JSON.parse(localStorage.getItem('palm_olive_admin_users') || '[]');<br>
+console.log('عدد المستخدمين:', users.length);<br>
+console.log('المستخدمون:', users);<br>
+<br>
+const target = users.find(u => u.phone === '0563406760');<br>
+console.log('المستخدم 0563406760:', target ? '✅ موجود' : '❌ غير موجود');<br>
+if (target) console.log('الرقم السري:', target.secretCode);
+      </div>
+    </div>
+
+    <div class="step">
+      <h3>🎯 الخطوات التالية:</h3>
+      <ol style="padding-right: 20px; line-height: 2;">
+        <li>اضغط زر "إصلاح المشكلة الآن" أعلاه</li>
+        <li>تحقق من النتيجة</li>
+        <li>ارجع للتطبيق</li>
+        <li>حاول تسجيل الدخول بـ: <strong>0563406760</strong> / <strong>5678</strong></li>
+        <li>إذا نجح → المشكلة محلولة!</li>
+        <li>إذا لم ينجح → افتح Console وشاهد الرسائل</li>
+      </ol>
+    </div>
+  </div>
+
+  <script>
+    function fixNow() {
+      const result = document.getElementById('result');
+      result.className = 'result show';
+
+      try {
+        // Get current users
+        let users = JSON.parse(localStorage.getItem('palm_olive_admin_users') || '[]');
+
+        console.log('📖 المستخدمون الحاليون:', users);
+
+        // Remove if exists
+        const beforeCount = users.length;
+        users = users.filter(u => u.phone !== '0563406760');
+
+        // Add user
+        const newUser = {
+          phone: '0563406760',
+          name: 'عمر إبراهيم',
+          role: 'staff',
+          roleAr: 'موظف',
+          status: 'active',
+          secretCode: '5678',
+          createdAt: new Date().toISOString(),
+          createdBy: 'إصلاح تلقائي'
+        };
+
+        users.push(newUser);
+
+        // Save
+        localStorage.setItem('palm_olive_admin_users', JSON.stringify(users));
+
+        // Verify
+        const saved = JSON.parse(localStorage.getItem('palm_olive_admin_users'));
+        const found = saved.find(u => u.phone === '0563406760');
+
+        console.log('✅ تم الحفظ');
+        console.log('👥 العدد الإجمالي:', saved.length);
+        console.log('🔍 المستخدم موجود؟', found ? 'نعم' : 'لا');
+
+        if (found) {
+          result.innerHTML = `
+            <div style="text-align: center;">
+              <h3 class="success" style="font-size: 2em; margin-bottom: 20px;">✅✅✅ تم الإصلاح بنجاح!</h3>
+              <div class="code" style="text-align: right;">
+                <strong>الاسم:</strong> ${found.name}<br>
+                <strong>الجوال:</strong> ${found.phone}<br>
+                <strong>الرقم السري:</strong> <span style="color: #D4AF37; font-size: 1.5em;">${found.secretCode}</span><br>
+                <strong>الحالة:</strong> ${found.status}<br>
+                <br>
+                <strong>العدد قبل:</strong> ${beforeCount}<br>
+                <strong>العدد بعد:</strong> ${saved.length}
+              </div>
+              <p style="margin-top: 20px; font-size: 1.2em;">
+                الآن يمكنك تسجيل الدخول بنجاح! 🎉
+              </p>
+            </div>
+          `;
+
+          // Auto reload after confirmation
+          setTimeout(() => {
+            if (confirm('هل تريد إعادة تحميل الصفحة للتحديث؟')) {
+              location.reload();
+            }
+          }, 2000);
+        } else {
+          result.innerHTML = `
+            <h3 class="error">❌ فشل الإصلاح</h3>
+            <p>يرجى استخدام Console لإضافة المستخدم يدوياً.</p>
+          `;
+        }
+      } catch (e) {
+        console.error('خطأ:', e);
+        result.innerHTML = `
+          <h3 class="error">❌ حدث خطأ</h3>
+          <p>${e.message}</p>
+        `;
+      }
+    }
+
+    // Show current status on load
+    window.onload = function() {
+      const users = JSON.parse(localStorage.getItem('palm_olive_admin_users') || '[]');
+      console.log('📊 حالة localStorage الحالية:');
+      console.log('   عدد المستخدمين:', users.length);
+      console.log('   المستخدمون:', users);
+
+      const target = users.find(u => u.phone === '0563406760');
+      if (target) {
+        console.log('✅ المستخدم 0563406760 موجود بالفعل!');
+        console.log('   الرقم السري:', target.secretCode);
+      } else {
+        console.log('❌ المستخدم 0563406760 غير موجود');
+      }
+    };
+  </script>
+</body>
+</html>

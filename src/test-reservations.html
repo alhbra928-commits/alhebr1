@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Test Reservations</title>
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+    const supabaseUrl = 'https://xdjeygiadqavkmwarkfz.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhkamV5Z2lhZHFhdmttd2Fya2Z6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA5Mzk0NjYsImV4cCI6MjA3NjUxNTQ2Nn0.cEVEABWKMlHAc29xWHK0xVpCilWWt4r9ccOOg7skLr0';
+
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    async function testReservations() {
+      console.log('Testing Reservations Query...');
+
+      const { data, error } = await supabase
+        .from('reservations')
+        .select(`
+          *,
+          farms:farm_id(name_ar, name_en, tree_type)
+        `)
+        .is('deleted_at', null)
+        .order('created_at', { ascending: false });
+
+      console.log('Result:', { data, error });
+
+      const output = document.getElementById('output');
+      if (error) {
+        output.innerHTML = `<pre style="color: red">ERROR: ${JSON.stringify(error, null, 2)}</pre>`;
+      } else {
+        output.innerHTML = `<pre style="color: green">SUCCESS: Found ${data.length} reservations\n\n${JSON.stringify(data, null, 2)}</pre>`;
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', testReservations);
+  </script>
+</head>
+<body style="font-family: monospace; padding: 20px; direction: rtl;">
+  <h1>اختبار استعلام الحجوزات</h1>
+  <div id="output">Loading...</div>
+</body>
+</html>

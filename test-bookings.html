@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>اختبار الحجوزات</title>
+  <style>
+    body {
+      font-family: Arial;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .result {
+      background: white;
+      padding: 20px;
+      margin: 10px 0;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .error {
+      background: #fee;
+      color: #c00;
+      padding: 15px;
+      border-radius: 8px;
+      margin: 10px 0;
+    }
+    .success {
+      background: #efe;
+      color: #060;
+      padding: 15px;
+      border-radius: 8px;
+      margin: 10px 0;
+    }
+    pre {
+      background: #f5f5f5;
+      padding: 10px;
+      border-radius: 4px;
+      overflow-x: auto;
+    }
+    button {
+      background: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      margin: 5px;
+    }
+    button:hover {
+      background: #45a049;
+    }
+    .loading {
+      color: #666;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <h1>🔍 اختبار الحجوزات المباشر</h1>
+
+  <button onclick="testReservations()">اختبار جدول Reservations</button>
+  <button onclick="testBookings()">اختبار جدول Bookings</button>
+  <button onclick="testCombined()">اختبار الدمج</button>
+
+  <div id="results"></div>
+
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+    const supabase = createClient(
+      'https://xdjeygiadqavkmwarkfz.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhkamV5Z2lhZHFhdmttd2Fya2Z6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA5Mzk0NjYsImV4cCI6MjA3NjUxNTQ2Nn0.cEVEABWKMlHAc29xWHK0xVpCilWWt4r9ccOOg7skLr0'
+    );
+
+    window.supabase = supabase;
+
+    window.testReservations = async function() {
+      const results = document.getElementById('results');
+      results.innerHTML = '<div class="loading">⏳ جاري الاختبار...</div>';
+
+      try {
+        console.log('Testing reservations table...');
+
+        const { data, error, count } = await supabase
+          .from('reservations')
+          .select(`
+            *,
+            farms:farm_id(id, farm_code, name_ar, farm_type, region, city)
+          `, { count: 'exact' })
+          .is('deleted_at', null)
+          .order('created_at', { ascending: false });
+
+        console.log('Reservations result:', { data, error, count });
+
+        if (error) {
+          results.innerHTML = `<div class="error">❌ خطأ: ${error.message}</div><pre>${JSON.stringify(error, null, 2)}</pre>`;
+          return;
+        }
+
+        results.innerHTML = `
+          <div class="success">✅ نجح الاستعلام!</div>
+          <div class="result">
+            <h3>📊 النتائج:</h3>
+            <p><strong>العدد:</strong> ${data?.length || 0} حجز</p>
+            <p><strong>Count:</strong> ${count}</p>
+            <h4>البيانات:</h4>
+            <pre>${JSON.stringify(data, null, 2)}</pre>
+          </div>
+        `;
+
+        if (data && data.length > 0) {
+          let cards = '<h3>🎴 البطاقات:</h3>';
+          data.forEach(res => {
+            cards += `
+              <div class="result">
+                <h4>${res.customer_name || 'غير معروف'}</h4>
+                <p>📞 ${res.customer_phone || 'غير متوفر'}</p>
+                <p>🌳 ${res.number_of_trees} شجرة</p>
+                <p>💰 ${Number(res.total_amount).toLocaleString('ar-SA')} ريال</p>
+                <p>📍 المزرعة: ${res.farms?.name_ar || 'غير متوفر'}</p>
+                <p>📊 الحالة: ${res.status}</p>
+              </div>
+            `;
+          });
+          results.innerHTML += cards;
+        }
+      } catch (err) {
+        console.error('Error:', err);
+        results.innerHTML = `<div class="error">❌ خطأ في التنفيذ: ${err.message}</div>`;
+      }
+    };
+
+    window.testBookings = async function() {
+      const results = document.getElementById('results');
+      results.innerHTML = '<div class="loading">⏳ جاري الاختبار...</div>';
+
+      try {
+        console.log('Testing bookings table...');
+
+        const { data, error, count } = await supabase
+          .from('bookings')
+          .select('*', { count: 'exact' })
+          .is('deleted_at', null)
+          .order('created_at', { ascending: false });
+
+        console.log('Bookings result:', { data, error, count });
+
+        if (error) {
+          results.innerHTML = `<div class="error">❌ خطأ: ${error.message}</div><pre>${JSON.stringify(error, null, 2)}</pre>`;
+          return;
+        }
+
+        results.innerHTML = `
+          <div class="success">✅ نجح الاستعلام!</div>
+          <div class="result">
+            <h3>📊 النتائج:</h3>
+            <p><strong>العدد:</strong> ${data?.length || 0} حجز</p>
+            <p><strong>Count:</strong> ${count}</p>
+            <h4>البيانات:</h4>
+            <pre>${JSON.stringify(data, null, 2)}</pre>
+          </div>
+        `;
+      } catch (err) {
+        console.error('Error:', err);
+        results.innerHTML = `<div class="error">❌ خطأ في التنفيذ: ${err.message}</div>`;
+      }
+    };
+
+    window.testCombined = async function() {
+      const results = document.getElementById('results');
+      results.innerHTML = '<div class="loading">⏳ جاري الاختبار المدمج...</div>';
+
+      try {
+        console.log('Testing combined query...');
+
+        // Test reservations
+        const { data: reservationsData, error: reservationsError } = await supabase
+          .from('reservations')
+          .select(`
+            *,
+            farms:farm_id(id, farm_code, name_ar, farm_type, region, city)
+          `)
+          .is('deleted_at', null)
+          .order('created_at', { ascending: false });
+
+        console.log('Reservations:', { count: reservationsData?.length, error: reservationsError });
+
+        // Test bookings
+        const { data: bookingsData, error: bookingsError } = await supabase
+          .from('bookings')
+          .select('*')
+          .is('deleted_at', null)
+          .order('created_at', { ascending: false });
+
+        console.log('Bookings:', { count: bookingsData?.length, error: bookingsError });
+
+        const total = (reservationsData?.length || 0) + (bookingsData?.length || 0);
+
+        results.innerHTML = `
+          <div class="success">✅ نجح الاستعلام المدمج!</div>
+          <div class="result">
+            <h3>📊 النتائج المدمجة:</h3>
+            <p><strong>من reservations:</strong> ${reservationsData?.length || 0} حجز</p>
+            <p><strong>من bookings:</strong> ${bookingsData?.length || 0} حجز</p>
+            <p><strong>المجموع:</strong> ${total} حجز</p>
+
+            ${reservationsError ? `<div class="error">❌ خطأ في reservations: ${reservationsError.message}</div>` : ''}
+            ${bookingsError ? `<div class="error">❌ خطأ في bookings: ${bookingsError.message}</div>` : ''}
+
+            <h4>بيانات Reservations:</h4>
+            <pre>${JSON.stringify(reservationsData, null, 2)}</pre>
+
+            <h4>بيانات Bookings:</h4>
+            <pre>${JSON.stringify(bookingsData, null, 2)}</pre>
+          </div>
+        `;
+      } catch (err) {
+        console.error('Error:', err);
+        results.innerHTML = `<div class="error">❌ خطأ في التنفيذ: ${err.message}</div>`;
+      }
+    };
+
+    // تشغيل تلقائي
+    console.log('✅ صفحة الاختبار جاهزة!');
+    console.log('Supabase client:', supabase);
+  </script>
+</body>
+</html>

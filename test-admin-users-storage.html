@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>اختبار نظام المستخدمين الإداريين</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #2E2A26 0%, #3D5B4B 100%);
+      color: white;
+      padding: 20px;
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #D4AF37;
+    }
+    .section {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .section h2 {
+      color: #D4AF37;
+      margin-bottom: 15px;
+      border-bottom: 2px solid #D4AF37;
+      padding-bottom: 10px;
+    }
+    button {
+      background: linear-gradient(135deg, #D4AF37 0%, #AA8A2E 100%);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      margin: 5px;
+      transition: transform 0.2s;
+    }
+    button:hover {
+      transform: scale(1.05);
+    }
+    button:active {
+      transform: scale(0.95);
+    }
+    .output {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 8px;
+      padding: 15px;
+      margin-top: 15px;
+      font-family: 'Courier New', monospace;
+      white-space: pre-wrap;
+      max-height: 400px;
+      overflow-y: auto;
+      direction: ltr;
+      text-align: left;
+    }
+    .success {
+      color: #10B981;
+    }
+    .error {
+      color: #EF4444;
+    }
+    .warning {
+      color: #F59E0B;
+    }
+    input {
+      padding: 10px;
+      border-radius: 8px;
+      border: 2px solid #D4AF37;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      margin: 5px;
+      width: 200px;
+    }
+    input::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+    .user-card {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+      padding: 15px;
+      margin: 10px 0;
+      border: 2px solid rgba(212, 175, 55, 0.3);
+    }
+    .user-card h3 {
+      color: #D4AF37;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔐 اختبار نظام المستخدمين الإداريين</h1>
+
+    <div class="section">
+      <h2>1️⃣ فحص النظام</h2>
+      <button onclick="checkSystem()">✅ فحص النظام</button>
+      <button onclick="viewAllUsers()">👥 عرض جميع المستخدمين</button>
+      <button onclick="clearStorage()">🗑️ مسح localStorage</button>
+      <div id="systemOutput" class="output"></div>
+    </div>
+
+    <div class="section">
+      <h2>2️⃣ إضافة مستخدم تجريبي</h2>
+      <div>
+        <input type="text" id="testName" placeholder="الاسم" value="عمر إبراهيم">
+        <input type="text" id="testPhone" placeholder="رقم الجوال" value="0551234567">
+        <input type="text" id="testCode" placeholder="الرقم السري" value="7342">
+      </div>
+      <button onclick="addTestUser()">➕ إضافة مستخدم</button>
+      <div id="addOutput" class="output"></div>
+    </div>
+
+    <div class="section">
+      <h2>3️⃣ اختبار تسجيل الدخول</h2>
+      <div>
+        <input type="text" id="loginPhone" placeholder="رقم الجوال" value="0551234567">
+        <input type="text" id="loginCode" placeholder="الرقم السري" value="7342">
+      </div>
+      <button onclick="testLogin()">🔑 تسجيل الدخول</button>
+      <div id="loginOutput" class="output"></div>
+    </div>
+
+    <div class="section">
+      <h2>4️⃣ البحث عن مستخدم</h2>
+      <div>
+        <input type="text" id="searchPhone" placeholder="رقم الجوال" value="0551234567">
+      </div>
+      <button onclick="searchUser()">🔍 بحث</button>
+      <div id="searchOutput" class="output"></div>
+    </div>
+
+    <div class="section">
+      <h2>5️⃣ المستخدمون المحفوظون</h2>
+      <button onclick="displayUsersGrid()">📊 عرض البطاقات</button>
+      <div id="usersGrid"></div>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'palm_olive_admin_users';
+
+    const DEFAULT_USERS = [
+      {
+        phone: '0500000000',
+        name: 'المدير العام',
+        role: 'super_admin',
+        roleAr: 'المدير العام',
+        status: 'active',
+        secretCode: '1234',
+      },
+      {
+        phone: '0501234567',
+        name: 'موظف المالية',
+        role: 'staff',
+        roleAr: 'موظف',
+        status: 'active',
+        secretCode: '5678',
+      },
+    ];
+
+    function initStorage() {
+      const existing = localStorage.getItem(STORAGE_KEY);
+      if (!existing) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_USERS));
+      }
+    }
+
+    function getAllUsers() {
+      initStorage();
+      const data = localStorage.getItem(STORAGE_KEY);
+      return data ? JSON.parse(data) : DEFAULT_USERS;
+    }
+
+    function checkSystem() {
+      const output = document.getElementById('systemOutput');
+      let result = '<span class="success">✅ فحص النظام</span>\n\n';
+
+      result += '1. localStorage متاح: ';
+      if (typeof(Storage) !== "undefined") {
+        result += '<span class="success">✅ نعم</span>\n';
+      } else {
+        result += '<span class="error">❌ لا</span>\n';
+      }
+
+      result += '\n2. البيانات المحفوظة: ';
+      const data = localStorage.getItem(STORAGE_KEY);
+      if (data) {
+        result += '<span class="success">✅ موجودة</span>\n';
+        const users = JSON.parse(data);
+        result += `   عدد المستخدمين: ${users.length}\n`;
+      } else {
+        result += '<span class="warning">⚠️ غير موجودة</span>\n';
+      }
+
+      result += '\n3. حجم البيانات: ';
+      if (data) {
+        result += `${(new Blob([data]).size / 1024).toFixed(2)} KB\n`;
+      } else {
+        result += '0 KB\n';
+      }
+
+      output.innerHTML = result;
+    }
+
+    function viewAllUsers() {
+      const output = document.getElementById('systemOutput');
+      const users = getAllUsers();
+
+      let result = '<span class="success">👥 جميع المستخدمين:</span>\n\n';
+      result += JSON.stringify(users, null, 2);
+
+      output.innerHTML = result;
+    }
+
+    function clearStorage() {
+      if (confirm('⚠️ هل أنت متأكد من مسح جميع البيانات؟')) {
+        localStorage.removeItem(STORAGE_KEY);
+        document.getElementById('systemOutput').innerHTML =
+          '<span class="success">✅ تم مسح البيانات بنجاح</span>';
+      }
+    }
+
+    function addTestUser() {
+      const name = document.getElementById('testName').value;
+      const phone = document.getElementById('testPhone').value;
+      const code = document.getElementById('testCode').value;
+      const output = document.getElementById('addOutput');
+
+      if (!name || !phone || !code) {
+        output.innerHTML = '<span class="error">❌ يرجى إدخال جميع البيانات</span>';
+        return;
+      }
+
+      const users = getAllUsers();
+
+      const exists = users.find(u => u.phone === phone);
+      if (exists) {
+        output.innerHTML = `<span class="warning">⚠️ المستخدم موجود بالفعل:\n\n${JSON.stringify(exists, null, 2)}</span>`;
+        return;
+      }
+
+      const newUser = {
+        phone: phone,
+        name: name,
+        role: 'staff',
+        roleAr: 'موظف',
+        status: 'active',
+        secretCode: code,
+        createdAt: new Date().toISOString()
+      };
+
+      users.push(newUser);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(users));
+
+      output.innerHTML = `<span class="success">✅ تم إضافة المستخدم بنجاح:\n\n${JSON.stringify(newUser, null, 2)}</span>`;
+    }
+
+    function testLogin() {
+      const phone = document.getElementById('loginPhone').value;
+      const code = document.getElementById('loginCode').value;
+      const output = document.getElementById('loginOutput');
+
+      let result = '🔑 محاولة تسجيل الدخول...\n\n';
+      result += `الجوال: ${phone}\n`;
+      result += `الرقم السري: ${code}\n\n`;
+
+      const users = getAllUsers();
+      const user = users.find(u => u.phone === phone);
+
+      if (!user) {
+        result += '<span class="error">❌ ليس لديك صلاحية حالية، يرجى إضافتك من قبل الإدارة</span>';
+        output.innerHTML = result;
+        return;
+      }
+
+      result += `✅ المستخدم موجود: ${user.name}\n\n`;
+
+      if (user.status === 'frozen') {
+        result += '<span class="error">❌ تم تجميد حسابك</span>';
+        output.innerHTML = result;
+        return;
+      }
+
+      if (user.status === 'pending') {
+        result += '<span class="warning">⚠️ حسابك تحت المراجعة</span>';
+        output.innerHTML = result;
+        return;
+      }
+
+      if (user.secretCode !== code) {
+        result += `<span class="error">❌ رمز الدخول غير صحيح</span>\n`;
+        result += `الرقم الصحيح: ${user.secretCode}`;
+        output.innerHTML = result;
+        return;
+      }
+
+      result += '<span class="success">✅✅✅ تسجيل الدخول ناجح!\n\n';
+      result += `مرحباً ${user.name}\n`;
+      result += `الدور: ${user.roleAr}</span>`;
+
+      output.innerHTML = result;
+    }
+
+    function searchUser() {
+      const phone = document.getElementById('searchPhone').value;
+      const output = document.getElementById('searchOutput');
+
+      const users = getAllUsers();
+      const user = users.find(u => u.phone === phone);
+
+      if (!user) {
+        output.innerHTML = '<span class="error">❌ المستخدم غير موجود</span>';
+        return;
+      }
+
+      output.innerHTML = `<span class="success">✅ المستخدم موجود:\n\n${JSON.stringify(user, null, 2)}</span>`;
+    }
+
+    function displayUsersGrid() {
+      const grid = document.getElementById('usersGrid');
+      const users = getAllUsers();
+
+      let html = '';
+      users.forEach(user => {
+        html += `
+          <div class="user-card">
+            <h3>👤 ${user.name}</h3>
+            <p>📱 الجوال: ${user.phone}</p>
+            <p>🔑 الرقم السري: <strong style="color: #D4AF37; font-size: 1.2em;">${user.secretCode}</strong></p>
+            <p>💼 الدور: ${user.roleAr || user.role}</p>
+            <p>📊 الحالة: ${user.status === 'active' ? '✅ نشط' : user.status === 'frozen' ? '❄️ مجمد' : '⏸️ غير متصل'}</p>
+          </div>
+        `;
+      });
+
+      grid.innerHTML = html;
+    }
+
+    // Initialize on load
+    window.onload = function() {
+      initStorage();
+      checkSystem();
+      displayUsersGrid();
+    };
+  </script>
+</body>
+</html>

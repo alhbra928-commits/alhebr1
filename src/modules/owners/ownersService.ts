@@ -1,0 +1,175 @@
+import { supabase } from '../../lib/supabase';
+
+export interface FarmOwner {
+  id: string;
+  full_name: string;
+  mobile_number: string;
+  email?: string;
+  region: string;
+  city: string;
+  admin_notes?: string;
+  farm_area: number;
+  farm_area_unit: string;
+  farm_type: string;
+  actual_price: number;
+  deed_number: string;
+  farm_location_region: string;
+  farm_location_city: string;
+  farm_location_description?: string;
+  payment_grace_period: number;
+  status: 'active' | 'frozen' | 'archived';
+  frozen_at?: string;
+  frozen_by?: string;
+  frozen_reason?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface OwnerFormData {
+  full_name: string;
+  mobile_number: string;
+  email?: string;
+  region: string;
+  city: string;
+  admin_notes?: string;
+  farm_area: number;
+  farm_area_unit: string;
+  farm_type: string;
+  actual_price: number;
+  deed_number: string;
+  farm_location_region: string;
+  farm_location_city: string;
+  farm_location_description?: string;
+  payment_grace_period: number;
+}
+
+export interface OwnerStatistics {
+  total: number;
+  active: number;
+  frozen: number;
+}
+
+export class OwnersService {
+  static async getOwnersList(status?: string): Promise<FarmOwner[]> {
+    let query = supabase
+      .from('farm_owners')
+      .select('*')
+      .is('deleted_at', null)
+      .order('created_at', { ascending: false });
+
+    if (status) {
+      query = query.eq('status', status);
+    }
+
+    const { data, error } = await query;
+
+    if (error) throw error;
+    return data || [];
+  }
+
+  static async getOwnerById(id: string): Promise<FarmOwner> {
+    const { data, error } = await supabase
+      .from('farm_owners')
+      .select('*')
+      .eq('id', id)
+      .is('deleted_at', null)
+      .maybeSingle();
+
+    if (error) throw error;
+    if (!data) throw new Error('المالك غير موجود');
+    return data;
+  }
+
+  static async createOwner(ownerData: OwnerFormData) {
+    const { data, error } = await supabase
+      .from('farm_owners')
+      .insert([{
+        ...ownerData,
+        status: 'active',
+        created_by: (await supabase.auth.getUser()).data.user?.id
+      }])
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  }
+
+  static async updateOwner(id: string, ownerData: Partial<OwnerFormData>) {
+    const { data, error } = await supabase
+      .from('farm_owners')
+      .update({
+        ...ownerData,
+        updated_at: new Date().toISOString(),
+        updated_by: (await supabase.auth.getUser()).data.user?.id
+      })
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  }
+
+  static async toggleStatus(id: string, newStatus: 'active' | 'frozen', reason?: string) {
+    const { data, error } = await supabase.rpc('toggle_owner_status', {
+      p_owner_id: id,
+      p_new_status: newStatus,
+      p_reason: reason
+    });
+
+    if (error) throw error;
+    return data;
+  }
+
+  static async deleteOwnerPermanently(id: string, deletionReason?: string) {
+    const { data, error } = await supabase.rpc('delete_owner_permanently', {
+      p_owner_id: id,
+      p_deletion_reason: deletionReason || 'حذف إداري'
+    });
+
+    if (error) throw error;
+    return data;
+  }
+
+  static async getStatistics(): Promise<OwnerStatistics> {
+    const { data, error } = await supabase.rpc('get_owners_statistics');
+
+    if (error) throw error;
+    return data;
+  }
+
+  static formatPrice(price: number): string {
+    return new Intl.NumberFormat('ar-SA', {
+      style: 'currency',
+      currency: 'SAR'
+    }).format(price);
+  }
+
+  static getFarmTypeEmoji(type: string): string {
+    const map: any = {
+      'نخيل': '🌴',
+      'زيتون': '🫒',
+      'مختلط': '🌾'
+    };
+    return map[type] || '🌱';
+  }
+
+  static getStatusColor(status: string): string {
+    const map: any = {
+      'active': 'bg-green-100 text-green-700 border-green-200',
+      'frozen': 'bg-blue-100 text-blue-700 border-blue-200',
+      'archived': 'bg-gray-100 text-gray-700 border-gray-200'
+    };
+    return map[status] || map.active;
+  }
+
+  static getStatusLabel(status: string): string {
+    const map: any = {
+      'active': 'نشط',
+      'frozen': 'مجمد',
+      'archived': 'مؤرشف'
+    };
+    return map[status] || status;
+  }
+}

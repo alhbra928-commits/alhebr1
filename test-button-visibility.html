@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🔍 اختبار ظهور الزر المتوهج</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Tajawal', Arial, sans-serif;
+      background: linear-gradient(135deg, #f5f3ef 0%, #e8e4db 100%);
+    }
+
+    /* محاكاة الهيدر */
+    .header {
+      background: white;
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      text-align: center;
+      font-weight: bold;
+      font-size: 20px;
+    }
+
+    /* محاكاة Stock Ticker */
+    .stock-ticker {
+      background: linear-gradient(90deg, #1e293b, #334155);
+      color: white;
+      padding: 10px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    /* الزر المتوهج - نسخة طبق الأصل */
+    .glowing-button-container {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 24px 16px;
+      background: linear-gradient(to right, transparent, rgba(251, 191, 36, 0.1), transparent);
+    }
+
+    .glowing-concept-button {
+      position: relative;
+      overflow: hidden;
+      padding: 20px 40px;
+      border-radius: 9999px;
+      font-weight: bold;
+      font-size: 18px;
+      color: white;
+      cursor: pointer;
+      transition: all 0.5s;
+      background: linear-gradient(135deg, #D4AF37 0%, #F8E45F 25%, #B8960A 50%, #8B7500 75%, #6B5D00 100%);
+      border: 3px solid rgba(212, 175, 55, 0.6);
+      box-shadow:
+        0 8px 32px rgba(212, 175, 55, 0.4),
+        0 4px 16px rgba(212, 175, 55, 0.3),
+        inset 0 2px 4px rgba(255, 255, 255, 0.3),
+        inset 0 -2px 4px rgba(0, 0, 0, 0.2);
+      animation: gentle-pulse 5s ease-in-out infinite;
+    }
+
+    .glowing-concept-button:hover {
+      transform: scale(1.1);
+      background: linear-gradient(135deg, #F8E45F 0%, #FFD700 25%, #D4AF37 50%, #B8960A 75%, #8B7500 100%);
+      box-shadow:
+        0 12px 48px rgba(255, 215, 0, 0.6),
+        0 8px 24px rgba(212, 175, 55, 0.5),
+        inset 0 2px 4px rgba(255, 255, 255, 0.4),
+        inset 0 -2px 4px rgba(0, 0, 0, 0.2);
+      border-color: rgba(255, 215, 0, 0.8);
+    }
+
+    .glowing-concept-button:active {
+      transform: scale(0.95);
+    }
+
+    .button-content {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      justify-content: center;
+    }
+
+    .button-icon {
+      font-size: 32px;
+      animation: icon-bounce 5s ease-in-out infinite;
+    }
+
+    .button-text {
+      white-space: nowrap;
+      text-shadow:
+        0 2px 4px rgba(0, 0, 0, 0.3),
+        0 0 10px rgba(212, 175, 55, 0.5);
+    }
+
+    .shimmer {
+      position: absolute;
+      inset: 0;
+      border-radius: 9999px;
+      pointer-events: none;
+      background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%);
+      background-size: 200% 100%;
+      animation: shimmer 3s linear infinite;
+    }
+
+    @keyframes gentle-pulse {
+      0%, 100% {
+        box-shadow:
+          0 8px 32px rgba(212, 175, 55, 0.4),
+          0 4px 16px rgba(212, 175, 55, 0.3);
+      }
+      50% {
+        box-shadow:
+          0 12px 48px rgba(255, 215, 0, 0.6),
+          0 8px 24px rgba(212, 175, 55, 0.5);
+      }
+    }
+
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+
+    @keyframes icon-bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+
+    /* محاكاة المحتوى */
+    .content-area {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    .title {
+      text-align: center;
+      font-size: 48px;
+      font-weight: 900;
+      background: linear-gradient(135deg, #D4AF37, #F8E45F, #D4AF37);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 16px;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 20px;
+      color: #666;
+      margin-bottom: 32px;
+    }
+
+    .farms-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 24px;
+    }
+
+    .farm-card {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .status-message {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 10px 50px rgba(0,0,0,0.3);
+      text-align: center;
+      display: none;
+      z-index: 1000;
+    }
+
+    .status-message.show {
+      display: block;
+      animation: fadeIn 0.3s;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
+      to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      z-index: 999;
+    }
+
+    .overlay.show {
+      display: block;
+    }
+
+    .check-mark {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 20px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 50px;
+    }
+
+    @media (max-width: 768px) {
+      .glowing-concept-button {
+        font-size: 14px;
+        padding: 16px 24px;
+      }
+      .button-icon {
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay" id="overlay"></div>
+  <div class="status-message" id="statusMessage">
+    <div class="check-mark">✓</div>
+    <h2 style="color: #22c55e; margin-bottom: 16px; font-size: 28px;">الزر يعمل بنجاح! 🎉</h2>
+    <p style="color: #666; font-size: 18px; margin-bottom: 24px;">
+      الزر المتوهج موجود ويعمل بشكل صحيح في الكود الفعلي
+    </p>
+    <button onclick="closeModal()" style="background: #3b82f6; color: white; border: none; padding: 12px 32px; border-radius: 8px; font-size: 16px; cursor: pointer; font-weight: bold;">
+      إغلاق
+    </button>
+  </div>
+
+  <!-- محاكاة البنية الفعلية -->
+  <div class="header">
+    🌟 Premium Header - الهيدر الرئيسي
+  </div>
+
+  <div class="stock-ticker">
+    📊 Stock Ticker - شريط الأسعار المتحرك
+  </div>
+
+  <!-- ════════════════════════════════════════════ -->
+  <!-- 👇 الزر المتوهج - تحت Stock Ticker مباشرة 👇 -->
+  <!-- ════════════════════════════════════════════ -->
+
+  <div class="glowing-button-container">
+    <button class="glowing-concept-button" onclick="handleButtonClick()">
+      <div class="button-content">
+        <span class="button-icon" id="buttonIcon">🌴</span>
+        <span class="button-text" id="buttonText">اكتشف فكرة تملك النخيل</span>
+      </div>
+      <div class="shimmer"></div>
+    </button>
+  </div>
+
+  <!-- ════════════════════════════════════════════ -->
+
+  <div class="content-area">
+    <h1 class="title">مزارع النخيل والزيتون المميزة</h1>
+    <p class="subtitle">استثمر في مستقبل الزراعة الذكية</p>
+
+    <div class="farms-grid">
+      <div class="farm-card">
+        <div style="font-size: 48px; margin-bottom: 16px;">🌴</div>
+        <h3 style="margin-bottom: 12px;">مزرعة النخيل 1</h3>
+        <p style="color: #666;">نخيل فاخر للاستثمار</p>
+      </div>
+      <div class="farm-card">
+        <div style="font-size: 48px; margin-bottom: 16px;">🫒</div>
+        <h3 style="margin-bottom: 12px;">مزرعة الزيتون 1</h3>
+        <p style="color: #666;">زيتون عضوي طبيعي</p>
+      </div>
+      <div class="farm-card">
+        <div style="font-size: 48px; margin-bottom: 16px;">🌴</div>
+        <h3 style="margin-bottom: 12px;">مزرعة النخيل 2</h3>
+        <p style="color: #666;">استثمار آمن ومربح</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentIndex = 0;
+    const texts = [
+      { icon: '🌴', text: 'اكتشف فكرة تملك النخيل' },
+      { icon: '🫒', text: 'تعرف على تملك أشجار الزيتون' }
+    ];
+
+    // تبديل النص كل 5 ثوانٍ
+    setInterval(() => {
+      currentIndex = (currentIndex + 1) % texts.length;
+      document.getElementById('buttonIcon').textContent = texts[currentIndex].icon;
+      document.getElementById('buttonText').textContent = texts[currentIndex].text;
+    }, 5000);
+
+    function handleButtonClick() {
+      // تشغيل صوت خفيف
+      try {
+        const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj');
+        audio.volume = 0.3;
+        audio.play().catch(() => {});
+      } catch (e) {
+        console.log('Audio play failed');
+      }
+
+      // عرض رسالة النجاح
+      document.getElementById('overlay').classList.add('show');
+      document.getElementById('statusMessage').classList.add('show');
+    }
+
+    function closeModal() {
+      document.getElementById('overlay').classList.remove('show');
+      document.getElementById('statusMessage').classList.remove('show');
+    }
+
+    // إغلاق عند الضغط على الخلفية
+    document.getElementById('overlay').onclick = closeModal;
+  </script>
+</body>
+</html>

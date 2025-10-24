@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Debug: فحص التوثيق</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+      background: #f5f5f5;
+    }
+    .section {
+      background: white;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    button {
+      padding: 12px 24px;
+      font-size: 16px;
+      font-weight: bold;
+      background: linear-gradient(135deg, #D4AF37, #F4C430);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-right: 10px;
+      margin-bottom: 10px;
+    }
+    button:hover {
+      transform: scale(1.05);
+    }
+    .result {
+      margin-top: 20px;
+      padding: 15px;
+      background: #f9f9f9;
+      border-radius: 8px;
+      white-space: pre-wrap;
+      direction: ltr;
+      text-align: left;
+      max-height: 500px;
+      overflow-y: auto;
+    }
+    h1 { color: #D4AF37; }
+    h2 { color: #333; border-bottom: 2px solid #D4AF37; padding-bottom: 10px; }
+    .error { color: #e74c3c; font-weight: bold; }
+    .success { color: #27ae60; font-weight: bold; }
+    .info { color: #3498db; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>🔍 Debug: فحص نظام التوثيق</h1>
+
+  <div class="section">
+    <h2>1️⃣ فحص جدول documentation</h2>
+    <button onclick="checkDocumentation()">فحص جميع السجلات</button>
+    <button onclick="checkShaikhaDoc()">البحث عن شيخة</button>
+    <div id="docResult" class="result"></div>
+  </div>
+
+  <div class="section">
+    <h2>2️⃣ فحص جدول reservations</h2>
+    <button onclick="checkReservations()">فحص الحجوزات</button>
+    <button onclick="checkShaikhaReservation()">حجز شيخة</button>
+    <div id="resResult" class="result"></div>
+  </div>
+
+  <div class="section">
+    <h2>3️⃣ فحص جدول investors</h2>
+    <button onclick="checkInvestors()">جميع المستثمرين</button>
+    <button onclick="checkShaikhaInvestor()">بيانات شيخة</button>
+    <div id="invResult" class="result"></div>
+  </div>
+
+  <div class="section">
+    <h2>4️⃣ إنشاء توثيق يدوي لشيخة</h2>
+    <button onclick="createManualDoc()">إنشاء سجل يدوي</button>
+    <div id="createResult" class="result"></div>
+  </div>
+
+  <script type="module">
+    // استبدل هذه القيم بقيم Supabase الخاصة بك
+    const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || 'YOUR_URL';
+    const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || 'YOUR_KEY';
+
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    window.checkDocumentation = async function() {
+      const result = document.getElementById('docResult');
+      result.innerHTML = '⏳ جاري الفحص...';
+
+      try {
+        const { data, error } = await supabase
+          .from('documentation')
+          .select('*')
+          .order('created_at', { ascending: false })
+          .limit(10);
+
+        result.innerHTML = `
+<span class="info">📊 عدد السجلات: ${data?.length || 0}</span>
+
+${error ? '<span class="error">❌ خطأ: ' + JSON.stringify(error, null, 2) + '</span>' : ''}
+
+${data ? JSON.stringify(data, null, 2) : 'لا توجد بيانات'}
+        `;
+      } catch (err) {
+        result.innerHTML = '<span class="error">❌ خطأ: ' + err.message + '</span>';
+      }
+    };
+
+    window.checkShaikhaDoc = async function() {
+      const result = document.getElementById('docResult');
+      result.innerHTML = '⏳ البحث عن شيخة...';
+
+      try {
+        const { data, error } = await supabase
+          .from('documentation')
+          .select('*')
+          .ilike('investor_name', '%شيخة%');
+
+        result.innerHTML = `
+<span class="info">📊 نتائج البحث: ${data?.length || 0}</span>
+
+${error ? '<span class="error">❌ خطأ: ' + JSON.stringify(error, null, 2) + '</span>' : ''}
+
+${data && data.length > 0 ? JSON.stringify(data, null, 2) : '<span class="error">❌ لم يتم العثور على سجلات لشيخة</span>'}
+        `;
+      } catch (err) {
+        result.innerHTML = '<span class="error">❌ خطأ: ' + err.message + '</span>';
+      }
+    };
+
+    window.checkReservations = async function() {
+      const result = document.getElementById('resResult');
+      result.innerHTML = '⏳ جاري الفحص...';
+
+      try {
+        const { data, error } = await supabase
+          .from('reservations')
+          .select('id, reservation_code, investor_name, booking_status, payment_status, total_amount, created_at')
+          .order('created_at', { ascending: false })
+          .limit(10);
+
+        result.innerHTML = `
+<span class="info">📊 عدد الحجوزات: ${data?.length || 0}</span>
+
+${error ? '<span class="error">❌ خطأ: ' + JSON.stringify(error, null, 2) + '</span>' : ''}
+
+${data ? JSON.stringify(data, null, 2) : 'لا توجد بيانات'}
+        `;
+      } catch (err) {
+        result.innerHTML = '<span class="error">❌ خطأ: ' + err.message + '</span>';
+      }
+    };
+
+    window.checkShaikhaReservation = async function() {
+      const result = document.getElementById('resResult');
+      result.innerHTML = '⏳ البحث عن حجز شيخة...';
+
+      try {
+        const { data, error } = await supabase
+          .from('reservations')
+          .select('*')
+          .ilike('investor_name', '%شيخة%');
+
+        result.innerHTML = `
+<span class="info">📊 نتائج البحث: ${data?.length || 0}</span>
+
+${error ? '<span class="error">❌ خطأ: ' + JSON.stringify(error, null, 2) + '</span>' : ''}
+
+${data && data.length > 0 ? JSON.stringify(data, null, 2) : '<span class="error">❌ لم يتم العثور على حجز لشيخة</span>'}
+        `;
+      } catch (err) {
+        result.innerHTML = '<span class="error">❌ خطأ: ' + err.message + '</span>';
+      }
+    };
+
+    window.checkInvestors = async function() {
+      const result = document.getElementById('invResult');
+      result.innerHTML = '⏳ جاري الفحص...';
+
+      try {
+        const { data, error } = await supabase
+          .from('investors')
+          .select('id, full_name, mobile_number, total_investments')
+          .order('created_at', { ascending: false })
+          .limit(10);
+
+        result.innerHTML = `
+<span class="info">📊 عدد المستثمرين: ${data?.length || 0}</span>
+
+${error ? '<span class="error">❌ خطأ: ' + JSON.stringify(error, null, 2) + '</span>' : ''}
+
+${data ? JSON.stringify(data, null, 2) : 'لا توجد بيانات'}
+        `;
+      } catch (err) {
+        result.innerHTML = '<span class="error">❌ خطأ: ' + err.message + '</span>';
+      }
+    };
+
+    window.checkShaikhaInvestor = async function() {
+      const result = document.getElementById('invResult');
+      result.innerHTML = '⏳ البحث عن شيخة...';
+
+      try {
+        const { data, error } = await supabase
+          .from('investors')
+          .select('*')
+          .ilike('full_name', '%شيخة%');
+
+        result.innerHTML = `
+<span class="info">📊 نتائج البحث: ${data?.length || 0}</span>
+
+${error ? '<span class="error">❌ خطأ: ' + JSON.stringify(error, null, 2) + '</span>' : ''}
+
+${data && data.length > 0 ? JSON.stringify(data, null, 2) : '<span class="error">❌ لم يتم العثور على مستثمر باسم شيخة</span>'}
+        `;
+      } catch (err) {
+        result.innerHTML = '<span class="error">❌ خطأ: ' + err.message + '</span>';
+      }
+    };
+
+    window.createManualDoc = async function() {
+      const result = document.getElementById('createResult');
+      result.innerHTML = '⏳ جاري الإنشاء...';
+
+      result.innerHTML = `
+<span class="error">❌ هذه الميزة تتطلب صلاحيات خاصة</span>
+
+<span class="info">💡 الحل البديل:</span>
+1. اذهب إلى لوحة الإدارة
+2. قسم "الحجوزات"
+3. ابحث عن حجز شيخة
+4. غيّر حالة الحجز إلى "approved" أو "documented"
+5. سيتم إنشاء السجل تلقائياً في جدول documentation
+
+أو استخدم SQL مباشرة في Supabase Dashboard.
+      `;
+    };
+  </script>
+</body>
+</html>

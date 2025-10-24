@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>اختبار تسجيل دخول المستثمر</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #2c5530;
+      margin-bottom: 30px;
+    }
+    .test-section {
+      margin: 20px 0;
+      padding: 20px;
+      background: #f9f9f9;
+      border-radius: 5px;
+    }
+    button {
+      background: #2c5530;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      margin: 5px;
+    }
+    button:hover {
+      background: #3d7040;
+    }
+    .result {
+      margin-top: 15px;
+      padding: 15px;
+      background: white;
+      border-radius: 5px;
+      border-left: 4px solid #2c5530;
+      white-space: pre-wrap;
+      font-family: monospace;
+      font-size: 12px;
+    }
+    .error {
+      border-left-color: #d32f2f;
+      background: #ffebee;
+    }
+    .success {
+      border-left-color: #388e3c;
+      background: #e8f5e9;
+    }
+    input {
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      width: 300px;
+      font-size: 16px;
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔍 اختبار تسجيل دخول المستثمر - تشخيص شامل</h1>
+
+    <div class="test-section">
+      <h3>📱 رقم الهاتف للاختبار</h3>
+      <input type="text" id="phoneInput" value="511111111" placeholder="511111111">
+      <div>
+        <button onclick="testPhoneNormalization()">1️⃣ اختبار تطبيع الرقم</button>
+        <button onclick="testCheckLoginStatus()">2️⃣ اختبار checkLoginStatus</button>
+        <button onclick="testGetInvestorByPhone()">3️⃣ اختبار getInvestorByPhone</button>
+        <button onclick="testGetReservations()">4️⃣ اختبار getReservations</button>
+        <button onclick="runAllTests()">🚀 تشغيل جميع الاختبارات</button>
+      </div>
+      <div id="results"></div>
+    </div>
+  </div>
+
+  <script type="module">
+    const SUPABASE_URL = 'https://xdjeygiadqavkmwarkfz.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhkamV5Z2lhZHFhdmttd2Fya2Z6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjk0MTEwNjUsImV4cCI6MjA0NDk4NzA2NX0.qn6TYqZkZ3L-eQWr81MBQPsB03uCRy2WjAxH_l15b4w';
+
+    window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    window.normalizePhone = function(phone) {
+      if (!phone) return phone;
+      let normalized = phone.trim();
+      if (normalized.startsWith('+966')) {
+        normalized = normalized.substring(4);
+      } else if (normalized.startsWith('966')) {
+        normalized = normalized.substring(3);
+      } else if (normalized.startsWith('00966')) {
+        normalized = normalized.substring(5);
+      }
+      if (normalized.startsWith('0')) {
+        normalized = normalized.substring(1);
+      }
+      normalized = normalized.replace(/\s/g, '');
+      return normalized;
+    };
+
+    window.addResult = function(title, content, isError = false) {
+      const results = document.getElementById('results');
+      const resultDiv = document.createElement('div');
+      resultDiv.className = `result ${isError ? 'error' : 'success'}`;
+      resultDiv.innerHTML = `<strong>${title}</strong>\n${content}`;
+      results.appendChild(resultDiv);
+    };
+
+    window.clearResults = function() {
+      document.getElementById('results').innerHTML = '';
+    };
+
+    window.testPhoneNormalization = function() {
+      clearResults();
+      const phone = document.getElementById('phoneInput').value;
+
+      const testCases = [
+        phone,
+        `+966${phone}`,
+        `0${phone}`,
+        `966${phone}`,
+        `00966${phone}`
+      ];
+
+      let output = 'اختبارات تطبيع الرقم:\n\n';
+      testCases.forEach(test => {
+        const normalized = normalizePhone(test);
+        output += `Input: "${test}" → Output: "${normalized}"\n`;
+      });
+
+      addResult('✅ نتائج تطبيع الرقم', output);
+    };
+
+    window.testCheckLoginStatus = async function() {
+      clearResults();
+      const phone = document.getElementById('phoneInput').value;
+      const normalized = normalizePhone(phone);
+
+      addResult('🔄 جاري الاختبار...', `Original: ${phone}\nNormalized: ${normalized}`);
+
+      try {
+        // Test 1: Check active sessions
+        const { data: sessions, error: sessionsError } = await window.supabase
+          .from('investor_sessions')
+          .select('*')
+          .eq('phone', normalized)
+          .eq('is_active', true)
+          .gt('expires_at', new Date().toISOString());
+
+        if (sessionsError) throw sessionsError;
+        addResult('1️⃣ الجلسات النشطة', JSON.stringify(sessions, null, 2));
+
+        // Test 2: Check investor
+        const { data: investor, error: investorError } = await window.supabase
+          .from('investors')
+          .select('id, phone, status')
+          .eq('phone', normalized)
+          .is('deleted_at', null)
+          .maybeSingle();
+
+        if (investorError) throw investorError;
+        addResult('2️⃣ بيانات المستثمر', JSON.stringify(investor, null, 2));
+
+        // Test 3: Check reservations
+        const { data: reservation, error: resError } = await window.supabase
+          .from('reservations')
+          .select('id, customer_phone, status')
+          .eq('customer_phone', normalized)
+          .is('deleted_at', null)
+          .maybeSingle();
+
+        if (resError) throw resError;
+        addResult('3️⃣ الحجوزات', JSON.stringify(reservation, null, 2));
+
+        const exists = !!investor || !!reservation;
+        addResult('✅ النتيجة النهائية', `exists: ${exists}\nhasSession: ${sessions.length > 0}\nhasInvestor: ${!!investor}\nhasReservation: ${!!reservation}`);
+
+      } catch (error) {
+        addResult('❌ خطأ', JSON.stringify(error, null, 2), true);
+      }
+    };
+
+    window.testGetInvestorByPhone = async function() {
+      clearResults();
+      const phone = document.getElementById('phoneInput').value;
+      const normalized = normalizePhone(phone);
+
+      addResult('🔄 جاري اختبار getInvestorByPhone...', `Normalized: ${normalized}`);
+
+      try {
+        const { data, error } = await window.supabase
+          .from('investors')
+          .select('*')
+          .eq('phone', normalized)
+          .is('deleted_at', null)
+          .maybeSingle();
+
+        if (error) throw error;
+        addResult('✅ نتيجة getInvestorByPhone', JSON.stringify(data, null, 2));
+      } catch (error) {
+        addResult('❌ خطأ', JSON.stringify(error, null, 2), true);
+      }
+    };
+
+    window.testGetReservations = async function() {
+      clearResults();
+      const phone = document.getElementById('phoneInput').value;
+      const normalized = normalizePhone(phone);
+
+      addResult('🔄 جاري اختبار getReservations...', `Normalized: ${normalized}`);
+
+      try {
+        const { data, error } = await window.supabase
+          .from('reservations')
+          .select(`
+            id,
+            farm_id,
+            number_of_trees,
+            total_amount,
+            status,
+            payment_status,
+            booking_status,
+            reservation_date,
+            created_at,
+            farms(
+              name_ar,
+              farm_type
+            )
+          `)
+          .eq('customer_phone', normalized)
+          .is('deleted_at', null)
+          .order('created_at', { ascending: false });
+
+        if (error) throw error;
+        addResult('✅ نتيجة getReservations', `Count: ${data?.length || 0}\nData: ${JSON.stringify(data, null, 2)}`);
+      } catch (error) {
+        addResult('❌ خطأ', JSON.stringify(error, null, 2), true);
+      }
+    };
+
+    window.runAllTests = async function() {
+      clearResults();
+      addResult('🚀 تشغيل جميع الاختبارات...', 'الرجاء الانتظار...');
+
+      await testPhoneNormalization();
+      await new Promise(r => setTimeout(r, 500));
+
+      await testCheckLoginStatus();
+      await new Promise(r => setTimeout(r, 500));
+
+      await testGetInvestorByPhone();
+      await new Promise(r => setTimeout(r, 500));
+
+      await testGetReservations();
+
+      addResult('✅ انتهت جميع الاختبارات', 'تم تشغيل جميع الاختبارات بنجاح');
+    };
+
+    console.log('✅ Test page loaded successfully!');
+    console.log('Supabase client:', window.supabase);
+  </script>
+</body>
+</html>

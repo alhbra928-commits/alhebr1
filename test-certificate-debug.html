@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>Debug Certificate Verification</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body style="font-family: Arial; padding: 20px;">
+  <h1>Debug: فحص جدول documentation</h1>
+
+  <button onclick="checkTable()" style="padding: 10px 20px; font-size: 16px;">
+    فحص البيانات
+  </button>
+
+  <div id="result" style="margin-top: 20px; white-space: pre-wrap;"></div>
+
+  <script type="module">
+    const supabaseUrl = 'YOUR_SUPABASE_URL';
+    const supabaseKey = 'YOUR_SUPABASE_ANON_KEY';
+    const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+    window.checkTable = async function() {
+      const resultDiv = document.getElementById('result');
+      resultDiv.innerHTML = 'جاري الفحص...';
+
+      try {
+        // 1. فحص جميع السجلات
+        const { data: allDocs, error: error1 } = await supabase
+          .from('documentation')
+          .select('certificate_code, investor_name, status, deleted_at')
+          .limit(10);
+
+        console.log('All documentation:', allDocs);
+        console.log('Error:', error1);
+
+        // 2. البحث عن الشهادة المحددة
+        const { data: cert, error: error2 } = await supabase
+          .from('documentation')
+          .select('*')
+          .eq('certificate_code', 'CERT-2025-0001')
+          .maybeSingle();
+
+        console.log('Specific certificate:', cert);
+        console.log('Error:', error2);
+
+        // 3. البحث بدون case sensitivity
+        const { data: cert2, error: error3 } = await supabase
+          .from('documentation')
+          .select('*')
+          .ilike('certificate_code', 'CERT-2025-0001')
+          .maybeSingle();
+
+        console.log('Certificate (case insensitive):', cert2);
+
+        resultDiv.innerHTML = `
+=== جميع الشهادات ===
+${JSON.stringify(allDocs, null, 2)}
+
+Error 1: ${error1 ? JSON.stringify(error1) : 'لا يوجد'}
+
+=== البحث عن CERT-2025-0001 ===
+${JSON.stringify(cert, null, 2)}
+
+Error 2: ${error2 ? JSON.stringify(error2) : 'لا يوجد'}
+
+=== البحث (case insensitive) ===
+${JSON.stringify(cert2, null, 2)}
+
+Error 3: ${error3 ? JSON.stringify(error3) : 'لا يوجد'}
+        `;
+      } catch (err) {
+        resultDiv.innerHTML = 'خطأ: ' + err.message;
+        console.error(err);
+      }
+    };
+  </script>
+</body>
+</html>

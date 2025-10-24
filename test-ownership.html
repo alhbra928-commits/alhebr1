@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>اختبار صفحة اختيار الأصناف</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f5f0e6 0%, #e8dcc8 100%);
+      padding: 20px;
+      direction: rtl;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #d4af37;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .farm-selector {
+      margin-bottom: 30px;
+    }
+    select {
+      width: 100%;
+      padding: 15px;
+      border: 2px solid #d4af37;
+      border-radius: 10px;
+      font-size: 16px;
+      background: white;
+    }
+    .variety-card {
+      background: linear-gradient(135deg, rgba(212,175,55,0.1) 0%, white 100%);
+      border: 2px solid #d4af37;
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .variety-name {
+      font-size: 20px;
+      font-weight: bold;
+      color: #2c3e50;
+      margin-bottom: 10px;
+    }
+    .variety-info {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 15px;
+      color: #666;
+    }
+    .quantity-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .btn {
+      background: linear-gradient(135deg, #d4af37 0%, #f4e4b7 100%);
+      border: none;
+      padding: 10px 20px;
+      border-radius: 10px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 20px;
+    }
+    .btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+    input[type="number"] {
+      flex: 1;
+      text-align: center;
+      font-size: 20px;
+      padding: 10px;
+      border: 2px solid #d4af37;
+      border-radius: 10px;
+    }
+    .subtotal {
+      background: rgba(212,175,55,0.1);
+      padding: 15px;
+      border-radius: 10px;
+      text-align: center;
+      font-size: 18px;
+      font-weight: bold;
+      color: #d4af37;
+      margin-top: 10px;
+    }
+    .total-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(135deg, #d4af37 0%, #c49b2e 100%);
+      color: white;
+      padding: 20px;
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+      box-shadow: 0 -5px 20px rgba(0,0,0,0.2);
+    }
+    .error {
+      background: #fee;
+      border: 2px solid #f44;
+      padding: 15px;
+      border-radius: 10px;
+      color: #c00;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+    .loading {
+      text-align: center;
+      padding: 50px;
+      font-size: 20px;
+      color: #d4af37;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🌴 اختبار نظام اختيار الأصناف المتعدد 🫒</h1>
+
+    <div class="farm-selector">
+      <label style="display: block; margin-bottom: 10px; font-weight: bold;">اختر المزرعة:</label>
+      <select id="farmSelector">
+        <option value="">-- اختر مزرعة --</option>
+      </select>
+    </div>
+
+    <div id="maxVarietiesInfo" style="background: #fff3cd; padding: 15px; border-radius: 10px; margin-bottom: 20px; display: none;">
+      <strong>📊 عدد الأصناف المختارة:</strong> <span id="selectedCount">0</span> / 20
+    </div>
+
+    <div id="errorMsg" class="error" style="display: none;"></div>
+    <div id="loadingMsg" class="loading" style="display: none;">⏳ جاري التحميل...</div>
+    <div id="varietiesList"></div>
+  </div>
+
+  <div id="totalBar" class="total-bar" style="display: none;">
+    المجموع: <span id="totalQuantity">0</span> شجرة × <span id="totalPrice">0</span> ر.س
+  </div>
+
+  <script>
+    const SUPABASE_URL = 'https://fcujkmdzztfydkafihue.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZjdWprbWR6enRmeWRrYWZpaHVlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjk0MjMxOTgsImV4cCI6MjA0NDk5OTE5OH0.3-dMwzRcvWm9S4a5Ry9IFXU2-6hNSZ-iMiQxeBrB6aM';
+
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    let varieties = [];
+    const MAX_VARIETIES = 20;
+
+    async function loadFarms() {
+      try {
+        const { data, error } = await supabase
+          .from('farms')
+          .select('id, name_ar, farm_type')
+          .is('deleted_at', null)
+          .order('name_ar');
+
+        if (error) throw error;
+
+        const selector = document.getElementById('farmSelector');
+        data.forEach(farm => {
+          const option = document.createElement('option');
+          option.value = farm.id;
+          option.textContent = `${farm.name_ar} (${farm.farm_type})`;
+          selector.appendChild(option);
+        });
+      } catch (error) {
+        console.error('خطأ في تحميل المزارع:', error);
+        showError('فشل تحميل المزارع: ' + error.message);
+      }
+    }
+
+    async function loadVarieties(farmId) {
+      try {
+        showLoading(true);
+        hideError();
+
+        const { data, error } = await supabase
+          .from('farm_tree_varieties')
+          .select('*')
+          .eq('farm_id', farmId)
+          .is('deleted_at', null)
+          .gt('available_quantity', 0)
+          .order('tree_type')
+          .order('variety_name');
+
+        if (error) throw error;
+
+        console.log(`✅ تم تحميل ${data.length} صنف`);
+        varieties = data.map(v => ({
+          ...v,
+          selectedQuantity: 0,
+          totalPrice: 0
+        }));
+
+        renderVarieties();
+        showLoading(false);
+      } catch (error) {
+        console.error('خطأ في تحميل الأصناف:', error);
+        showError('فشل تحميل الأصناف: ' + error.message);
+        showLoading(false);
+      }
+    }
+
+    function renderVarieties() {
+      const container = document.getElementById('varietiesList');
+
+      if (varieties.length === 0) {
+        container.innerHTML = '<p style="text-align: center; padding: 50px; color: #999;">لا توجد أصناف متاحة لهذه المزرعة</p>';
+        return;
+      }
+
+      document.getElementById('maxVarietiesInfo').style.display = 'block';
+
+      container.innerHTML = varieties.map(variety => `
+        <div class="variety-card">
+          <div class="variety-name">
+            ${variety.tree_type === 'نخيل' ? '🌴' : '🫒'} ${variety.variety_name}
+          </div>
+          <div class="variety-info">
+            <span>السعر: ${parseFloat(variety.price_per_tree).toLocaleString('ar-SA')} ر.س</span>
+            <span>المتاح: ${variety.available_quantity.toLocaleString('ar-SA')}</span>
+          </div>
+          <div class="quantity-controls">
+            <button class="btn" onclick="decrementQuantity('${variety.id}')" ${variety.selectedQuantity === 0 ? 'disabled' : ''}>➖</button>
+            <input
+              type="number"
+              value="${variety.selectedQuantity || ''}"
+              onchange="updateQuantity('${variety.id}', this.value)"
+              placeholder="0"
+              min="0"
+              max="${variety.available_quantity}"
+            />
+            <button class="btn" onclick="incrementQuantity('${variety.id}')" ${variety.selectedQuantity >= variety.available_quantity ? 'disabled' : ''}>➕</button>
+          </div>
+          ${variety.selectedQuantity > 0 ? `
+            <div class="subtotal">
+              ${variety.selectedQuantity} × ${parseFloat(variety.price_per_tree).toLocaleString('ar-SA')} = ${variety.totalPrice.toLocaleString('ar-SA')} ر.س
+            </div>
+          ` : ''}
+        </div>
+      `).join('');
+
+      updateTotals();
+    }
+
+    function updateQuantity(varietyId, value) {
+      const numValue = parseInt(value) || 0;
+      const variety = varieties.find(v => v.id === varietyId);
+
+      if (!variety) return;
+
+      const isNewSelection = variety.selectedQuantity === 0 && numValue > 0;
+      const selectedCount = varieties.filter(v => v.selectedQuantity > 0).length;
+
+      if (isNewSelection && selectedCount >= MAX_VARIETIES) {
+        showError(`الحد الأقصى ${MAX_VARIETIES} صنف فقط في الحجز الواحد`);
+        return;
+      }
+
+      hideError();
+      variety.selectedQuantity = Math.max(0, Math.min(numValue, variety.available_quantity));
+      variety.totalPrice = variety.selectedQuantity * parseFloat(variety.price_per_tree);
+
+      renderVarieties();
+    }
+
+    function incrementQuantity(varietyId) {
+      const variety = varieties.find(v => v.id === varietyId);
+      if (variety) {
+        updateQuantity(varietyId, variety.selectedQuantity + 1);
+      }
+    }
+
+    function decrementQuantity(varietyId) {
+      const variety = varieties.find(v => v.id === varietyId);
+      if (variety) {
+        updateQuantity(varietyId, variety.selectedQuantity - 1);
+      }
+    }
+
+    function updateTotals() {
+      const selectedCount = varieties.filter(v => v.selectedQuantity > 0).length;
+      const totalQuantity = varieties.reduce((sum, v) => sum + v.selectedQuantity, 0);
+      const totalPrice = varieties.reduce((sum, v) => sum + v.totalPrice, 0);
+
+      document.getElementById('selectedCount').textContent = selectedCount;
+      document.getElementById('totalQuantity').textContent = totalQuantity.toLocaleString('ar-SA');
+      document.getElementById('totalPrice').textContent = totalPrice.toLocaleString('ar-SA');
+
+      document.getElementById('totalBar').style.display = totalQuantity > 0 ? 'block' : 'none';
+    }
+
+    function showError(msg) {
+      const errorDiv = document.getElementById('errorMsg');
+      errorDiv.textContent = msg;
+      errorDiv.style.display = 'block';
+    }
+
+    function hideError() {
+      document.getElementById('errorMsg').style.display = 'none';
+    }
+
+    function showLoading(show) {
+      document.getElementById('loadingMsg').style.display = show ? 'block' : 'none';
+    }
+
+    document.getElementById('farmSelector').addEventListener('change', (e) => {
+      if (e.target.value) {
+        loadVarieties(e.target.value);
+      } else {
+        document.getElementById('varietiesList').innerHTML = '';
+        document.getElementById('maxVarietiesInfo').style.display = 'none';
+        document.getElementById('totalBar').style.display = 'none';
+      }
+    });
+
+    loadFarms();
+  </script>
+</body>
+</html>
