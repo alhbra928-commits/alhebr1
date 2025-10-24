@@ -20,6 +20,13 @@ export const SmartFarmDataForm: React.FC<SmartFarmDataFormProps> = ({ profileId,
   const [totalArea, setTotalArea] = useState<number>(initialData?.total_farm_area || 0);
   const [areaUnit, setAreaUnit] = useState(initialData?.farm_area_unit || 'متر');
 
+  // معلومات البنك
+  const [bankName, setBankName] = useState(initialData?.bank_name || '');
+  const [bankAccountNumber, setBankAccountNumber] = useState(initialData?.bank_account_number || '');
+  const [bankIban, setBankIban] = useState(initialData?.bank_iban || '');
+  const [bankAccountHolderName, setBankAccountHolderName] = useState(initialData?.bank_account_holder_name || '');
+  const [bankBranch, setBankBranch] = useState(initialData?.bank_branch || '');
+
   // القسم (ب) - نوع المزرعة والأصناف
   const [farmType, setFarmType] = useState<FarmType>(initialData?.farm_type || 'نخيل');
   const [varieties, setVarieties] = useState<Array<{ type: 'نخيل' | 'زيتون'; name: string; count: number }>>([]);
@@ -105,6 +112,11 @@ export const SmartFarmDataForm: React.FC<SmartFarmDataFormProps> = ({ profileId,
       price_per_tree: totalPrice / getTotalTrees(),
       payment_grace_period: gracePeriod,
       additional_notes: additionalNotes,
+      bank_name: bankName,
+      bank_account_number: bankAccountNumber,
+      bank_iban: bankIban,
+      bank_account_holder_name: bankAccountHolderName,
+      bank_branch: bankBranch,
       varieties
     });
 
@@ -218,6 +230,91 @@ export const SmartFarmDataForm: React.FC<SmartFarmDataFormProps> = ({ profileId,
               </select>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* معلومات البنك */}
+      <div className="bg-white rounded-3xl p-6 border-2" style={{ borderColor: '#3B82F6' }}>
+        <h3 className="text-xl font-black mb-6 flex items-center gap-2" style={{ color: '#3B82F6' }}>
+          <span>🏦</span> معلومات البنك
+        </h3>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-bold mb-2 text-gray-700">اسم البنك</label>
+            <select
+              value={bankName}
+              onChange={(e) => setBankName(e.target.value)}
+              className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-blue-500 focus:outline-none transition-colors"
+            >
+              <option value="">اختر البنك</option>
+              <option value="البنك الأهلي">البنك الأهلي</option>
+              <option value="الراجحي">الراجحي</option>
+              <option value="الرياض">الرياض</option>
+              <option value="سامبا">سامبا</option>
+              <option value="البلاد">البلاد</option>
+              <option value="الإنماء">الإنماء</option>
+              <option value="الجزيرة">الجزيرة</option>
+              <option value="ساب">ساب</option>
+              <option value="العربي الوطني">العربي الوطني</option>
+              <option value="الفرنسي">الفرنسي</option>
+              <option value="بنك الخليج">بنك الخليج</option>
+              <option value="أخرى">أخرى</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-bold mb-2 text-gray-700">اسم صاحب الحساب</label>
+            <input
+              type="text"
+              value={bankAccountHolderName}
+              onChange={(e) => setBankAccountHolderName(e.target.value)}
+              className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-blue-500 focus:outline-none transition-colors"
+              placeholder="الاسم كما في البنك"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-bold mb-2 text-gray-700">رقم الحساب البنكي</label>
+            <input
+              type="text"
+              value={bankAccountNumber}
+              onChange={(e) => setBankAccountNumber(e.target.value)}
+              className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-blue-500 focus:outline-none transition-colors"
+              placeholder="رقم الحساب"
+              dir="ltr"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-bold mb-2 text-gray-700">رقم الآيبان (IBAN)</label>
+            <input
+              type="text"
+              value={bankIban}
+              onChange={(e) => setBankIban(e.target.value)}
+              className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-blue-500 focus:outline-none transition-colors"
+              placeholder="SA0000000000000000000000"
+              dir="ltr"
+              maxLength={34}
+            />
+          </div>
+
+          <div className="md:col-span-2">
+            <label className="block text-sm font-bold mb-2 text-gray-700">فرع البنك</label>
+            <input
+              type="text"
+              value={bankBranch}
+              onChange={(e) => setBankBranch(e.target.value)}
+              className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-blue-500 focus:outline-none transition-colors"
+              placeholder="اسم الفرع أو المدينة"
+            />
+          </div>
+        </div>
+
+        <div className="mt-4 p-4 bg-blue-50 rounded-xl">
+          <p className="text-sm text-blue-700">
+            <strong>ملاحظة:</strong> معلومات البنك اختيارية ولكن يُنصح بتعبئتها لتسهيل عملية تحويل الأموال لاحقاً.
+          </p>
         </div>
       </div>
 

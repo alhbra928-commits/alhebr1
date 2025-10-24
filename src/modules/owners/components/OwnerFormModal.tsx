@@ -33,7 +33,12 @@ export function OwnerFormModal({ isOpen, onClose, onSubmit, initialData, mode }:
     farm_location_region: '',
     farm_location_city: '',
     farm_location_description: '',
-    payment_grace_period: 6
+    payment_grace_period: 6,
+    bank_name: '',
+    bank_account_number: '',
+    bank_iban: '',
+    bank_account_holder_name: '',
+    bank_branch: ''
   });
 
   const [varieties, setVarieties] = useState<Variety[]>([]);
@@ -57,7 +62,12 @@ export function OwnerFormModal({ isOpen, onClose, onSubmit, initialData, mode }:
         farm_location_region: initialData.farm_location_region || '',
         farm_location_city: initialData.farm_location_city || '',
         farm_location_description: initialData.farm_location_description || '',
-        payment_grace_period: initialData.payment_grace_period || 6
+        payment_grace_period: initialData.payment_grace_period || 6,
+        bank_name: initialData.bank_name || '',
+        bank_account_number: initialData.bank_account_number || '',
+        bank_iban: initialData.bank_iban || '',
+        bank_account_holder_name: initialData.bank_account_holder_name || '',
+        bank_branch: initialData.bank_branch || ''
       });
     } else {
       setFormData({
@@ -75,7 +85,12 @@ export function OwnerFormModal({ isOpen, onClose, onSubmit, initialData, mode }:
         farm_location_region: '',
         farm_location_city: '',
         farm_location_description: '',
-        payment_grace_period: 6
+        payment_grace_period: 6,
+        bank_name: '',
+        bank_account_number: '',
+        bank_iban: '',
+        bank_account_holder_name: '',
+        bank_branch: ''
       });
     }
     setErrors({});
@@ -293,6 +308,90 @@ export function OwnerFormModal({ isOpen, onClose, onSubmit, initialData, mode }:
                   rows={2}
                 />
               </div>
+            </div>
+          </div>
+
+          {/* معلومات البنك */}
+          <div className="bg-gradient-to-r from-blue-50 to-cyan-50 p-4 rounded-xl border-2 border-blue-200">
+            <h3 className="text-lg font-bold text-blue-900 mb-4 flex items-center gap-2">
+              <DollarSign className="h-5 w-5" />
+              معلومات البنك
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="text-sm font-medium text-[#2C2C2C] mb-2 block">اسم البنك</label>
+                <select
+                  value={formData.bank_name || ''}
+                  onChange={(e) => setFormData({ ...formData, bank_name: e.target.value })}
+                  className="w-full px-4 py-3 bg-white border-2 border-blue-200 rounded-xl focus:outline-none focus:border-blue-400 transition-colors"
+                >
+                  <option value="">اختر البنك</option>
+                  <option value="البنك الأهلي">البنك الأهلي</option>
+                  <option value="الراجحي">الراجحي</option>
+                  <option value="الرياض">الرياض</option>
+                  <option value="سامبا">سامبا</option>
+                  <option value="البلاد">البلاد</option>
+                  <option value="الإنماء">الإنماء</option>
+                  <option value="الجزيرة">الجزيرة</option>
+                  <option value="ساب">ساب</option>
+                  <option value="العربي الوطني">العربي الوطني</option>
+                  <option value="الفرنسي">الفرنسي</option>
+                  <option value="بنك الخليج">بنك الخليج</option>
+                  <option value="أخرى">أخرى</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="text-sm font-medium text-[#2C2C2C] mb-2 block">اسم صاحب الحساب</label>
+                <input
+                  type="text"
+                  value={formData.bank_account_holder_name || ''}
+                  onChange={(e) => setFormData({ ...formData, bank_account_holder_name: e.target.value })}
+                  className="w-full px-4 py-3 bg-white border-2 border-blue-200 rounded-xl focus:outline-none focus:border-blue-400 transition-colors"
+                  placeholder="الاسم كما في البنك"
+                />
+              </div>
+
+              <div>
+                <label className="text-sm font-medium text-[#2C2C2C] mb-2 block">رقم الحساب البنكي</label>
+                <input
+                  type="text"
+                  value={formData.bank_account_number || ''}
+                  onChange={(e) => setFormData({ ...formData, bank_account_number: e.target.value })}
+                  className="w-full px-4 py-3 bg-white border-2 border-blue-200 rounded-xl focus:outline-none focus:border-blue-400 transition-colors"
+                  placeholder="رقم الحساب"
+                  dir="ltr"
+                />
+              </div>
+
+              <div>
+                <label className="text-sm font-medium text-[#2C2C2C] mb-2 block">رقم الآيبان (IBAN)</label>
+                <input
+                  type="text"
+                  value={formData.bank_iban || ''}
+                  onChange={(e) => setFormData({ ...formData, bank_iban: e.target.value })}
+                  className="w-full px-4 py-3 bg-white border-2 border-blue-200 rounded-xl focus:outline-none focus:border-blue-400 transition-colors"
+                  placeholder="SA0000000000000000000000"
+                  dir="ltr"
+                  maxLength={34}
+                />
+              </div>
+
+              <div className="md:col-span-2">
+                <label className="text-sm font-medium text-[#2C2C2C] mb-2 block">فرع البنك</label>
+                <input
+                  type="text"
+                  value={formData.bank_branch || ''}
+                  onChange={(e) => setFormData({ ...formData, bank_branch: e.target.value })}
+                  className="w-full px-4 py-3 bg-white border-2 border-blue-200 rounded-xl focus:outline-none focus:border-blue-400 transition-colors"
+                  placeholder="اسم الفرع أو المدينة"
+                />
+              </div>
+            </div>
+            <div className="mt-3 p-3 bg-blue-100 rounded-lg">
+              <p className="text-xs text-blue-700">
+                <strong>ملاحظة:</strong> معلومات البنك اختيارية ويمكن تعبئتها لاحقاً.
+              </p>
             </div>
           </div>
 
