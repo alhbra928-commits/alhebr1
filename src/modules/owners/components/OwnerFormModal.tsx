@@ -11,6 +11,12 @@ interface OwnerFormModalProps {
   mode: 'create' | 'edit';
 }
 
+interface Variety {
+  type: 'نخيل' | 'زيتون';
+  name: string;
+  count: number;
+}
+
 export function OwnerFormModal({ isOpen, onClose, onSubmit, initialData, mode }: OwnerFormModalProps) {
   const [formData, setFormData] = useState<OwnerFormData>({
     full_name: '',
@@ -30,6 +36,7 @@ export function OwnerFormModal({ isOpen, onClose, onSubmit, initialData, mode }:
     payment_grace_period: 6
   });
 
+  const [varieties, setVarieties] = useState<Variety[]>([]);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<any>({});
 
@@ -72,7 +79,43 @@ export function OwnerFormModal({ isOpen, onClose, onSubmit, initialData, mode }:
       });
     }
     setErrors({});
+    setVarieties([]);
   }, [initialData, mode, isOpen]);
+
+  // Load varieties when editing
+  useEffect(() => {
+    const loadVarieties = async () => {
+      if (mode === 'edit' && initialData?.id && isOpen) {
+        try {
+          const loadedVarieties = await OwnersService.getOwnerVarieties(initialData.id);
+          setVarieties(loadedVarieties);
+        } catch (error) {
+          console.error('Error loading varieties:', error);
+        }
+      }
+    };
+    loadVarieties();
+  }, [mode, initialData?.id, isOpen]);
+
+  // Varieties Management
+  const addVariety = () => {
+    const defaultType = formData.farm_type === 'مختلط' ? 'نخيل' : (formData.farm_type as 'نخيل' | 'زيتون');
+    setVarieties([...varieties, { type: defaultType, name: '', count: 0 }]);
+  };
+
+  const removeVariety = (index: number) => {
+    setVarieties(varieties.filter((_, i) => i !== index));
+  };
+
+  const updateVariety = (index: number, field: keyof Variety, value: any) => {
+    const updated = [...varieties];
+    updated[index] = { ...updated[index], [field]: value };
+    setVarieties(updated);
+  };
+
+  const getTotalTrees = () => {
+    return varieties.reduce((sum, v) => sum + (v.count || 0), 0);
+  };
 
   const validate = () => {
     const newErrors: any = {};
@@ -87,6 +130,16 @@ export function OwnerFormModal({ isOpen, onClose, onSubmit, initialData, mode }:
     if (!formData.farm_location_region.trim()) newErrors.farm_location_region = 'منطقة المزرعة مطلوبة';
     if (!formData.farm_location_city.trim()) newErrors.farm_location_city = 'مدينة المزرعة مطلوبة';
 
+    // Validate varieties
+    if (varieties.length === 0) {
+      newErrors.varieties = 'يجب إضافة صنف واحد على الأقل';
+    } else {
+      const invalidVariety = varieties.find(v => !v.name.trim() || v.count <= 0);
+      if (invalidVariety) {
+        newErrors.varieties = 'جميع الأصناف يجب أن تحتوي على اسم وعدد صحيح';
+      }
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -97,7 +150,9 @@ export function OwnerFormModal({ isOpen, onClose, onSubmit, initialData, mode }:
 
     try {
       setLoading(true);
-      await onSubmit(formData);
+      // Add varieties to formData
+      const dataWithVarieties = { ...formData, varieties };
+      await onSubmit(dataWithVarieties);
       onClose();
     } catch (error: any) {
       setErrors({ submit: error.message || 'حدث خطأ أثناء الحفظ' });
@@ -299,6 +354,121 @@ export function OwnerFormModal({ isOpen, onClose, onSubmit, initialData, mode }:
                   placeholder="500000"
                 />
                 {errors.actual_price && <p className="text-red-500 text-xs mt-1">{errors.actual_price}</p>}
+              </div>
+
+              {/* Varieties Section */}
+              <div className="md:col-span-2">
+                <div className="bg-gradient-to-br from-green-50 to-emerald-50 p-5 rounded-xl border-2 border-green-200">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-2">
+                      <TreePine className="h-5 w-5 text-green-600" />
+                      <h4 className="text-lg font-bold text-green-900">الأصناف المزروعة *</h4>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={addVariety}
+                      className="flex items-center gap-2 px-4 py-2 bg-gradient-to-br from-green-500 to-emerald-600 text-white rounded-lg hover:shadow-lg transition-all text-sm font-bold"
+                    >
+                      <Plus className="h-4 w-4" />
+                      إضافة صنف
+                    </button>
+                  </div>
+
+                  {varieties.length === 0 ? (
+                    <div className="text-center py-8 bg-white rounded-xl border-2 border-dashed border-green-300">
+                      <TreePine className="h-12 w-12 text-green-400 mx-auto mb-2" />
+                      <p className="text-green-700 font-medium">لم يتم إضافة أصناف بعد</p>
+                      <p className="text-green-600/70 text-sm mt-1">اضغط "إضافة صنف" للبدء</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      {varieties.map((variety, index) => (
+                        <div
+                          key={index}
+                          className="bg-white p-4 rounded-xl border-2 border-green-200 shadow-sm"
+                        >
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                            {/* Type */}
+                            {formData.farm_type === 'مختلط' && (
+                              <div>
+                                <label className="text-xs font-medium text-gray-600 mb-1 block">
+                                  النوع
+                                </label>
+                                <select
+                                  value={variety.type}
+                                  onChange={(e) => updateVariety(index, 'type', e.target.value as 'نخيل' | 'زيتون')}
+                                  className="w-full px-3 py-2 bg-gray-50 border-2 border-green-200 rounded-lg focus:outline-none focus:border-green-400 text-sm"
+                                >
+                                  <option value="نخيل">🌴 نخيل</option>
+                                  <option value="زيتون">🫒 زيتون</option>
+                                </select>
+                              </div>
+                            )}
+
+                            {/* Name */}
+                            <div className={formData.farm_type === 'مختلط' ? '' : 'md:col-span-2'}>
+                              <label className="text-xs font-medium text-gray-600 mb-1 block">
+                                اسم الصنف *
+                              </label>
+                              <input
+                                type="text"
+                                value={variety.name}
+                                onChange={(e) => updateVariety(index, 'name', e.target.value)}
+                                className="w-full px-3 py-2 bg-gray-50 border-2 border-green-200 rounded-lg focus:outline-none focus:border-green-400 text-sm"
+                                placeholder={variety.type === 'نخيل' ? 'مثال: خلاص، سكري، برحي' : 'مثال: أربيكوينا، بيكوال'}
+                              />
+                            </div>
+
+                            {/* Count */}
+                            <div>
+                              <label className="text-xs font-medium text-gray-600 mb-1 block">
+                                العدد *
+                              </label>
+                              <input
+                                type="number"
+                                value={variety.count}
+                                onChange={(e) => updateVariety(index, 'count', parseInt(e.target.value) || 0)}
+                                className="w-full px-3 py-2 bg-gray-50 border-2 border-green-200 rounded-lg focus:outline-none focus:border-green-400 text-sm"
+                                placeholder="100"
+                                min="1"
+                              />
+                            </div>
+
+                            {/* Remove Button */}
+                            <div className="flex items-end">
+                              <button
+                                type="button"
+                                onClick={() => removeVariety(index)}
+                                className="w-full px-3 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors flex items-center justify-center gap-2 text-sm font-medium"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                                حذف
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+
+                      {/* Total Trees Summary */}
+                      <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-4 rounded-xl border-2 border-blue-200">
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm font-medium text-blue-900">
+                            إجمالي عدد الأشجار:
+                          </span>
+                          <span className="text-2xl font-black text-blue-600">
+                            {getTotalTrees().toLocaleString('ar-SA')}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {errors.varieties && (
+                    <p className="text-red-600 text-sm mt-2 bg-red-50 p-2 rounded-lg">
+                      ⚠️ {errors.varieties}
+                    </p>
+                  )}
+                </div>
               </div>
 
               <div>
