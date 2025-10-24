@@ -80,29 +80,51 @@ export function SliderSetting({
   unit: string;
   onChange: (value: number) => void;
 }) {
+  const [isDragging, setIsDragging] = useState(false);
+
   return (
-    <div className="space-y-3">
+    <div className="space-y-4">
       <div className="flex items-center gap-3">
         <div className="text-gray-700">{icon}</div>
         <div className="flex-1">
           <div className="font-bold text-gray-900">{label}</div>
           <div className="text-xs text-gray-600">{description}</div>
         </div>
-        <div className="text-2xl font-black text-blue-600">
+        <div className={`text-2xl font-black transition-all ${
+          isDragging ? 'text-blue-600 scale-110' : 'text-blue-600'
+        }`}>
           {value} {unit}
         </div>
       </div>
-      <input
-        type="range"
-        min={min}
-        max={max}
-        value={value}
-        onChange={(e) => onChange(parseInt(e.target.value))}
-        className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider-thumb"
-      />
-      <div className="flex justify-between text-xs text-gray-500">
-        <span>{min} {unit}</span>
-        <span>{max} {unit}</span>
+
+      <div className="relative">
+        {/* Background Track */}
+        <div className="absolute top-0 left-0 w-full h-2 bg-gray-200 rounded-lg" />
+
+        {/* Progress Bar */}
+        <div
+          className="absolute top-0 left-0 h-2 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg pointer-events-none transition-all shadow-sm"
+          style={{ width: `${((value - min) / (max - min)) * 100}%` }}
+        />
+
+        {/* Slider Input */}
+        <input
+          type="range"
+          min={min}
+          max={max}
+          value={value}
+          onChange={(e) => onChange(parseInt(e.target.value))}
+          onMouseDown={() => setIsDragging(true)}
+          onMouseUp={() => setIsDragging(false)}
+          onTouchStart={() => setIsDragging(true)}
+          onTouchEnd={() => setIsDragging(false)}
+          className="slider-thumb w-full relative z-10"
+        />
+      </div>
+
+      <div className="flex justify-between text-xs font-medium text-gray-500">
+        <span className={value === min ? 'text-blue-600 font-bold' : ''}>{min} {unit}</span>
+        <span className={value === max ? 'text-blue-600 font-bold' : ''}>{max} {unit}</span>
       </div>
     </div>
   );
