@@ -147,7 +147,7 @@ export function AdminCrownButton({ onAdminLogin, onFarmOwnerLogin }: AdminCrownB
                 <Building2 className="h-6 w-6 text-white" strokeWidth={2.5} />
               </div>
               <div className="flex-1 text-right">
-                <div className="text-lg font-black text-gray-900">صاحب المزرعة</div>
+                <div className="text-lg font-black text-gray-900">لوحة المزرعة</div>
                 <div className="text-xs text-gray-600">إدارة مزرعتك</div>
               </div>
             </button>
