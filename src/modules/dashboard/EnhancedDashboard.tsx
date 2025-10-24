@@ -13,7 +13,8 @@ import {
   LogOut,
   Globe,
   Maximize2,
-  Minimize2
+  Minimize2,
+  MessageCircle
 } from 'lucide-react';
 import { DashboardService } from './dashboardService';
 import { AdminSessionService } from '../admin/services/adminSessionService';
@@ -21,6 +22,7 @@ import { LogoutConfirmationModal } from '../admin/components/LogoutConfirmationM
 import { SessionTerminatedMessage } from '../admin/components/SessionTerminatedMessage';
 import { LiveFinancialSystem } from '../../services/liveFinancialSystem';
 import { NotificationSoundControl } from '../../components/common/NotificationSoundControl';
+import { FloatingWhatsAppButton } from '../../components/common/FloatingWhatsAppButton';
 
 interface EnhancedDashboardProps {
   onModuleSelect: (moduleId: string) => void;
@@ -168,6 +170,15 @@ export function EnhancedDashboard({ onModuleSelect, onLogout, onGoToPublic, onSh
       icon: Shield,
       gradient: 'linear-gradient(135deg, #DC2626 0%, #EF4444 100%)',
       bgColor: 'bg-gradient-to-br from-red-600/10 to-red-500/10',
+    },
+    {
+      id: 'whatsapp',
+      title: 'مركز الاتصالات والواتساب',
+      subtitle: 'إدارة الرسائل والإشعارات',
+      value: 0,
+      icon: MessageCircle,
+      gradient: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+      bgColor: 'bg-gradient-to-br from-green-500/10 to-emerald-600/10',
     },
     {
       id: 'settings',
@@ -503,6 +514,9 @@ export function EnhancedDashboard({ onModuleSelect, onLogout, onGoToPublic, onSh
 
       {/* التحكم في الإشعارات الصوتية */}
       <NotificationSoundControl />
+
+      {/* زر الواتساب العائم */}
+      <FloatingWhatsAppButton />
     </div>
   );
 }
