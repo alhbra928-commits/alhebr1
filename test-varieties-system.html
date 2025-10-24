@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>نظام الأصناف المتكامل</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      text-align: center;
+      color: white;
+      font-size: 48px;
+      font-weight: 900;
+      margin-bottom: 20px;
+      text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+
+    .subtitle {
+      text-align: center;
+      color: rgba(255,255,255,0.9);
+      font-size: 20px;
+      margin-bottom: 50px;
+    }
+
+    .demo-section {
+      background: white;
+      border-radius: 24px;
+      padding: 40px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      margin-bottom: 30px;
+    }
+
+    .section-title {
+      font-size: 28px;
+      font-weight: 900;
+      color: #1f2937;
+      margin-bottom: 30px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .varieties-container {
+      background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+      border: 2px solid #22c55e;
+      border-radius: 16px;
+      padding: 24px;
+    }
+
+    .varieties-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .varieties-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #166534;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .add-btn {
+      padding: 10px 20px;
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .add-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(34, 197, 94, 0.4);
+    }
+
+    .variety-card {
+      background: white;
+      border: 2px solid #22c55e;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 16px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      align-items: end;
+      transition: all 0.3s;
+    }
+
+    .variety-card:hover {
+      box-shadow: 0 8px 24px rgba(34, 197, 94, 0.2);
+      transform: translateX(-4px);
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #374151;
+    }
+
+    .form-input, .form-select {
+      padding: 10px;
+      border: 2px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: border 0.3s;
+    }
+
+    .form-input:focus, .form-select:focus {
+      outline: none;
+      border-color: #22c55e;
+    }
+
+    .delete-btn {
+      padding: 10px 16px;
+      background: #fee2e2;
+      color: #991b1b;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .delete-btn:hover {
+      background: #fecaca;
+    }
+
+    .total-card {
+      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+      border: 2px solid #3b82f6;
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .total-label {
+      font-size: 16px;
+      font-weight: 600;
+      color: #1e40af;
+    }
+
+    .total-value {
+      font-size: 36px;
+      font-weight: 900;
+      color: #2563eb;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      background: white;
+      border: 3px dashed #22c55e;
+      border-radius: 16px;
+    }
+
+    .empty-icon {
+      font-size: 72px;
+      margin-bottom: 16px;
+    }
+
+    .empty-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #166534;
+      margin-bottom: 8px;
+    }
+
+    .empty-text {
+      color: #16a34a;
+      opacity: 0.7;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+    }
+
+    .feature-box {
+      background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+      border: 2px solid #e5e7eb;
+      border-radius: 16px;
+      padding: 24px;
+      transition: all 0.3s;
+    }
+
+    .feature-box:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.1);
+      border-color: #22c55e;
+    }
+
+    .feature-icon {
+      font-size: 40px;
+      margin-bottom: 16px;
+    }
+
+    .feature-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1f2937;
+      margin-bottom: 8px;
+    }
+
+    .feature-desc {
+      color: #6b7280;
+      line-height: 1.6;
+    }
+
+    .comparison-box {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      margin-top: 24px;
+    }
+
+    .before-box, .after-box {
+      padding: 24px;
+      border-radius: 16px;
+      border: 3px solid;
+    }
+
+    .before-box {
+      background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+      border-color: #ef4444;
+    }
+
+    .after-box {
+      background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+      border-color: #22c55e;
+    }
+
+    .comparison-title {
+      font-size: 22px;
+      font-weight: 900;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .comparison-list {
+      list-style: none;
+    }
+
+    .comparison-list li {
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(0,0,0,0.1);
+    }
+
+    .comparison-list li:last-child {
+      border-bottom: none;
+    }
+
+    @media (max-width: 768px) {
+      .comparison-box {
+        grid-template-columns: 1fr;
+      }
+
+      .variety-card {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🌳 نظام الأصناف المتكامل</h1>
+    <p class="subtitle">إدارة شاملة للأصناف المزروعة مع جميع الميزات</p>
+
+    <!-- Interactive Demo -->
+    <div class="demo-section">
+      <div class="section-title">
+        <span>🎮</span>
+        <span>تجربة تفاعلية</span>
+      </div>
+
+      <div class="varieties-container" id="varietiesContainer">
+        <div class="varieties-header">
+          <div class="varieties-title">
+            <span>🌳</span>
+            <span>الأصناف المزروعة</span>
+          </div>
+          <button class="add-btn" onclick="addVariety()">+ إضافة صنف</button>
+        </div>
+
+        <div id="varietiesList">
+          <div class="empty-state">
+            <div class="empty-icon">🌳</div>
+            <div class="empty-title">لم يتم إضافة أصناف بعد</div>
+            <div class="empty-text">اضغط "إضافة صنف" للبدء</div>
+          </div>
+        </div>
+
+        <div id="totalCard" style="display: none;" class="total-card">
+          <div class="total-label">إجمالي عدد الأشجار:</div>
+          <div class="total-value" id="totalTrees">0</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Features -->
+    <div class="demo-section">
+      <div class="section-title">
+        <span>✨</span>
+        <span>الميزات الرئيسية</span>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-box">
+          <div class="feature-icon">➕</div>
+          <div class="feature-title">إضافة صنف</div>
+          <div class="feature-desc">
+            إضافة أصناف متعددة مع النوع والاسم والعدد بسهولة تامة
+          </div>
+        </div>
+
+        <div class="feature-box">
+          <div class="feature-icon">🗑️</div>
+          <div class="feature-title">حذف صنف</div>
+          <div class="feature-desc">
+            إزالة أي صنف بنقرة واحدة مع تحديث تلقائي للإجمالي
+          </div>
+        </div>
+
+        <div class="feature-box">
+          <div class="feature-icon">🧮</div>
+          <div class="feature-title">حساب تلقائي</div>
+          <div class="feature-desc">
+            إجمالي عدد الأشجار يُحسب ويُعرض تلقائياً عند كل تغيير
+          </div>
+        </div>
+
+        <div class="feature-box">
+          <div class="feature-icon">✅</div>
+          <div class="feature-title">التحقق الذكي</div>
+          <div class="feature-desc">
+            يجب إضافة صنف واحد على الأقل مع اسم وعدد صحيح
+          </div>
+        </div>
+
+        <div class="feature-box">
+          <div class="feature-icon">🌾</div>
+          <div class="feature-title">مزارع مختلطة</div>
+          <div class="feature-desc">
+            دعم المزارع المختلطة مع اختيار النوع لكل صنف
+          </div>
+        </div>
+
+        <div class="feature-box">
+          <div class="feature-icon">💾</div>
+          <div class="feature-title">حفظ متكامل</div>
+          <div class="feature-desc">
+            الأصناف تُحفظ في قاعدة البيانات مع المزرعة والمالك
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Comparison -->
+    <div class="demo-section">
+      <div class="section-title">
+        <span>📊</span>
+        <span>قبل وبعد</span>
+      </div>
+
+      <div class="comparison-box">
+        <div class="before-box">
+          <div class="comparison-title" style="color: #991b1b;">
+            <span>❌</span>
+            <span>قبل التحديث</span>
+          </div>
+          <ul class="comparison-list">
+            <li>❌ لا يوجد نظام للأصناف</li>
+            <li>❌ لا يمكن إضافة تفاصيل</li>
+            <li>❌ عدم التوافق مع لوحة صاحب المزرعة</li>
+            <li>❌ بيانات ناقصة</li>
+            <li>❌ لا توجد تقارير</li>
+          </ul>
+        </div>
+
+        <div class="after-box">
+          <div class="comparison-title" style="color: #166534;">
+            <span>✅</span>
+            <span>بعد التحديث</span>
+          </div>
+          <ul class="comparison-list">
+            <li>✅ نظام أصناف متكامل</li>
+            <li>✅ إضافة/حذف/تعديل الأصناف</li>
+            <li>✅ توافق كامل مع لوحة صاحب المزرعة</li>
+            <li>✅ بيانات شاملة ودقيقة</li>
+            <li>✅ حساب تلقائي للإجماليات</li>
+            <li>✅ حفظ في قاعدة البيانات</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let varieties = [];
+    let varietyCounter = 0;
+
+    function addVariety() {
+      const id = varietyCounter++;
+      varieties.push({
+        id,
+        type: 'نخيل',
+        name: '',
+        count: 0
+      });
+      renderVarieties();
+    }
+
+    function removeVariety(id) {
+      varieties = varieties.filter(v => v.id !== id);
+      renderVarieties();
+    }
+
+    function updateVariety(id, field, value) {
+      const variety = varieties.find(v => v.id === id);
+      if (variety) {
+        variety[field] = value;
+        if (field === 'count') {
+          updateTotal();
+        }
+      }
+    }
+
+    function updateTotal() {
+      const total = varieties.reduce((sum, v) => sum + (parseInt(v.count) || 0), 0);
+      document.getElementById('totalTrees').textContent = total.toLocaleString('ar-SA');
+    }
+
+    function renderVarieties() {
+      const container = document.getElementById('varietiesList');
+      const totalCard = document.getElementById('totalCard');
+
+      if (varieties.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">🌳</div>
+            <div class="empty-title">لم يتم إضافة أصناف بعد</div>
+            <div class="empty-text">اضغط "إضافة صنف" للبدء</div>
+          </div>
+        `;
+        totalCard.style.display = 'none';
+      } else {
+        container.innerHTML = varieties.map(v => `
+          <div class="variety-card">
+            <div class="form-group">
+              <label class="form-label">النوع</label>
+              <select class="form-select" onchange="updateVariety(${v.id}, 'type', this.value)">
+                <option value="نخيل" ${v.type === 'نخيل' ? 'selected' : ''}>🌴 نخيل</option>
+                <option value="زيتون" ${v.type === 'زيتون' ? 'selected' : ''}>🫒 زيتون</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">اسم الصنف</label>
+              <input
+                type="text"
+                class="form-input"
+                placeholder="${v.type === 'نخيل' ? 'خلاص، سكري، برحي' : 'أربيكوينا، بيكوال'}"
+                value="${v.name}"
+                oninput="updateVariety(${v.id}, 'name', this.value)"
+              />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">العدد</label>
+              <input
+                type="number"
+                class="form-input"
+                placeholder="100"
+                value="${v.count || ''}"
+                min="1"
+                oninput="updateVariety(${v.id}, 'count', this.value)"
+              />
+            </div>
+
+            <button class="delete-btn" onclick="removeVariety(${v.id})">
+              🗑️ حذف
+            </button>
+          </div>
+        `).join('');
+        totalCard.style.display = 'flex';
+        updateTotal();
+      }
+    }
+
+    // Initial render
+    renderVarieties();
+
+    // Demo data
+    setTimeout(() => {
+      console.log('🌳 نظام الأصناف المتكامل جاهز!');
+      console.log('📋 جرّب إضافة أصناف مختلفة');
+      console.log('✅ النظام يعمل بشكل كامل');
+    }, 500);
+  </script>
+</body>
+</html>

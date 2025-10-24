@@ -114,6 +114,32 @@ export class OwnersService {
     return data;
   }
 
+  static async getOwnerVarieties(ownerId: string): Promise<Variety[]> {
+    // Get farm associated with owner
+    const { data: farm } = await supabase
+      .from('farms')
+      .select('id')
+      .eq('owner_id', ownerId)
+      .maybeSingle();
+
+    if (!farm) return [];
+
+    // Get varieties
+    const { data: varieties, error } = await supabase
+      .from('farm_tree_varieties')
+      .select('tree_type, variety_name, total_trees')
+      .eq('farm_id', farm.id)
+      .is('deleted_at', null);
+
+    if (error) throw error;
+
+    return (varieties || []).map(v => ({
+      type: v.tree_type as 'نخيل' | 'زيتون',
+      name: v.variety_name,
+      count: v.total_trees
+    }));
+  }
+
   static async createOwner(ownerData: OwnerFormData) {
     const { data, error } = await supabase
       .from('farm_owners')

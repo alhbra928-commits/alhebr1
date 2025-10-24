@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { X, Save, User, Phone, Mail, MapPin, FileText, DollarSign, Home } from 'lucide-react';
+import { X, Save, User, Phone, Mail, MapPin, FileText, DollarSign, Home, Plus, Trash2, TreePine } from 'lucide-react';
 import type { OwnerFormData } from '../ownersService';
+import { OwnersService } from '../ownersService';
 
 interface OwnerFormModalProps {
   isOpen: boolean;
