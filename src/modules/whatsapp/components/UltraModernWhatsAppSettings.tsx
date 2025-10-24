@@ -44,6 +44,13 @@ export function UltraModernWhatsAppSettings() {
     loadSettings();
     loadUsageStats();
     loadChangeHistory();
+
+    const interval = setInterval(() => {
+      loadSettings();
+      loadUsageStats();
+    }, 10000);
+
+    return () => clearInterval(interval);
   }, []);
 
   const loadSettings = async () => {

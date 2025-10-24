@@ -21,6 +21,12 @@ export function AdvancedAnalyticsReports() {
 
   useEffect(() => {
     loadStats();
+
+    const interval = setInterval(() => {
+      loadStats();
+    }, 15000);
+
+    return () => clearInterval(interval);
   }, [period]);
 
   const loadStats = async () => {

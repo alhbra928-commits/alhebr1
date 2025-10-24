@@ -22,6 +22,12 @@ export function UltraModernTemplatesManager() {
     if (favorites) {
       setFavoriteTemplates(JSON.parse(favorites));
     }
+
+    const interval = setInterval(() => {
+      loadData();
+    }, 10000);
+
+    return () => clearInterval(interval);
   }, []);
 
   const loadData = async () => {
