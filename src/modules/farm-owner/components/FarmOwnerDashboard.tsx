@@ -131,10 +131,10 @@ export const FarmOwnerDashboard: React.FC<FarmOwnerDashboardProps> = ({ profileI
               </div>
               <div>
                 <h1 className="text-2xl font-black bg-gradient-to-r from-green-600 to-green-800 bg-clip-text text-transparent">
-                  بوابة البائع
+                  بوابة صاحب المزرعة
                 </h1>
                 <p className="text-sm text-gray-600 font-semibold">
-                  {profile?.full_name || profile?.mobile_number}
+                  {profile?.full_name ? `${profile.full_name} - ${profile.mobile_number}` : profile?.mobile_number}
                 </p>
               </div>
             </div>

@@ -7,8 +7,9 @@ interface FarmOwnerLoginPageProps {
 }
 
 export const FarmOwnerLoginPage: React.FC<FarmOwnerLoginPageProps> = ({ onLoginSuccess }) => {
-  const [step, setStep] = useState<'mobile' | 'otp'>('mobile');
+  const [step, setStep] = useState<'mobile' | 'name' | 'otp'>('mobile');
   const [mobileNumber, setMobileNumber] = useState('');
+  const [fullName, setFullName] = useState('');
   const [otp, setOtp] = useState('');
   const [displayedOTP, setDisplayedOTP] = useState('');
   const [isNewAccount, setIsNewAccount] = useState(false);
@@ -38,22 +39,42 @@ export const FarmOwnerLoginPage: React.FC<FarmOwnerLoginPageProps> = ({ onLoginS
     const { exists } = await farmOwnerService.checkAccount(cleanMobile);
 
     if (!exists) {
-      const result = await farmOwnerService.directLogin(cleanMobile);
-      if (result.success) {
-        onLoginSuccess(result.profile_id!, result.status!);
-      } else {
-        setError(result.error || 'حدث خطأ في التسجيل');
-      }
+      // حساب جديد - اطلب الاسم
+      setIsNewAccount(true);
+      setStep('name');
     } else {
+      // حساب موجود - أرسل OTP
       const result = await farmOwnerService.sendOTP(cleanMobile);
       if (result.success) {
         setDisplayedOTP(result.otp || '');
-        setIsNewAccount(result.is_new || false);
+        setIsNewAccount(false);
         setStep('otp');
         setCountdown(300);
       } else {
         setError(result.error || 'حدث خطأ في إرسال رمز التحقق');
       }
+    }
+
+    setLoading(false);
+  };
+
+  const handleNameSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+
+    if (!fullName.trim() || fullName.trim().length < 3) {
+      setError('الرجاء إدخال الاسم الكامل (3 أحرف على الأقل)');
+      setLoading(false);
+      return;
+    }
+
+    // إنشاء حساب جديد مع الاسم
+    const result = await farmOwnerService.directLoginWithName(mobileNumber, fullName.trim());
+    if (result.success) {
+      onLoginSuccess(result.profile_id!, result.status!);
+    } else {
+      setError(result.error || 'حدث خطأ في التسجيل');
     }
 
     setLoading(false);
@@ -170,7 +191,7 @@ export const FarmOwnerLoginPage: React.FC<FarmOwnerLoginPageProps> = ({ onLoginS
 
           <div className="relative z-10">
             <h2 className="text-xl font-bold text-white mb-6 text-center">
-              {step === 'mobile' ? '🎩 دخول صاحب المزرعة' : '🔐 التحقق من الرمز'}
+              {step === 'mobile' ? '🎩 دخول صاحب المزرعة' : step === 'name' ? '👤 الاسم الكامل' : '🔐 التحقق من الرمز'}
             </h2>
 
             {step === 'mobile' ? (
@@ -244,6 +265,108 @@ export const FarmOwnerLoginPage: React.FC<FarmOwnerLoginPageProps> = ({ onLoginS
                   • دخول مباشر للمرة الأولى<br />
                   • رمز تحقق للمرات التالية
                 </div>
+              </form>
+            ) : step === 'name' ? (
+              <form onSubmit={handleNameSubmit} className="space-y-6">
+                <div
+                  className="p-4 rounded-xl text-center"
+                  style={{
+                    background: 'rgba(59, 130, 246, 0.2)',
+                    border: '2px solid rgba(59, 130, 246, 0.5)'
+                  }}
+                >
+                  <p className="text-sm font-bold" style={{ color: '#93C5FD' }}>
+                    مرحباً بك في منصة الحبر
+                  </p>
+                  <p className="text-xs mt-1" style={{ color: '#93C5FD', opacity: 0.8 }}>
+                    الرجاء إدخال اسمك الكامل لإنشاء حسابك
+                  </p>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold mb-2" style={{ color: '#8BC34A' }}>
+                    👤 الاسم الكامل
+                  </label>
+                  <input
+                    type="text"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    placeholder="مثال: أحمد محمد العلي"
+                    disabled={loading}
+                    className="w-full px-4 py-3 rounded-xl text-white text-lg font-semibold transition-all duration-300 focus:outline-none focus:ring-2"
+                    style={{
+                      background: 'rgba(0, 0, 0, 0.4)',
+                      border: '2px solid rgba(139, 195, 74, 0.3)',
+                      caretColor: '#8BC34A'
+                    }}
+                    onFocus={(e) => {
+                      e.target.style.borderColor = '#8BC34A';
+                      e.target.style.boxShadow = '0 0 20px rgba(139, 195, 74, 0.5)';
+                    }}
+                    onBlur={(e) => {
+                      e.target.style.borderColor = 'rgba(139, 195, 74, 0.3)';
+                      e.target.style.boxShadow = 'none';
+                    }}
+                  />
+                  <p className="text-xs mt-2" style={{ color: '#8BC34A', opacity: 0.7 }}>
+                    سيتم استخدام اسمك في الشهادات والمراسلات الرسمية
+                  </p>
+                </div>
+
+                {error && (
+                  <div
+                    className="px-4 py-3 rounded-xl text-sm font-semibold text-center"
+                    style={{
+                      background: 'rgba(239, 68, 68, 0.1)',
+                      border: '2px solid rgba(239, 68, 68, 0.3)',
+                      color: '#FCA5A5'
+                    }}
+                  >
+                    ⚠️ {error}
+                  </div>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={loading || !fullName.trim()}
+                  className="w-full py-4 rounded-2xl font-black text-lg text-white transition-all duration-500 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                  style={{
+                    background: loading || !fullName.trim()
+                      ? 'linear-gradient(135deg, #4B5563 0%, #374151 100%)'
+                      : 'linear-gradient(135deg, #A4D65E 0%, #8BC34A 50%, #689F38 100%)',
+                    boxShadow: loading || !fullName.trim()
+                      ? 'none'
+                      : '0 15px 40px rgba(139, 195, 74, 0.5), inset 0 0 20px rgba(139, 195, 74, 0.2)',
+                    border: '2px solid rgba(255, 255, 255, 0.2)',
+                    textShadow: '0 2px 8px rgba(0, 0, 0, 0.3)'
+                  }}
+                >
+                  {loading ? (
+                    <span className="flex items-center justify-center gap-2">
+                      <span className="inline-block w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      جاري إنشاء الحساب...
+                    </span>
+                  ) : (
+                    '✓ إنشاء حسابي'
+                  )}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setStep('mobile');
+                    setFullName('');
+                    setError('');
+                  }}
+                  className="w-full py-3 rounded-xl font-bold transition-all hover:scale-105"
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.1)',
+                    border: '2px solid rgba(255, 255, 255, 0.2)',
+                    color: 'white'
+                  }}
+                >
+                  رجوع
+                </button>
               </form>
             ) : (
               <form onSubmit={handleOTPSubmit} className="space-y-6">
@@ -376,7 +499,7 @@ export const FarmOwnerLoginPage: React.FC<FarmOwnerLoginPageProps> = ({ onLoginS
         </div>
 
         <div className="mt-6 text-center text-sm" style={{ color: '#8BC34A', opacity: 0.6 }}>
-          لوحة خاصة بأصحاب المزارع المعتمدين
+          بوابة خاصة بأصحاب المزارع المعتمدين
         </div>
       </div>
     </div>

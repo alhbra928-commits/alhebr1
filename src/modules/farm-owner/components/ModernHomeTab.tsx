@@ -38,9 +38,10 @@ export const ModernHomeTab: React.FC<ModernHomeTabProps> = ({ profile, farmStatu
 
     // إذا لم يرفع بياناته بعد
     if (!hasSubmittedData) {
+      const ownerName = profile.full_name || 'صاحب المزرعة';
       return {
         emoji: '📝',
-        title: 'مرحباً بك في بوابة البائع',
+        title: `مرحباً ${ownerName}`,
         message: 'ابدأ برفع بيانات مزرعتك من تبويب "بياناتي" لعرضها على المستثمرين',
         color: '#3B82F6',
         bgGradient: 'from-blue-50 to-indigo-50',

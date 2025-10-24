@@ -230,6 +230,57 @@ class FarmOwnerService {
   }
 
   /**
+   * تسجيل دخول مباشر مع الاسم (للمرة الأولى فقط)
+   */
+  async directLoginWithName(mobileNumber: string, fullName: string) {
+    try {
+      // التحقق من أن الحساب غير موجود
+      const { exists } = await this.checkAccount(mobileNumber);
+      if (exists) {
+        return { success: false, error: 'الحساب موجود مسبقاً. يرجى استخدام رمز التحقق' };
+      }
+
+      // إنشاء حساب جديد
+      const { data, error } = await supabase.rpc('farm_owner_login_or_create', {
+        p_mobile_number: mobileNumber
+      });
+
+      if (error) throw error;
+
+      if (data?.success) {
+        // تحديث الاسم الكامل
+        const { error: updateError } = await supabase
+          .from('farm_owner_profiles')
+          .update({ full_name: fullName })
+          .eq('id', data.profile_id);
+
+        if (updateError) {
+          console.error('خطأ في تحديث الاسم:', updateError);
+        }
+
+        localStorage.setItem('farm_owner_session', JSON.stringify({
+          profile_id: data.profile_id,
+          session_token: data.session_token,
+          mobile_number: mobileNumber,
+          status: data.status
+        }));
+
+        return {
+          success: true,
+          profile_id: data.profile_id,
+          status: data.status,
+          is_new: true
+        };
+      }
+
+      return { success: false, error: data?.error || 'فشل تسجيل الدخول' };
+    } catch (error: any) {
+      console.error('خطأ في التسجيل المباشر:', error);
+      return { success: false, error: error.message };
+    }
+  }
+
+  /**
    * تسجيل الخروج
    */
   logout() {
