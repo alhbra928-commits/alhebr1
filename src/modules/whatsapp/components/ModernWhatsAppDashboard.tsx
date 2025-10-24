@@ -9,7 +9,7 @@ import { AnimatedCounter } from '../../../components/ui/AnimatedCounter';
 import { UltraModernTemplatesManager } from './UltraModernTemplatesManager';
 import { ModernMessagesLog } from './ModernMessagesLog';
 import { ModernBroadcastManager } from './ModernBroadcastManager';
-import { ModernWhatsAppSettings } from './ModernWhatsAppSettings';
+import { UltraModernWhatsAppSettings } from './UltraModernWhatsAppSettings';
 import { AdvancedAnalyticsReports } from './AdvancedAnalyticsReports';
 
 export function ModernWhatsAppDashboard() {
@@ -74,7 +74,7 @@ export function ModernWhatsAppDashboard() {
           {activeView === 'templates' && <UltraModernTemplatesManager />}
           {activeView === 'messages' && <ModernMessagesLog />}
           {activeView === 'broadcast' && <ModernBroadcastManager />}
-          {activeView === 'settings' && <ModernWhatsAppSettings />}
+          {activeView === 'settings' && <UltraModernWhatsAppSettings />}
           {activeView === 'analytics' && <AdvancedAnalyticsReports />}
         </div>
       </div>
