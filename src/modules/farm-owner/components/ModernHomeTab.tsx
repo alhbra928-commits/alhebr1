@@ -32,8 +32,12 @@ export const ModernHomeTab: React.FC<ModernHomeTabProps> = ({ profile, farmStatu
   const getStatusInfo = () => {
     if (!profile) return { emoji: '⏳', title: 'جاري التحميل...', message: '', color: '#9CA3AF', bgGradient: 'from-gray-50 to-gray-100', icon: Clock };
 
-    // إذا لم يتم رفع المزرعة بعد (لا توجد بيانات farmStatus)
-    if (!farmStatus) {
+    // التحقق من أن المستخدم رفع بيانات مزرعته
+    // إذا لم يكن له farm_owner_id، معناه لم يرفع طلبه بعد
+    const hasSubmittedData = farmStatus?.farm_owner_id || profile.farm_owner_id;
+
+    // إذا لم يرفع بياناته بعد
+    if (!hasSubmittedData) {
       return {
         emoji: '📝',
         title: 'مرحباً بك في بوابة البائع',
@@ -44,6 +48,7 @@ export const ModernHomeTab: React.FC<ModernHomeTabProps> = ({ profile, farmStatu
       };
     }
 
+    // إذا رفع بياناته، نتحقق من حالة الطلب
     switch (profile.status) {
       case 'pending':
         return {
@@ -87,6 +92,9 @@ export const ModernHomeTab: React.FC<ModernHomeTabProps> = ({ profile, farmStatu
   const statusInfo = getStatusInfo();
   const progress = farmStatus?.progress_percentage || 0;
   const StatusIcon = statusInfo.icon || Activity;
+
+  // التحقق من رفع البيانات
+  const hasSubmittedData = farmStatus?.farm_owner_id || profile?.farm_owner_id;
 
   const stats = [
     {
@@ -198,7 +206,7 @@ export const ModernHomeTab: React.FC<ModernHomeTabProps> = ({ profile, farmStatu
           )}
 
           {/* زر دعوة للعمل للمستخدمين الجدد */}
-          {!farmStatus && (
+          {!hasSubmittedData && (
             <div className="mt-6 text-center">
               <button
                 onClick={() => {
@@ -225,7 +233,7 @@ export const ModernHomeTab: React.FC<ModernHomeTabProps> = ({ profile, farmStatu
       </div>
 
       {/* بطاقة إرشادية للمستخدمين الجدد */}
-      {!farmStatus && (
+      {!hasSubmittedData && (
         <div className="bg-white rounded-3xl p-8 border-2 border-blue-100 shadow-lg">
           <h3 className="text-2xl font-black mb-6 text-center" style={{ color: '#3B82F6' }}>
             🎯 خطوات بسيطة للبدء
@@ -283,7 +291,7 @@ export const ModernHomeTab: React.FC<ModernHomeTabProps> = ({ profile, farmStatu
       )}
 
       {/* بطاقات الإحصائيات - فقط إذا كانت المزرعة مرفوعة */}
-      {farmStatus && (
+      {hasSubmittedData && (
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
           {stats.map((stat, index) => {
             const Icon = stat.icon;
