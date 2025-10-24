@@ -7,7 +7,7 @@ import {
 import { whatsappService, DailyStats } from '../services/whatsappService';
 import { AnimatedCounter } from '../../../components/ui/AnimatedCounter';
 import { TemplatesManager } from './TemplatesManager';
-import { MessagesLog } from './MessagesLog';
+import { ModernMessagesLog } from './ModernMessagesLog';
 import { BroadcastManager } from './BroadcastManager';
 import { ModernWhatsAppSettings } from './ModernWhatsAppSettings';
 import { AnalyticsReports } from './AnalyticsReports';
@@ -72,7 +72,7 @@ export function ModernWhatsAppDashboard() {
           </button>
 
           {activeView === 'templates' && <TemplatesManager />}
-          {activeView === 'messages' && <MessagesLog />}
+          {activeView === 'messages' && <ModernMessagesLog />}
           {activeView === 'broadcast' && <BroadcastManager />}
           {activeView === 'settings' && <ModernWhatsAppSettings />}
           {activeView === 'analytics' && <AnalyticsReports />}
