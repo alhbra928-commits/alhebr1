@@ -10,6 +10,7 @@ import { TemplatesManager } from './TemplatesManager';
 import { MessagesLog } from './MessagesLog';
 import { BroadcastManager } from './BroadcastManager';
 import { WhatsAppSettings } from './WhatsAppSettings';
+import { AnalyticsReports } from './AnalyticsReports';
 
 export function WhatsAppDashboard() {
   const [activeView, setActiveView] = useState('dashboard');
@@ -92,6 +93,7 @@ export function WhatsAppDashboard() {
         {activeView === 'messages' && <MessagesLog />}
         {activeView === 'broadcast' && <BroadcastManager />}
         {activeView === 'settings' && <WhatsAppSettings />}
+        {activeView === 'analytics' && <AnalyticsReports />}
       </div>
     );
   }

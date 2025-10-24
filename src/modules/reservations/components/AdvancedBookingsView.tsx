@@ -3,6 +3,7 @@ import { BookingsService } from '../bookingsService';
 import { ArrowRight, Calendar, Users, CheckCircle, Clock, DollarSign, Search, RefreshCw, Filter } from 'lucide-react';
 import { BookingCard3D } from './BookingCard3D';
 import { BookingDetailsPanel } from './BookingDetailsPanel';
+import { whatsappIntegration } from '../../whatsapp/services/whatsappIntegration';
 
 interface AdvancedBookingsViewProps {
   onBack: () => void;
@@ -76,8 +77,25 @@ export function AdvancedBookingsView({ onBack }: AdvancedBookingsViewProps) {
   const handleApprove = async (bookingId: string) => {
     try {
       await BookingsService.updateStatus(bookingId, 'approved');
+
+      // إرسال رسالة واتساب تلقائية
+      const booking = bookings.find(b => b.id === bookingId);
+      if (booking && booking.customer_phone) {
+        await whatsappIntegration.sendSafe(
+          () => whatsappIntegration.notifyBookingApproved({
+            id: booking.id,
+            customer_name: booking.customer_name || 'عزيزي العميل',
+            customer_phone: booking.customer_phone,
+            farm_name: booking.farm_name || 'المزرعة',
+            reserved_trees: booking.reserved_trees || 0,
+            total_amount: booking.total_amount || 0
+          }),
+          'موافقة الحجز'
+        );
+      }
+
       await loadData();
-      alert('✅ تم اعتماد الحجز بنجاح');
+      alert('✅ تم اعتماد الحجز بنجاح وإرسال إشعار الواتساب');
     } catch (error) {
       console.error('Error approving booking:', error);
       alert('❌ حدث خطأ أثناء اعتماد الحجز');

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { CheckCircle, XCircle, Eye, Download, Loader, FileText, Calendar, DollarSign } from 'lucide-react';
 import { PaymentReceiptService } from '../../investor/services/paymentReceiptService';
 import { brandColors, brandGradients } from '../../finance/styles/brandColors';
+import { whatsappIntegration } from '../../whatsapp/services/whatsappIntegration';
 
 export function PaymentReceiptsManagement() {
   const [receipts, setReceipts] = useState<any[]>([]);
@@ -38,7 +39,20 @@ export function PaymentReceiptsManagement() {
         verificationNotes || 'تم التحقق من الإيصال بنجاح'
       );
 
-      alert('✅ تم التحقق من الإيصال بنجاح!');
+      // إرسال إشعار واتساب تلقائي
+      if (selectedReceipt.investor_phone) {
+        await whatsappIntegration.sendSafe(
+          () => whatsappIntegration.notifyPaymentReceived({
+            customer_name: selectedReceipt.investor_name || 'عزيزي العميل',
+            customer_phone: selectedReceipt.investor_phone,
+            amount: selectedReceipt.amount || 0,
+            payment_date: new Date(selectedReceipt.payment_date).toLocaleDateString('ar-SA')
+          }),
+          'قبول الدفعة'
+        );
+      }
+
+      alert('✅ تم التحقق من الإيصال بنجاح وإرسال إشعار الواتساب!');
       setShowModal(false);
       setSelectedReceipt(null);
       setVerificationNotes('');
