@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Sparkles, TreePine, TrendingUp, Users, Shield, Award, ArrowLeft, CheckCircle } from 'lucide-react';
+import { Sparkles, TreePine, DollarSign, Users, Shield, Award, ArrowLeft, CheckCircle, Heart, Handshake } from 'lucide-react';
 
 interface FarmOwnerWelcomeProps {
   ownerName: string;
@@ -16,50 +16,50 @@ export const FarmOwnerWelcome: React.FC<FarmOwnerWelcomeProps> = ({ ownerName, o
 
   const benefits = [
     {
-      icon: TreePine,
-      title: 'إدارة مزرعتك بسهولة',
-      description: 'تحكم كامل في بيانات المزرعة، الأشجار، والأسعار',
+      icon: Shield,
+      title: 'شريك موثوق',
+      description: 'نحن معك في كل خطوة حتى إتمام الصفقة بأمان',
       color: '#8BC34A'
     },
     {
-      icon: TrendingUp,
-      title: 'تتبع الأرباح لحظياً',
-      description: 'شاهد الإيرادات والمصروفات في الوقت الفعلي',
+      icon: DollarSign,
+      title: 'دفعات منتظمة ومضمونة',
+      description: 'نلتزم بجدول الدفعات المتفق عليه بدقة',
       color: '#FFB74D'
     },
     {
-      icon: Users,
-      title: 'تواصل مع المستثمرين',
-      description: 'متابعة الحجوزات والتواصل المباشر',
+      icon: Heart,
+      title: 'فريق دعم متواصل',
+      description: 'نحن هنا للإجابة على جميع استفساراتك دائماً',
       color: '#4FC3F7'
     },
     {
-      icon: Shield,
-      title: 'أمان وموثوقية',
-      description: 'حماية كاملة لبياناتك ومعاملاتك',
+      icon: Handshake,
+      title: 'انتقال سلس للملكية',
+      description: 'إجراءات قانونية واضحة ومضمونة بالكامل',
       color: '#9575CD'
     }
   ];
 
   const steps = [
     {
-      title: 'أكمل بيانات المزرعة',
-      description: 'أضف معلومات مزرعتك والأشجار المتاحة',
+      title: 'قدم معلومات المزرعة',
+      description: 'أضف بيانات مزرعتك بكل سهولة ويسر',
       icon: TreePine
     },
     {
-      title: 'حدد الأسعار',
-      description: 'ضع أسعار الأشجار بناءً على الأنواع',
-      icon: TrendingUp
+      title: 'حدد السعر النهائي',
+      description: 'ضع سعر البيع المناسب لمزرعتك',
+      icon: DollarSign
     },
     {
-      title: 'انتظر الموافقة',
-      description: 'سيتم مراجعة بياناتك من فريق الإدارة',
+      title: 'انتظر المراجعة والموافقة',
+      description: 'سنراجع البيانات ونوافق عليها سريعاً',
       icon: CheckCircle
     },
     {
-      title: 'ابدأ البيع',
-      description: 'بعد الموافقة، ستظهر مزرعتك للمستثمرين',
+      title: 'استلم دفعاتك بانتظام',
+      description: 'سنبدأ بتحويل الدفعات حسب الاتفاق',
       icon: Award
     }
   ];
@@ -122,20 +122,24 @@ export const FarmOwnerWelcome: React.FC<FarmOwnerWelcomeProps> = ({ ownerName, o
               textShadow: '0 0 40px rgba(139, 195, 74, 0.3)'
             }}
           >
-            مرحباً بك، {ownerName}! 🎉
+            نرحب بك معنا، {ownerName}! 🤝
           </h1>
 
-          <p className="text-xl md:text-2xl font-bold" style={{ color: '#A4D65E' }}>
-            أهلاً بك في منصة إدارة مزرعتك الذكية
+          <p className="text-xl md:text-2xl font-bold mb-3" style={{ color: '#A4D65E' }}>
+            شكراً لثقتك في منصة النخيل والزيتون
+          </p>
+
+          <p className="text-lg mb-4 max-w-2xl mx-auto" style={{ color: '#A4D65E', opacity: 0.9 }}>
+            يسعدنا أن نكون شريكك في رحلة بيع مزرعتك. نحن هنا لنجعل العملية سهلة وآمنة ومريحة لك
           </p>
 
           <div className="mt-6 inline-flex items-center gap-2 px-6 py-3 rounded-full" style={{
             background: 'rgba(139, 195, 74, 0.1)',
             border: '2px solid rgba(139, 195, 74, 0.3)'
           }}>
-            <Award className="text-yellow-400" size={24} />
+            <Handshake className="text-yellow-400" size={24} />
             <span className="font-bold" style={{ color: '#8BC34A' }}>
-              شريك نجاح في منصة النخيل والزيتون
+              بائع موثوق في منصة النخيل والزيتون
             </span>
           </div>
         </div>
@@ -187,10 +191,10 @@ export const FarmOwnerWelcome: React.FC<FarmOwnerWelcomeProps> = ({ ownerName, o
         <div className={`transition-all duration-1000 delay-500 ${showContent ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
           <div className="text-center mb-10">
             <h2 className="text-3xl md:text-4xl font-black mb-3" style={{ color: '#8BC34A' }}>
-              خطوات البداية 🚀
+              رحلتك معنا 🌟
             </h2>
             <p className="text-lg" style={{ color: '#A4D65E' }}>
-              اتبع هذه الخطوات البسيطة لتفعيل مزرعتك
+              اتبع هذه الخطوات البسيطة وسنكون معك في كل خطوة
             </p>
           </div>
 
@@ -259,11 +263,14 @@ export const FarmOwnerWelcome: React.FC<FarmOwnerWelcomeProps> = ({ ownerName, o
                 boxShadow: '0 10px 40px rgba(139, 195, 74, 0.4)'
               }}
             >
-              <span>ابدأ الآن</span>
+              <span>لنبدأ معاً</span>
               <ArrowLeft className="group-hover:-translate-x-2 transition-transform" size={28} />
             </button>
 
-            <p className="mt-4 text-sm opacity-70" style={{ color: '#A4D65E' }}>
+            <p className="mt-4 text-base font-semibold" style={{ color: '#A4D65E' }}>
+              نحن معك خطوة بخطوة حتى نهاية الرحلة 💚
+            </p>
+            <p className="mt-2 text-sm opacity-70" style={{ color: '#A4D65E' }}>
               لن تظهر هذه الرسالة مرة أخرى
             </p>
           </div>
