@@ -50,6 +50,40 @@ export interface OwnerStatistics {
 }
 
 export class OwnersService {
+  /**
+   * الحصول على طلبات المراجعة المعلقة
+   */
+  static async getPendingSubmissions(): Promise<any[]> {
+    const { data, error } = await supabase
+      .from('farm_submission_requests')
+      .select(`
+        id,
+        profile_id,
+        status,
+        submitted_data,
+        varieties_data,
+        submitted_at,
+        rejection_reason,
+        farm_owner_profiles (
+          mobile_number,
+          full_name,
+          national_id,
+          region,
+          city
+        )
+      `)
+      .eq('status', 'pending')
+      .is('deleted_at', null)
+      .order('submitted_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching pending submissions:', error);
+      return [];
+    }
+
+    return data || [];
+  }
+
   static async getOwnersList(status?: string): Promise<FarmOwner[]> {
     let query = supabase
       .from('farm_owners')
@@ -129,6 +163,60 @@ export class OwnersService {
     });
 
     if (error) throw error;
+    return data;
+  }
+
+  /**
+   * الموافقة على طلب مزرعة
+   */
+  static async approveSubmission(submissionId: string, adminNotes?: string) {
+    // الحصول على معرف الأدمن الحالي
+    const { data: adminData } = await supabase
+      .from('admin_users')
+      .select('id')
+      .is('deleted_at', null)
+      .limit(1)
+      .maybeSingle();
+
+    const adminId = adminData?.id || '00000000-0000-0000-0000-000000000000';
+
+    const { data, error } = await supabase.rpc('approve_farm_submission', {
+      p_submission_id: submissionId,
+      p_admin_id: adminId,
+      p_admin_notes: adminNotes || null
+    });
+
+    if (error) {
+      console.error('Error approving submission:', error);
+      throw error;
+    }
+    return data;
+  }
+
+  /**
+   * رفض طلب مزرعة
+   */
+  static async rejectSubmission(submissionId: string, rejectionReason: string) {
+    // الحصول على معرف الأدمن الحالي
+    const { data: adminData } = await supabase
+      .from('admin_users')
+      .select('id')
+      .is('deleted_at', null)
+      .limit(1)
+      .maybeSingle();
+
+    const adminId = adminData?.id || '00000000-0000-0000-0000-000000000000';
+
+    const { data, error } = await supabase.rpc('reject_farm_submission', {
+      p_submission_id: submissionId,
+      p_admin_id: adminId,
+      p_rejection_reason: rejectionReason
+    });
+
+    if (error) {
+      console.error('Error rejecting submission:', error);
+      throw error;
+    }
     return data;
   }
 
