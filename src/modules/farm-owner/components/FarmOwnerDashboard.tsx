@@ -112,39 +112,39 @@ export const FarmOwnerDashboard: React.FC<FarmOwnerDashboardProps> = ({ profileI
         borderBottom: '1px solid rgba(139, 195, 74, 0.2)',
         boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05), 0 10px 30px rgba(139, 195, 74, 0.1)'
       }}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16 sm:h-20">
             {/* الشعار العصري */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
               <div
-                className="w-14 h-14 rounded-2xl flex items-center justify-center relative overflow-hidden group"
+                className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-xl sm:rounded-2xl flex items-center justify-center relative overflow-hidden group"
                 style={{
                   background: 'linear-gradient(135deg, #8BC34A 0%, #689F38 100%)',
                   boxShadow: '0 4px 12px rgba(139, 195, 74, 0.3)'
                 }}
               >
-                <span className="text-3xl group-hover:scale-110 transition-transform">🌳</span>
+                <span className="text-xl sm:text-2xl md:text-3xl group-hover:scale-110 transition-transform">🌳</span>
                 <div
                   className="absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity"
                   style={{ background: 'radial-gradient(circle, white 0%, transparent 70%)' }}
                 />
               </div>
-              <div>
-                <h1 className="text-2xl font-black bg-gradient-to-r from-green-600 to-green-800 bg-clip-text text-transparent">
+              <div className="min-w-0 flex-1">
+                <h1 className="text-base sm:text-lg md:text-xl lg:text-2xl font-black bg-gradient-to-r from-green-600 to-green-800 bg-clip-text text-transparent truncate">
                   بوابة صاحب المزرعة
                 </h1>
-                <p className="text-sm text-gray-600 font-semibold">
+                <p className="text-xs sm:text-sm text-gray-600 font-semibold truncate">
                   {profile?.full_name ? `${profile.full_name} - ${profile.mobile_number}` : profile?.mobile_number}
                 </p>
               </div>
             </div>
 
             {/* الإجراءات العصرية */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1 sm:gap-2">
               {/* جرس الإشعارات */}
               <button
                 onClick={() => setActiveTab('notifications')}
-                className="relative p-3 rounded-2xl transition-all duration-300 hover:scale-105 hover:shadow-lg group"
+                className="relative p-2 sm:p-2.5 md:p-3 rounded-xl sm:rounded-2xl transition-all duration-300 hover:scale-105 hover:shadow-lg group"
                 style={{
                   background: activeTab === 'notifications'
                     ? 'linear-gradient(135deg, #8BC34A 0%, #689F38 100%)'
@@ -154,9 +154,8 @@ export const FarmOwnerDashboard: React.FC<FarmOwnerDashboardProps> = ({ profileI
                 }}
               >
                 <Bell
-                  size={20}
+                  className="w-4 h-4 sm:w-5 sm:h-5 md:w-5 md:h-5 group-hover:scale-110 transition-transform"
                   style={{ color: activeTab === 'notifications' ? 'white' : '#6B7280' }}
-                  className="group-hover:scale-110 transition-transform"
                 />
                 {unreadCount > 0 && (
                   <span
@@ -174,19 +173,19 @@ export const FarmOwnerDashboard: React.FC<FarmOwnerDashboardProps> = ({ profileI
               {/* زر العودة للمنصة */}
               <button
                 onClick={() => window.location.href = '/'}
-                className="p-3 rounded-2xl transition-all duration-300 hover:scale-105 hover:shadow-lg bg-white border-2 border-gray-200 group"
+                className="hidden sm:flex p-2 sm:p-2.5 md:p-3 rounded-xl sm:rounded-2xl transition-all duration-300 hover:scale-105 hover:shadow-lg bg-white border-2 border-gray-200 group"
                 title="العودة للمنصة الرئيسية"
               >
-                <Home size={20} className="text-gray-600 group-hover:text-green-600 group-hover:scale-110 transition-all" />
+                <Home className="w-4 h-4 sm:w-5 sm:h-5 md:w-5 md:h-5 text-gray-600 group-hover:text-green-600 group-hover:scale-110 transition-all" />
               </button>
 
               {/* زر الخروج */}
               <button
                 onClick={handleLogout}
-                className="p-3 rounded-2xl transition-all duration-300 hover:scale-105 hover:shadow-lg bg-white border-2 border-gray-200 group"
+                className="p-2 sm:p-2.5 md:p-3 rounded-xl sm:rounded-2xl transition-all duration-300 hover:scale-105 hover:shadow-lg bg-white border-2 border-gray-200 group"
                 title="تسجيل الخروج"
               >
-                <LogOut size={20} className="text-gray-600 group-hover:text-red-600 group-hover:scale-110 transition-all" />
+                <LogOut className="w-4 h-4 sm:w-5 sm:h-5 md:w-5 md:h-5 text-gray-600 group-hover:text-red-600 group-hover:scale-110 transition-all" />
               </button>
             </div>
           </div>
@@ -194,15 +193,15 @@ export const FarmOwnerDashboard: React.FC<FarmOwnerDashboardProps> = ({ profileI
       </header>
 
       {/* التبويبات العصرية */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
-        <div className="bg-white rounded-2xl p-2 shadow-sm border border-gray-200 flex gap-1 overflow-x-auto">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 mt-4 sm:mt-6">
+        <div className="bg-white rounded-xl sm:rounded-2xl p-1.5 sm:p-2 shadow-sm border border-gray-200 flex gap-0.5 sm:gap-1 overflow-x-auto scrollbar-hide">
           {[
-            { id: 'home', label: 'الرئيسية', icon: Home },
-            { id: 'form', label: 'بياناتي', icon: FileText },
-            { id: 'finance', label: 'المالية', icon: DollarSign },
-            { id: 'notifications', label: 'الإشعارات', icon: Bell, badge: unreadCount },
-            { id: 'support', label: 'تواصل', icon: Phone },
-            { id: 'faq', label: 'الأسئلة', icon: HelpCircle }
+            { id: 'home', label: 'الرئيسية', icon: Home, shortLabel: 'الرئيسية' },
+            { id: 'form', label: 'بياناتي', icon: FileText, shortLabel: 'البيانات' },
+            { id: 'finance', label: 'المالية', icon: DollarSign, shortLabel: 'المالية' },
+            { id: 'notifications', label: 'الإشعارات', icon: Bell, badge: unreadCount, shortLabel: 'الإشعارات' },
+            { id: 'support', label: 'تواصل', icon: Phone, shortLabel: 'تواصل' },
+            { id: 'faq', label: 'الأسئلة', icon: HelpCircle, shortLabel: 'أسئلة' }
           ].map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
@@ -211,7 +210,7 @@ export const FarmOwnerDashboard: React.FC<FarmOwnerDashboardProps> = ({ profileI
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as any)}
-                className="relative flex items-center gap-2 px-5 py-3 rounded-xl font-bold text-sm whitespace-nowrap transition-all duration-300 group"
+                className="relative flex items-center gap-1 sm:gap-2 px-2 sm:px-3 md:px-4 lg:px-5 py-2 sm:py-2.5 md:py-3 rounded-lg sm:rounded-xl font-bold text-xs sm:text-sm whitespace-nowrap transition-all duration-300 group"
                 style={{
                   background: isActive
                     ? 'linear-gradient(135deg, #8BC34A 0%, #689F38 100%)'
@@ -220,8 +219,9 @@ export const FarmOwnerDashboard: React.FC<FarmOwnerDashboardProps> = ({ profileI
                   boxShadow: isActive ? '0 2px 8px rgba(139, 195, 74, 0.3)' : 'none'
                 }}
               >
-                <Icon size={18} className={isActive ? '' : 'group-hover:scale-110 transition-transform'} />
-                {tab.label}
+                <Icon className="w-4 h-4 sm:w-4.5 sm:h-4.5 md:w-5 md:h-5" />
+                <span className="hidden sm:inline">{tab.label}</span>
+                <span className="inline sm:hidden">{tab.shortLabel}</span>
                 {tab.badge && tab.badge > 0 && (
                   <span
                     className="min-w-[20px] h-5 px-1.5 rounded-full flex items-center justify-center text-xs font-bold animate-pulse"

@@ -126,29 +126,29 @@ export const FarmOwnerLoginPage: React.FC<FarmOwnerLoginPageProps> = ({ onLoginS
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4" style={{
+    <div className="min-h-screen flex items-center justify-center px-3 sm:px-4 py-6" style={{
       background: 'linear-gradient(135deg, #1C2E0F 0%, #0F1A08 50%, #1C2E0F 100%)'
     }}>
       {/* زر العودة */}
       <button
         onClick={() => window.location.href = '/'}
-        className="fixed top-6 right-6 flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-300 hover:scale-105 group z-50"
+        className="fixed top-3 sm:top-6 right-3 sm:right-6 flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-105 group z-50 text-xs sm:text-sm"
         style={{
           background: 'rgba(139, 195, 74, 0.1)',
           border: '2px solid rgba(139, 195, 74, 0.3)',
           backdropFilter: 'blur(10px)'
         }}
       >
-        <ArrowRight size={20} style={{ color: '#8BC34A' }} className="group-hover:translate-x-1 transition-transform" />
-        <span className="text-sm font-bold" style={{ color: '#8BC34A' }}>
+        <ArrowRight size={16} className="sm:w-5 sm:h-5" style={{ color: '#8BC34A' }} />
+        <span className="font-bold" style={{ color: '#8BC34A' }}>
           العودة للمنصة
         </span>
       </button>
 
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
+      <div className="w-full max-w-md px-2 sm:px-0">
+        <div className="text-center mb-6 sm:mb-8">
           <div
-            className="inline-block text-6xl mb-4"
+            className="inline-block text-4xl sm:text-6xl mb-3 sm:mb-4"
             style={{
               filter: 'drop-shadow(0 0 20px #8BC34A)',
               animation: 'float 3s ease-in-out infinite'
@@ -157,7 +157,7 @@ export const FarmOwnerLoginPage: React.FC<FarmOwnerLoginPageProps> = ({ onLoginS
             🌳
           </div>
           <h1
-            className="text-3xl font-black mb-2"
+            className="text-2xl sm:text-3xl font-black mb-1.5 sm:mb-2"
             style={{
               background: 'linear-gradient(135deg, #A4D65E 0%, #8BC34A 50%, #689F38 100%)',
               WebkitBackgroundClip: 'text',
@@ -167,13 +167,13 @@ export const FarmOwnerLoginPage: React.FC<FarmOwnerLoginPageProps> = ({ onLoginS
           >
             لوحة صاحب المزرعة
           </h1>
-          <p className="text-sm" style={{ color: '#8BC34A', opacity: 0.8 }}>
+          <p className="text-xs sm:text-sm px-4" style={{ color: '#8BC34A', opacity: 0.8 }}>
             منصة الحبر الزراعية - استثمارك يبدأ من الأرض
           </p>
         </div>
 
         <div
-          className="relative rounded-3xl p-8 transition-all duration-500"
+          className="relative rounded-2xl sm:rounded-3xl p-5 sm:p-8 transition-all duration-500"
           style={{
             background: 'linear-gradient(135deg, #2D4519 0%, #1C2E0F 100%)',
             boxShadow: '0 25px 80px rgba(139, 195, 74, 0.4), inset 0 0 40px rgba(139, 195, 74, 0.1)',
@@ -190,14 +190,14 @@ export const FarmOwnerLoginPage: React.FC<FarmOwnerLoginPageProps> = ({ onLoginS
           />
 
           <div className="relative z-10">
-            <h2 className="text-xl font-bold text-white mb-6 text-center">
+            <h2 className="text-lg sm:text-xl font-bold text-white mb-4 sm:mb-6 text-center leading-relaxed">
               {step === 'mobile' ? '🎩 دخول صاحب المزرعة' : step === 'name' ? '👤 الاسم الكامل' : '🔐 التحقق من الرمز'}
             </h2>
 
             {step === 'mobile' ? (
-              <form onSubmit={handleMobileSubmit} className="space-y-6">
+              <form onSubmit={handleMobileSubmit} className="space-y-4 sm:space-y-6">
                 <div>
-                  <label className="block text-sm font-semibold mb-2" style={{ color: '#8BC34A' }}>
+                  <label className="block text-xs sm:text-sm font-semibold mb-2" style={{ color: '#8BC34A' }}>
                     📱 رقم الجوال
                   </label>
                   <input
@@ -206,7 +206,7 @@ export const FarmOwnerLoginPage: React.FC<FarmOwnerLoginPageProps> = ({ onLoginS
                     onChange={(e) => setMobileNumber(e.target.value)}
                     placeholder="05xxxxxxxx"
                     disabled={loading}
-                    className="w-full px-4 py-3 rounded-xl text-white text-lg font-semibold transition-all duration-300 focus:outline-none focus:ring-2"
+                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg sm:rounded-xl text-white text-base sm:text-lg font-semibold transition-all duration-300 focus:outline-none focus:ring-2"
                     style={{
                       background: 'rgba(0, 0, 0, 0.4)',
                       border: '2px solid rgba(139, 195, 74, 0.3)',
@@ -225,7 +225,7 @@ export const FarmOwnerLoginPage: React.FC<FarmOwnerLoginPageProps> = ({ onLoginS
 
                 {error && (
                   <div
-                    className="px-4 py-3 rounded-xl text-sm font-semibold text-center"
+                    className="px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold text-center"
                     style={{
                       background: 'rgba(239, 68, 68, 0.1)',
                       border: '2px solid rgba(239, 68, 68, 0.3)',
@@ -239,7 +239,7 @@ export const FarmOwnerLoginPage: React.FC<FarmOwnerLoginPageProps> = ({ onLoginS
                 <button
                   type="submit"
                   disabled={loading || !mobileNumber.trim()}
-                  className="w-full py-4 rounded-2xl font-black text-lg text-white transition-all duration-500 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full py-3 sm:py-4 rounded-xl sm:rounded-2xl font-black text-base sm:text-lg text-white transition-all duration-500 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
                   style={{
                     background: loading || !mobileNumber.trim()
                       ? 'linear-gradient(135deg, #4B5563 0%, #374151 100%)'
@@ -252,8 +252,8 @@ export const FarmOwnerLoginPage: React.FC<FarmOwnerLoginPageProps> = ({ onLoginS
                   }}
                 >
                   {loading ? (
-                    <span className="flex items-center justify-center gap-2">
-                      <span className="inline-block w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    <span className="flex items-center justify-center gap-1.5 sm:gap-2">
+                      <span className="inline-block w-4 h-4 sm:w-5 sm:h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                       جاري التحقق...
                     </span>
                   ) : (
@@ -267,9 +267,9 @@ export const FarmOwnerLoginPage: React.FC<FarmOwnerLoginPageProps> = ({ onLoginS
                 </div>
               </form>
             ) : step === 'name' ? (
-              <form onSubmit={handleNameSubmit} className="space-y-6">
+              <form onSubmit={handleNameSubmit} className="space-y-4 sm:space-y-6">
                 <div
-                  className="p-4 rounded-xl text-center"
+                  className="p-3 sm:p-4 rounded-lg sm:rounded-xl text-center"
                   style={{
                     background: 'rgba(59, 130, 246, 0.2)',
                     border: '2px solid rgba(59, 130, 246, 0.5)'
@@ -315,7 +315,7 @@ export const FarmOwnerLoginPage: React.FC<FarmOwnerLoginPageProps> = ({ onLoginS
 
                 {error && (
                   <div
-                    className="px-4 py-3 rounded-xl text-sm font-semibold text-center"
+                    className="px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold text-center"
                     style={{
                       background: 'rgba(239, 68, 68, 0.1)',
                       border: '2px solid rgba(239, 68, 68, 0.3)',
@@ -342,8 +342,8 @@ export const FarmOwnerLoginPage: React.FC<FarmOwnerLoginPageProps> = ({ onLoginS
                   }}
                 >
                   {loading ? (
-                    <span className="flex items-center justify-center gap-2">
-                      <span className="inline-block w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    <span className="flex items-center justify-center gap-1.5 sm:gap-2">
+                      <span className="inline-block w-4 h-4 sm:w-5 sm:h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                       جاري إنشاء الحساب...
                     </span>
                   ) : (
@@ -369,9 +369,9 @@ export const FarmOwnerLoginPage: React.FC<FarmOwnerLoginPageProps> = ({ onLoginS
                 </button>
               </form>
             ) : (
-              <form onSubmit={handleOTPSubmit} className="space-y-6">
+              <form onSubmit={handleOTPSubmit} className="space-y-4 sm:space-y-6">
                 <div
-                  className="p-4 rounded-xl text-center animate-pulse"
+                  className="p-3 sm:p-4 rounded-lg sm:rounded-xl text-center animate-pulse"
                   style={{
                     background: 'rgba(251, 191, 36, 0.2)',
                     border: '2px solid rgba(251, 191, 36, 0.5)'
@@ -424,7 +424,7 @@ export const FarmOwnerLoginPage: React.FC<FarmOwnerLoginPageProps> = ({ onLoginS
 
                 {error && (
                   <div
-                    className="px-4 py-3 rounded-xl text-sm font-semibold text-center"
+                    className="px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold text-center"
                     style={{
                       background: 'rgba(239, 68, 68, 0.1)',
                       border: '2px solid rgba(239, 68, 68, 0.3)',
@@ -451,8 +451,8 @@ export const FarmOwnerLoginPage: React.FC<FarmOwnerLoginPageProps> = ({ onLoginS
                   }}
                 >
                   {loading ? (
-                    <span className="flex items-center justify-center gap-2">
-                      <span className="inline-block w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    <span className="flex items-center justify-center gap-1.5 sm:gap-2">
+                      <span className="inline-block w-4 h-4 sm:w-5 sm:h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                       جاري التحقق...
                     </span>
                   ) : (
