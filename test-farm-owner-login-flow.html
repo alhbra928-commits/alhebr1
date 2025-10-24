@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>اختبار تدفق تسجيل الدخول - صاحب المزرعة</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #1C2E0F 0%, #0F1A08 100%);
+      min-height: 100vh;
+      padding: 20px;
+      color: white;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .header h1 {
+      font-size: 32px;
+      margin-bottom: 10px;
+      color: #8BC34A;
+    }
+
+    .test-card {
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(139, 195, 74, 0.3);
+      border-radius: 20px;
+      padding: 30px;
+      margin-bottom: 20px;
+      backdrop-filter: blur(10px);
+    }
+
+    .test-card h2 {
+      color: #8BC34A;
+      margin-bottom: 20px;
+      font-size: 24px;
+    }
+
+    .test-step {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 20px;
+      border-radius: 15px;
+      margin-bottom: 15px;
+      border: 2px solid rgba(139, 195, 74, 0.2);
+    }
+
+    .test-step h3 {
+      color: #A4D65E;
+      margin-bottom: 10px;
+      font-size: 18px;
+    }
+
+    .test-step p {
+      color: #E0E0E0;
+      line-height: 1.8;
+      margin-bottom: 10px;
+    }
+
+    .code-block {
+      background: rgba(0, 0, 0, 0.5);
+      padding: 15px;
+      border-radius: 10px;
+      font-family: 'Courier New', monospace;
+      color: #FCD34D;
+      margin: 10px 0;
+      border: 1px solid rgba(251, 191, 36, 0.3);
+    }
+
+    .success {
+      color: #10B981;
+      font-weight: bold;
+    }
+
+    .warning {
+      color: #F59E0B;
+      font-weight: bold;
+    }
+
+    .info {
+      color: #3B82F6;
+      font-weight: bold;
+    }
+
+    .button {
+      background: linear-gradient(135deg, #A4D65E 0%, #8BC34A 50%, #689F38 100%);
+      color: white;
+      padding: 15px 30px;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 10px;
+      transition: all 0.3s;
+    }
+
+    .button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 24px rgba(139, 195, 74, 0.5);
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: bold;
+      margin-left: 10px;
+    }
+
+    .badge-success {
+      background: rgba(16, 185, 129, 0.2);
+      color: #10B981;
+      border: 1px solid #10B981;
+    }
+
+    .badge-warning {
+      background: rgba(245, 158, 11, 0.2);
+      color: #F59E0B;
+      border: 1px solid #F59E0B;
+    }
+
+    .badge-info {
+      background: rgba(59, 130, 246, 0.2);
+      color: #3B82F6;
+      border: 1px solid #3B82F6;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🧪 اختبار تدفق تسجيل الدخول - صاحب المزرعة</h1>
+      <p style="color: #A4D65E; font-size: 18px;">التحقق من إضافة حقل الاسم الكامل</p>
+    </div>
+
+    <!-- حالة التطبيق -->
+    <div class="test-card">
+      <h2>📊 حالة التطبيق الحالية</h2>
+
+      <div class="test-step">
+        <h3>✅ التعديلات المُنفذة في الكود المصدري</h3>
+        <p><span class="success">✓</span> إضافة خطوة <span class="code-block" style="display: inline; padding: 2px 8px;">'name'</span> في useState</p>
+        <p><span class="success">✓</span> إضافة حقل <span class="code-block" style="display: inline; padding: 2px 8px;">fullName</span> في state</p>
+        <p><span class="success">✓</span> إضافة دالة <span class="code-block" style="display: inline; padding: 2px 8px;">handleNameSubmit</span></p>
+        <p><span class="success">✓</span> إضافة دالة <span class="code-block" style="display: inline; padding: 2px 8px;">directLoginWithName</span> في الخدمة</p>
+        <p><span class="success">✓</span> إضافة واجهة UI لإدخال الاسم الكامل</p>
+      </div>
+
+      <div class="test-step">
+        <h3>✅ التحقق من الملف المجمع</h3>
+        <p><span class="success">✓</span> الكود موجود في <span class="code-block" style="display: inline; padding: 2px 8px;">FarmOwnerRouter-CJyAk60k.js</span></p>
+        <p><span class="success">✓</span> دالة <span class="code-block" style="display: inline; padding: 2px 8px;">directLoginWithName</span> موجودة</p>
+        <p><span class="success">✓</span> الانتقال إلى خطوة <span class="code-block" style="display: inline; padding: 2px 8px;">t("name")</span> موجود</p>
+        <p><span class="success">✓</span> نص "الاسم الكامل" موجود (2 مرة)</p>
+      </div>
+    </div>
+
+    <!-- التدفق المتوقع -->
+    <div class="test-card">
+      <h2>🔄 التدفق المتوقع للمستخدم الجديد</h2>
+
+      <div class="test-step">
+        <h3>الخطوة 1: إدخال رقم الجوال</h3>
+        <p>• المستخدم يدخل رقم جواله (مثال: 0501234567)</p>
+        <p>• النظام يتحقق من وجود الحساب</p>
+        <div class="code-block">
+const { exists } = await farmOwnerService.checkAccount(cleanMobile);
+        </div>
+      </div>
+
+      <div class="test-step">
+        <h3>الخطوة 2: طلب الاسم (للمستخدم الجديد فقط)</h3>
+        <p><span class="info">إذا كان الحساب غير موجود:</span></p>
+        <p>• يتم الانتقال إلى خطوة إدخال الاسم</p>
+        <div class="code-block">
+if (!exists) {
+  setIsNewAccount(true);
+  setStep('name');  // ← الانتقال لخطوة الاسم
+}
+        </div>
+        <p>• يظهر للمستخدم:</p>
+        <p style="margin-right: 20px;">- عنوان: <span class="success">👤 الاسم الكامل</span></p>
+        <p style="margin-right: 20px;">- رسالة: <span class="info">مرحباً بك في منصة الحبر</span></p>
+        <p style="margin-right: 20px;">- حقل إدخال: <span class="warning">مثال: أحمد محمد العلي</span></p>
+        <p style="margin-right: 20px;">- زر: <span class="success">✓ إنشاء حسابي</span></p>
+      </div>
+
+      <div class="test-step">
+        <h3>الخطوة 3: إنشاء الحساب مع الاسم</h3>
+        <p>• المستخدم يدخل اسمه الكامل</p>
+        <p>• عند الضغط على "إنشاء حسابي":</p>
+        <div class="code-block">
+const result = await farmOwnerService.directLoginWithName(
+  mobileNumber,
+  fullName.trim()
+);
+        </div>
+        <p>• يتم:</p>
+        <p style="margin-right: 20px;">1. إنشاء الحساب</p>
+        <p style="margin-right: 20px;">2. حفظ الاسم في قاعدة البيانات</p>
+        <p style="margin-right: 20px;">3. تسجيل الدخول تلقائياً</p>
+      </div>
+
+      <div class="test-step">
+        <h3>الخطوة 4: الدخول إلى اللوحة</h3>
+        <p>• يظهر الترحيب: <span class="success">مرحباً أحمد محمد</span></p>
+        <p>• في الهيدر: <span class="info">أحمد محمد - 0501234567</span></p>
+      </div>
+    </div>
+
+    <!-- التدفق للمستخدم الحالي -->
+    <div class="test-card">
+      <h2>🔄 التدفق للمستخدم الحالي</h2>
+
+      <div class="test-step">
+        <h3>إذا كان الحساب موجود مسبقاً</h3>
+        <p>• لا يتم طلب الاسم</p>
+        <p>• يتم إرسال OTP مباشرة</p>
+        <div class="code-block">
+if (exists) {
+  // إرسال OTP
+  const result = await farmOwnerService.sendOTP(cleanMobile);
+  setStep('otp');  // ← الانتقال لخطوة OTP
+}
+        </div>
+      </div>
+    </div>
+
+    <!-- اختبار يدوي -->
+    <div class="test-card">
+      <h2>🧪 اختبار يدوي</h2>
+
+      <div class="test-step">
+        <h3>لاختبار التطبيق:</h3>
+        <p>1. افتح صفحة تسجيل الدخول لصاحب المزرعة</p>
+        <p>2. أدخل رقم جوال جديد (لم يُستخدم من قبل)</p>
+        <p>3. <span class="warning">يجب أن تظهر</span> صفحة طلب الاسم الكامل</p>
+        <p>4. أدخل الاسم واضغط "إنشاء حسابي"</p>
+        <p>5. تحقق من ظهور الاسم في الترحيب والهيدر</p>
+
+        <a href="/farm-owner/login" class="button" target="_blank">
+          🚀 فتح صفحة تسجيل الدخول
+        </a>
+      </div>
+    </div>
+
+    <!-- الكود الفعلي -->
+    <div class="test-card">
+      <h2>💻 الكود الفعلي المُطبق</h2>
+
+      <div class="test-step">
+        <h3>useState للخطوات:</h3>
+        <div class="code-block">
+const [step, setStep] = useState&lt;'mobile' | 'name' | 'otp'&gt;('mobile');
+const [fullName, setFullName] = useState('');
+        </div>
+      </div>
+
+      <div class="test-step">
+        <h3>منطق التحقق من الحساب:</h3>
+        <div class="code-block">
+const { exists } = await farmOwnerService.checkAccount(cleanMobile);
+
+if (!exists) {
+  // حساب جديد - اطلب الاسم
+  setIsNewAccount(true);
+  setStep('name');
+} else {
+  // حساب موجود - أرسل OTP
+  const result = await farmOwnerService.sendOTP(cleanMobile);
+  setStep('otp');
+}
+        </div>
+      </div>
+
+      <div class="test-step">
+        <h3>دالة حفظ الاسم:</h3>
+        <div class="code-block">
+async directLoginWithName(mobileNumber: string, fullName: string) {
+  // إنشاء الحساب
+  const { data, error } = await supabase.rpc('farm_owner_login_or_create', {
+    p_mobile_number: mobileNumber
+  });
+
+  // تحديث الاسم
+  await supabase
+    .from('farm_owner_profiles')
+    .update({ full_name: fullName })
+    .eq('id', data.profile_id);
+}
+        </div>
+      </div>
+    </div>
+
+    <!-- ملخص -->
+    <div class="test-card" style="background: rgba(139, 195, 74, 0.1); border-color: #8BC34A;">
+      <h2 style="color: #8BC34A;">✅ الخلاصة</h2>
+
+      <div class="test-step" style="border-color: rgba(139, 195, 74, 0.3);">
+        <h3>جميع التعديلات مطبقة بنجاح!</h3>
+        <p><span class="success">✓</span> الكود المصدري محدّث</p>
+        <p><span class="success">✓</span> الملفات المجمعة تحتوي على التعديلات</p>
+        <p><span class="success">✓</span> الخدمة تدعم حفظ الاسم</p>
+        <p><span class="success">✓</span> واجهة UI جاهزة</p>
+        <p><span class="success">✓</span> التدفق الكامل جاهز للاختبار</p>
+
+        <p style="margin-top: 20px; color: #A4D65E; font-size: 18px;">
+          <strong>ملاحظة:</strong> إذا لم تظهر التعديلات، قد تحتاج إلى:
+        </p>
+        <p>1. مسح كاش المتصفح (Ctrl+Shift+Delete)</p>
+        <p>2. فتح نافذة Incognito جديدة</p>
+        <p>3. إعادة تشغيل السيرفر</p>
+      </div>
+    </div>
+  </div>
+
+  <div style="text-align: center; margin-top: 40px; padding-bottom: 40px;">
+    <p style="color: #8BC34A; font-size: 14px;">
+      منصة الحبر الزراعية © 2025
+    </p>
+  </div>
+</body>
+</html>
