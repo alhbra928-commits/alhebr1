@@ -21,6 +21,8 @@ export function SmartTemplatesManager() {
   const [selectedTemplate, setSelectedTemplate] = useState<WhatsAppTemplate | null>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [templateToDelete, setTemplateToDelete] = useState<string | null>(null);
+  const [draggedTemplate, setDraggedTemplate] = useState<WhatsAppTemplate | null>(null);
+  const [showChart, setShowChart] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -146,6 +148,100 @@ export function SmartTemplatesManager() {
     notificationSoundService.playSuccess();
   };
 
+  // Drag & Drop handlers
+  const handleDragStart = (template: WhatsAppTemplate) => {
+    setDraggedTemplate(template);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = async (targetTemplate: WhatsAppTemplate) => {
+    if (!draggedTemplate || draggedTemplate.id === targetTemplate.id) {
+      setDraggedTemplate(null);
+      return;
+    }
+
+    try {
+      const draggedPriority = draggedTemplate.priority || 0;
+      const targetPriority = targetTemplate.priority || 0;
+
+      await Promise.all([
+        whatsappService.updateTemplatePriority(draggedTemplate.id, targetPriority),
+        whatsappService.updateTemplatePriority(targetTemplate.id, draggedPriority)
+      ]);
+
+      await loadData();
+      notificationSoundService.playSuccess();
+    } catch (error) {
+      console.error('Error reordering templates:', error);
+      notificationSoundService.playError();
+    } finally {
+      setDraggedTemplate(null);
+    }
+  };
+
+  // Export/Import handlers
+  const handleExportJSON = () => {
+    const dataStr = JSON.stringify(templates, null, 2);
+    const blob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `whatsapp-templates-${new Date().toISOString().split('T')[0]}.json`;
+    link.click();
+    notificationSoundService.playSuccess();
+  };
+
+  const handleExportCSV = () => {
+    const csv = [
+      ['الكود', 'الاسم', 'الفئة', 'الحالة', 'الأولوية', 'الحدث', 'عدد الاستخدام'],
+      ...templates.map(t => [
+        t.template_code,
+        t.template_name_ar,
+        t.template_category,
+        t.status || 'active',
+        t.priority || 0,
+        t.event_trigger || '-',
+        t.usage_count
+      ])
+    ].map(row => row.join(',')).join('\n');
+
+    const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `whatsapp-templates-${new Date().toISOString().split('T')[0]}.csv`;
+    link.click();
+    notificationSoundService.playSuccess();
+  };
+
+  const handleImportJSON = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = async (event) => {
+      try {
+        const importedTemplates = JSON.parse(event.target?.result as string);
+
+        for (const template of importedTemplates) {
+          const { id, created_at, updated_at, usage_count, last_used_at, ...templateData } = template;
+          await whatsappService.createTemplate(templateData);
+        }
+
+        await loadData();
+        notificationSoundService.playSuccess();
+      } catch (error) {
+        console.error('Error importing templates:', error);
+        notificationSoundService.playError();
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = '';
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-96">
@@ -200,6 +296,51 @@ export function SmartTemplatesManager() {
               </button>
 
               <button
+                onClick={() => setShowChart(!showChart)}
+                className="px-6 py-3 bg-white/20 backdrop-blur-xl text-white rounded-xl hover:bg-white/30 transition-all border-2 border-white/30 font-bold shadow-lg hover:scale-105"
+              >
+                <BarChart3 className="h-5 w-5 inline mr-2" />
+                {showChart ? 'إخفاء الرسم' : 'الرسم البياني'}
+              </button>
+
+              <div className="relative">
+                <button
+                  onClick={handleExportJSON}
+                  className="px-6 py-3 bg-white/20 backdrop-blur-xl text-white rounded-xl hover:bg-white/30 transition-all border-2 border-white/30 font-bold shadow-lg hover:scale-105"
+                >
+                  <Download className="h-5 w-5 inline mr-2" />
+                  تصدير JSON
+                </button>
+              </div>
+
+              <div className="relative">
+                <button
+                  onClick={handleExportCSV}
+                  className="px-6 py-3 bg-white/20 backdrop-blur-xl text-white rounded-xl hover:bg-white/30 transition-all border-2 border-white/30 font-bold shadow-lg hover:scale-105"
+                >
+                  <Download className="h-5 w-5 inline mr-2" />
+                  تصدير CSV
+                </button>
+              </div>
+
+              <div className="relative">
+                <input
+                  type="file"
+                  accept=".json"
+                  onChange={handleImportJSON}
+                  className="hidden"
+                  id="import-json"
+                />
+                <label
+                  htmlFor="import-json"
+                  className="cursor-pointer px-6 py-3 bg-white/20 backdrop-blur-xl text-white rounded-xl hover:bg-white/30 transition-all border-2 border-white/30 font-bold shadow-lg hover:scale-105 inline-flex items-center"
+                >
+                  <Upload className="h-5 w-5 inline mr-2" />
+                  استيراد JSON
+                </label>
+              </div>
+
+              <button
                 onClick={handleCreate}
                 className="px-8 py-3 bg-white text-amber-600 rounded-xl hover:bg-amber-50 transition-all font-bold shadow-lg hover:scale-105 flex items-center gap-2"
               >
@@ -247,6 +388,37 @@ export function SmartTemplatesManager() {
           )}
         </div>
       </div>
+
+      {/* Charts & Stats */}
+      {stats && showChart && (
+        <div className="bg-white rounded-2xl shadow-lg border-2 border-gray-100 p-6">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-cyan-600 rounded-xl flex items-center justify-center">
+              <BarChart3 className="h-5 w-5 text-white" />
+            </div>
+            <h3 className="text-xl font-black text-gray-900">التوزيع حسب الفئة</h3>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
+            {Object.entries(stats.byCategory).map(([category, count]) => {
+              const categoryConfig = getCategoryConfig(category);
+              const Icon = categoryConfig.icon;
+              const percentage = stats.total > 0 ? Math.round((count as number / stats.total) * 100) : 0;
+
+              return (
+                <div key={category} className="text-center">
+                  <div className={`w-full bg-gradient-to-r from-${categoryConfig.color}-100 to-${categoryConfig.color}-200 rounded-xl p-4 mb-2`}>
+                    <Icon className={`h-8 w-8 text-${categoryConfig.color}-600 mx-auto mb-2`} />
+                    <div className="text-2xl font-black text-gray-900">{count as number}</div>
+                    <div className="text-xs text-gray-600">{percentage}%</div>
+                  </div>
+                  <div className="text-xs font-bold text-gray-700">{categoryConfig.label}</div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* Quick Stats Bar */}
       {stats && (
@@ -394,13 +566,21 @@ export function SmartTemplatesManager() {
             return (
               <div
                 key={template.id}
-                className="bg-white rounded-2xl shadow-lg border-2 border-gray-100 hover:shadow-2xl transition-all group overflow-hidden"
+                draggable
+                onDragStart={() => handleDragStart(template)}
+                onDragOver={handleDragOver}
+                onDrop={() => handleDrop(template)}
+                className={`bg-white rounded-2xl shadow-lg border-2 ${
+                  draggedTemplate?.id === template.id
+                    ? 'border-amber-500 opacity-50'
+                    : 'border-gray-100'
+                } hover:shadow-2xl transition-all group overflow-hidden cursor-move`}
               >
                 {/* Header with Drag Handle */}
                 <div className={`bg-gradient-to-r from-${categoryConfig.color}-500 to-${categoryConfig.color}-600 p-4`}>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <GripVertical className="h-5 w-5 text-white/50 cursor-move" />
+                      <GripVertical className="h-5 w-5 text-white/80 cursor-move animate-pulse" />
                       <div className={`w-12 h-12 bg-white/20 backdrop-blur-xl rounded-xl flex items-center justify-center`}>
                         <CategoryIcon className="h-6 w-6 text-white" />
                       </div>
