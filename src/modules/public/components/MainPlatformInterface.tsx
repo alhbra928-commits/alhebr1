@@ -158,7 +158,7 @@ export function MainPlatformInterface({
       />
       <SmartStockTicker />
 
-      <div className="pt-28 md:pt-36">
+      <div className="pt-32 md:pt-40">
         <GlowingConceptButton onClick={() => setCurrentView('concept')} />
       </div>
 

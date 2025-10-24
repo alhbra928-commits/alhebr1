@@ -101,9 +101,8 @@ export function SmartStockTicker() {
 
   return (
     <div
-      className="fixed left-0 right-0 w-full overflow-hidden border-y shadow-2xl z-40"
+      className="fixed top-16 md:top-20 left-0 right-0 w-full overflow-hidden border-y shadow-2xl z-40"
       style={{
-        top: `${64}px`, // بعد الهيدر
         height: `${settings.height}px`,
         background: settings.background_color,
         borderColor: settings.border_color,
