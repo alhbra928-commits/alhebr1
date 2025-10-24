@@ -58,8 +58,8 @@ export const FarmOwnerWelcome: React.FC<FarmOwnerWelcomeProps> = ({ ownerName, o
       icon: CheckCircle
     },
     {
-      title: 'استلم دفعاتك بانتظام',
-      description: 'سنبدأ بتحويل الدفعات حسب الاتفاق',
+      title: 'استلم كامل قيمة مزرعتك',
+      description: 'خلال فترة قصيرة إن شاء الله يتم دفع كامل المبلغ',
       icon: Award
     }
   ];
