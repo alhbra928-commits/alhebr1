@@ -368,7 +368,7 @@ export function WhatsAppDashboard() {
       </div>
 
       {/* روابط سريعة */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
         <QuickActionCard
           title="إدارة القوالب"
           description="إضافة وتعديل قوالب الرسائل"
@@ -391,6 +391,14 @@ export function WhatsAppDashboard() {
           icon={Users}
           color="from-green-500 to-emerald-600"
           onClick={() => setActiveView('broadcast')}
+        />
+
+        <QuickActionCard
+          title="التقارير والإحصائيات"
+          description="تحليل شامل للأداء"
+          icon={BarChart3}
+          color="from-indigo-500 to-purple-600"
+          onClick={() => setActiveView('analytics')}
         />
 
         <QuickActionCard
