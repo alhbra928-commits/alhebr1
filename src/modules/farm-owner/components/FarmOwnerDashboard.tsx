@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { farmOwnerService, FarmOwnerProfile, FarmStatus, FarmOwnerNotification } from '../services/farmOwnerService';
 import { Bell, LogOut, FileText, DollarSign, Home } from 'lucide-react';
+import { FarmOwnerWelcome } from './FarmOwnerWelcome';
 
 interface FarmOwnerDashboardProps {
   profileId: string;
@@ -14,6 +15,7 @@ export const FarmOwnerDashboard: React.FC<FarmOwnerDashboardProps> = ({ profileI
   const [unreadCount, setUnreadCount] = useState(0);
   const [activeTab, setActiveTab] = useState<'home' | 'form' | 'finance' | 'notifications'>('home');
   const [loading, setLoading] = useState(true);
+  const [showWelcome, setShowWelcome] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -43,7 +45,18 @@ export const FarmOwnerDashboard: React.FC<FarmOwnerDashboardProps> = ({ profileI
     const unread = notificationsData.filter(n => !n.is_read).length;
     setUnreadCount(unread);
 
+    // Check if first visit
+    const hasSeenWelcome = localStorage.getItem(`farm_owner_welcome_${profileId}`);
+    if (!hasSeenWelcome && profileData) {
+      setShowWelcome(true);
+    }
+
     setLoading(false);
+  };
+
+  const handleWelcomeComplete = () => {
+    localStorage.setItem(`farm_owner_welcome_${profileId}`, 'true');
+    setShowWelcome(false);
   };
 
   const handleLogout = () => {
@@ -66,6 +79,15 @@ export const FarmOwnerDashboard: React.FC<FarmOwnerDashboardProps> = ({ profileI
           </p>
         </div>
       </div>
+    );
+  }
+
+  if (showWelcome && profile) {
+    return (
+      <FarmOwnerWelcome
+        ownerName={profile.full_name || profile.mobile_number}
+        onComplete={handleWelcomeComplete}
+      />
     );
   }
 
