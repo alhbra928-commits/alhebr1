@@ -11,7 +11,8 @@ import {
   Activity,
   DollarSign,
   Calendar,
-  Eye
+  Eye,
+  FileText
 } from 'lucide-react';
 import { FarmOwnerProfile, FarmStatus } from '../services/farmOwnerService';
 
@@ -29,14 +30,26 @@ export const ModernHomeTab: React.FC<ModernHomeTabProps> = ({ profile, farmStatu
   }, []);
 
   const getStatusInfo = () => {
-    if (!profile) return { emoji: '⏳', title: 'جاري التحميل...', message: '', color: '#9CA3AF', bgGradient: 'from-gray-50 to-gray-100' };
+    if (!profile) return { emoji: '⏳', title: 'جاري التحميل...', message: '', color: '#9CA3AF', bgGradient: 'from-gray-50 to-gray-100', icon: Clock };
+
+    // إذا لم يتم رفع المزرعة بعد (لا توجد بيانات farmStatus)
+    if (!farmStatus) {
+      return {
+        emoji: '📝',
+        title: 'مرحباً بك في بوابة البائع',
+        message: 'ابدأ برفع بيانات مزرعتك من تبويب "بياناتي" لعرضها على المستثمرين',
+        color: '#3B82F6',
+        bgGradient: 'from-blue-50 to-indigo-50',
+        icon: FileText
+      };
+    }
 
     switch (profile.status) {
       case 'pending':
         return {
           emoji: '🕐',
           title: 'قيد المراجعة',
-          message: 'طلبك تحت المراجعة من فريقنا المتخصص',
+          message: 'طلبك تحت المراجعة من فريقنا المتخصص - سنرد عليك قريباً',
           color: '#F59E0B',
           bgGradient: 'from-amber-50 to-orange-50',
           icon: Clock
@@ -183,38 +196,123 @@ export const ModernHomeTab: React.FC<ModernHomeTabProps> = ({ profile, farmStatu
               </div>
             </div>
           )}
+
+          {/* زر دعوة للعمل للمستخدمين الجدد */}
+          {!farmStatus && (
+            <div className="mt-6 text-center">
+              <button
+                onClick={() => {
+                  const event = new CustomEvent('switchTab', { detail: 'form' });
+                  window.dispatchEvent(event);
+                }}
+                className="inline-flex items-center gap-3 px-8 py-4 rounded-2xl font-bold text-lg transition-all duration-300 hover:scale-105 hover:shadow-xl group"
+                style={{
+                  background: 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)',
+                  color: 'white',
+                  boxShadow: '0 4px 16px rgba(59, 130, 246, 0.4)'
+                }}
+              >
+                <FileText size={24} className="group-hover:scale-110 transition-transform" />
+                ابدأ برفع بيانات مزرعتك الآن
+                <Sparkles size={20} className="animate-pulse" />
+              </button>
+              <p className="text-sm text-gray-500 mt-3">
+                عملية سهلة وسريعة - لن تستغرق أكثر من 5 دقائق
+              </p>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* بطاقات الإحصائيات */}
-      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {stats.map((stat, index) => {
-          const Icon = stat.icon;
-          return (
-            <div
-              key={index}
-              className="bg-white rounded-2xl p-6 border-2 border-gray-100 hover:border-gray-300 transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
-            >
-              <div className="flex items-center justify-between mb-4">
-                <div
-                  className="w-12 h-12 rounded-xl flex items-center justify-center"
-                  style={{ background: stat.bgColor }}
-                >
-                  <Icon size={24} style={{ color: stat.color }} />
-                </div>
-                <Sparkles size={20} className="text-gray-300" />
+      {/* بطاقة إرشادية للمستخدمين الجدد */}
+      {!farmStatus && (
+        <div className="bg-white rounded-3xl p-8 border-2 border-blue-100 shadow-lg">
+          <h3 className="text-2xl font-black mb-6 text-center" style={{ color: '#3B82F6' }}>
+            🎯 خطوات بسيطة للبدء
+          </h3>
+          <div className="grid md:grid-cols-3 gap-6">
+            <div className="text-center">
+              <div
+                className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
+                style={{
+                  background: 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)',
+                  boxShadow: '0 4px 12px rgba(59, 130, 246, 0.3)'
+                }}
+              >
+                <span className="text-3xl text-white font-black">1</span>
               </div>
-              <p className="text-sm text-gray-500 mb-2">{stat.label}</p>
-              <div className="flex items-baseline gap-2">
-                <p className="text-3xl font-black" style={{ color: stat.color }}>
-                  {stat.value}
-                </p>
-                <p className="text-sm text-gray-600 font-semibold">{stat.suffix}</p>
-              </div>
+              <h4 className="font-bold text-gray-900 mb-2">ارفع بيانات المزرعة</h4>
+              <p className="text-sm text-gray-600">
+                املأ النموذج بمعلومات مزرعتك وصور واضحة
+              </p>
             </div>
-          );
-        })}
-      </div>
+
+            <div className="text-center">
+              <div
+                className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
+                style={{
+                  background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
+                  boxShadow: '0 4px 12px rgba(16, 185, 129, 0.3)'
+                }}
+              >
+                <span className="text-3xl text-white font-black">2</span>
+              </div>
+              <h4 className="font-bold text-gray-900 mb-2">انتظر المراجعة</h4>
+              <p className="text-sm text-gray-600">
+                فريقنا سيراجع طلبك خلال 24-48 ساعة
+              </p>
+            </div>
+
+            <div className="text-center">
+              <div
+                className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
+                style={{
+                  background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
+                  boxShadow: '0 4px 12px rgba(245, 158, 11, 0.3)'
+                }}
+              >
+                <span className="text-3xl text-white font-black">3</span>
+              </div>
+              <h4 className="font-bold text-gray-900 mb-2">تابع المبيعات</h4>
+              <p className="text-sm text-gray-600">
+                راقب تقدم البيع واستلم أموالك بأمان
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* بطاقات الإحصائيات - فقط إذا كانت المزرعة مرفوعة */}
+      {farmStatus && (
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {stats.map((stat, index) => {
+            const Icon = stat.icon;
+            return (
+              <div
+                key={index}
+                className="bg-white rounded-2xl p-6 border-2 border-gray-100 hover:border-gray-300 transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
+              >
+                <div className="flex items-center justify-between mb-4">
+                  <div
+                    className="w-12 h-12 rounded-xl flex items-center justify-center"
+                    style={{ background: stat.bgColor }}
+                  >
+                    <Icon size={24} style={{ color: stat.color }} />
+                  </div>
+                  <Sparkles size={20} className="text-gray-300" />
+                </div>
+                <p className="text-sm text-gray-500 mb-2">{stat.label}</p>
+                <div className="flex items-baseline gap-2">
+                  <p className="text-3xl font-black" style={{ color: stat.color }}>
+                    {stat.value}
+                  </p>
+                  <p className="text-sm text-gray-600 font-semibold">{stat.suffix}</p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
 
       {/* شريط التقدم العصري */}
       {farmStatus?.is_published && (
