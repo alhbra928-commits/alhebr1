@@ -126,7 +126,7 @@ export const FarmOwnerWelcome: React.FC<FarmOwnerWelcomeProps> = ({ ownerName, o
           </h1>
 
           <p className="text-xl md:text-2xl font-bold mb-3" style={{ color: '#A4D65E' }}>
-            شكراً لثقتك في منصة النخيل والزيتون
+            شكراً لك لثقتك في منصة الحبر للتسويق الزراعي
           </p>
 
           <p className="text-lg mb-4 max-w-2xl mx-auto" style={{ color: '#A4D65E', opacity: 0.9 }}>
@@ -139,7 +139,7 @@ export const FarmOwnerWelcome: React.FC<FarmOwnerWelcomeProps> = ({ ownerName, o
           }}>
             <Handshake className="text-yellow-400" size={24} />
             <span className="font-bold" style={{ color: '#8BC34A' }}>
-              بائع موثوق في منصة النخيل والزيتون
+              بائع موثوق في منصة الحبر للتسويق الزراعي
             </span>
           </div>
         </div>
