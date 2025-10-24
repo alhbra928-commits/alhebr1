@@ -139,7 +139,7 @@ function App() {
       case 'settings':
         return <SettingsView onBack={() => setActiveModule('dashboard')} />;
       case 'whatsapp':
-        return <ModernWhatsAppDashboard />;
+        return <ModernWhatsAppDashboard onBack={() => setActiveModule('dashboard')} />;
       case 'permissions':
         return <ControlOversightView onBack={() => setActiveModule('dashboard')} />;
       case 'sessions':

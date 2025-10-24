@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import {
   MessageCircle, Send, CheckCheck, Eye, AlertCircle, TrendingUp,
   Users, Settings, BarChart3, RefreshCw, Bell, Zap, ArrowRight,
-  FileText, Sparkles, Activity, Clock, Target, Crown
+  FileText, Sparkles, Activity, Clock, Target, Crown, ArrowLeft
 } from 'lucide-react';
 import { whatsappService, DailyStats } from '../services/whatsappService';
 import { AnimatedCounter } from '../../../components/ui/AnimatedCounter';
@@ -12,7 +12,11 @@ import { ModernBroadcastManager } from './ModernBroadcastManager';
 import { UltraModernWhatsAppSettings } from './UltraModernWhatsAppSettings';
 import { AdvancedAnalyticsReports } from './AdvancedAnalyticsReports';
 
-export function ModernWhatsAppDashboard() {
+interface ModernWhatsAppDashboardProps {
+  onBack?: () => void;
+}
+
+export function ModernWhatsAppDashboard({ onBack }: ModernWhatsAppDashboardProps) {
   const [activeView, setActiveView] = useState('dashboard');
   const [todayStats, setTodayStats] = useState<DailyStats | null>(null);
   const [overallStats, setOverallStats] = useState<any>(null);
@@ -101,6 +105,17 @@ export function ModernWhatsAppDashboard() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-green-50">
       <div className="max-w-7xl mx-auto p-6 space-y-8">
+        {/* Back Button */}
+        {onBack && (
+          <button
+            onClick={onBack}
+            className="group flex items-center gap-2 px-6 py-3 bg-white border-2 border-gray-200 rounded-2xl hover:border-green-500 hover:shadow-lg transition-all font-bold text-gray-700"
+          >
+            <ArrowLeft className="h-5 w-5 group-hover:-translate-x-1 transition-transform" />
+            العودة للوحة الإدارة
+          </button>
+        )}
+
         {/* Hero Header */}
         <div className="relative overflow-hidden bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 rounded-3xl p-8 shadow-2xl">
           <div className="absolute inset-0 bg-black/10" />
