@@ -34,6 +34,7 @@ interface OwnersViewProps {
 }
 
 export function OwnersView({ onBack }: OwnersViewProps) {
+  const [activeTab, setActiveTab] = useState<'approved' | 'pending'>('pending');
   const [owners, setOwners] = useState<FarmOwner[]>([]);
   const [pendingSubmissions, setPendingSubmissions] = useState<any[]>([]);
   const [filteredOwners, setFilteredOwners] = useState<FarmOwner[]>([]);
@@ -312,129 +313,22 @@ export function OwnersView({ onBack }: OwnersViewProps) {
               <p className="text-sm text-[#2C2C2C]/70">إجمالي المزارع</p>
             </div>
           </Card3D>
-        </div>
-
-        {/* Simple Pending Submissions Display */}
-        {pendingSubmissions.length > 0 && (
-          <div className="bg-yellow-50 border-4 border-yellow-200 rounded-2xl p-6 mb-8">
-            <h2 className="text-2xl font-black text-yellow-800 mb-4 flex items-center gap-2">
-              <Clock className="h-6 w-6" />
-              طلبات المراجعة المعلقة ({pendingSubmissions.length})
-            </h2>
-            <div className="space-y-4">
-              {pendingSubmissions.map((sub: any) => (
-                <div key={sub.id} className="bg-white rounded-xl p-4 border-2 border-yellow-300">
-                  <div className="flex justify-between items-start mb-3">
-                    <div>
-                      <h3 className="font-bold text-lg">{sub.submitted_data?.full_name}</h3>
-                      <p className="text-sm text-gray-600">{sub.farm_owner_profiles?.mobile_number}</p>
-                    </div>
-                    <span className="text-xs px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full font-bold">
-                      معلق
-                    </span>
-                  </div>
-                  <div className="flex gap-2">
-                    <button
-                      onClick={async () => {
-                        if (confirm('الموافقة على الطلب؟')) {
-                          try {
-                            await OwnersService.approveSubmission(sub.id);
-                            alert('تم بنجاح');
-                            loadData();
-                          } catch (e) {
-                            alert('خطأ');
-                          }
-                        }
-                      }}
-                      className="px-4 py-2 bg-green-600 text-white rounded-lg font-bold"
-                    >
-                      موافقة
-                    </button>
-                    <button
-                      onClick={async () => {
-                        const reason = prompt('سبب الرفض:');
-                        if (reason) {
-                          try {
-                            await OwnersService.rejectSubmission(sub.id, reason);
-                            alert('تم الرفض');
-                            loadData();
-                          } catch (e) {
-                            alert('خطأ');
-                          }
-                        }
-                      }}
-                      className="px-4 py-2 bg-red-600 text-white rounded-lg font-bold"
-                    >
-                      رفض
-                    </button>
-                  </div>
-                </div>
-              ))}
+                )}
+              </div>
             </div>
           </div>
-        )}
-
-        {/* Toolbar */}
-        <div className="bg-white rounded-2xl shadow-xl p-6 mb-8">
-          <div className="flex gap-4 items-center">
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="البحث..."
-              className="flex-1 px-4 py-3 rounded-xl border-2"
-            />
-            <button
-              onClick={handleCreateOwner}
-              className="px-6 py-3 bg-gradient-to-br from-[#C9A962] to-[#D4B574] text-white rounded-xl font-bold"
-            >
-              + إضافة مالك
-            </button>
-          </div>
         </div>
-
-        {/* Owners Grid */}
-        {filteredOwners.length === 0 ? (
-          <div className="text-center py-16">
-            <p className="text-xl">لا يوجد ملاك</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredOwners.map((owner) => (
-              <Card3D key={owner.id}>
-                <div className="bg-white rounded-2xl p-6">
-                  <h3 className="text-xl font-bold mb-2">{owner.full_name}</h3>
-                  <p className="text-sm text-gray-600">{owner.mobile_number}</p>
-                  <p className="text-sm">{owner.region} - {owner.city}</p>
-                  <div className="flex gap-2 mt-4">
-                    <button
-                      onClick={() => handleEditOwner(owner, null as any)}
-                      className="px-4 py-2 bg-blue-500 text-white rounded-lg"
-                    >
-                      تعديل
-                    </button>
-                    <button
-                      onClick={() => handleDeleteOwner(owner, null as any)}
-                      className="px-4 py-2 bg-red-500 text-white rounded-lg"
-                    >
-                      حذف
-                    </button>
-                  </div>
-                </div>
-              </Card3D>
-            ))}
-          </div>
+          </>
         )}
 
-        {/* Owner Form Modal */}
-        <OwnerFormModal
-          isOpen={showModal}
-          onClose={() => setShowModal(false)}
-          onSubmit={handleSubmitOwner}
-          initialData={selectedOwner}
-          mode={modalMode}
-        />
-      </div>
+      {/* Owner Form Modal */}
+      <OwnerFormModal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        onSubmit={handleSubmitOwner}
+        initialData={selectedOwner}
+        mode={modalMode}
+      />
     </div>
   );
 }
