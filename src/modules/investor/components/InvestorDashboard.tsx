@@ -14,6 +14,7 @@ import { NotificationBadgeService, BadgeNotifications } from '../services/notifi
 import { ConnectionStatus } from './ConnectionStatus';
 import { EnhancedNotificationService, Notification, ConnectionStatus as ConnStatus } from '../services/enhancedNotificationService';
 import { CertificateModal } from './CertificateModal';
+import { SmartWelcomeModal } from './SmartWelcomeModal';
 
 interface InvestorDashboardProps {
   phone: string;
@@ -241,74 +242,10 @@ export function InvestorDashboard({ phone, onLogout, isFirstTimeLogin = false }:
       dir="rtl"
     >
       {showWelcome && (
-        <div
-          className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-4 md:p-6 backdrop-blur-lg"
-          style={{ background: 'rgba(0,0,0,0.7)' }}
-          onClick={() => setShowWelcome(false)}
-        >
-          <div
-            className="relative max-w-2xl w-full rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 lg:p-12 text-center max-h-[90vh] overflow-y-auto"
-            style={{
-              background: 'linear-gradient(135deg, rgba(212,175,55,0.15) 0%, rgba(255,255,255,0.1) 100%)',
-              border: `2px solid ${brandColors.primary.gold}60`,
-              boxShadow: '0 30px 80px rgba(0,0,0,0.5)',
-            }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div
-              className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 rounded-full mx-auto mb-4 sm:mb-6 md:mb-8 flex items-center justify-center"
-              style={{
-                background: brandGradients.gold,
-                boxShadow: '0 20px 60px rgba(212,175,55,0.5)',
-                animation: 'bounce 1s infinite'
-              }}
-            >
-              <CheckCircle2 className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 lg:w-20 lg:h-20 text-white" />
-            </div>
-
-            <h2
-              className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-black mb-2 sm:mb-3 md:mb-4 leading-tight"
-              style={{
-                background: brandGradients.gold,
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-              }}
-            >
-              مرحباً بك في عائلة النخيل والزيتون! 🎉
-            </h2>
-
-            <p className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-white opacity-90 mb-4 sm:mb-6 md:mb-8">
-              {investorName || 'عزيزنا المستثمر'}
-            </p>
-
-            <div
-              className="rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-5 lg:p-6 mb-4 sm:mb-6 md:mb-8"
-              style={{
-                background: 'rgba(212,175,55,0.1)',
-                border: `1px solid ${brandColors.primary.gold}30`,
-              }}
-            >
-              <p className="text-xs sm:text-sm md:text-base lg:text-lg leading-relaxed text-white opacity-90">
-                تم إنشاء حسابك بنجاح! 🌟
-                <br />
-                الآن يمكنك متابعة حجوزاتك، رفع إيصالات السداد، والحصول على شهاداتك الرقمية
-                <br />
-                نحن سعداء بانضمامك لرحلة التملك الزراعي المميزة 🫒🌴
-              </p>
-            </div>
-
-            <button
-              onClick={() => setShowWelcome(false)}
-              className="px-6 sm:px-8 md:px-10 lg:px-12 py-2.5 sm:py-3 md:py-3.5 lg:py-4 rounded-xl sm:rounded-2xl font-black text-sm sm:text-base md:text-lg lg:text-xl text-white transition-all active:scale-95 sm:hover:scale-105 touch-manipulation"
-              style={{
-                background: brandGradients.gold,
-                boxShadow: '0 10px 40px rgba(212,175,55,0.4)',
-              }}
-            >
-              ابدأ رحلتك الآن ✨
-            </button>
-          </div>
-        </div>
+        <SmartWelcomeModal
+          onClose={() => setShowWelcome(false)}
+          investorName={investorName}
+        />
       )}
 
       <div
