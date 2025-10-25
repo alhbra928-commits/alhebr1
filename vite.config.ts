@@ -1,9 +1,27 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import { copyFileSync } from 'fs';
+import { resolve } from 'path';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    {
+      name: 'copy-version-manifest',
+      closeBundle() {
+        try {
+          copyFileSync(
+            resolve(__dirname, 'version-manifest.json'),
+            resolve(__dirname, 'dist/version-manifest.json')
+          );
+          console.log('✅ Copied version-manifest.json to dist/');
+        } catch (error) {
+          console.warn('⚠️  Could not copy version-manifest.json:', error.message);
+        }
+      }
+    }
+  ],
   optimizeDeps: {
     exclude: ['lucide-react'],
   },
