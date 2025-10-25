@@ -46,6 +46,10 @@ const menuItems: MenuItem[] = [
 export function Sidebar({ activeModule, onModuleChange }: SidebarProps) {
   const { canAccessModule, isAdmin, loading } = usePermissions();
 
+  console.log('🔍🔍🔍 [Sidebar] Rendering...');
+  console.log('🔍 [Sidebar] isAdmin:', isAdmin);
+  console.log('🔍 [Sidebar] loading:', loading);
+
   return (
     <div className="h-screen w-64 bg-gradient-to-b from-amber-900 via-amber-800 to-orange-900 text-white fixed right-0 top-0 shadow-2xl overflow-y-auto" dir="rtl">
       <div className="p-6">
@@ -65,6 +69,7 @@ export function Sidebar({ activeModule, onModuleChange }: SidebarProps) {
             const isActive = activeModule === item.id;
 
             if (item.id === 'dashboard') {
+              console.log(`✅ [Sidebar] ${item.id}: Dashboard - Always shown`);
               return (
                 <button
                   key={item.id}
@@ -87,11 +92,14 @@ export function Sidebar({ activeModule, onModuleChange }: SidebarProps) {
             }
 
             const hasAccess = isAdmin || canAccessModule(item.id);
+            console.log(`🔍 [Sidebar] ${item.id}: isAdmin=${isAdmin}, canAccess=${hasAccess}, loading=${loading}`);
 
             if (!hasAccess && !loading) {
+              console.log(`❌ [Sidebar] ${item.id}: HIDDEN (no access)`);
               return null;
             }
 
+            console.log(`✅ [Sidebar] ${item.id}: SHOWN`);
             return (
               <button
                 key={item.id}
