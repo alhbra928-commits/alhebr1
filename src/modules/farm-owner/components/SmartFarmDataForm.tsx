@@ -121,7 +121,7 @@ export const SmartFarmDataForm: React.FC<SmartFarmDataFormProps> = ({ profileId,
     });
 
     if (result.success) {
-      alert(`✅ تم إرسال طلبك بنجاح!\n\nإجمالي الأشجار: ${result.total_trees}\n\nسيتم مراجعة الطلب من قبل الإدارة وإشعارك قريباً.`);
+      alert(`✅ تم إرسال طلبك بنجاح!\n\nكود المزرعة: ${result.farm_code}\nإجمالي الأشجار: ${result.total_trees}\n\nسيتم مراجعة الطلب من قبل الإدارة وإشعارك قريباً.`);
       onSuccess();
     } else {
       setError(result.error || 'حدث خطأ في الإرسال');

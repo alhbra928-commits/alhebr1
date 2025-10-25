@@ -511,6 +511,7 @@ class FarmOwnerService {
       bank_iban?: string;
       bank_account_holder_name?: string;
       bank_branch?: string;
+      farm_id?: string;
       varieties: Array<{
         type: 'نخيل' | 'زيتون';
         name: string;
@@ -540,7 +541,8 @@ class FarmOwnerService {
         p_bank_account_number: formData.bank_account_number || null,
         p_bank_iban: formData.bank_iban || null,
         p_bank_account_holder_name: formData.bank_account_holder_name || null,
-        p_bank_branch: formData.bank_branch || null
+        p_bank_branch: formData.bank_branch || null,
+        p_farm_id: formData.farm_id || null
       });
 
       if (error) throw error;
@@ -548,6 +550,8 @@ class FarmOwnerService {
       return {
         success: data?.success || false,
         submission_id: data?.submission_id,
+        farm_id: data?.farm_id,
+        farm_code: data?.farm_code,
         total_trees: data?.total_trees,
         message: data?.message,
         error: data?.error
@@ -555,6 +559,46 @@ class FarmOwnerService {
     } catch (error: any) {
       console.error('خطأ في إرسال الطلب:', error);
       return { success: false, error: error.message };
+    }
+  }
+
+  /**
+   * الحصول على جميع المزارع لصاحب المزرعة
+   */
+  async getOwnerFarms(profileId: string) {
+    try {
+      const { data, error } = await supabase
+        .from('farms')
+        .select('*')
+        .eq('owner_id', profileId)
+        .is('deleted_at', null)
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      return data || [];
+    } catch (error: any) {
+      console.error('خطأ في جلب المزارع:', error);
+      return [];
+    }
+  }
+
+  /**
+   * الحصول على تفاصيل مزرعة محددة
+   */
+  async getFarm(farmId: string) {
+    try {
+      const { data, error } = await supabase
+        .from('farms')
+        .select('*')
+        .eq('id', farmId)
+        .is('deleted_at', null)
+        .maybeSingle();
+
+      if (error) throw error;
+      return data;
+    } catch (error: any) {
+      console.error('خطأ في جلب تفاصيل المزرعة:', error);
+      return null;
     }
   }
 
