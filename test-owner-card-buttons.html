@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار أزرار بطاقة المالك</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-black mb-6 text-center">🔍 اختبار أزرار بطاقة المالك</h1>
+
+        <div class="relative bg-white rounded-2xl overflow-hidden border-4 border-gray-200 shadow-xl">
+            <!-- Header -->
+            <div class="relative h-32 bg-gradient-to-br from-amber-400 via-orange-500 to-red-500">
+                <div class="absolute top-3 left-3 bg-white/95 px-3 py-1.5 rounded-full text-xs font-black">
+                    ⭐ صاحب مزرعة
+                </div>
+                <div class="absolute -bottom-16 right-6">
+                    <div class="w-32 h-32 rounded-full bg-white ring-4 ring-green-400 shadow-xl flex items-center justify-center">
+                        <div class="w-28 h-28 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-white text-4xl">
+                            👤
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content -->
+            <div class="pt-20 px-6 pb-4">
+                <div class="mb-6">
+                    <h3 class="text-2xl font-black text-gray-900 mb-3">عبدالله محمد</h3>
+                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-black border-2 border-green-300 bg-gradient-to-r from-green-50 to-emerald-50 shadow-md">
+                        ✓ نشط
+                    </div>
+                </div>
+
+                <!-- Contact Info -->
+                <div class="space-y-3 mb-6">
+                    <div class="flex items-center gap-3 p-3 rounded-xl bg-gradient-to-r from-blue-50 to-cyan-50 border border-blue-200">
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-600 flex items-center justify-center shadow-md text-white">
+                            📱
+                        </div>
+                        <div>
+                            <p class="text-xs text-blue-700 font-bold">رقم الجوال</p>
+                            <p class="text-base font-black text-blue-900">0501234567</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-3 p-3 rounded-xl bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200">
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-md text-white">
+                            📍
+                        </div>
+                        <div>
+                            <p class="text-xs text-green-700 font-bold">الموقع</p>
+                            <p class="text-base font-black text-green-900">الرياض - حي الملك فهد</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stats -->
+                <div class="grid grid-cols-2 gap-3 mb-4">
+                    <div class="bg-gradient-to-br from-orange-50 to-amber-50 rounded-xl p-4 border-2 border-orange-200">
+                        <p class="text-xs font-black text-orange-900 mb-2">🏠 عدد المزارع</p>
+                        <p class="text-3xl font-black text-orange-600">3</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-4 border-2 border-green-200">
+                        <p class="text-xs font-black text-green-900 mb-2">🌳 عدد الأشجار</p>
+                        <p class="text-3xl font-black text-green-600">150</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-center gap-2 text-xs text-gray-600 font-bold pb-4 border-b-2 border-gray-100">
+                    📅 تاريخ الإضافة: 2025-10-20
+                </div>
+            </div>
+
+            <!-- ⭐ الأزرار - يجب أن تكون هنا! -->
+            <div class="px-4 pb-4 space-y-2 bg-gray-50">
+                <div class="text-center py-2 bg-yellow-200 border-2 border-yellow-600 rounded font-black">
+                    ⬇️ الأزرار يجب أن تظهر هنا ⬇️
+                </div>
+
+                <!-- زر 1: عرض النموذج -->
+                <button
+                    onclick="alert('✅ زر عرض النموذج يعمل!')"
+                    class="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-300 hover:from-amber-100 hover:to-orange-100 shadow-md hover:shadow-lg"
+                >
+                    <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-md text-white text-2xl">
+                        👁️
+                    </div>
+                    <div class="flex-1 text-right">
+                        <p class="font-black text-amber-900 text-base">عرض النموذج المرفوع</p>
+                        <p class="text-xs text-amber-700 font-bold">مشاهدة جميع البيانات المقدمة</p>
+                    </div>
+                </button>
+
+                <!-- زر 2: تعديل -->
+                <button
+                    onclick="alert('✅ زر التعديل يعمل!')"
+                    class="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-300 hover:from-blue-100 hover:to-cyan-100 shadow-md hover:shadow-lg"
+                >
+                    <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-blue-400 to-cyan-500 flex items-center justify-center shadow-md text-white text-2xl">
+                        ✏️
+                    </div>
+                    <div class="flex-1 text-right">
+                        <p class="font-black text-blue-900 text-base">تعديل البيانات</p>
+                        <p class="text-xs text-blue-700 font-bold">تحديث معلومات المالك</p>
+                    </div>
+                </button>
+
+                <!-- زر 3: حذف -->
+                <button
+                    onclick="if(confirm('⚠️ هل أنت متأكد من الحذف؟')) alert('✅ تم الحذف!')"
+                    class="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-gradient-to-r from-red-50 to-rose-50 border-2 border-red-300 hover:from-red-100 hover:to-rose-100 shadow-md hover:shadow-lg"
+                >
+                    <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-red-400 to-rose-500 flex items-center justify-center shadow-md text-white text-2xl">
+                        🗑️
+                    </div>
+                    <div class="flex-1 text-right">
+                        <p class="font-black text-red-800 text-base">حذف نهائي</p>
+                        <p class="text-xs text-red-600 font-bold">حذف المالك وجميع بياناته</p>
+                    </div>
+                </button>
+            </div>
+
+            <!-- Bottom Bar -->
+            <div class="h-2 bg-gradient-to-r from-amber-400 via-orange-500 to-red-500"></div>
+        </div>
+
+        <!-- Instructions -->
+        <div class="mt-8 bg-blue-50 border-2 border-blue-300 rounded-xl p-6">
+            <h2 class="text-xl font-black mb-4 text-blue-900">✅ التعليمات:</h2>
+            <ol class="space-y-2 text-blue-900">
+                <li class="font-bold">1️⃣ إذا رأيت 3 أزرار واضحة، فالكود يعمل ✅</li>
+                <li class="font-bold">2️⃣ إذا لم تظهر الأزرار، المشكلة في CSS ❌</li>
+                <li class="font-bold">3️⃣ اضغط على الأزرار لاختبار عملها 🖱️</li>
+            </ol>
+        </div>
+    </div>
+</body>
+</html>
