@@ -5,6 +5,7 @@ import { IdleSessionWarning } from './modules/admin/components/IdleSessionWarnin
 import { LoginNotification } from './modules/admin/components/LoginNotification';
 import { AdminSessionService } from './modules/admin/services/adminSessionService';
 import { PermissionsProvider } from './contexts/PermissionsContext';
+import { UpdateNotificationBanner } from './components/common/UpdateNotificationBanner';
 
 const PublicPlatformRouter = lazy(() => import('./modules/public/components/PublicPlatformRouter').then(m => ({ default: m.PublicPlatformRouter })));
 const FarmOwnerRouter = lazy(() => import('./modules/farm-owner/components/FarmOwnerRouter').then(m => ({ default: m.FarmOwnerRouter })));
@@ -191,6 +192,10 @@ function App() {
             }}
             onLogout={handleLogout}
           />
+        )}
+
+        {adminSession && activeModule !== 'public' && (
+          <UpdateNotificationBanner userRole="admin" />
         )}
 
         {showLoginNotification && adminSession && (

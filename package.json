@@ -5,7 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "prebuild": "npm run clean && npm run generate-cache",
     "build": "vite build",
+    "clean": "rm -rf dist",
+    "generate-cache": "node scripts/generate-cache-buster.js",
     "lint": "eslint .",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit -p tsconfig.app.json"
