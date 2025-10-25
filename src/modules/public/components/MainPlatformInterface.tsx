@@ -16,6 +16,7 @@ import { SimpleLoader } from '../../../components/common/SimpleLoader';
 import { AdminCrownButton } from './AdminCrownButton';
 import { GlowingConceptButton } from './GlowingConceptButton';
 import { ConceptIntroductionPage } from './ConceptIntroductionPage';
+import { IdeaOverviewSection } from './IdeaOverviewSection';
 
 type ViewMode = 'home' | 'farmDetail' | 'booking' | 'investor' | 'verification' | 'concept';
 
@@ -158,11 +159,18 @@ export function MainPlatformInterface({
       />
       <SmartStockTicker />
 
+      {/* قسم فكرة تملك الأشجار */}
       <div className="pt-32 md:pt-40">
-        <GlowingConceptButton onClick={() => setCurrentView('concept')} />
+        <IdeaOverviewSection onNavigateToFarms={() => {
+          const farmsSection = document.getElementById('farms-section');
+          if (farmsSection) {
+            farmsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }} />
       </div>
 
-      <div className="max-w-[1400px] mx-auto px-3 sm:px-6 pt-2 sm:pt-4 pb-32">
+      {/* قسم المزارع المتاحة */}
+      <div id="farms-section" className="max-w-[1400px] mx-auto px-3 sm:px-6 pt-2 sm:pt-4 pb-32">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
           {farms.length === 0 ? (
             <div className="col-span-full text-center py-12">
