@@ -23,10 +23,10 @@ interface CertificateCard3DProps {
   certificate: Documentation;
   onView: (certificate: Documentation) => void;
   onPrint: (certificate: Documentation) => void;
-  onReissue: (certificate: Documentation) => void;
-  onEmail: (certificate: Documentation) => void;
-  onDelete: (certificate: Documentation) => void;
-  onArchive: (certificate: Documentation) => void;
+  onReissue?: (certificate: Documentation) => void;
+  onEmail?: (certificate: Documentation) => void;
+  onDelete?: (certificate: Documentation) => void;
+  onArchive?: (certificate: Documentation) => void;
 }
 
 export function CertificateCard3D({
@@ -38,6 +38,12 @@ export function CertificateCard3D({
   onDelete,
   onArchive
 }: CertificateCard3DProps) {
+  console.log('🔍🔍🔍 [CertificateCard3D] Certificate:', certificate.certificate_code);
+  console.log('  onDelete exists:', !!onDelete);
+  console.log('  onReissue exists:', !!onReissue);
+  console.log('  onEmail exists:', !!onEmail);
+  console.log('  onArchive exists:', !!onArchive);
+
   const getStatusConfig = (status: string) => {
     const configs: any = {
       documented: {
@@ -174,23 +180,27 @@ export function CertificateCard3D({
                 طباعة
               </button>
 
-              <button
-                onClick={() => onReissue(certificate)}
-                className="flex items-center justify-center gap-1 px-3 py-2 bg-[#C89B3C] hover:bg-[#B8894E] text-white rounded-lg font-bold text-xs transition-all"
-              >
-                <RefreshCw className="h-3 w-3" />
-                إعادة إصدار
-              </button>
+              {onReissue && (
+                <button
+                  onClick={() => onReissue(certificate)}
+                  className="flex items-center justify-center gap-1 px-3 py-2 bg-[#C89B3C] hover:bg-[#B8894E] text-white rounded-lg font-bold text-xs transition-all"
+                >
+                  <RefreshCw className="h-3 w-3" />
+                  إعادة إصدار
+                </button>
+              )}
 
-              <button
-                onClick={() => onEmail(certificate)}
-                className="flex items-center justify-center gap-1 px-3 py-2 bg-purple-500 hover:bg-purple-600 text-white rounded-lg font-bold text-xs transition-all"
-              >
-                <Mail className="h-3 w-3" />
-                إرسال
-              </button>
+              {onEmail && (
+                <button
+                  onClick={() => onEmail(certificate)}
+                  className="flex items-center justify-center gap-1 px-3 py-2 bg-purple-500 hover:bg-purple-600 text-white rounded-lg font-bold text-xs transition-all"
+                >
+                  <Mail className="h-3 w-3" />
+                  إرسال
+                </button>
+              )}
 
-              {certificate.status !== 'archived' && (
+              {certificate.status !== 'archived' && onArchive && (
                 <button
                   onClick={() => onArchive(certificate)}
                   className="flex items-center justify-center gap-1 px-3 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg font-bold text-xs transition-all"
@@ -200,13 +210,15 @@ export function CertificateCard3D({
                 </button>
               )}
 
-              <button
-                onClick={() => onDelete(certificate)}
-                className="flex items-center justify-center gap-1 px-3 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-bold text-xs transition-all"
-              >
-                <Trash2 className="h-3 w-3" />
-                حذف
-              </button>
+              {onDelete && (
+                <button
+                  onClick={() => onDelete(certificate)}
+                  className="flex items-center justify-center gap-1 px-3 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-bold text-xs transition-all"
+                >
+                  <Trash2 className="h-3 w-3" />
+                  حذف
+                </button>
+              )}
             </div>
           </div>
 

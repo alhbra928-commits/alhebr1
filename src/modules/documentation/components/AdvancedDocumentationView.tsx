@@ -372,10 +372,10 @@ export function AdvancedDocumentationView({ onBack }: AdvancedDocumentationViewP
                       certificate={certificate}
                       onView={handleViewCertificate}
                       onPrint={handlePrint}
-                      onReissue={handleReissue}
-                      onEmail={handleEmail}
-                      onDelete={handleDelete}
-                      onArchive={handleArchive}
+                      onReissue={hasEditPermission ? handleReissue : undefined}
+                      onEmail={hasEditPermission ? handleEmail : undefined}
+                      onDelete={hasDeletePermission ? handleDelete : undefined}
+                      onArchive={hasEditPermission ? handleArchive : undefined}
                     />
                   ))}
                 </div>
@@ -395,10 +395,10 @@ export function AdvancedDocumentationView({ onBack }: AdvancedDocumentationViewP
                       certificate={certificate}
                       onView={handleViewCertificate}
                       onPrint={handlePrint}
-                      onReissue={handleReissue}
-                      onEmail={handleEmail}
-                      onDelete={handleDelete}
-                      onArchive={handleArchive}
+                      onReissue={hasEditPermission ? handleReissue : undefined}
+                      onEmail={hasEditPermission ? handleEmail : undefined}
+                      onDelete={hasDeletePermission ? handleDelete : undefined}
+                      onArchive={hasEditPermission ? handleArchive : undefined}
                     />
                   ))}
                 </div>
@@ -418,10 +418,10 @@ export function AdvancedDocumentationView({ onBack }: AdvancedDocumentationViewP
                       certificate={certificate}
                       onView={handleViewCertificate}
                       onPrint={handlePrint}
-                      onReissue={handleReissue}
-                      onEmail={handleEmail}
-                      onDelete={handleDelete}
-                      onArchive={handleArchive}
+                      onReissue={hasEditPermission ? handleReissue : undefined}
+                      onEmail={hasEditPermission ? handleEmail : undefined}
+                      onDelete={hasDeletePermission ? handleDelete : undefined}
+                      onArchive={hasEditPermission ? handleArchive : undefined}
                     />
                   ))}
                 </div>
