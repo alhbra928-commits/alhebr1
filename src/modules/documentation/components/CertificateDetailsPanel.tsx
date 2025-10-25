@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { Documentation } from '../documentationService';
 import { CertificateModal } from '../../investor/components/CertificateModal';
+import { usePermissions } from '../../../contexts/PermissionsContext';
 
 interface CertificateDetailsPanelProps {
   certificate: Documentation | null;
@@ -43,6 +44,7 @@ export function CertificateDetailsPanel({
   onDelete
 }: CertificateDetailsPanelProps) {
   const [showCertificate, setShowCertificate] = useState(false);
+  const { canEdit, canDelete } = usePermissions();
 
   if (!isOpen || !certificate) return null;
 
@@ -291,41 +293,49 @@ export function CertificateDetailsPanel({
               عرض الشهادة الفاخرة
             </button>
 
-            <div className="grid grid-cols-2 gap-3">
-              <button
-                onClick={() => onReissue(certificate)}
-                className="flex items-center justify-center gap-2 px-4 py-3 bg-[#C89B3C] hover:bg-[#B8894E] text-white rounded-xl font-bold transition-all"
-              >
-                <RefreshCw className="h-5 w-5" />
-                إعادة إصدار
-              </button>
+            {(canEdit || canDelete) && (
+              <div className="grid grid-cols-2 gap-3">
+                {canEdit && (
+                  <>
+                    <button
+                      onClick={() => onReissue(certificate)}
+                      className="flex items-center justify-center gap-2 px-4 py-3 bg-[#C89B3C] hover:bg-[#B8894E] text-white rounded-xl font-bold transition-all"
+                    >
+                      <RefreshCw className="h-5 w-5" />
+                      إعادة إصدار
+                    </button>
 
-              <button
-                onClick={() => onEmail(certificate)}
-                className="flex items-center justify-center gap-2 px-4 py-3 bg-purple-500 hover:bg-purple-600 text-white rounded-xl font-bold transition-all"
-              >
-                <Mail className="h-5 w-5" />
-                إرسال بالبريد
-              </button>
+                    <button
+                      onClick={() => onEmail(certificate)}
+                      className="flex items-center justify-center gap-2 px-4 py-3 bg-purple-500 hover:bg-purple-600 text-white rounded-xl font-bold transition-all"
+                    >
+                      <Mail className="h-5 w-5" />
+                      إرسال بالبريد
+                    </button>
 
-              {certificate.status !== 'archived' && (
-                <button
-                  onClick={() => onArchive(certificate)}
-                  className="flex items-center justify-center gap-2 px-4 py-3 bg-gray-500 hover:bg-gray-600 text-white rounded-xl font-bold transition-all"
-                >
-                  <Archive className="h-5 w-5" />
-                  أرشفة
-                </button>
-              )}
+                    {certificate.status !== 'archived' && (
+                      <button
+                        onClick={() => onArchive(certificate)}
+                        className="flex items-center justify-center gap-2 px-4 py-3 bg-gray-500 hover:bg-gray-600 text-white rounded-xl font-bold transition-all"
+                      >
+                        <Archive className="h-5 w-5" />
+                        أرشفة
+                      </button>
+                    )}
+                  </>
+                )}
 
-              <button
-                onClick={() => onDelete(certificate)}
-                className="flex items-center justify-center gap-2 px-4 py-3 bg-red-500 hover:bg-red-600 text-white rounded-xl font-bold transition-all"
-              >
-                <Trash2 className="h-5 w-5" />
-                حذف نهائي
-              </button>
-            </div>
+                {canDelete && (
+                  <button
+                    onClick={() => onDelete(certificate)}
+                    className="flex items-center justify-center gap-2 px-4 py-3 bg-red-500 hover:bg-red-600 text-white rounded-xl font-bold transition-all"
+                  >
+                    <Trash2 className="h-5 w-5" />
+                    حذف نهائي
+                  </button>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>

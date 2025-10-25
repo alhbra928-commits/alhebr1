@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>اختبار صلاحيات عمر في المواثيق</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px; min-height: 100vh; }
+    .container { max-width: 900px; margin: 0 auto; background: white; border-radius: 20px; padding: 30px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+    h1 { color: #667eea; margin-bottom: 20px; text-align: center; font-size: 28px; }
+    .section { background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px; }
+    .section h2 { color: #333; margin-bottom: 15px; font-size: 18px; }
+    .permission-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; }
+    .permission-box { background: white; padding: 15px; border-radius: 10px; text-align: center; border: 3px solid #ddd; }
+    .permission-box.allowed { border-color: #10b981; background: #d4edda; }
+    .permission-box.denied { border-color: #ef4444; background: #f8d7da; }
+    .permission-box h3 { font-size: 14px; color: #333; margin-bottom: 8px; }
+    .permission-box .icon { font-size: 32px; margin-bottom: 5px; }
+    .expected { background: #fff3cd; padding: 15px; border-radius: 10px; border-left: 4px solid #ffc107; }
+    .expected h3 { color: #856404; margin-bottom: 10px; }
+    .expected ul { list-style: none; padding: 0; }
+    .expected li { padding: 5px 0; color: #856404; }
+    .status { display: inline-block; padding: 5px 15px; border-radius: 20px; font-size: 12px; font-weight: bold; }
+    .status.success { background: #d4edda; color: #155724; }
+    .status.error { background: #f8d7da; color: #721c24; }
+    .btn { background: #667eea; color: white; padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 15px; }
+    .btn:hover { background: #5568d3; }
+    .log { background: #2d3748; color: #fff; padding: 15px; border-radius: 8px; font-family: 'Courier New', monospace; font-size: 12px; max-height: 250px; overflow-y: auto; margin-top: 15px; }
+    .log div { margin-bottom: 5px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔍 اختبار صلاحيات عمر في قسم المواثيق</h1>
+
+    <div class="section">
+      <h2>👤 معلومات المستخدم</h2>
+      <div id="user-info"></div>
+    </div>
+
+    <div class="section">
+      <h2>🎯 الصلاحيات الفعلية من قاعدة البيانات</h2>
+      <div class="permission-grid" id="actual-permissions"></div>
+    </div>
+
+    <div class="expected">
+      <h3>✅ السلوك المتوقع في واجهة المواثيق:</h3>
+      <ul>
+        <li>✓ يمكنه رؤية قائمة جميع الشهادات</li>
+        <li>✓ يمكنه الضغط على أي شهادة لعرض التفاصيل</li>
+        <li>✓ يمكنه رؤية زر "عرض الشهادة الفاخرة"</li>
+        <li>✗ <strong>لا يجب</strong> أن يرى أزرار: إعادة إصدار، إرسال بالبريد، أرشفة، حذف</li>
+        <li>✗ <strong>لا يجب</strong> أن يرى زر إضافة شهادة جديدة</li>
+        <li>✗ <strong>لا يجب</strong> أن يتمكن من تعديل أي بيانات</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>📝 سجل الاختبار</h2>
+      <div class="log" id="log"></div>
+    </div>
+
+    <div style="text-align: center;">
+      <button class="btn" onclick="runTest()">🔄 إعادة الاختبار</button>
+    </div>
+  </div>
+
+  <script>
+    const SUPABASE_URL = 'https://bhtqgybizsqzlbahlkxi.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJodHFneWJpenNxemxiYWhsa3hpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjk0MTc1ODEsImV4cCI6MjA0NDk5MzU4MX0.wquH2opi6VahklB1L0VIJlIEHvgJcOKTx_NZ5aY6Z3o';
+
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    function log(message, type = 'info') {
+      const logEl = document.getElementById('log');
+      const time = new Date().toLocaleTimeString('ar-SA');
+      const color = type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#60a5fa';
+      logEl.innerHTML = `<div style="color: ${color}">[${time}] ${message}</div>` + logEl.innerHTML;
+    }
+
+    async function runTest() {
+      const logEl = document.getElementById('log');
+      logEl.innerHTML = '<div style="color: #fbbf24;">⏳ جارِ التحميل...</div>';
+
+      try {
+        log('🚀 بدء اختبار صلاحيات عمر في قسم المواثيق...', 'info');
+
+        // 1️⃣ جلب بيانات عمر
+        log('1️⃣ جلب بيانات عمر من admin_users...', 'info');
+        const { data: user, error: userError } = await supabase
+          .from('admin_users')
+          .select('phone, full_name, job_title, is_active')
+          .eq('phone', '0500000011')
+          .single();
+
+        if (userError) throw userError;
+
+        const userInfoEl = document.getElementById('user-info');
+        userInfoEl.innerHTML = `
+          <table style="width: 100%; border-collapse: collapse;">
+            <tr><th style="padding: 10px; background: #667eea; color: white; text-align: right;">الاسم</th><td style="padding: 10px;">${user.full_name}</td></tr>
+            <tr><th style="padding: 10px; background: #667eea; color: white; text-align: right;">الجوال</th><td style="padding: 10px;">${user.phone}</td></tr>
+            <tr><th style="padding: 10px; background: #667eea; color: white; text-align: right;">المسمى الوظيفي</th><td style="padding: 10px;">${user.job_title || 'غير محدد'}</td></tr>
+            <tr><th style="padding: 10px; background: #667eea; color: white; text-align: right;">الحالة</th><td style="padding: 10px;">${user.is_active ? '✅ مفعّل' : '❌ غير مفعّل'}</td></tr>
+          </table>
+        `;
+        log(`✅ تم جلب بيانات: ${user.full_name}`, 'success');
+
+        // 2️⃣ جلب صلاحيات قسم المواثيق
+        log('2️⃣ جلب صلاحيات قسم المواثيق (documentation)...', 'info');
+        const { data: permissions, error: permError } = await supabase
+          .from('admin_module_permissions')
+          .select('*')
+          .eq('admin_phone', '0500000011')
+          .eq('module_id', 'documentation')
+          .single();
+
+        if (permError) {
+          log('⚠️ لم يتم العثور على صلاحيات في قسم المواثيق', 'error');
+          throw permError;
+        }
+
+        log('✅ تم جلب الصلاحيات بنجاح', 'success');
+
+        // عرض الصلاحيات
+        const permissionsEl = document.getElementById('actual-permissions');
+        const permissionsList = [
+          { key: 'can_view', label: 'عرض', icon: '👁️' },
+          { key: 'can_create', label: 'إنشاء', icon: '➕' },
+          { key: 'can_edit', label: 'تعديل', icon: '✏️' },
+          { key: 'can_delete', label: 'حذف', icon: '🗑️' }
+        ];
+
+        let html = '';
+        permissionsList.forEach(perm => {
+          const isAllowed = permissions[perm.key];
+          const className = isAllowed ? 'allowed' : 'denied';
+          const status = isAllowed ? '✅ مسموح' : '❌ ممنوع';
+          html += `
+            <div class="permission-box ${className}">
+              <div class="icon">${perm.icon}</div>
+              <h3>${perm.label}</h3>
+              <div style="font-weight: bold; margin-top: 5px;">${status}</div>
+            </div>
+          `;
+        });
+        permissionsEl.innerHTML = html;
+
+        // 3️⃣ التحقق من التطابق مع المتوقع
+        log('3️⃣ التحقق من التطابق مع السلوك المتوقع...', 'info');
+
+        const checks = [
+          { condition: permissions.can_view === true, message: 'يمكنه العرض ✅' },
+          { condition: permissions.can_create === false, message: 'لا يمكنه الإنشاء ✅' },
+          { condition: permissions.can_edit === false, message: 'لا يمكنه التعديل ✅' },
+          { condition: permissions.can_delete === false, message: 'لا يمكنه الحذف ✅' },
+        ];
+
+        let allPassed = true;
+        checks.forEach(check => {
+          if (check.condition) {
+            log(check.message, 'success');
+          } else {
+            log(check.message.replace('✅', '❌'), 'error');
+            allPassed = false;
+          }
+        });
+
+        if (allPassed) {
+          log('🎉 جميع الفحوصات نجحت! الصلاحيات مضبوطة بشكل صحيح', 'success');
+          log('📌 النتيجة: عمر لن يرى أزرار الإجراءات في تفاصيل الشهادة', 'success');
+        } else {
+          log('⚠️ بعض الفحوصات فشلت', 'error');
+        }
+
+      } catch (error) {
+        log('❌ خطأ: ' + error.message, 'error');
+        console.error('Error:', error);
+      }
+    }
+
+    window.onload = runTest;
+  </script>
+</body>
+</html>
