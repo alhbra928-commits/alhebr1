@@ -14,8 +14,19 @@ import {
   Eye,
   Clock,
   X,
-  XCircle
+  XCircle,
+  MessageSquare,
+  Wallet,
+  MoreHorizontal,
+  TreePine,
+  Calendar,
+  Home,
+  FileText,
+  DollarSign,
+  CreditCard,
+  Building
 } from 'lucide-react';
+import { Card3D } from '../../../components/ui/Card3D';
 import { BackButton } from '../../../components/common/BackButton';
 import { OwnersService, FarmOwner } from '../ownersService';
 import { FarmsService } from '../../farms/farmsService';
@@ -186,17 +197,50 @@ export function OwnersView({ onBack }: OwnersViewProps) {
 
   const handleDeleteOwner = async (owner: FarmOwner, e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!confirm(`هل أنت متأكد من حذف المالك "${owner.full_name}" نهائياً؟\n\nسيتم حفظ نسخة احتياطية JSON تلقائياً.`)) {
+
+    const confirmMessage = `⚠️ تحذير: حذف نهائي ⚠️\n\n` +
+      `هل أنت متأكد من حذف المالك "${owner.full_name}" نهائياً؟\n\n` +
+      `📱 الجوال: ${owner.mobile_number}\n` +
+      `📍 المنطقة: ${owner.region} - ${owner.city}\n` +
+      `🏠 عدد المزارع: ${owner.farms_count || 0}\n\n` +
+      `⚠️ هذا الإجراء لا يمكن التراجع عنه!\n` +
+      `✅ سيتم حفظ نسخة احتياطية JSON تلقائياً.`;
+
+    if (!confirm(confirmMessage)) {
       return;
     }
 
     try {
+      console.log('🗑️ حذف المالك:', owner.full_name, owner.id);
       await OwnersService.deleteOwnerPermanently(owner.id, 'حذف نهائي من لوحة التحكم');
-      alert('تم حذف المالك نهائياً مع حفظ نسخة احتياطية');
+      alert('✅ تم حذف المالك نهائياً\n\n✓ تم حفظ نسخة احتياطية JSON\n✓ تم تحديث قاعدة البيانات');
       await loadData();
     } catch (err: any) {
-      alert('حدث خطأ: ' + err.message);
+      console.error('❌ خطأ في الحذف:', err);
+      alert('❌ حدث خطأ في الحذف:\n\n' + err.message);
     }
+  };
+
+  const handleSendMessage = (owner: FarmOwner, e: React.MouseEvent) => {
+    e.stopPropagation();
+    const message = prompt(`أرسل رسالة إلى ${owner.full_name}:`);
+    if (message) {
+      const whatsappUrl = `https://wa.me/${owner.mobile_number.replace(/\D/g, '')}?text=${encodeURIComponent(message)}`;
+      window.open(whatsappUrl, '_blank');
+    }
+  };
+
+  const handleViewFinancials = (owner: FarmOwner, e: React.MouseEvent) => {
+    e.stopPropagation();
+    alert(`عرض المعاملات المالية لـ ${owner.full_name}\n\nهذه الميزة قيد التطوير...`);
+  };
+
+  const toggleExpandedActions = (ownerId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setExpandedActions(prev => ({
+      ...prev,
+      [ownerId]: !prev[ownerId]
+    }));
   };
 
   const getStatusColor = (status: string) => {
