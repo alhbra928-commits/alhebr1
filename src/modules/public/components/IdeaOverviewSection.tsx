@@ -60,7 +60,11 @@ export const IdeaOverviewSection: React.FC<IdeaOverviewSectionProps> = ({ onNavi
                 }}
               >
                 <span className="relative inline-block text-transparent bg-clip-text bg-gradient-to-br from-gray-900 via-amber-900 to-gray-900 drop-shadow-lg animate-gradient">
-                  امتلك أشجارك الخاصة
+                  امتلك أشجارك
+                </span>
+                <br />
+                <span className="relative inline-block text-transparent bg-clip-text bg-gradient-to-br from-amber-800 via-yellow-700 to-amber-800 drop-shadow-lg animate-gradient mt-2">
+                  من النخيل والزيتون
                 </span>
               </span>
               <div className="absolute -inset-x-4 -inset-y-2 bg-gradient-to-r from-transparent via-amber-100/40 to-transparent blur-2xl -z-10 animate-pulse-slow" />
