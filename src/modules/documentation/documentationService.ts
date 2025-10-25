@@ -273,8 +273,9 @@ export class DocumentationService {
     return labelMap[status] || status;
   }
 
-  static async deletePermanently(id: string, reason: string = 'حذف من لوحة التحكم'): Promise<void> {
-    console.log('🗑️ محاولة حذف شهادة:', id);
+  static async deletePermanently(id: string, reason: string = 'حذف من لوحة التحكم'): Promise<any> {
+    console.log('🗑️ [DELETE] بدء عملية حذف شهادة:', id);
+    console.log('🗑️ [DELETE] السبب:', reason);
 
     try {
       const { data, error } = await supabase
@@ -284,17 +285,42 @@ export class DocumentationService {
         });
 
       if (error) {
-        console.error('❌ خطأ في حذف الشهادة:', error);
-        throw new Error(`فشل حذف الشهادة: ${error.message}`);
+        console.error('❌ [DELETE ERROR] خطأ من قاعدة البيانات:', error);
+        console.error('❌ [DELETE ERROR] تفاصيل الخطأ:', {
+          message: error.message,
+          details: error.details,
+          hint: error.hint,
+          code: error.code
+        });
+
+        // رسالة خطأ واضحة للمستخدم
+        let userMessage = 'فشل حذف الشهادة';
+
+        if (error.message.includes('غير موجودة')) {
+          userMessage = 'الشهادة غير موجودة أو تم حذفها مسبقاً';
+        } else if (error.message.includes('permission')) {
+          userMessage = 'ليس لديك صلاحية لحذف هذه الشهادة';
+        } else {
+          userMessage = error.message || 'حدث خطأ غير متوقع';
+        }
+
+        throw new Error(userMessage);
       }
 
-      console.log('✅ تم حذف الشهادة بنجاح:', data);
-      console.log('📦 معرف النسخة الاحتياطية:', data?.backup_id);
+      console.log('✅ [DELETE SUCCESS] تم حذف الشهادة بنجاح!');
+      console.log('✅ [DELETE SUCCESS] البيانات المرجعة:', data);
 
       return data;
     } catch (err: any) {
-      console.error('❌ خطأ في عملية الحذف:', err);
-      throw new Error(err.message || 'حدث خطأ في حذف الشهادة');
+      console.error('❌ [DELETE EXCEPTION] خطأ في عملية الحذف:', err);
+
+      // إذا كان الخطأ من try block، نعيد رميه
+      if (err instanceof Error) {
+        throw err;
+      }
+
+      // خطأ غير متوقع
+      throw new Error('حدث خطأ غير متوقع في حذف الشهادة. يرجى المحاولة مرة أخرى.');
     }
   }
 }

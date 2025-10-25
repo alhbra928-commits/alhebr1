@@ -201,12 +201,21 @@ export function AdvancedDocumentationView({ onBack }: AdvancedDocumentationViewP
         `✓ تم تسجيل العملية في السجل`
       );
     } catch (error: any) {
-      console.error('❌ خطأ في حذف الشهادة:', error);
+      console.error('❌ [UI] خطأ في حذف الشهادة:', error);
+
+      const errorMessage = error?.message || 'خطأ غير معروف';
+
       alert(
-        `❌ حدث خطأ في الحذف!\n\n` +
-        `الخطأ: ${error.message || 'خطأ غير معروف'}\n\n` +
-        `يرجى المحاولة مرة أخرى أو التواصل مع الدعم الفني.`
+        `❌ فشل حذف الشهادة!\n\n` +
+        `السبب: ${errorMessage}\n\n` +
+        `💡 الحلول المقترحة:\n` +
+        `• تحقق من اتصالك بالإنترنت\n` +
+        `• حدّث الصفحة وحاول مرة أخرى\n` +
+        `• إذا استمرت المشكلة، تواصل مع الإدارة\n\n` +
+        `رقم الشهادة: ${certificate.certificate_code}`
       );
+
+      // إعادة تحميل البيانات لعرض الحالة الحقيقية
       await loadData();
     } finally {
       setActionLoading(false);
