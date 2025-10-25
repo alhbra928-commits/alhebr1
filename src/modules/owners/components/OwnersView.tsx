@@ -28,6 +28,7 @@ import { BackButton } from '../../../components/common/BackButton';
 import { OwnersService, FarmOwner } from '../ownersService';
 import { FarmsService } from '../../farms/farmsService';
 import { OwnerFormModal } from './OwnerFormModal';
+import { usePermissions } from '../../../contexts/PermissionsContext';
 
 interface OwnersViewProps {
   onBack?: () => void;
@@ -48,6 +49,13 @@ export function OwnersView({ onBack }: OwnersViewProps) {
   const [showDetailsPanel, setShowDetailsPanel] = useState(false);
   const [selectedOwnerDetails, setSelectedOwnerDetails] = useState<any>(null);
   const [ownerFarms, setOwnerFarms] = useState<any[]>([]);
+
+  const { hasPermission, isAdmin } = usePermissions();
+  const canCreate = isAdmin || hasPermission('owners', 'create');
+  const canEdit = isAdmin || hasPermission('owners', 'edit');
+  const canDelete = isAdmin || hasPermission('owners', 'delete');
+
+  console.log('🔍 [OwnersView] Permissions:', { canCreate, canEdit, canDelete });
 
   // Rejection modal state
   const [showRejectModal, setShowRejectModal] = useState(false);
@@ -384,12 +392,14 @@ export function OwnersView({ onBack }: OwnersViewProps) {
               placeholder="البحث..."
               className="flex-1 px-4 py-3 rounded-xl border-2"
             />
-            <button
-              onClick={handleCreateOwner}
-              className="px-6 py-3 bg-gradient-to-br from-[#C9A962] to-[#D4B574] text-white rounded-xl font-bold"
-            >
-              + إضافة مالك
-            </button>
+            {canCreate && (
+              <button
+                onClick={handleCreateOwner}
+                className="px-6 py-3 bg-gradient-to-br from-[#C9A962] to-[#D4B574] text-white rounded-xl font-bold"
+              >
+                + إضافة مالك
+              </button>
+            )}
           </div>
         </div>
 
@@ -401,13 +411,15 @@ export function OwnersView({ onBack }: OwnersViewProps) {
             </div>
             <h3 className="text-2xl font-black text-[#2C2C2C] mb-2">لا يوجد ملاك</h3>
             <p className="text-[#2C2C2C]/60 mb-6">ابدأ بإضافة أول مالك مزرعة</p>
-            <button
-              onClick={handleCreateOwner}
-              className="px-8 py-3 bg-gradient-to-br from-[#C9A962] to-[#D4B574] text-white rounded-xl font-bold hover:shadow-xl transform hover:-translate-y-0.5 transition-all"
-            >
-              <Plus className="h-5 w-5 inline-block ml-2" />
-              إضافة مالك جديد
-            </button>
+            {canCreate && (
+              <button
+                onClick={handleCreateOwner}
+                className="px-8 py-3 bg-gradient-to-br from-[#C9A962] to-[#D4B574] text-white rounded-xl font-bold hover:shadow-xl transform hover:-translate-y-0.5 transition-all"
+              >
+                <Plus className="h-5 w-5 inline-block ml-2" />
+                إضافة مالك جديد
+              </button>
+            )}
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -549,16 +561,18 @@ export function OwnersView({ onBack }: OwnersViewProps) {
                             <span>عرض</span>
                           </button>
 
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleEditOwner(owner, e);
-                            }}
-                            className="flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-xl font-bold hover:shadow-lg transform hover:-translate-y-0.5 transition-all"
-                          >
-                            <Edit className="h-4 w-4" />
-                            <span>تعديل</span>
-                          </button>
+                          {canEdit && (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleEditOwner(owner, e);
+                              }}
+                              className="flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-xl font-bold hover:shadow-lg transform hover:-translate-y-0.5 transition-all"
+                            >
+                              <Edit className="h-4 w-4" />
+                              <span>تعديل</span>
+                            </button>
+                          )}
                         </div>
 
                         {/* Secondary Actions */}
@@ -621,17 +635,19 @@ export function OwnersView({ onBack }: OwnersViewProps) {
                             <span>اتصال</span>
                           </button>
 
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleDeleteOwner(owner, e);
-                            }}
-                            className="flex items-center justify-center gap-1.5 px-3 py-2 bg-red-100 text-red-700 rounded-lg font-bold hover:bg-red-200 transition-all text-sm"
-                            title="حذف المالك"
-                          >
-                            <Trash2 className="h-3.5 w-3.5" />
-                            <span>حذف</span>
-                          </button>
+                          {canDelete && (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDeleteOwner(owner, e);
+                              }}
+                              className="flex items-center justify-center gap-1.5 px-3 py-2 bg-red-100 text-red-700 rounded-lg font-bold hover:bg-red-200 transition-all text-sm"
+                              title="حذف المالك"
+                            >
+                              <Trash2 className="h-3.5 w-3.5" />
+                              <span>حذف</span>
+                            </button>
+                          )}
                         </div>
                       </div>
 

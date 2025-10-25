@@ -24,6 +24,7 @@ import { FarmsService, Farm } from '../farmsService';
 import { OwnersService } from '../../owners/ownersService';
 import { FarmFormModal } from './FarmFormModal';
 import { useRealtimeTables } from '../../../lib/realtimeSync';
+import { usePermissions } from '../../../contexts/PermissionsContext';
 
 interface FarmsViewProps {
   onBack?: () => void;
@@ -41,6 +42,13 @@ export function FarmsView({ onBack }: FarmsViewProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState<string>('all');
   const [filterStatus, setFilterStatus] = useState<string>('all');
+
+  const { hasPermission, isAdmin } = usePermissions();
+  const canCreate = isAdmin || hasPermission('farms', 'create');
+  const canEdit = isAdmin || hasPermission('farms', 'edit');
+  const canDelete = isAdmin || hasPermission('farms', 'delete');
+
+  console.log('🔍 [FarmsView] Permissions:', { canCreate, canEdit, canDelete });
 
   useEffect(() => {
     loadData();
@@ -420,13 +428,15 @@ export function FarmsView({ onBack }: FarmsViewProps) {
             </select>
 
             {/* Add Button */}
-            <button
-              onClick={handleCreateFarm}
-              className="flex items-center gap-2 px-6 py-3 bg-gradient-to-br from-[#3D5B4B] to-[#4A6F5C] text-white rounded-xl hover:shadow-xl transform hover:-translate-y-0.5 transition-all font-bold"
-            >
-              <Plus className="h-5 w-5" />
-              إضافة مزرعة جديدة
-            </button>
+            {canCreate && (
+              <button
+                onClick={handleCreateFarm}
+                className="flex items-center gap-2 px-6 py-3 bg-gradient-to-br from-[#3D5B4B] to-[#4A6F5C] text-white rounded-xl hover:shadow-xl transform hover:-translate-y-0.5 transition-all font-bold"
+              >
+                <Plus className="h-5 w-5" />
+                إضافة مزرعة جديدة
+              </button>
+            )}
           </div>
         </div>
 
@@ -551,13 +561,15 @@ export function FarmsView({ onBack }: FarmsViewProps) {
                     {/* Action Buttons */}
                     <div className="flex flex-col gap-2 pt-4 border-t-2 border-gray-100 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                       <div className="flex items-center gap-2">
-                        <button
-                          onClick={(e) => handleEditFarm(farm, e)}
-                          className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-sm font-bold"
-                        >
-                          <Edit className="h-4 w-4" />
-                          تعديل
-                        </button>
+                        {canEdit && (
+                          <button
+                            onClick={(e) => handleEditFarm(farm, e)}
+                            className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-sm font-bold"
+                          >
+                            <Edit className="h-4 w-4" />
+                            تعديل
+                          </button>
+                        )}
 
                         <button
                           onClick={(e) => handleToggleStatus(farm, e)}
@@ -580,12 +592,14 @@ export function FarmsView({ onBack }: FarmsViewProps) {
                           )}
                         </button>
 
-                        <button
-                          onClick={(e) => handleDeleteFarm(farm, e)}
-                          className="px-4 py-2.5 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </button>
+                        {canDelete && (
+                          <button
+                            onClick={(e) => handleDeleteFarm(farm, e)}
+                            className="px-4 py-2.5 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        )}
                     </div>
 
                     <button

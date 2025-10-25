@@ -17,6 +17,7 @@ import { InvestorsService, Investor, InvestorFormData } from '../investorsServic
 import { InvestorCard3D } from './InvestorCard3D';
 import { InvestorDetailsPanel } from './InvestorDetailsPanel';
 import { InvestorFormModal } from './InvestorFormModal';
+import { usePermissions } from '../../../contexts/PermissionsContext';
 
 interface AdvancedInvestorsViewProps {
   onBack?: () => void;
@@ -35,6 +36,13 @@ export function AdvancedInvestorsView({ onBack }: AdvancedInvestorsViewProps) {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingInvestor, setEditingInvestor] = useState<Investor | null>(null);
+
+  const { hasPermission, isAdmin } = usePermissions();
+  const canCreate = isAdmin || hasPermission('investors', 'create');
+  const canEdit = isAdmin || hasPermission('investors', 'edit');
+  const canDelete = isAdmin || hasPermission('investors', 'delete');
+
+  console.log('🔍 [AdvancedInvestorsView] Permissions:', { canCreate, canEdit, canDelete });
 
   useEffect(() => {
     loadData();
