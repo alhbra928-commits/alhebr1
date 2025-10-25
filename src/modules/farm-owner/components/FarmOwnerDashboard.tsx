@@ -106,90 +106,154 @@ export const FarmOwnerDashboard: React.FC<FarmOwnerDashboardProps> = ({ profileI
     <div className="min-h-screen" style={{
       background: 'linear-gradient(to bottom, #F9FAFB 0%, #F3F4F6 50%, #E5E7EB 100%)'
     }}>
-      {/* الهيدر العصري - محسّن للجوال */}
-      <header className="sticky top-0 z-50 backdrop-blur-xl" style={{
-        background: 'rgba(255, 255, 255, 0.95)',
-        borderBottom: '1px solid rgba(139, 195, 74, 0.2)',
-        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05), 0 10px 30px rgba(139, 195, 74, 0.1)'
-      }}>
-        <div className="w-full px-2 sm:px-3 md:px-6 lg:px-8">
-          <div className="flex items-center justify-between gap-2 h-14 sm:h-16 md:h-20">
-            {/* الشعار العصري */}
-            <div className="flex items-center gap-1.5 sm:gap-2 md:gap-3 min-w-0 flex-1">
-              <div
-                className="w-9 h-9 sm:w-11 sm:h-11 md:w-14 md:h-14 rounded-lg sm:rounded-xl md:rounded-2xl flex items-center justify-center relative overflow-hidden group flex-shrink-0"
-                style={{
-                  background: 'linear-gradient(135deg, #8BC34A 0%, #689F38 100%)',
-                  boxShadow: '0 4px 12px rgba(139, 195, 74, 0.3)'
-                }}
-              >
-                <span className="text-lg sm:text-xl md:text-2xl lg:text-3xl group-hover:scale-110 transition-transform">🌳</span>
+      {/* الهيدر الاحترافي المطور */}
+      <header className="sticky top-0 z-50">
+        {/* خلفية متدرجة مع blur */}
+        <div className="absolute inset-0 backdrop-blur-xl" style={{
+          background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(249, 250, 251, 0.95) 100%)',
+        }} />
+
+        {/* خط زخرفي علوي */}
+        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-500 via-green-500 to-teal-500" />
+
+        <div className="relative w-full px-3 sm:px-4 md:px-6 lg:px-8">
+          <div className="flex items-center justify-between gap-3 h-16 sm:h-18 md:h-20">
+            {/* قسم الشعار والملف الشخصي */}
+            <div className="flex items-center gap-2 sm:gap-3 md:gap-4 min-w-0 flex-1">
+              {/* شعار مبتكر */}
+              <div className="relative flex-shrink-0">
                 <div
-                  className="absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity"
-                  style={{ background: 'radial-gradient(circle, white 0%, transparent 70%)' }}
-                />
+                  className="w-11 h-11 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center relative overflow-hidden group cursor-pointer"
+                  style={{
+                    background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
+                    boxShadow: '0 4px 16px rgba(16, 185, 129, 0.3), 0 0 0 4px rgba(16, 185, 129, 0.1)'
+                  }}
+                >
+                  <span className="text-2xl sm:text-3xl md:text-4xl group-hover:scale-110 transition-transform duration-300 filter drop-shadow-lg">🌳</span>
+
+                  {/* تأثير توهج */}
+                  <div
+                    className="absolute inset-0 opacity-0 group-hover:opacity-30 transition-opacity duration-300"
+                    style={{ background: 'radial-gradient(circle at center, white 0%, transparent 70%)' }}
+                  />
+
+                  {/* حلقة متحركة */}
+                  <div className="absolute inset-0 rounded-2xl border-2 border-white/30 group-hover:scale-110 transition-transform duration-500" />
+                </div>
+
+                {/* Badge النشاط */}
+                <div className="absolute -bottom-1 -right-1 w-4 h-4 sm:w-5 sm:h-5 bg-green-500 rounded-full border-2 border-white shadow-lg">
+                  <div className="absolute inset-0 bg-green-400 rounded-full animate-ping opacity-75" />
+                </div>
               </div>
+
+              {/* معلومات المستخدم */}
               <div className="min-w-0 flex-1">
-                <h1 className="text-sm sm:text-base md:text-lg lg:text-xl font-black bg-gradient-to-r from-green-600 to-green-800 bg-clip-text text-transparent truncate leading-tight">
-                  بوابة صاحب المزرعة
-                </h1>
-                <p className="text-[10px] sm:text-xs md:text-sm text-gray-600 font-semibold truncate leading-tight">
-                  {profile?.full_name || profile?.mobile_number}
-                </p>
+                <div className="flex items-center gap-2">
+                  <h1 className="text-base sm:text-lg md:text-xl font-black bg-gradient-to-r from-emerald-600 via-green-600 to-teal-600 bg-clip-text text-transparent truncate leading-tight">
+                    بوابة صاحب المزرعة
+                  </h1>
+                  <div className="hidden sm:flex items-center gap-1 px-2 py-0.5 rounded-full bg-green-50 border border-green-200">
+                    <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                    <span className="text-[10px] font-bold text-green-700">نشط</span>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2 mt-0.5">
+                  <p className="text-xs sm:text-sm text-gray-700 font-bold truncate">
+                    {profile?.full_name || 'صاحب المزرعة'}
+                  </p>
+                  {profile?.full_name && (
+                    <span className="hidden sm:inline text-xs text-gray-400">•</span>
+                  )}
+                  <p className="hidden sm:block text-xs text-gray-500 font-medium truncate" dir="ltr">
+                    {profile?.mobile_number}
+                  </p>
+                </div>
               </div>
             </div>
 
-            {/* الإجراءات العصرية - محسّنة للجوال */}
-            <div className="flex items-center gap-1 sm:gap-1.5 md:gap-2 flex-shrink-0">
-              {/* جرس الإشعارات */}
+            {/* قسم الإجراءات */}
+            <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+              {/* زر الإشعارات المطور */}
               <button
                 onClick={() => setActiveTab('notifications')}
-                className="relative p-1.5 sm:p-2 md:p-2.5 rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg group"
+                className={`
+                  relative p-2 sm:p-2.5 md:p-3
+                  rounded-xl sm:rounded-2xl
+                  transition-all duration-300
+                  hover:scale-105
+                  group
+                  ${activeTab === 'notifications'
+                    ? 'shadow-lg'
+                    : 'hover:shadow-md'
+                  }
+                `}
                 style={{
                   background: activeTab === 'notifications'
-                    ? 'linear-gradient(135deg, #8BC34A 0%, #689F38 100%)'
+                    ? 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)'
                     : 'white',
-                  border: '2px solid',
-                  borderColor: activeTab === 'notifications' ? 'transparent' : '#E5E7EB'
+                  border: activeTab === 'notifications' ? 'none' : '2px solid #E5E7EB'
                 }}
+                title="الإشعارات"
               >
                 <Bell
-                  className="w-4 h-4 sm:w-4.5 sm:h-4.5 md:w-5 md:h-5 group-hover:scale-110 transition-transform"
-                  style={{ color: activeTab === 'notifications' ? 'white' : '#6B7280' }}
+                  className={`
+                    w-5 h-5 sm:w-5.5 sm:h-5.5 md:w-6 md:h-6
+                    transition-all duration-300
+                    ${activeTab === 'notifications'
+                      ? 'text-white scale-110'
+                      : 'text-gray-600 group-hover:text-orange-500'
+                    }
+                  `}
                 />
+
                 {unreadCount > 0 && (
-                  <span
-                    className="absolute -top-0.5 -right-0.5 sm:-top-1 sm:-right-1 min-w-[16px] sm:min-w-[18px] h-4 sm:h-5 px-0.5 sm:px-1 rounded-full flex items-center justify-center text-[9px] sm:text-[10px] font-bold text-white animate-pulse"
-                    style={{
-                      background: 'linear-gradient(135deg, #EF4444, #DC2626)',
-                      boxShadow: '0 2px 8px rgba(239, 68, 68, 0.4)'
-                    }}
-                  >
-                    {unreadCount > 9 ? '9+' : unreadCount}
-                  </span>
+                  <div className="absolute -top-1 -right-1 flex items-center justify-center">
+                    <div className="absolute inset-0 bg-red-500 rounded-full animate-ping opacity-75" />
+                    <span
+                      className="relative min-w-[20px] h-5 px-1.5 rounded-full flex items-center justify-center text-[10px] font-black text-white shadow-lg"
+                      style={{
+                        background: 'linear-gradient(135deg, #EF4444 0%, #DC2626 100%)',
+                        border: '2px solid white'
+                      }}
+                    >
+                      {unreadCount > 9 ? '9+' : unreadCount}
+                    </span>
+                  </div>
                 )}
               </button>
 
               {/* زر العودة للمنصة */}
               <button
                 onClick={() => window.location.href = '/'}
-                className="hidden sm:flex p-1.5 sm:p-2 md:p-2.5 rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg bg-white border-2 border-gray-200 group"
+                className="hidden sm:flex p-2 sm:p-2.5 md:p-3 rounded-xl sm:rounded-2xl transition-all duration-300 hover:scale-105 hover:shadow-md bg-white border-2 border-gray-200 group"
                 title="العودة للمنصة الرئيسية"
               >
-                <Home className="w-4 h-4 sm:w-4.5 sm:h-4.5 md:w-5 md:h-5 text-gray-600 group-hover:text-green-600 group-hover:scale-110 transition-all" />
+                <Home className="w-5 h-5 sm:w-5.5 sm:h-5.5 md:w-6 md:h-6 text-gray-600 group-hover:text-emerald-600 group-hover:scale-110 transition-all" />
               </button>
 
-              {/* زر الخروج */}
+              {/* زر الخروج المطور */}
               <button
                 onClick={handleLogout}
-                className="p-1.5 sm:p-2 md:p-2.5 rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg bg-white border-2 border-gray-200 group"
+                className="p-2 sm:p-2.5 md:p-3 rounded-xl sm:rounded-2xl transition-all duration-300 hover:scale-105 hover:shadow-md bg-white border-2 border-gray-200 group relative overflow-hidden"
                 title="تسجيل الخروج"
               >
-                <LogOut className="w-4 h-4 sm:w-4.5 sm:h-4.5 md:w-5 md:h-5 text-gray-600 group-hover:text-red-600 group-hover:scale-110 transition-all" />
+                {/* تأثير hover */}
+                <div className="absolute inset-0 bg-red-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+                <LogOut className="relative w-5 h-5 sm:w-5.5 sm:h-5.5 md:w-6 md:h-6 text-gray-600 group-hover:text-red-600 group-hover:scale-110 transition-all" />
               </button>
             </div>
           </div>
         </div>
+
+        {/* خط سفلي مع ظل */}
+        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0" style={{
+          height: '1px',
+          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05), 0 10px 30px rgba(16, 185, 129, 0.08)'
+        }} />
       </header>
 
       {/* التبويبات المبتكرة - محسّنة للجوال */}
