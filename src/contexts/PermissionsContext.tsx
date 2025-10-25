@@ -19,6 +19,10 @@ interface PermissionsContextValue {
   isAdmin: boolean;
   currentAdminPhone: string | null;
   currentAdminRole: string | null;
+  canCreate: (moduleId: string) => boolean;
+  canEdit: (moduleId: string) => boolean;
+  canDelete: (moduleId: string) => boolean;
+  canView: (moduleId: string) => boolean;
 }
 
 const PermissionsContext = createContext<PermissionsContextValue | undefined>(undefined);
