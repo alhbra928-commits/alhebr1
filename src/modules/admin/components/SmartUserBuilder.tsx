@@ -200,10 +200,7 @@ export function SmartUserBuilder({ onClose, onSuccess, existingUsers }: SmartUse
         phone: formData.phone,
         full_name: formData.name,
         email: `${formData.phone}@temp.com`,
-        role_id: 'employee',
         is_active: activateNow,
-        job_title: formData.jobTitle,
-        department: formData.department,
       });
       console.log('✅ User created in DB:', createdUser);
 

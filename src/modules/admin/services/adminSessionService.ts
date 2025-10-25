@@ -280,10 +280,7 @@ export class AdminSessionService {
           phone: userData.phone,
           full_name: userData.full_name,
           email: userData.email,
-          role_id: userData.role_id || 'employee',
           is_active: userData.is_active !== false,
-          job_title: userData.job_title,
-          department: userData.department,
         })
         .select()
         .single();
