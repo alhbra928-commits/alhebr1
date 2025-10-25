@@ -33,6 +33,15 @@ export function AdvancedOwnerCard3D({
 }: AdvancedOwnerCard3DProps) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
+  // تسجيل الصلاحيات للتأكد
+  console.log('🔍 [AdvancedOwnerCard3D] Owner:', owner.full_name, {
+    hasEditPermission,
+    hasDeletePermission,
+    onEdit: !!onEdit,
+    onDelete: !!onDelete,
+    onViewSubmittedData: !!onViewSubmittedData
+  });
+
   // إلغاء تأكيد الحذف بعد 3 ثواني
   useEffect(() => {
     if (showDeleteConfirm) {
@@ -230,7 +239,12 @@ export function AdvancedOwnerCard3D({
       </div>
 
       {/* Action Buttons - أسفل البطاقة */}
-      <div className="px-4 pb-4 space-y-2">
+      <div className="px-4 pb-4 space-y-2 bg-blue-50 border-t-4 border-blue-500">
+        {/* علامة تأكيد ظهور القسم */}
+        <div className="text-center py-2 bg-green-500 text-white font-black">
+          ✅ قسم الأزرار (Edit={hasEditPermission ? 'نعم' : 'لا'}, Delete={hasDeletePermission ? 'نعم' : 'لا'})
+        </div>
+
         {/* عرض النموذج المرفوع */}
         <button
           onClick={handleViewClick}
