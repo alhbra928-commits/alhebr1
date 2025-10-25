@@ -32,12 +32,12 @@ export const IdeaOverviewSection: React.FC<IdeaOverviewSectionProps> = ({ onNavi
               امتلك أشجارك الخاصة
             </span>
             <br />
-            <span className="text-gray-800">في مزارع حقيقية منتجة</span>
+            <span className="text-gray-800">من مزارع منتقاة ومعتمدة</span>
           </h1>
 
           {/* الوصف */}
           <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            استثمر في الطبيعة واحصل على عوائد سنوية مستدامة من أشجار مملوكة لك بالكامل
+            استثمر في الطبيعة واحصل على عوائد سنوية ثابتة من أشجار مملوكة لك بالكامل
           </p>
 
           {/* إحصائيات سريعة */}
@@ -108,11 +108,11 @@ export const IdeaOverviewSection: React.FC<IdeaOverviewSectionProps> = ({ onNavi
                   {/* المحتوى */}
                   <div className="flex-1 text-center md:text-right">
                     <h2 className="text-3xl sm:text-4xl font-black text-amber-800 mb-4">
-                      استثمر في أشجار النخيل
+                      استثمر في أشجار النخيل الأصيلة
                     </h2>
                     <p className="text-lg text-gray-700 leading-relaxed mb-4">
-                      النخيل رمز الأصالة والعطاء المستمر. امتلك أشجار نخيل حقيقية في مزارعنا المعتمدة،
-                      واحصل على نصيبك السنوي من إنتاج التمور الفاخرة المسجّل باسمك.
+                      النخيل رمز الأصالة والعطاء المستمر. امتلك أشجار نخيل حقيقية من مزارع منتقاة ومعتمدة،
+                      واحصل على حصتك السنوية من إنتاج التمور الفاخرة المسجّلة باسمك رسمياً.
                     </p>
                     <div className="flex flex-wrap gap-2 justify-center md:justify-start">
                       <span className="px-3 py-1 rounded-full bg-amber-100 text-amber-800 text-sm font-bold">
@@ -148,11 +148,11 @@ export const IdeaOverviewSection: React.FC<IdeaOverviewSectionProps> = ({ onNavi
                   {/* المحتوى */}
                   <div className="flex-1 text-center md:text-right">
                     <h2 className="text-3xl sm:text-4xl font-black text-green-800 mb-4">
-                      استثمر في أشجار الزيتون
+                      استثمر في أشجار الزيتون المباركة
                     </h2>
                     <p className="text-lg text-gray-700 leading-relaxed mb-4">
-                      الزيتون شجرة مباركة وعطاء دائم. امتلك أشجار زيتون مثمرة من أجود الأصناف،
-                      واحصل على نصيبك من إنتاج زيت الزيتون الطبيعي المسجّل باسمك.
+                      الزيتون شجرة مباركة وعطاء دائم. امتلك أشجار زيتون مثمرة من مزارع متخصصة ومعتمدة،
+                      واحصل على حصتك من إنتاج زيت الزيتون الطبيعي المسجّل باسمك رسمياً.
                     </p>
                     <div className="flex flex-wrap gap-2 justify-center md:justify-start">
                       <span className="px-3 py-1 rounded-full bg-green-100 text-green-800 text-sm font-bold">
@@ -179,9 +179,9 @@ export const IdeaOverviewSection: React.FC<IdeaOverviewSectionProps> = ({ onNavi
             <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
               <TrendingUp className="w-7 h-7 text-white" />
             </div>
-            <h3 className="text-xl font-black text-gray-800 mb-3">استثماري مربح</h3>
+            <h3 className="text-xl font-black text-gray-800 mb-3">استثماري مستدام</h3>
             <p className="text-gray-600 leading-relaxed mb-4">
-              احصل على عوائد سنوية ثابتة من إنتاج أشجارك المملوكة لك بالكامل
+              احصل على عوائد سنوية ثابتة من إنتاج أشجارك المملوكة لك بشكل كامل وموثق
             </p>
             <div className="flex items-center gap-2 text-blue-600 font-bold text-sm">
               <BarChart3 className="w-4 h-4" />
@@ -194,9 +194,9 @@ export const IdeaOverviewSection: React.FC<IdeaOverviewSectionProps> = ({ onNavi
             <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-red-500 to-red-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
               <Heart className="w-7 h-7 text-white" />
             </div>
-            <h3 className="text-xl font-black text-gray-800 mb-3">إنساني وداعم</h3>
+            <h3 className="text-xl font-black text-gray-800 mb-3">إنساني وأخلاقي</h3>
             <p className="text-gray-600 leading-relaxed mb-4">
-              ساهم في دعم المزارعين المحليين وتنمية القطاع الزراعي بشكل مستدام
+              ساهم في دعم المزارعين وأصحاب المزارع وتنمية القطاع الزراعي بشكل عادل ومستدام
             </p>
             <div className="flex items-center gap-2 text-red-600 font-bold text-sm">
               <Users className="w-4 h-4" />
@@ -236,8 +236,8 @@ export const IdeaOverviewSection: React.FC<IdeaOverviewSectionProps> = ({ onNavi
                 <div className="w-12 h-12 rounded-full bg-gradient-to-br from-amber-500 to-amber-600 text-white font-black text-xl flex items-center justify-center mx-auto mb-4">
                   1
                 </div>
-                <h4 className="font-black text-gray-800 mb-2">اختر نوع الشجرة</h4>
-                <p className="text-sm text-gray-600">نخيل أو زيتون حسب رغبتك</p>
+                <h4 className="font-black text-gray-800 mb-2">اختر النوع</h4>
+                <p className="text-sm text-gray-600">نخيل أو زيتون أو كلاهما</p>
               </div>
               <div className="hidden md:block absolute top-1/2 left-full w-6 h-0.5 bg-gradient-to-r from-amber-300 to-transparent -translate-y-1/2" />
             </div>
@@ -248,8 +248,8 @@ export const IdeaOverviewSection: React.FC<IdeaOverviewSectionProps> = ({ onNavi
                 <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 text-white font-black text-xl flex items-center justify-center mx-auto mb-4">
                   2
                 </div>
-                <h4 className="font-black text-gray-800 mb-2">حدد العدد</h4>
-                <p className="text-sm text-gray-600">اختر عدد الأشجار المناسب</p>
+                <h4 className="font-black text-gray-800 mb-2">حدد الكمية</h4>
+                <p className="text-sm text-gray-600">اختر عدد الأشجار المناسب لك</p>
               </div>
               <div className="hidden md:block absolute top-1/2 left-full w-6 h-0.5 bg-gradient-to-r from-blue-300 to-transparent -translate-y-1/2" />
             </div>
@@ -260,8 +260,8 @@ export const IdeaOverviewSection: React.FC<IdeaOverviewSectionProps> = ({ onNavi
                 <div className="w-12 h-12 rounded-full bg-gradient-to-br from-green-500 to-green-600 text-white font-black text-xl flex items-center justify-center mx-auto mb-4">
                   3
                 </div>
-                <h4 className="font-black text-gray-800 mb-2">وثق الملكية</h4>
-                <p className="text-sm text-gray-600">احصل على شهادة رسمية</p>
+                <h4 className="font-black text-gray-800 mb-2">وثق ملكيتك</h4>
+                <p className="text-sm text-gray-600">احصل على شهادة ملكية رسمية</p>
               </div>
               <div className="hidden md:block absolute top-1/2 left-full w-6 h-0.5 bg-gradient-to-r from-green-300 to-transparent -translate-y-1/2" />
             </div>
@@ -271,8 +271,8 @@ export const IdeaOverviewSection: React.FC<IdeaOverviewSectionProps> = ({ onNavi
               <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-purple-600 text-white font-black text-xl flex items-center justify-center mx-auto mb-4">
                 4
               </div>
-              <h4 className="font-black text-gray-800 mb-2">استلم العوائد</h4>
-              <p className="text-sm text-gray-600">عوائد سنوية من الإنتاج</p>
+              <h4 className="font-black text-gray-800 mb-2">استلم حصتك</h4>
+              <p className="text-sm text-gray-600">حصتك السنوية من الإنتاج</p>
             </div>
           </div>
         </div>
@@ -295,8 +295,8 @@ export const IdeaOverviewSection: React.FC<IdeaOverviewSectionProps> = ({ onNavi
             </h3>
 
             <p className="text-lg sm:text-xl text-gray-700 leading-relaxed mb-8">
-              كل شجرة موثقة <span className="font-black text-amber-700">برقم تسلسلي فريد</span> داخل النظام،
-              وموقعها محدد بدقة في المزرعة. أنت لست مشتركاً، بل <span className="font-black text-amber-700">مالك حقيقي</span> لأشجار منتجة.
+              كل شجرة موثقة <span className="font-black text-amber-700">برقم تسلسلي فريد</span> داخل المنصة،
+              وموقعها محدد بدقة في المزرعة المعتمدة. أنت لست مشتركاً، بل <span className="font-black text-amber-700">مالك فعلي</span> لأشجار حقيقية منتجة.
             </p>
 
             <div className="flex flex-wrap gap-4 justify-center">
@@ -347,7 +347,7 @@ export const IdeaOverviewSection: React.FC<IdeaOverviewSectionProps> = ({ onNavi
           </button>
 
           <p className="mt-6 text-gray-600 font-medium">
-            اكتشف المزارع المتاحة واختر أشجارك بكل سهولة
+            استعرض المزارع المتاحة واختر أشجارك الآن بكل سهولة
           </p>
         </div>
       </div>
