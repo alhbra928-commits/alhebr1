@@ -18,15 +18,13 @@ import {
   Map,
   Hash,
   AlertCircle,
-  X,
-  Info,
-  Shield,
-  Activity,
   Eye,
   Sparkles,
   Star,
-  Crown
+  Crown,
+  MoreVertical
 } from 'lucide-react';
+import { Card3D } from '../../../components/ui/Card3D';
 import { FarmOwner } from '../ownersService';
 
 interface AdvancedOwnerCard3DProps {
@@ -46,7 +44,7 @@ export function AdvancedOwnerCard3D({
   hasEditPermission = false,
   hasDeletePermission = false
 }: AdvancedOwnerCard3DProps) {
-  const [isHovered, setIsHovered] = useState(false);
+  const [showActions, setShowActions] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const getStatusConfig = () => {
@@ -55,34 +53,31 @@ export function AdvancedOwnerCard3D({
         return {
           label: 'نشط',
           icon: CheckCircle,
-          gradient: 'from-green-500 via-emerald-500 to-green-600',
+          gradient: 'from-green-500 to-emerald-600',
           bg: 'bg-green-50',
           text: 'text-green-700',
-          border: 'border-green-300',
-          shadow: 'shadow-green-500/50',
-          glow: 'from-green-400/20 to-emerald-400/20'
+          border: 'border-green-400',
+          iconColor: 'text-green-600'
         };
       case 'frozen':
         return {
           label: 'مجمد',
           icon: Snowflake,
-          gradient: 'from-blue-500 via-cyan-500 to-blue-600',
+          gradient: 'from-blue-500 to-cyan-600',
           bg: 'bg-blue-50',
           text: 'text-blue-700',
-          border: 'border-blue-300',
-          shadow: 'shadow-blue-500/50',
-          glow: 'from-blue-400/20 to-cyan-400/20'
+          border: 'border-blue-400',
+          iconColor: 'text-blue-600'
         };
       default:
         return {
           label: 'غير محدد',
           icon: AlertCircle,
-          gradient: 'from-gray-500 via-gray-500 to-gray-600',
+          gradient: 'from-gray-500 to-gray-600',
           bg: 'bg-gray-50',
           text: 'text-gray-700',
-          border: 'border-gray-300',
-          shadow: 'shadow-gray-500/50',
-          glow: 'from-gray-400/20 to-gray-400/20'
+          border: 'border-gray-400',
+          iconColor: 'text-gray-600'
         };
     }
   };
@@ -101,205 +96,181 @@ export function AdvancedOwnerCard3D({
   };
 
   return (
-    <div
-      className="group relative"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
-      {/* 3D Card Container with Enhanced Depth */}
-      <div
-        className="relative bg-white rounded-3xl border-2 border-gray-200/50 overflow-hidden transition-all duration-700"
-        style={{
-          transform: isHovered
-            ? 'perspective(1500px) rotateX(2deg) translateY(-8px)'
-            : 'perspective(1500px) rotateX(0deg) translateY(0)',
-          transformStyle: 'preserve-3d',
-          boxShadow: isHovered
-            ? '0 30px 60px -12px rgba(0, 0, 0, 0.25), 0 18px 36px -18px rgba(0, 0, 0, 0.3)'
-            : '0 10px 30px -5px rgba(0, 0, 0, 0.15)'
-        }}
-      >
-        {/* Premium Animated Background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-amber-50/30 via-white to-orange-50/20 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+    <Card3D interactive={false}>
+      <div className={`relative bg-white rounded-2xl overflow-hidden border-4 ${statusConfig.border} ${statusConfig.bg} group cursor-pointer transition-all duration-300`}>
+        {/* Header Image/Avatar Section */}
+        <div className="relative h-48 bg-gradient-to-br from-amber-100 via-orange-50 to-yellow-100 flex items-center justify-center overflow-hidden">
+          {/* Decorative Background */}
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-amber-400 rounded-full blur-3xl" />
+            <div className="absolute bottom-0 left-0 w-32 h-32 bg-orange-400 rounded-full blur-3xl" />
+          </div>
 
-        {/* Decorative Glow Effects */}
-        <div className={`absolute top-0 right-0 w-96 h-96 bg-gradient-to-br ${statusConfig.glow} rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-all duration-700`} />
-        <div className="absolute bottom-0 left-0 w-80 h-80 bg-gradient-to-tr from-amber-200/10 to-transparent rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-all duration-700" />
+          {/* Premium Avatar */}
+          <div className="relative z-10">
+            <div className="relative group/avatar">
+              {/* Glow Effect */}
+              <div className={`absolute inset-0 bg-gradient-to-br ${statusConfig.gradient} rounded-3xl blur-2xl opacity-40 group-hover/avatar:opacity-60 transition-all duration-500`} />
 
-        {/* Sparkle Effects on Hover */}
-        {isHovered && (
-          <>
-            <div className="absolute top-10 right-10 w-3 h-3 bg-amber-400 rounded-full animate-sparkle" />
-            <div className="absolute top-20 right-32 w-2 h-2 bg-yellow-400 rounded-full animate-sparkle" style={{ animationDelay: '0.3s' }} />
-            <div className="absolute top-32 right-20 w-2 h-2 bg-orange-400 rounded-full animate-sparkle" style={{ animationDelay: '0.6s' }} />
-          </>
-        )}
-
-        {/* Main Content */}
-        <div className="relative">
-          {/* Header Section with Premium Design */}
-          <div className="relative p-8 border-b-2 border-gray-100">
-            {/* Status Badge - Top Right */}
-            <div className="absolute top-6 left-6">
-              <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full ${statusConfig.bg} ${statusConfig.text} border-2 ${statusConfig.border} font-black text-sm shadow-lg`}>
-                <StatusIcon className="w-4 h-4 animate-pulse" />
-                <span>{statusConfig.label}</span>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-6 mt-12">
-              {/* Ultra Premium Avatar */}
-              <div className="relative group/avatar flex-shrink-0">
-                {/* Glow Background */}
-                <div className={`absolute inset-0 bg-gradient-to-br ${statusConfig.gradient} rounded-3xl blur-2xl opacity-40 group-hover/avatar:opacity-60 transition-all duration-500`} />
-
-                {/* Avatar Container with 3D Effect */}
-                <div
-                  className={`relative w-32 h-32 rounded-3xl bg-gradient-to-br ${statusConfig.gradient} flex items-center justify-center shadow-2xl ring-4 ring-white/80 group-hover/avatar:ring-amber-300/80 transition-all duration-500`}
-                  style={{
-                    transform: isHovered ? 'translateZ(20px) scale(1.05)' : 'translateZ(0) scale(1)'
-                  }}
-                >
-                  <UserCheck className="w-16 h-16 text-white group-hover/avatar:scale-110 transition-transform duration-500" strokeWidth={2.5} />
-                </div>
-
-                {/* Floating Badge */}
-                <div className={`absolute -bottom-3 -right-3 w-12 h-12 bg-gradient-to-br ${statusConfig.gradient} rounded-full flex items-center justify-center shadow-xl ring-4 ring-white animate-float`}>
-                  <StatusIcon className="w-6 h-6 text-white" strokeWidth={2.5} />
-                </div>
-
-                {/* Premium Star */}
-                <div className="absolute -top-2 -left-2 w-8 h-8 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center shadow-xl ring-2 ring-white animate-spin-slow">
-                  <Star className="w-4 h-4 text-white" fill="white" />
-                </div>
+              {/* Avatar Container */}
+              <div className={`relative w-32 h-32 rounded-3xl bg-gradient-to-br ${statusConfig.gradient} flex items-center justify-center shadow-2xl ring-4 ring-white/90 group-hover/avatar:scale-110 transition-all duration-500`}>
+                <UserCheck className="w-16 h-16 text-white" strokeWidth={2.5} />
               </div>
 
-              {/* Owner Information */}
-              <div className="flex-1 min-w-0">
-                <div className="flex items-start justify-between gap-4 mb-4">
-                  <div className="flex-1">
-                    <h3 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-gray-900 via-amber-900 to-gray-900 mb-2 leading-tight">
-                      {owner.full_name}
-                    </h3>
-                    <div className="flex items-center gap-2">
-                      <Crown className="w-5 h-5 text-amber-600" />
-                      <span className="text-sm font-bold text-amber-700">صاحب مزرعة معتمد</span>
-                    </div>
-                  </div>
-                </div>
+              {/* Crown Badge */}
+              <div className="absolute -top-3 -right-3 w-10 h-10 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center shadow-xl ring-4 ring-white">
+                <Crown className="w-5 h-5 text-white" />
+              </div>
 
-                {/* Contact Grid with Icons */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 mt-6">
-                  {/* Phone */}
-                  <div className="group/item flex items-center gap-3 p-3 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-2xl border-2 border-blue-200/50 hover:border-blue-400 hover:shadow-lg transition-all">
-                    <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-600 flex items-center justify-center shadow-lg group-hover/item:scale-110 transition-transform">
-                      <Phone className="w-5 h-5 text-white" strokeWidth={2.5} />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-xs text-blue-600 font-bold mb-0.5">رقم الجوال</p>
-                      <p className="text-base font-black text-blue-900" dir="ltr">{owner.mobile_number}</p>
-                    </div>
-                  </div>
-
-                  {/* Email */}
-                  {owner.email && (
-                    <div className="group/item flex items-center gap-3 p-3 bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl border-2 border-purple-200/50 hover:border-purple-400 hover:shadow-lg transition-all">
-                      <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center shadow-lg group-hover/item:scale-110 transition-transform">
-                        <Mail className="w-5 h-5 text-white" strokeWidth={2.5} />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-xs text-purple-600 font-bold mb-0.5">البريد الإلكتروني</p>
-                        <p className="text-sm font-bold text-purple-900 truncate">{owner.email}</p>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Location */}
-                  <div className="group/item flex items-center gap-3 p-3 bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl border-2 border-green-200/50 hover:border-green-400 hover:shadow-lg transition-all">
-                    <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-lg group-hover/item:scale-110 transition-transform">
-                      <MapPin className="w-5 h-5 text-white" strokeWidth={2.5} />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-xs text-green-600 font-bold mb-0.5">الموقع</p>
-                      <p className="text-base font-black text-green-900">{owner.city}, {owner.region}</p>
-                    </div>
-                  </div>
-
-                  {/* Created Date */}
-                  <div className="group/item flex items-center gap-3 p-3 bg-gradient-to-r from-amber-50 to-orange-50 rounded-2xl border-2 border-amber-200/50 hover:border-amber-400 hover:shadow-lg transition-all">
-                    <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-lg group-hover/item:scale-110 transition-transform">
-                      <Calendar className="w-5 h-5 text-white" strokeWidth={2.5} />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-xs text-amber-600 font-bold mb-0.5">تاريخ الإضافة</p>
-                      <p className="text-sm font-bold text-amber-900">
-                        {new Date(owner.created_at).toLocaleDateString('ar-SA')}
-                      </p>
-                    </div>
-                  </div>
-                </div>
+              {/* Status Badge */}
+              <div className={`absolute -bottom-2 -left-2 w-10 h-10 bg-gradient-to-br ${statusConfig.gradient} rounded-full flex items-center justify-center shadow-xl ring-4 ring-white`}>
+                <StatusIcon className="w-5 h-5 text-white" />
               </div>
             </div>
           </div>
 
-          {/* Farm Statistics - Premium Cards */}
-          <div className="relative p-6 bg-gradient-to-br from-gray-50 to-white">
-            <div className="flex items-center gap-2 mb-4">
-              <Sparkles className="w-5 h-5 text-amber-600" />
-              <h4 className="text-lg font-black text-gray-900">معلومات المزرعة</h4>
+          {/* Top Right Badge */}
+          <div className="absolute top-3 right-3 bg-white/95 backdrop-blur-sm px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 shadow-lg">
+            <Star className="h-3 w-3 text-amber-600" />
+            صاحب مزرعة
+          </div>
+        </div>
+
+        {/* Content */}
+        <div className="p-6">
+          {/* Header */}
+          <div className="flex items-start justify-between mb-4">
+            <div className="flex-1">
+              <h3 className="text-xl font-black text-gray-900 mb-2 flex items-center gap-2">
+                {owner.full_name}
+              </h3>
+              <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold border-2 ${statusConfig.border} ${statusConfig.bg}`}>
+                <StatusIcon className={`h-3.5 w-3.5 ${statusConfig.iconColor}`} />
+                {statusConfig.label}
+              </div>
             </div>
 
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-              {/* Farm Type */}
-              <div className="group/stat relative bg-white rounded-2xl p-5 border-2 border-gray-200/50 hover:border-amber-400 hover:shadow-xl transition-all duration-300 overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-orange-500/5 opacity-0 group-hover/stat:opacity-100 transition-opacity" />
-                <div className="relative">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center mb-3 shadow-lg group-hover/stat:scale-110 group-hover/stat:rotate-12 transition-all">
-                    <TreePine className="w-6 h-6 text-white" strokeWidth={2.5} />
-                  </div>
-                  <p className="text-xs text-gray-600 font-bold mb-1">نوع المزرعة</p>
-                  <p className="text-xl font-black text-gray-900">{owner.farm_type}</p>
+            {/* Actions Menu */}
+            <div className="relative">
+              <button
+                onClick={() => setShowActions(!showActions)}
+                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              >
+                <MoreVertical className="h-5 w-5 text-gray-600" />
+              </button>
+
+              {showActions && (
+                <div className="absolute left-0 top-full mt-2 bg-white rounded-xl shadow-2xl border-2 border-gray-200 py-2 min-w-[180px] z-50">
+                  <button
+                    onClick={() => {
+                      onViewSubmittedData?.(owner);
+                      setShowActions(false);
+                    }}
+                    className="w-full px-4 py-2 text-right hover:bg-amber-50 transition-colors flex items-center gap-3 text-sm font-bold text-gray-700"
+                  >
+                    <Eye className="h-4 w-4 text-amber-600" />
+                    عرض النموذج المرفوع
+                  </button>
+
+                  {hasEditPermission && (
+                    <button
+                      onClick={() => {
+                        onEdit?.(owner);
+                        setShowActions(false);
+                      }}
+                      className="w-full px-4 py-2 text-right hover:bg-blue-50 transition-colors flex items-center gap-3 text-sm font-bold text-gray-700"
+                    >
+                      <Edit className="h-4 w-4 text-blue-600" />
+                      تعديل
+                    </button>
+                  )}
+
+                  {hasDeletePermission && (
+                    <button
+                      onClick={handleDeleteClick}
+                      className={`w-full px-4 py-2 text-right transition-colors flex items-center gap-3 text-sm font-bold ${
+                        showDeleteConfirm
+                          ? 'bg-red-100 text-red-700'
+                          : 'hover:bg-red-50 text-gray-700'
+                      }`}
+                    >
+                      <Trash2 className="h-4 w-4 text-red-600" />
+                      {showDeleteConfirm ? 'تأكيد الحذف؟' : 'حذف'}
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Contact Info */}
+          <div className="space-y-3 mb-4">
+            <div className="flex items-center gap-2 text-sm text-gray-700">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-600 flex items-center justify-center flex-shrink-0">
+                <Phone className="h-4 w-4 text-white" />
+              </div>
+              <span className="font-bold" dir="ltr">{owner.mobile_number}</span>
+            </div>
+
+            {owner.email && (
+              <div className="flex items-center gap-2 text-sm text-gray-700">
+                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center flex-shrink-0">
+                  <Mail className="h-4 w-4 text-white" />
+                </div>
+                <span className="font-medium truncate">{owner.email}</span>
+              </div>
+            )}
+
+            <div className="flex items-center gap-2 text-sm text-gray-700">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center flex-shrink-0">
+                <MapPin className="h-4 w-4 text-white" />
+              </div>
+              <span className="font-bold">{owner.city}, {owner.region}</span>
+            </div>
+          </div>
+
+          {/* Farm Stats */}
+          <div className="mb-4 bg-gradient-to-r from-gray-50 to-white rounded-xl p-4 border-2 border-gray-200">
+            <div className="flex items-center gap-2 mb-3">
+              <Sparkles className="h-4 w-4 text-amber-600" />
+              <h4 className="text-sm font-black text-gray-900">معلومات المزرعة</h4>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div className="flex items-center gap-2">
+                <TreePine className="h-4 w-4 text-amber-600 flex-shrink-0" />
+                <div>
+                  <p className="text-xs text-gray-600">النوع</p>
+                  <p className="text-sm font-black text-gray-900">{owner.farm_type}</p>
                 </div>
               </div>
 
-              {/* Farm Area */}
-              <div className="group/stat relative bg-white rounded-2xl p-5 border-2 border-gray-200/50 hover:border-blue-400 hover:shadow-xl transition-all duration-300 overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-cyan-500/5 opacity-0 group-hover/stat:opacity-100 transition-opacity" />
-                <div className="relative">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-600 flex items-center justify-center mb-3 shadow-lg group-hover/stat:scale-110 group-hover/stat:rotate-12 transition-all">
-                    <Map className="w-6 h-6 text-white" strokeWidth={2.5} />
-                  </div>
-                  <p className="text-xs text-gray-600 font-bold mb-1">المساحة</p>
-                  <p className="text-xl font-black text-gray-900">
-                    {owner.farm_area} <span className="text-sm">{owner.farm_area_unit}</span>
+              <div className="flex items-center gap-2">
+                <Map className="h-4 w-4 text-blue-600 flex-shrink-0" />
+                <div>
+                  <p className="text-xs text-gray-600">المساحة</p>
+                  <p className="text-sm font-black text-gray-900">
+                    {owner.farm_area} {owner.farm_area_unit}
                   </p>
                 </div>
               </div>
 
-              {/* Price */}
-              <div className="group/stat relative bg-white rounded-2xl p-5 border-2 border-gray-200/50 hover:border-green-400 hover:shadow-xl transition-all duration-300 overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-emerald-500/5 opacity-0 group-hover/stat:opacity-100 transition-opacity" />
-                <div className="relative">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center mb-3 shadow-lg group-hover/stat:scale-110 group-hover/stat:rotate-12 transition-all">
-                    <DollarSign className="w-6 h-6 text-white" strokeWidth={2.5} />
-                  </div>
-                  <p className="text-xs text-gray-600 font-bold mb-1">السعر الفعلي</p>
-                  <p className="text-lg font-black text-gray-900">
-                    {owner.actual_price.toLocaleString('ar-SA')} <span className="text-xs">ر.س</span>
+              <div className="flex items-center gap-2">
+                <DollarSign className="h-4 w-4 text-green-600 flex-shrink-0" />
+                <div>
+                  <p className="text-xs text-gray-600">السعر</p>
+                  <p className="text-xs font-black text-gray-900">
+                    {owner.actual_price.toLocaleString('ar-SA')} ر.س
                   </p>
                 </div>
               </div>
 
-              {/* Payment Grace */}
-              <div className="group/stat relative bg-white rounded-2xl p-5 border-2 border-gray-200/50 hover:border-purple-400 hover:shadow-xl transition-all duration-300 overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-pink-500/5 opacity-0 group-hover/stat:opacity-100 transition-opacity" />
-                <div className="relative">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center mb-3 shadow-lg group-hover/stat:scale-110 group-hover/stat:rotate-12 transition-all">
-                    <Clock className="w-6 h-6 text-white" strokeWidth={2.5} />
-                  </div>
-                  <p className="text-xs text-gray-600 font-bold mb-1">مهلة السداد</p>
-                  <p className="text-xl font-black text-gray-900">
-                    {owner.payment_grace_period} <span className="text-sm">يوم</span>
+              <div className="flex items-center gap-2">
+                <Clock className="h-4 w-4 text-purple-600 flex-shrink-0" />
+                <div>
+                  <p className="text-xs text-gray-600">المهلة</p>
+                  <p className="text-sm font-black text-gray-900">
+                    {owner.payment_grace_period} يوم
                   </p>
                 </div>
               </div>
@@ -307,174 +278,70 @@ export function AdvancedOwnerCard3D({
           </div>
 
           {/* Location Details */}
-          <div className="relative p-6 border-t-2 border-gray-100 bg-gradient-to-br from-white to-green-50/30">
-            <div className="flex items-center gap-2 mb-4">
-              <MapPin className="w-5 h-5 text-green-600" />
-              <h4 className="text-lg font-black text-gray-900">تفاصيل موقع المزرعة</h4>
+          <div className="mb-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-4 border-2 border-green-200">
+            <div className="flex items-center gap-2 mb-3">
+              <MapPin className="h-4 w-4 text-green-600" />
+              <h4 className="text-sm font-black text-gray-900">موقع المزرعة</h4>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="flex items-start gap-3 p-4 bg-white rounded-xl border-2 border-green-200/50 shadow-sm">
-                <Building className="w-5 h-5 text-green-600 mt-1 flex-shrink-0" />
-                <div>
-                  <p className="text-sm text-gray-600 font-bold mb-1">المنطقة</p>
-                  <p className="text-base font-black text-gray-900">{owner.farm_location_region}</p>
-                </div>
+            <div className="space-y-2 text-sm">
+              <div className="flex items-center gap-2">
+                <Building className="h-3.5 w-3.5 text-green-600 flex-shrink-0" />
+                <span className="text-gray-700"><span className="font-bold">المنطقة:</span> {owner.farm_location_region}</span>
               </div>
 
-              <div className="flex items-start gap-3 p-4 bg-white rounded-xl border-2 border-green-200/50 shadow-sm">
-                <Home className="w-5 h-5 text-green-600 mt-1 flex-shrink-0" />
-                <div>
-                  <p className="text-sm text-gray-600 font-bold mb-1">المدينة</p>
-                  <p className="text-base font-black text-gray-900">{owner.farm_location_city}</p>
-                </div>
+              <div className="flex items-center gap-2">
+                <Home className="h-3.5 w-3.5 text-green-600 flex-shrink-0" />
+                <span className="text-gray-700"><span className="font-bold">المدينة:</span> {owner.farm_location_city}</span>
               </div>
 
-              <div className="flex items-start gap-3 p-4 bg-white rounded-xl border-2 border-blue-200/50 shadow-sm">
-                <Hash className="w-5 h-5 text-blue-600 mt-1 flex-shrink-0" />
-                <div>
-                  <p className="text-sm text-gray-600 font-bold mb-1">رقم الصك</p>
-                  <p className="text-base font-black text-gray-900">{owner.deed_number}</p>
-                </div>
+              <div className="flex items-center gap-2">
+                <Hash className="h-3.5 w-3.5 text-blue-600 flex-shrink-0" />
+                <span className="text-gray-700"><span className="font-bold">الصك:</span> {owner.deed_number}</span>
               </div>
             </div>
-
-            {owner.farm_location_description && (
-              <div className="mt-4 p-4 bg-white rounded-xl border-2 border-gray-200/50 shadow-sm">
-                <div className="flex items-start gap-3">
-                  <Map className="w-5 h-5 text-gray-600 mt-1 flex-shrink-0" />
-                  <div>
-                    <p className="text-sm text-gray-600 font-bold mb-1">وصف الموقع</p>
-                    <p className="text-base font-medium text-gray-900 leading-relaxed">
-                      {owner.farm_location_description}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
 
-          {/* Admin Notes & Frozen Info */}
-          {(owner.admin_notes || (owner.status === 'frozen' && owner.frozen_reason)) && (
-            <div className="relative p-6 border-t-2 border-gray-100 bg-gradient-to-br from-white to-amber-50/30">
-              {owner.admin_notes && (
-                <div className="mb-4">
-                  <div className="flex items-center gap-2 mb-3">
-                    <Info className="w-5 h-5 text-amber-600" />
-                    <h4 className="text-lg font-black text-gray-900">ملاحظات إدارية</h4>
-                  </div>
-                  <div className="p-4 bg-white rounded-xl border-2 border-amber-200/50 shadow-sm">
-                    <p className="text-base font-medium text-gray-900 leading-relaxed">{owner.admin_notes}</p>
-                  </div>
-                </div>
-              )}
-
-              {owner.status === 'frozen' && owner.frozen_reason && (
+          {/* Admin Notes */}
+          {owner.admin_notes && (
+            <div className="mb-4 bg-amber-50 rounded-xl p-3 border-2 border-amber-200">
+              <div className="flex items-start gap-2">
+                <FileText className="h-4 w-4 text-amber-600 mt-0.5 flex-shrink-0" />
                 <div>
-                  <div className="flex items-center gap-2 mb-3">
-                    <Shield className="w-5 h-5 text-red-600" />
-                    <h4 className="text-lg font-black text-gray-900">معلومات التجميد</h4>
-                  </div>
-                  <div className="p-4 bg-white rounded-xl border-2 border-red-200/50 shadow-sm">
-                    <p className="text-base font-medium text-gray-900 mb-2">{owner.frozen_reason}</p>
-                    {owner.frozen_at && (
-                      <p className="text-sm text-gray-600">
-                        <Calendar className="w-4 h-4 inline ml-1" />
-                        {new Date(owner.frozen_at).toLocaleString('ar-SA')}
-                      </p>
-                    )}
-                  </div>
+                  <p className="text-xs font-bold text-amber-900 mb-1">ملاحظات</p>
+                  <p className="text-xs text-gray-700 leading-relaxed">{owner.admin_notes}</p>
                 </div>
-              )}
+              </div>
             </div>
           )}
 
-          {/* Action Buttons - Enhanced 3D Design */}
-          <div className="relative p-6 bg-gradient-to-r from-gray-50 to-white border-t-2 border-gray-100">
-            <div className="flex items-center justify-center gap-4 flex-wrap">
-              {/* View Submitted Data Button */}
-              <button
-                onClick={() => onViewSubmittedData?.(owner)}
-                className="group/btn flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 text-white rounded-2xl font-black text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 relative overflow-hidden"
-              >
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent translate-x-[-100%] group-hover/btn:translate-x-[100%] transition-transform duration-1000" />
-                <Eye className="w-6 h-6 relative z-10 group-hover/btn:scale-110 transition-transform" strokeWidth={2.5} />
-                <span className="relative z-10">عرض النموذج المرفوع</span>
-              </button>
-
-              {hasEditPermission && (
-                <button
-                  onClick={() => onEdit?.(owner)}
-                  className="group/btn flex items-center gap-3 px-6 py-4 bg-gradient-to-r from-blue-500 to-cyan-600 text-white rounded-2xl font-black shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 relative overflow-hidden"
-                >
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent translate-x-[-100%] group-hover/btn:translate-x-[100%] transition-transform duration-1000" />
-                  <Edit className="w-5 h-5 relative z-10 group-hover/btn:scale-110 transition-transform" strokeWidth={2.5} />
-                  <span className="relative z-10">تعديل</span>
-                </button>
-              )}
-
-              {hasDeletePermission && (
-                <button
-                  onClick={handleDeleteClick}
-                  className={`group/btn flex items-center gap-3 px-6 py-4 rounded-2xl font-black shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 relative overflow-hidden ${
-                    showDeleteConfirm
-                      ? 'bg-gradient-to-r from-red-600 to-pink-700 animate-pulse'
-                      : 'bg-gradient-to-r from-red-500 to-pink-600'
-                  } text-white`}
-                >
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent translate-x-[-100%] group-hover/btn:translate-x-[100%] transition-transform duration-1000" />
-                  <Trash2 className="w-5 h-5 relative z-10 group-hover/btn:scale-110 transition-transform" strokeWidth={2.5} />
-                  <span className="relative z-10">
-                    {showDeleteConfirm ? 'تأكيد الحذف؟' : 'حذف'}
-                  </span>
-                </button>
-              )}
-            </div>
-          </div>
-
-          {/* System Info Footer */}
-          <div className="relative p-4 bg-gradient-to-r from-gray-100 to-gray-50 border-t border-gray-200">
-            <div className="flex items-center justify-between text-sm text-gray-600">
-              <div className="flex items-center gap-2">
-                <Activity className="w-4 h-4" />
-                <span className="font-medium">آخر تحديث: {new Date(owner.updated_at).toLocaleString('ar-SA')}</span>
+          {/* Frozen Info */}
+          {owner.status === 'frozen' && owner.frozen_reason && (
+            <div className="mb-4 bg-red-50 rounded-xl p-3 border-2 border-red-200">
+              <div className="flex items-start gap-2">
+                <Snowflake className="h-4 w-4 text-red-600 mt-0.5 flex-shrink-0" />
+                <div>
+                  <p className="text-xs font-bold text-red-900 mb-1">سبب التجميد</p>
+                  <p className="text-xs text-gray-700 leading-relaxed">{owner.frozen_reason}</p>
+                </div>
               </div>
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-bold text-gray-500">ID: {owner.id.slice(0, 8)}</span>
+            </div>
+          )}
+
+          {/* Footer */}
+          <div className="pt-4 border-t-2 border-gray-100">
+            <div className="flex items-center justify-between text-xs text-gray-500">
+              <div className="flex items-center gap-1.5">
+                <Calendar className="h-3.5 w-3.5" />
+                <span>{new Date(owner.created_at).toLocaleDateString('ar-SA')}</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span className="font-mono">{owner.id.slice(0, 8)}</span>
               </div>
             </div>
           </div>
         </div>
       </div>
-
-      <style>{`
-        @keyframes sparkle {
-          0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
-          50% { opacity: 1; transform: scale(1.5) rotate(180deg); }
-        }
-
-        @keyframes float {
-          0%, 100% { transform: translateY(0px) rotate(0deg); }
-          50% { transform: translateY(-8px) rotate(5deg); }
-        }
-
-        @keyframes spin-slow {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-
-        .animate-sparkle {
-          animation: sparkle 2s ease-in-out infinite;
-        }
-
-        .animate-float {
-          animation: float 3s ease-in-out infinite;
-        }
-
-        .animate-spin-slow {
-          animation: spin-slow 8s linear infinite;
-        }
-      `}</style>
-    </div>
+    </Card3D>
   );
 }
