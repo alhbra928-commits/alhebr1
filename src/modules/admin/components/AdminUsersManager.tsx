@@ -113,23 +113,64 @@ export function AdminUsersManager() {
   };
 
   const handleDeleteUser = async (user: AdminUser) => {
-    if (!confirm(`⚠️ هل أنت متأكد من حذف المستخدم "${user.name}"؟\n\nهذا الإجراء لا يمكن التراجع عنه!`)) return;
+    // حماية خاصة للمدير العام (0500000000)
+    const isSuperAdmin = user.phone === '0500000000' || user.role === 'super_admin';
+
+    if (isSuperAdmin) {
+      // التحذير الأول - خاص بالمدير العام
+      const firstConfirm = confirm(
+        `🚨 تحذير: أنت على وشك حذف المدير العام!\n\n` +
+        `👤 المستخدم: ${user.name}\n` +
+        `📱 الجوال: ${user.phone}\n\n` +
+        `⚠️ هذا المستخدم لديه صلاحيات كاملة على النظام!\n\n` +
+        `هل تريد المتابعة؟`
+      );
+
+      if (!firstConfirm) return;
+
+      // التحذير الثاني - تأكيد نهائي
+      const secondConfirm = confirm(
+        `🛑 تأكيد نهائي!\n\n` +
+        `سيتم حذف جميع بيانات المدير العام:\n` +
+        `✓ بيانات الحساب\n` +
+        `✓ الصلاحيات على جميع الأقسام\n` +
+        `✓ السجلات والجلسات\n\n` +
+        `⚠️ هذا الإجراء لا يمكن التراجع عنه!\n\n` +
+        `اكتب "نعم" للتأكيد:`
+      );
+
+      if (!secondConfirm) return;
+
+      // طلب كتابة "نعم" للتأكيد النهائي
+      const finalConfirmation = prompt(
+        `⚠️ للمتابعة في حذف المدير العام\n\n` +
+        `اكتب كلمة "حذف نهائي" بالضبط:`
+      );
+
+      if (finalConfirmation !== 'حذف نهائي') {
+        alert('❌ تم إلغاء العملية. لم يتم كتابة التأكيد الصحيح.');
+        return;
+      }
+    } else {
+      // تحذير عادي للمستخدمين الآخرين
+      if (!confirm(`⚠️ هل أنت متأكد من حذف المستخدم "${user.name}"؟\n\nهذا الإجراء لا يمكن التراجع عنه!`)) return;
+    }
 
     try {
       await AdminSessionService.addAccessLog(
         AdminSessionService.getCurrentSession().admin?.phone || '',
         AdminSessionService.getCurrentSession().admin?.name || '',
         'delete_user',
-        `حذف المستخدم: ${user.name} (${user.phone})`,
+        `حذف المستخدم${isSuperAdmin ? ' (المدير العام)' : ''}: ${user.name} (${user.phone})`,
         'success'
       );
 
-      AdminUsersStorage.remove(user.phone);
+      await AdminUsersStorage.remove(user.phone);
       loadUsers();
-      alert('تم حذف المستخدم بنجاح');
+      alert(`✅ تم حذف المستخدم "${user.name}" بنجاح`);
     } catch (error) {
       console.error('Error deleting user:', error);
-      alert('حدث خطأ في حذف المستخدم');
+      alert('❌ حدث خطأ في حذف المستخدم');
     }
   };
 

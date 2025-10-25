@@ -168,10 +168,44 @@ export class AdminUsersStorage {
     }
   }
 
-  static remove(phone: string): void {
+  static async remove(phone: string): Promise<void> {
+    // حذف من localStorage
     const users = this.getAll();
     const filtered = users.filter(u => u.phone !== phone);
     localStorage.setItem(LOCAL_USERS_KEY, JSON.stringify(filtered));
+
+    // حذف من قاعدة البيانات
+    try {
+      console.log('🗑️ [AdminUsersStorage] Removing user from DB:', phone);
+
+      // حذف المستخدم من admin_users
+      const { error: userError } = await supabase
+        .from('admin_users')
+        .delete()
+        .eq('phone', phone);
+
+      if (userError) {
+        console.error('❌ Error deleting user from admin_users:', userError);
+      } else {
+        console.log('✅ User deleted from admin_users');
+      }
+
+      // حذف الصلاحيات من admin_module_permissions
+      const { error: permError } = await supabase
+        .from('admin_module_permissions')
+        .delete()
+        .eq('admin_phone', phone);
+
+      if (permError) {
+        console.error('❌ Error deleting permissions:', permError);
+      } else {
+        console.log('✅ Permissions deleted from admin_module_permissions');
+      }
+
+      console.log('✅✅✅ User and permissions fully removed');
+    } catch (error) {
+      console.error('❌ Error in remove:', error);
+    }
   }
 
   static updateLastLogin(phone: string): void {

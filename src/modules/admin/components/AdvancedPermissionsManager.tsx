@@ -107,15 +107,45 @@ export function AdvancedPermissionsManager() {
   };
 
   const handleDeletePermission = async (permId: string) => {
-    if (!confirm('هل تريد حذف هذه الصلاحية؟')) return;
+    const permission = permissions.find(p => p.id === permId);
+    if (!permission) return;
+
+    // حماية خاصة للمدير العام (0500000000)
+    const isSuperAdmin = permission.admin_phone === '0500000000';
+
+    if (isSuperAdmin) {
+      // التحذير الأول
+      const firstConfirm = confirm(
+        `🚨 تحذير: أنت على وشك حذف صلاحيات المدير العام!\n\n` +
+        `📱 الجوال: ${permission.admin_phone}\n` +
+        `📦 القسم: ${permission.module_id}\n\n` +
+        `⚠️ هذا المستخدم هو المدير العام للمنصة!\n\n` +
+        `هل تريد المتابعة؟`
+      );
+
+      if (!firstConfirm) return;
+
+      // التحذير الثاني
+      const finalConfirmation = prompt(
+        `⚠️ للمتابعة في حذف صلاحيات المدير العام\n\n` +
+        `اكتب كلمة "تأكيد الحذف" بالضبط:`
+      );
+
+      if (finalConfirmation !== 'تأكيد الحذف') {
+        alert('❌ تم إلغاء العملية. لم يتم كتابة التأكيد الصحيح.');
+        return;
+      }
+    } else {
+      if (!confirm('هل تريد حذف هذه الصلاحية؟')) return;
+    }
 
     try {
       await AdminSessionService.deletePermission(permId);
       setPermissions(permissions.filter(p => p.id !== permId));
-      alert('تم حذف الصلاحية بنجاح');
+      alert('✅ تم حذف الصلاحية بنجاح');
     } catch (error) {
       console.error('Error deleting permission:', error);
-      alert('حدث خطأ في حذف الصلاحية');
+      alert('❌ حدث خطأ في حذف الصلاحية');
     }
   };
 
