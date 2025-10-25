@@ -225,7 +225,7 @@ export const FarmOwnerDashboard: React.FC<FarmOwnerDashboardProps> = ({ profileI
                 )}
               </button>
 
-              {/* زر العودة للمنصة (بدون خروج) */}
+              {/* زر العودة للمنصة (بدون خروج) - ظاهر على جميع الأجهزة */}
               <button
                 onClick={() => {
                   if (onBackToPublic) {
@@ -235,13 +235,13 @@ export const FarmOwnerDashboard: React.FC<FarmOwnerDashboardProps> = ({ profileI
                     window.open('/', '_blank');
                   }
                 }}
-                className="hidden sm:flex p-2 sm:p-2.5 md:p-3 rounded-xl sm:rounded-2xl transition-all duration-300 hover:scale-105 hover:shadow-md bg-white border-2 border-gray-200 group relative overflow-hidden"
+                className="p-2 sm:p-2.5 md:p-3 rounded-xl sm:rounded-2xl transition-all duration-300 hover:scale-105 hover:shadow-md bg-white border-2 border-emerald-300 group relative overflow-hidden"
                 title="العودة للمنصة الرئيسية (الجلسة تبقى مفتوحة)"
               >
                 {/* تأثير hover أخضر */}
                 <div className="absolute inset-0 bg-emerald-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
-                <Home className="relative w-5 h-5 sm:w-5.5 sm:h-5.5 md:w-6 md:h-6 text-gray-600 group-hover:text-emerald-600 group-hover:scale-110 transition-all" />
+                <ArrowLeft className="relative w-5 h-5 sm:w-5.5 sm:h-5.5 md:w-6 md:h-6 text-emerald-600 group-hover:text-emerald-700 group-hover:scale-110 transition-all" />
               </button>
 
               {/* زر الخروج المطور */}
