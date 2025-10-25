@@ -54,14 +54,11 @@ export function PermissionsProvider({ children }: { children: ReactNode }) {
       console.log('🔍 [PermissionsContext] Admin Role:', admin.role);
       console.log('🔍 [PermissionsContext] Admin Name:', admin.name);
 
-      const roleCheckValues = [admin.role?.toLowerCase(), admin.role?.trim()];
-      const isAdminRole = roleCheckValues.includes('super_admin') ||
-                          roleCheckValues.includes('admin') ||
-                          roleCheckValues.includes('مدير') ||
-                          roleCheckValues.includes('مدير عام');
+      const SUPER_ADMIN_PHONES = ['0500000000'];
+      const isSuperAdmin = SUPER_ADMIN_PHONES.includes(admin.phone);
 
-      if (isAdminRole) {
-        console.log('✅✅✅ [PermissionsContext] ADMIN ROLE DETECTED - Full permissions granted');
+      if (isSuperAdmin) {
+        console.log('✅✅✅ [PermissionsContext] SUPER ADMIN DETECTED (by phone) - Full permissions granted');
         setIsAdmin(true);
         setPermissions([]);
         return;
@@ -161,8 +158,10 @@ export function PermissionsProvider({ children }: { children: ReactNode }) {
   };
 
   const canAccessModule = (moduleId: string): boolean => {
-    console.log(`🔍 [canAccessModule] Checking access for module: ${moduleId}`);
-    console.log(`🔍 [canAccessModule] isAdmin: ${isAdmin}, permissions: ${permissions.length}`);
+    console.log(`🔍🔍🔍 [canAccessModule] ===== Checking: ${moduleId} =====`);
+    console.log(`  📊 isAdmin: ${isAdmin}`);
+    console.log(`  📋 Total Permissions: ${permissions.length}`);
+    console.log(`  ⏳ Loading: ${loading}`);
 
     if (moduleId === 'dashboard') {
       console.log(`✅ [canAccessModule] Dashboard always accessible`);
@@ -170,31 +169,34 @@ export function PermissionsProvider({ children }: { children: ReactNode }) {
     }
 
     if (isAdmin) {
-      console.log(`✅ [canAccessModule] ADMIN - Full access`);
+      console.log(`✅✅✅ [canAccessModule] ADMIN - Full access to ${moduleId}`);
       return true;
     }
 
     if (permissions.length === 0) {
-      console.log(`❌ [canAccessModule] NO PERMISSIONS - Access denied for ${moduleId}`);
+      console.log(`❌❌❌ [canAccessModule] NO PERMISSIONS ARRAY - Access DENIED for ${moduleId}`);
       return false;
     }
 
     const permission = permissions.find(p => p.module_id === moduleId && p.is_active);
-    const canAccess = permission ? permission.can_view : false;
 
-    console.log(`${canAccess ? '✅' : '❌'} [canAccessModule] Access for ${moduleId}: ${canAccess}`);
-
-    if (permission) {
-      console.log(`  Permission details:`, {
-        module_id: permission.module_id,
-        module_name_ar: permission.module_name_ar,
-        can_view: permission.can_view,
-        can_create: permission.can_create,
-        can_edit: permission.can_edit,
-        can_delete: permission.can_delete,
-        is_active: permission.is_active
-      });
+    if (!permission) {
+      console.log(`❌ [canAccessModule] Module "${moduleId}" NOT FOUND in permissions array`);
+      console.log(`  Available modules:`, permissions.map(p => p.module_id));
+      return false;
     }
+
+    const canAccess = permission.can_view;
+    console.log(`${canAccess ? '✅✅✅' : '❌❌❌'} [canAccessModule] ${moduleId}: can_view = ${canAccess}`);
+    console.log(`  Permission:`, {
+      module_id: permission.module_id,
+      module_name_ar: permission.module_name_ar,
+      can_view: permission.can_view,
+      can_create: permission.can_create,
+      can_edit: permission.can_edit,
+      can_delete: permission.can_delete,
+      is_active: permission.is_active
+    });
 
     return canAccess;
   };
