@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>تحديث الصلاحيات</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body style="font-family: Arial; padding: 40px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh;">
+    <div style="max-width: 600px; margin: 0 auto; background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 50px rgba(0,0,0,0.3);">
+        <h1 style="text-align: center; color: #667eea; margin-bottom: 30px;">🔄 تحديث الصلاحيات</h1>
+
+        <div id="result" style="margin-top: 20px; padding: 20px; border-radius: 10px; display: none;"></div>
+
+        <button onclick="refreshPermissions()" style="width: 100%; padding: 15px; font-size: 18px; font-weight: bold; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; border-radius: 10px; cursor: pointer; margin-top: 20px;">
+            🔄 تحديث الصلاحيات للموظف 0510101010
+        </button>
+
+        <div id="permissions" style="margin-top: 30px;"></div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = 'https://plnupwsxtfshmlwxoqjb.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBsbnVwd3N4dGZzaG1sd3hvcWpiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjk0MTIzNjAsImV4cCI6MjA0NDk4ODM2MH0.D4xzDqJBdFaEXa-X5kS5aAF2dKJCuZtI7YmU_4Ng4x4';
+
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        async function refreshPermissions() {
+            const resultDiv = document.getElementById('result');
+            const permissionsDiv = document.getElementById('permissions');
+
+            resultDiv.style.display = 'block';
+            resultDiv.style.background = '#FEF3C7';
+            resultDiv.style.color = '#92400E';
+            resultDiv.innerHTML = '⏳ جاري تحديث الصلاحيات...';
+
+            try {
+                const response = await supabase
+                    .from('admin_module_permissions')
+                    .select('*')
+                    .eq('admin_phone', '0510101010')
+                    .order('module_id');
+
+                if (response.error) throw response.error;
+
+                const data = response.data;
+
+                resultDiv.style.background = '#D1FAE5';
+                resultDiv.style.color = '#065F46';
+                resultDiv.innerHTML = '✅ <strong>تم تحديث الصلاحيات بنجاح!</strong><br><br>عدد الصلاحيات: ' + data.length;
+
+                let html = '<h3 style="color: #667eea; margin-bottom: 15px;">📋 الصلاحيات المحدثة:</h3>';
+                data.forEach(perm => {
+                    const borderColor = (perm.can_create && perm.can_edit) ? '#10B981' : '#F59E0B';
+                    html += '<div style="background: #F3F4F6; padding: 15px; border-radius: 10px; margin-bottom: 10px; border-left: 4px solid ' + borderColor + ';">';
+                    html += '<div style="font-weight: bold; color: #1F2937; margin-bottom: 8px;">' + perm.module_name_ar + ' (' + perm.module_id + ')</div>';
+                    html += '<div style="display: flex; gap: 15px; font-size: 14px;">';
+                    html += '<span style="color: ' + (perm.can_view ? '#10B981' : '#EF4444') + ';">' + (perm.can_view ? '✅' : '❌') + ' عرض</span>';
+                    html += '<span style="color: ' + (perm.can_create ? '#10B981' : '#EF4444') + ';">' + (perm.can_create ? '✅' : '❌') + ' إنشاء</span>';
+                    html += '<span style="color: ' + (perm.can_edit ? '#10B981' : '#EF4444') + ';">' + (perm.can_edit ? '✅' : '❌') + ' تعديل</span>';
+                    html += '<span style="color: ' + (perm.can_delete ? '#10B981' : '#EF4444') + ';">' + (perm.can_delete ? '✅' : '❌') + ' حذف</span>';
+                    html += '</div></div>';
+                });
+
+                permissionsDiv.innerHTML = html;
+
+                setTimeout(() => {
+                    resultDiv.innerHTML += '<br><br>⚠️ <strong>مهم:</strong> سجل خروج ثم سجل دخول مرة أخرى لتفعيل التغييرات!';
+                }, 1000);
+
+            } catch (error) {
+                resultDiv.style.background = '#FEE2E2';
+                resultDiv.style.color = '#991B1B';
+                resultDiv.innerHTML = '❌ <strong>خطأ:</strong> ' + error.message;
+                console.error(error);
+            }
+        }
+
+        refreshPermissions();
+    </script>
+</body>
+</html>
