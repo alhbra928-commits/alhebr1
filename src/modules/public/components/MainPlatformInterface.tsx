@@ -37,6 +37,7 @@ export function MainPlatformInterface({
 }: MainPlatformInterfaceProps) {
   const [farms, setFarms] = useState<PublicFarm[]>([]);
   const [showConceptModal, setShowConceptModal] = useState(false);
+  const [showIdeaOverview, setShowIdeaOverview] = useState(false);
   const [currentView, setCurrentView] = useState<ViewMode>('home');
   const [selectedFarm, setSelectedFarm] = useState<PublicFarm | null>(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -159,18 +160,13 @@ export function MainPlatformInterface({
       />
       <SmartStockTicker />
 
-      {/* قسم فكرة تملك الأشجار */}
+      {/* الزر الذهبي */}
       <div className="pt-32 md:pt-40">
-        <IdeaOverviewSection onNavigateToFarms={() => {
-          const farmsSection = document.getElementById('farms-section');
-          if (farmsSection) {
-            farmsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          }
-        }} />
+        <GlowingConceptButton onClick={() => setShowIdeaOverview(true)} />
       </div>
 
       {/* قسم المزارع المتاحة */}
-      <div id="farms-section" className="max-w-[1400px] mx-auto px-3 sm:px-6 pt-2 sm:pt-4 pb-32">
+      <div className="max-w-[1400px] mx-auto px-3 sm:px-6 pt-2 sm:pt-4 pb-32">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
           {farms.length === 0 ? (
             <div className="col-span-full text-center py-12">
@@ -197,6 +193,31 @@ export function MainPlatformInterface({
 
       {showConceptModal && (
         <ConceptIntroModal onClose={() => setShowConceptModal(false)} />
+      )}
+
+      {/* Modal فكرة تملك الأشجار */}
+      {showIdeaOverview && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setShowIdeaOverview(false)}>
+          <div className="relative w-full max-w-7xl max-h-[90vh] overflow-y-auto bg-white rounded-3xl shadow-2xl" onClick={(e) => e.stopPropagation()}>
+            {/* زر الإغلاق */}
+            <button
+              onClick={() => setShowIdeaOverview(false)}
+              className="sticky top-4 left-4 z-10 w-12 h-12 rounded-full bg-gray-900/80 hover:bg-gray-900 text-white flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-lg float-left ml-4 mt-4"
+            >
+              <span className="text-2xl">×</span>
+            </button>
+
+            {/* المحتوى */}
+            <IdeaOverviewSection
+              onNavigateToFarms={() => {
+                setShowIdeaOverview(false);
+                setTimeout(() => {
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }, 100);
+              }}
+            />
+          </div>
+        </div>
       )}
     </div>
   );
