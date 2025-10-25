@@ -188,6 +188,60 @@ export function SmartUserBuilder({ onClose, onSuccess, existingUsers }: SmartUse
       const currentSession = AdminSessionService.getCurrentSession();
       const secretCode = generateSecretCode();
 
+      console.log('🔥🔥🔥 [SmartUserBuilder] handleSubmit START');
+      console.log('📞 Phone:', formData.phone);
+      console.log('👤 Name:', formData.name);
+      console.log('🔐 Secret Code:', secretCode);
+      console.log('📋 Permissions:', permissions);
+
+      // 1️⃣ حفظ في admin_users
+      console.log('1️⃣ Saving to admin_users...');
+      const createdUser = await AdminSessionService.createUserInDB({
+        phone: formData.phone,
+        full_name: formData.name,
+        email: `${formData.phone}@temp.com`,
+        role_id: 'employee',
+        is_active: activateNow,
+        job_title: formData.jobTitle,
+        department: formData.department,
+      });
+      console.log('✅ User created in DB:', createdUser);
+
+      // 2️⃣ حفظ الصلاحيات في admin_module_permissions
+      console.log('2️⃣ Saving permissions to admin_module_permissions...');
+      const moduleMapping: Record<string, string> = {
+        finance: 'المالية',
+        farms: 'المزارع',
+        documentation: 'التوثيق',
+        investors: 'المستثمرون',
+        reservations: 'الحجوزات',
+        operations: 'التشغيل',
+        control: 'الرقابة',
+        support: 'الدعم',
+      };
+
+      for (const [moduleId, perms] of Object.entries(permissions)) {
+        // فقط إذا كان لديه أي صلاحية في هذا القسم
+        if (perms.view || perms.create || perms.edit || perms.delete || perms.approve) {
+          console.log(`   Adding permission for module: ${moduleId}`);
+          await AdminSessionService.addPermissionToDB({
+            admin_phone: formData.phone,
+            module_id: moduleId,
+            module_name_ar: moduleMapping[moduleId] || moduleId,
+            module_name_en: moduleId,
+            can_view: perms.view,
+            can_create: perms.create,
+            can_edit: perms.edit,
+            can_delete: perms.delete,
+            icon: 'shield',
+            is_active: true,
+          });
+          console.log(`   ✅ Permission added for ${moduleId}`);
+        }
+      }
+      console.log('✅ All permissions saved to DB');
+
+      // 3️⃣ حفظ في localStorage (للتوافق مع الكود القديم)
       const userData = {
         ...formData,
         permissions,
@@ -205,21 +259,15 @@ export function SmartUserBuilder({ onClose, onSuccess, existingUsers }: SmartUse
         'success'
       );
 
-      console.log('🎨🎨🎨 SmartUserBuilder - بيانات المستخدم الجديد:', userData);
-      console.log('🎨 Phone:', userData.phone);
-      console.log('🎨 SecretCode:', userData.secretCode);
-      console.log('🎨 Status:', userData.status);
-      console.log('🎨 Calling onSuccess()...');
-
+      console.log('✅ Calling onSuccess()...');
       onSuccess(userData);
-
-      console.log('🎨 onSuccess() called successfully');
+      console.log('🔥🔥🔥 [SmartUserBuilder] handleSubmit END - SUCCESS');
 
       alert(`✅ ${activateNow ? `تم تفعيل المستخدم بنجاح\n\n🔑 الرقم السري: ${secretCode}\n\nيرجى حفظه للدخول` : 'تم حفظ المستخدم تحت المراجعة'}`);
       onClose();
     } catch (error) {
-      console.error('Error creating user:', error);
-      alert('❌ حدث خطأ في إنشاء المستخدم');
+      console.error('❌❌❌ [SmartUserBuilder] Error creating user:', error);
+      alert('❌ حدث خطأ في إنشاء المستخدم: ' + (error as any).message);
     }
   };
 

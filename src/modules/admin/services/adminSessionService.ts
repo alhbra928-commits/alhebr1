@@ -269,6 +269,62 @@ export class AdminSessionService {
     }
   }
 
+  static async createUserInDB(userData: any) {
+    try {
+      console.log('📝 [AdminSessionService] createUserInDB START');
+      console.log('User data:', userData);
+
+      const { data, error } = await supabase
+        .from('admin_users')
+        .insert({
+          phone: userData.phone,
+          full_name: userData.full_name,
+          email: userData.email,
+          role_id: userData.role_id || 'employee',
+          is_active: userData.is_active !== false,
+          job_title: userData.job_title,
+          department: userData.department,
+        })
+        .select()
+        .single();
+
+      if (error) {
+        console.error('❌ [AdminSessionService] Supabase error:', error);
+        throw error;
+      }
+
+      console.log('✅ [AdminSessionService] User created:', data);
+      return data;
+    } catch (error) {
+      console.error('❌❌❌ [AdminSessionService] Error creating user:', error);
+      throw error;
+    }
+  }
+
+  static async addPermissionToDB(permission: any) {
+    try {
+      console.log('📝 [AdminSessionService] addPermissionToDB START');
+      console.log('Permission:', permission);
+
+      const { data, error } = await supabase
+        .from('admin_module_permissions')
+        .insert(permission)
+        .select()
+        .single();
+
+      if (error) {
+        console.error('❌ [AdminSessionService] Supabase error:', error);
+        throw error;
+      }
+
+      console.log('✅ [AdminSessionService] Permission created:', data);
+      return data;
+    } catch (error) {
+      console.error('❌❌❌ [AdminSessionService] Error adding permission:', error);
+      throw error;
+    }
+  }
+
   static async addPermission(permission: Omit<AdminPermission, 'id' | 'granted_at' | 'updated_at'>) {
     try {
       const { data, error } = await supabase
