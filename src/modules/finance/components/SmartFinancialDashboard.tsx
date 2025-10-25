@@ -8,6 +8,7 @@ import { ExpandableFinancialCard } from './ExpandableFinancialCard';
 import { SettlementService } from '../services/settlementService';
 import { SmartFinancialAnalyticsDashboard } from './SmartFinancialAnalyticsDashboard';
 import { ModernFinancialInterface } from './ModernFinancialInterface';
+import { usePermissions } from '../../../contexts/PermissionsContext';
 
 interface SmartFinancialDashboardProps {
   onBack?: () => void;
@@ -20,6 +21,11 @@ export function SmartFinancialDashboard({ onBack }: SmartFinancialDashboardProps
   const [expandedCardIndex, setExpandedCardIndex] = useState<number | null>(null);
   const [showAnalyticsDashboard, setShowAnalyticsDashboard] = useState(false);
   const [showModernInterface, setShowModernInterface] = useState(false);
+
+  const { hasPermission, isAdmin } = usePermissions();
+  const canEdit = isAdmin || hasPermission('finance', 'edit');
+
+  console.log('🔍 [SmartFinancialDashboard] canEdit:', canEdit);
   const [stats, setStats] = useState({
     totalFarms: 0,
     totalMarketingAmount: 0,

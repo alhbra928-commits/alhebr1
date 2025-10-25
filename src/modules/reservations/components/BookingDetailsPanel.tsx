@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { X, MapPin, User, Phone, Mail, Calendar, TreeDeciduous, DollarSign, CheckCircle, XCircle, Trash2, FileText, Clock, Eye, AlertCircle, Check } from 'lucide-react';
 import { PaymentReceiptService } from '../../investor/services/paymentReceiptService';
 import { RejectReceiptModal } from './RejectReceiptModal';
+import { usePermissions } from '../../../contexts/PermissionsContext';
 
 interface BookingDetailsPanelProps {
   booking: any;
@@ -30,6 +31,18 @@ export function BookingDetailsPanel({
   const [receiptToReject, setReceiptToReject] = useState<string | null>(null);
   const [rejectLoading, setRejectLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string>('');
+
+  const { hasPermission, isAdmin } = usePermissions();
+
+  const canEdit = isAdmin || hasPermission('reservations', 'edit');
+  const canDelete = isAdmin || hasPermission('reservations', 'delete');
+  const canCreate = isAdmin || hasPermission('reservations', 'create');
+
+  console.log('🔍 [BookingDetailsPanel] Permissions Check:');
+  console.log('  isAdmin:', isAdmin);
+  console.log('  canEdit:', canEdit);
+  console.log('  canDelete:', canDelete);
+  console.log('  canCreate:', canCreate);
 
   useEffect(() => {
     if (isOpen && booking?.id) {
@@ -496,7 +509,7 @@ export function BookingDetailsPanel({
                       </div>
                     </div>
 
-                    {receipt.status === 'pending' && (
+                    {receipt.status === 'pending' && canEdit && (
                       <div className="flex gap-2 mt-4 pt-4 border-t">
                         <button
                           onClick={() => {
@@ -572,7 +585,7 @@ export function BookingDetailsPanel({
           <div className="space-y-3 pb-8">
             {booking.booking_status === 'pending' && (
               <>
-                {onApprove && (
+                {onApprove && canEdit && (
                   <button
                     onClick={() => {
                       if (confirm(`هل تريد اعتماد الحجز ${booking.booking_code}؟`)) {
@@ -587,7 +600,7 @@ export function BookingDetailsPanel({
                     اعتماد الحجز
                   </button>
                 )}
-                {onReject && (
+                {onReject && canEdit && (
                   <button
                     onClick={() => {
                       if (confirm(`هل تريد رفض الحجز ${booking.booking_code}؟`)) {
@@ -605,7 +618,7 @@ export function BookingDetailsPanel({
               </>
             )}
 
-            {booking.booking_status === 'approved' && onIssueCertificate && (
+            {booking.booking_status === 'approved' && onIssueCertificate && canCreate && (
               <button
                 onClick={() => {
                   if (confirm(`🪪 إصدار شهادة تملك للحجز ${booking.booking_code}\n\nسيتم:\n• نقل الحجز إلى إدارة التوثيق\n• إنشاء شهادة تملك رقمية\n• إرسال إشعار للمستثمر\n\nهل تريد المتابعة؟`)) {
@@ -621,7 +634,7 @@ export function BookingDetailsPanel({
               </button>
             )}
 
-            {(booking.booking_status === 'pending' || booking.booking_status === 'rejected') && onDelete && (
+            {(booking.booking_status === 'pending' || booking.booking_status === 'rejected') && onDelete && canDelete && (
               <button
                 onClick={() => {
                   if (confirm(`هل تريد حذف الحجز ${booking.booking_code} نهائياً؟\n\nهذا الإجراء لا يمكن التراجع عنه.`)) {

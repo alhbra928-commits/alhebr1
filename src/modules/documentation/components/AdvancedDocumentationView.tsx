@@ -17,6 +17,7 @@ import { BackButton } from '../../../components/common/BackButton';
 import { DocumentationService, Documentation } from '../documentationService';
 import { CertificateCard3D } from './CertificateCard3D';
 import { CertificateDetailsPanel } from './CertificateDetailsPanel';
+import { usePermissions } from '../../../contexts/PermissionsContext';
 
 interface AdvancedDocumentationViewProps {
   onBack?: () => void;
@@ -33,6 +34,12 @@ export function AdvancedDocumentationView({ onBack }: AdvancedDocumentationViewP
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [selectedCertificate, setSelectedCertificate] = useState<Documentation | null>(null);
   const [isPanelOpen, setIsPanelOpen] = useState(false);
+
+  const { hasPermission, isAdmin } = usePermissions();
+  const canDelete = isAdmin || hasPermission('documentation', 'delete');
+  const canEdit = isAdmin || hasPermission('documentation', 'edit');
+
+  console.log('🔍 [AdvancedDocumentationView] canDelete:', canDelete, 'canEdit:', canEdit);
 
   useEffect(() => {
     loadData();
@@ -449,8 +456,8 @@ export function AdvancedDocumentationView({ onBack }: AdvancedDocumentationViewP
         onPrint={handlePrint}
         onReissue={handleReissue}
         onEmail={handleEmail}
-        onArchive={handleArchive}
-        onDelete={handleDelete}
+        onArchive={canEdit ? handleArchive : undefined}
+        onDelete={canDelete ? handleDelete : undefined}
       />
 
       {actionLoading && (
