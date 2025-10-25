@@ -172,33 +172,99 @@ export class AdminSessionService {
     }
   }
 
+  static async getAllUsers(): Promise<any[]> {
+    try {
+      console.log('🔍 [AdminSessionService] Fetching all users from admin_users...');
+
+      const { data, error } = await supabase
+        .from('admin_users')
+        .select('*')
+        .is('deleted_at', null)
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('❌ [AdminSessionService] Error fetching users:', error);
+        throw error;
+      }
+
+      console.log('✅ [AdminSessionService] Raw users from DB:', data);
+
+      const users = (data || []).map((user: any) => ({
+        phone: user.phone,
+        name: user.full_name || user.phone,
+        role: user.role_id || 'employee',
+        roleAr: this.getRoleArabic(user.role_id),
+        email: user.email,
+        isActive: user.is_active,
+      }));
+
+      console.log('✅ [AdminSessionService] Mapped users:', users);
+      return users;
+    } catch (error) {
+      console.error('❌ [AdminSessionService] Error in getAllUsers:', error);
+      return [];
+    }
+  }
+
+  static getRoleArabic(roleId: string | null): string {
+    if (!roleId) return 'موظف';
+
+    const roleMap: Record<string, string> = {
+      'super_admin': 'مدير عام',
+      'admin': 'مدير',
+      'employee': 'موظف',
+      'staff': 'موظف',
+      'موظف': 'موظف',
+      'مدير': 'مدير',
+    };
+
+    return roleMap[roleId.toLowerCase()] || 'موظف';
+  }
+
   static async getPermissions(adminPhone: string): Promise<AdminPermission[]> {
     try {
+      console.log('🔍 [AdminSessionService] Fetching permissions for:', adminPhone);
+
       const { data, error } = await supabase
         .from('admin_module_permissions')
         .select('*')
         .eq('admin_phone', adminPhone)
-        .eq('is_active', true)
         .order('module_name_ar');
 
-      if (error) throw error;
+      if (error) {
+        console.error('❌ [AdminSessionService] Error fetching permissions:', error);
+        throw error;
+      }
+
+      console.log('✅ [AdminSessionService] Permissions for', adminPhone, ':', data);
       return data || [];
     } catch (error) {
-      console.error('Error fetching permissions:', error);
+      console.error('❌ [AdminSessionService] Error in getPermissions:', error);
       return [];
     }
   }
 
   static async updatePermission(permissionId: string, updates: Partial<AdminPermission>) {
     try {
-      const { error } = await supabase
+      console.log('📝 [AdminSessionService] updatePermission START');
+      console.log('Permission ID:', permissionId);
+      console.log('Updates:', updates);
+
+      const { data, error } = await supabase
         .from('admin_module_permissions')
         .update(updates)
-        .eq('id', permissionId);
+        .eq('id', permissionId)
+        .select();
 
-      if (error) throw error;
+      if (error) {
+        console.error('❌ [AdminSessionService] Supabase error:', error);
+        throw error;
+      }
+
+      console.log('✅ [AdminSessionService] Updated successfully:', data);
+      console.log('📝 [AdminSessionService] updatePermission END');
     } catch (error) {
-      console.error('Error updating permission:', error);
+      console.error('❌❌❌ [AdminSessionService] Error updating permission:', error);
       throw error;
     }
   }

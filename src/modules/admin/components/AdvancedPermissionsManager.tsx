@@ -12,20 +12,36 @@ interface AdminUser {
 }
 
 export function AdvancedPermissionsManager() {
-  const [users] = useState<AdminUser[]>([
-    { phone: '0500000000', name: 'المدير العام', role: 'super_admin', roleAr: 'مدير عام' },
-    { phone: '0501234567', name: 'موظف المالية', role: 'staff', roleAr: 'موظف' },
-  ]);
+  const [users, setUsers] = useState<AdminUser[]>([]);
   const [selectedUser, setSelectedUser] = useState<AdminUser | null>(null);
   const [permissions, setPermissions] = useState<AdminPermission[]>([]);
   const [loading, setLoading] = useState(false);
+  const [loadingUsers, setLoadingUsers] = useState(true);
   const [editingPermission, setEditingPermission] = useState<string | null>(null);
+
+  useEffect(() => {
+    loadUsers();
+  }, []);
 
   useEffect(() => {
     if (selectedUser) {
       loadPermissions(selectedUser.phone);
     }
   }, [selectedUser]);
+
+  const loadUsers = async () => {
+    setLoadingUsers(true);
+    try {
+      console.log('🔍 [AdvancedPermissionsManager] Loading users from DB...');
+      const loadedUsers = await AdminSessionService.getAllUsers();
+      console.log('✅ [AdvancedPermissionsManager] Loaded users:', loadedUsers);
+      setUsers(loadedUsers);
+    } catch (error) {
+      console.error('❌ [AdvancedPermissionsManager] Error loading users:', error);
+    } finally {
+      setLoadingUsers(false);
+    }
+  };
 
   const loadPermissions = async (phone: string) => {
     setLoading(true);
@@ -40,14 +56,25 @@ export function AdvancedPermissionsManager() {
   };
 
   const handleTogglePermission = async (permId: string, field: keyof AdminPermission, currentValue: boolean) => {
+    console.log('🔄 [AdvancedPermissionsManager] Toggle permission START');
+    console.log('Permission ID:', permId);
+    console.log('Field:', field);
+    console.log('Current Value:', currentValue);
+    console.log('New Value:', !currentValue);
+
     try {
+      console.log('📤 Calling updatePermission...');
       await AdminSessionService.updatePermission(permId, { [field]: !currentValue } as any);
+      console.log('✅ Update successful in DB');
+
       setPermissions(permissions.map(p =>
         p.id === permId ? { ...p, [field]: !currentValue } : p
       ));
+      console.log('✅ State updated successfully');
+      console.log('🔄 [AdvancedPermissionsManager] Toggle permission END');
     } catch (error) {
-      console.error('Error updating permission:', error);
-      alert('حدث خطأ في تحديث الصلاحية');
+      console.error('❌❌❌ Error updating permission:', error);
+      alert('حدث خطأ في تحديث الصلاحية: ' + (error as any).message);
     }
   };
 
