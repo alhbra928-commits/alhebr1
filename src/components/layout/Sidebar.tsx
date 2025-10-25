@@ -64,7 +64,7 @@ export function Sidebar({ activeModule, onModuleChange }: SidebarProps) {
             const Icon = item.icon;
             const isActive = activeModule === item.id;
 
-            if (item.id === 'dashboard' || isAdmin) {
+            if (item.id === 'dashboard') {
               return (
                 <button
                   key={item.id}
@@ -86,7 +86,7 @@ export function Sidebar({ activeModule, onModuleChange }: SidebarProps) {
               );
             }
 
-            const hasAccess = canAccessModule(item.id);
+            const hasAccess = isAdmin || canAccessModule(item.id);
 
             if (!hasAccess && !loading) {
               return null;
