@@ -35,11 +35,16 @@ export function AdvancedDocumentationView({ onBack }: AdvancedDocumentationViewP
   const [selectedCertificate, setSelectedCertificate] = useState<Documentation | null>(null);
   const [isPanelOpen, setIsPanelOpen] = useState(false);
 
-  const { hasPermission, isAdmin } = usePermissions();
-  const canDelete = isAdmin || hasPermission('documentation', 'delete');
-  const canEdit = isAdmin || hasPermission('documentation', 'edit');
+  const { isAdmin, canEdit, canDelete } = usePermissions();
 
-  console.log('🔍 [AdvancedDocumentationView] canDelete:', canDelete, 'canEdit:', canEdit);
+  const hasEditPermission = canEdit('documentation');
+  const hasDeletePermission = canDelete('documentation');
+
+  console.log('🔍 [AdvancedDocumentationView] Permissions:', {
+    isAdmin,
+    canEdit: hasEditPermission,
+    canDelete: hasDeletePermission
+  });
 
   useEffect(() => {
     loadData();
@@ -456,8 +461,8 @@ export function AdvancedDocumentationView({ onBack }: AdvancedDocumentationViewP
         onPrint={handlePrint}
         onReissue={handleReissue}
         onEmail={handleEmail}
-        onArchive={canEdit ? handleArchive : undefined}
-        onDelete={canDelete ? handleDelete : undefined}
+        onArchive={hasEditPermission ? handleArchive : undefined}
+        onDelete={hasDeletePermission ? handleDelete : undefined}
       />
 
       {actionLoading && (

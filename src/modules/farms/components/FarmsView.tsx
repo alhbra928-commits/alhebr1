@@ -43,12 +43,18 @@ export function FarmsView({ onBack }: FarmsViewProps) {
   const [filterType, setFilterType] = useState<string>('all');
   const [filterStatus, setFilterStatus] = useState<string>('all');
 
-  const { hasPermission, isAdmin } = usePermissions();
-  const canCreate = isAdmin || hasPermission('farms', 'create');
-  const canEdit = isAdmin || hasPermission('farms', 'edit');
-  const canDelete = isAdmin || hasPermission('farms', 'delete');
+  const { isAdmin, canCreate, canEdit, canDelete } = usePermissions();
 
-  console.log('🔍 [FarmsView] Permissions:', { canCreate, canEdit, canDelete });
+  const hasCreatePermission = canCreate('farms');
+  const hasEditPermission = canEdit('farms');
+  const hasDeletePermission = canDelete('farms');
+
+  console.log('🔍 [FarmsView] Permissions:', {
+    isAdmin,
+    canCreate: hasCreatePermission,
+    canEdit: hasEditPermission,
+    canDelete: hasDeletePermission
+  });
 
   useEffect(() => {
     loadData();
@@ -428,7 +434,7 @@ export function FarmsView({ onBack }: FarmsViewProps) {
             </select>
 
             {/* Add Button */}
-            {canCreate && (
+            {hasCreatePermission && (
               <button
                 onClick={handleCreateFarm}
                 className="flex items-center gap-2 px-6 py-3 bg-gradient-to-br from-[#3D5B4B] to-[#4A6F5C] text-white rounded-xl hover:shadow-xl transform hover:-translate-y-0.5 transition-all font-bold"
@@ -561,7 +567,7 @@ export function FarmsView({ onBack }: FarmsViewProps) {
                     {/* Action Buttons */}
                     <div className="flex flex-col gap-2 pt-4 border-t-2 border-gray-100 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                       <div className="flex items-center gap-2">
-                        {canEdit && (
+                        {hasEditPermission && (
                           <button
                             onClick={(e) => handleEditFarm(farm, e)}
                             className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-sm font-bold"
@@ -592,7 +598,7 @@ export function FarmsView({ onBack }: FarmsViewProps) {
                           )}
                         </button>
 
-                        {canDelete && (
+                        {hasDeletePermission && (
                           <button
                             onClick={(e) => handleDeleteFarm(farm, e)}
                             className="px-4 py-2.5 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"

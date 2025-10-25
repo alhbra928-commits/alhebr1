@@ -50,12 +50,18 @@ export function OwnersView({ onBack }: OwnersViewProps) {
   const [selectedOwnerDetails, setSelectedOwnerDetails] = useState<any>(null);
   const [ownerFarms, setOwnerFarms] = useState<any[]>([]);
 
-  const { hasPermission, isAdmin } = usePermissions();
-  const canCreate = isAdmin || hasPermission('owners', 'create');
-  const canEdit = isAdmin || hasPermission('owners', 'edit');
-  const canDelete = isAdmin || hasPermission('owners', 'delete');
+  const { isAdmin, canCreate, canEdit, canDelete } = usePermissions();
 
-  console.log('🔍 [OwnersView] Permissions:', { canCreate, canEdit, canDelete });
+  const hasCreatePermission = canCreate('farm_owners');
+  const hasEditPermission = canEdit('farm_owners');
+  const hasDeletePermission = canDelete('farm_owners');
+
+  console.log('🔍 [OwnersView] Permissions:', {
+    isAdmin,
+    canCreate: hasCreatePermission,
+    canEdit: hasEditPermission,
+    canDelete: hasDeletePermission
+  });
 
   // Rejection modal state
   const [showRejectModal, setShowRejectModal] = useState(false);
@@ -392,7 +398,7 @@ export function OwnersView({ onBack }: OwnersViewProps) {
               placeholder="البحث..."
               className="flex-1 px-4 py-3 rounded-xl border-2"
             />
-            {canCreate && (
+            {hasCreatePermission && (
               <button
                 onClick={handleCreateOwner}
                 className="px-6 py-3 bg-gradient-to-br from-[#C9A962] to-[#D4B574] text-white rounded-xl font-bold"
@@ -411,7 +417,7 @@ export function OwnersView({ onBack }: OwnersViewProps) {
             </div>
             <h3 className="text-2xl font-black text-[#2C2C2C] mb-2">لا يوجد ملاك</h3>
             <p className="text-[#2C2C2C]/60 mb-6">ابدأ بإضافة أول مالك مزرعة</p>
-            {canCreate && (
+            {hasCreatePermission && (
               <button
                 onClick={handleCreateOwner}
                 className="px-8 py-3 bg-gradient-to-br from-[#C9A962] to-[#D4B574] text-white rounded-xl font-bold hover:shadow-xl transform hover:-translate-y-0.5 transition-all"
@@ -561,7 +567,7 @@ export function OwnersView({ onBack }: OwnersViewProps) {
                             <span>عرض</span>
                           </button>
 
-                          {canEdit && (
+                          {hasEditPermission && (
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();
@@ -635,7 +641,7 @@ export function OwnersView({ onBack }: OwnersViewProps) {
                             <span>اتصال</span>
                           </button>
 
-                          {canDelete && (
+                          {hasDeletePermission && (
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();

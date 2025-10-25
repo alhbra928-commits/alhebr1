@@ -22,10 +22,14 @@ export function SmartFinancialDashboard({ onBack }: SmartFinancialDashboardProps
   const [showAnalyticsDashboard, setShowAnalyticsDashboard] = useState(false);
   const [showModernInterface, setShowModernInterface] = useState(false);
 
-  const { hasPermission, isAdmin } = usePermissions();
-  const canEdit = isAdmin || hasPermission('finance', 'edit');
+  const { isAdmin, canEdit } = usePermissions();
 
-  console.log('🔍 [SmartFinancialDashboard] canEdit:', canEdit);
+  const hasEditPermission = canEdit('finance');
+
+  console.log('🔍 [SmartFinancialDashboard] Permissions:', {
+    isAdmin,
+    canEdit: hasEditPermission
+  });
   const [stats, setStats] = useState({
     totalFarms: 0,
     totalMarketingAmount: 0,

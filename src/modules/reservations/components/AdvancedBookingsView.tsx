@@ -11,21 +11,22 @@ interface AdvancedBookingsViewProps {
 }
 
 export function AdvancedBookingsView({ onBack }: AdvancedBookingsViewProps) {
-  const { isAdmin, hasPermission } = usePermissions();
+  const { isAdmin, canCreate, canEdit, canDelete } = usePermissions();
   const [bookings, setBookings] = useState<any[]>([]);
   const [filteredBookings, setFilteredBookings] = useState<any[]>([]);
   const [stats, setStats] = useState<any>({});
 
-  // Check permissions
-  const canEdit = isAdmin || hasPermission('reservations', 'edit');
-  const canDelete = isAdmin || hasPermission('reservations', 'delete');
-  const canCreate = isAdmin || hasPermission('reservations', 'create');
+  // حساب الصلاحيات للحجوزات
+  const hasCreatePermission = canCreate('reservations');
+  const hasEditPermission = canEdit('reservations');
+  const hasDeletePermission = canDelete('reservations');
 
-  console.log('🔍 [AdvancedBookingsView] Permissions Check:');
-  console.log('  isAdmin:', isAdmin);
-  console.log('  canEdit:', canEdit);
-  console.log('  canDelete:', canDelete);
-  console.log('  canCreate:', canCreate);
+  console.log('🔍 [AdvancedBookingsView] Permissions:', {
+    isAdmin,
+    canCreate: hasCreatePermission,
+    canEdit: hasEditPermission,
+    canDelete: hasDeletePermission
+  });
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -330,9 +331,9 @@ export function AdvancedBookingsView({ onBack }: AdvancedBookingsViewProps) {
                   key={booking.id}
                   booking={booking}
                   onViewDetails={handleViewDetails}
-                  onApprove={canEdit ? handleApprove : undefined}
-                  onReject={canEdit ? handleReject : undefined}
-                  onDelete={canDelete ? handleDelete : undefined}
+                  onApprove={hasEditPermission ? handleApprove : undefined}
+                  onReject={hasEditPermission ? handleReject : undefined}
+                  onDelete={hasDeletePermission ? handleDelete : undefined}
                 />
               ))}
             </div>
@@ -353,7 +354,7 @@ export function AdvancedBookingsView({ onBack }: AdvancedBookingsViewProps) {
                   key={booking.id}
                   booking={booking}
                   onViewDetails={handleViewDetails}
-                  onIssueCertificate={canCreate ? handleIssueCertificate : undefined}
+                  onIssueCertificate={hasCreatePermission ? handleIssueCertificate : undefined}
                 />
               ))}
             </div>
@@ -394,7 +395,7 @@ export function AdvancedBookingsView({ onBack }: AdvancedBookingsViewProps) {
                   key={booking.id}
                   booking={booking}
                   onViewDetails={handleViewDetails}
-                  onDelete={canDelete ? handleDelete : undefined}
+                  onDelete={hasDeletePermission ? handleDelete : undefined}
                 />
               ))}
             </div>
@@ -415,10 +416,10 @@ export function AdvancedBookingsView({ onBack }: AdvancedBookingsViewProps) {
         booking={selectedBooking}
         isOpen={showDetailsPanel}
         onClose={() => setShowDetailsPanel(false)}
-        onApprove={canEdit ? handleApprove : undefined}
-        onReject={canEdit ? handleReject : undefined}
-        onDelete={canDelete ? handleDelete : undefined}
-        onIssueCertificate={canCreate ? handleIssueCertificate : undefined}
+        onApprove={hasEditPermission ? handleApprove : undefined}
+        onReject={hasEditPermission ? handleReject : undefined}
+        onDelete={hasDeletePermission ? handleDelete : undefined}
+        onIssueCertificate={hasCreatePermission ? handleIssueCertificate : undefined}
       />
     </div>
   );
