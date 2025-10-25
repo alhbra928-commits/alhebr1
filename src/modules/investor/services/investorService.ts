@@ -355,6 +355,20 @@ export class InvestorService {
     }
   }
 
+  static async checkPreviousSessions(phone: string): Promise<{ data: any[] | null }> {
+    try {
+      const normalizedPhone = this.normalizePhone(phone);
+      const { data } = await supabase
+        .from('investor_sessions')
+        .select('id')
+        .eq('phone', normalizedPhone);
+      return { data };
+    } catch (error) {
+      console.error('Error checking previous sessions:', error);
+      return { data: null };
+    }
+  }
+
   static async checkLoginStatus(phone: string): Promise<LoginCheckResult> {
     try {
       console.log('🔍🔍🔍 [checkLoginStatus] CALLED WITH:', phone);

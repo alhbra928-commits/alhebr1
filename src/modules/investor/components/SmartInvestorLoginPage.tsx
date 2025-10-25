@@ -123,7 +123,7 @@ export function SmartInvestorLoginPage({ onLoginSuccess, onBack }: SmartInvestor
       const loginStatus = await InvestorService.checkLoginStatus(phone);
       console.log('✅✅✅ [handlePhoneSubmit] Login status:', loginStatus);
 
-      // إذا لم يكن موجوداً في النظام، إنشاء حساب تلقائياً
+      // إذا لم يكن موجوداً في النظام، إنشاء حساب تلقائياً ودخول مباشر
       if (!loginStatus.exists) {
         console.log('⚠️ المستثمر غير موجود، جاري الإنشاء التلقائي...');
 
@@ -134,7 +134,21 @@ export function SmartInvestorLoginPage({ onLoginSuccess, onBack }: SmartInvestor
           return;
         }
 
-        console.log('✅ تم إنشاء الحساب تلقائياً');
+        console.log('✅ تم إنشاء الحساب تلقائياً - دخول مباشر للمرة الأولى');
+
+        setIsFirstLogin(true);
+        const sessionToken = await InvestorService.createSession(phone, true);
+
+        await InvestorService.logLoginAttempt({
+          phone,
+          login_type: 'first_time_auto_created',
+          success: true
+        });
+
+        const investorData = await InvestorService.getInvestorByPhone(phone);
+        console.log('🔍 Auto-Created Account - Investor Data:', investorData);
+        onLoginSuccess(phone, sessionToken, investorData?.customer_name);
+        return;
       }
 
       // جلسة نشطة موجودة
@@ -151,7 +165,7 @@ export function SmartInvestorLoginPage({ onLoginSuccess, onBack }: SmartInvestor
         return;
       }
 
-      // دخول لأول مرة بعد الحجز
+      // دخول لأول مرة بدون OTP
       if (loginStatus.isFirstLogin) {
         setIsFirstLogin(true);
         const sessionToken = await InvestorService.createSession(phone, true);

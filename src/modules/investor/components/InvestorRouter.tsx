@@ -78,7 +78,15 @@ export function InvestorRouter({ onBack, autoLoginPhone, autoLoginName }: Invest
     }
   };
 
-  const handleLoginSuccess = (phone: string, token: string, investorName?: string) => {
+  const handleLoginSuccess = async (phone: string, token: string, investorName?: string) => {
+    console.log('🎯 [handleLoginSuccess] Called with:', { phone, token, investorName });
+
+    // فحص إذا كان هذا أول دخول
+    const { data: previousSessions } = await InvestorService.checkPreviousSessions(phone);
+    const isFirst = !previousSessions || previousSessions.length <= 1;
+
+    console.log('🎯 [handleLoginSuccess] isFirstTimeLogin:', isFirst);
+
     SessionManager.saveSession({
       phone,
       sessionToken: token,
@@ -90,6 +98,7 @@ export function InvestorRouter({ onBack, autoLoginPhone, autoLoginName }: Invest
     setInvestorPhone(phone);
     setSessionToken(token);
     setIsLoggedIn(true);
+    setIsFirstTimeLogin(isFirst);
   };
 
   const handleLogout = async () => {
