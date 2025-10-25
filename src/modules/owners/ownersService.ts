@@ -140,11 +140,14 @@ export class OwnersService {
     }));
   }
 
-  static async createOwner(ownerData: OwnerFormData) {
+  static async createOwner(ownerData: any) {
+    // Remove varieties from ownerData as it's not a column in farm_owners
+    const { varieties, ...cleanOwnerData } = ownerData;
+
     const { data, error } = await supabase
       .from('farm_owners')
       .insert([{
-        ...ownerData,
+        ...cleanOwnerData,
         status: 'active',
         created_by: (await supabase.auth.getUser()).data.user?.id
       }])
@@ -155,11 +158,14 @@ export class OwnersService {
     return data;
   }
 
-  static async updateOwner(id: string, ownerData: Partial<OwnerFormData>) {
+  static async updateOwner(id: string, ownerData: any) {
+    // Remove varieties from ownerData as it's not a column in farm_owners
+    const { varieties, ...cleanOwnerData } = ownerData;
+
     const { data, error } = await supabase
       .from('farm_owners')
       .update({
-        ...ownerData,
+        ...cleanOwnerData,
         updated_at: new Date().toISOString(),
         updated_by: (await supabase.auth.getUser()).data.user?.id
       })
