@@ -17,7 +17,9 @@ import {
   FileText,
   Calendar,
   AlertCircle,
-  Loader
+  Loader,
+  CreditCard,
+  Banknote
 } from 'lucide-react';
 import { supabase } from '../../../lib/supabase';
 
@@ -354,6 +356,80 @@ export function SubmittedDataModal({ owner, onClose, onApprove }: SubmittedDataM
                 </div>
               )}
 
+              {/* Bank Information */}
+              {(data.bank_name || data.bank_account_number || data.bank_iban) && (
+                <div className="bg-gradient-to-br from-indigo-50 to-blue-50 rounded-2xl p-6 border-2 border-indigo-200">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-blue-600 rounded-xl flex items-center justify-center">
+                      <CreditCard className="w-6 h-6 text-white" />
+                    </div>
+                    <h3 className="text-xl font-black text-gray-900">المعلومات البنكية</h3>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {data.bank_name && (
+                      <div className="bg-white rounded-xl p-4">
+                        <div className="flex items-center gap-2 mb-1">
+                          <Building className="w-4 h-4 text-indigo-600" />
+                          <p className="text-sm text-gray-600">اسم البنك</p>
+                        </div>
+                        <p className="text-lg font-black text-gray-900">{data.bank_name}</p>
+                      </div>
+                    )}
+
+                    {data.bank_account_holder_name && (
+                      <div className="bg-white rounded-xl p-4">
+                        <div className="flex items-center gap-2 mb-1">
+                          <User className="w-4 h-4 text-indigo-600" />
+                          <p className="text-sm text-gray-600">اسم صاحب الحساب</p>
+                        </div>
+                        <p className="text-lg font-black text-gray-900">{data.bank_account_holder_name}</p>
+                      </div>
+                    )}
+
+                    {data.bank_account_number && (
+                      <div className="bg-white rounded-xl p-4">
+                        <div className="flex items-center gap-2 mb-1">
+                          <Hash className="w-4 h-4 text-indigo-600" />
+                          <p className="text-sm text-gray-600">رقم الحساب</p>
+                        </div>
+                        <p className="text-lg font-black text-gray-900" dir="ltr">{data.bank_account_number}</p>
+                      </div>
+                    )}
+
+                    {data.bank_iban && (
+                      <div className="bg-white rounded-xl p-4">
+                        <div className="flex items-center gap-2 mb-1">
+                          <Banknote className="w-4 h-4 text-indigo-600" />
+                          <p className="text-sm text-gray-600">رقم الآيبان (IBAN)</p>
+                        </div>
+                        <p className="text-base font-black text-gray-900" dir="ltr">{data.bank_iban}</p>
+                      </div>
+                    )}
+
+                    {data.bank_branch && (
+                      <div className="bg-white rounded-xl p-4">
+                        <div className="flex items-center gap-2 mb-1">
+                          <Building className="w-4 h-4 text-indigo-600" />
+                          <p className="text-sm text-gray-600">الفرع</p>
+                        </div>
+                        <p className="text-lg font-black text-gray-900">{data.bank_branch}</p>
+                      </div>
+                    )}
+
+                    {data.bank_swift_code && (
+                      <div className="bg-white rounded-xl p-4">
+                        <div className="flex items-center gap-2 mb-1">
+                          <Hash className="w-4 h-4 text-indigo-600" />
+                          <p className="text-sm text-gray-600">كود سويفت (SWIFT)</p>
+                        </div>
+                        <p className="text-base font-black text-gray-900" dir="ltr">{data.bank_swift_code}</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
               {/* Admin Notes */}
               {data.admin_notes && (
                 <div className="bg-gray-50 rounded-2xl p-6 border-2 border-gray-200">
@@ -365,14 +441,80 @@ export function SubmittedDataModal({ owner, onClose, onApprove }: SubmittedDataM
                 </div>
               )}
 
-              {/* Submission Date */}
-              {submittedData?.submitted_at && (
-                <div className="bg-gray-50 rounded-xl p-4 flex items-center justify-center gap-2 text-gray-600">
-                  <Calendar className="w-5 h-5" />
-                  <span className="font-bold">تاريخ التقديم:</span>
-                  <span>{new Date(submittedData.submitted_at).toLocaleString('ar-SA')}</span>
+              {/* Timestamps */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {submittedData?.submitted_at && (
+                  <div className="bg-gray-50 rounded-xl p-4 flex items-center gap-2 text-gray-600">
+                    <Calendar className="w-5 h-5" />
+                    <div>
+                      <p className="text-xs text-gray-500">تاريخ التقديم</p>
+                      <p className="font-bold">{new Date(submittedData.submitted_at).toLocaleString('ar-SA')}</p>
+                    </div>
+                  </div>
+                )}
+
+                {data.created_at && (
+                  <div className="bg-gray-50 rounded-xl p-4 flex items-center gap-2 text-gray-600">
+                    <Calendar className="w-5 h-5" />
+                    <div>
+                      <p className="text-xs text-gray-500">تاريخ الإنشاء</p>
+                      <p className="font-bold">{new Date(data.created_at).toLocaleString('ar-SA')}</p>
+                    </div>
+                  </div>
+                )}
+
+                {data.updated_at && data.updated_at !== data.created_at && (
+                  <div className="bg-gray-50 rounded-xl p-4 flex items-center gap-2 text-gray-600">
+                    <Calendar className="w-5 h-5" />
+                    <div>
+                      <p className="text-xs text-gray-500">آخر تحديث</p>
+                      <p className="font-bold">{new Date(data.updated_at).toLocaleString('ar-SA')}</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Status Information */}
+              <div className="bg-gradient-to-br from-gray-50 to-slate-50 rounded-2xl p-6 border-2 border-gray-200">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                  <div>
+                    <p className="text-sm text-gray-600 mb-1">حالة الحساب</p>
+                    <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl font-black ${
+                      data.status === 'active' ? 'bg-green-100 text-green-800' :
+                      data.status === 'frozen' ? 'bg-blue-100 text-blue-800' :
+                      'bg-gray-100 text-gray-800'
+                    }`}>
+                      {data.status === 'active' ? <CheckCircle className="w-4 h-4" /> :
+                       data.status === 'frozen' ? <XCircle className="w-4 h-4" /> : null}
+                      {data.status === 'active' ? 'نشط' : data.status === 'frozen' ? 'مجمد' : data.status}
+                    </div>
+                  </div>
+
+                  {submittedData?.status && (
+                    <div>
+                      <p className="text-sm text-gray-600 mb-1">حالة الطلب</p>
+                      <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl font-black ${
+                        submittedData.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                        submittedData.status === 'approved' ? 'bg-green-100 text-green-800' :
+                        submittedData.status === 'rejected' ? 'bg-red-100 text-red-800' :
+                        'bg-blue-100 text-blue-800'
+                      }`}>
+                        {submittedData.status === 'pending' ? 'قيد المراجعة' :
+                         submittedData.status === 'approved' ? 'مقبول' :
+                         submittedData.status === 'rejected' ? 'مرفوض' :
+                         submittedData.status === 'direct_entry' ? 'إدخال مباشر' : submittedData.status}
+                      </div>
+                    </div>
+                  )}
+
+                  {data.farms_count !== undefined && (
+                    <div>
+                      <p className="text-sm text-gray-600 mb-1">عدد المزارع</p>
+                      <p className="text-3xl font-black text-gray-900">{data.farms_count || 0}</p>
+                    </div>
+                  )}
                 </div>
-              )}
+              </div>
             </div>
           )}
         </div>
