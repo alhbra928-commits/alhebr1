@@ -69,21 +69,47 @@ export function Sidebar({ activeModule, onModuleChange }: SidebarProps) {
           </div>
         </div>
 
-        {/* رسالة التشخيص للموظف 0510101010 */}
-        {currentAdminPhone === '0510101010' && (
-          <div className="mb-4 p-3 bg-blue-500 rounded-lg text-white text-xs">
-            <div className="font-bold mb-1">🔍 معلومات التشخيص:</div>
-            <div>الرقم: {currentAdminPhone}</div>
-            <div>Admin: {isAdmin ? 'نعم' : 'لا'}</div>
-            <div>الصلاحيات: {permissions?.length || 0}</div>
+        {/* رسالة التشخيص - تظهر لجميع الموظفين */}
+        {currentAdminPhone && !isAdmin && (
+          <div className="mb-4 p-4 bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl text-white shadow-lg border-2 border-blue-400">
+            <div className="font-bold text-lg mb-2 flex items-center gap-2">
+              🔍 معلومات الحساب
+            </div>
+            <div className="space-y-1 text-sm">
+              <div className="flex justify-between">
+                <span>الرقم:</span>
+                <span className="font-bold">{currentAdminPhone}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>مدير النظام:</span>
+                <span className="font-bold">{isAdmin ? '✅ نعم' : '❌ لا'}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>عدد الصلاحيات:</span>
+                <span className="font-bold bg-white text-blue-600 px-2 py-0.5 rounded">{permissions?.length || 0}</span>
+              </div>
+            </div>
             {permissions && permissions.length > 0 && (
-              <div className="mt-2">
-                <div className="font-bold">الأقسام المتاحة:</div>
-                {permissions.map(p => (
-                  <div key={p.module_id} className="text-[10px]">
-                    ✅ {p.module_name_ar} (View: {p.can_view ? '✅' : '❌'})
-                  </div>
-                ))}
+              <div className="mt-3 pt-3 border-t border-blue-400">
+                <div className="font-bold mb-2">📋 الأقسام المتاحة:</div>
+                <div className="space-y-1 max-h-40 overflow-y-auto">
+                  {permissions.map(p => (
+                    <div key={p.module_id} className="bg-blue-800 bg-opacity-50 p-2 rounded text-xs">
+                      <div className="font-bold">{p.module_name_ar}</div>
+                      <div className="flex gap-2 mt-1 text-[10px]">
+                        <span>عرض: {p.can_view ? '✅' : '❌'}</span>
+                        <span>إضافة: {p.can_create ? '✅' : '❌'}</span>
+                        <span>تعديل: {p.can_edit ? '✅' : '❌'}</span>
+                        <span>حذف: {p.can_delete ? '✅' : '❌'}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            {(!permissions || permissions.length === 0) && (
+              <div className="mt-3 pt-3 border-t border-blue-400 text-center text-sm bg-red-500 bg-opacity-30 p-2 rounded">
+                ⚠️ لا توجد صلاحيات! تواصل مع المدير
               </div>
             )}
           </div>
