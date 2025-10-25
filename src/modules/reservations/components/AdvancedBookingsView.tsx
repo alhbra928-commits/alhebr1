@@ -21,12 +21,16 @@ export function AdvancedBookingsView({ onBack }: AdvancedBookingsViewProps) {
   const hasEditPermission = canEdit('reservations');
   const hasDeletePermission = canDelete('reservations');
 
-  console.log('🔍 [AdvancedBookingsView] Permissions:', {
-    isAdmin,
-    canCreate: hasCreatePermission,
-    canEdit: hasEditPermission,
-    canDelete: hasDeletePermission
-  });
+  console.log('🔍🔍🔍 [AdvancedBookingsView] ===================');
+  console.log('🔍 [AdvancedBookingsView] Current User Info:');
+  console.log('  - Admin Phone:', localStorage.getItem('admin_data') ? JSON.parse(localStorage.getItem('admin_data')).phone : 'N/A');
+  console.log('  - Is Admin:', isAdmin);
+  console.log('🔍 [AdvancedBookingsView] Permissions for "reservations":');
+  console.log('  - Can Create:', hasCreatePermission);
+  console.log('  - Can Edit:', hasEditPermission);
+  console.log('  - Can Delete:', hasDeletePermission);
+  console.log('🔍 [AdvancedBookingsView] Delete button will be:', hasDeletePermission ? '✅ SHOWN' : '❌ HIDDEN');
+  console.log('🔍🔍🔍 [AdvancedBookingsView] ===================');
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');

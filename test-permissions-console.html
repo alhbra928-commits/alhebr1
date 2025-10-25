@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>فحص الصلاحيات المباشر</title>
+</head>
+<body style="font-family: Arial; padding: 40px; background: #111827; color: white;">
+    <div style="max-width: 900px; margin: 0 auto;">
+        <h1 style="text-align: center; color: #F59E0B; margin-bottom: 30px;">🔍 فحص الصلاحيات - Console</h1>
+
+        <div style="background: #1F2937; padding: 30px; border-radius: 15px; margin-bottom: 20px;">
+            <h2 style="color: #10B981; margin-bottom: 20px;">📋 التعليمات:</h2>
+
+            <ol style="line-height: 2; font-size: 16px;">
+                <li><strong>افتح التطبيق</strong> في لوحة التحكم (Dashboard)</li>
+                <li>اذهب إلى قسم <strong>"الحجوزات"</strong></li>
+                <li><strong>افتح Console</strong> (اضغط F12)</li>
+                <li>ابحث في Console عن هذا النص:</li>
+            </ol>
+
+            <div style="background: #000; padding: 20px; border-radius: 10px; margin: 20px 0; border: 2px solid #F59E0B; font-family: monospace;">
+                <div style="color: #10B981;">🔍 [AdvancedBookingsView] Permissions:</div>
+                <div style="color: #60A5FA; margin-left: 20px;">isAdmin: ???</div>
+                <div style="color: #60A5FA; margin-left: 20px;">canCreate: ???</div>
+                <div style="color: #60A5FA; margin-left: 20px;">canEdit: ???</div>
+                <div style="color: #F59E0B; margin-left: 20px; font-weight: bold;">canDelete: ??? ← هذا المهم!</div>
+            </div>
+
+            <h3 style="color: #F59E0B; margin: 30px 0 15px 0;">📸 ما يفترض تشوفه:</h3>
+
+            <div style="background: #065F46; padding: 20px; border-radius: 10px; margin-bottom: 15px; border-left: 4px solid #10B981;">
+                <div style="font-weight: bold; margin-bottom: 10px;">✅ إذا كانت الصلاحيات صحيحة:</div>
+                <div style="font-family: monospace; font-size: 14px; line-height: 1.8;">
+                    isAdmin: <strong>false</strong><br>
+                    canCreate: <strong>true</strong><br>
+                    canEdit: <strong>true</strong><br>
+                    canDelete: <strong style="color: #FDE047;">false</strong> ← يفترض false!
+                </div>
+            </div>
+
+            <div style="background: #991B1B; padding: 20px; border-radius: 10px; border-left: 4px solid #EF4444;">
+                <div style="font-weight: bold; margin-bottom: 10px;">❌ إذا كانت المشكلة موجودة:</div>
+                <div style="font-family: monospace; font-size: 14px; line-height: 1.8;">
+                    isAdmin: <strong>false</strong><br>
+                    canCreate: <strong>true</strong><br>
+                    canEdit: <strong>true</strong><br>
+                    canDelete: <strong style="color: #FDE047;">true</strong> ← إذا طلع true، المشكلة في Context!
+                </div>
+            </div>
+        </div>
+
+        <div style="background: #1F2937; padding: 30px; border-radius: 15px; margin-bottom: 20px;">
+            <h2 style="color: #F59E0B; margin-bottom: 20px;">🔧 الحلول:</h2>
+
+            <div style="background: #374151; padding: 20px; border-radius: 10px; margin-bottom: 15px;">
+                <h3 style="color: #60A5FA; margin-bottom: 10px;">إذا canDelete = false في Console:</h3>
+                <p>المشكلة في كود الـ BookingCard3D</p>
+                <p style="color: #FDE047;">الزر يظهر رغم أن الصلاحية معطلة!</p>
+            </div>
+
+            <div style="background: #374151; padding: 20px; border-radius: 10px;">
+                <h3 style="color: #60A5FA; margin-bottom: 10px;">إذا canDelete = true في Console:</h3>
+                <p>المشكلة في Context أو في جلب البيانات من قاعدة البيانات</p>
+                <p style="color: #FDE047;">الصلاحيات لا تتحدث بشكل صحيح!</p>
+            </div>
+        </div>
+
+        <div style="background: #92400E; padding: 25px; border-radius: 15px; border: 2px solid #F59E0B;">
+            <h2 style="color: #FDE047; margin-bottom: 15px; text-align: center;">⚠️ مهم جداً!</h2>
+            <p style="font-size: 18px; text-align: center; line-height: 1.8;">
+                بعد ما تتأكد من قيمة <strong>canDelete</strong> في Console،<br>
+                <strong style="color: #FDE047;">أرسل لي لقطة شاشة</strong> أو اكتب القيمة بالضبط!
+            </p>
+        </div>
+    </div>
+</body>
+</html>
