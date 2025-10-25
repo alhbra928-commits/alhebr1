@@ -241,33 +241,119 @@ export const ModernHomeTab: React.FC<ModernHomeTabProps> = ({ profile, farmStatu
 
   return (
     <div className="space-y-4 sm:space-y-6 pb-6">
-      {/* Call to Action Banner - Only show if no data submitted */}
+      {/* Ultra Modern Call to Action Banner - Only show if no data submitted */}
       {!hasSubmittedData && (
-        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-600 via-blue-500 to-cyan-500 p-4 sm:p-6 text-white shadow-xl animate-pulse-slow">
-          <div className="absolute inset-0 opacity-20">
-            <div className="absolute top-0 left-0 w-40 h-40 bg-white rounded-full blur-2xl animate-float" />
-            <div className="absolute bottom-0 right-0 w-32 h-32 bg-white rounded-full blur-2xl animate-float-delayed" />
-          </div>
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 p-1 shadow-2xl group hover:shadow-3xl transition-all duration-500">
+          {/* Animated Gradient Border */}
+          <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 opacity-75 blur-xl group-hover:blur-2xl transition-all duration-500" />
 
-          <div className="relative z-10 flex flex-col sm:flex-row items-center gap-4">
-            <div className="flex-shrink-0 w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border-2 border-white/30 animate-bounce-slow">
-              <Upload className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
+          {/* Inner Container */}
+          <div className="relative bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 rounded-3xl p-6 sm:p-8">
+            {/* Floating Animated Elements */}
+            <div className="absolute inset-0 overflow-hidden rounded-3xl">
+              <div className="absolute top-0 left-0 w-64 h-64 bg-gradient-to-br from-cyan-400/30 to-transparent rounded-full blur-3xl animate-float" />
+              <div className="absolute bottom-0 right-0 w-48 h-48 bg-gradient-to-tl from-purple-400/30 to-transparent rounded-full blur-3xl animate-float-delayed" />
+              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-gradient-radial from-white/10 to-transparent rounded-full blur-2xl animate-pulse-slow" />
             </div>
 
-            <div className="flex-1 text-center sm:text-right">
-              <h3 className="text-lg sm:text-xl font-black mb-1">ابدأ الآن برفع بيانات مزرعتك!</h3>
-              <p className="text-sm sm:text-base text-white/90">
-                خطوة واحدة تفصلك عن الوصول لآلاف المستثمرين المهتمين
-              </p>
-            </div>
+            {/* Grid Pattern Overlay */}
+            <div className="absolute inset-0 opacity-10" style={{
+              backgroundImage: `linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px)`,
+              backgroundSize: '30px 30px'
+            }} />
 
-            <button
-              onClick={onNavigateToData}
-              className="flex-shrink-0 bg-white text-blue-600 px-6 py-3 rounded-xl font-bold hover:bg-blue-50 transition-all duration-300 flex items-center gap-2 shadow-lg hover:shadow-xl hover:scale-105 group"
-            >
-              <span>ارفع البيانات</span>
-              <ChevronLeft className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </button>
+            <div className="relative z-10">
+              {/* Header Section */}
+              <div className="flex items-start gap-4 mb-6">
+                <div className="relative group">
+                  <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-2xl blur-xl opacity-75 group-hover:opacity-100 transition-opacity animate-pulse" />
+                  <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-white/20 to-white/10 backdrop-blur-xl border-2 border-white/30 flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
+                    <Rocket className="w-8 h-8 sm:w-10 sm:h-10 text-white animate-bounce-slow" />
+                    <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full animate-ping" />
+                  </div>
+                </div>
+
+                <div className="flex-1">
+                  <div className="inline-block bg-white/20 backdrop-blur-sm border border-white/30 rounded-full px-4 py-1 mb-3">
+                    <p className="text-xs sm:text-sm font-bold text-white flex items-center gap-2">
+                      <Sparkles className="w-4 h-4" />
+                      خطوة واحدة نحو النجاح
+                    </p>
+                  </div>
+                  <h3 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white mb-2 leading-tight">
+                    ابدأ الآن برفع
+                    <span className="block bg-gradient-to-r from-yellow-300 via-yellow-200 to-yellow-300 text-transparent bg-clip-text animate-shimmer">
+                      بيانات مزرعتك
+                    </span>
+                  </h3>
+                  <p className="text-sm sm:text-base text-white/90 leading-relaxed max-w-2xl">
+                    انضم إلى شبكة من المزارعين الناجحين واعرض مزرعتك أمام آلاف المستثمرين المهتمين
+                  </p>
+                </div>
+              </div>
+
+              {/* Features Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
+                {[
+                  { icon: Users, text: 'آلاف المستثمرين', color: 'from-cyan-400 to-blue-500' },
+                  { icon: Zap, text: 'عملية سريعة', color: 'from-yellow-400 to-orange-500' },
+                  { icon: ShieldCheck, text: 'موثوق ومضمون', color: 'from-green-400 to-emerald-500' }
+                ].map((feature, index) => (
+                  <div key={index} className="flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-xl px-4 py-3 border border-white/20 hover:bg-white/20 transition-all duration-300 group">
+                    <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${feature.color} flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform`}>
+                      <feature.icon className="w-5 h-5 text-white" />
+                    </div>
+                    <p className="text-sm font-bold text-white">{feature.text}</p>
+                  </div>
+                ))}
+              </div>
+
+              {/* CTA Button Section */}
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                <button
+                  onClick={onNavigateToData}
+                  className="relative group flex-1 overflow-hidden"
+                >
+                  {/* Button Glow Effect */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-white via-yellow-200 to-white opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-300" />
+
+                  {/* Button Content */}
+                  <div className="relative bg-white rounded-2xl px-8 py-4 shadow-2xl group-hover:shadow-3xl transition-all duration-300 transform group-hover:scale-105">
+                    <div className="flex items-center justify-center gap-3">
+                      <Upload className="w-6 h-6 text-blue-600 group-hover:rotate-12 transition-transform duration-300" />
+                      <span className="text-lg font-black bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-transparent bg-clip-text">
+                        ارفع البيانات الآن
+                      </span>
+                      <ArrowUpRight className="w-5 h-5 text-blue-600 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300" />
+                    </div>
+
+                    {/* Shine Animation */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                  </div>
+                </button>
+
+                <div className="flex items-center gap-2 justify-center text-white/80 text-xs">
+                  <Clock className="w-4 h-4" />
+                  <span>5 دقائق فقط</span>
+                </div>
+              </div>
+
+              {/* Trust Indicators */}
+              <div className="mt-6 flex flex-wrap items-center gap-4 text-white/70 text-xs">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+                  <span>+500 مزارع مسجل</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+                  <span>تقييم 4.9/5</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <ShieldCheck className="w-4 h-4 text-green-400" />
+                  <span>معتمد وموثوق</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       )}
@@ -554,35 +640,66 @@ export const ModernHomeTab: React.FC<ModernHomeTabProps> = ({ profile, farmStatu
 
       <style>{`
         @keyframes shimmer {
-          0% { transform: translateX(-100%); }
-          100% { transform: translateX(100%); }
+          0% {
+            transform: translateX(-100%);
+            background-position: 0% 50%;
+          }
+          50% {
+            background-position: 100% 50%;
+          }
+          100% {
+            transform: translateX(100%);
+            background-position: 0% 50%;
+          }
         }
         .animate-shimmer {
-          animation: shimmer 2s infinite;
+          animation: shimmer 3s ease-in-out infinite;
+          background-size: 200% 200%;
         }
         @keyframes float {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-20px); }
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          33% { transform: translateY(-20px) rotate(2deg); }
+          66% { transform: translateY(-10px) rotate(-2deg); }
         }
         .animate-float {
-          animation: float 6s ease-in-out infinite;
+          animation: float 8s ease-in-out infinite;
         }
         .animate-float-delayed {
-          animation: float 6s ease-in-out 3s infinite;
+          animation: float 8s ease-in-out 4s infinite;
         }
         @keyframes pulse-slow {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.95; }
+          0%, 100% {
+            opacity: 1;
+            transform: scale(1);
+          }
+          50% {
+            opacity: 0.8;
+            transform: scale(1.05);
+          }
         }
         .animate-pulse-slow {
-          animation: pulse-slow 3s ease-in-out infinite;
+          animation: pulse-slow 4s ease-in-out infinite;
         }
         @keyframes bounce-slow {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-10px); }
+          0%, 100% { transform: translateY(0) scale(1); }
+          50% { transform: translateY(-15px) scale(1.05); }
         }
         .animate-bounce-slow {
-          animation: bounce-slow 2s ease-in-out infinite;
+          animation: bounce-slow 3s ease-in-out infinite;
+        }
+        @keyframes gradient-shift {
+          0%, 100% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+        }
+        .animate-gradient {
+          animation: gradient-shift 5s ease infinite;
+          background-size: 200% 200%;
+        }
+        .shadow-3xl {
+          box-shadow: 0 35px 60px -15px rgba(0, 0, 0, 0.3), 0 0 80px -10px rgba(59, 130, 246, 0.4);
+        }
+        .hover\:shadow-3xl:hover {
+          box-shadow: 0 40px 70px -15px rgba(0, 0, 0, 0.4), 0 0 100px -10px rgba(59, 130, 246, 0.6);
         }
       `}</style>
     </div>
