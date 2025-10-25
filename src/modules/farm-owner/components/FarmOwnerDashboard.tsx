@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { farmOwnerService, FarmOwnerProfile, FarmStatus, FarmOwnerNotification } from '../services/farmOwnerService';
-import { Bell, LogOut, FileText, DollarSign, Home, HelpCircle, Phone } from 'lucide-react';
+import { Bell, LogOut, FileText, DollarSign, Home, HelpCircle, Phone, ArrowLeft } from 'lucide-react';
 import { FarmOwnerWelcome } from './FarmOwnerWelcome';
 import { AdvancedFinanceTab } from './AdvancedFinanceTab';
 import { ModernHomeTab } from './ModernHomeTab';
