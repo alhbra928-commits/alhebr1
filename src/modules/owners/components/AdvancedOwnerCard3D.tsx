@@ -230,7 +230,12 @@ export function AdvancedOwnerCard3D({
       </div>
 
       {/* Action Buttons - أسفل البطاقة */}
-      <div className="px-4 pb-4 space-y-2">
+      <div className="px-4 pb-4 space-y-2 bg-gradient-to-r from-yellow-100 to-orange-100 border-t-4 border-yellow-500">
+        {/* علامة مرئية للتأكد */}
+        <div className="text-center py-2 bg-red-500 text-white font-black text-lg animate-pulse">
+          ⚠️ الأزرار هنا - إصدار جديد ⚠️
+        </div>
+
         {/* عرض النموذج المرفوع */}
         <button
           onClick={handleViewClick}
