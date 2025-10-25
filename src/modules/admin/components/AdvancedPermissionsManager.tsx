@@ -345,9 +345,10 @@ export function AdvancedPermissionsManager() {
               </h2>
               <div className="space-y-3">
                 {users.map((user) => (
-                  <div
+                  <button
                     key={user.phone}
-                    className="group relative w-full rounded-xl p-4 transition-all"
+                    onClick={() => setSelectedUser(user)}
+                    className="w-full rounded-xl p-4 text-right transition-all hover:scale-[1.02]"
                     style={{
                       background: selectedUser?.phone === user.phone
                         ? 'linear-gradient(135deg, rgba(61, 91, 75, 0.1) 0%, rgba(212, 175, 55, 0.1) 100%)'
@@ -357,10 +358,7 @@ export function AdvancedPermissionsManager() {
                         : '2px solid transparent',
                     }}
                   >
-                    <div
-                      onClick={() => setSelectedUser(user)}
-                      className="flex cursor-pointer items-center gap-3"
-                    >
+                    <div className="flex items-center gap-3">
                       <div
                         className="flex h-12 w-12 items-center justify-center rounded-full font-black text-white"
                         style={{ background: brandGradients.gold }}
@@ -384,24 +382,7 @@ export function AdvancedPermissionsManager() {
                         </span>
                       </div>
                     </div>
-
-                    {/* زر الحذف - يظهر عند المرور بالماوس */}
-                    {user.phone !== '0569335257' && user.phone !== '0500000001' && (
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDeleteUser(user);
-                        }}
-                        className="absolute left-3 top-3 flex h-8 w-8 items-center justify-center rounded-lg opacity-0 transition-all hover:scale-110 group-hover:opacity-100"
-                        style={{
-                          background: 'linear-gradient(135deg, #EF4444 0%, #DC2626 100%)',
-                        }}
-                        title="حذف المستخدم"
-                      >
-                        <Trash2 className="h-4 w-4 text-white" />
-                      </button>
-                    )}
-                  </div>
+                  </button>
                 ))}
               </div>
             </div>
@@ -449,7 +430,7 @@ export function AdvancedPermissionsManager() {
                       </p>
                     </div>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex flex-wrap gap-2">
                     <button
                       onClick={handleEditUser}
                       className="flex items-center gap-2 rounded-xl px-4 py-2 font-bold text-white transition-all hover:scale-105"
@@ -483,6 +464,18 @@ export function AdvancedPermissionsManager() {
                       >
                         <Check className="h-4 w-4" />
                         <span>تفعيل</span>
+                      </button>
+                    )}
+                    {/* زر حذف المستخدم - محمي للمدير العام وصاحب المنصة */}
+                    {selectedUser.phone !== '0569335257' && selectedUser.phone !== '0500000001' && (
+                      <button
+                        onClick={() => handleDeleteUser(selectedUser)}
+                        className="flex items-center gap-2 rounded-xl px-4 py-2 font-bold text-white transition-all hover:scale-105"
+                        style={{ background: 'linear-gradient(135deg, #DC2626 0%, #991B1B 100%)' }}
+                        title="حذف المستخدم نهائياً"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                        <span>حذف المستخدم</span>
                       </button>
                     )}
                   </div>
