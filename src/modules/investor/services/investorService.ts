@@ -504,4 +504,70 @@ export class InvestorService {
   static isDemoMode(): boolean {
     return DEMO_MODE;
   }
+
+  /**
+   * إنشاء حساب مستثمر جديد مباشرة (بدون حجز)
+   */
+  static async createDirectAccount(
+    phone: string,
+    fullName: string
+  ): Promise<{ success: boolean; error?: string }> {
+    try {
+      const normalizedPhone = this.normalizePhone(phone);
+      console.log('🔵 بدء إنشاء حساب مستثمر جديد:', { phone, normalizedPhone, fullName });
+
+      // التحقق من عدم وجود الحساب
+      const existingInvestor = await this.getInvestorByPhone(phone);
+      if (existingInvestor) {
+        console.log('⚠️ الحساب موجود مسبقاً');
+        return { success: false, error: 'هذا الرقم مسجل مسبقاً' };
+      }
+
+      console.log('✅ الحساب غير موجود، جاري الإنشاء...');
+
+      // إنشاء مستثمر جديد في جدول investors
+      const { data: investor, error: investorError } = await supabase
+        .from('investors')
+        .insert({
+          phone: normalizedPhone,
+          full_name: fullName,
+          status: 'قيد_الانتظار'
+        })
+        .select()
+        .single();
+
+      if (investorError) {
+        console.error('❌ خطأ في إنشاء المستثمر:', investorError);
+        throw investorError;
+      }
+
+      console.log('✅ تم إنشاء حساب المستثمر بنجاح:', investor);
+
+      // إنشاء جلسة للمستثمر
+      const sessionToken = Math.random().toString(36).substring(2);
+      const { error: sessionError } = await supabase
+        .from('investor_sessions')
+        .insert({
+          investor_id: investor.id,
+          phone: normalizedPhone,
+          session_token: sessionToken,
+          expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+          is_active: true
+        });
+
+      if (sessionError) {
+        console.error('⚠️ خطأ في إنشاء الجلسة:', sessionError);
+      } else {
+        console.log('✅ تم إنشاء الجلسة بنجاح');
+      }
+
+      return { success: true };
+    } catch (error: any) {
+      console.error('❌ خطأ في إنشاء حساب المستثمر:', error);
+      return {
+        success: false,
+        error: error.message || 'فشل إنشاء الحساب'
+      };
+    }
+  }
 }
