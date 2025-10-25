@@ -281,6 +281,7 @@ export class AdminSessionService {
           full_name: userData.full_name,
           email: userData.email,
           is_active: userData.is_active !== false,
+          secret_code: userData.secret_code,
         })
         .select()
         .single();

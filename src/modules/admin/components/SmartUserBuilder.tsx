@@ -201,6 +201,7 @@ export function SmartUserBuilder({ onClose, onSuccess, existingUsers }: SmartUse
         full_name: formData.name,
         email: `${formData.phone}@temp.com`,
         is_active: activateNow,
+        secret_code: secretCode,
       });
       console.log('✅ User created in DB:', createdUser);
 

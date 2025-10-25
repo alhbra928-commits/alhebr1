@@ -120,7 +120,7 @@ export class AdminUsersStorage {
         role: data.role_id || 'employee',
         roleAr: this.getRoleArabic(data.role_id),
         status: data.is_active ? 'active' : 'frozen',
-        secretCode: '1234',
+        secretCode: data.secret_code || '1234',
         jobTitle: data.role_id,
         lastLogin: data.last_login,
         createdAt: data.created_at,
