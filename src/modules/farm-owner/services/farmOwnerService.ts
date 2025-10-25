@@ -281,6 +281,150 @@ class FarmOwnerService {
   }
 
   /**
+   * إنشاء حساب جديد (للمرة الأولى)
+   */
+  async createProfile(mobileNumber: string, fullName: string): Promise<{ success: boolean; profileId?: string; error?: string }> {
+    try {
+      console.log('🔵 بدء إنشاء حساب جديد:', { mobileNumber, fullName });
+
+      // التحقق من أن الحساب غير موجود
+      const { exists } = await this.checkAccount(mobileNumber);
+      if (exists) {
+        console.log('⚠️ الحساب موجود مسبقاً');
+        return { success: false, error: 'الحساب موجود مسبقاً' };
+      }
+
+      console.log('✅ الحساب غير موجود، جاري الإنشاء...');
+
+      // إنشاء حساب جديد مباشرة في الجدول
+      const { data: profile, error: insertError } = await supabase
+        .from('farm_owner_profiles')
+        .insert({
+          mobile_number: mobileNumber,
+          full_name: fullName,
+          status: 'pending'
+        })
+        .select()
+        .single();
+
+      if (insertError) {
+        console.error('❌ خطأ في إنشاء الحساب:', insertError);
+        throw insertError;
+      }
+
+      console.log('✅ تم إنشاء الحساب بنجاح:', profile);
+
+      // حفظ بيانات الجلسة
+      const sessionToken = Math.random().toString(36).substring(2);
+      localStorage.setItem('farm_owner_session', JSON.stringify({
+        profile_id: profile.id,
+        session_token: sessionToken,
+        mobile_number: mobileNumber,
+        status: profile.status
+      }));
+
+      console.log('✅ تم حفظ الجلسة بنجاح');
+
+      return {
+        success: true,
+        profileId: profile.id
+      };
+    } catch (error: any) {
+      console.error('❌ خطأ في إنشاء الحساب:', error);
+      return {
+        success: false,
+        error: error.message || 'فشل إنشاء الحساب'
+      };
+    }
+  }
+
+  /**
+   * التحقق من OTP
+   */
+  async verifyOTP(mobileNumber: string, otp: string): Promise<{ success: boolean; profileId?: string; status?: string; error?: string }> {
+    try {
+      console.log('🔵 بدء التحقق من OTP:', { mobileNumber, otp });
+
+      // التحقق من OTP المحفوظ
+      const savedOTP = localStorage.getItem('farm_owner_otp');
+      if (!savedOTP) {
+        console.log('⚠️ لم يتم العثور على OTP محفوظ');
+        return { success: false, error: 'لم يتم إرسال رمز التحقق' };
+      }
+
+      const otpData = JSON.parse(savedOTP);
+      console.log('📋 OTP المحفوظ:', otpData);
+
+      // التحقق من الرقم
+      if (otpData.mobile_number !== mobileNumber) {
+        console.log('⚠️ رقم الجوال غير متطابق');
+        return { success: false, error: 'رقم الجوال غير صحيح' };
+      }
+
+      // التحقق من انتهاء الصلاحية
+      if (Date.now() > otpData.expires_at) {
+        console.log('⚠️ انتهت صلاحية OTP');
+        localStorage.removeItem('farm_owner_otp');
+        return { success: false, error: 'انتهت صلاحية الرمز' };
+      }
+
+      // التحقق من الرمز
+      if (otpData.otp !== otp) {
+        console.log('⚠️ رمز التحقق غير صحيح');
+        return { success: false, error: 'رمز التحقق غير صحيح' };
+      }
+
+      console.log('✅ تم التحقق من OTP بنجاح');
+
+      // حذف OTP بعد الاستخدام
+      localStorage.removeItem('farm_owner_otp');
+
+      // البحث عن الحساب
+      const { data: profile, error: profileError } = await supabase
+        .from('farm_owner_profiles')
+        .select('*')
+        .eq('mobile_number', mobileNumber)
+        .is('deleted_at', null)
+        .maybeSingle();
+
+      if (profileError) {
+        console.error('❌ خطأ في البحث عن الحساب:', profileError);
+        throw profileError;
+      }
+
+      if (!profile) {
+        console.log('⚠️ الحساب غير موجود');
+        return { success: false, error: 'الحساب غير موجود' };
+      }
+
+      console.log('✅ تم العثور على الحساب:', profile);
+
+      // حفظ بيانات الجلسة
+      const sessionToken = Math.random().toString(36).substring(2);
+      localStorage.setItem('farm_owner_session', JSON.stringify({
+        profile_id: profile.id,
+        session_token: sessionToken,
+        mobile_number: mobileNumber,
+        status: profile.status
+      }));
+
+      console.log('✅ تم تسجيل الدخول بنجاح');
+
+      return {
+        success: true,
+        profileId: profile.id,
+        status: profile.status
+      };
+    } catch (error: any) {
+      console.error('❌ خطأ في التحقق من OTP:', error);
+      return {
+        success: false,
+        error: error.message || 'فشل التحقق من الرمز'
+      };
+    }
+  }
+
+  /**
    * تسجيل الخروج
    */
   logout() {
