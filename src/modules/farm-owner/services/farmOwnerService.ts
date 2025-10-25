@@ -506,6 +506,11 @@ class FarmOwnerService {
       location_lat?: number;
       location_lng?: number;
       additional_notes?: string;
+      bank_name?: string;
+      bank_account_number?: string;
+      bank_iban?: string;
+      bank_account_holder_name?: string;
+      bank_branch?: string;
       varieties: Array<{
         type: 'نخيل' | 'زيتون';
         name: string;
@@ -530,7 +535,12 @@ class FarmOwnerService {
         p_location_lat: formData.location_lat || null,
         p_location_lng: formData.location_lng || null,
         p_additional_notes: formData.additional_notes || null,
-        p_varieties: formData.varieties
+        p_varieties: formData.varieties,
+        p_bank_name: formData.bank_name || null,
+        p_bank_account_number: formData.bank_account_number || null,
+        p_bank_iban: formData.bank_iban || null,
+        p_bank_account_holder_name: formData.bank_account_holder_name || null,
+        p_bank_branch: formData.bank_branch || null
       });
 
       if (error) throw error;
