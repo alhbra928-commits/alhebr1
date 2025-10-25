@@ -222,17 +222,14 @@ export function AdvancedPermissionsManager() {
     }
 
     try {
-      // حذف جميع صلاحيات المستخدم
-      const userPermissions = await AdminSessionService.getPermissions(userToDelete.phone);
+      console.log('🗑️ Starting delete process for user:', userToDelete.phone);
 
-      for (const perm of userPermissions) {
-        await AdminSessionService.deletePermission(perm.id);
-      }
-
-      // حذف المستخدم من قاعدة البيانات
+      // حذف المستخدم من قاعدة البيانات (يحذف الصلاحيات تلقائياً)
       await AdminSessionService.deleteUser(userToDelete.phone);
 
-      // تحديث القائمة
+      console.log('✅ User deleted from database');
+
+      // تحديث القائمة في الواجهة
       setUsers(users.filter(u => u.phone !== userToDelete.phone));
 
       // إلغاء تحديد المستخدم إذا كان محدداً
@@ -246,9 +243,11 @@ export function AdvancedPermissionsManager() {
       setUserToDelete(null);
       setDeleteReason('');
 
-      alert('✅ تم حذف المستخدم بنجاح\n\nالسبب: ' + deleteReason);
+      console.log('✅ UI updated, modal closed');
+
+      alert('✅ تم حذف المستخدم بنجاح من قاعدة البيانات\n\nالسبب: ' + deleteReason);
     } catch (error) {
-      console.error('Error deleting user:', error);
+      console.error('❌ Error deleting user:', error);
       alert('❌ حدث خطأ في حذف المستخدم: ' + (error as any).message);
     }
   };

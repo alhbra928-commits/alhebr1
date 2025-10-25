@@ -397,7 +397,34 @@ export class AdminSessionService {
       console.log('🗑️ [AdminSessionService] deleteUser START');
       console.log('Phone:', phone);
 
-      // حذف المستخدم من جدول admin_users
+      // 1. أولاً: حذف جميع الصلاحيات للمستخدم
+      console.log('🗑️ Step 1: Deleting all permissions for user...');
+      const { error: permissionsError } = await supabase
+        .from('admin_module_permissions')
+        .delete()
+        .eq('admin_phone', phone);
+
+      if (permissionsError) {
+        console.error('❌ Error deleting permissions:', permissionsError);
+        throw permissionsError;
+      }
+      console.log('✅ Permissions deleted successfully');
+
+      // 2. ثانياً: حذف جميع الجلسات النشطة
+      console.log('🗑️ Step 2: Deleting active sessions...');
+      const { error: sessionsError } = await supabase
+        .from('admin_active_sessions')
+        .delete()
+        .eq('admin_phone', phone);
+
+      if (sessionsError) {
+        console.error('❌ Error deleting sessions:', sessionsError);
+        // نستمر حتى لو كان هناك خطأ في حذف الجلسات
+      }
+      console.log('✅ Sessions deleted successfully');
+
+      // 3. ثالثاً: حذف المستخدم من جدول admin_users
+      console.log('🗑️ Step 3: Deleting user from admin_users...');
       const { error: deleteError } = await supabase
         .from('admin_users')
         .delete()
@@ -408,16 +435,18 @@ export class AdminSessionService {
         throw deleteError;
       }
 
-      console.log('✅ User deleted successfully');
+      console.log('✅ User deleted successfully from database');
 
-      // تسجيل في Access Log
+      // 4. رابعاً: تسجيل في Access Log
       await this.addAccessLog(
         phone,
         'System',
         'delete_user',
-        `حذف المستخدم ${phone}`,
+        `حذف المستخدم ${phone} وجميع صلاحياته بشكل نهائي`,
         'success'
       );
+
+      console.log('✅ [AdminSessionService] deleteUser COMPLETED');
 
     } catch (error) {
       console.error('❌ Error in deleteUser:', error);
