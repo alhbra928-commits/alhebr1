@@ -1,21 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  User,
-  Phone,
-  Mail,
-  MapPin,
-  CheckCircle,
-  XCircle,
-  Snowflake,
-  Edit,
-  Trash2,
-  Eye,
-  Star,
-  Calendar,
-  TreePine,
-  Building,
-  Clock
-} from 'lucide-react';
+import { User, Phone, Mail, MapPin, CheckCircle, XCircle, Snowflake, CreditCard as Edit, Trash2, Eye, Star, Calendar, TreePine, Building, Clock } from 'lucide-react';
 
 interface FarmOwner {
   id: string;
