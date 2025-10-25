@@ -193,7 +193,9 @@ export class AdminSessionService {
         phone: user.phone,
         name: user.full_name || user.phone,
         role: user.role_id || 'employee',
-        roleAr: this.getRoleArabic(user.role_id),
+        roleAr: user.job_title || this.getRoleArabic(user.role_id),
+        jobTitle: user.job_title,
+        jobTitleEn: user.job_title_en,
         email: user.email,
         isActive: user.is_active,
       }));
