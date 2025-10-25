@@ -46,6 +46,9 @@ export function CertificateDetailsPanel({
   const [showCertificate, setShowCertificate] = useState(false);
   const { canEdit, canDelete } = usePermissions();
 
+  const hasEditPermission = canEdit('documentation');
+  const hasDeletePermission = canDelete('documentation');
+
   if (!isOpen || !certificate) return null;
 
   const getStatusConfig = (status: string) => {
@@ -293,9 +296,9 @@ export function CertificateDetailsPanel({
               عرض الشهادة الفاخرة
             </button>
 
-            {(canEdit || canDelete) && (
+            {(hasEditPermission || hasDeletePermission) && (
               <div className="grid grid-cols-2 gap-3">
-                {canEdit && (
+                {hasEditPermission && (
                   <>
                     <button
                       onClick={() => onReissue(certificate)}
@@ -325,7 +328,7 @@ export function CertificateDetailsPanel({
                   </>
                 )}
 
-                {canDelete && (
+                {hasDeletePermission && (
                   <button
                     onClick={() => onDelete(certificate)}
                     className="flex items-center justify-center gap-2 px-4 py-3 bg-red-500 hover:bg-red-600 text-white rounded-xl font-bold transition-all"
