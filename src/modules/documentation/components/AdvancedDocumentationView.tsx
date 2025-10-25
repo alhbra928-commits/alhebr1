@@ -179,17 +179,34 @@ export function AdvancedDocumentationView({ onBack }: AdvancedDocumentationViewP
       setActionLoading(true);
       setIsPanelOpen(false);
 
-      await DocumentationService.deletePermanently(certificate.id);
+      console.log('🗑️ بدء عملية حذف الشهادة:', certificate.certificate_code);
+
+      const result = await DocumentationService.deletePermanently(
+        certificate.id,
+        `حذف شهادة ${certificate.certificate_code} من لوحة التحكم`
+      );
+
+      console.log('✅ نتيجة الحذف:', result);
 
       setCertificates(prev => prev.filter(c => c.id !== certificate.id));
       setFilteredCertificates(prev => prev.filter(c => c.id !== certificate.id));
 
       await loadData();
 
-      alert('✅ تم حذف الشهادة نهائياً بنجاح');
+      alert(
+        `✅ تم حذف الشهادة نهائياً بنجاح!\n\n` +
+        `رقم الشهادة: ${certificate.certificate_code}\n` +
+        `المستثمر: ${certificate.investor_name}\n\n` +
+        `✓ تم حفظ نسخة احتياطية\n` +
+        `✓ تم تسجيل العملية في السجل`
+      );
     } catch (error: any) {
-      console.error('Error deleting certificate:', error);
-      alert(`حدث خطأ في الحذف: ${error.message || 'خطأ غير معروف'}`);
+      console.error('❌ خطأ في حذف الشهادة:', error);
+      alert(
+        `❌ حدث خطأ في الحذف!\n\n` +
+        `الخطأ: ${error.message || 'خطأ غير معروف'}\n\n` +
+        `يرجى المحاولة مرة أخرى أو التواصل مع الدعم الفني.`
+      );
       await loadData();
     } finally {
       setActionLoading(false);

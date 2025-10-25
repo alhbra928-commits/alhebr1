@@ -273,20 +273,28 @@ export class DocumentationService {
     return labelMap[status] || status;
   }
 
-  static async deletePermanently(id: string): Promise<void> {
+  static async deletePermanently(id: string, reason: string = 'حذف من لوحة التحكم'): Promise<void> {
     console.log('🗑️ محاولة حذف شهادة:', id);
 
-    const { data, error } = await supabase
-      .from('documentation')
-      .delete()
-      .eq('id', id)
-      .select();
+    try {
+      const { data, error } = await supabase
+        .rpc('delete_documentation_permanently', {
+          p_documentation_id: id,
+          p_reason: reason
+        });
 
-    if (error) {
-      console.error('❌ خطأ في حذف الشهادة:', error);
-      throw error;
+      if (error) {
+        console.error('❌ خطأ في حذف الشهادة:', error);
+        throw new Error(`فشل حذف الشهادة: ${error.message}`);
+      }
+
+      console.log('✅ تم حذف الشهادة بنجاح:', data);
+      console.log('📦 معرف النسخة الاحتياطية:', data?.backup_id);
+
+      return data;
+    } catch (err: any) {
+      console.error('❌ خطأ في عملية الحذف:', err);
+      throw new Error(err.message || 'حدث خطأ في حذف الشهادة');
     }
-
-    console.log('✅ تم حذف الشهادة بنجاح:', data);
   }
 }
