@@ -58,7 +58,7 @@ export function PermissionsProvider({ children }: { children: ReactNode }) {
       console.log('🔍 [PermissionsContext] Admin Role:', admin.role);
       console.log('🔍 [PermissionsContext] Admin Name:', admin.name);
 
-      const SUPER_ADMIN_PHONES = ['0500000000'];
+      const SUPER_ADMIN_PHONES = ['0500000000', '0500000001'];
       const isSuperAdmin = SUPER_ADMIN_PHONES.includes(admin.phone);
 
       if (isSuperAdmin) {
