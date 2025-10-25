@@ -6,11 +6,12 @@ interface SmartFarmDataFormProps {
   profileId: string;
   onSuccess: () => void;
   initialData?: any;
+  farmId?: string;
 }
 
 type FarmType = 'نخيل' | 'زيتون' | 'مختلط';
 
-export const SmartFarmDataForm: React.FC<SmartFarmDataFormProps> = ({ profileId, onSuccess, initialData }) => {
+export const SmartFarmDataForm: React.FC<SmartFarmDataFormProps> = ({ profileId, onSuccess, initialData, farmId }) => {
   // القسم (أ) - بيانات المالك
   const [fullName, setFullName] = useState(initialData?.full_name || '');
   const [nationalId, setNationalId] = useState(initialData?.national_id || '');
@@ -117,6 +118,7 @@ export const SmartFarmDataForm: React.FC<SmartFarmDataFormProps> = ({ profileId,
       bank_iban: bankIban,
       bank_account_holder_name: bankAccountHolderName,
       bank_branch: bankBranch,
+      farm_id: farmId,
       varieties
     });
 
