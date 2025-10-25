@@ -44,11 +44,15 @@ const menuItems: MenuItem[] = [
 ];
 
 export function Sidebar({ activeModule, onModuleChange }: SidebarProps) {
-  const { canAccessModule, isAdmin, loading } = usePermissions();
+  const { canAccessModule, isAdmin, loading, permissions } = usePermissions();
 
   console.log('🔍🔍🔍 [Sidebar] Rendering...');
   console.log('🔍 [Sidebar] isAdmin:', isAdmin);
   console.log('🔍 [Sidebar] loading:', loading);
+  console.log('🔍 [Sidebar] permissions count:', permissions?.length || 0);
+  if (permissions && permissions.length > 0) {
+    console.log('🔍 [Sidebar] Available modules:', permissions.map(p => p.module_id));
+  }
 
   return (
     <div className="h-screen w-64 bg-gradient-to-b from-amber-900 via-amber-800 to-orange-900 text-white fixed right-0 top-0 shadow-2xl overflow-y-auto" dir="rtl">

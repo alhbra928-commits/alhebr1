@@ -87,6 +87,7 @@ export function PermissionsProvider({ children }: { children: ReactNode }) {
       }
 
       setPermissions(userPermissions);
+      console.log('✅ [PermissionsContext] Permissions SET in state:', userPermissions.length);
       console.log('🔍🔍🔍 [PermissionsContext] ======================');
     } catch (error) {
       console.error('❌❌❌ [PermissionsContext] ERROR LOADING PERMISSIONS:', error);
@@ -95,11 +96,13 @@ export function PermissionsProvider({ children }: { children: ReactNode }) {
       setCurrentAdminPhone(null);
       setCurrentAdminRole(null);
     } finally {
+      console.log('⏳ [PermissionsContext] Setting loading = false');
       setLoading(false);
     }
   };
 
   useEffect(() => {
+    console.log('🔄🔄🔄 [PermissionsContext] useEffect triggered - loading permissions');
     loadPermissions();
 
     const interval = setInterval(() => {

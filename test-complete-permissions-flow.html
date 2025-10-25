@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>اختبار نظام الصلاحيات الكامل</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding: 20px;
+      background: #0f172a;
+      color: #e2e8f0;
+      line-height: 1.6;
+    }
+    h1 { color: #fbbf24; border-bottom: 3px solid #fbbf24; padding-bottom: 10px; }
+    h2 { color: #60a5fa; margin-top: 30px; }
+    button {
+      padding: 12px 24px;
+      margin: 8px;
+      background: linear-gradient(135deg, #fbbf24, #f59e0b);
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 15px;
+      transition: all 0.3s;
+    }
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(251, 191, 36, 0.3);
+    }
+    .success { color: #4ade80; }
+    .error { color: #f87171; }
+    .warning { color: #fbbf24; }
+    .info { color: #60a5fa; }
+    pre {
+      background: #1e293b;
+      padding: 15px;
+      border-radius: 8px;
+      overflow-x: auto;
+      border-left: 4px solid #fbbf24;
+      margin: 10px 0;
+    }
+    .test-section {
+      background: #1e293b;
+      padding: 20px;
+      border-radius: 10px;
+      margin: 20px 0;
+      border: 2px solid #334155;
+    }
+    .result-box {
+      background: #0f172a;
+      border: 2px solid #475569;
+      border-radius: 8px;
+      padding: 15px;
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>🔐 اختبار نظام الصلاحيات الكامل</h1>
+
+  <div class="test-section">
+    <h2>📋 خطوة 1: اختبار قراءة البيانات من DB</h2>
+    <button onclick="testDatabaseRead()">🔍 فحص قراءة البيانات</button>
+    <div id="dbReadResult"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>👤 خطوة 2: اختبار المستخدمين</h2>
+    <button onclick="testUser('0500000000', '1234')">Admin: 0500000000</button>
+    <button onclick="testUser('0510000000', '8117')">أسماء: 0510000000</button>
+    <button onclick="testUser('0500000002', '1234')">سعد: 0500000002</button>
+    <button onclick="testUser('0500000007', '1234')">تميم: 0500000007</button>
+    <div id="userTestResult"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>🔑 خطوة 3: اختبار تسجيل الدخول الكامل</h2>
+    <button onclick="testFullLogin('0510000000', '8117')">تسجيل دخول أسماء</button>
+    <button onclick="testFullLogin('0500000000', '1234')">تسجيل دخول Admin</button>
+    <div id="loginTestResult"></div>
+  </div>
+
+  <script>
+    const SUPABASE_URL = 'https://uictvlpcptrlkgtepzfy.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVpY3R2bHBjcHRybGtndGVwemZ5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjk0MDU1MTEsImV4cCI6MjA0NDk4MTUxMX0.ZFPd_g7yk1rkFoW71kH5Rps5Rft0kMWiwd7GR5l1Aog';
+
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    function log(elementId, message, type = 'info') {
+      const div = document.getElementById(elementId);
+      const resultBox = document.createElement('div');
+      resultBox.className = `result-box ${type}`;
+      resultBox.innerHTML = typeof message === 'object'
+        ? `<pre>${JSON.stringify(message, null, 2)}</pre>`
+        : `<div class="${type}">${message}</div>`;
+      div.appendChild(resultBox);
+    }
+
+    function clear(elementId) {
+      document.getElementById(elementId).innerHTML = '';
+    }
+
+    async function testDatabaseRead() {
+      clear('dbReadResult');
+      log('dbReadResult', '🔍 جاري فحص قاعدة البيانات...', 'info');
+
+      try {
+        // اختبار 1: قراءة جميع المستخدمين
+        log('dbReadResult', '\n📊 اختبار 1: قراءة admin_users', 'warning');
+        const { data: users, error: usersError } = await supabase
+          .from('admin_users')
+          .select('phone, full_name, role_id, is_active')
+          .is('deleted_at', null);
+
+        if (usersError) {
+          log('dbReadResult', `❌ خطأ: ${usersError.message}`, 'error');
+        } else {
+          log('dbReadResult', `✅ تم العثور على ${users.length} مستخدمين`, 'success');
+          log('dbReadResult', users, 'info');
+        }
+
+        // اختبار 2: قراءة جميع الصلاحيات
+        log('dbReadResult', '\n📊 اختبار 2: قراءة admin_module_permissions', 'warning');
+        const { data: perms, error: permsError } = await supabase
+          .from('admin_module_permissions')
+          .select('admin_phone, module_id, module_name_ar, can_view, is_active')
+          .eq('is_active', true);
+
+        if (permsError) {
+          log('dbReadResult', `❌ خطأ: ${permsError.message}`, 'error');
+        } else {
+          log('dbReadResult', `✅ تم العثور على ${perms.length} صلاحية`, 'success');
+
+          // تجميع الصلاحيات حسب المستخدم
+          const permsByUser = {};
+          perms.forEach(p => {
+            if (!permsByUser[p.admin_phone]) {
+              permsByUser[p.admin_phone] = [];
+            }
+            permsByUser[p.admin_phone].push(p.module_id);
+          });
+
+          log('dbReadResult', 'الصلاحيات حسب المستخدم:', 'info');
+          Object.entries(permsByUser).forEach(([phone, modules]) => {
+            log('dbReadResult', `  ${phone}: ${modules.join(', ')}`, 'success');
+          });
+        }
+
+      } catch (err) {
+        log('dbReadResult', `❌ استثناء: ${err.message}`, 'error');
+      }
+    }
+
+    async function testUser(phone, secretCode) {
+      clear('userTestResult');
+      log('userTestResult', `🔍 اختبار المستخدم: ${phone}`, 'info');
+
+      try {
+        // اختبار 1: هل المستخدم موجود؟
+        log('userTestResult', '\n1️⃣ البحث عن المستخدم في admin_users...', 'warning');
+        const { data: user, error: userError } = await supabase
+          .from('admin_users')
+          .select('*')
+          .eq('phone', phone)
+          .is('deleted_at', null)
+          .maybeSingle();
+
+        if (userError || !user) {
+          log('userTestResult', `❌ المستخدم غير موجود!`, 'error');
+          return;
+        }
+
+        log('userTestResult', `✅ المستخدم موجود:`, 'success');
+        log('userTestResult', {
+          phone: user.phone,
+          full_name: user.full_name,
+          role_id: user.role_id,
+          is_active: user.is_active,
+          secret_code: user.secret_code
+        }, 'info');
+
+        // اختبار 2: التحقق من الرمز السري
+        log('userTestResult', '\n2️⃣ التحقق من الرمز السري...', 'warning');
+        if (user.secret_code === secretCode) {
+          log('userTestResult', `✅ الرمز السري صحيح!`, 'success');
+        } else {
+          log('userTestResult', `❌ الرمز السري خاطئ! (المتوقع: ${user.secret_code}, المدخل: ${secretCode})`, 'error');
+        }
+
+        // اختبار 3: هل هو Super Admin؟
+        log('userTestResult', '\n3️⃣ فحص Super Admin...', 'warning');
+        const SUPER_ADMIN_PHONES = ['0500000000'];
+        const isSuperAdmin = SUPER_ADMIN_PHONES.includes(phone);
+        log('userTestResult', isSuperAdmin
+          ? `✅ نعم، هذا Super Admin`
+          : `⚠️ لا، هذا موظف عادي`,
+          isSuperAdmin ? 'success' : 'warning'
+        );
+
+        // اختبار 4: جلب الصلاحيات
+        log('userTestResult', '\n4️⃣ جلب الصلاحيات من admin_module_permissions...', 'warning');
+        const { data: permissions, error: permsError } = await supabase
+          .from('admin_module_permissions')
+          .select('*')
+          .eq('admin_phone', phone)
+          .eq('is_active', true);
+
+        if (permsError) {
+          log('userTestResult', `❌ خطأ في جلب الصلاحيات: ${permsError.message}`, 'error');
+        } else {
+          log('userTestResult', `✅ تم العثور على ${permissions.length} صلاحية`, 'success');
+          permissions.forEach(p => {
+            log('userTestResult', `  ✓ ${p.module_name_ar} (${p.module_id}) - can_view: ${p.can_view}`, 'info');
+          });
+        }
+
+        // اختبار 5: تحديد الأقسام التي يمكن الوصول إليها
+        log('userTestResult', '\n5️⃣ الأقسام المتاحة في Sidebar:', 'warning');
+        const allModules = [
+          'dashboard', 'owners', 'farms', 'reservations', 'investors',
+          'finance', 'agriculture', 'documentation', 'marketing',
+          'whatsapp', 'wallets', 'permissions', 'settings'
+        ];
+
+        const accessibleModules = [];
+
+        if (isSuperAdmin) {
+          accessibleModules.push(...allModules);
+          log('userTestResult', '✅ Super Admin - الوصول إلى جميع الأقسام!', 'success');
+        } else {
+          accessibleModules.push('dashboard'); // دائماً متاح
+
+          permissions.forEach(p => {
+            if (p.can_view && allModules.includes(p.module_id)) {
+              accessibleModules.push(p.module_id);
+            }
+          });
+
+          log('userTestResult', `✅ الأقسام المتاحة (${accessibleModules.length}):`, 'success');
+          accessibleModules.forEach(m => {
+            log('userTestResult', `  ✓ ${m}`, 'info');
+          });
+
+          const deniedModules = allModules.filter(m => !accessibleModules.includes(m));
+          if (deniedModules.length > 0) {
+            log('userTestResult', `❌ الأقسام المحظورة (${deniedModules.length}):`, 'error');
+            deniedModules.forEach(m => {
+              log('userTestResult', `  ✗ ${m}`, 'error');
+            });
+          }
+        }
+
+      } catch (err) {
+        log('userTestResult', `❌ استثناء: ${err.message}`, 'error');
+      }
+    }
+
+    async function testFullLogin(phone, secretCode) {
+      clear('loginTestResult');
+      log('loginTestResult', `🔐 محاكاة تسجيل دخول كامل: ${phone}`, 'info');
+
+      try {
+        // خطوة 1: التحقق من المستخدم
+        log('loginTestResult', '\n📝 خطوة 1: التحقق من بيانات المستخدم...', 'warning');
+        const { data: user, error: userError } = await supabase
+          .from('admin_users')
+          .select('*')
+          .eq('phone', phone)
+          .is('deleted_at', null)
+          .maybeSingle();
+
+        if (userError || !user) {
+          log('loginTestResult', '❌ فشل تسجيل الدخول: المستخدم غير موجود', 'error');
+          return;
+        }
+
+        if (user.secret_code !== secretCode) {
+          log('loginTestResult', '❌ فشل تسجيل الدخول: الرمز السري خاطئ', 'error');
+          return;
+        }
+
+        log('loginTestResult', '✅ تم التحقق من المستخدم', 'success');
+
+        // خطوة 2: تحديد نوع المستخدم
+        log('loginTestResult', '\n📝 خطوة 2: تحديد نوع المستخدم...', 'warning');
+        const SUPER_ADMIN_PHONES = ['0500000000'];
+        const isSuperAdmin = SUPER_ADMIN_PHONES.includes(phone);
+
+        if (isSuperAdmin) {
+          log('loginTestResult', '✅ Super Admin - صلاحيات كاملة', 'success');
+          log('loginTestResult', '✨ يمكنه الوصول إلى جميع الأقسام الـ 13', 'success');
+        } else {
+          log('loginTestResult', '⚠️ موظف - يحتاج صلاحيات محددة', 'warning');
+
+          // خطوة 3: جلب الصلاحيات
+          log('loginTestResult', '\n📝 خطوة 3: جلب الصلاحيات...', 'warning');
+          const { data: permissions, error: permsError } = await supabase
+            .from('admin_module_permissions')
+            .select('*')
+            .eq('admin_phone', phone)
+            .eq('is_active', true);
+
+          if (permsError) {
+            log('loginTestResult', `❌ خطأ في جلب الصلاحيات: ${permsError.message}`, 'error');
+            return;
+          }
+
+          log('loginTestResult', `✅ تم جلب ${permissions.length} صلاحية`, 'success');
+
+          // خطوة 4: عرض نتيجة تسجيل الدخول
+          log('loginTestResult', '\n📝 خطوة 4: نتيجة تسجيل الدخول النهائية:', 'warning');
+
+          const visibleModules = ['dashboard']; // Dashboard دائماً مرئي
+          permissions.forEach(p => {
+            if (p.can_view) {
+              visibleModules.push(p.module_id);
+            }
+          });
+
+          log('loginTestResult', '✅ تسجيل الدخول ناجح!', 'success');
+          log('loginTestResult', `📊 الأقسام المرئية في Sidebar (${visibleModules.length}):`, 'info');
+          visibleModules.forEach(m => {
+            log('loginTestResult', `  ✓ ${m}`, 'success');
+          });
+        }
+
+      } catch (err) {
+        log('loginTestResult', `❌ استثناء: ${err.message}`, 'error');
+      }
+    }
+
+    // تشغيل اختبار أولي عند تحميل الصفحة
+    window.onload = () => {
+      log('dbReadResult', '💡 اضغط على الزر لبدء الاختبار', 'info');
+      log('userTestResult', '💡 اختر مستخدماً لاختباره', 'info');
+      log('loginTestResult', '💡 اضغط لمحاكاة تسجيل دخول كامل', 'info');
+    };
+  </script>
+</body>
+</html>
