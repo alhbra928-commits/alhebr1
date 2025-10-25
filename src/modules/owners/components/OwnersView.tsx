@@ -21,7 +21,11 @@ import {
   X,
   XCircle,
   Building,
-  TreePine
+  TreePine,
+  MessageSquare,
+  Wallet,
+  MoreHorizontal,
+  Send
 } from 'lucide-react';
 import { Card3D } from '../../../components/ui/Card3D';
 import { BackButton } from '../../../components/common/BackButton';
@@ -49,6 +53,7 @@ export function OwnersView({ onBack }: OwnersViewProps) {
   const [showDetailsPanel, setShowDetailsPanel] = useState(false);
   const [selectedOwnerDetails, setSelectedOwnerDetails] = useState<any>(null);
   const [ownerFarms, setOwnerFarms] = useState<any[]>([]);
+  const [expandedActions, setExpandedActions] = useState<{ [key: string]: boolean }>({});
 
   const { isAdmin, canCreate, canEdit, canDelete } = usePermissions();
 
@@ -205,6 +210,28 @@ export function OwnersView({ onBack }: OwnersViewProps) {
     } catch (err: any) {
       alert('حدث خطأ: ' + err.message);
     }
+  };
+
+  const handleSendMessage = (owner: FarmOwner, e: React.MouseEvent) => {
+    e.stopPropagation();
+    const message = prompt(`أرسل رسالة إلى ${owner.full_name}:`);
+    if (message) {
+      const whatsappUrl = `https://wa.me/${owner.mobile_number.replace(/\D/g, '')}?text=${encodeURIComponent(message)}`;
+      window.open(whatsappUrl, '_blank');
+    }
+  };
+
+  const handleViewFinancials = (owner: FarmOwner, e: React.MouseEvent) => {
+    e.stopPropagation();
+    alert(`عرض المعاملات المالية لـ ${owner.full_name}\n\nهذه الميزة قيد التطوير...`);
+  };
+
+  const toggleExpandedActions = (ownerId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setExpandedActions(prev => ({
+      ...prev,
+      [ownerId]: !prev[ownerId]
+    }));
   };
 
   const getStatusColor = (status: string) => {
@@ -585,17 +612,9 @@ export function OwnersView({ onBack }: OwnersViewProps) {
                         <div className="grid grid-cols-3 gap-2">
                           {owner.status === 'active' ? (
                             <button
-                              onClick={async (e) => {
+                              onClick={(e) => {
                                 e.stopPropagation();
-                                if (confirm(`هل تريد تجميد حساب ${owner.full_name}؟`)) {
-                                  try {
-                                    await OwnersService.updateOwner(owner.id, { status: 'frozen' });
-                                    alert('✅ تم تجميد الحساب');
-                                    loadData();
-                                  } catch (err) {
-                                    alert('❌ حدث خطأ');
-                                  }
-                                }
+                                handleToggleStatus(owner, e);
                               }}
                               className="flex items-center justify-center gap-1.5 px-3 py-2 bg-blue-100 text-blue-700 rounded-lg font-bold hover:bg-blue-200 transition-all text-sm"
                               title="تجميد الحساب"
@@ -605,17 +624,9 @@ export function OwnersView({ onBack }: OwnersViewProps) {
                             </button>
                           ) : owner.status === 'frozen' ? (
                             <button
-                              onClick={async (e) => {
+                              onClick={(e) => {
                                 e.stopPropagation();
-                                if (confirm(`هل تريد تفعيل حساب ${owner.full_name}؟`)) {
-                                  try {
-                                    await OwnersService.updateOwner(owner.id, { status: 'active' });
-                                    alert('✅ تم تفعيل الحساب');
-                                    loadData();
-                                  } catch (err) {
-                                    alert('❌ حدث خطأ');
-                                  }
-                                }
+                                handleToggleStatus(owner, e);
                               }}
                               className="flex items-center justify-center gap-1.5 px-3 py-2 bg-green-100 text-green-700 rounded-lg font-bold hover:bg-green-200 transition-all text-sm"
                               title="تفعيل الحساب"
@@ -655,6 +666,50 @@ export function OwnersView({ onBack }: OwnersViewProps) {
                             </button>
                           )}
                         </div>
+
+                        {/* Expanded Actions Toggle */}
+                        <button
+                          onClick={(e) => toggleExpandedActions(owner.id, e)}
+                          className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-bold hover:bg-gray-200 transition-all text-sm"
+                        >
+                          <MoreHorizontal className="h-4 w-4" />
+                          <span>{expandedActions[owner.id] ? 'إخفاء الإجراءات' : 'المزيد من الإجراءات'}</span>
+                        </button>
+
+                        {/* Extended Actions (Collapsible) */}
+                        {expandedActions[owner.id] && (
+                          <div className="grid grid-cols-3 gap-2 pt-2 border-t-2 border-gray-100">
+                            <button
+                              onClick={(e) => handleSendMessage(owner, e)}
+                              className="flex items-center justify-center gap-1.5 px-3 py-2 bg-green-50 text-green-700 rounded-lg font-bold hover:bg-green-100 transition-all text-sm border border-green-200"
+                              title="إرسال رسالة واتساب"
+                            >
+                              <MessageSquare className="h-3.5 w-3.5" />
+                              <span>واتساب</span>
+                            </button>
+
+                            <button
+                              onClick={(e) => handleViewFinancials(owner, e)}
+                              className="flex items-center justify-center gap-1.5 px-3 py-2 bg-purple-50 text-purple-700 rounded-lg font-bold hover:bg-purple-100 transition-all text-sm border border-purple-200"
+                              title="عرض المعاملات المالية"
+                            >
+                              <Wallet className="h-3.5 w-3.5" />
+                              <span>المالية</span>
+                            </button>
+
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                alert(`إضافة مزرعة جديدة لـ ${owner.full_name}\n\nهذه الميزة قيد التطوير...`);
+                              }}
+                              className="flex items-center justify-center gap-1.5 px-3 py-2 bg-amber-50 text-amber-700 rounded-lg font-bold hover:bg-amber-100 transition-all text-sm border border-amber-200"
+                              title="إضافة مزرعة جديدة"
+                            >
+                              <TreePine className="h-3.5 w-3.5" />
+                              <span>مزرعة</span>
+                            </button>
+                          </div>
+                        )}
                       </div>
 
                       {/* Footer Info */}
