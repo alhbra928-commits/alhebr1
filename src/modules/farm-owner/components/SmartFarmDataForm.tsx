@@ -461,22 +461,43 @@ export const SmartFarmDataForm: React.FC<SmartFarmDataFormProps> = ({ profileId,
               المدة المسموحة للمستثمرين لإتمام دفع كامل قيمة المزرعة
             </p>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              {[3, 6, 9, 12].map((months) => (
-                <button
-                  key={months}
-                  type="button"
-                  onClick={() => setGracePeriod(months)}
-                  className="px-4 py-3 rounded-xl font-bold transition-all hover:scale-105"
-                  style={{
-                    background: gracePeriod === months ? 'linear-gradient(135deg, #D4AF37, #C4941F)' : 'white',
-                    color: gracePeriod === months ? 'white' : '#4B5563',
-                    border: `2px solid ${gracePeriod === months ? '#D4AF37' : '#E5E7EB'}`,
-                    boxShadow: gracePeriod === months ? '0 4px 12px rgba(212, 175, 55, 0.3)' : 'none'
-                  }}
-                >
-                  {months} {months === 3 ? 'أشهر' : 'شهر'}
-                </button>
-              ))}
+              {[3, 6, 9, 12].map((months) => {
+                const isRecommended = months === 6;
+                const isSelected = gracePeriod === months;
+
+                return (
+                  <button
+                    key={months}
+                    type="button"
+                    onClick={() => setGracePeriod(months)}
+                    className="relative px-4 py-3 rounded-xl font-bold transition-all hover:scale-105"
+                    style={{
+                      background: isSelected
+                        ? 'linear-gradient(135deg, #D4AF37, #C4941F)'
+                        : isRecommended
+                        ? 'linear-gradient(135deg, #F0FDF4, #DCFCE7)'
+                        : 'white',
+                      color: isSelected ? 'white' : isRecommended ? '#16A34A' : '#4B5563',
+                      border: `2px solid ${isSelected ? '#D4AF37' : isRecommended ? '#22C55E' : '#E5E7EB'}`,
+                      boxShadow: isSelected
+                        ? '0 4px 12px rgba(212, 175, 55, 0.3)'
+                        : isRecommended
+                        ? '0 2px 8px rgba(34, 197, 94, 0.2)'
+                        : 'none'
+                    }}
+                  >
+                    {isRecommended && !isSelected && (
+                      <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 px-2 py-0.5 bg-green-500 text-white text-[9px] font-black rounded-full whitespace-nowrap">
+                        مقترح
+                      </div>
+                    )}
+                    <div className="flex flex-col items-center gap-0.5">
+                      <span className="text-lg">{months}</span>
+                      <span className="text-xs">{months === 3 ? 'أشهر' : 'شهر'}</span>
+                    </div>
+                  </button>
+                );
+              })}
             </div>
             {gracePeriod > 0 && (
               <div className="mt-3 p-3 bg-green-50 rounded-lg border border-green-200">
