@@ -329,6 +329,42 @@ export function EnhancedDashboard({ onModuleSelect, onLogout, onGoToPublic, onSh
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
+          {/* بطاقة تعريف الموظف */}
+          {(() => {
+            const { admin } = AdminSessionService.getCurrentSession();
+            if (admin) {
+              return (
+                <div className="mb-6 bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
+                  <div className="bg-gradient-to-r from-[#C89B3C] to-[#D4AF37] px-6 py-4">
+                    <div className="flex items-center gap-4">
+                      <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg">
+                        <Shield className="h-8 w-8 text-white" />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="text-xl font-bold text-white mb-1">
+                          {admin.name || 'مدير النظام'}
+                        </h3>
+                        <div className="flex items-center gap-4 text-white/90 text-sm">
+                          <span className="flex items-center gap-2">
+                            📱 {admin.phone}
+                          </span>
+                          <span className="flex items-center gap-2">
+                            💼 {admin.role === 'super_admin' ? 'المدير العام' : admin.roleAr || 'موظف'}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="hidden sm:flex items-center gap-2 px-4 py-2 bg-white/20 backdrop-blur-sm rounded-lg">
+                        <div className="w-2.5 h-2.5 bg-green-400 rounded-full animate-pulse"></div>
+                        <span className="text-white text-sm font-medium">متصل</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            }
+            return null;
+          })()}
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {modules.map((module, index) => {
               const Icon = module.icon;
