@@ -32,6 +32,7 @@ import { OwnersService, FarmOwner } from '../ownersService';
 import { FarmsService } from '../../farms/farmsService';
 import { OwnerFormModal } from './OwnerFormModal';
 import { AdvancedOwnerCard3D } from './AdvancedOwnerCard3D';
+import { SubmittedDataModal } from './SubmittedDataModal';
 import { usePermissions } from '../../../contexts/PermissionsContext';
 
 interface OwnersViewProps {
@@ -53,6 +54,8 @@ export function OwnersView({ onBack }: OwnersViewProps) {
   const [showDetailsPanel, setShowDetailsPanel] = useState(false);
   const [selectedOwnerDetails, setSelectedOwnerDetails] = useState<any>(null);
   const [ownerFarms, setOwnerFarms] = useState<any[]>([]);
+  const [showSubmittedDataModal, setShowSubmittedDataModal] = useState(false);
+  const [selectedOwnerForData, setSelectedOwnerForData] = useState<FarmOwner | null>(null);
 
   const { isAdmin, canCreate, canEdit, canDelete } = usePermissions();
 
@@ -153,7 +156,13 @@ export function OwnersView({ onBack }: OwnersViewProps) {
     setShowModal(true);
   };
 
-  const handleViewDetails = async (owner: FarmOwner, e: React.MouseEvent) => {
+  const handleViewDetails = async (owner: FarmOwner, e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    setSelectedOwnerForData(owner);
+    setShowSubmittedDataModal(true);
+  };
+
+  const handleViewDetailsOld = async (owner: FarmOwner, e: React.MouseEvent) => {
     e.stopPropagation();
     setSelectedOwnerDetails(owner);
     setShowDetailsPanel(true);
@@ -640,6 +649,20 @@ export function OwnersView({ onBack }: OwnersViewProps) {
           initialData={selectedOwner}
           mode={modalMode}
         />
+
+        {/* Submitted Data Modal */}
+        {showSubmittedDataModal && selectedOwnerForData && (
+          <SubmittedDataModal
+            owner={selectedOwnerForData}
+            onClose={() => {
+              setShowSubmittedDataModal(false);
+              setSelectedOwnerForData(null);
+            }}
+            onApprove={() => {
+              loadData();
+            }}
+          />
+        )}
       </div>
     </div>
   );
