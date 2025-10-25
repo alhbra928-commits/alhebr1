@@ -201,7 +201,14 @@ export function BookingCard3D({
           </button>
         )}
 
-        {(booking.booking_status === 'pending' || booking.booking_status === 'rejected') && onDelete && (
+        {(booking.booking_status === 'pending' || booking.booking_status === 'rejected') && (() => {
+          console.log('🔍🔍🔍 [BookingCard3D - Delete Button Check]');
+          console.log('  Booking ID:', booking.id);
+          console.log('  Booking Status:', booking.booking_status);
+          console.log('  onDelete exists:', !!onDelete);
+          console.log('  Will show delete button:', !!onDelete);
+          return onDelete;
+        })() && (
           <button
             onClick={(e) => {
               e.stopPropagation();
