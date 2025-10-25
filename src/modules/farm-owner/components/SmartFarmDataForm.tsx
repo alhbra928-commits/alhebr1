@@ -436,37 +436,58 @@ export const SmartFarmDataForm: React.FC<SmartFarmDataFormProps> = ({ profileId,
 
         <div className="grid grid-cols-1 gap-4">
           <div>
-            <label className="block text-sm font-bold mb-2 text-gray-700">السعر الإجمالي للمزرعة (ريال) *</label>
+            <label className="block text-sm font-bold mb-2 text-gray-700">
+              إجمالي السعر المطلوب لكامل المزرعة (ريال سعودي) *
+            </label>
             <input
               type="number"
               value={totalPrice}
               onChange={(e) => setTotalPrice(Number(e.target.value))}
               required
               min="1"
-              className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-yellow-500 focus:outline-none transition-colors"
-              placeholder="أدخل السعر الإجمالي"
+              className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-yellow-500 focus:outline-none transition-colors text-lg font-bold"
+              placeholder="مثال: 500000"
             />
+            <p className="text-xs text-gray-500 mt-1">
+              السعر الإجمالي لجميع الأشجار في المزرعة
+            </p>
           </div>
 
           <div className="md:col-span-2">
-            <label className="block text-sm font-bold mb-2 text-gray-700">مدة السماح (شهور) *</label>
-            <div className="grid grid-cols-4 gap-3">
+            <label className="block text-sm font-bold mb-2 text-gray-700">
+              مدة السماح بسداد كامل مبلغ المزرعة (بالشهور) *
+            </label>
+            <p className="text-xs text-gray-600 mb-3 bg-yellow-50 p-2 rounded-lg border border-yellow-200">
+              المدة المسموحة للمستثمرين لإتمام دفع كامل قيمة المزرعة
+            </p>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {[3, 6, 9, 12].map((months) => (
                 <button
                   key={months}
                   type="button"
                   onClick={() => setGracePeriod(months)}
-                  className="px-4 py-3 rounded-xl font-bold transition-all"
+                  className="px-4 py-3 rounded-xl font-bold transition-all hover:scale-105"
                   style={{
                     background: gracePeriod === months ? 'linear-gradient(135deg, #D4AF37, #C4941F)' : 'white',
                     color: gracePeriod === months ? 'white' : '#4B5563',
-                    border: `2px solid ${gracePeriod === months ? '#D4AF37' : '#E5E7EB'}`
+                    border: `2px solid ${gracePeriod === months ? '#D4AF37' : '#E5E7EB'}`,
+                    boxShadow: gracePeriod === months ? '0 4px 12px rgba(212, 175, 55, 0.3)' : 'none'
                   }}
                 >
-                  {months} شهور
+                  {months} {months === 3 ? 'أشهر' : 'شهر'}
                 </button>
               ))}
             </div>
+            {gracePeriod > 0 && (
+              <div className="mt-3 p-3 bg-green-50 rounded-lg border border-green-200">
+                <p className="text-sm text-green-700 font-bold">
+                  ✅ تم تحديد مدة السماح: {gracePeriod} {gracePeriod === 3 ? 'أشهر' : 'شهر'}
+                </p>
+                <p className="text-xs text-green-600 mt-1">
+                  سيكون لدى المستثمرين {gracePeriod} {gracePeriod === 3 ? 'أشهر' : 'شهر'} لإتمام دفع كامل المبلغ
+                </p>
+              </div>
+            )}
           </div>
 
           <div className="md:col-span-2">
