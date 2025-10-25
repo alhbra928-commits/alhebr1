@@ -25,11 +25,21 @@ export function InvestorLoginPage({ onLoginSuccess, onBack }: InvestorLoginPageP
         return;
       }
 
+      console.log('🔵 محاولة تسجيل الدخول:', phone);
+
       const investor = await InvestorService.getInvestorByPhone(phone);
 
       if (!investor) {
-        setError('لم يتم العثور على حساب مرتبط بهذا الرقم');
-        return;
+        console.log('⚠️ المستثمر غير موجود، جاري الإنشاء التلقائي...');
+
+        const result = await InvestorService.createInvestorQuickRegistration(phone, 'مستثمر جديد');
+
+        if (!result.success) {
+          setError('فشل إنشاء الحساب. الرجاء المحاولة مرة أخرى.');
+          return;
+        }
+
+        console.log('✅ تم إنشاء الحساب تلقائياً');
       }
 
       onLoginSuccess(phone);

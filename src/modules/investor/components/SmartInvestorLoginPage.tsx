@@ -123,16 +123,18 @@ export function SmartInvestorLoginPage({ onLoginSuccess, onBack }: SmartInvestor
       const loginStatus = await InvestorService.checkLoginStatus(phone);
       console.log('✅✅✅ [handlePhoneSubmit] Login status:', loginStatus);
 
-      // إذا لم يكن موجوداً في النظام
+      // إذا لم يكن موجوداً في النظام، إنشاء حساب تلقائياً
       if (!loginStatus.exists) {
-        setError('رقم الجوال غير مسجل في النظام. يرجى القيام بحجز أولاً من الصفحة الرئيسية.');
-        await InvestorService.logLoginAttempt({
-          phone,
-          login_type: 'unauthorized_attempt',
-          success: false,
-          failure_reason: 'لا يوجد حجوزات أو بيانات مستثمر'
-        });
-        return;
+        console.log('⚠️ المستثمر غير موجود، جاري الإنشاء التلقائي...');
+
+        const result = await InvestorService.createInvestorQuickRegistration(phone, 'مستثمر جديد');
+
+        if (!result.success) {
+          setError('فشل إنشاء الحساب. الرجاء المحاولة مرة أخرى.');
+          return;
+        }
+
+        console.log('✅ تم إنشاء الحساب تلقائياً');
       }
 
       // جلسة نشطة موجودة
