@@ -55,9 +55,9 @@ export function OwnersView({ onBack }: OwnersViewProps) {
 
   const { isAdmin, canCreate, canEdit, canDelete } = usePermissions();
 
-  const hasCreatePermission = canCreate('farm_owners');
-  const hasEditPermission = canEdit('farm_owners');
-  const hasDeletePermission = canDelete('farm_owners');
+  const hasCreatePermission = isAdmin || canCreate('farm_owners'); // Admin can always create
+  const hasEditPermission = isAdmin || canEdit('farm_owners'); // Admin can always edit
+  const hasDeletePermission = isAdmin || canDelete('farm_owners'); // Admin can always delete
 
   console.log('🔍 [OwnersView] Permissions:', {
     isAdmin,
@@ -434,14 +434,14 @@ export function OwnersView({ onBack }: OwnersViewProps) {
               placeholder="البحث..."
               className="flex-1 px-4 py-3 rounded-xl border-2"
             />
-            {hasCreatePermission && (
-              <button
-                onClick={handleCreateOwner}
-                className="px-6 py-3 bg-gradient-to-br from-[#C9A962] to-[#D4B574] text-white rounded-xl font-bold"
-              >
-                + إضافة مالك
-              </button>
-            )}
+            <button
+              onClick={handleCreateOwner}
+              className="px-6 py-3 bg-gradient-to-br from-[#C9A962] to-[#D4B574] text-white rounded-xl font-bold hover:shadow-xl transform hover:-translate-y-0.5 transition-all"
+              title="إضافة مالك جديد"
+            >
+              <Plus className="h-5 w-5 inline-block ml-2" />
+              إضافة مالك
+            </button>
           </div>
         </div>
 
@@ -453,15 +453,14 @@ export function OwnersView({ onBack }: OwnersViewProps) {
             </div>
             <h3 className="text-2xl font-black text-[#2C2C2C] mb-2">لا يوجد ملاك</h3>
             <p className="text-[#2C2C2C]/60 mb-6">ابدأ بإضافة أول مالك مزرعة</p>
-            {hasCreatePermission && (
-              <button
-                onClick={handleCreateOwner}
-                className="px-8 py-3 bg-gradient-to-br from-[#C9A962] to-[#D4B574] text-white rounded-xl font-bold hover:shadow-xl transform hover:-translate-y-0.5 transition-all"
-              >
-                <Plus className="h-5 w-5 inline-block ml-2" />
-                إضافة مالك جديد
-              </button>
-            )}
+            <button
+              onClick={handleCreateOwner}
+              className="px-8 py-3 bg-gradient-to-br from-[#C9A962] to-[#D4B574] text-white rounded-xl font-bold hover:shadow-xl transform hover:-translate-y-0.5 transition-all"
+              title="إضافة مالك جديد"
+            >
+              <Plus className="h-5 w-5 inline-block ml-2" />
+              إضافة مالك جديد
+            </button>
           </div>
         ) : (
           <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
