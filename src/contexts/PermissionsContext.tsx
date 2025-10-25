@@ -232,6 +232,12 @@ export function PermissionsProvider({ children }: { children: ReactNode }) {
     await loadPermissions();
   };
 
+  // دوال مركزية للتحكم في الإجراءات
+  const checkCanCreate = (moduleId: string) => isAdmin || hasPermission(moduleId, 'create');
+  const checkCanEdit = (moduleId: string) => isAdmin || hasPermission(moduleId, 'edit');
+  const checkCanDelete = (moduleId: string) => isAdmin || hasPermission(moduleId, 'delete');
+  const checkCanView = (moduleId: string) => isAdmin || hasPermission(moduleId, 'view');
+
   return (
     <PermissionsContext.Provider
       value={{
@@ -242,6 +248,10 @@ export function PermissionsProvider({ children }: { children: ReactNode }) {
         getModulePermissions,
         refreshPermissions,
         isAdmin,
+        canCreate: checkCanCreate,
+        canEdit: checkCanEdit,
+        canDelete: checkCanDelete,
+        canView: checkCanView,
         currentAdminPhone,
         currentAdminRole,
       }}
