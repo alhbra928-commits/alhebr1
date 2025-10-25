@@ -25,6 +25,7 @@ import { NotificationSoundControl } from '../../components/common/NotificationSo
 import { SmartFloatingWhatsApp } from '../../components/common/SmartFloatingWhatsApp';
 import { floatingWhatsAppService } from '../../services/floatingWhatsAppService';
 import { usePermissions } from '../../contexts/PermissionsContext';
+import { supabase } from '../../lib/supabase';
 
 interface EnhancedDashboardProps {
   onModuleSelect: (moduleId: string) => void;
@@ -41,6 +42,7 @@ export function EnhancedDashboard({ onModuleSelect, onLogout, onGoToPublic, onSh
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [showSessionTerminated, setShowSessionTerminated] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [adminInfo, setAdminInfo] = useState<any>(null);
 
   const { canAccessModule, isAdmin, loading: permissionsLoading } = usePermissions();
 
@@ -50,6 +52,7 @@ export function EnhancedDashboard({ onModuleSelect, onLogout, onGoToPublic, onSh
 
   useEffect(() => {
     loadStats();
+    loadAdminInfo();
 
     LiveFinancialSystem.initialize();
 
@@ -63,6 +66,32 @@ export function EnhancedDashboard({ onModuleSelect, onLogout, onGoToPublic, onSh
       unsubscribe();
     };
   }, []);
+
+  const loadAdminInfo = async () => {
+    try {
+      const { admin } = AdminSessionService.getCurrentSession();
+      if (admin?.phone) {
+        const { data, error } = await supabase
+          .from('admin_users')
+          .select('phone, full_name, job_title, job_title_en, role_id')
+          .eq('phone', admin.phone)
+          .is('deleted_at', null)
+          .maybeSingle();
+
+        if (data && !error) {
+          setAdminInfo({
+            phone: data.phone,
+            name: data.full_name,
+            jobTitle: data.job_title,
+            jobTitleEn: data.job_title_en,
+            role: data.role_id,
+          });
+        }
+      }
+    } catch (err) {
+      console.error('Error loading admin info:', err);
+    }
+  };
 
   // الاستماع لتغيرات وضع ملء الشاشة
   useEffect(() => {
@@ -330,40 +359,34 @@ export function EnhancedDashboard({ onModuleSelect, onLogout, onGoToPublic, onSh
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
           {/* بطاقة تعريف الموظف */}
-          {(() => {
-            const { admin } = AdminSessionService.getCurrentSession();
-            if (admin) {
-              return (
-                <div className="mb-6 bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
-                  <div className="bg-gradient-to-r from-[#C89B3C] to-[#D4AF37] px-6 py-4">
-                    <div className="flex items-center gap-4">
-                      <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg">
-                        <Shield className="h-8 w-8 text-white" />
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="text-xl font-bold text-white mb-1">
-                          {admin.name || 'مدير النظام'}
-                        </h3>
-                        <div className="flex items-center gap-4 text-white/90 text-sm">
-                          <span className="flex items-center gap-2">
-                            📱 {admin.phone}
-                          </span>
-                          <span className="flex items-center gap-2">
-                            💼 {admin.role === 'super_admin' ? 'المدير العام' : admin.roleAr || 'موظف'}
-                          </span>
-                        </div>
-                      </div>
-                      <div className="hidden sm:flex items-center gap-2 px-4 py-2 bg-white/20 backdrop-blur-sm rounded-lg">
-                        <div className="w-2.5 h-2.5 bg-green-400 rounded-full animate-pulse"></div>
-                        <span className="text-white text-sm font-medium">متصل</span>
-                      </div>
+          {adminInfo && (
+            <div className="mb-6 bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
+              <div className="bg-gradient-to-r from-[#C89B3C] to-[#D4AF37] px-6 py-4">
+                <div className="flex items-center gap-4">
+                  <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg">
+                    <Shield className="h-8 w-8 text-white" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-xl font-bold text-white mb-1">
+                      {adminInfo.name || 'مدير النظام'}
+                    </h3>
+                    <div className="flex items-center gap-4 text-white/90 text-sm">
+                      <span className="flex items-center gap-2">
+                        📱 {adminInfo.phone}
+                      </span>
+                      <span className="flex items-center gap-2">
+                        💼 {adminInfo.jobTitle || 'موظف'}
+                      </span>
                     </div>
                   </div>
+                  <div className="hidden sm:flex items-center gap-2 px-4 py-2 bg-white/20 backdrop-blur-sm rounded-lg">
+                    <div className="w-2.5 h-2.5 bg-green-400 rounded-full animate-pulse"></div>
+                    <span className="text-white text-sm font-medium">متصل</span>
+                  </div>
                 </div>
-              );
-            }
-            return null;
-          })()}
+              </div>
+            </div>
+          )}
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {modules.map((module, index) => {
