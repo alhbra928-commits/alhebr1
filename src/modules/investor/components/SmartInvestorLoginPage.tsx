@@ -10,10 +10,12 @@ interface SmartInvestorLoginPageProps {
 
 export function SmartInvestorLoginPage({ onLoginSuccess, onBack }: SmartInvestorLoginPageProps) {
   const [phone, setPhone] = useState('+966');
+  const [name, setName] = useState('');
   const [otp, setOtp] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [showOTPField, setShowOTPField] = useState(false);
+  const [showNameField, setShowNameField] = useState(false);
   const [isFirstLogin, setIsFirstLogin] = useState(false);
   const [copied, setCopied] = useState(false);
 
@@ -123,31 +125,11 @@ export function SmartInvestorLoginPage({ onLoginSuccess, onBack }: SmartInvestor
       const loginStatus = await InvestorService.checkLoginStatus(phone);
       console.log('✅✅✅ [handlePhoneSubmit] Login status:', loginStatus);
 
-      // إذا لم يكن موجوداً في النظام، إنشاء حساب تلقائياً ودخول مباشر
+      // إذا لم يكن موجوداً في النظام، طلب الاسم أولاً
       if (!loginStatus.exists) {
-        console.log('⚠️ المستثمر غير موجود، جاري الإنشاء التلقائي...');
-
-        const result = await InvestorService.createInvestorQuickRegistration(phone, 'مستثمر جديد');
-
-        if (!result.success) {
-          setError('فشل إنشاء الحساب. الرجاء المحاولة مرة أخرى.');
-          return;
-        }
-
-        console.log('✅ تم إنشاء الحساب تلقائياً - دخول مباشر للمرة الأولى');
-
+        console.log('⚠️ المستثمر غير موجود، طلب الاسم...');
+        setShowNameField(true);
         setIsFirstLogin(true);
-        const sessionToken = await InvestorService.createSession(phone, true);
-
-        await InvestorService.logLoginAttempt({
-          phone,
-          login_type: 'first_time_auto_created',
-          success: true
-        });
-
-        const investorData = await InvestorService.getInvestorByPhone(phone);
-        console.log('🔍 Auto-Created Account - Investor Data:', investorData);
-        onLoginSuccess(phone, sessionToken, investorData?.customer_name);
         return;
       }
 
@@ -238,6 +220,46 @@ export function SmartInvestorLoginPage({ onLoginSuccess, onBack }: SmartInvestor
     }
   };
 
+  const handleNameSubmit = async () => {
+    try {
+      setLoading(true);
+      setError('');
+
+      if (!name || name.trim().length < 2) {
+        setError('الرجاء إدخال الاسم الكامل');
+        return;
+      }
+
+      console.log('⚠️ المستثمر غير موجود، جاري الإنشاء التلقائي مع الاسم:', name);
+
+      const result = await InvestorService.createInvestorQuickRegistration(phone, name.trim());
+
+      if (!result.success) {
+        setError('فشل إنشاء الحساب. الرجاء المحاولة مرة أخرى.');
+        return;
+      }
+
+      console.log('✅ تم إنشاء الحساب تلقائياً - دخول مباشر للمرة الأولى');
+
+      const sessionToken = await InvestorService.createSession(phone, true);
+
+      await InvestorService.logLoginAttempt({
+        phone,
+        login_type: 'first_time_auto_created',
+        success: true
+      });
+
+      const investorData = await InvestorService.getInvestorByPhone(phone);
+      console.log('🔍 Auto-Created Account - Investor Data:', investorData);
+      onLoginSuccess(phone, sessionToken, name.trim());
+    } catch (err) {
+      console.error('Name registration error:', err);
+      setError('حدث خطأ أثناء إنشاء الحساب. الرجاء المحاولة مرة أخرى.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleCopyOTP = () => {
     if (demoOTP) {
       navigator.clipboard.writeText(demoOTP);
@@ -309,7 +331,7 @@ export function SmartInvestorLoginPage({ onLoginSuccess, onBack }: SmartInvestor
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder="+966 5xxxxxxxx"
-                  disabled={loading || showOTPField}
+                  disabled={loading || showOTPField || showNameField}
                   className="w-full px-6 py-4 rounded-xl border-2 outline-none transition-all text-lg text-white"
                   style={{
                     background: 'rgba(255,255,255,0.05)',
@@ -317,6 +339,30 @@ export function SmartInvestorLoginPage({ onLoginSuccess, onBack }: SmartInvestor
                   }}
                 />
               </div>
+
+              {showNameField && (
+                <div>
+                  <label className="block text-sm font-bold mb-3 text-gray-300">
+                    👤 الاسم الكامل
+                  </label>
+                  <input
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="أدخل اسمك الكامل"
+                    disabled={loading}
+                    className="w-full px-6 py-4 rounded-xl border-2 outline-none transition-all text-lg text-white"
+                    style={{
+                      background: 'rgba(255,255,255,0.05)',
+                      borderColor: error ? brandColors.error : brandColors.primary.gold + '40',
+                    }}
+                    autoFocus
+                  />
+                  <p className="mt-2 text-sm text-gray-400">
+                    سيظهر هذا الاسم في شهادات التملك والمستندات الرسمية
+                  </p>
+                </div>
+              )}
 
               {showOTPField && (
                 <div>
@@ -379,7 +425,7 @@ export function SmartInvestorLoginPage({ onLoginSuccess, onBack }: SmartInvestor
               )}
 
               <button
-                onClick={showOTPField ? handleOTPSubmit : handlePhoneSubmit}
+                onClick={showNameField ? handleNameSubmit : (showOTPField ? handleOTPSubmit : handlePhoneSubmit)}
                 disabled={loading}
                 className="w-full py-5 rounded-2xl font-black text-xl text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed hover:scale-[1.02] flex items-center justify-center gap-3"
                 style={{
@@ -390,15 +436,38 @@ export function SmartInvestorLoginPage({ onLoginSuccess, onBack }: SmartInvestor
                 {loading ? (
                   <>
                     <Loader className="w-6 h-6 animate-spin" />
-                    <span>{showOTPField ? 'جاري التحقق...' : 'جاري الدخول...'}</span>
+                    <span>
+                      {showNameField ? 'جاري إنشاء الحساب...' : (showOTPField ? 'جاري التحقق...' : 'جاري الدخول...')}
+                    </span>
                   </>
                 ) : (
                   <>
                     <LogIn className="w-6 h-6" />
-                    <span>{showOTPField ? 'تأكيد الدخول' : 'الدخول إلى لوحة المستثمر'} 🌿</span>
+                    <span>
+                      {showNameField ? 'إنشاء الحساب والدخول 🌿' : (showOTPField ? 'تأكيد الدخول' : 'الدخول إلى لوحة المستثمر')} 🌿
+                    </span>
                   </>
                 )}
               </button>
+
+              {showNameField && (
+                <button
+                  onClick={() => {
+                    setShowNameField(false);
+                    setName('');
+                    setError('');
+                  }}
+                  disabled={loading}
+                  className="w-full py-4 rounded-2xl font-bold text-lg transition-all disabled:opacity-50"
+                  style={{
+                    background: 'rgba(255,255,255,0.1)',
+                    color: 'white',
+                    border: '2px solid rgba(255,255,255,0.2)',
+                  }}
+                >
+                  تغيير رقم الجوال
+                </button>
+              )}
 
               {showOTPField && (
                 <button
