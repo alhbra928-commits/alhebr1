@@ -110,8 +110,8 @@ export function AdvancedPermissionsManager() {
     const permission = permissions.find(p => p.id === permId);
     if (!permission) return;
 
-    // حماية خاصة للمدير العام (0500000000)
-    const isSuperAdmin = permission.admin_phone === '0500000000';
+    // حماية خاصة للمدير العام (0500000001)
+    const isSuperAdmin = permission.admin_phone === '0500000001';
 
     if (isSuperAdmin) {
       // التحذير الأول

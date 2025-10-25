@@ -21,12 +21,12 @@ const LOCAL_USERS_KEY = 'palm_olive_local_users';
 
 const DEFAULT_USERS: AdminUser[] = [
   {
-    phone: '0500000000',
-    name: 'المدير العام',
+    phone: '0500000001',
+    name: 'إبراهيم بن علي الحبر التميمي',
     role: 'super_admin',
     roleAr: 'المدير العام',
     status: 'active',
-    secretCode: '1234',
+    secretCode: '2802',
   },
 ];
 
