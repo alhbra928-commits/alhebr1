@@ -57,30 +57,11 @@ export function OwnersView({ onBack }: OwnersViewProps) {
   const [showSubmittedDataModal, setShowSubmittedDataModal] = useState(false);
   const [selectedOwnerForData, setSelectedOwnerForData] = useState<FarmOwner | null>(null);
 
-  const { isAdmin, canCreate, canEdit, canDelete, currentUser } = usePermissions();
+  const { isAdmin, canCreate, canEdit, canDelete } = usePermissions();
 
-  const hasCreatePermission = isAdmin || canCreate('farm_owners'); // Admin can always create
-  const hasEditPermission = isAdmin || canEdit('farm_owners'); // Admin can always edit
-  const hasDeletePermission = isAdmin || canDelete('farm_owners'); // Admin can always delete
-
-  console.log('🔍 [OwnersView] Permissions:', {
-    currentUser: currentUser?.username,
-    isAdmin,
-    canCreate: hasCreatePermission,
-    canEdit: hasEditPermission,
-    canDelete: hasDeletePermission
-  });
-
-  console.log('📊 [OwnersView] Full Permission Details:', {
-    'Current User': currentUser,
-    'isAdmin?': isAdmin,
-    'canCreate function?': typeof canCreate,
-    'canEdit function?': typeof canEdit,
-    'canDelete function?': typeof canDelete,
-    'hasCreatePermission': hasCreatePermission,
-    'hasEditPermission': hasEditPermission,
-    'hasDeletePermission': hasDeletePermission
-  });
+  const hasCreatePermission = isAdmin || canCreate('farm_owners');
+  const hasEditPermission = isAdmin || canEdit('farm_owners');
+  const hasDeletePermission = isAdmin || canDelete('farm_owners');
 
   // Rejection modal state
   const [showRejectModal, setShowRejectModal] = useState(false);
