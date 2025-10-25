@@ -329,47 +329,6 @@ export function EnhancedDashboard({ onModuleSelect, onLogout, onGoToPublic, onSh
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
-          {/* صندوق التشخيص الأزرق - للموظفين المحدودي الصلاحية فقط */}
-          {(() => {
-            const { admin } = AdminSessionService.getCurrentSession();
-            const currentAdminPhone = admin?.phone || '';
-            const checkIsAdmin = isAdmin;
-
-            console.log('🟦🟦🟦 [EnhancedDashboard] BLUE BOX CHECK:');
-            console.log('🟦 currentAdminPhone:', currentAdminPhone);
-            console.log('🟦 isAdmin:', checkIsAdmin);
-            console.log('🟦 Condition (phone && !isAdmin):', !!(currentAdminPhone && !checkIsAdmin));
-
-            if (currentAdminPhone && !checkIsAdmin) {
-              console.log('✅✅✅ BLUE BOX IS RENDERING NOW IN ENHANCED DASHBOARD!');
-              return (
-                <div className="mb-6 p-6 bg-gradient-to-r from-blue-600 to-blue-700 rounded-2xl text-white shadow-2xl border-4 border-blue-400 animate-pulse">
-                  <div className="font-bold text-2xl mb-4 flex items-center gap-3">
-                    🔍 معلومات الحساب
-                  </div>
-                  <div className="space-y-2 text-lg">
-                    <div className="flex justify-between items-center">
-                      <span>الرقم:</span>
-                      <span className="font-bold text-xl">{currentAdminPhone}</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span>مدير النظام:</span>
-                      <span className="font-bold text-xl">{checkIsAdmin ? '✅ نعم' : '❌ لا'}</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span>عدد الصلاحيات:</span>
-                      <span className="font-bold text-xl">4</span>
-                    </div>
-                  </div>
-                  <div className="mt-4 pt-4 border-t border-white/30 text-sm opacity-80">
-                    هذا الصندوق يظهر للموظفين محدودي الصلاحية فقط
-                  </div>
-                </div>
-              );
-            }
-            return null;
-          })()}
-
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {modules.map((module, index) => {
               const Icon = module.icon;
