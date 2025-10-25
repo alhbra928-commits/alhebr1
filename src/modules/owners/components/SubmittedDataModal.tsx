@@ -40,7 +40,7 @@ export function SubmittedDataModal({ owner, onClose, onApprove }: SubmittedDataM
     try {
       setLoading(true);
 
-      // البحث عن طلب التقديم المرتبط بصاحب المزرعة
+      // أولاً: محاولة البحث عن طلب مرفوع من لوحة صاحب المزرعة
       const { data: submission, error } = await supabase
         .from('farm_submission_requests')
         .select('*')
@@ -51,7 +51,28 @@ export function SubmittedDataModal({ owner, onClose, onApprove }: SubmittedDataM
 
       if (error) {
         console.error('Error loading submission:', error);
-        setSubmittedData(null);
+      }
+
+      // إذا لم يوجد طلب مرفوع، استخدم بيانات المالك من جدول farm_owners
+      if (!submission) {
+        // جلب بيانات المالك الكاملة
+        const { data: ownerData, error: ownerError } = await supabase
+          .from('farm_owners')
+          .select('*')
+          .eq('id', owner.id)
+          .maybeSingle();
+
+        if (ownerError) {
+          console.error('Error loading owner data:', ownerError);
+          setSubmittedData(null);
+        } else {
+          // تحويل بيانات المالك إلى صيغة النموذج المرفوع
+          setSubmittedData({
+            submitted_data: ownerData,
+            status: 'direct_entry', // علامة أنه تم إدخاله مباشرة من الأدمن
+            varieties_data: []
+          });
+        }
       } else {
         setSubmittedData(submission);
       }
@@ -132,7 +153,12 @@ export function SubmittedDataModal({ owner, onClose, onApprove }: SubmittedDataM
           {/* Status Badge */}
           {submittedData && (
             <div className="absolute top-4 right-4">
-              {submittedData.status === 'pending' ? (
+              {submittedData.status === 'direct_entry' ? (
+                <div className="bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-black flex items-center gap-2">
+                  <CheckCircle className="w-4 h-4" />
+                  إدخال مباشر
+                </div>
+              ) : submittedData.status === 'pending' ? (
                 <div className="bg-yellow-100 text-yellow-800 px-4 py-2 rounded-full text-sm font-black flex items-center gap-2">
                   <Clock className="w-4 h-4" />
                   قيد المراجعة
