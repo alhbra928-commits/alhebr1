@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>اختبار صلاحيات جنا</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    * {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .container {
+      background: white;
+      border-radius: 24px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      padding: 40px;
+      max-width: 800px;
+      width: 100%;
+    }
+    h1 {
+      color: #2d3748;
+      font-size: 32px;
+      font-weight: 800;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+    .subtitle {
+      color: #718096;
+      font-size: 16px;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+    .card {
+      background: #f7fafc;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 20px;
+      border: 2px solid #e2e8f0;
+    }
+    .card-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #2d3748;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .badge-success {
+      background: #c6f6d5;
+      color: #22543d;
+    }
+    .badge-error {
+      background: #fed7d7;
+      color: #742a2a;
+    }
+    .badge-warning {
+      background: #feebc8;
+      color: #7c2d12;
+    }
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .info-row:last-child {
+      border-bottom: none;
+    }
+    .info-label {
+      font-weight: 600;
+      color: #4a5568;
+    }
+    .info-value {
+      color: #2d3748;
+      font-weight: 700;
+    }
+    .permission-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-top: 15px;
+    }
+    .permission-item {
+      background: white;
+      padding: 15px;
+      border-radius: 12px;
+      border: 2px solid #e2e8f0;
+    }
+    .permission-name {
+      font-weight: 700;
+      color: #2d3748;
+      margin-bottom: 8px;
+    }
+    .permission-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .action-badge {
+      padding: 4px 8px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .action-yes {
+      background: #c6f6d5;
+      color: #22543d;
+    }
+    .action-no {
+      background: #fed7d7;
+      color: #742a2a;
+    }
+    button {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 20px;
+      transition: transform 0.2s;
+    }
+    button:hover {
+      transform: translateY(-2px);
+    }
+    button:active {
+      transform: translateY(0);
+    }
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: #718096;
+      font-size: 18px;
+    }
+    .emoji {
+      font-size: 24px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔐 اختبار صلاحيات جنا</h1>
+    <p class="subtitle">نظام التحقق من الصلاحيات والأذونات</p>
+
+    <div id="loading" class="loading">
+      <div class="emoji">⏳</div>
+      <p>جاري تحميل البيانات...</p>
+    </div>
+
+    <div id="content" style="display: none;">
+      <!-- Admin Info -->
+      <div class="card">
+        <div class="card-title">
+          <span class="emoji">👤</span>
+          معلومات المستخدم
+        </div>
+        <div class="info-row">
+          <span class="info-label">رقم الجوال:</span>
+          <span class="info-value" id="phone">-</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">الاسم:</span>
+          <span class="info-value" id="name">-</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">الحالة:</span>
+          <span id="status">-</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Super Admin:</span>
+          <span id="isSuperAdmin">-</span>
+        </div>
+      </div>
+
+      <!-- Permissions -->
+      <div class="card">
+        <div class="card-title">
+          <span class="emoji">🔑</span>
+          الصلاحيات المسندة
+        </div>
+        <div id="permissions-list"></div>
+      </div>
+
+      <button onclick="window.location.href='/'">🏠 العودة للرئيسية</button>
+    </div>
+  </div>
+
+  <script>
+    const SUPABASE_URL = 'https://wseqkvknelkntxnuaexh.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndzZXFrdmtuZWxrbnR4bnVhZXhoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjk0MzU4MDUsImV4cCI6MjA0NTAxMTgwNX0.eVFci1l5gP0LNIb-o4qIrGg_XF_TIRLEtSXaHt3BxsE';
+
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const SUPER_ADMIN_PHONES = ['0500000000'];
+    const TEST_PHONE = '0510101010'; // جنا
+
+    async function loadData() {
+      try {
+        // Get admin user
+        const { data: admin, error: adminError } = await supabase
+          .from('admin_users')
+          .select('*')
+          .eq('phone', TEST_PHONE)
+          .maybeSingle();
+
+        if (adminError) throw adminError;
+
+        if (!admin) {
+          alert('❌ المستخدم غير موجود!');
+          return;
+        }
+
+        const isSuperAdmin = SUPER_ADMIN_PHONES.includes(admin.phone);
+
+        // Display admin info
+        document.getElementById('phone').textContent = admin.phone;
+        document.getElementById('name').textContent = admin.full_name;
+        document.getElementById('status').innerHTML = admin.is_active
+          ? '<span class="badge badge-success">نشط ✅</span>'
+          : '<span class="badge badge-error">غير نشط ❌</span>';
+        document.getElementById('isSuperAdmin').innerHTML = isSuperAdmin
+          ? '<span class="badge badge-success">نعم ✅</span>'
+          : '<span class="badge badge-warning">لا</span>';
+
+        // Get permissions
+        const { data: permissions, error: permError } = await supabase
+          .from('admin_module_permissions')
+          .select('*')
+          .eq('admin_phone', TEST_PHONE)
+          .eq('is_active', true);
+
+        if (permError) throw permError;
+
+        // Display permissions
+        const permissionsList = document.getElementById('permissions-list');
+
+        if (isSuperAdmin) {
+          permissionsList.innerHTML = `
+            <div style="text-align: center; padding: 20px; color: #22543d; background: #c6f6d5; border-radius: 12px;">
+              <div style="font-size: 48px; margin-bottom: 10px;">👑</div>
+              <div style="font-size: 20px; font-weight: 800;">صلاحيات كاملة لجميع الأقسام</div>
+              <div style="margin-top: 10px; font-size: 14px;">Super Admin يملك جميع الصلاحيات تلقائياً</div>
+            </div>
+          `;
+        } else if (!permissions || permissions.length === 0) {
+          permissionsList.innerHTML = `
+            <div style="text-align: center; padding: 20px; color: #742a2a; background: #fed7d7; border-radius: 12px;">
+              <div style="font-size: 48px; margin-bottom: 10px;">⚠️</div>
+              <div style="font-size: 18px; font-weight: 700;">لا توجد صلاحيات مسندة</div>
+            </div>
+          `;
+        } else {
+          const grid = document.createElement('div');
+          grid.className = 'permission-grid';
+
+          permissions.forEach(perm => {
+            const item = document.createElement('div');
+            item.className = 'permission-item';
+            item.innerHTML = `
+              <div class="permission-name">${perm.module_name_ar || perm.module_id}</div>
+              <div class="permission-actions">
+                <span class="action-badge ${perm.can_view ? 'action-yes' : 'action-no'}">
+                  ${perm.can_view ? '✅' : '❌'} اطلاع
+                </span>
+                <span class="action-badge ${perm.can_create ? 'action-yes' : 'action-no'}">
+                  ${perm.can_create ? '✅' : '❌'} إضافة
+                </span>
+                <span class="action-badge ${perm.can_edit ? 'action-yes' : 'action-no'}">
+                  ${perm.can_edit ? '✅' : '❌'} تعديل
+                </span>
+                <span class="action-badge ${perm.can_delete ? 'action-yes' : 'action-no'}">
+                  ${perm.can_delete ? '✅' : '❌'} حذف
+                </span>
+              </div>
+            `;
+            grid.appendChild(item);
+          });
+
+          permissionsList.appendChild(grid);
+        }
+
+        // Show content
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('content').style.display = 'block';
+
+      } catch (error) {
+        console.error('Error:', error);
+        alert('❌ حدث خطأ: ' + error.message);
+      }
+    }
+
+    // Load on page load
+    loadData();
+  </script>
+</body>
+</html>
