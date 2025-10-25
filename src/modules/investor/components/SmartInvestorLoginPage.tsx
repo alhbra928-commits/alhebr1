@@ -270,7 +270,7 @@ export function SmartInvestorLoginPage({ onLoginSuccess, onBack }: SmartInvestor
 
   return (
     <div
-      className="min-h-screen flex items-center justify-center p-6"
+      className="min-h-screen flex items-center justify-center p-3 sm:p-4 md:p-6"
       style={{
         background: 'linear-gradient(135deg, #2d3436 0%, #1e272e 50%, #2d3436 100%)',
       }}
@@ -278,7 +278,7 @@ export function SmartInvestorLoginPage({ onLoginSuccess, onBack }: SmartInvestor
     >
       <div className="max-w-md w-full">
         <div
-          className="rounded-3xl p-12 relative overflow-hidden"
+          className="rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-12 relative overflow-hidden"
           style={{
             background: 'linear-gradient(135deg, rgba(212,175,55,0.1) 0%, rgba(255,255,255,0.05) 100%)',
             border: `2px solid ${brandColors.primary.gold}40`,
@@ -293,20 +293,20 @@ export function SmartInvestorLoginPage({ onLoginSuccess, onBack }: SmartInvestor
           />
 
           <div className="relative z-10">
-            <div className="text-center mb-8">
+            <div className="text-center mb-6 sm:mb-8">
               <div
-                className="w-20 h-20 rounded-full mx-auto mb-6 flex items-center justify-center"
+                className="w-16 h-16 sm:w-20 sm:h-20 rounded-full mx-auto mb-4 sm:mb-6 flex items-center justify-center"
                 style={{
                   background: brandGradients.gold,
                   boxShadow: '0 20px 60px rgba(212,175,55,0.5)',
                   animation: 'pulse 4s ease-in-out infinite',
                 }}
               >
-                <span className="text-4xl">🌴</span>
+                <span className="text-3xl sm:text-4xl">🌴</span>
               </div>
 
               <h1
-                className="text-4xl font-black mb-3"
+                className="text-2xl sm:text-3xl md:text-4xl font-black mb-2 sm:mb-3"
                 style={{
                   background: brandGradients.gold,
                   WebkitBackgroundClip: 'text',
@@ -316,14 +316,14 @@ export function SmartInvestorLoginPage({ onLoginSuccess, onBack }: SmartInvestor
                 منصة تملك النخيل والزيتون
               </h1>
 
-              <p className="text-gray-400 text-sm">
+              <p className="text-gray-400 text-xs sm:text-sm">
                 ادخل رقم جوالك لتتابع مزارعك واستثماراتك
               </p>
             </div>
 
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-6">
               <div>
-                <label className="block text-sm font-bold mb-3 text-gray-300">
+                <label className="block text-xs sm:text-sm font-bold mb-2 sm:mb-3 text-gray-300">
                   📱 رقم الجوال
                 </label>
                 <input
@@ -332,7 +332,7 @@ export function SmartInvestorLoginPage({ onLoginSuccess, onBack }: SmartInvestor
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder="+966 5xxxxxxxx"
                   disabled={loading || showOTPField || showNameField}
-                  className="w-full px-6 py-4 rounded-xl border-2 outline-none transition-all text-lg text-white"
+                  className="w-full px-4 sm:px-6 py-3 sm:py-4 rounded-xl border-2 outline-none transition-all text-base sm:text-lg text-white"
                   style={{
                     background: 'rgba(255,255,255,0.05)',
                     borderColor: error ? brandColors.error : brandColors.primary.gold + '40',
@@ -342,7 +342,7 @@ export function SmartInvestorLoginPage({ onLoginSuccess, onBack }: SmartInvestor
 
               {showNameField && (
                 <div>
-                  <label className="block text-sm font-bold mb-3 text-gray-300">
+                  <label className="block text-xs sm:text-sm font-bold mb-2 sm:mb-3 text-gray-300">
                     👤 الاسم الكامل
                   </label>
                   <input
@@ -351,14 +351,14 @@ export function SmartInvestorLoginPage({ onLoginSuccess, onBack }: SmartInvestor
                     onChange={(e) => setName(e.target.value)}
                     placeholder="أدخل اسمك الكامل"
                     disabled={loading}
-                    className="w-full px-6 py-4 rounded-xl border-2 outline-none transition-all text-lg text-white"
+                    className="w-full px-4 sm:px-6 py-3 sm:py-4 rounded-xl border-2 outline-none transition-all text-base sm:text-lg text-white"
                     style={{
                       background: 'rgba(255,255,255,0.05)',
                       borderColor: error ? brandColors.error : brandColors.primary.gold + '40',
                     }}
                     autoFocus
                   />
-                  <p className="mt-2 text-sm text-gray-400">
+                  <p className="mt-2 text-xs sm:text-sm text-gray-400">
                     سيظهر هذا الاسم في شهادات التملك والمستندات الرسمية
                   </p>
                 </div>
@@ -366,7 +366,7 @@ export function SmartInvestorLoginPage({ onLoginSuccess, onBack }: SmartInvestor
 
               {showOTPField && (
                 <div>
-                  <label className="block text-sm font-bold mb-3 text-gray-300">
+                  <label className="block text-xs sm:text-sm font-bold mb-2 sm:mb-3 text-gray-300">
                     🔐 رمز الدخول
                   </label>
                   <input
@@ -375,7 +375,7 @@ export function SmartInvestorLoginPage({ onLoginSuccess, onBack }: SmartInvestor
                     onChange={(e) => setOtp(e.target.value)}
                     placeholder="أدخل رمز الدخول"
                     disabled={loading}
-                    className="w-full px-6 py-4 rounded-xl border-2 outline-none transition-all text-lg text-white text-center tracking-widest font-bold"
+                    className="w-full px-4 sm:px-6 py-3 sm:py-4 rounded-xl border-2 outline-none transition-all text-base sm:text-lg text-white text-center tracking-widest font-bold"
                     style={{
                       background: 'rgba(255,255,255,0.05)',
                       borderColor: error ? brandColors.error : brandColors.primary.gold + '40',
@@ -427,7 +427,7 @@ export function SmartInvestorLoginPage({ onLoginSuccess, onBack }: SmartInvestor
               <button
                 onClick={showNameField ? handleNameSubmit : (showOTPField ? handleOTPSubmit : handlePhoneSubmit)}
                 disabled={loading}
-                className="w-full py-5 rounded-2xl font-black text-xl text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed hover:scale-[1.02] flex items-center justify-center gap-3"
+                className="w-full py-4 sm:py-5 rounded-xl sm:rounded-2xl font-black text-base sm:text-xl text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 sm:hover:scale-[1.02] flex items-center justify-center gap-2 sm:gap-3 touch-manipulation"
                 style={{
                   background: loading ? brandGradients.beige : brandGradients.gold,
                   boxShadow: loading ? 'none' : '0 10px 40px rgba(212,175,55,0.3)',
@@ -435,15 +435,15 @@ export function SmartInvestorLoginPage({ onLoginSuccess, onBack }: SmartInvestor
               >
                 {loading ? (
                   <>
-                    <Loader className="w-6 h-6 animate-spin" />
-                    <span>
+                    <Loader className="w-5 h-5 sm:w-6 sm:h-6 animate-spin" />
+                    <span className="text-sm sm:text-base md:text-xl">
                       {showNameField ? 'جاري إنشاء الحساب...' : (showOTPField ? 'جاري التحقق...' : 'جاري الدخول...')}
                     </span>
                   </>
                 ) : (
                   <>
-                    <LogIn className="w-6 h-6" />
-                    <span>
+                    <LogIn className="w-5 h-5 sm:w-6 sm:h-6" />
+                    <span className="text-sm sm:text-base md:text-xl">
                       {showNameField ? 'إنشاء الحساب والدخول 🌿' : (showOTPField ? 'تأكيد الدخول' : 'الدخول إلى لوحة المستثمر')} 🌿
                     </span>
                   </>
