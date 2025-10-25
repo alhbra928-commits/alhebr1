@@ -192,58 +192,144 @@ export const FarmOwnerDashboard: React.FC<FarmOwnerDashboardProps> = ({ profileI
         </div>
       </header>
 
-      {/* التبويبات العصرية - محسّنة للجوال */}
-      <div className="w-full px-2 sm:px-3 md:px-6 lg:px-8 mt-3 sm:mt-4 md:mt-6">
-        <div className="bg-white rounded-lg sm:rounded-xl md:rounded-2xl p-1 sm:p-1.5 md:p-2 shadow-sm border border-gray-200 flex gap-0.5 sm:gap-1 overflow-x-auto scrollbar-hide">
-          {[
-            { id: 'home', label: 'الرئيسية', icon: Home, shortLabel: 'الرئيسية' },
-            { id: 'form', label: 'بياناتي', icon: FileText, shortLabel: 'البيانات' },
-            { id: 'finance', label: 'المالية', icon: DollarSign, shortLabel: 'المالية' },
-            { id: 'notifications', label: 'الإشعارات', icon: Bell, badge: unreadCount, shortLabel: 'الإشعارات' },
-            { id: 'support', label: 'تواصل', icon: Phone, shortLabel: 'تواصل' },
-            { id: 'faq', label: 'الأسئلة', icon: HelpCircle, shortLabel: 'أسئلة' }
-          ].map((tab) => {
-            const Icon = tab.icon;
-            const isActive = activeTab === tab.id;
+      {/* التبويبات المبتكرة - محسّنة للجوال */}
+      <div className="w-full px-3 sm:px-4 md:px-6 lg:px-8 mt-3 sm:mt-4 md:mt-5">
+        <div className="relative bg-gradient-to-r from-gray-50 via-white to-gray-50 rounded-xl sm:rounded-2xl md:rounded-3xl p-2 sm:p-2.5 md:p-3 shadow-lg border-2 border-gray-100">
+          {/* خلفية متحركة */}
+          <div className="absolute inset-0 bg-gradient-to-r from-green-50/50 via-transparent to-blue-50/50 rounded-xl sm:rounded-2xl md:rounded-3xl opacity-50" />
 
-            return (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id as any)}
-                className="relative flex items-center gap-1 sm:gap-1.5 md:gap-2 px-2 sm:px-2.5 md:px-3 lg:px-4 py-1.5 sm:py-2 md:py-2.5 rounded-lg sm:rounded-xl font-bold text-[10px] sm:text-xs md:text-sm whitespace-nowrap transition-all duration-300 group flex-shrink-0"
-                style={{
-                  background: isActive
-                    ? 'linear-gradient(135deg, #8BC34A 0%, #689F38 100%)'
-                    : 'transparent',
-                  color: isActive ? 'white' : '#6B7280',
-                  boxShadow: isActive ? '0 2px 8px rgba(139, 195, 74, 0.3)' : 'none'
-                }}
-              >
-                <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-4.5 md:h-4.5" />
-                <span className="hidden sm:inline">{tab.label}</span>
-                <span className="inline sm:hidden">{tab.shortLabel}</span>
-                {tab.badge && tab.badge > 0 && (
-                  <span
-                    className="min-w-[16px] sm:min-w-[18px] h-4 sm:h-5 px-1 sm:px-1.5 rounded-full flex items-center justify-center text-[9px] sm:text-[10px] font-bold animate-pulse"
-                    style={{
-                      background: isActive ? 'rgba(255, 255, 255, 0.25)' : 'linear-gradient(135deg, #EF4444, #DC2626)',
-                      color: 'white'
-                    }}
-                  >
-                    {tab.badge > 9 ? '9+' : tab.badge}
+          <div className="relative flex gap-1 sm:gap-2 overflow-x-auto scrollbar-hide pb-1">
+            {[
+              { id: 'home', label: 'الرئيسية', icon: Home, color: '#10B981', gradient: 'from-emerald-500 to-green-600' },
+              { id: 'form', label: 'بياناتي', icon: FileText, color: '#3B82F6', gradient: 'from-blue-500 to-cyan-600' },
+              { id: 'finance', label: 'المالية', icon: DollarSign, color: '#8BC34A', gradient: 'from-green-500 to-teal-600' },
+              { id: 'notifications', label: 'الإشعارات', icon: Bell, badge: unreadCount, color: '#F59E0B', gradient: 'from-orange-500 to-amber-600' },
+              { id: 'support', label: 'تواصل', icon: Phone, color: '#8B5CF6', gradient: 'from-purple-500 to-indigo-600' },
+              { id: 'faq', label: 'الأسئلة', icon: HelpCircle, color: '#EC4899', gradient: 'from-pink-500 to-rose-600' }
+            ].map((tab) => {
+              const Icon = tab.icon;
+              const isActive = activeTab === tab.id;
+
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id as any)}
+                  className={`
+                    relative flex flex-col items-center justify-center
+                    min-w-[70px] sm:min-w-[90px] md:min-w-[110px]
+                    px-3 sm:px-4 md:px-5
+                    py-2 sm:py-2.5 md:py-3
+                    rounded-xl sm:rounded-2xl
+                    font-bold text-[10px] sm:text-xs md:text-sm
+                    transition-all duration-300
+                    group flex-shrink-0
+                    ${isActive
+                      ? 'transform scale-105 shadow-xl'
+                      : 'hover:scale-102 hover:shadow-md'
+                    }
+                  `}
+                  style={{
+                    background: isActive
+                      ? `linear-gradient(135deg, ${tab.color}, ${tab.color}dd)`
+                      : 'white',
+                    color: isActive ? 'white' : '#6B7280',
+                    border: isActive ? 'none' : '2px solid #E5E7EB',
+                  }}
+                >
+                  {/* أيقونة مع تأثير */}
+                  <div className={`
+                    relative
+                    w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10
+                    rounded-xl
+                    flex items-center justify-center
+                    mb-1 sm:mb-1.5
+                    transition-all duration-300
+                    ${isActive
+                      ? 'bg-white/20 backdrop-blur-sm'
+                      : 'bg-gray-50 group-hover:bg-gray-100'
+                    }
+                  `}>
+                    <Icon
+                      className={`
+                        w-4 h-4 sm:w-5 sm:h-5 md:w-5.5 md:h-5.5
+                        transition-all duration-300
+                        ${isActive ? 'scale-110' : 'group-hover:scale-105'}
+                      `}
+                      style={{ color: isActive ? 'white' : tab.color }}
+                    />
+
+                    {/* Badge للإشعارات */}
+                    {tab.badge && tab.badge > 0 && (
+                      <div
+                        className="absolute -top-1 -right-1 min-w-[18px] h-[18px] rounded-full flex items-center justify-center text-[9px] font-black shadow-lg animate-bounce"
+                        style={{
+                          background: 'linear-gradient(135deg, #EF4444, #DC2626)',
+                          color: 'white',
+                          border: '2px solid white'
+                        }}
+                      >
+                        {tab.badge > 9 ? '9+' : tab.badge}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* النص */}
+                  <span className={`
+                    text-center leading-tight
+                    transition-all duration-300
+                    ${isActive ? 'font-black' : 'font-bold'}
+                  `}>
+                    {tab.label}
                   </span>
-                )}
-                {isActive && (
-                  <div
-                    className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1/2 h-0.5 sm:h-1 rounded-t-full"
-                    style={{ background: 'rgba(255, 255, 255, 0.5)' }}
-                  />
-                )}
-              </button>
-            );
-          })}
+
+                  {/* مؤشر النشاط */}
+                  {isActive && (
+                    <div
+                      className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-2/3 h-1 rounded-t-full"
+                      style={{
+                        background: 'rgba(255, 255, 255, 0.8)',
+                        boxShadow: '0 -2px 8px rgba(255, 255, 255, 0.5)'
+                      }}
+                    />
+                  )}
+
+                  {/* توهج خلفي */}
+                  {isActive && (
+                    <div
+                      className="absolute inset-0 rounded-xl sm:rounded-2xl opacity-50 blur-xl -z-10"
+                      style={{ background: tab.color }}
+                    />
+                  )}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* مؤشر التمرير للجوال */}
+          <div className="block sm:hidden mt-2 flex justify-center gap-1">
+            <div className="w-12 h-1 bg-gray-300 rounded-full" />
+            <div className="w-8 h-1 bg-gray-200 rounded-full" />
+            <div className="w-4 h-1 bg-gray-200 rounded-full" />
+          </div>
         </div>
       </div>
+
+      <style>{`
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+        @keyframes gentle-pulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.8; }
+        }
+        .hover\\:scale-102:hover {
+          transform: scale(1.02);
+        }
+      `}</style>
 
       {/* المحتوى */}
       <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 md:py-8">
