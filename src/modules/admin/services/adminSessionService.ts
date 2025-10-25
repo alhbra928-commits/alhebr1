@@ -352,6 +352,32 @@ export class AdminSessionService {
     }
   }
 
+  static async updateUserInfo(phone: string, updates: { full_name?: string; job_title?: string }) {
+    try {
+      console.log('📝 [AdminSessionService] updateUserInfo START');
+      console.log('Phone:', phone);
+      console.log('Updates:', updates);
+
+      const { data, error } = await supabase
+        .from('admin_users')
+        .update(updates)
+        .eq('phone', phone)
+        .select()
+        .single();
+
+      if (error) {
+        console.error('❌ [AdminSessionService] Supabase error:', error);
+        throw error;
+      }
+
+      console.log('✅ [AdminSessionService] User info updated:', data);
+      return data;
+    } catch (error) {
+      console.error('❌❌❌ [AdminSessionService] Error updating user info:', error);
+      throw error;
+    }
+  }
+
   static async deletePermission(permissionId: string) {
     try {
       const { error } = await supabase

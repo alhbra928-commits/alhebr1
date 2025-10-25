@@ -9,6 +9,8 @@ interface AdminUser {
   role: string;
   roleAr: string;
   avatar?: string;
+  jobTitle?: string;
+  jobTitleEn?: string;
 }
 
 export function AdvancedPermissionsManager() {
@@ -18,6 +20,16 @@ export function AdvancedPermissionsManager() {
   const [loading, setLoading] = useState(false);
   const [loadingUsers, setLoadingUsers] = useState(true);
   const [editingPermission, setEditingPermission] = useState<string | null>(null);
+  const [showEditUserModal, setShowEditUserModal] = useState(false);
+  const [editUserForm, setEditUserForm] = useState({ name: '', jobTitle: '' });
+  const [showAddPermissionModal, setShowAddPermissionModal] = useState(false);
+  const [newPermissionForm, setNewPermissionForm] = useState({
+    moduleId: '',
+    canView: true,
+    canCreate: false,
+    canEdit: false,
+    canDelete: false,
+  });
 
   useEffect(() => {
     loadUsers();
@@ -149,6 +161,95 @@ export function AdvancedPermissionsManager() {
     }
   };
 
+  const handleEditUser = () => {
+    if (!selectedUser) return;
+    setEditUserForm({
+      name: selectedUser.name,
+      jobTitle: selectedUser.jobTitle || '',
+    });
+    setShowEditUserModal(true);
+  };
+
+  const handleSaveUserInfo = async () => {
+    if (!selectedUser) return;
+
+    try {
+      await AdminSessionService.updateUserInfo(selectedUser.phone, {
+        full_name: editUserForm.name,
+        job_title: editUserForm.jobTitle,
+      });
+
+      setUsers(users.map(u =>
+        u.phone === selectedUser.phone
+          ? { ...u, name: editUserForm.name, jobTitle: editUserForm.jobTitle }
+          : u
+      ));
+
+      setSelectedUser({
+        ...selectedUser,
+        name: editUserForm.name,
+        jobTitle: editUserForm.jobTitle,
+      });
+
+      setShowEditUserModal(false);
+      alert('✅ تم تحديث بيانات المستخدم بنجاح');
+    } catch (error) {
+      console.error('Error updating user:', error);
+      alert('❌ حدث خطأ في تحديث البيانات');
+    }
+  };
+
+  const handleAddPermission = () => {
+    setNewPermissionForm({
+      moduleId: '',
+      canView: true,
+      canCreate: false,
+      canEdit: false,
+      canDelete: false,
+    });
+    setShowAddPermissionModal(true);
+  };
+
+  const handleSaveNewPermission = async () => {
+    if (!selectedUser || !newPermissionForm.moduleId) {
+      alert('⚠️ الرجاء اختيار قسم');
+      return;
+    }
+
+    const moduleMapping: Record<string, string> = {
+      finance: 'المالية',
+      farms: 'المزارع',
+      documentation: 'التوثيق',
+      investors: 'المستثمرون',
+      reservations: 'الحجوزات',
+      operations: 'التشغيل',
+      control: 'الرقابة',
+      support: 'الدعم',
+    };
+
+    try {
+      await AdminSessionService.addPermissionToDB({
+        admin_phone: selectedUser.phone,
+        module_id: newPermissionForm.moduleId,
+        module_name_ar: moduleMapping[newPermissionForm.moduleId] || newPermissionForm.moduleId,
+        module_name_en: newPermissionForm.moduleId,
+        can_view: newPermissionForm.canView,
+        can_create: newPermissionForm.canCreate,
+        can_edit: newPermissionForm.canEdit,
+        can_delete: newPermissionForm.canDelete,
+        icon: 'shield',
+        is_active: true,
+      });
+
+      await loadPermissions(selectedUser.phone);
+      setShowAddPermissionModal(false);
+      alert('✅ تم إضافة الصلاحية بنجاح');
+    } catch (error) {
+      console.error('Error adding permission:', error);
+      alert('❌ حدث خطأ في إضافة الصلاحية');
+    }
+  };
+
   const allPermissionsActive = permissions.every(p => p.is_active);
   const allPermissionsFrozen = permissions.every(p => !p.is_active);
 
@@ -266,11 +367,28 @@ export function AdvancedPermissionsManager() {
                         {selectedUser.name}
                       </h2>
                       <p className="text-sm" style={{ color: brandColors.text.secondary }}>
-                        {selectedUser.phone} • {selectedUser.roleAr}
+                        {selectedUser.phone}
+                        {selectedUser.jobTitle && ` • ${selectedUser.jobTitle}`}
                       </p>
                     </div>
                   </div>
                   <div className="flex gap-2">
+                    <button
+                      onClick={handleEditUser}
+                      className="flex items-center gap-2 rounded-xl px-4 py-2 font-bold text-white transition-all hover:scale-105"
+                      style={{ background: brandGradients.gold }}
+                    >
+                      <Edit className="h-4 w-4" />
+                      <span>تعديل البيانات</span>
+                    </button>
+                    <button
+                      onClick={handleAddPermission}
+                      className="flex items-center gap-2 rounded-xl px-4 py-2 font-bold text-white transition-all hover:scale-105"
+                      style={{ background: 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)' }}
+                    >
+                      <Plus className="h-4 w-4" />
+                      <span>إضافة صلاحية</span>
+                    </button>
                     {allPermissionsActive ? (
                       <button
                         onClick={() => handleFreezeUser(selectedUser.phone)}
@@ -404,6 +522,173 @@ export function AdvancedPermissionsManager() {
           </div>
         </div>
       </div>
+
+      {/* نموذج تعديل بيانات المستخدم */}
+      {showEditUserModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+          <div
+            className="w-full max-w-md rounded-2xl p-6"
+            style={{ background: 'white', boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)' }}
+          >
+            <h3 className="mb-4 text-2xl font-black" style={{ color: brandColors.text.primary }}>
+              تعديل بيانات المستخدم
+            </h3>
+            <div className="space-y-4">
+              <div>
+                <label className="mb-2 block text-sm font-bold" style={{ color: brandColors.text.secondary }}>
+                  الاسم الكامل
+                </label>
+                <input
+                  type="text"
+                  value={editUserForm.name}
+                  onChange={(e) => setEditUserForm({ ...editUserForm, name: e.target.value })}
+                  className="w-full rounded-xl border-2 px-4 py-3 font-bold transition-all focus:outline-none"
+                  style={{
+                    borderColor: brandColors.primary.gold,
+                    color: brandColors.text.primary,
+                  }}
+                  placeholder="أدخل الاسم الكامل"
+                />
+              </div>
+              <div>
+                <label className="mb-2 block text-sm font-bold" style={{ color: brandColors.text.secondary }}>
+                  المسمى الوظيفي
+                </label>
+                <input
+                  type="text"
+                  value={editUserForm.jobTitle}
+                  onChange={(e) => setEditUserForm({ ...editUserForm, jobTitle: e.target.value })}
+                  className="w-full rounded-xl border-2 px-4 py-3 font-bold transition-all focus:outline-none"
+                  style={{
+                    borderColor: brandColors.primary.gold,
+                    color: brandColors.text.primary,
+                  }}
+                  placeholder="أدخل المسمى الوظيفي"
+                />
+              </div>
+              <div className="flex gap-3">
+                <button
+                  onClick={handleSaveUserInfo}
+                  className="flex-1 rounded-xl py-3 font-bold text-white transition-all hover:scale-105"
+                  style={{ background: brandGradients.gold }}
+                >
+                  حفظ التعديلات
+                </button>
+                <button
+                  onClick={() => setShowEditUserModal(false)}
+                  className="flex-1 rounded-xl py-3 font-bold transition-all hover:scale-105"
+                  style={{
+                    background: 'rgba(0, 0, 0, 0.05)',
+                    color: brandColors.text.secondary,
+                  }}
+                >
+                  إلغاء
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* نموذج إضافة صلاحية جديدة */}
+      {showAddPermissionModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+          <div
+            className="w-full max-w-md rounded-2xl p-6"
+            style={{ background: 'white', boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)' }}
+          >
+            <h3 className="mb-4 text-2xl font-black" style={{ color: brandColors.text.primary }}>
+              إضافة صلاحية جديدة
+            </h3>
+            <div className="space-y-4">
+              <div>
+                <label className="mb-2 block text-sm font-bold" style={{ color: brandColors.text.secondary }}>
+                  القسم
+                </label>
+                <select
+                  value={newPermissionForm.moduleId}
+                  onChange={(e) => setNewPermissionForm({ ...newPermissionForm, moduleId: e.target.value })}
+                  className="w-full rounded-xl border-2 px-4 py-3 font-bold transition-all focus:outline-none"
+                  style={{
+                    borderColor: brandColors.primary.gold,
+                    color: brandColors.text.primary,
+                  }}
+                >
+                  <option value="">اختر القسم</option>
+                  <option value="finance">المالية</option>
+                  <option value="farms">المزارع</option>
+                  <option value="documentation">التوثيق</option>
+                  <option value="investors">المستثمرون</option>
+                  <option value="reservations">الحجوزات</option>
+                  <option value="operations">التشغيل</option>
+                  <option value="control">الرقابة</option>
+                  <option value="support">الدعم</option>
+                </select>
+              </div>
+              <div className="space-y-2">
+                <label className="mb-2 block text-sm font-bold" style={{ color: brandColors.text.secondary }}>
+                  الصلاحيات
+                </label>
+                <label className="flex items-center gap-3">
+                  <input
+                    type="checkbox"
+                    checked={newPermissionForm.canView}
+                    onChange={(e) => setNewPermissionForm({ ...newPermissionForm, canView: e.target.checked })}
+                    className="h-5 w-5"
+                  />
+                  <span className="font-bold" style={{ color: brandColors.text.primary }}>عرض</span>
+                </label>
+                <label className="flex items-center gap-3">
+                  <input
+                    type="checkbox"
+                    checked={newPermissionForm.canCreate}
+                    onChange={(e) => setNewPermissionForm({ ...newPermissionForm, canCreate: e.target.checked })}
+                    className="h-5 w-5"
+                  />
+                  <span className="font-bold" style={{ color: brandColors.text.primary }}>إنشاء</span>
+                </label>
+                <label className="flex items-center gap-3">
+                  <input
+                    type="checkbox"
+                    checked={newPermissionForm.canEdit}
+                    onChange={(e) => setNewPermissionForm({ ...newPermissionForm, canEdit: e.target.checked })}
+                    className="h-5 w-5"
+                  />
+                  <span className="font-bold" style={{ color: brandColors.text.primary }}>تعديل</span>
+                </label>
+                <label className="flex items-center gap-3">
+                  <input
+                    type="checkbox"
+                    checked={newPermissionForm.canDelete}
+                    onChange={(e) => setNewPermissionForm({ ...newPermissionForm, canDelete: e.target.checked })}
+                    className="h-5 w-5"
+                  />
+                  <span className="font-bold" style={{ color: brandColors.text.primary }}>حذف</span>
+                </label>
+              </div>
+              <div className="flex gap-3">
+                <button
+                  onClick={handleSaveNewPermission}
+                  className="flex-1 rounded-xl py-3 font-bold text-white transition-all hover:scale-105"
+                  style={{ background: 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)' }}
+                >
+                  إضافة الصلاحية
+                </button>
+                <button
+                  onClick={() => setShowAddPermissionModal(false)}
+                  className="flex-1 rounded-xl py-3 font-bold transition-all hover:scale-105"
+                  style={{
+                    background: 'rgba(0, 0, 0, 0.05)',
+                    color: brandColors.text.secondary,
+                  }}
+                >
+                  إلغاء
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
