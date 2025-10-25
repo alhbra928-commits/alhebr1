@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔍 اختبار حذف المستخدم</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 50px rgba(0,0,0,0.2);
+        }
+        h1 { color: #333; text-align: center; margin-bottom: 30px; }
+        .section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .section h2 {
+            color: #667eea;
+            margin-top: 0;
+        }
+        button {
+            padding: 12px 24px;
+            margin: 5px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .btn-load { background: #3B82F6; color: white; }
+        .btn-delete { background: #DC2626; color: white; }
+        .btn-check { background: #10B981; color: white; }
+        button:hover { opacity: 0.9; transform: scale(1.02); }
+        .log {
+            background: #1e1e1e;
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+        .user-card {
+            background: white;
+            border: 2px solid #e5e7eb;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .user-info { flex: 1; }
+        .user-name { font-weight: bold; color: #333; font-size: 16px; }
+        .user-phone { color: #666; font-size: 14px; }
+        input {
+            padding: 10px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 14px;
+            width: 200px;
+            margin: 5px;
+        }
+        .success { color: #10B981; font-weight: bold; }
+        .error { color: #DC2626; font-weight: bold; }
+        .warning { color: #F59E0B; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 اختبار نظام حذف المستخدمين</h1>
+
+        <div class="section">
+            <h2>📋 الخطوة 1: تحميل المستخدمين</h2>
+            <button class="btn-load" onclick="loadUsers()">🔄 تحميل جميع المستخدمين</button>
+            <div id="usersList" style="margin-top: 15px;"></div>
+        </div>
+
+        <div class="section">
+            <h2>🗑️ الخطوة 2: حذف مستخدم</h2>
+            <input type="text" id="phoneToDelete" placeholder="رقم الجوال" value="">
+            <button class="btn-delete" onclick="deleteUserComplete()">🗑️ حذف المستخدم</button>
+        </div>
+
+        <div class="section">
+            <h2>✅ الخطوة 3: التحقق من الحذف</h2>
+            <button class="btn-check" onclick="verifyDeletion()">✅ التحقق من قاعدة البيانات</button>
+        </div>
+
+        <div class="section">
+            <h2>📊 سجل العمليات</h2>
+            <div id="log" class="log"></div>
+        </div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = 'https://pscmuljqipdzscuaqvbi.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzY211bGpxaXBkenNjdWFxdmJpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjk0MTI2NjgsImV4cCI6MjA0NDk4ODY2OH0.VlGm-T7IbKljaKbVL_NlZl9schwKMakMgn7AZx2DXKk';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        let allUsers = [];
+
+        function log(message, type = 'info') {
+            const logDiv = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString('ar-EG');
+            let icon = '📝';
+            if (type === 'success') icon = '✅';
+            if (type === 'error') icon = '❌';
+            if (type === 'warning') icon = '⚠️';
+            if (type === 'delete') icon = '🗑️';
+            if (type === 'check') icon = '🔍';
+            
+            logDiv.innerHTML += `[${timestamp}] ${icon} ${message}\n`;
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        async function loadUsers() {
+            try {
+                log('جاري تحميل المستخدمين من admin_users...', 'info');
+                
+                const { data, error } = await supabase
+                    .from('admin_users')
+                    .select('*')
+                    .is('deleted_at', null)
+                    .order('created_at', { ascending: false });
+
+                if (error) {
+                    log('خطأ في التحميل: ' + error.message, 'error');
+                    throw error;
+                }
+
+                allUsers = data || [];
+                log(`تم تحميل ${allUsers.length} مستخدم`, 'success');
+
+                const usersList = document.getElementById('usersList');
+                if (allUsers.length === 0) {
+                    usersList.innerHTML = '<p style="color: #666;">لا توجد مستخدمين</p>';
+                } else {
+                    usersList.innerHTML = allUsers.map(user => `
+                        <div class="user-card">
+                            <div class="user-info">
+                                <div class="user-name">${user.full_name || 'بدون اسم'}</div>
+                                <div class="user-phone">📱 ${user.phone}</div>
+                                <div style="font-size: 12px; color: #999;">
+                                    ${user.job_title || 'لا يوجد مسمى'} • 
+                                    ${user.is_active ? '✅ نشط' : '❌ معطل'}
+                                </div>
+                            </div>
+                            <button class="btn-delete" onclick="selectUserForDeletion('${user.phone}', '${user.full_name}')">
+                                حذف
+                            </button>
+                        </div>
+                    `).join('');
+                }
+            } catch (error) {
+                log('فشل تحميل المستخدمين: ' + error.message, 'error');
+            }
+        }
+
+        function selectUserForDeletion(phone, name) {
+            document.getElementById('phoneToDelete').value = phone;
+            log(`تم اختيار: ${name} (${phone})`, 'warning');
+        }
+
+        async function deleteUserComplete() {
+            const phone = document.getElementById('phoneToDelete').value.trim();
+            
+            if (!phone) {
+                alert('⚠️ يرجى إدخال رقم الجوال');
+                return;
+            }
+
+            if (!confirm(`⚠️ هل أنت متأكد من حذف المستخدم صاحب الرقم: ${phone}؟\n\nسيتم حذف:\n1. جميع الصلاحيات\n2. جميع الجلسات\n3. بيانات المستخدم\n\nهذا الإجراء لا يمكن التراجع عنه!`)) {
+                log('تم إلغاء عملية الحذف', 'warning');
+                return;
+            }
+
+            try {
+                log('━━━━━━━━━━━━━━━━━━━━━━━━━━', 'delete');
+                log(`بدء عملية حذف المستخدم: ${phone}`, 'delete');
+                log('━━━━━━━━━━━━━━━━━━━━━━━━━━', 'delete');
+
+                // الخطوة 1: حذف الصلاحيات
+                log('الخطوة 1/4: حذف الصلاحيات...', 'delete');
+                const { data: permissions, error: permError } = await supabase
+                    .from('admin_module_permissions')
+                    .select('id')
+                    .eq('admin_phone', phone);
+
+                if (permError) {
+                    log('خطأ في جلب الصلاحيات: ' + permError.message, 'error');
+                } else {
+                    log(`وجدت ${permissions.length} صلاحية`, 'check');
+                    
+                    const { error: deletePermError } = await supabase
+                        .from('admin_module_permissions')
+                        .delete()
+                        .eq('admin_phone', phone);
+
+                    if (deletePermError) {
+                        log('خطأ في حذف الصلاحيات: ' + deletePermError.message, 'error');
+                        throw deletePermError;
+                    }
+                    log(`✅ تم حذف ${permissions.length} صلاحية`, 'success');
+                }
+
+                // الخطوة 2: حذف الجلسات
+                log('الخطوة 2/4: حذف الجلسات النشطة...', 'delete');
+                const { data: sessions, error: sessError } = await supabase
+                    .from('admin_active_sessions')
+                    .select('id')
+                    .eq('admin_phone', phone);
+
+                if (sessError) {
+                    log('خطأ في جلب الجلسات: ' + sessError.message, 'error');
+                } else {
+                    log(`وجدت ${sessions.length} جلسة`, 'check');
+                    
+                    const { error: deleteSessError } = await supabase
+                        .from('admin_active_sessions')
+                        .delete()
+                        .eq('admin_phone', phone);
+
+                    if (deleteSessError) {
+                        log('خطأ في حذف الجلسات: ' + deleteSessError.message, 'error');
+                    } else {
+                        log(`✅ تم حذف ${sessions.length} جلسة`, 'success');
+                    }
+                }
+
+                // الخطوة 3: حذف المستخدم
+                log('الخطوة 3/4: حذف المستخدم من admin_users...', 'delete');
+                const { error: deleteUserError } = await supabase
+                    .from('admin_users')
+                    .delete()
+                    .eq('phone', phone);
+
+                if (deleteUserError) {
+                    log('❌ خطأ في حذف المستخدم: ' + deleteUserError.message, 'error');
+                    throw deleteUserError;
+                }
+                log('✅ تم حذف المستخدم من admin_users', 'success');
+
+                // الخطوة 4: تسجيل في Log
+                log('الخطوة 4/4: تسجيل العملية...', 'delete');
+                const { error: logError } = await supabase
+                    .from('admin_access_log')
+                    .insert({
+                        admin_phone: phone,
+                        admin_name: 'System',
+                        action_type: 'delete_user',
+                        action_details: `حذف المستخدم ${phone} وجميع بياناته`,
+                        device_info: navigator.userAgent,
+                        ip_address: 'Test',
+                        action_status: 'success'
+                    });
+
+                if (logError) {
+                    log('تحذير: فشل التسجيل في Log: ' + logError.message, 'warning');
+                }
+
+                log('━━━━━━━━━━━━━━━━━━━━━━━━━━', 'success');
+                log('✅✅✅ تم حذف المستخدم بنجاح من قاعدة البيانات!', 'success');
+                log('━━━━━━━━━━━━━━━━━━━━━━━━━━', 'success');
+
+                // تحديث القائمة
+                await loadUsers();
+
+            } catch (error) {
+                log('━━━━━━━━━━━━━━━━━━━━━━━━━━', 'error');
+                log('❌ فشلت عملية الحذف: ' + error.message, 'error');
+                log('━━━━━━━━━━━━━━━━━━━━━━━━━━', 'error');
+            }
+        }
+
+        async function verifyDeletion() {
+            const phone = document.getElementById('phoneToDelete').value.trim();
+            
+            if (!phone) {
+                alert('⚠️ يرجى إدخال رقم الجوال للتحقق');
+                return;
+            }
+
+            try {
+                log('━━━━━━━━━━━━━━━━━━━━━━━━━━', 'check');
+                log(`التحقق من حذف: ${phone}`, 'check');
+                log('━━━━━━━━━━━━━━━━━━━━━━━━━━', 'check');
+
+                // التحقق من admin_users
+                const { data: user, error: userError } = await supabase
+                    .from('admin_users')
+                    .select('*')
+                    .eq('phone', phone)
+                    .maybeSingle();
+
+                if (userError) {
+                    log('خطأ في البحث: ' + userError.message, 'error');
+                } else if (user) {
+                    log('❌ المستخدم موجود في admin_users!', 'error');
+                    log('البيانات: ' + JSON.stringify(user), 'error');
+                } else {
+                    log('✅ المستخدم محذوف من admin_users', 'success');
+                }
+
+                // التحقق من الصلاحيات
+                const { data: perms, error: permError } = await supabase
+                    .from('admin_module_permissions')
+                    .select('id')
+                    .eq('admin_phone', phone);
+
+                if (permError) {
+                    log('خطأ في البحث عن الصلاحيات: ' + permError.message, 'error');
+                } else if (perms && perms.length > 0) {
+                    log(`❌ الصلاحيات موجودة: ${perms.length} صلاحية`, 'error');
+                } else {
+                    log('✅ الصلاحيات محذوفة', 'success');
+                }
+
+                // التحقق من الجلسات
+                const { data: sessions, error: sessError } = await supabase
+                    .from('admin_active_sessions')
+                    .select('id')
+                    .eq('admin_phone', phone);
+
+                if (sessError) {
+                    log('خطأ في البحث عن الجلسات: ' + sessError.message, 'error');
+                } else if (sessions && sessions.length > 0) {
+                    log(`❌ الجلسات موجودة: ${sessions.length} جلسة`, 'error');
+                } else {
+                    log('✅ الجلسات محذوفة', 'success');
+                }
+
+                log('━━━━━━━━━━━━━━━━━━━━━━━━━━', 'check');
+                log('انتهى التحقق', 'check');
+                log('━━━━━━━━━━━━━━━━━━━━━━━━━━', 'check');
+
+            } catch (error) {
+                log('خطأ في التحقق: ' + error.message, 'error');
+            }
+        }
+
+        // تحميل تلقائي عند فتح الصفحة
+        window.onload = () => {
+            log('🚀 مرحباً بك في اختبار نظام الحذف', 'info');
+            log('━━━━━━━━━━━━━━━━━━━━━━━━━━', 'info');
+            loadUsers();
+        };
+    </script>
+</body>
+</html>
