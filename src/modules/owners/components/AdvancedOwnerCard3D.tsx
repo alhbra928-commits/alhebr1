@@ -249,6 +249,7 @@ export function AdvancedOwnerCard3D({
         <button
           onClick={handleViewClick}
           className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-300 hover:from-amber-100 hover:to-orange-100 transition-all duration-200 shadow-md hover:shadow-lg group"
+          style={{ minHeight: '80px', border: '3px solid red' }}
         >
           <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-md group-hover:scale-110 transition-transform duration-200">
             <Eye className="h-6 w-6 text-white" />
@@ -256,6 +257,9 @@ export function AdvancedOwnerCard3D({
           <div className="flex-1 text-right">
             <p className="font-black text-amber-900 text-base">عرض النموذج المرفوع</p>
             <p className="text-xs text-amber-700 font-bold">مشاهدة جميع البيانات المقدمة</p>
+          </div>
+          <div className="absolute top-0 left-0 bg-red-600 text-white px-2 py-1 text-xs font-black">
+            الزر هنا!
           </div>
         </button>
 
