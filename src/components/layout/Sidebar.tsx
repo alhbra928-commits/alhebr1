@@ -70,8 +70,16 @@ export function Sidebar({ activeModule, onModuleChange }: SidebarProps) {
         </div>
 
         {/* رسالة التشخيص - تظهر لجميع الموظفين */}
+        {(() => {
+          console.log('🟦🟦🟦 [Sidebar] BLUE BOX CHECK:');
+          console.log('🟦 currentAdminPhone:', currentAdminPhone);
+          console.log('🟦 isAdmin:', isAdmin);
+          console.log('🟦 Condition (phone && !isAdmin):', !!(currentAdminPhone && !isAdmin));
+          return null;
+        })()}
         {currentAdminPhone && !isAdmin && (
           <div className="mb-4 p-4 bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl text-white shadow-lg border-2 border-blue-400">
+            {console.log('✅✅✅ BLUE BOX IS RENDERING NOW!')}
             <div className="font-bold text-lg mb-2 flex items-center gap-2">
               🔍 معلومات الحساب
             </div>
