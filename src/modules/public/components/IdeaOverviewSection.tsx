@@ -149,6 +149,7 @@ export const IdeaOverviewSection: React.FC<IdeaOverviewSectionProps> = ({ onNavi
                       النخيل رمز <span className="font-black text-amber-700">الأصالة والعطاء المستمر</span>. امتلك أشجار نخيل حقيقية من مزارع منتقاة ومعتمدة،
                       واحصل على <span className="font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-600 to-orange-600">عوائد استثمارك في النخيل المملوكة لك كلياً</span> في أرض المزرعة،
                       سواء من بيع الثمار، أو الاستثمار في بيع النخيل، أو الإهداء، أو الوقف الخيري.
+                      <span className="block mt-4 font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-600">✨ المنصة تتولى الإدارة التشغيلية والصيانة بالكامل</span> - أنت تملك وتستفيد ونحن نعتني بكل شيء.
                     </p>
 
                     <div className="flex flex-wrap gap-3 justify-center">
@@ -203,6 +204,7 @@ export const IdeaOverviewSection: React.FC<IdeaOverviewSectionProps> = ({ onNavi
                       الزيتون شجرة <span className="font-black text-green-700">مباركة وعطاء دائم</span>. امتلك أشجار زيتون مثمرة من مزارع متخصصة ومعتمدة،
                       واحصل على <span className="font-black text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-emerald-600">عوائد استثمارك في الزيتون المملوكة لك كلياً</span> في أرض المزرعة،
                       سواء من بيع الثمار، أو الاستثمار في بيع الزيتون، أو الإهداء، أو الوقف الخيري.
+                      <span className="block mt-4 font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-600">✨ المنصة تتولى الإدارة التشغيلية والصيانة بالكامل</span> - أنت تملك وتستفيد ونحن نعتني بكل شيء.
                     </p>
 
                     <div className="flex flex-wrap gap-3 justify-center">
@@ -348,12 +350,13 @@ export const IdeaOverviewSection: React.FC<IdeaOverviewSectionProps> = ({ onNavi
             <p className="text-lg sm:text-xl text-gray-600 font-medium">عملية واضحة وشفافة من البداية للنهاية</p>
           </div>
 
-          <div className="relative grid sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+          <div className="relative grid sm:grid-cols-2 lg:grid-cols-5 gap-6 sm:gap-8">
             {[
               { num: '1', title: 'اختر النوع', desc: 'نخيل أو زيتون أو كلاهما', gradient: 'from-amber-500 via-yellow-500 to-orange-600', delay: '0s' },
               { num: '2', title: 'حدد الكمية', desc: 'اختر العدد المناسب لك', gradient: 'from-blue-500 via-cyan-500 to-cyan-600', delay: '0.1s' },
               { num: '3', title: 'وثق ملكيتك', desc: 'شهادة ملكية رسمية موثقة', gradient: 'from-green-500 via-emerald-500 to-emerald-600', delay: '0.2s' },
-              { num: '4', title: 'تمتع بالحرية', desc: 'تصرف بملكيتك بحرية تامة', gradient: 'from-purple-500 via-pink-500 to-pink-600', delay: '0.3s' }
+              { num: '4', title: 'تمتع بالحرية', desc: 'تصرف بملكيتك بحرية تامة', gradient: 'from-purple-500 via-pink-500 to-pink-600', delay: '0.3s' },
+              { num: '5', title: 'نحن نهتم بالباقي', desc: 'إدارة وصيانة تشغيلية كاملة', gradient: 'from-teal-500 via-cyan-500 to-blue-600', delay: '0.4s' }
             ].map((step, idx) => (
               <div key={idx} className="group relative animate-fade-in-up" style={{ animationDelay: step.delay }}>
                 <div className="relative bg-white rounded-3xl p-6 sm:p-8 text-center shadow-xl border-2 border-gray-200/50 hover:shadow-2xl transition-all duration-500 hover:scale-110 hover:-translate-y-3">
@@ -365,7 +368,7 @@ export const IdeaOverviewSection: React.FC<IdeaOverviewSectionProps> = ({ onNavi
                   <h4 className="font-black text-lg sm:text-xl text-gray-900 mb-3">{step.title}</h4>
                   <p className="text-sm sm:text-base text-gray-600 leading-relaxed">{step.desc}</p>
                 </div>
-                {idx < 3 && (
+                {idx < 4 && (
                   <div className="hidden lg:block absolute top-1/2 left-full w-8 h-1 bg-gradient-to-r from-gray-300 via-amber-300 to-transparent -translate-y-1/2 animate-pulse-slow" />
                 )}
               </div>
