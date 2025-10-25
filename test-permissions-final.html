@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>اختبار الصلاحيات - 0510101010</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body { font-family: Arial; padding: 20px; background: #f5f5f5; }
+    .result { background: white; padding: 15px; margin: 10px 0; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .success { background: #d4edda; color: #155724; }
+    .error { background: #f8d7da; color: #721c24; }
+    h1 { color: #333; }
+    table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+    th, td { padding: 12px; text-align: right; border-bottom: 1px solid #ddd; }
+    th { background: #007bff; color: white; }
+    tr:hover { background: #f5f5f5; }
+    .check { color: green; font-size: 20px; }
+    .cross { color: red; font-size: 20px; }
+    button { 
+      background: #007bff; 
+      color: white; 
+      border: none; 
+      padding: 10px 20px; 
+      border-radius: 5px; 
+      cursor: pointer; 
+      font-size: 16px;
+    }
+    button:hover { background: #0056b3; }
+  </style>
+</head>
+<body>
+  <h1>🔍 اختبار صلاحيات الموظف 0510101010</h1>
+  <button onclick="testPermissions()">اختبار الصلاحيات</button>
+  <div id="results"></div>
+
+  <script>
+    const SUPABASE_URL = 'https://xdjeygiadqavkmwarkfz.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhkamV5Z2lhZHFhdmttd2Fya2Z6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjk0MTk5OTYsImV4cCI6MjA0NDk5NTk5Nn0.LQAS1tocAmo5RtT6w0J1xVFxlXlxt0f-knTHxIpVoHo';
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    async function testPermissions() {
+      const results = document.getElementById('results');
+      results.innerHTML = '<div class="result">⏳ جاري الاختبار...</div>';
+
+      try {
+        // 1. جلب صلاحيات الموظف
+        const { data: permissions, error } = await supabase
+          .from('admin_module_permissions')
+          .select('*')
+          .eq('admin_phone', '0510101010')
+          .eq('is_active', true);
+
+        if (error) throw error;
+
+        let html = '<div class="result success">';
+        html += '<h2>✅ تم جلب الصلاحيات بنجاح</h2>';
+        html += `<p><strong>عدد الأقسام:</strong> ${permissions.length}</p>`;
+        html += '</div>';
+
+        // 2. عرض الصلاحيات في جدول
+        html += '<div class="result">';
+        html += '<h2>📊 جدول الصلاحيات</h2>';
+        html += '<table>';
+        html += '<thead><tr>';
+        html += '<th>القسم</th>';
+        html += '<th>View</th>';
+        html += '<th>Create</th>';
+        html += '<th>Edit</th>';
+        html += '<th>Delete</th>';
+        html += '</tr></thead>';
+        html += '<tbody>';
+
+        permissions.forEach(p => {
+          html += '<tr>';
+          html += `<td><strong>${p.module_name_ar}</strong><br><small>${p.module_id}</small></td>`;
+          html += `<td>${p.can_view ? '<span class="check">✅</span>' : '<span class="cross">❌</span>'}</td>`;
+          html += `<td>${p.can_create ? '<span class="check">✅</span>' : '<span class="cross">❌</span>'}</td>`;
+          html += `<td>${p.can_edit ? '<span class="check">✅</span>' : '<span class="cross">❌</span>'}</td>`;
+          html += `<td>${p.can_delete ? '<span class="check">✅</span>' : '<span class="cross">❌</span>'}</td>`;
+          html += '</tr>';
+        });
+
+        html += '</tbody></table>';
+        html += '</div>';
+
+        // 3. التوقعات
+        html += '<div class="result">';
+        html += '<h2>🎯 النتيجة المتوقعة</h2>';
+        html += '<h3>✅ يجب أن يظهر في القائمة:</h3>';
+        html += '<ul>';
+        permissions.forEach(p => {
+          if (p.can_view) {
+            html += `<li>✅ ${p.module_name_ar}</li>`;
+          }
+        });
+        html += '</ul>';
+        
+        html += '<h3>❌ يجب أن يكون مخفي من القائمة:</h3>';
+        html += '<ul>';
+        const allModules = ['investors', 'owners', 'agriculture', 'marketing', 'whatsapp', 'wallets', 'permissions', 'settings'];
+        const visibleModules = permissions.filter(p => p.can_view).map(p => p.module_id);
+        allModules.forEach(m => {
+          if (!visibleModules.includes(m)) {
+            html += `<li>❌ ${m}</li>`;
+          }
+        });
+        html += '</ul>';
+        html += '</div>';
+
+        // 4. تفاصيل كل قسم
+        html += '<div class="result">';
+        html += '<h2>📝 تفاصيل الأزرار في كل قسم</h2>';
+        
+        permissions.forEach(p => {
+          html += '<div style="background: #f8f9fa; padding: 10px; margin: 10px 0; border-radius: 5px;">';
+          html += `<h3>${p.module_name_ar} (${p.module_id})</h3>`;
+          html += '<ul>';
+          html += `<li>${p.can_create ? '✅' : '❌'} زر "إضافة"</li>`;
+          html += `<li>${p.can_edit ? '✅' : '❌'} زر "تعديل"</li>`;
+          html += `<li>${p.can_delete ? '✅' : '❌'} زر "حذف"</li>`;
+          html += '<li>✅ زر "عرض" (دائماً موجود)</li>';
+          html += '</ul>';
+          html += '</div>';
+        });
+        
+        html += '</div>';
+
+        results.innerHTML = html;
+
+      } catch (err) {
+        results.innerHTML = `<div class="result error"><h2>❌ خطأ</h2><pre>${err.message}</pre></div>`;
+      }
+    }
+
+    // تشغيل تلقائي عند فتح الصفحة
+    window.onload = () => testPermissions();
+  </script>
+</body>
+</html>
