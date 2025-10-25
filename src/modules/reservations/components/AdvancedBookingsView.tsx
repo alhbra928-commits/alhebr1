@@ -4,15 +4,28 @@ import { ArrowRight, Calendar, Users, CheckCircle, Clock, DollarSign, Search, Re
 import { BookingCard3D } from './BookingCard3D';
 import { BookingDetailsPanel } from './BookingDetailsPanel';
 import { whatsappIntegration } from '../../whatsapp/services/whatsappIntegration';
+import { usePermissions } from '../../../contexts/PermissionsContext';
 
 interface AdvancedBookingsViewProps {
   onBack: () => void;
 }
 
 export function AdvancedBookingsView({ onBack }: AdvancedBookingsViewProps) {
+  const { isAdmin, hasPermission } = usePermissions();
   const [bookings, setBookings] = useState<any[]>([]);
   const [filteredBookings, setFilteredBookings] = useState<any[]>([]);
   const [stats, setStats] = useState<any>({});
+
+  // Check permissions
+  const canEdit = isAdmin || hasPermission('reservations', 'edit');
+  const canDelete = isAdmin || hasPermission('reservations', 'delete');
+  const canCreate = isAdmin || hasPermission('reservations', 'create');
+
+  console.log('🔍 [AdvancedBookingsView] Permissions Check:');
+  console.log('  isAdmin:', isAdmin);
+  console.log('  canEdit:', canEdit);
+  console.log('  canDelete:', canDelete);
+  console.log('  canCreate:', canCreate);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -317,9 +330,9 @@ export function AdvancedBookingsView({ onBack }: AdvancedBookingsViewProps) {
                   key={booking.id}
                   booking={booking}
                   onViewDetails={handleViewDetails}
-                  onApprove={handleApprove}
-                  onReject={handleReject}
-                  onDelete={handleDelete}
+                  onApprove={canEdit ? handleApprove : undefined}
+                  onReject={canEdit ? handleReject : undefined}
+                  onDelete={canDelete ? handleDelete : undefined}
                 />
               ))}
             </div>
@@ -340,7 +353,7 @@ export function AdvancedBookingsView({ onBack }: AdvancedBookingsViewProps) {
                   key={booking.id}
                   booking={booking}
                   onViewDetails={handleViewDetails}
-                  onIssueCertificate={handleIssueCertificate}
+                  onIssueCertificate={canCreate ? handleIssueCertificate : undefined}
                 />
               ))}
             </div>
@@ -381,7 +394,7 @@ export function AdvancedBookingsView({ onBack }: AdvancedBookingsViewProps) {
                   key={booking.id}
                   booking={booking}
                   onViewDetails={handleViewDetails}
-                  onDelete={handleDelete}
+                  onDelete={canDelete ? handleDelete : undefined}
                 />
               ))}
             </div>
