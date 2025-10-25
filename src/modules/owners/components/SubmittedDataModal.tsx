@@ -229,19 +229,113 @@ export function SubmittedDataModal({ owner, onClose, onApprove }: SubmittedDataM
                 </div>
               </div>
 
-              {/* Farm Information */}
-              <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-6 border-2 border-green-200">
+              {/* Pricing & Payment - CRITICAL DECISION INFO */}
+              <div className="bg-gradient-to-br from-amber-50 via-yellow-50 to-amber-50 rounded-2xl p-6 border-4 border-amber-400 shadow-2xl">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center">
+                  <div className="w-14 h-14 bg-gradient-to-br from-amber-500 to-yellow-600 rounded-xl flex items-center justify-center shadow-lg">
+                    <DollarSign className="w-8 h-8 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-black text-gray-900">معلومات التسعير والدفع</h3>
+                    <p className="text-sm text-amber-700 font-bold">معلومات حاسمة لاتخاذ القرار</p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="bg-white rounded-xl p-5 border-2 border-amber-300 shadow-lg">
+                    <div className="flex items-center gap-2 mb-2">
+                      <DollarSign className="w-5 h-5 text-amber-600" />
+                      <p className="text-sm text-gray-600 font-bold">السعر الفعلي المطلوب</p>
+                    </div>
+                    <p className="text-3xl font-black text-amber-600">
+                      {data.actual_price?.toLocaleString('ar-SA')} ر.س
+                    </p>
+                    <p className="text-xs text-gray-500 mt-1">السعر الذي حدده المالك</p>
+                  </div>
+
+                  <div className="bg-white rounded-xl p-5 border-2 border-purple-300 shadow-lg">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Clock className="w-5 h-5 text-purple-600" />
+                      <p className="text-sm text-gray-600 font-bold">مهلة السداد</p>
+                    </div>
+                    <p className="text-3xl font-black text-purple-600">
+                      {data.payment_grace_period} يوم
+                    </p>
+                    <p className="text-xs text-gray-500 mt-1">المدة المسموحة للدفع</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Varieties - Tree Types & Counts */}
+              <div className="bg-gradient-to-br from-green-50 via-emerald-50 to-green-50 rounded-2xl p-6 border-4 border-green-400 shadow-2xl">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-14 h-14 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center shadow-lg">
+                    <TreePine className="w-8 h-8 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-black text-gray-900">أنواع الأشجار وأعدادها</h3>
+                    <p className="text-sm text-green-700 font-bold">تفاصيل الأصناف المتاحة</p>
+                  </div>
+                </div>
+
+                {varieties.length > 0 ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {varieties.map((variety: any, index: number) => (
+                      <div key={index} className="bg-white rounded-xl p-5 border-2 border-green-300 shadow-lg">
+                        <div className="flex items-center justify-between">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-1">
+                              <TreePine className="w-5 h-5 text-green-600" />
+                              <p className="text-xs text-gray-500 font-bold">النوع</p>
+                            </div>
+                            <p className="text-xl font-black text-gray-900 mb-1">{variety.name || variety.variety_name || 'غير محدد'}</p>
+                            <p className="text-sm text-gray-600 font-bold bg-green-50 px-3 py-1 rounded-lg inline-block">
+                              {variety.type || variety.tree_type || data.farm_type || 'غير محدد'}
+                            </p>
+                          </div>
+                          <div className="text-center bg-gradient-to-br from-green-500 to-emerald-600 text-white rounded-2xl px-4 py-3 min-w-[100px]">
+                            <p className="text-3xl font-black">{variety.count || variety.tree_count || 0}</p>
+                            <p className="text-xs font-bold mt-1">شجرة</p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+
+                    {/* Total Trees */}
+                    <div className="md:col-span-2 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl p-4 text-white shadow-lg">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <TreePine className="w-6 h-6" />
+                          <p className="text-lg font-black">إجمالي عدد الأشجار</p>
+                        </div>
+                        <p className="text-4xl font-black">
+                          {varieties.reduce((sum: number, v: any) => sum + (v.count || v.tree_count || 0), 0)}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="bg-yellow-50 border-2 border-yellow-300 rounded-xl p-6 text-center">
+                    <AlertCircle className="w-12 h-12 text-yellow-600 mx-auto mb-3" />
+                    <p className="text-lg font-black text-gray-900 mb-2">لم يتم تحديد الأصناف بعد</p>
+                    <p className="text-sm text-gray-600">لم يقم المالك بإضافة أنواع الأشجار وأعدادها</p>
+                  </div>
+                )}
+              </div>
+
+              {/* Farm Information */}
+              <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl p-6 border-2 border-blue-200">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-xl flex items-center justify-center">
                     <TreePine className="w-6 h-6 text-white" />
                   </div>
-                  <h3 className="text-xl font-black text-gray-900">معلومات المزرعة</h3>
+                  <h3 className="text-xl font-black text-gray-900">معلومات المزرعة الأساسية</h3>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="bg-white rounded-xl p-4">
                     <div className="flex items-center gap-2 mb-1">
-                      <TreePine className="w-4 h-4 text-green-600" />
+                      <TreePine className="w-4 h-4 text-blue-600" />
                       <p className="text-sm text-gray-600">نوع المزرعة</p>
                     </div>
                     <p className="text-lg font-black text-gray-900">{data.farm_type}</p>
@@ -254,26 +348,6 @@ export function SubmittedDataModal({ owner, onClose, onApprove }: SubmittedDataM
                     </div>
                     <p className="text-lg font-black text-gray-900">
                       {data.farm_area} {data.farm_area_unit}
-                    </p>
-                  </div>
-
-                  <div className="bg-white rounded-xl p-4">
-                    <div className="flex items-center gap-2 mb-1">
-                      <DollarSign className="w-4 h-4 text-green-600" />
-                      <p className="text-sm text-gray-600">السعر الفعلي</p>
-                    </div>
-                    <p className="text-lg font-black text-gray-900">
-                      {data.actual_price?.toLocaleString('ar-SA')} ر.س
-                    </p>
-                  </div>
-
-                  <div className="bg-white rounded-xl p-4">
-                    <div className="flex items-center gap-2 mb-1">
-                      <Clock className="w-4 h-4 text-purple-600" />
-                      <p className="text-sm text-gray-600">مهلة السداد</p>
-                    </div>
-                    <p className="text-lg font-black text-gray-900">
-                      {data.payment_grace_period} يوم
                     </p>
                   </div>
 
@@ -326,35 +400,6 @@ export function SubmittedDataModal({ owner, onClose, onApprove }: SubmittedDataM
                   )}
                 </div>
               </div>
-
-              {/* Varieties */}
-              {varieties.length > 0 && (
-                <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-6 border-2 border-purple-200">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl flex items-center justify-center">
-                      <TreePine className="w-6 h-6 text-white" />
-                    </div>
-                    <h3 className="text-xl font-black text-gray-900">الأصناف</h3>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    {varieties.map((variety: any, index: number) => (
-                      <div key={index} className="bg-white rounded-xl p-4">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <p className="text-base font-black text-gray-900">{variety.name}</p>
-                            <p className="text-sm text-gray-600">{variety.type}</p>
-                          </div>
-                          <div className="text-left">
-                            <p className="text-2xl font-black text-purple-600">{variety.count}</p>
-                            <p className="text-xs text-gray-600">شجرة</p>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
 
               {/* Bank Information */}
               {(data.bank_name || data.bank_account_number || data.bank_iban) && (
