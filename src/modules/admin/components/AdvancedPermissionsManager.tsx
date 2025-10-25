@@ -30,6 +30,9 @@ export function AdvancedPermissionsManager() {
     canEdit: false,
     canDelete: false,
   });
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [userToDelete, setUserToDelete] = useState<AdminUser | null>(null);
+  const [deleteReason, setDeleteReason] = useState('');
 
   useEffect(() => {
     loadUsers();
@@ -199,58 +202,51 @@ export function AdvancedPermissionsManager() {
     }
   };
 
-  const handleDeleteUser = async (user: AdminUser) => {
+  const handleDeleteUser = (user: AdminUser) => {
     // التحقق من أن المستخدم ليس صاحب المنصة أو المدير العام
     if (user.phone === '0569335257' || user.phone === '0500000001') {
       alert('⛔ لا يمكن حذف صاحب المنصة أو المدير العام!');
       return;
     }
 
-    // طلب تأكيد الحذف
-    const confirmDelete = confirm(
-      `⚠️ تحذير: حذف المستخدم\n\n` +
-      `👤 الاسم: ${user.name}\n` +
-      `📱 الجوال: ${user.phone}\n` +
-      `💼 المسمى: ${user.jobTitle || 'غير محدد'}\n\n` +
-      `هل تريد حذف هذا المستخدم وجميع صلاحياته؟\n\n` +
-      `⚠️ هذا الإجراء لا يمكن التراجع عنه!`
-    );
+    // فتح نموذج الحذف
+    setUserToDelete(user);
+    setDeleteReason('');
+    setShowDeleteModal(true);
+  };
 
-    if (!confirmDelete) return;
-
-    // طلب تأكيد نهائي
-    const finalConfirm = prompt(
-      `🔴 تأكيد نهائي\n\n` +
-      `لحذف المستخدم: ${user.name}\n` +
-      `اكتب كلمة "حذف" بالضبط:`
-    );
-
-    if (finalConfirm !== 'حذف') {
-      alert('❌ تم إلغاء العملية');
+  const confirmDeleteUser = async () => {
+    if (!userToDelete || !deleteReason) {
+      alert('⚠️ يرجى اختيار سبب الحذف');
       return;
     }
 
     try {
       // حذف جميع صلاحيات المستخدم
-      const userPermissions = await AdminSessionService.getPermissions(user.phone);
+      const userPermissions = await AdminSessionService.getPermissions(userToDelete.phone);
 
       for (const perm of userPermissions) {
         await AdminSessionService.deletePermission(perm.id);
       }
 
       // حذف المستخدم من قاعدة البيانات
-      await AdminSessionService.deleteUser(user.phone);
+      await AdminSessionService.deleteUser(userToDelete.phone);
 
       // تحديث القائمة
-      setUsers(users.filter(u => u.phone !== user.phone));
+      setUsers(users.filter(u => u.phone !== userToDelete.phone));
 
       // إلغاء تحديد المستخدم إذا كان محدداً
-      if (selectedUser?.phone === user.phone) {
+      if (selectedUser?.phone === userToDelete.phone) {
         setSelectedUser(null);
         setPermissions([]);
       }
 
-      alert('✅ تم حذف المستخدم بنجاح');
+      // إغلاق النموذج
+      setShowDeleteModal(false);
+      setUserToDelete(null);
+      setDeleteReason('');
+
+      alert('✅ تم حذف المستخدم بنجاح\n\nالسبب: ' + deleteReason);
     } catch (error) {
       console.error('Error deleting user:', error);
       alert('❌ حدث خطأ في حذف المستخدم: ' + (error as any).message);
@@ -780,6 +776,160 @@ export function AdvancedPermissionsManager() {
                   إلغاء
                 </button>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* نموذج حذف المستخدم */}
+      {showDeleteModal && userToDelete && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4"
+          onClick={() => setShowDeleteModal(false)}
+        >
+          <div
+            className="w-full max-w-lg rounded-3xl p-8"
+            style={{ background: 'white', boxShadow: '0 25px 50px rgba(0, 0, 0, 0.15)' }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* رأس النموذج */}
+            <div className="mb-6 text-center">
+              <div
+                className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full"
+                style={{ background: 'linear-gradient(135deg, #FEE2E2 0%, #FECACA 100%)' }}
+              >
+                <Trash2 className="h-10 w-10" style={{ color: '#DC2626' }} />
+              </div>
+              <h2 className="mb-2 text-2xl font-black" style={{ color: brandColors.text.primary }}>
+                حذف المستخدم
+              </h2>
+              <p className="text-sm" style={{ color: brandColors.text.secondary }}>
+                ⚠️ هذا الإجراء لا يمكن التراجع عنه
+              </p>
+            </div>
+
+            {/* معلومات المستخدم */}
+            <div
+              className="mb-6 rounded-2xl p-4"
+              style={{ background: 'rgba(0, 0, 0, 0.03)' }}
+            >
+              <div className="flex items-center gap-3">
+                <div
+                  className="flex h-14 w-14 items-center justify-center rounded-full font-black text-white"
+                  style={{ background: brandGradients.gold }}
+                >
+                  {userToDelete.name.charAt(0)}
+                </div>
+                <div>
+                  <p className="font-bold" style={{ color: brandColors.text.primary }}>
+                    {userToDelete.name}
+                  </p>
+                  <p className="text-sm" style={{ color: brandColors.text.secondary }}>
+                    📱 {userToDelete.phone}
+                  </p>
+                  {userToDelete.jobTitle && (
+                    <p className="text-xs" style={{ color: brandColors.text.secondary }}>
+                      💼 {userToDelete.jobTitle}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* سبب الحذف */}
+            <div className="mb-6">
+              <label className="mb-3 block text-sm font-bold" style={{ color: brandColors.text.primary }}>
+                سبب الحذف <span style={{ color: '#DC2626' }}>*</span>
+              </label>
+              <div className="space-y-2">
+                {[
+                  { value: 'استقالة', label: '📤 استقالة من العمل', icon: '📤' },
+                  { value: 'انتهاء_عقد', label: '📄 انتهاء العقد', icon: '📄' },
+                  { value: 'نقل', label: '🔄 نقل إلى قسم آخر', icon: '🔄' },
+                  { value: 'أداء_ضعيف', label: '📉 أداء ضعيف', icon: '📉' },
+                  { value: 'مخالفات', label: '⚠️ مخالفات إدارية', icon: '⚠️' },
+                  { value: 'آخر', label: '✏️ سبب آخر', icon: '✏️' },
+                ].map((reason) => (
+                  <button
+                    key={reason.value}
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setDeleteReason(reason.value);
+                    }}
+                    className="flex w-full items-center gap-3 rounded-xl p-3 text-right font-bold transition-all hover:scale-[1.02]"
+                    style={{
+                      background: deleteReason === reason.value
+                        ? 'linear-gradient(135deg, rgba(220, 38, 38, 0.1) 0%, rgba(185, 28, 28, 0.1) 100%)'
+                        : 'rgba(0, 0, 0, 0.02)',
+                      border: deleteReason === reason.value
+                        ? '2px solid #DC2626'
+                        : '2px solid transparent',
+                      color: deleteReason === reason.value
+                        ? '#DC2626'
+                        : brandColors.text.secondary,
+                    }}
+                  >
+                    <span className="text-2xl">{reason.icon}</span>
+                    <span className="flex-1">{reason.label.replace(reason.icon + ' ', '')}</span>
+                    {deleteReason === reason.value && (
+                      <Check className="h-5 w-5" style={{ color: '#DC2626' }} />
+                    )}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* الأزرار */}
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setShowDeleteModal(false);
+                  setUserToDelete(null);
+                  setDeleteReason('');
+                }}
+                className="flex-1 rounded-xl py-3 font-bold transition-all hover:scale-105"
+                style={{
+                  background: 'rgba(0, 0, 0, 0.05)',
+                  color: brandColors.text.secondary,
+                }}
+              >
+                إلغاء
+              </button>
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  confirmDeleteUser();
+                }}
+                disabled={!deleteReason}
+                className="flex-1 rounded-xl py-3 font-bold text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed hover:enabled:scale-105"
+                style={{
+                  background: deleteReason
+                    ? 'linear-gradient(135deg, #DC2626 0%, #991B1B 100%)'
+                    : '#9CA3AF',
+                }}
+              >
+                <div className="flex items-center justify-center gap-2">
+                  <Trash2 className="h-5 w-5" />
+                  <span>تأكيد الحذف</span>
+                </div>
+              </button>
+            </div>
+
+            {/* ملاحظة */}
+            <div
+              className="mt-4 rounded-xl p-3 text-center text-xs"
+              style={{
+                background: 'linear-gradient(135deg, rgba(220, 38, 38, 0.05) 0%, rgba(185, 28, 28, 0.05) 100%)',
+                color: '#DC2626',
+              }}
+            >
+              ⚠️ سيتم حذف المستخدم وجميع صلاحياته بشكل نهائي
             </div>
           </div>
         </div>
