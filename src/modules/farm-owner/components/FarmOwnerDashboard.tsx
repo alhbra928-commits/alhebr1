@@ -45,26 +45,40 @@ export const FarmOwnerDashboard: React.FC<FarmOwnerDashboardProps> = ({ profileI
   const loadData = async () => {
     setLoading(true);
 
-    const [profileData, statusData, notificationsData] = await Promise.all([
-      farmOwnerService.getProfile(profileId),
-      farmOwnerService.getFarmStatus(profileId),
-      farmOwnerService.getNotifications(profileId)
-    ]);
+    try {
+      // تحميل البيانات الأساسية أولاً (أسرع)
+      const profileData = await farmOwnerService.getProfile(profileId);
 
-    setProfile(profileData);
-    setFarmStatus(statusData);
-    setNotifications(notificationsData);
+      if (profileData) {
+        setProfile(profileData);
+        setLoading(false); // إظهار الواجهة فوراً
 
-    const unread = notificationsData.filter(n => !n.is_read).length;
-    setUnreadCount(unread);
+        // Check if first visit
+        const hasSeenWelcome = localStorage.getItem(`farm_owner_welcome_${profileId}`);
+        if (!hasSeenWelcome) {
+          setShowWelcome(true);
+        }
 
-    // Check if first visit
-    const hasSeenWelcome = localStorage.getItem(`farm_owner_welcome_${profileId}`);
-    if (!hasSeenWelcome && profileData) {
-      setShowWelcome(true);
+        // تحميل البيانات الثانوية في الخلفية
+        Promise.all([
+          farmOwnerService.getFarmStatus(profileId),
+          farmOwnerService.getNotifications(profileId)
+        ]).then(([statusData, notificationsData]) => {
+          setFarmStatus(statusData);
+          setNotifications(notificationsData);
+
+          const unread = notificationsData.filter(n => !n.is_read).length;
+          setUnreadCount(unread);
+        }).catch(error => {
+          console.error('خطأ في تحميل البيانات الثانوية:', error);
+        });
+      } else {
+        setLoading(false);
+      }
+    } catch (error) {
+      console.error('خطأ في تحميل البيانات:', error);
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   const handleWelcomeComplete = () => {

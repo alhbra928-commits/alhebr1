@@ -459,10 +459,20 @@ class FarmOwnerService {
     try {
       const { data, error } = await supabase
         .from('farm_owner_profiles')
-        .select('*')
+        .select(`
+          id,
+          mobile_number,
+          full_name,
+          national_id,
+          status,
+          bank_name,
+          bank_account_number,
+          bank_iban,
+          created_at
+        `)
         .eq('id', profileId)
         .is('deleted_at', null)
-        .single();
+        .maybeSingle();
 
       if (error) throw error;
       return data;
@@ -608,17 +618,26 @@ class FarmOwnerService {
   }
 
   /**
-   * الحصول على حالة المزرعة
+   * الحصول على حالة المزرعة (نسخة محسنة وسريعة)
    */
   async getFarmStatus(profileId: string): Promise<FarmStatus | null> {
     try {
-      const { data, error } = await supabase.rpc('get_farm_status', {
-        p_profile_id: profileId
-      });
+      // استعلام بسيط ومباشر بدون RPC
+      const { data: profile, error: profileError } = await supabase
+        .from('farm_owner_profiles')
+        .select('status, farm_owner_id')
+        .eq('id', profileId)
+        .is('deleted_at', null)
+        .maybeSingle();
 
-      if (error) throw error;
+      if (profileError) throw profileError;
+      if (!profile) return null;
 
-      return data?.success ? data.data : null;
+      return {
+        profile_status: profile.status,
+        farm_owner_id: profile.farm_owner_id,
+        message: 'تم جلب البيانات بنجاح'
+      };
     } catch (error: any) {
       console.error('خطأ في جلب حالة المزرعة:', error);
       return null;
@@ -626,17 +645,17 @@ class FarmOwnerService {
   }
 
   /**
-   * الحصول على الإشعارات
+   * الحصول على الإشعارات (محسنة - فقط الأخيرة)
    */
   async getNotifications(profileId: string): Promise<FarmOwnerNotification[]> {
     try {
       const { data, error } = await supabase
         .from('farm_owner_notifications')
-        .select('*')
+        .select('id, title_ar, message_ar, notification_type, is_read, priority, created_at')
         .eq('profile_id', profileId)
         .is('deleted_at', null)
         .order('created_at', { ascending: false })
-        .limit(50);
+        .limit(10); // تقليل العدد من 50 إلى 10 لسرعة أكبر
 
       if (error) throw error;
       return data || [];
