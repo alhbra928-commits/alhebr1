@@ -71,55 +71,17 @@ export const IdeaOverviewSection: React.FC<IdeaOverviewSectionProps> = ({ onNavi
               <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-1 bg-gradient-to-r from-transparent via-amber-400 to-transparent blur-sm" />
             </h1>
 
-            <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-700 via-yellow-600 to-amber-700 mb-6 sm:mb-8 animate-gradient">
+            <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-700 via-yellow-600 to-amber-700 mb-12 sm:mb-16 animate-gradient">
               من مزارع منتقاة ومعتمدة
             </p>
-
-            <p className="text-base sm:text-lg lg:text-xl text-gray-700 max-w-3xl mx-auto leading-relaxed font-medium px-4">
-              استثمر في ملكية حقيقية مع <span className="font-black text-amber-700 relative inline-block animate-pulse-slow">حرية تصرف كاملة</span>
-            </p>
-          </div>
-
-          {/* Ultra Luxury Stats - Enhanced Glass Morphism */}
-          <div className="grid grid-cols-3 gap-3 sm:gap-6 max-w-5xl mx-auto">
-            {[
-              { value: '100%', label: 'ملكية كاملة', color: 'from-amber-500 via-yellow-500 to-orange-600', icon: Award, delay: '0s' },
-              { value: 'موثق', label: 'رقم تسلسلي', color: 'from-green-500 via-emerald-500 to-emerald-600', icon: Shield, delay: '0.2s' },
-              { value: 'حرية', label: 'تصرف كاملة', color: 'from-blue-500 via-cyan-500 to-cyan-600', icon: Zap, delay: '0.4s' }
-            ].map((stat, idx) => (
-              <div
-                key={idx}
-                className="group relative bg-white/70 backdrop-blur-2xl rounded-3xl sm:rounded-[2rem] p-4 sm:p-6 lg:p-8 border-2 border-white/40 shadow-2xl hover:shadow-amber-300/50 transition-all duration-500 hover:scale-110 hover:-translate-y-3 animate-fade-in-up"
-                style={{ animationDelay: stat.delay }}
-              >
-                <div className="absolute inset-0 rounded-3xl sm:rounded-[2rem] bg-gradient-to-br from-amber-50/50 via-yellow-50/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                <div className={`absolute inset-0 rounded-3xl sm:rounded-[2rem] bg-gradient-to-br ${stat.color} opacity-0 group-hover:opacity-5 blur-xl transition-all duration-500`} />
-
-                <div className={`relative w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-4 rounded-2xl bg-gradient-to-br ${stat.color} flex items-center justify-center shadow-xl group-hover:rotate-12 group-hover:scale-125 transition-all duration-500 ring-4 ring-white/50`}>
-                  <stat.icon className="w-6 h-6 sm:w-8 sm:h-8 text-white" strokeWidth={2.5} />
-                </div>
-                <div className="relative text-2xl sm:text-3xl lg:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-br from-gray-900 via-gray-700 to-gray-900 mb-2">
-                  {stat.value}
-                </div>
-                <div className="relative text-xs sm:text-sm lg:text-base text-gray-600 font-bold">
-                  {stat.label}
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Scroll Indicator */}
-          <div className="flex justify-center mt-12 sm:mt-16 animate-bounce">
-            <div className="flex flex-col items-center gap-2 text-amber-600">
-              <ChevronDown className="w-6 h-6 animate-pulse" />
-              <span className="text-xs font-bold">استكشف المزيد</span>
-            </div>
           </div>
         </div>
       </div>
 
-      {/* Elegant Type Selection */}
+      {/* Main Content Section */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+
+        {/* Elegant Type Selection */}
         <div className="flex justify-center gap-4 sm:gap-6 mb-12 sm:mb-16">
           {[
             { type: 'palm', icon: TreePine, label: 'النخيل', fullLabel: 'أشجار النخيل', gradient: 'from-amber-500 via-yellow-500 to-amber-600', shadowColor: 'amber' },
@@ -261,108 +223,6 @@ export const IdeaOverviewSection: React.FC<IdeaOverviewSectionProps> = ({ onNavi
           )}
         </div>
 
-        {/* Ownership Options - Ultra Premium Cards */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-16 sm:mb-24">
-          {[
-            { icon: Briefcase, title: 'بيع الثمار', desc: 'احصل على عوائد سنوية من بيع إنتاج أشجارك', gradient: 'from-amber-500 via-yellow-500 to-orange-600', delay: '0s' },
-            { icon: TrendingUp, title: 'بيع الأشجار', desc: 'استثمر في القيمة المتزايدة لأشجارك', gradient: 'from-blue-500 via-cyan-500 to-cyan-600', delay: '0.1s' },
-            { icon: Gift, title: 'الإهداء', desc: 'أهدِ أشجارك لأحبائك كهدية قيّمة', gradient: 'from-rose-500 via-pink-500 to-pink-600', delay: '0.2s' },
-            { icon: Heart, title: 'الوقف الخيري', desc: 'اجعل أشجارك صدقة جارية', gradient: 'from-green-500 via-emerald-500 to-emerald-600', delay: '0.3s' }
-          ].map((option, idx) => (
-            <div
-              key={idx}
-              className="group relative bg-white/90 backdrop-blur-2xl rounded-3xl sm:rounded-[2rem] p-6 sm:p-8 border-2 border-white/50 shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-110 hover:-translate-y-3 animate-fade-in-up"
-              style={{ animationDelay: option.delay }}
-            >
-              <div className={`absolute inset-0 rounded-3xl sm:rounded-[2rem] bg-gradient-to-br ${option.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
-              <div className={`absolute inset-0 rounded-3xl sm:rounded-[2rem] bg-gradient-to-br ${option.gradient} opacity-0 group-hover:opacity-5 blur-xl transition-all duration-500`} />
-
-              <div className={`relative w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-4 sm:mb-5 rounded-2xl bg-gradient-to-br ${option.gradient} flex items-center justify-center shadow-xl group-hover:rotate-12 group-hover:scale-125 transition-all duration-500 ring-4 ring-white/50`}>
-                <option.icon className="w-7 h-7 sm:w-8 sm:h-8 text-white" strokeWidth={2.5} />
-              </div>
-              <h3 className="relative text-base sm:text-lg lg:text-xl font-black text-gray-900 mb-3 text-center">
-                {option.title}
-              </h3>
-              <p className="relative text-xs sm:text-sm text-gray-600 leading-relaxed text-center">
-                {option.desc}
-              </p>
-            </div>
-          ))}
-        </div>
-
-        {/* Three Pillars - Ultra Luxury Edition */}
-        <div className="grid md:grid-cols-3 gap-6 sm:gap-8 mb-16 sm:mb-24">
-          {[
-            { icon: BarChart3, title: 'استثماري مستدام', desc: 'احصل على عوائد متنوعة من أشجارك المملوكة لك بشكل كامل وموثق', badge: 'عوائد متعددة', gradient: 'from-blue-500 via-cyan-500 to-cyan-600', bg: 'from-blue-50/50 to-white', delay: '0s' },
-            { icon: Users, title: 'إنساني وأخلاقي', desc: 'ساهم في دعم المزارعين وأصحاب المزارع وتنمية القطاع الزراعي بشكل عادل', badge: 'دعم مجتمعي', gradient: 'from-rose-500 via-pink-500 to-pink-600', bg: 'from-rose-50/50 to-white', delay: '0.2s' },
-            { icon: Droplets, title: 'بيئي ومستدام', desc: 'ساهم في زيادة الرقعة الخضراء والحفاظ على البيئة للأجيال القادمة', badge: 'حماية بيئية', gradient: 'from-green-500 via-emerald-500 to-emerald-600', bg: 'from-green-50/50 to-white', delay: '0.4s' }
-          ].map((pillar, idx) => (
-            <div
-              key={idx}
-              className={`group relative bg-gradient-to-br ${pillar.bg} rounded-3xl sm:rounded-[2rem] p-8 sm:p-10 border-2 border-white/50 shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-105 hover:-translate-y-2 animate-fade-in-up`}
-              style={{ animationDelay: pillar.delay }}
-            >
-              <div className={`absolute inset-0 rounded-3xl sm:rounded-[2rem] bg-gradient-to-br ${pillar.gradient} opacity-0 group-hover:opacity-5 blur-xl transition-all duration-500`} />
-
-              <div className={`relative w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br ${pillar.gradient} flex items-center justify-center mb-6 shadow-xl group-hover:rotate-12 group-hover:scale-110 transition-all duration-500 ring-4 ring-white/60`}>
-                <pillar.icon className="w-8 h-8 sm:w-10 sm:h-10 text-white" strokeWidth={2.5} />
-              </div>
-              <h3 className="text-2xl sm:text-3xl font-black text-gray-900 mb-4">
-                {pillar.title}
-              </h3>
-              <p className="text-base sm:text-lg text-gray-700 leading-relaxed mb-6">
-                {pillar.desc}
-              </p>
-              <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r ${pillar.gradient} text-white text-sm font-black shadow-lg hover:scale-105 transition-transform`}>
-                <CheckCircle2 className="w-4 h-4" />
-                <span>{pillar.badge}</span>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* How It Works - Premium Steps */}
-        <div className="relative bg-gradient-to-br from-gray-50 to-white rounded-[2rem] sm:rounded-[3rem] p-8 sm:p-12 lg:p-16 mb-16 sm:mb-24 border-2 border-gray-200/50 shadow-2xl overflow-hidden">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-gradient-to-b from-amber-100/30 to-transparent rounded-full blur-3xl animate-pulse-slow" />
-
-          <div className="relative text-center mb-12 sm:mb-16">
-            <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-200 mb-6 shadow-lg hover:scale-105 transition-transform">
-              <Sparkles className="w-4 h-4 text-blue-600 animate-pulse" />
-              <span className="text-sm font-black text-blue-700">خطوات بسيطة</span>
-            </div>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black mb-4">
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-900 via-amber-800 to-gray-900 animate-gradient">
-                كيف يعمل النظام؟
-              </span>
-            </h2>
-            <p className="text-lg sm:text-xl text-gray-600 font-medium">عملية واضحة وشفافة من البداية للنهاية</p>
-          </div>
-
-          <div className="relative grid sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
-            {[
-              { num: '1', title: 'اختر النوع', desc: 'نخيل أو زيتون أو كلاهما', gradient: 'from-amber-500 via-yellow-500 to-orange-600', delay: '0s' },
-              { num: '2', title: 'حدد الكمية', desc: 'اختر العدد المناسب لك', gradient: 'from-blue-500 via-cyan-500 to-cyan-600', delay: '0.1s' },
-              { num: '3', title: 'وثق ملكيتك', desc: 'شهادة ملكية رسمية موثقة', gradient: 'from-green-500 via-emerald-500 to-emerald-600', delay: '0.2s' },
-              { num: '4', title: 'تمتع بالحرية', desc: 'تصرف بملكيتك بحرية تامة', gradient: 'from-purple-500 via-pink-500 to-pink-600', delay: '0.3s' }
-            ].map((step, idx) => (
-              <div key={idx} className="group relative animate-fade-in-up" style={{ animationDelay: step.delay }}>
-                <div className="relative bg-white rounded-3xl p-6 sm:p-8 text-center shadow-xl border-2 border-gray-200/50 hover:shadow-2xl transition-all duration-500 hover:scale-110 hover:-translate-y-3">
-                  <div className={`absolute inset-0 rounded-3xl bg-gradient-to-br ${step.gradient} opacity-0 group-hover:opacity-5 blur-xl transition-all duration-500`} />
-
-                  <div className={`relative w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br ${step.gradient} text-white font-black text-2xl sm:text-3xl flex items-center justify-center mx-auto mb-5 shadow-xl group-hover:rotate-12 group-hover:scale-125 transition-all duration-500 ring-4 ring-white/60`}>
-                    {step.num}
-                  </div>
-                  <h4 className="font-black text-lg sm:text-xl text-gray-900 mb-3">{step.title}</h4>
-                  <p className="text-sm sm:text-base text-gray-600 leading-relaxed">{step.desc}</p>
-                </div>
-                {idx < 3 && (
-                  <div className="hidden lg:block absolute top-1/2 left-full w-8 h-1 bg-gradient-to-r from-gray-300 via-amber-300 to-transparent -translate-y-1/2 animate-pulse-slow" />
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-
         {/* Central Trust Message - Ultra Premium */}
         <div className="relative bg-gradient-to-br from-amber-50 via-yellow-50 to-amber-50 rounded-[2rem] sm:rounded-[3rem] p-8 sm:p-12 lg:p-16 mb-16 sm:mb-24 border-2 border-amber-200/50 shadow-2xl overflow-hidden group hover:shadow-amber-300/50 transition-all duration-700">
           <div className="absolute inset-0 opacity-5" style={{
@@ -405,6 +265,111 @@ export const IdeaOverviewSection: React.FC<IdeaOverviewSectionProps> = ({ onNavi
                 </div>
               ))}
             </div>
+          </div>
+        </div>
+
+        {/* Enhanced Icons Grid - 4 + 3 Layout */}
+        <div className="mb-16 sm:mb-24 space-y-6 sm:space-y-8">
+          {/* First Row - 4 Items */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+            {[
+              { icon: Briefcase, title: 'بيع الثمار', desc: 'احصل على عوائد سنوية من بيع إنتاج أشجارك', gradient: 'from-amber-500 via-yellow-500 to-orange-600', delay: '0s' },
+              { icon: TrendingUp, title: 'بيع الأشجار', desc: 'استثمر في القيمة المتزايدة لأشجارك', gradient: 'from-blue-500 via-cyan-500 to-cyan-600', delay: '0.1s' },
+              { icon: Gift, title: 'الإهداء', desc: 'أهدِ أشجارك لأحبائك كهدية قيّمة', gradient: 'from-rose-500 via-pink-500 to-pink-600', delay: '0.2s' },
+              { icon: Heart, title: 'الوقف الخيري', desc: 'اجعل أشجارك صدقة جارية', gradient: 'from-green-500 via-emerald-500 to-emerald-600', delay: '0.3s' }
+            ].map((option, idx) => (
+              <div
+                key={idx}
+                className="group relative bg-white/90 backdrop-blur-2xl rounded-3xl sm:rounded-[2rem] p-6 sm:p-8 border-2 border-white/50 shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-110 hover:-translate-y-3 animate-fade-in-up"
+                style={{ animationDelay: option.delay }}
+              >
+                <div className={`absolute inset-0 rounded-3xl sm:rounded-[2rem] bg-gradient-to-br ${option.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
+                <div className={`absolute inset-0 rounded-3xl sm:rounded-[2rem] bg-gradient-to-br ${option.gradient} opacity-0 group-hover:opacity-5 blur-xl transition-all duration-500`} />
+
+                <div className={`relative w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-4 sm:mb-5 rounded-2xl bg-gradient-to-br ${option.gradient} flex items-center justify-center shadow-xl group-hover:rotate-12 group-hover:scale-125 transition-all duration-500 ring-4 ring-white/50`}>
+                  <option.icon className="w-7 h-7 sm:w-8 sm:h-8 text-white" strokeWidth={2.5} />
+                </div>
+                <h3 className="relative text-base sm:text-lg lg:text-xl font-black text-gray-900 mb-3 text-center">
+                  {option.title}
+                </h3>
+                <p className="relative text-xs sm:text-sm text-gray-600 leading-relaxed text-center">
+                  {option.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          {/* Second Row - 3 Items Centered */}
+          <div className="grid md:grid-cols-3 gap-6 sm:gap-8 max-w-5xl mx-auto">
+            {[
+              { icon: BarChart3, title: 'استثماري مستدام', desc: 'احصل على عوائد متنوعة من أشجارك المملوكة لك بشكل كامل وموثق', badge: 'عوائد متعددة', gradient: 'from-blue-500 via-cyan-500 to-cyan-600', bg: 'from-blue-50/50 to-white', delay: '0s' },
+              { icon: Users, title: 'إنساني وأخلاقي', desc: 'ساهم في دعم المزارعين وأصحاب المزارع وتنمية القطاع الزراعي بشكل عادل', badge: 'دعم مجتمعي', gradient: 'from-rose-500 via-pink-500 to-pink-600', bg: 'from-rose-50/50 to-white', delay: '0.2s' },
+              { icon: Droplets, title: 'بيئي ومستدام', desc: 'ساهم في زيادة الرقعة الخضراء والحفاظ على البيئة للأجيال القادمة', badge: 'حماية بيئية', gradient: 'from-green-500 via-emerald-500 to-emerald-600', bg: 'from-green-50/50 to-white', delay: '0.4s' }
+            ].map((pillar, idx) => (
+              <div
+                key={idx}
+                className={`group relative bg-gradient-to-br ${pillar.bg} rounded-3xl sm:rounded-[2rem] p-8 sm:p-10 border-2 border-white/50 shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-105 hover:-translate-y-2 animate-fade-in-up`}
+                style={{ animationDelay: pillar.delay }}
+              >
+                <div className={`absolute inset-0 rounded-3xl sm:rounded-[2rem] bg-gradient-to-br ${pillar.gradient} opacity-0 group-hover:opacity-5 blur-xl transition-all duration-500`} />
+
+                <div className={`relative w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br ${pillar.gradient} flex items-center justify-center mb-6 shadow-xl group-hover:rotate-12 group-hover:scale-110 transition-all duration-500 ring-4 ring-white/60`}>
+                  <pillar.icon className="w-8 h-8 sm:w-10 sm:h-10 text-white" strokeWidth={2.5} />
+                </div>
+                <h3 className="text-2xl sm:text-3xl font-black text-gray-900 mb-4">
+                  {pillar.title}
+                </h3>
+                <p className="text-base sm:text-lg text-gray-700 leading-relaxed mb-6">
+                  {pillar.desc}
+                </p>
+                <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r ${pillar.gradient} text-white text-sm font-black shadow-lg hover:scale-105 transition-transform`}>
+                  <CheckCircle2 className="w-4 h-4" />
+                  <span>{pillar.badge}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* How It Works - Premium Steps */}
+        <div className="relative bg-gradient-to-br from-gray-50 to-white rounded-[2rem] sm:rounded-[3rem] p-8 sm:p-12 lg:p-16 mb-16 sm:mb-24 border-2 border-gray-200/50 shadow-2xl overflow-hidden">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-gradient-to-b from-amber-100/30 to-transparent rounded-full blur-3xl animate-pulse-slow" />
+
+          <div className="relative text-center mb-12 sm:mb-16">
+            <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-200 mb-6 shadow-lg hover:scale-105 transition-transform">
+              <Sparkles className="w-4 h-4 text-blue-600 animate-pulse" />
+              <span className="text-sm font-black text-blue-700">خطوات بسيطة</span>
+            </div>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black mb-4">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-900 via-amber-800 to-gray-900 animate-gradient">
+                كيف يعمل النظام؟
+              </span>
+            </h2>
+            <p className="text-lg sm:text-xl text-gray-600 font-medium">عملية واضحة وشفافة من البداية للنهاية</p>
+          </div>
+
+          <div className="relative grid sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+            {[
+              { num: '1', title: 'اختر النوع', desc: 'نخيل أو زيتون أو كلاهما', gradient: 'from-amber-500 via-yellow-500 to-orange-600', delay: '0s' },
+              { num: '2', title: 'حدد الكمية', desc: 'اختر العدد المناسب لك', gradient: 'from-blue-500 via-cyan-500 to-cyan-600', delay: '0.1s' },
+              { num: '3', title: 'وثق ملكيتك', desc: 'شهادة ملكية رسمية موثقة', gradient: 'from-green-500 via-emerald-500 to-emerald-600', delay: '0.2s' },
+              { num: '4', title: 'تمتع بالحرية', desc: 'تصرف بملكيتك بحرية تامة', gradient: 'from-purple-500 via-pink-500 to-pink-600', delay: '0.3s' }
+            ].map((step, idx) => (
+              <div key={idx} className="group relative animate-fade-in-up" style={{ animationDelay: step.delay }}>
+                <div className="relative bg-white rounded-3xl p-6 sm:p-8 text-center shadow-xl border-2 border-gray-200/50 hover:shadow-2xl transition-all duration-500 hover:scale-110 hover:-translate-y-3">
+                  <div className={`absolute inset-0 rounded-3xl bg-gradient-to-br ${step.gradient} opacity-0 group-hover:opacity-5 blur-xl transition-all duration-500`} />
+
+                  <div className={`relative w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br ${step.gradient} text-white font-black text-2xl sm:text-3xl flex items-center justify-center mx-auto mb-5 shadow-xl group-hover:rotate-12 group-hover:scale-125 transition-all duration-500 ring-4 ring-white/60`}>
+                    {step.num}
+                  </div>
+                  <h4 className="font-black text-lg sm:text-xl text-gray-900 mb-3">{step.title}</h4>
+                  <p className="text-sm sm:text-base text-gray-600 leading-relaxed">{step.desc}</p>
+                </div>
+                {idx < 3 && (
+                  <div className="hidden lg:block absolute top-1/2 left-full w-8 h-1 bg-gradient-to-r from-gray-300 via-amber-300 to-transparent -translate-y-1/2 animate-pulse-slow" />
+                )}
+              </div>
+            ))}
           </div>
         </div>
 
