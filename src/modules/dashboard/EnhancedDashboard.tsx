@@ -24,6 +24,7 @@ import { LiveFinancialSystem } from '../../services/liveFinancialSystem';
 import { NotificationSoundControl } from '../../components/common/NotificationSoundControl';
 import { SmartFloatingWhatsApp } from '../../components/common/SmartFloatingWhatsApp';
 import { floatingWhatsAppService } from '../../services/floatingWhatsAppService';
+import { usePermissions } from '../../contexts/PermissionsContext';
 
 interface EnhancedDashboardProps {
   onModuleSelect: (moduleId: string) => void;
@@ -40,6 +41,12 @@ export function EnhancedDashboard({ onModuleSelect, onLogout, onGoToPublic, onSh
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [showSessionTerminated, setShowSessionTerminated] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
+
+  const { canAccessModule, isAdmin, loading: permissionsLoading } = usePermissions();
+
+  console.log('🔍🔍🔍 [EnhancedDashboard] Rendering...');
+  console.log('🔍 [EnhancedDashboard] isAdmin:', isAdmin);
+  console.log('🔍 [EnhancedDashboard] permissionsLoading:', permissionsLoading);
 
   useEffect(() => {
     loadStats();
@@ -326,6 +333,17 @@ export function EnhancedDashboard({ onModuleSelect, onLogout, onGoToPublic, onSh
             {modules.map((module, index) => {
               const Icon = module.icon;
               const isHovered = hoveredCard === module.id;
+
+              const hasAccess = isAdmin || canAccessModule(module.id);
+
+              console.log(`🔍 [EnhancedDashboard] Module ${module.id}: isAdmin=${isAdmin}, hasAccess=${hasAccess}`);
+
+              if (!hasAccess && !permissionsLoading) {
+                console.log(`❌ [EnhancedDashboard] Module ${module.id}: HIDDEN (no access)`);
+                return null;
+              }
+
+              console.log(`✅ [EnhancedDashboard] Module ${module.id}: SHOWN`);
 
               return (
                 <div
