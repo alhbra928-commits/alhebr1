@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   User,
   Phone,
@@ -7,7 +7,6 @@ import {
   CheckCircle,
   XCircle,
   Snowflake,
-  MoreVertical,
   Edit,
   Trash2,
   Eye,
@@ -15,11 +14,7 @@ import {
   Calendar,
   TreePine,
   Building,
-  Clock,
-  Sparkles,
-  MessageSquare,
-  FileText,
-  TrendingUp
+  Clock
 } from 'lucide-react';
 
 interface FarmOwner {
@@ -52,33 +47,7 @@ export function AdvancedOwnerCard3D({
   hasEditPermission = false,
   hasDeletePermission = false
 }: AdvancedOwnerCard3DProps) {
-  const [showActions, setShowActions] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const actionsRef = useRef<HTMLDivElement>(null);
-  const buttonRef = useRef<HTMLButtonElement>(null);
-
-  // إغلاق القائمة عند النقر خارجها
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        actionsRef.current &&
-        !actionsRef.current.contains(event.target as Node) &&
-        buttonRef.current &&
-        !buttonRef.current.contains(event.target as Node)
-      ) {
-        setShowActions(false);
-        setShowDeleteConfirm(false);
-      }
-    };
-
-    if (showActions) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [showActions]);
 
   // إلغاء تأكيد الحذف بعد 3 ثواني
   useEffect(() => {
@@ -99,8 +68,7 @@ export function AdvancedOwnerCard3D({
           bg: 'bg-gradient-to-r from-green-50 to-emerald-50',
           border: 'border-green-300',
           iconColor: 'text-green-600',
-          ringColor: 'ring-green-400',
-          shadowColor: 'shadow-green-200'
+          ringColor: 'ring-green-400'
         };
       case 'frozen':
         return {
@@ -109,8 +77,7 @@ export function AdvancedOwnerCard3D({
           bg: 'bg-gradient-to-r from-blue-50 to-cyan-50',
           border: 'border-blue-300',
           iconColor: 'text-blue-600',
-          ringColor: 'ring-blue-400',
-          shadowColor: 'shadow-blue-200'
+          ringColor: 'ring-blue-400'
         };
       case 'pending':
         return {
@@ -119,8 +86,7 @@ export function AdvancedOwnerCard3D({
           bg: 'bg-gradient-to-r from-amber-50 to-yellow-50',
           border: 'border-amber-300',
           iconColor: 'text-amber-600',
-          ringColor: 'ring-amber-400',
-          shadowColor: 'shadow-amber-200'
+          ringColor: 'ring-amber-400'
         };
       default:
         return {
@@ -129,15 +95,13 @@ export function AdvancedOwnerCard3D({
           bg: 'bg-gray-50',
           border: 'border-gray-300',
           iconColor: 'text-gray-600',
-          ringColor: 'ring-gray-400',
-          shadowColor: 'shadow-gray-200'
+          ringColor: 'ring-gray-400'
         };
     }
   };
 
   const handleEditClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setShowActions(false);
     if (onEdit) {
       onEdit(owner, e);
     }
@@ -148,7 +112,6 @@ export function AdvancedOwnerCard3D({
 
     if (showDeleteConfirm) {
       // تنفيذ الحذف
-      setShowActions(false);
       setShowDeleteConfirm(false);
       if (onDelete) {
         onDelete(owner, e);
@@ -161,145 +124,31 @@ export function AdvancedOwnerCard3D({
 
   const handleViewClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setShowActions(false);
     if (onViewSubmittedData) {
       onViewSubmittedData(owner);
     }
-  };
-
-  const handleSendMessage = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setShowActions(false);
-    const whatsappUrl = `https://wa.me/${owner.mobile_number.replace(/\D/g, '')}`;
-    window.open(whatsappUrl, '_blank');
   };
 
   const statusConfig = getStatusConfig();
   const StatusIcon = statusConfig.icon;
 
   return (
-    <div className="relative bg-white rounded-2xl overflow-hidden border-4 border-gray-200 shadow-xl transition-all duration-300 hover:shadow-2xl">
-      {/* Header Background - بدون حركة */}
+    <div className="relative bg-white rounded-2xl overflow-hidden border-4 border-gray-200 shadow-xl transition-shadow duration-300 hover:shadow-2xl">
+      {/* Header Background */}
       <div className="relative h-32 bg-gradient-to-br from-amber-400 via-orange-500 to-red-500 overflow-hidden">
-        {/* Pattern ثابت */}
+        {/* Pattern */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-0 left-0 w-40 h-40 bg-white rounded-full -translate-x-1/2 -translate-y-1/2"></div>
           <div className="absolute bottom-0 right-0 w-32 h-32 bg-white rounded-full translate-x-1/2 translate-y-1/2"></div>
         </div>
 
-        {/* Sparkles Badge */}
+        {/* Badge */}
         <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-black flex items-center gap-1.5 shadow-lg">
           <Star className="h-3.5 w-3.5 text-amber-500 fill-amber-500" />
           <span className="text-gray-900">صاحب مزرعة</span>
         </div>
 
-        {/* Actions Button */}
-        <div className="absolute top-3 right-3">
-          <button
-            ref={buttonRef}
-            onClick={(e) => {
-              e.stopPropagation();
-              setShowActions(!showActions);
-            }}
-            className={`p-2.5 bg-white/95 backdrop-blur-sm rounded-xl shadow-lg transition-all duration-200 hover:shadow-xl ${
-              showActions ? 'ring-2 ring-amber-400' : ''
-            }`}
-          >
-            <MoreVertical className="h-5 w-5 text-gray-700" />
-          </button>
-
-          {/* Actions Menu */}
-          {showActions && (
-            <div
-              ref={actionsRef}
-              className="absolute left-0 top-full mt-2 bg-white rounded-2xl shadow-2xl border-2 border-gray-200 py-2 min-w-[240px] z-50"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {/* عرض النموذج المرفوع */}
-              <button
-                onClick={handleViewClick}
-                className="w-full px-4 py-3 text-right hover:bg-gradient-to-r hover:from-amber-50 hover:to-orange-50 transition-colors flex items-center gap-3 text-sm font-bold text-gray-800"
-              >
-                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-md">
-                  <Eye className="h-5 w-5 text-white" />
-                </div>
-                <div className="flex-1 text-right">
-                  <p className="font-black">عرض النموذج المرفوع</p>
-                  <p className="text-xs text-gray-500">مشاهدة جميع البيانات</p>
-                </div>
-              </button>
-
-              {/* خط فاصل */}
-              <div className="h-px bg-gray-200 my-2"></div>
-
-              {/* تعديل */}
-              {hasEditPermission && (
-                <button
-                  onClick={handleEditClick}
-                  className="w-full px-4 py-3 text-right hover:bg-gradient-to-r hover:from-blue-50 hover:to-cyan-50 transition-colors flex items-center gap-3 text-sm font-bold text-gray-800"
-                >
-                  <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-400 to-cyan-500 flex items-center justify-center shadow-md">
-                    <Edit className="h-5 w-5 text-white" />
-                  </div>
-                  <div className="flex-1 text-right">
-                    <p className="font-black">تعديل البيانات</p>
-                    <p className="text-xs text-gray-500">تحديث المعلومات</p>
-                  </div>
-                </button>
-              )}
-
-              {/* حذف */}
-              {hasDeletePermission && (
-                <>
-                  <div className="h-px bg-gray-200 my-2"></div>
-                  <button
-                    onClick={handleDeleteClick}
-                    className={`w-full px-4 py-3 text-right transition-colors flex items-center gap-3 text-sm font-bold ${
-                      showDeleteConfirm
-                        ? 'bg-gradient-to-r from-red-100 to-rose-100'
-                        : 'hover:bg-gradient-to-r hover:from-red-50 hover:to-rose-50'
-                    }`}
-                  >
-                    <div className={`w-9 h-9 rounded-xl flex items-center justify-center shadow-md ${
-                      showDeleteConfirm
-                        ? 'bg-gradient-to-br from-red-600 to-rose-700 animate-pulse'
-                        : 'bg-gradient-to-br from-red-400 to-rose-500'
-                    }`}>
-                      <Trash2 className="h-5 w-5 text-white" />
-                    </div>
-                    <div className="flex-1 text-right">
-                      <p className={`font-black ${showDeleteConfirm ? 'text-red-900' : 'text-gray-800'}`}>
-                        {showDeleteConfirm ? '⚠️ تأكيد الحذف النهائي' : 'حذف نهائي'}
-                      </p>
-                      <p className={`text-xs ${showDeleteConfirm ? 'text-red-600' : 'text-gray-500'}`}>
-                        {showDeleteConfirm ? 'اضغط مرة أخرى للحذف' : 'حذف المالك والبيانات'}
-                      </p>
-                    </div>
-                  </button>
-                </>
-              )}
-
-              {/* خط فاصل */}
-              <div className="h-px bg-gray-200 my-2"></div>
-
-              {/* إرسال رسالة واتساب */}
-              <button
-                onClick={handleSendMessage}
-                className="w-full px-4 py-3 text-right hover:bg-gradient-to-r hover:from-green-50 hover:to-emerald-50 transition-colors flex items-center gap-3 text-sm font-bold text-gray-800"
-              >
-                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-green-400 to-emerald-500 flex items-center justify-center shadow-md">
-                  <MessageSquare className="h-5 w-5 text-white" />
-                </div>
-                <div className="flex-1 text-right">
-                  <p className="font-black">إرسال رسالة</p>
-                  <p className="text-xs text-gray-500">فتح محادثة واتساب</p>
-                </div>
-              </button>
-            </div>
-          )}
-        </div>
-
-        {/* Avatar Circle - ثابت */}
+        {/* Avatar Circle */}
         <div className="absolute -bottom-16 right-6">
           <div className={`w-32 h-32 rounded-full bg-white ring-4 ${statusConfig.ringColor} shadow-xl flex items-center justify-center`}>
             <div className="w-28 h-28 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center">
@@ -310,13 +159,13 @@ export function AdvancedOwnerCard3D({
       </div>
 
       {/* Content */}
-      <div className="pt-20 px-6 pb-6">
+      <div className="pt-20 px-6 pb-4">
         {/* Name and Status */}
         <div className="mb-6">
           <h3 className="text-2xl font-black text-gray-900 mb-3 leading-tight">
             {owner.full_name}
           </h3>
-          <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-black border-2 ${statusConfig.border} ${statusConfig.bg} ${statusConfig.shadowColor} shadow-md`}>
+          <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-black border-2 ${statusConfig.border} ${statusConfig.bg} shadow-md`}>
             <StatusIcon className={`h-4 w-4 ${statusConfig.iconColor}`} />
             <span className={statusConfig.iconColor}>{statusConfig.label}</span>
           </div>
@@ -361,7 +210,7 @@ export function AdvancedOwnerCard3D({
         </div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-2 gap-3 mb-5">
+        <div className="grid grid-cols-2 gap-3 mb-4">
           {/* Farms Count */}
           <div className="relative overflow-hidden bg-gradient-to-br from-orange-50 to-amber-50 rounded-xl p-4 border-2 border-orange-200 shadow-md">
             <div className="absolute top-0 right-0 w-20 h-20 bg-orange-200/30 rounded-full -translate-y-1/2 translate-x-1/2"></div>
@@ -389,10 +238,71 @@ export function AdvancedOwnerCard3D({
 
         {/* Created Date */}
         {owner.created_at && (
-          <div className="flex items-center justify-center gap-2 text-xs text-gray-600 font-bold pt-4 border-t-2 border-gray-100">
+          <div className="flex items-center justify-center gap-2 text-xs text-gray-600 font-bold pb-4 border-b-2 border-gray-100">
             <Calendar className="h-3.5 w-3.5" />
             <span>تاريخ الإضافة: {new Date(owner.created_at).toLocaleDateString('ar-SA')}</span>
           </div>
+        )}
+      </div>
+
+      {/* Action Buttons - أسفل البطاقة */}
+      <div className="px-4 pb-4 space-y-2">
+        {/* عرض النموذج المرفوع */}
+        <button
+          onClick={handleViewClick}
+          className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-300 hover:from-amber-100 hover:to-orange-100 transition-all duration-200 shadow-md hover:shadow-lg group"
+        >
+          <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-md group-hover:scale-110 transition-transform duration-200">
+            <Eye className="h-6 w-6 text-white" />
+          </div>
+          <div className="flex-1 text-right">
+            <p className="font-black text-amber-900 text-base">عرض النموذج المرفوع</p>
+            <p className="text-xs text-amber-700 font-bold">مشاهدة جميع البيانات المقدمة</p>
+          </div>
+        </button>
+
+        {/* تعديل */}
+        {hasEditPermission && (
+          <button
+            onClick={handleEditClick}
+            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-300 hover:from-blue-100 hover:to-cyan-100 transition-all duration-200 shadow-md hover:shadow-lg group"
+          >
+            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-blue-400 to-cyan-500 flex items-center justify-center shadow-md group-hover:scale-110 transition-transform duration-200">
+              <Edit className="h-6 w-6 text-white" />
+            </div>
+            <div className="flex-1 text-right">
+              <p className="font-black text-blue-900 text-base">تعديل البيانات</p>
+              <p className="text-xs text-blue-700 font-bold">تحديث معلومات المالك</p>
+            </div>
+          </button>
+        )}
+
+        {/* حذف */}
+        {hasDeletePermission && (
+          <button
+            onClick={handleDeleteClick}
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl border-2 transition-all duration-200 shadow-md hover:shadow-lg group ${
+              showDeleteConfirm
+                ? 'bg-gradient-to-r from-red-200 to-rose-200 border-red-500'
+                : 'bg-gradient-to-r from-red-50 to-rose-50 border-red-300 hover:from-red-100 hover:to-rose-100'
+            }`}
+          >
+            <div className={`w-11 h-11 rounded-xl flex items-center justify-center shadow-md transition-all duration-200 ${
+              showDeleteConfirm
+                ? 'bg-gradient-to-br from-red-600 to-rose-700 animate-pulse scale-110'
+                : 'bg-gradient-to-br from-red-400 to-rose-500 group-hover:scale-110'
+            }`}>
+              <Trash2 className="h-6 w-6 text-white" />
+            </div>
+            <div className="flex-1 text-right">
+              <p className={`font-black text-base ${showDeleteConfirm ? 'text-red-900' : 'text-red-800'}`}>
+                {showDeleteConfirm ? '⚠️ تأكيد الحذف النهائي' : 'حذف نهائي'}
+              </p>
+              <p className={`text-xs font-bold ${showDeleteConfirm ? 'text-red-700' : 'text-red-600'}`}>
+                {showDeleteConfirm ? 'اضغط مرة أخرى لتأكيد الحذف' : 'حذف المالك وجميع بياناته'}
+              </p>
+            </div>
+          </button>
         )}
       </div>
 
