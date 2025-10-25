@@ -199,6 +199,64 @@ export function AdvancedPermissionsManager() {
     }
   };
 
+  const handleDeleteUser = async (user: AdminUser) => {
+    // التحقق من أن المستخدم ليس صاحب المنصة أو المدير العام
+    if (user.phone === '0569335257' || user.phone === '0500000001') {
+      alert('⛔ لا يمكن حذف صاحب المنصة أو المدير العام!');
+      return;
+    }
+
+    // طلب تأكيد الحذف
+    const confirmDelete = confirm(
+      `⚠️ تحذير: حذف المستخدم\n\n` +
+      `👤 الاسم: ${user.name}\n` +
+      `📱 الجوال: ${user.phone}\n` +
+      `💼 المسمى: ${user.jobTitle || 'غير محدد'}\n\n` +
+      `هل تريد حذف هذا المستخدم وجميع صلاحياته؟\n\n` +
+      `⚠️ هذا الإجراء لا يمكن التراجع عنه!`
+    );
+
+    if (!confirmDelete) return;
+
+    // طلب تأكيد نهائي
+    const finalConfirm = prompt(
+      `🔴 تأكيد نهائي\n\n` +
+      `لحذف المستخدم: ${user.name}\n` +
+      `اكتب كلمة "حذف" بالضبط:`
+    );
+
+    if (finalConfirm !== 'حذف') {
+      alert('❌ تم إلغاء العملية');
+      return;
+    }
+
+    try {
+      // حذف جميع صلاحيات المستخدم
+      const userPermissions = await AdminSessionService.getPermissions(user.phone);
+
+      for (const perm of userPermissions) {
+        await AdminSessionService.deletePermission(perm.id);
+      }
+
+      // حذف المستخدم من قاعدة البيانات
+      await AdminSessionService.deleteUser(user.phone);
+
+      // تحديث القائمة
+      setUsers(users.filter(u => u.phone !== user.phone));
+
+      // إلغاء تحديد المستخدم إذا كان محدداً
+      if (selectedUser?.phone === user.phone) {
+        setSelectedUser(null);
+        setPermissions([]);
+      }
+
+      alert('✅ تم حذف المستخدم بنجاح');
+    } catch (error) {
+      console.error('Error deleting user:', error);
+      alert('❌ حدث خطأ في حذف المستخدم: ' + (error as any).message);
+    }
+  };
+
   const handleAddPermission = () => {
     setNewPermissionForm({
       moduleId: '',
@@ -287,10 +345,9 @@ export function AdvancedPermissionsManager() {
               </h2>
               <div className="space-y-3">
                 {users.map((user) => (
-                  <button
+                  <div
                     key={user.phone}
-                    onClick={() => setSelectedUser(user)}
-                    className="w-full rounded-xl p-4 text-right transition-all hover:scale-[1.02]"
+                    className="group relative w-full rounded-xl p-4 transition-all"
                     style={{
                       background: selectedUser?.phone === user.phone
                         ? 'linear-gradient(135deg, rgba(61, 91, 75, 0.1) 0%, rgba(212, 175, 55, 0.1) 100%)'
@@ -300,7 +357,10 @@ export function AdvancedPermissionsManager() {
                         : '2px solid transparent',
                     }}
                   >
-                    <div className="flex items-center gap-3">
+                    <div
+                      onClick={() => setSelectedUser(user)}
+                      className="flex cursor-pointer items-center gap-3"
+                    >
                       <div
                         className="flex h-12 w-12 items-center justify-center rounded-full font-black text-white"
                         style={{ background: brandGradients.gold }}
@@ -324,7 +384,24 @@ export function AdvancedPermissionsManager() {
                         </span>
                       </div>
                     </div>
-                  </button>
+
+                    {/* زر الحذف - يظهر عند المرور بالماوس */}
+                    {user.phone !== '0569335257' && user.phone !== '0500000001' && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDeleteUser(user);
+                        }}
+                        className="absolute left-3 top-3 flex h-8 w-8 items-center justify-center rounded-lg opacity-0 transition-all hover:scale-110 group-hover:opacity-100"
+                        style={{
+                          background: 'linear-gradient(135deg, #EF4444 0%, #DC2626 100%)',
+                        }}
+                        title="حذف المستخدم"
+                      >
+                        <Trash2 className="h-4 w-4 text-white" />
+                      </button>
+                    )}
+                  </div>
                 ))}
               </div>
             </div>

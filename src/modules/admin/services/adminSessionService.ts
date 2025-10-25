@@ -392,6 +392,39 @@ export class AdminSessionService {
     }
   }
 
+  static async deleteUser(phone: string) {
+    try {
+      console.log('🗑️ [AdminSessionService] deleteUser START');
+      console.log('Phone:', phone);
+
+      // حذف المستخدم من جدول admin_users
+      const { error: deleteError } = await supabase
+        .from('admin_users')
+        .delete()
+        .eq('phone', phone);
+
+      if (deleteError) {
+        console.error('❌ Error deleting user:', deleteError);
+        throw deleteError;
+      }
+
+      console.log('✅ User deleted successfully');
+
+      // تسجيل في Access Log
+      await this.addAccessLog(
+        phone,
+        'System',
+        'delete_user',
+        `حذف المستخدم ${phone}`,
+        'success'
+      );
+
+    } catch (error) {
+      console.error('❌ Error in deleteUser:', error);
+      throw error;
+    }
+  }
+
   static async getAccessLog(adminPhone?: string, limit: number = 100) {
     try {
       let query = supabase
