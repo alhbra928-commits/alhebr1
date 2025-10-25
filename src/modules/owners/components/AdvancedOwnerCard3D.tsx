@@ -47,6 +47,22 @@ export function AdvancedOwnerCard3D({
   const [showActions, setShowActions] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
+  React.useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (showActions) {
+        setShowActions(false);
+      }
+    };
+
+    if (showActions) {
+      document.addEventListener('click', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [showActions]);
+
   const getStatusConfig = () => {
     switch (owner.status) {
       case 'active':
@@ -85,14 +101,26 @@ export function AdvancedOwnerCard3D({
   const statusConfig = getStatusConfig();
   const StatusIcon = statusConfig.icon;
 
-  const handleDeleteClick = () => {
+  const handleDeleteClick = (e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+
     if (showDeleteConfirm) {
-      onDelete?.(owner);
+      // Create a mock event for the delete function
+      const mockEvent = e || { stopPropagation: () => {} } as React.MouseEvent;
+      onDelete?.(owner, mockEvent as any);
       setShowDeleteConfirm(false);
+      setShowActions(false);
     } else {
       setShowDeleteConfirm(true);
       setTimeout(() => setShowDeleteConfirm(false), 3000);
     }
+  };
+
+  const handleEditClick = (e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    const mockEvent = e || { stopPropagation: () => {} } as React.MouseEvent;
+    onEdit?.(owner, mockEvent as any);
+    setShowActions(false);
   };
 
   return (
@@ -153,16 +181,23 @@ export function AdvancedOwnerCard3D({
             {/* Actions Menu */}
             <div className="relative">
               <button
-                onClick={() => setShowActions(!showActions)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowActions(!showActions);
+                }}
                 className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
               >
                 <MoreVertical className="h-5 w-5 text-gray-600" />
               </button>
 
               {showActions && (
-                <div className="absolute left-0 top-full mt-2 bg-white rounded-xl shadow-2xl border-2 border-gray-200 py-2 min-w-[180px] z-50">
+                <div
+                  className="absolute left-0 top-full mt-2 bg-white rounded-xl shadow-2xl border-2 border-gray-200 py-2 min-w-[180px] z-50"
+                  onClick={(e) => e.stopPropagation()}
+                >
                   <button
-                    onClick={() => {
+                    onClick={(e) => {
+                      e.stopPropagation();
                       onViewSubmittedData?.(owner);
                       setShowActions(false);
                     }}
@@ -174,9 +209,9 @@ export function AdvancedOwnerCard3D({
 
                   {hasEditPermission && (
                     <button
-                      onClick={() => {
-                        onEdit?.(owner);
-                        setShowActions(false);
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleEditClick();
                       }}
                       className="w-full px-4 py-2 text-right hover:bg-blue-50 transition-colors flex items-center gap-3 text-sm font-bold text-gray-700"
                     >
@@ -187,7 +222,10 @@ export function AdvancedOwnerCard3D({
 
                   {hasDeletePermission && (
                     <button
-                      onClick={handleDeleteClick}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeleteClick();
+                      }}
                       className={`w-full px-4 py-2 text-right transition-colors flex items-center gap-3 text-sm font-bold ${
                         showDeleteConfirm
                           ? 'bg-red-100 text-red-700'
