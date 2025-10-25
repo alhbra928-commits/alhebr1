@@ -100,6 +100,8 @@ export class AdminUsersStorage {
 
   static async getByPhoneFromDB(phone: string): Promise<AdminUser | null> {
     try {
+      console.log('🔍 [getByPhoneFromDB] Searching for phone:', phone);
+
       const { data, error } = await supabase
         .from('admin_users')
         .select('*')
@@ -107,12 +109,17 @@ export class AdminUsersStorage {
         .is('deleted_at', null)
         .maybeSingle();
 
-      if (error || !data) {
-        console.error('❌ User not found in DB:', phone);
+      if (error) {
+        console.error('❌ [getByPhoneFromDB] Supabase error:', error);
         return null;
       }
 
-      console.log('✅ User found in DB:', data);
+      if (!data) {
+        console.error('❌ [getByPhoneFromDB] User not found in DB:', phone);
+        return null;
+      }
+
+      console.log('✅ [getByPhoneFromDB] User found in DB:', data);
 
       return {
         phone: data.phone,
