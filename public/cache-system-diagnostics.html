@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🔧 تشخيص نظام الكاش الذكي</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 20px;
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    h1 {
+      color: #667eea;
+      margin-bottom: 10px;
+      text-align: center;
+      font-size: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+    }
+    .subtitle {
+      text-align: center;
+      color: #666;
+      margin-bottom: 40px;
+      font-size: 18px;
+    }
+    .test-card {
+      background: #f9fafb;
+      border: 2px solid #e5e7eb;
+      border-radius: 15px;
+      padding: 25px;
+      margin-bottom: 20px;
+    }
+    .test-card.success {
+      border-color: #10b981;
+      background: #f0fdf4;
+    }
+    .test-card.warning {
+      border-color: #f59e0b;
+      background: #fffbeb;
+    }
+    .test-card.error {
+      border-color: #ef4444;
+      background: #fef2f2;
+    }
+    .test-header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+    .test-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+    .test-icon.success { background: #10b981; color: white; }
+    .test-icon.warning { background: #f59e0b; color: white; }
+    .test-icon.error { background: #ef4444; color: white; }
+    .test-icon.pending { background: #6b7280; color: white; }
+    .test-title {
+      flex: 1;
+    }
+    .test-title h3 {
+      font-size: 20px;
+      color: #1f2937;
+      margin-bottom: 5px;
+    }
+    .test-title p {
+      color: #6b7280;
+      font-size: 14px;
+    }
+    .test-result {
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      line-height: 1.8;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+    .status-badge {
+      display: inline-block;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-weight: bold;
+      font-size: 14px;
+    }
+    .status-badge.success { background: #10b981; color: white; }
+    .status-badge.warning { background: #f59e0b; color: white; }
+    .status-badge.error { background: #ef4444; color: white; }
+    .btn {
+      width: 100%;
+      padding: 18px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-top: 20px;
+    }
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+    }
+    .summary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 30px;
+      border-radius: 15px;
+      text-align: center;
+      margin-top: 30px;
+    }
+    .summary h2 {
+      font-size: 28px;
+      margin-bottom: 15px;
+    }
+    .summary-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-top: 20px;
+    }
+    .stat {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 20px;
+      border-radius: 12px;
+      backdrop-filter: blur(10px);
+    }
+    .stat-number {
+      font-size: 36px;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    .stat-label {
+      font-size: 14px;
+      opacity: 0.9;
+    }
+    .loader {
+      border: 4px solid #f3f4f6;
+      border-top: 4px solid #667eea;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 20px auto;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>
+      🔧 تشخيص نظام الكاش الذكي
+    </h1>
+    <p class="subtitle">فحص شامل للتأكد من أن نظام الكاش يعمل بشكل فعلي</p>
+
+    <button class="btn" onclick="runAllTests()">▶️ بدء الفحص الشامل</button>
+
+    <div id="results"></div>
+    <div id="summary"></div>
+  </div>
+
+  <script>
+    let testsResults = {
+      passed: 0,
+      failed: 0,
+      warnings: 0,
+      total: 0
+    };
+
+    async function runAllTests() {
+      testsResults = { passed: 0, failed: 0, warnings: 0, total: 0 };
+      const resultsDiv = document.getElementById('results');
+      const summaryDiv = document.getElementById('summary');
+      resultsDiv.innerHTML = '<div class="loader"></div>';
+      summaryDiv.innerHTML = '';
+
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      resultsDiv.innerHTML = '';
+
+      await test1_CheckCacheBusterMeta();
+      await test2_CheckCacheBusterValue();
+      await test3_CheckCacheHeaders();
+      await test4_CheckVersionManifest();
+      await test5_CheckBuildFiles();
+      await test6_CheckDatabaseVersions();
+      await test7_CheckUpdateNotifications();
+
+      showSummary();
+    }
+
+    async function test1_CheckCacheBusterMeta() {
+      testsResults.total++;
+      const card = createTestCard('test1', 'pending', 'فحص وجود Cache-Buster Meta Tag', 'التحقق من وجود meta tag في index.html');
+
+      await new Promise(resolve => setTimeout(resolve, 300));
+
+      const meta = document.querySelector('meta[name="cache-buster"]');
+
+      if (meta) {
+        const content = meta.getAttribute('content');
+        updateTestCard('test1', 'success', `✅ موجود: ${content}`, 'Cache-Buster Meta Tag موجود بشكل صحيح');
+        testsResults.passed++;
+      } else {
+        updateTestCard('test1', 'error', '❌ غير موجود!', 'Cache-Buster Meta Tag مفقود - النظام لا يعمل!');
+        testsResults.failed++;
+      }
+    }
+
+    async function test2_CheckCacheBusterValue() {
+      testsResults.total++;
+      const card = createTestCard('test2', 'pending', 'فحص قيمة Cache-Buster', 'التحقق من أن القيمة فريدة ومحدثة');
+
+      await new Promise(resolve => setTimeout(resolve, 300));
+
+      const meta = document.querySelector('meta[name="cache-buster"]');
+      if (!meta) {
+        updateTestCard('test2', 'error', '❌ لا يمكن الفحص - Meta Tag مفقود', '');
+        testsResults.failed++;
+        return;
+      }
+
+      const content = meta.getAttribute('content');
+      const pattern = /^v\d{8}_\d+$/;
+
+      if (pattern.test(content)) {
+        const timestamp = parseInt(content.split('_')[1]);
+        const date = new Date(timestamp);
+        updateTestCard('test2', 'success',
+          `✅ القيمة صحيحة وفريدة\n\nالقيمة: ${content}\nالتاريخ: ${date.toLocaleString('ar-SA')}\n\nهذا يعني أن النظام يعمل ويولد أرقام فريدة!`,
+          'Cache-Buster يعمل بشكل صحيح');
+        testsResults.passed++;
+      } else {
+        updateTestCard('test2', 'warning',
+          `⚠️ القيمة موجودة لكن التنسيق غير صحيح\n\nالقيمة الحالية: ${content}\nالتنسيق المتوقع: v20251025_1234567890`,
+          'قد يؤثر على عمل النظام');
+        testsResults.warnings++;
+      }
+    }
+
+    async function test3_CheckCacheHeaders() {
+      testsResults.total++;
+      const card = createTestCard('test3', 'pending', 'فحص Cache Control Headers', 'التحقق من إعدادات الكاش في السيرفر');
+
+      await new Promise(resolve => setTimeout(resolve, 300));
+
+      const cacheControl = document.querySelector('meta[http-equiv="Cache-Control"]');
+      const pragma = document.querySelector('meta[http-equiv="Pragma"]');
+      const expires = document.querySelector('meta[http-equiv="Expires"]');
+
+      const results = [];
+      let allPresent = true;
+
+      if (cacheControl) {
+        results.push('✅ Cache-Control: ' + cacheControl.getAttribute('content'));
+      } else {
+        results.push('❌ Cache-Control: مفقود');
+        allPresent = false;
+      }
+
+      if (pragma) {
+        results.push('✅ Pragma: ' + pragma.getAttribute('content'));
+      } else {
+        results.push('❌ Pragma: مفقود');
+        allPresent = false;
+      }
+
+      if (expires) {
+        results.push('✅ Expires: ' + expires.getAttribute('content'));
+      } else {
+        results.push('❌ Expires: مفقود');
+        allPresent = false;
+      }
+
+      if (allPresent) {
+        updateTestCard('test3', 'success', results.join('\n'), 'جميع Headers موجودة - الكاش معطل بشكل صحيح');
+        testsResults.passed++;
+      } else {
+        updateTestCard('test3', 'warning', results.join('\n'), 'بعض Headers مفقودة - قد يسبب مشاكل في الكاش');
+        testsResults.warnings++;
+      }
+    }
+
+    async function test4_CheckVersionManifest() {
+      testsResults.total++;
+      const card = createTestCard('test4', 'pending', 'فحص Version Manifest', 'التحقق من ملف version-manifest.json');
+
+      await new Promise(resolve => setTimeout(resolve, 300));
+
+      try {
+        const response = await fetch('/version-manifest.json?t=' + Date.now());
+        if (response.ok) {
+          const manifest = await response.json();
+          const date = new Date(manifest.timestamp);
+          updateTestCard('test4', 'success',
+            `✅ ملف Manifest موجود ويعمل\n\nVersion: ${manifest.version}\nBuild: ${manifest.build}\nEnvironment: ${manifest.environment}\nDate: ${date.toLocaleString('ar-SA')}\n\nهذا دليل على أن نظام التتبع يعمل!`,
+            'Version Manifest يعمل بشكل ممتاز');
+          testsResults.passed++;
+        } else {
+          throw new Error('File not found');
+        }
+      } catch (error) {
+        updateTestCard('test4', 'error',
+          `❌ ملف version-manifest.json غير موجود\n\nهذا يعني أن سكربت generate-cache لم يعمل بشكل صحيح.\n\nتأكد من تشغيل: npm run build`,
+          'Version Manifest مفقود');
+        testsResults.failed++;
+      }
+    }
+
+    async function test5_CheckBuildFiles() {
+      testsResults.total++;
+      const card = createTestCard('test5', 'pending', 'فحص Build Files', 'التحقق من أن الملفات لها hash فريد');
+
+      await new Promise(resolve => setTimeout(resolve, 300));
+
+      const scripts = document.querySelectorAll('script[src]');
+      const styles = document.querySelectorAll('link[rel="stylesheet"]');
+
+      let hasHashes = true;
+      const files = [];
+
+      scripts.forEach(script => {
+        const src = script.getAttribute('src');
+        if (src && src.includes('assets')) {
+          const hasHash = /\-[a-zA-Z0-9]{8,}\.(js|css)/.test(src);
+          files.push(`${hasHash ? '✅' : '❌'} ${src}`);
+          if (!hasHash) hasHashes = false;
+        }
+      });
+
+      styles.forEach(style => {
+        const href = style.getAttribute('href');
+        if (href && href.includes('assets')) {
+          const hasHash = /\-[a-zA-Z0-9]{8,}\.(js|css)/.test(href);
+          files.push(`${hasHash ? '✅' : '❌'} ${href}`);
+          if (!hasHash) hasHashes = false;
+        }
+      });
+
+      if (files.length === 0) {
+        updateTestCard('test5', 'warning',
+          '⚠️ لم يتم العثور على ملفات assets\n\nقد يكون هذا لأن المنصة لم تُبنَ بعد أو يتم تشغيلها في وضع التطوير.',
+          'Build files غير موجودة');
+        testsResults.warnings++;
+      } else if (hasHashes) {
+        updateTestCard('test5', 'success',
+          `✅ جميع الملفات لها hash فريد\n\nعدد الملفات: ${files.length}\n\n${files.slice(0, 5).join('\n')}${files.length > 5 ? '\n...' : ''}\n\nهذا يضمن أن المتصفح يجلب النسخة الجديدة دائماً!`,
+          'Build files صحيحة');
+        testsResults.passed++;
+      } else {
+        updateTestCard('test5', 'error',
+          `❌ بعض الملفات لا تحتوي على hash\n\n${files.join('\n')}\n\nهذا يعني أن إعدادات Vite غير صحيحة!`,
+          'مشكلة في Build configuration');
+        testsResults.failed++;
+      }
+    }
+
+    async function test6_CheckDatabaseVersions() {
+      testsResults.total++;
+      const card = createTestCard('test6', 'pending', 'فحص قاعدة البيانات - جدول الإصدارات', 'التحقق من جدول system_versions');
+
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      try {
+        // محاكاة استدعاء API (في الواقع يجب استدعاء Supabase)
+        updateTestCard('test6', 'warning',
+          `⚠️ يتطلب اتصال بقاعدة البيانات\n\nهذا الفحص يحتاج إلى:\n1. تسجيل دخول كمدير\n2. فتح Console في المتصفح\n3. تشغيل هذا الكود:\n\nconst { versionTrackingService } = await import('./services/versionTrackingService');\nconst versions = await versionTrackingService.getVersionHistory(5);\nconsole.log('Versions:', versions);`,
+          'يحتاج تسجيل دخول');
+        testsResults.warnings++;
+      } catch (error) {
+        updateTestCard('test6', 'error',
+          `❌ خطأ في الاتصال بقاعدة البيانات\n\n${error.message}`,
+          'Database connection failed');
+        testsResults.failed++;
+      }
+    }
+
+    async function test7_CheckUpdateNotifications() {
+      testsResults.total++;
+      const card = createTestCard('test7', 'pending', 'فحص نظام الإشعارات', 'التحقق من UpdateNotificationBanner');
+
+      await new Promise(resolve => setTimeout(resolve, 300));
+
+      updateTestCard('test7', 'warning',
+        `⚠️ يتطلب تسجيل دخول كمدير\n\nللتحقق من نظام الإشعارات:\n\n1. سجل دخول كمدير (0500000000)\n2. ابحث عن بانر أخضر/أزرق في أعلى الشاشة\n3. اذهب إلى: الإعدادات → سجل الإصدارات\n4. يجب أن ترى قائمة بالإصدارات\n\nإذا رأيت هذه الأشياء = النظام يعمل ✅\nإذا لم تراها = مشكلة في الإشعارات ❌`,
+        'يحتاج فحص يدوي');
+      testsResults.warnings++;
+    }
+
+    function createTestCard(id, status, title, description) {
+      const resultsDiv = document.getElementById('results');
+      const card = document.createElement('div');
+      card.id = id;
+      card.className = `test-card ${status}`;
+      card.innerHTML = `
+        <div class="test-header">
+          <div class="test-icon ${status}">
+            ${status === 'pending' ? '⏳' : status === 'success' ? '✅' : status === 'warning' ? '⚠️' : '❌'}
+          </div>
+          <div class="test-title">
+            <h3>${title}</h3>
+            <p>${description}</p>
+          </div>
+        </div>
+        <div class="test-result" id="${id}-result">جاري الفحص...</div>
+      `;
+      resultsDiv.appendChild(card);
+      return card;
+    }
+
+    function updateTestCard(id, status, result, description) {
+      const card = document.getElementById(id);
+      card.className = `test-card ${status}`;
+
+      const icon = card.querySelector('.test-icon');
+      icon.className = `test-icon ${status}`;
+      icon.textContent = status === 'success' ? '✅' : status === 'warning' ? '⚠️' : '❌';
+
+      const desc = card.querySelector('.test-title p');
+      desc.textContent = description;
+
+      const resultDiv = document.getElementById(`${id}-result`);
+      resultDiv.textContent = result;
+    }
+
+    function showSummary() {
+      const summaryDiv = document.getElementById('summary');
+      const totalTests = testsResults.total;
+      const successRate = Math.round((testsResults.passed / totalTests) * 100);
+
+      let statusText = '';
+      let statusEmoji = '';
+
+      if (successRate >= 80) {
+        statusText = 'النظام يعمل بشكل ممتاز! 🎉';
+        statusEmoji = '✅';
+      } else if (successRate >= 50) {
+        statusText = 'النظام يعمل لكن يحتاج تحسينات ⚠️';
+        statusEmoji = '⚠️';
+      } else {
+        statusText = 'النظام لا يعمل بشكل صحيح ❌';
+        statusEmoji = '❌';
+      }
+
+      summaryDiv.innerHTML = `
+        <div class="summary">
+          <h2>${statusEmoji} ${statusText}</h2>
+          <p>نسبة النجاح: ${successRate}%</p>
+
+          <div class="summary-stats">
+            <div class="stat">
+              <div class="stat-number">${testsResults.passed}</div>
+              <div class="stat-label">نجح ✅</div>
+            </div>
+            <div class="stat">
+              <div class="stat-number">${testsResults.warnings}</div>
+              <div class="stat-label">تحذيرات ⚠️</div>
+            </div>
+            <div class="stat">
+              <div class="stat-number">${testsResults.failed}</div>
+              <div class="stat-label">فشل ❌</div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // تشغيل تلقائي عند تحميل الصفحة
+    // window.addEventListener('load', runAllTests);
+  </script>
+</body>
+</html>

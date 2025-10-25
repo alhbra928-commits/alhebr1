@@ -6,6 +6,7 @@ import { LoginNotification } from './modules/admin/components/LoginNotification'
 import { AdminSessionService } from './modules/admin/services/adminSessionService';
 import { PermissionsProvider } from './contexts/PermissionsContext';
 import { UpdateNotificationBanner } from './components/common/UpdateNotificationBanner';
+import { VersionIndicator } from './components/common/VersionIndicator';
 
 const PublicPlatformRouter = lazy(() => import('./modules/public/components/PublicPlatformRouter').then(m => ({ default: m.PublicPlatformRouter })));
 const FarmOwnerRouter = lazy(() => import('./modules/farm-owner/components/FarmOwnerRouter').then(m => ({ default: m.FarmOwnerRouter })));
@@ -219,6 +220,8 @@ function App() {
         }>
           {renderModule()}
         </Suspense>
+
+        <VersionIndicator />
       </div>
     </PermissionsProvider>
   );
