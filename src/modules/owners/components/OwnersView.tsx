@@ -7,27 +7,15 @@ import {
   CheckCircle,
   Snowflake,
   UserCheck,
-  Home,
   Phone,
   MapPin,
-  FileText,
-  DollarSign,
-  Calendar,
   Search,
   Filter,
   Eye,
   Clock,
-  CreditCard,
   X,
-  XCircle,
-  Building,
-  TreePine,
-  MessageSquare,
-  Wallet,
-  MoreHorizontal,
-  Send
+  XCircle
 } from 'lucide-react';
-import { Card3D } from '../../../components/ui/Card3D';
 import { BackButton } from '../../../components/common/BackButton';
 import { OwnersService, FarmOwner } from '../ownersService';
 import { FarmsService } from '../../farms/farmsService';
@@ -53,7 +41,6 @@ export function OwnersView({ onBack }: OwnersViewProps) {
   const [showDetailsPanel, setShowDetailsPanel] = useState(false);
   const [selectedOwnerDetails, setSelectedOwnerDetails] = useState<any>(null);
   const [ownerFarms, setOwnerFarms] = useState<any[]>([]);
-  const [expandedActions, setExpandedActions] = useState<{ [key: string]: boolean }>({});
 
   const { isAdmin, canCreate, canEdit, canDelete } = usePermissions();
 
@@ -210,28 +197,6 @@ export function OwnersView({ onBack }: OwnersViewProps) {
     } catch (err: any) {
       alert('حدث خطأ: ' + err.message);
     }
-  };
-
-  const handleSendMessage = (owner: FarmOwner, e: React.MouseEvent) => {
-    e.stopPropagation();
-    const message = prompt(`أرسل رسالة إلى ${owner.full_name}:`);
-    if (message) {
-      const whatsappUrl = `https://wa.me/${owner.mobile_number.replace(/\D/g, '')}?text=${encodeURIComponent(message)}`;
-      window.open(whatsappUrl, '_blank');
-    }
-  };
-
-  const handleViewFinancials = (owner: FarmOwner, e: React.MouseEvent) => {
-    e.stopPropagation();
-    alert(`عرض المعاملات المالية لـ ${owner.full_name}\n\nهذه الميزة قيد التطوير...`);
-  };
-
-  const toggleExpandedActions = (ownerId: string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    setExpandedActions(prev => ({
-      ...prev,
-      [ownerId]: !prev[ownerId]
-    }));
   };
 
   const getStatusColor = (status: string) => {
@@ -455,143 +420,75 @@ export function OwnersView({ onBack }: OwnersViewProps) {
             )}
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredOwners.map((owner) => {
-              const statusConfig = {
-                active: {
-                  bg: 'from-green-500 to-emerald-600',
-                  badge: 'bg-green-100 text-green-800 border-green-300',
-                  icon: CheckCircle,
-                  label: 'نشط',
-                  dot: 'bg-green-500'
-                },
-                frozen: {
-                  bg: 'from-blue-400 to-blue-600',
-                  badge: 'bg-blue-100 text-blue-800 border-blue-300',
-                  icon: Snowflake,
-                  label: 'مجمد',
-                  dot: 'bg-blue-500'
-                },
-                under_review: {
-                  bg: 'from-yellow-400 to-amber-500',
-                  badge: 'bg-yellow-100 text-yellow-800 border-yellow-300',
-                  icon: Clock,
-                  label: 'تحت المراجعة',
-                  dot: 'bg-yellow-500'
-                }
-              };
-
-              const config = statusConfig[owner.status as keyof typeof statusConfig] || statusConfig.active;
-              const StatusIcon = config.icon;
-
-              return (
-                <Card3D key={owner.id} interactive={false}>
-                  <div className="bg-white rounded-2xl overflow-hidden border-2 border-gray-100 hover:border-[#C9A962] transition-all duration-300 group">
-                    {/* Header with Gradient */}
-                    <div className={`bg-gradient-to-br ${config.bg} p-6 relative overflow-hidden`}>
-                      <div className="absolute top-0 left-0 w-full h-full opacity-10">
-                        <div className="absolute top-4 left-4 w-32 h-32 bg-white rounded-full blur-2xl"></div>
-                        <div className="absolute bottom-4 right-4 w-24 h-24 bg-white rounded-full blur-2xl"></div>
-                      </div>
-
-                      <div className="relative flex items-start justify-between">
+          <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-gradient-to-r from-[#C9A962] to-[#D4B574]">
+                  <tr>
+                    <th className="px-6 py-4 text-right text-sm font-bold text-white">الاسم</th>
+                    <th className="px-6 py-4 text-right text-sm font-bold text-white">رقم الجوال</th>
+                    <th className="px-6 py-4 text-right text-sm font-bold text-white">المدينة</th>
+                    <th className="px-6 py-4 text-right text-sm font-bold text-white">الحالة</th>
+                    <th className="px-6 py-4 text-right text-sm font-bold text-white">الإجراءات</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {filteredOwners.map((owner) => (
+                    <tr key={owner.id} className="hover:bg-gray-50 transition-colors">
+                      <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center border-2 border-white/30">
-                            <Users className="h-7 w-7 text-white" />
+                          <div className="w-10 h-10 bg-gradient-to-br from-[#C9A962] to-[#D4B574] rounded-full flex items-center justify-center">
+                            <UserCheck className="h-5 w-5 text-white" />
                           </div>
                           <div>
-                            <h3 className="text-xl font-black text-white mb-1 line-clamp-1">
-                              {owner.full_name}
-                            </h3>
-                            <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-lg border-2 ${config.badge}`}>
-                              <div className={`w-2 h-2 rounded-full ${config.dot} animate-pulse`}></div>
-                              <span className="text-xs font-bold">{config.label}</span>
-                            </div>
+                            <div className="font-bold text-gray-900">{owner.full_name}</div>
+                            {owner.national_id && (
+                              <div className="text-xs text-gray-500">{owner.national_id}</div>
+                            )}
                           </div>
                         </div>
-                      </div>
-                    </div>
-
-                    {/* Content */}
-                    <div className="p-5 space-y-4">
-                      {/* Contact Info */}
-                      <div className="space-y-2.5">
-                        <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl hover:bg-[#F5F1E8] transition-colors">
-                          <div className="w-9 h-9 bg-gradient-to-br from-[#C9A962] to-[#D4B574] rounded-lg flex items-center justify-center flex-shrink-0">
-                            <Phone className="h-4 w-4 text-white" />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="text-xs text-[#2C2C2C]/60 mb-0.5">رقم الجوال</p>
-                            <a
-                              href={`tel:${owner.mobile_number}`}
-                              className="font-mono font-bold text-[#2C2C2C] hover:text-[#C9A962] transition-colors"
-                              dir="ltr"
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              {owner.mobile_number}
-                            </a>
-                          </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-2 text-gray-700">
+                          <Phone className="h-4 w-4 text-gray-400" />
+                          <span>{owner.mobile_number}</span>
                         </div>
-
-                        <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl hover:bg-[#F5F1E8] transition-colors">
-                          <div className="w-9 h-9 bg-gradient-to-br from-[#3D5B4B] to-[#4A6F5C] rounded-lg flex items-center justify-center flex-shrink-0">
-                            <MapPin className="h-4 w-4 text-white" />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="text-xs text-[#2C2C2C]/60 mb-0.5">الموقع</p>
-                            <p className="font-bold text-[#2C2C2C] truncate">{owner.region} - {owner.city}</p>
-                          </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-2 text-gray-700">
+                          <MapPin className="h-4 w-4 text-gray-400" />
+                          <span>{owner.city || 'غير محدد'}</span>
                         </div>
-
-                        {owner.national_id && (
-                          <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl hover:bg-[#F5F1E8] transition-colors">
-                            <div className="w-9 h-9 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center flex-shrink-0">
-                              <FileText className="h-4 w-4 text-white" />
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <p className="text-xs text-[#2C2C2C]/60 mb-0.5">الهوية الوطنية</p>
-                              <p className="font-mono font-bold text-[#2C2C2C]" dir="ltr">{owner.national_id}</p>
-                            </div>
-                          </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        {owner.status === 'active' ? (
+                          <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-bold">
+                            <CheckCircle className="h-3.5 w-3.5" />
+                            نشط
+                          </span>
+                        ) : owner.status === 'frozen' ? (
+                          <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-bold">
+                            <Snowflake className="h-3.5 w-3.5" />
+                            مجمد
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-bold">
+                            <Clock className="h-3.5 w-3.5" />
+                            تحت المراجعة
+                          </span>
                         )}
-                      </div>
-
-                      {/* Stats Grid */}
-                      <div className="grid grid-cols-2 gap-2">
-                        <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-3 rounded-xl border-2 border-blue-100">
-                          <div className="flex items-center gap-2 mb-1">
-                            <Home className="h-4 w-4 text-blue-600" />
-                            <span className="text-xs text-blue-900/70">المزارع</span>
-                          </div>
-                          <p className="text-2xl font-black text-blue-600">
-                            {owner.farms_count || 0}
-                          </p>
-                        </div>
-
-                        <div className="bg-gradient-to-br from-green-50 to-emerald-50 p-3 rounded-xl border-2 border-green-100">
-                          <div className="flex items-center gap-2 mb-1">
-                            <DollarSign className="h-4 w-4 text-green-600" />
-                            <span className="text-xs text-green-900/70">الإيرادات</span>
-                          </div>
-                          <p className="text-sm font-black text-green-600">
-                            {owner.total_revenue ? `${(owner.total_revenue / 1000).toFixed(0)}k` : '0'}
-                          </p>
-                        </div>
-                      </div>
-
-                      {/* Quick Actions */}
-                      <div className="pt-3 border-t-2 border-gray-100 space-y-2">
-                        {/* Primary Actions */}
-                        <div className="grid grid-cols-2 gap-2">
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-2">
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
                               handleViewDetails(owner, e);
                             }}
-                            className="flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-br from-[#C9A962] to-[#D4B574] text-white rounded-xl font-bold hover:shadow-lg transform hover:-translate-y-0.5 transition-all"
+                            className="p-2 bg-gradient-to-br from-[#C9A962] to-[#D4B574] text-white rounded-lg hover:shadow-lg transition-all"
+                            title="عرض التفاصيل"
                           >
                             <Eye className="h-4 w-4" />
-                            <span>عرض</span>
                           </button>
 
                           {hasEditPermission && (
@@ -600,57 +497,12 @@ export function OwnersView({ onBack }: OwnersViewProps) {
                                 e.stopPropagation();
                                 handleEditOwner(owner, e);
                               }}
-                              className="flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-xl font-bold hover:shadow-lg transform hover:-translate-y-0.5 transition-all"
+                              className="p-2 bg-blue-500 text-white rounded-lg hover:shadow-lg transition-all"
+                              title="تعديل"
                             >
                               <Edit className="h-4 w-4" />
-                              <span>تعديل</span>
                             </button>
                           )}
-                        </div>
-
-                        {/* Secondary Actions */}
-                        <div className="grid grid-cols-3 gap-2">
-                          {owner.status === 'active' ? (
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleToggleStatus(owner, e);
-                              }}
-                              className="flex items-center justify-center gap-1.5 px-3 py-2 bg-blue-100 text-blue-700 rounded-lg font-bold hover:bg-blue-200 transition-all text-sm"
-                              title="تجميد الحساب"
-                            >
-                              <Snowflake className="h-3.5 w-3.5" />
-                              <span>تجميد</span>
-                            </button>
-                          ) : owner.status === 'frozen' ? (
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleToggleStatus(owner, e);
-                              }}
-                              className="flex items-center justify-center gap-1.5 px-3 py-2 bg-green-100 text-green-700 rounded-lg font-bold hover:bg-green-200 transition-all text-sm"
-                              title="تفعيل الحساب"
-                            >
-                              <CheckCircle className="h-3.5 w-3.5" />
-                              <span>تفعيل</span>
-                            </button>
-                          ) : (
-                            <div className="flex items-center justify-center px-3 py-2 bg-gray-100 text-gray-400 rounded-lg text-sm">
-                              <Clock className="h-3.5 w-3.5" />
-                            </div>
-                          )}
-
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              window.open(`tel:${owner.mobile_number}`, '_self');
-                            }}
-                            className="flex items-center justify-center gap-1.5 px-3 py-2 bg-green-100 text-green-700 rounded-lg font-bold hover:bg-green-200 transition-all text-sm"
-                            title="اتصال مباشر"
-                          >
-                            <Phone className="h-3.5 w-3.5" />
-                            <span>اتصال</span>
-                          </button>
 
                           {hasDeletePermission && (
                             <button
@@ -658,80 +510,19 @@ export function OwnersView({ onBack }: OwnersViewProps) {
                                 e.stopPropagation();
                                 handleDeleteOwner(owner, e);
                               }}
-                              className="flex items-center justify-center gap-1.5 px-3 py-2 bg-red-100 text-red-700 rounded-lg font-bold hover:bg-red-200 transition-all text-sm"
-                              title="حذف المالك"
+                              className="p-2 bg-red-500 text-white rounded-lg hover:shadow-lg transition-all"
+                              title="حذف"
                             >
-                              <Trash2 className="h-3.5 w-3.5" />
-                              <span>حذف</span>
+                              <Trash2 className="h-4 w-4" />
                             </button>
                           )}
                         </div>
-
-                        {/* Expanded Actions Toggle */}
-                        <button
-                          onClick={(e) => toggleExpandedActions(owner.id, e)}
-                          className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-bold hover:bg-gray-200 transition-all text-sm"
-                        >
-                          <MoreHorizontal className="h-4 w-4" />
-                          <span>{expandedActions[owner.id] ? 'إخفاء الإجراءات' : 'المزيد من الإجراءات'}</span>
-                        </button>
-
-                        {/* Extended Actions (Collapsible) */}
-                        {expandedActions[owner.id] && (
-                          <div className="grid grid-cols-3 gap-2 pt-2 border-t-2 border-gray-100">
-                            <button
-                              onClick={(e) => handleSendMessage(owner, e)}
-                              className="flex items-center justify-center gap-1.5 px-3 py-2 bg-green-50 text-green-700 rounded-lg font-bold hover:bg-green-100 transition-all text-sm border border-green-200"
-                              title="إرسال رسالة واتساب"
-                            >
-                              <MessageSquare className="h-3.5 w-3.5" />
-                              <span>واتساب</span>
-                            </button>
-
-                            <button
-                              onClick={(e) => handleViewFinancials(owner, e)}
-                              className="flex items-center justify-center gap-1.5 px-3 py-2 bg-purple-50 text-purple-700 rounded-lg font-bold hover:bg-purple-100 transition-all text-sm border border-purple-200"
-                              title="عرض المعاملات المالية"
-                            >
-                              <Wallet className="h-3.5 w-3.5" />
-                              <span>المالية</span>
-                            </button>
-
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                alert(`إضافة مزرعة جديدة لـ ${owner.full_name}\n\nهذه الميزة قيد التطوير...`);
-                              }}
-                              className="flex items-center justify-center gap-1.5 px-3 py-2 bg-amber-50 text-amber-700 rounded-lg font-bold hover:bg-amber-100 transition-all text-sm border border-amber-200"
-                              title="إضافة مزرعة جديدة"
-                            >
-                              <TreePine className="h-3.5 w-3.5" />
-                              <span>مزرعة</span>
-                            </button>
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Footer Info */}
-                      {owner.created_at && (
-                        <div className="pt-2 border-t border-gray-100">
-                          <div className="flex items-center justify-between text-xs text-[#2C2C2C]/50">
-                            <div className="flex items-center gap-1.5">
-                              <Calendar className="h-3 w-3" />
-                              <span>مضاف منذ: {new Date(owner.created_at).toLocaleDateString('ar-SA')}</span>
-                            </div>
-                            <div className="flex items-center gap-1">
-                              <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div>
-                              <span>متصل</span>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </Card3D>
-              );
-            })}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
 
