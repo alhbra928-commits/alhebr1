@@ -8,9 +8,10 @@ import { ModernHomeTab } from './ModernHomeTab';
 interface FarmOwnerDashboardProps {
   profileId: string;
   onLogout: () => void;
+  onBackToPublic?: () => void;
 }
 
-export const FarmOwnerDashboard: React.FC<FarmOwnerDashboardProps> = ({ profileId, onLogout }) => {
+export const FarmOwnerDashboard: React.FC<FarmOwnerDashboardProps> = ({ profileId, onLogout, onBackToPublic }) => {
   const [profile, setProfile] = useState<FarmOwnerProfile | null>(null);
   const [farmStatus, setFarmStatus] = useState<FarmStatus | null>(null);
   const [notifications, setNotifications] = useState<FarmOwnerNotification[]>([]);
@@ -224,13 +225,23 @@ export const FarmOwnerDashboard: React.FC<FarmOwnerDashboardProps> = ({ profileI
                 )}
               </button>
 
-              {/* زر العودة للمنصة */}
+              {/* زر العودة للمنصة (بدون خروج) */}
               <button
-                onClick={() => window.location.href = '/'}
-                className="hidden sm:flex p-2 sm:p-2.5 md:p-3 rounded-xl sm:rounded-2xl transition-all duration-300 hover:scale-105 hover:shadow-md bg-white border-2 border-gray-200 group"
-                title="العودة للمنصة الرئيسية"
+                onClick={() => {
+                  if (onBackToPublic) {
+                    onBackToPublic();
+                  } else {
+                    // فتح المنصة في تبويب جديد كبديل
+                    window.open('/', '_blank');
+                  }
+                }}
+                className="hidden sm:flex p-2 sm:p-2.5 md:p-3 rounded-xl sm:rounded-2xl transition-all duration-300 hover:scale-105 hover:shadow-md bg-white border-2 border-gray-200 group relative overflow-hidden"
+                title="العودة للمنصة الرئيسية (الجلسة تبقى مفتوحة)"
               >
-                <Home className="w-5 h-5 sm:w-5.5 sm:h-5.5 md:w-6 md:h-6 text-gray-600 group-hover:text-emerald-600 group-hover:scale-110 transition-all" />
+                {/* تأثير hover أخضر */}
+                <div className="absolute inset-0 bg-emerald-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+                <Home className="relative w-5 h-5 sm:w-5.5 sm:h-5.5 md:w-6 md:h-6 text-gray-600 group-hover:text-emerald-600 group-hover:scale-110 transition-all" />
               </button>
 
               {/* زر الخروج المطور */}
