@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار صلاحيات عبدالله</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+        .test-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 5px solid #667eea;
+        }
+        .test-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        .result {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .success {
+            border-left: 4px solid #28a745;
+            background: #d4edda;
+        }
+        .error {
+            border-left: 4px solid #dc3545;
+            background: #f8d7da;
+        }
+        .warning {
+            border-left: 4px solid #ffc107;
+            background: #fff3cd;
+        }
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.1em;
+            cursor: pointer;
+            font-weight: bold;
+            width: 100%;
+            margin: 10px 0;
+            transition: all 0.3s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+        .info {
+            background: #e7f3ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #2196F3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 اختبار صلاحيات عبدالله</h1>
+
+        <div class="info">
+            <strong>رقم الجوال:</strong> 0500000001<br>
+            <strong>الاسم:</strong> عبدالله<br>
+            <strong>الصلاحية المتوقعة:</strong> المالية فقط
+        </div>
+
+        <button onclick="testStep1()">1️⃣ فحص بيانات عبدالله في admin_users</button>
+        <div id="step1" class="test-section" style="display:none;">
+            <div class="test-title">نتيجة الفحص من admin_users:</div>
+            <div id="step1-result" class="result"></div>
+        </div>
+
+        <button onclick="testStep2()">2️⃣ فحص صلاحيات عبدالله في admin_module_permissions</button>
+        <div id="step2" class="test-section" style="display:none;">
+            <div class="test-title">نتيجة الفحص من admin_module_permissions:</div>
+            <div id="step2-result" class="result"></div>
+        </div>
+
+        <button onclick="testStep3()">3️⃣ محاكاة تسجيل الدخول</button>
+        <div id="step3" class="test-section" style="display:none;">
+            <div class="test-title">نتيجة محاكاة تسجيل الدخول:</div>
+            <div id="step3-result" class="result"></div>
+        </div>
+
+        <button onclick="testStep4()">4️⃣ اختبار شامل للنظام</button>
+        <div id="step4" class="test-section" style="display:none;">
+            <div class="test-title">نتيجة الاختبار الشامل:</div>
+            <div id="step4-result" class="result"></div>
+        </div>
+    </div>
+
+    <script>
+        // تهيئة Supabase
+        const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+        const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        const PHONE = '0500000001';
+
+        async function testStep1() {
+            const section = document.getElementById('step1');
+            const result = document.getElementById('step1-result');
+            section.style.display = 'block';
+            result.textContent = 'جاري الفحص...';
+
+            try {
+                const { data, error } = await supabase
+                    .from('admin_users')
+                    .select('*')
+                    .eq('phone', PHONE)
+                    .is('deleted_at', null)
+                    .maybeSingle();
+
+                if (error) throw error;
+
+                if (!data) {
+                    result.className = 'result error';
+                    result.textContent = '❌ لم يتم العثور على الموظف في قاعدة البيانات!\n\nيجب إضافة الموظف أولاً باستخدام:\n\nINSERT INTO admin_users (full_name, phone, role_id, is_active)\nVALUES (\'عبدالله\', \'0500000001\', \'employee\', true);';
+                    return;
+                }
+
+                result.className = 'result success';
+                result.textContent = '✅ تم العثور على الموظف:\n\n' + JSON.stringify(data, null, 2);
+
+                // تحليل البيانات
+                const analysis = '\n\n📊 التحليل:\n';
+                const role = data.role_id || 'غير محدد';
+                const isActive = data.is_active ? 'نشط' : 'معطل';
+
+                result.textContent += analysis;
+                result.textContent += `\nالدور (role_id): ${role}`;
+                result.textContent += `\nالحالة: ${isActive}`;
+
+                if (role === 'super_admin' || role === 'admin' || role === 'مدير') {
+                    result.textContent += '\n\n⚠️ تحذير: الموظف لديه دور إداري! سيحصل على كامل الصلاحيات.';
+                    result.textContent += '\n\n🔧 الحل: غير role_id إلى \'employee\'';
+                } else {
+                    result.textContent += '\n\n✅ الدور صحيح: موظف عادي';
+                }
+
+            } catch (err) {
+                result.className = 'result error';
+                result.textContent = '❌ خطأ:\n\n' + err.message;
+            }
+        }
+
+        async function testStep2() {
+            const section = document.getElementById('step2');
+            const result = document.getElementById('step2-result');
+            section.style.display = 'block';
+            result.textContent = 'جاري الفحص...';
+
+            try {
+                const { data, error } = await supabase
+                    .from('admin_module_permissions')
+                    .select('*')
+                    .eq('admin_phone', PHONE)
+                    .eq('is_active', true);
+
+                if (error) throw error;
+
+                if (!data || data.length === 0) {
+                    result.className = 'result error';
+                    result.textContent = '❌ لا توجد صلاحيات للموظف في قاعدة البيانات!\n\n';
+                    result.textContent += 'يجب إضافة صلاحية المالية:\n\n';
+                    result.textContent += 'INSERT INTO admin_module_permissions\n';
+                    result.textContent += '(admin_phone, module_id, module_name_ar, module_name_en,\n';
+                    result.textContent += ' can_view, can_create, can_edit, can_delete, icon, is_active)\n';
+                    result.textContent += 'VALUES\n';
+                    result.textContent += '(\'0500000001\', \'finance\', \'النظام المالي\', \'Financial System\',\n';
+                    result.textContent += ' true, true, true, true, \'wallet\', true);';
+                    return;
+                }
+
+                result.className = 'result success';
+                result.textContent = `✅ تم العثور على ${data.length} صلاحية:\n\n`;
+
+                data.forEach((perm, index) => {
+                    result.textContent += `\n${index + 1}. القسم: ${perm.module_name_ar} (${perm.module_id})\n`;
+                    result.textContent += `   - عرض: ${perm.can_view ? '✅' : '❌'}\n`;
+                    result.textContent += `   - إضافة: ${perm.can_create ? '✅' : '❌'}\n`;
+                    result.textContent += `   - تعديل: ${perm.can_edit ? '✅' : '❌'}\n`;
+                    result.textContent += `   - حذف: ${perm.can_delete ? '✅' : '❌'}\n`;
+                    result.textContent += `   - نشط: ${perm.is_active ? '✅' : '❌'}\n`;
+                });
+
+                result.textContent += '\n\n📊 التحليل:\n';
+                result.textContent += `عدد الصلاحيات: ${data.length}\n`;
+
+                if (data.length === 1 && data[0].module_id === 'finance') {
+                    result.textContent += '✅ صحيح! صلاحية واحدة للمالية فقط';
+                } else if (data.length > 1) {
+                    result.textContent += '⚠️ تحذير: يوجد أكثر من صلاحية واحدة';
+                } else {
+                    result.textContent += '⚠️ الصلاحية ليست للمالية';
+                }
+
+            } catch (err) {
+                result.className = 'result error';
+                result.textContent = '❌ خطأ:\n\n' + err.message;
+            }
+        }
+
+        async function testStep3() {
+            const section = document.getElementById('step3');
+            const result = document.getElementById('step3-result');
+            section.style.display = 'block';
+            result.textContent = 'جاري المحاكاة...';
+
+            let log = '🔐 محاكاة تسجيل الدخول:\n\n';
+
+            try {
+                // الخطوة 1: جلب بيانات الموظف
+                log += '1️⃣ جلب بيانات الموظف من admin_users...\n';
+                const { data: user, error: userError } = await supabase
+                    .from('admin_users')
+                    .select('*')
+                    .eq('phone', PHONE)
+                    .is('deleted_at', null)
+                    .maybeSingle();
+
+                if (userError) throw userError;
+                if (!user) {
+                    result.className = 'result error';
+                    result.textContent = log + '\n❌ الموظف غير موجود!';
+                    return;
+                }
+
+                log += `✅ تم العثور على: ${user.full_name}\n`;
+                log += `   role_id: ${user.role_id}\n\n`;
+
+                // الخطوة 2: فحص الدور
+                log += '2️⃣ فحص الدور (role)...\n';
+                const role = user.role_id || 'employee';
+                const isAdmin = role === 'super_admin' || role === 'admin' || role === 'مدير';
+
+                if (isAdmin) {
+                    log += `❌ الدور "${role}" هو دور إداري!\n`;
+                    log += '❌ النتيجة: سيحصل على كامل الصلاحيات\n\n';
+                    log += '🔧 المشكلة الجذرية: role_id يجب أن يكون "employee"\n';
+                    result.className = 'result error';
+                    result.textContent = log;
+                    return;
+                }
+
+                log += `✅ الدور "${role}" صحيح (موظف عادي)\n\n`;
+
+                // الخطوة 3: جلب الصلاحيات
+                log += '3️⃣ جلب الصلاحيات من admin_module_permissions...\n';
+                const { data: permissions, error: permError } = await supabase
+                    .from('admin_module_permissions')
+                    .select('*')
+                    .eq('admin_phone', PHONE)
+                    .eq('is_active', true);
+
+                if (permError) throw permError;
+
+                if (!permissions || permissions.length === 0) {
+                    log += '❌ لا توجد صلاحيات!\n';
+                    log += '❌ النتيجة: لن يرى أي قسم (ماعدا لوحة التحكم)\n';
+                    result.className = 'result warning';
+                } else {
+                    log += `✅ تم العثور على ${permissions.length} صلاحية:\n`;
+                    permissions.forEach(p => {
+                        log += `   - ${p.module_name_ar} (${p.module_id})\n`;
+                    });
+                    log += '\n';
+                    result.className = 'result success';
+                }
+
+                // الخطوة 4: النتيجة النهائية
+                log += '\n📊 النتيجة المتوقعة في Sidebar:\n';
+                log += '✅ لوحة التحكم (متاح للجميع)\n';
+
+                if (permissions && permissions.length > 0) {
+                    permissions.forEach(p => {
+                        log += `✅ ${p.module_name_ar}\n`;
+                    });
+
+                    const modules = ['owners', 'farms', 'reservations', 'investors', 'documentation', 'settings'];
+                    const hiddenModules = modules.filter(m => !permissions.find(p => p.module_id === m));
+
+                    if (hiddenModules.length > 0) {
+                        log += '\n❌ الأقسام المخفية:\n';
+                        hiddenModules.forEach(m => {
+                            log += `   - ${m}\n`;
+                        });
+                    }
+                } else {
+                    log += '\n❌ جميع الأقسام الأخرى مخفية (لا توجد صلاحيات)';
+                }
+
+                result.textContent = log;
+
+            } catch (err) {
+                result.className = 'result error';
+                result.textContent = log + '\n\n❌ خطأ:\n' + err.message;
+            }
+        }
+
+        async function testStep4() {
+            const section = document.getElementById('step4');
+            const result = document.getElementById('step4-result');
+            section.style.display = 'block';
+            result.textContent = 'جاري الاختبار الشامل...';
+
+            let report = '📋 تقرير الاختبار الشامل\n';
+            report += '='.repeat(50) + '\n\n';
+
+            try {
+                // اختبار 1: وجود الموظف
+                report += '1️⃣ فحص وجود الموظف في admin_users\n';
+                const { data: user } = await supabase
+                    .from('admin_users')
+                    .select('*')
+                    .eq('phone', PHONE)
+                    .maybeSingle();
+
+                if (!user) {
+                    report += '   ❌ فشل: الموظف غير موجود\n';
+                    report += '   📝 يجب إضافته أولاً\n\n';
+                } else {
+                    report += '   ✅ نجح: الموظف موجود\n\n';
+                }
+
+                // اختبار 2: الدور الصحيح
+                report += '2️⃣ فحص الدور (role_id)\n';
+                if (!user) {
+                    report += '   ⏭️ تخطي (الموظف غير موجود)\n\n';
+                } else {
+                    const role = user.role_id || 'غير محدد';
+                    const isAdminRole = role === 'super_admin' || role === 'admin' || role === 'مدير';
+
+                    if (isAdminRole) {
+                        report += `   ❌ فشل: role_id = "${role}" (دور إداري)\n`;
+                        report += '   🔧 يجب تغييره إلى: "employee"\n\n';
+                    } else if (role === 'employee') {
+                        report += '   ✅ نجح: role_id = "employee"\n\n';
+                    } else {
+                        report += `   ⚠️ تحذير: role_id = "${role}"\n\n`;
+                    }
+                }
+
+                // اختبار 3: وجود الصلاحيات
+                report += '3️⃣ فحص الصلاحيات في admin_module_permissions\n';
+                const { data: perms } = await supabase
+                    .from('admin_module_permissions')
+                    .select('*')
+                    .eq('admin_phone', PHONE)
+                    .eq('is_active', true);
+
+                if (!perms || perms.length === 0) {
+                    report += '   ❌ فشل: لا توجد صلاحيات\n';
+                    report += '   📝 يجب إضافة صلاحية المالية\n\n';
+                } else {
+                    report += `   ✅ نجح: ${perms.length} صلاحية موجودة\n\n`;
+                }
+
+                // اختبار 4: صلاحية المالية فقط
+                report += '4️⃣ فحص أن الصلاحية للمالية فقط\n';
+                if (!perms || perms.length === 0) {
+                    report += '   ⏭️ تخطي (لا توجد صلاحيات)\n\n';
+                } else if (perms.length === 1 && perms[0].module_id === 'finance') {
+                    report += '   ✅ نجح: صلاحية واحدة للمالية فقط\n\n';
+                } else if (perms.length > 1) {
+                    report += `   ❌ فشل: يوجد ${perms.length} صلاحيات\n`;
+                    report += '   الصلاحيات الموجودة:\n';
+                    perms.forEach(p => report += `      - ${p.module_id}\n`);
+                    report += '\n';
+                } else {
+                    report += `   ❌ فشل: الصلاحية لـ "${perms[0].module_id}" وليس finance\n\n`;
+                }
+
+                // النتيجة النهائية
+                report += '='.repeat(50) + '\n';
+                report += '📊 النتيجة النهائية:\n\n';
+
+                const allPassed = user &&
+                                  user.role_id === 'employee' &&
+                                  perms &&
+                                  perms.length === 1 &&
+                                  perms[0].module_id === 'finance';
+
+                if (allPassed) {
+                    report += '✅✅✅ جميع الاختبارات نجحت!\n';
+                    report += '\nالموظف عبدالله يجب أن يرى:\n';
+                    report += '  ✅ لوحة التحكم\n';
+                    report += '  ✅ المالية فقط\n';
+                    report += '  ❌ جميع الأقسام الأخرى مخفية\n';
+                    result.className = 'result success';
+                } else {
+                    report += '❌ يوجد مشاكل تحتاج إلى إصلاح!\n\n';
+                    report += '🔧 الإصلاحات المطلوبة:\n';
+
+                    if (!user) {
+                        report += '  1. إضافة الموظف في admin_users\n';
+                    }
+                    if (user && user.role_id !== 'employee') {
+                        report += '  2. تغيير role_id إلى "employee"\n';
+                    }
+                    if (!perms || perms.length === 0) {
+                        report += '  3. إضافة صلاحية المالية\n';
+                    }
+                    if (perms && perms.length > 1) {
+                        report += '  4. حذف الصلاحيات الزائدة (إبقاء المالية فقط)\n';
+                    }
+
+                    result.className = 'result error';
+                }
+
+                result.textContent = report;
+
+            } catch (err) {
+                result.className = 'result error';
+                result.textContent = report + '\n\n❌ خطأ:\n' + err.message;
+            }
+        }
+    </script>
+</body>
+</html>
