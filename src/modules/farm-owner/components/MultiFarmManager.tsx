@@ -32,7 +32,12 @@ export const MultiFarmManager: React.FC<MultiFarmManagerProps> = ({ profileId })
   const [editingFarm, setEditingFarm] = useState<Farm | null>(null);
 
   useEffect(() => {
-    loadFarms();
+    // تأخير بسيط لتحميل المزارع بعد ظهور الواجهة
+    const loadTimeout = setTimeout(() => {
+      loadFarms();
+    }, 100);
+
+    return () => clearTimeout(loadTimeout);
   }, [profileId]);
 
   const loadFarms = async () => {

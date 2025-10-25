@@ -578,13 +578,27 @@ class FarmOwnerService {
   }
 
   /**
-   * الحصول على جميع المزارع لصاحب المزرعة
+   * الحصول على جميع المزارع لصاحب المزرعة (محسّن - حقول مختارة فقط)
    */
   async getOwnerFarms(profileId: string) {
     try {
       const { data, error } = await supabase
         .from('farms')
-        .select('*')
+        .select(`
+          id,
+          farm_code,
+          region_ar,
+          city_ar,
+          tree_type_ar,
+          total_trees,
+          reserved_trees,
+          available_trees,
+          actual_total_price,
+          price_per_tree,
+          submission_status,
+          status,
+          created_at
+        `)
         .eq('owner_id', profileId)
         .is('deleted_at', null)
         .order('created_at', { ascending: false });

@@ -24,21 +24,32 @@ export const FarmOwnerDashboard: React.FC<FarmOwnerDashboardProps> = ({ profileI
   useEffect(() => {
     loadData();
 
-    // الاشتراك في الإشعارات اللحظية
-    const unsubscribe = farmOwnerService.subscribeToNotifications(profileId, (notification) => {
-      setNotifications(prev => [notification, ...prev]);
-      setUnreadCount(prev => prev + 1);
-    });
-
     // الاستماع لأحداث تبديل التبويبات
     const handleSwitchTab = (event: any) => {
       setActiveTab(event.detail);
     };
     window.addEventListener('switchTab', handleSwitchTab);
 
+    // تأجيل الاشتراك في الإشعارات حتى تحميل الواجهة (بعد 2 ثانية)
+    const subscriptionTimeout = setTimeout(() => {
+      const unsubscribe = farmOwnerService.subscribeToNotifications(profileId, (notification) => {
+        setNotifications(prev => [notification, ...prev]);
+        setUnreadCount(prev => prev + 1);
+      });
+
+      // حفظ unsubscribe للتنظيف
+      (window as any).__farmOwnerNotificationUnsubscribe = unsubscribe;
+    }, 2000);
+
     return () => {
-      unsubscribe();
+      clearTimeout(subscriptionTimeout);
       window.removeEventListener('switchTab', handleSwitchTab);
+
+      // تنظيف subscription إذا كان موجود
+      if ((window as any).__farmOwnerNotificationUnsubscribe) {
+        (window as any).__farmOwnerNotificationUnsubscribe();
+        delete (window as any).__farmOwnerNotificationUnsubscribe;
+      }
     };
   }, [profileId]);
 

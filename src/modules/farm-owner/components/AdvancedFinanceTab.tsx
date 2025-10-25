@@ -30,17 +30,34 @@ export const AdvancedFinanceTab: React.FC<AdvancedFinanceTabProps> = ({ ownerId,
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    loadFinancialData();
+    // تأخير بسيط قبل تحميل البيانات المالية
+    const loadTimeout = setTimeout(() => {
+      loadFinancialData();
+    }, 100);
 
-    const unsubscribe = farmOwnerFinanceService.subscribeToFinancialUpdates(
-      ownerId,
-      (data) => {
-        setFinancialData(data);
-        buildTimeline(data);
+    // تأجيل الاشتراك في التحديثات اللحظية
+    const subscribeTimeout = setTimeout(() => {
+      const unsubscribe = farmOwnerFinanceService.subscribeToFinancialUpdates(
+        ownerId,
+        (data) => {
+          setFinancialData(data);
+          buildTimeline(data);
+        }
+      );
+
+      // حفظ للتنظيف
+      (window as any).__financeUnsubscribe = unsubscribe;
+    }, 2000);
+
+    return () => {
+      clearTimeout(loadTimeout);
+      clearTimeout(subscribeTimeout);
+
+      if ((window as any).__financeUnsubscribe) {
+        (window as any).__financeUnsubscribe();
+        delete (window as any).__financeUnsubscribe;
       }
-    );
-
-    return () => unsubscribe();
+    };
   }, [ownerId]);
 
   const loadFinancialData = async () => {
