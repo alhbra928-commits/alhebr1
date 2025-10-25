@@ -330,16 +330,23 @@ export function AdvancedBookingsView({ onBack }: AdvancedBookingsViewProps) {
               </h2>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {groupedBookings.pending.map((booking) => (
-                <BookingCard3D
-                  key={booking.id}
-                  booking={booking}
-                  onViewDetails={handleViewDetails}
-                  onApprove={hasEditPermission ? handleApprove : undefined}
-                  onReject={hasEditPermission ? handleReject : undefined}
-                  onDelete={hasDeletePermission ? handleDelete : undefined}
-                />
-              ))}
+              {groupedBookings.pending.map((booking) => {
+                console.log('🔍 [Pending Booking Card] Passing props:', {
+                  bookingId: booking.id,
+                  onDelete: hasDeletePermission ? 'PASSED' : 'UNDEFINED',
+                  hasDeletePermission
+                });
+                return (
+                  <BookingCard3D
+                    key={booking.id}
+                    booking={booking}
+                    onViewDetails={handleViewDetails}
+                    onApprove={hasEditPermission ? handleApprove : undefined}
+                    onReject={hasEditPermission ? handleReject : undefined}
+                    onDelete={hasDeletePermission ? handleDelete : undefined}
+                  />
+                );
+              })}
             </div>
           </div>
         )}
