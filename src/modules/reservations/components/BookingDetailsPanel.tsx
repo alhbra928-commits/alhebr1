@@ -32,17 +32,18 @@ export function BookingDetailsPanel({
   const [rejectLoading, setRejectLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string>('');
 
-  const { hasPermission, isAdmin } = usePermissions();
+  const { isAdmin } = usePermissions();
 
   // لا نحسب الصلاحيات هنا - نعتمد فقط على الـ props المُمررة من الـ parent
   // إذا كانت الدالة undefined، معناها المستخدم ليس لديه صلاحية
 
-  console.log('🔍 [BookingDetailsPanel] Props Check:');
-  console.log('  isAdmin:', isAdmin);
-  console.log('  onApprove:', onApprove ? 'موجودة' : 'غير موجودة');
-  console.log('  onReject:', onReject ? 'موجودة' : 'غير موجودة');
-  console.log('  onDelete:', onDelete ? 'موجودة' : 'غير موجودة');
-  console.log('  onIssueCertificate:', onIssueCertificate ? 'موجودة' : 'غير موجودة');
+  console.log('🔍 [BookingDetailsPanel] Props Check:', {
+    isAdmin,
+    onApprove: onApprove ? 'موجودة ✅' : 'غير موجودة ❌',
+    onReject: onReject ? 'موجودة ✅' : 'غير موجودة ❌',
+    onDelete: onDelete ? 'موجودة ✅' : 'غير موجودة ❌',
+    onIssueCertificate: onIssueCertificate ? 'موجودة ✅' : 'غير موجودة ❌'
+  });
 
   useEffect(() => {
     if (isOpen && booking?.id) {
