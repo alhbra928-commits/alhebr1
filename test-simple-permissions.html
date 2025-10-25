@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>اختبار بسيط - صلاحيات جنا</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body {
+      font-family: Arial;
+      background: #1a1a1a;
+      color: white;
+      padding: 40px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    h1 { color: #4ade80; margin-bottom: 30px; }
+    .box {
+      background: #2a2a2a;
+      border: 2px solid #4ade80;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 20px 0;
+    }
+    .row {
+      padding: 10px;
+      margin: 5px 0;
+      background: #1a1a1a;
+      border-radius: 4px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .yes { color: #4ade80; font-weight: bold; }
+    .no { color: #ef4444; font-weight: bold; }
+    button {
+      background: #4ade80;
+      color: black;
+      border: none;
+      padding: 15px 30px;
+      font-size: 18px;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 20px;
+    }
+    button:hover { background: #22c55e; }
+  </style>
+</head>
+<body>
+  <h1>✅ اختبار بسيط - صلاحيات جنا</h1>
+
+  <div class="box">
+    <h2>📋 الصلاحيات من قاعدة البيانات</h2>
+    <div id="permissions">جاري التحميل...</div>
+  </div>
+
+  <div class="box">
+    <h2>🎯 النتيجة النهائية</h2>
+    <div id="result">جاري التحميل...</div>
+  </div>
+
+  <button onclick="location.reload()">🔄 إعادة الاختبار</button>
+  <button onclick="window.location.href='/'">🏠 الرئيسية</button>
+
+  <script>
+    const supabase = window.supabase.createClient(
+      'https://wseqkvknelkntxnuaexh.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndzZXFrdmtuZWxrbnR4bnVhZXhoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjk0MzU4MDUsImV4cCI6MjA0NTAxMTgwNX0.eVFci1l5gP0LNIb-o4qIrGg_XF_TIRLEtSXaHt3BxsE'
+    );
+
+    async function test() {
+      try {
+        // Get permissions
+        const { data, error } = await supabase
+          .from('admin_module_permissions')
+          .select('*')
+          .eq('admin_phone', '0510101010')
+          .eq('is_active', true);
+
+        if (error) throw error;
+
+        // Display permissions
+        let html = '';
+        if (!data || data.length === 0) {
+          html = '<div class="no">❌ لا توجد صلاحيات!</div>';
+        } else {
+          data.forEach(p => {
+            html += `
+              <div class="row">
+                <strong>${p.module_name_ar}</strong>
+                <span>
+                  اطلاع: <span class="${p.can_view ? 'yes' : 'no'}">${p.can_view ? '✅' : '❌'}</span> |
+                  إضافة: <span class="${p.can_create ? 'yes' : 'no'}">${p.can_create ? '✅' : '❌'}</span> |
+                  تعديل: <span class="${p.can_edit ? 'yes' : 'no'}">${p.can_edit ? '✅' : '❌'}</span> |
+                  حذف: <span class="${p.can_delete ? 'yes' : 'no'}">${p.can_delete ? '✅' : '❌'}</span>
+                </span>
+              </div>
+            `;
+          });
+        }
+        document.getElementById('permissions').innerHTML = html;
+
+        // Check specific permissions
+        const reservations = data?.find(p => p.module_id === 'reservations');
+
+        let result = '<h3 style="color: #4ade80;">📊 تحليل الصلاحيات:</h3>';
+
+        if (!reservations) {
+          result += '<div class="no">❌ لا توجد صلاحيات للحجوزات!</div>';
+        } else {
+          result += `
+            <div class="row">
+              <span>can_edit (الحجوزات)</span>
+              <span class="${!reservations.can_edit ? 'yes' : 'no'}">
+                ${reservations.can_edit ? '❌ TRUE (خطأ!)' : '✅ FALSE (صحيح!)'}
+              </span>
+            </div>
+            <div class="row">
+              <span>can_delete (الحجوزات)</span>
+              <span class="${!reservations.can_delete ? 'yes' : 'no'}">
+                ${reservations.can_delete ? '❌ TRUE (خطأ!)' : '✅ FALSE (صحيح!)'}
+              </span>
+            </div>
+            <div class="row">
+              <span>can_create (الحجوزات)</span>
+              <span class="${!reservations.can_create ? 'yes' : 'no'}">
+                ${reservations.can_create ? '❌ TRUE (خطأ!)' : '✅ FALSE (صحيح!)'}
+              </span>
+            </div>
+          `;
+
+          result += '<hr style="margin: 20px 0; border-color: #444;">';
+
+          if (!reservations.can_edit && !reservations.can_delete && !reservations.can_create) {
+            result += '<div style="font-size: 24px; color: #4ade80; text-align: center; padding: 20px;">✅✅✅ ممتاز! الصلاحيات صحيحة - الأزرار يجب أن تكون مخفية!</div>';
+          } else {
+            result += '<div style="font-size: 24px; color: #ef4444; text-align: center; padding: 20px;">❌❌❌ خطأ! بعض الصلاحيات TRUE - الأزرار ستظهر!</div>';
+          }
+        }
+
+        document.getElementById('result').innerHTML = result;
+
+      } catch (error) {
+        document.getElementById('permissions').innerHTML = '<div class="no">❌ خطأ: ' + error.message + '</div>';
+        document.getElementById('result').innerHTML = '<div class="no">❌ فشل الاختبار</div>';
+      }
+    }
+
+    test();
+  </script>
+</body>
+</html>

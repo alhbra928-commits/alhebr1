@@ -229,6 +229,7 @@ export class AdminSessionService {
         .from('admin_module_permissions')
         .select('*')
         .eq('admin_phone', adminPhone)
+        .eq('is_active', true)
         .order('module_name_ar');
 
       if (error) {
@@ -237,6 +238,15 @@ export class AdminSessionService {
       }
 
       console.log('✅ [AdminSessionService] Permissions for', adminPhone, ':', data);
+      console.log('✅ [AdminSessionService] Active permissions count:', data?.length || 0);
+
+      // Log each permission detail
+      if (data && data.length > 0) {
+        data.forEach((perm, idx) => {
+          console.log(`  ${idx + 1}. ${perm.module_id}: view=${perm.can_view}, create=${perm.can_create}, edit=${perm.can_edit}, delete=${perm.can_delete}`);
+        });
+      }
+
       return data || [];
     } catch (error) {
       console.error('❌ [AdminSessionService] Error in getPermissions:', error);
