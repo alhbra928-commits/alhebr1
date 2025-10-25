@@ -111,6 +111,46 @@ export class InvestorService {
     }
   }
 
+  static async createInvestorQuickRegistration(phone: string, fullName: string): Promise<{ success: boolean; error?: string }> {
+    try {
+      const normalizedPhone = this.normalizePhone(phone);
+      console.log('🔵 [createInvestorQuickRegistration] Starting...', { phone, fullName, normalizedPhone });
+
+      const { data: existingInvestor } = await supabase
+        .from('investors')
+        .select('id')
+        .eq('phone', normalizedPhone)
+        .is('deleted_at', null)
+        .maybeSingle();
+
+      if (existingInvestor) {
+        console.log('✅ [createInvestorQuickRegistration] Investor already exists');
+        return { success: true };
+      }
+
+      const { data: newInvestor, error: insertError } = await supabase
+        .from('investors')
+        .insert({
+          phone: normalizedPhone,
+          full_name: fullName,
+          status: 'active'
+        })
+        .select()
+        .single();
+
+      if (insertError) {
+        console.error('❌ [createInvestorQuickRegistration] Insert error:', insertError);
+        throw insertError;
+      }
+
+      console.log('✅ [createInvestorQuickRegistration] Created successfully:', newInvestor);
+      return { success: true };
+    } catch (error: any) {
+      console.error('❌ [createInvestorQuickRegistration] Error:', error);
+      return { success: false, error: error.message };
+    }
+  }
+
   static async getInvestorReservations(phone: string): Promise<InvestorReservation[]> {
     try {
       const normalizedPhone = this.normalizePhone(phone);
