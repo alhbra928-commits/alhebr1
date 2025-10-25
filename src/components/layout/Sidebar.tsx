@@ -44,14 +44,16 @@ const menuItems: MenuItem[] = [
 ];
 
 export function Sidebar({ activeModule, onModuleChange }: SidebarProps) {
-  const { canAccessModule, isAdmin, loading, permissions } = usePermissions();
+  const { canAccessModule, isAdmin, loading, permissions, currentAdminPhone } = usePermissions();
 
   console.log('🔍🔍🔍 [Sidebar] Rendering...');
+  console.log('🔍 [Sidebar] Current Admin Phone:', currentAdminPhone);
   console.log('🔍 [Sidebar] isAdmin:', isAdmin);
   console.log('🔍 [Sidebar] loading:', loading);
   console.log('🔍 [Sidebar] permissions count:', permissions?.length || 0);
   if (permissions && permissions.length > 0) {
     console.log('🔍 [Sidebar] Available modules:', permissions.map(p => p.module_id));
+    console.log('🔍 [Sidebar] Full permissions:', JSON.stringify(permissions, null, 2));
   }
 
   return (
@@ -66,6 +68,26 @@ export function Sidebar({ activeModule, onModuleChange }: SidebarProps) {
             <p className="text-xs text-gray-400">نظام الإدارة المتكامل</p>
           </div>
         </div>
+
+        {/* رسالة التشخيص للموظف 0510101010 */}
+        {currentAdminPhone === '0510101010' && (
+          <div className="mb-4 p-3 bg-blue-500 rounded-lg text-white text-xs">
+            <div className="font-bold mb-1">🔍 معلومات التشخيص:</div>
+            <div>الرقم: {currentAdminPhone}</div>
+            <div>Admin: {isAdmin ? 'نعم' : 'لا'}</div>
+            <div>الصلاحيات: {permissions?.length || 0}</div>
+            {permissions && permissions.length > 0 && (
+              <div className="mt-2">
+                <div className="font-bold">الأقسام المتاحة:</div>
+                {permissions.map(p => (
+                  <div key={p.module_id} className="text-[10px]">
+                    ✅ {p.module_name_ar} (View: {p.can_view ? '✅' : '❌'})
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
 
         <nav className="space-y-2">
           {menuItems.map((item) => {
