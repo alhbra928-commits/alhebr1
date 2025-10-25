@@ -432,7 +432,12 @@ export function AdvancedPermissionsManager() {
                   </div>
                   <div className="flex flex-wrap gap-2">
                     <button
-                      onClick={handleEditUser}
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        handleEditUser();
+                      }}
                       className="flex items-center gap-2 rounded-xl px-4 py-2 font-bold text-white transition-all hover:scale-105"
                       style={{ background: brandGradients.gold }}
                     >
@@ -440,7 +445,12 @@ export function AdvancedPermissionsManager() {
                       <span>تعديل البيانات</span>
                     </button>
                     <button
-                      onClick={handleAddPermission}
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        handleAddPermission();
+                      }}
                       className="flex items-center gap-2 rounded-xl px-4 py-2 font-bold text-white transition-all hover:scale-105"
                       style={{ background: 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)' }}
                     >
@@ -449,7 +459,12 @@ export function AdvancedPermissionsManager() {
                     </button>
                     {allPermissionsActive ? (
                       <button
-                        onClick={() => handleFreezeUser(selectedUser.phone)}
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          handleFreezeUser(selectedUser.phone);
+                        }}
                         className="flex items-center gap-2 rounded-xl px-4 py-2 font-bold text-white transition-all hover:scale-105"
                         style={{ background: 'linear-gradient(135deg, #EF4444 0%, #DC2626 100%)' }}
                       >
@@ -458,7 +473,12 @@ export function AdvancedPermissionsManager() {
                       </button>
                     ) : (
                       <button
-                        onClick={() => handleActivateUser(selectedUser.phone)}
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          handleActivateUser(selectedUser.phone);
+                        }}
                         className="flex items-center gap-2 rounded-xl px-4 py-2 font-bold text-white transition-all hover:scale-105"
                         style={{ background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)' }}
                       >
@@ -469,7 +489,12 @@ export function AdvancedPermissionsManager() {
                     {/* زر حذف المستخدم - محمي للمدير العام وصاحب المنصة */}
                     {selectedUser.phone !== '0569335257' && selectedUser.phone !== '0500000001' && (
                       <button
-                        onClick={() => handleDeleteUser(selectedUser)}
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          handleDeleteUser(selectedUser);
+                        }}
                         className="flex items-center gap-2 rounded-xl px-4 py-2 font-bold text-white transition-all hover:scale-105"
                         style={{ background: 'linear-gradient(135deg, #DC2626 0%, #991B1B 100%)' }}
                         title="حذف المستخدم نهائياً"
