@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>اختبار صفحة الحجوزات المباشر</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #111;
+      color: #0f0;
+      padding: 20px;
+      font-size: 16px;
+    }
+    .box {
+      background: #222;
+      border: 2px solid #0f0;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 8px;
+    }
+    .yes { color: #0f0; }
+    .no { color: #f00; }
+    pre { background: #000; padding: 10px; border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <h1>🔍 اختبار صفحة الحجوزات المباشر</h1>
+
+  <div class="box">
+    <h2>الخطوات:</h2>
+    <ol>
+      <li>افتح الصفحة الرئيسية في تاب آخر</li>
+      <li>سجل دخول كجنا: 0510101010</li>
+      <li>افتح Console (F12)</li>
+      <li>اذهب لقسم الحجوزات</li>
+      <li>ابحث عن هذه الرسائل في Console:</li>
+    </ol>
+  </div>
+
+  <div class="box">
+    <h2>✅ المفروض ترى في Console:</h2>
+    <pre>
+🔍 [AdvancedBookingsView] Permissions Check:
+  isAdmin: false
+  canEdit: false
+  canDelete: false
+  canCreate: false
+    </pre>
+  </div>
+
+  <div class="box">
+    <h2>✅ المفروض ترى في صفحة الحجوزات:</h2>
+    <ul>
+      <li class="yes">✅ قائمة الحجوزات</li>
+      <li class="yes">✅ زر "عرض التفاصيل" في كل بطاقة</li>
+      <li class="no">❌ لا ترى زر "اعتماد"</li>
+      <li class="no">❌ لا ترى زر "رفض"</li>
+      <li class="no">❌ لا ترى زر "حذف"</li>
+      <li class="no">❌ لا ترى زر "إصدار الشهادة"</li>
+    </ul>
+  </div>
+
+  <div class="box">
+    <h2>✅ عند فتح تفاصيل حجز:</h2>
+    <pre>
+🔍 [BookingDetailsPanel] Permissions Check:
+  isAdmin: false
+  canEdit: false
+  canDelete: false
+  canCreate: false
+    </pre>
+    <ul>
+      <li class="no">❌ لا ترى أي أزرار إجراءات</li>
+    </ul>
+  </div>
+
+  <div class="box">
+    <h2>⚠️ إذا رأيت الأزرار:</h2>
+    <p>المشكلة في الكاش - جرب:</p>
+    <ol>
+      <li>Ctrl + Shift + R</li>
+      <li>أو Incognito Mode</li>
+      <li>أو أغلق المتصفح تماماً وافتحه من جديد</li>
+    </ol>
+  </div>
+
+  <div class="box">
+    <h2>📊 النتيجة المتوقعة:</h2>
+    <p class="yes">جنا يمكنها فقط الاطلاع على الحجوزات - لا يمكنها اتخاذ أي إجراء</p>
+  </div>
+</body>
+</html>

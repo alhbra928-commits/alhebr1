@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>تشخيص الصلاحيات</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body { font-family: Arial; background: #000; color: #0f0; padding: 20px; }
+    .box { background: #111; border: 2px solid #0f0; padding: 20px; margin: 20px 0; border-radius: 8px; }
+    button { background: #0f0; color: #000; border: none; padding: 15px; font-size: 16px; font-weight: bold; border-radius: 8px; cursor: pointer; margin: 5px; }
+    .error { color: #f00; }
+    .success { color: #0f0; }
+    pre { background: #222; padding: 10px; border-radius: 4px; overflow-x: auto; }
+    h2 { color: #ff0; }
+  </style>
+</head>
+<body>
+  <h1>🔍 تشخيص الصلاحيات - جنا</h1>
+
+  <div class="box">
+    <h2>الخطوة 1: تحقق من قاعدة البيانات</h2>
+    <button onclick="testDB()">اختبار DB</button>
+    <div id="db-result"></div>
+  </div>
+
+  <div class="box">
+    <h2>الخطوة 2: تحقق من localStorage</h2>
+    <button onclick="testLocalStorage()">اختبار LocalStorage</button>
+    <div id="storage-result"></div>
+  </div>
+
+  <div class="box">
+    <h2>الخطوة 3: محاكاة hasPermission</h2>
+    <button onclick="simulatePermissions()">محاكاة الصلاحيات</button>
+    <div id="sim-result"></div>
+  </div>
+
+  <div class="box">
+    <h2>الخطوة 4: نظف الكاش</h2>
+    <button onclick="clearCache()">مسح الكاش</button>
+    <button onclick="location.reload(true)">Hard Reload</button>
+    <div id="cache-result"></div>
+  </div>
+
+  <script>
+    const supabase = window.supabase.createClient(
+      'https://wseqkvknelkntxnuaexh.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndzZXFrdmtuZWxrbnR4bnVhZXhoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjk0MzU4MDUsImV4cCI6MjA0NTAxMTgwNX0.eVFci1l5gP0LNIb-o4qIrGg_XF_TIRLEtSXaHt3BxsE'
+    );
+
+    async function testDB() {
+      const div = document.getElementById('db-result');
+      div.innerHTML = '<p>جاري الاختبار...</p>';
+
+      try {
+        const { data, error } = await supabase
+          .from('admin_module_permissions')
+          .select('*')
+          .eq('admin_phone', '0510101010')
+          .eq('is_active', true);
+
+        if (error) throw error;
+
+        div.innerHTML = '<h3 class="success">✅ الصلاحيات من DB:</h3>';
+        div.innerHTML += '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+
+        // Check permissions
+        const reservations = data.find(p => p.module_id === 'reservations');
+        if (reservations) {
+          div.innerHTML += '<h3>تحليل صلاحيات الحجوزات:</h3>';
+          div.innerHTML += `<p class="${!reservations.can_edit ? 'success' : 'error'}">can_edit: ${reservations.can_edit}</p>`;
+          div.innerHTML += `<p class="${!reservations.can_delete ? 'success' : 'error'}">can_delete: ${reservations.can_delete}</p>`;
+          div.innerHTML += `<p class="${!reservations.can_create ? 'success' : 'error'}">can_create: ${reservations.can_create}</p>`;
+        }
+      } catch (err) {
+        div.innerHTML = '<p class="error">❌ خطأ: ' + err.message + '</p>';
+      }
+    }
+
+    function testLocalStorage() {
+      const div = document.getElementById('storage-result');
+      const adminData = localStorage.getItem('admin_data');
+      const sessionToken = localStorage.getItem('admin_session_token');
+
+      div.innerHTML = '<h3>محتويات LocalStorage:</h3>';
+      div.innerHTML += '<pre>admin_data: ' + adminData + '</pre>';
+      div.innerHTML += '<pre>admin_session_token: ' + (sessionToken ? 'موجود' : 'غير موجود') + '</pre>';
+
+      if (adminData) {
+        const parsed = JSON.parse(adminData);
+        div.innerHTML += '<h3>بيانات المستخدم:</h3>';
+        div.innerHTML += '<pre>' + JSON.stringify(parsed, null, 2) + '</pre>';
+      }
+    }
+
+    async function simulatePermissions() {
+      const div = document.getElementById('sim-result');
+      div.innerHTML = '<p>جاري المحاكاة...</p>';
+
+      try {
+        // Get permissions
+        const { data: permissions, error } = await supabase
+          .from('admin_module_permissions')
+          .select('*')
+          .eq('admin_phone', '0510101010')
+          .eq('is_active', true);
+
+        if (error) throw error;
+
+        // Simulate hasPermission function
+        function hasPermission(moduleId, action) {
+          const perm = permissions.find(p => p.module_id === moduleId && p.is_active);
+          if (!perm) return false;
+
+          switch (action) {
+            case 'view': return perm.can_view;
+            case 'create': return perm.can_create;
+            case 'edit': return perm.can_edit;
+            case 'delete': return perm.can_delete;
+            default: return false;
+          }
+        }
+
+        // Simulate the checks
+        const isAdmin = false;
+        const canEdit = isAdmin || hasPermission('reservations', 'edit');
+        const canDelete = isAdmin || hasPermission('reservations', 'delete');
+        const canCreate = isAdmin || hasPermission('reservations', 'create');
+
+        div.innerHTML = '<h3 class="success">✅ نتيجة المحاكاة:</h3>';
+        div.innerHTML += '<pre>';
+        div.innerHTML += 'isAdmin: ' + isAdmin + '\n';
+        div.innerHTML += 'canEdit: ' + canEdit + '\n';
+        div.innerHTML += 'canDelete: ' + canDelete + '\n';
+        div.innerHTML += 'canCreate: ' + canCreate + '\n';
+        div.innerHTML += '</pre>';
+
+        if (!canEdit && !canDelete && !canCreate) {
+          div.innerHTML += '<h3 class="success">✅✅✅ ممتاز! جميع الصلاحيات false</h3>';
+          div.innerHTML += '<p class="success">الأزرار يجب أن تكون مخفية!</p>';
+        } else {
+          div.innerHTML += '<h3 class="error">❌ خطأ! بعض الصلاحيات true</h3>';
+        }
+      } catch (err) {
+        div.innerHTML = '<p class="error">❌ خطأ: ' + err.message + '</p>';
+      }
+    }
+
+    function clearCache() {
+      localStorage.clear();
+      sessionStorage.clear();
+      document.getElementById('cache-result').innerHTML = '<p class="success">✅ تم مسح الكاش</p>';
+    }
+  </script>
+</body>
+</html>

@@ -415,10 +415,10 @@ export function AdvancedBookingsView({ onBack }: AdvancedBookingsViewProps) {
         booking={selectedBooking}
         isOpen={showDetailsPanel}
         onClose={() => setShowDetailsPanel(false)}
-        onApprove={handleApprove}
-        onReject={handleReject}
-        onDelete={handleDelete}
-        onIssueCertificate={handleIssueCertificate}
+        onApprove={canEdit ? handleApprove : undefined}
+        onReject={canEdit ? handleReject : undefined}
+        onDelete={canDelete ? handleDelete : undefined}
+        onIssueCertificate={canCreate ? handleIssueCertificate : undefined}
       />
     </div>
   );
