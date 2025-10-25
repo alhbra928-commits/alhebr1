@@ -294,6 +294,7 @@ export class AdminSessionService {
           email: userData.email,
           is_active: userData.is_active !== false,
           secret_code: userData.secret_code,
+          job_title: userData.job_title || null,
         })
         .select()
         .single();
