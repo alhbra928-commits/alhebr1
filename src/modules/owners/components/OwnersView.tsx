@@ -471,7 +471,7 @@ export function OwnersView({ onBack }: OwnersViewProps) {
                 owner={owner}
                 onEdit={hasEditPermission ? handleEditOwner : undefined}
                 onDelete={hasDeletePermission ? handleDeleteOwner : undefined}
-                onViewDetails={handleViewDetails}
+                onViewSubmittedData={handleViewDetails}
                 hasEditPermission={hasEditPermission}
                 hasDeletePermission={hasDeletePermission}
               />
