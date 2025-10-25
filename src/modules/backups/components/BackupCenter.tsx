@@ -450,7 +450,7 @@ export function BackupCenter() {
               const StatusIcon = statusInfo.icon;
 
               return (
-                <Card3D key={backup.id}>
+                <Card3D key={backup.id} interactive={false}>
                   <div className="p-6 bg-white">
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex-1">

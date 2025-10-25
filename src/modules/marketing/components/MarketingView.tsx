@@ -109,7 +109,7 @@ export function MarketingView({ onBack }: MarketingViewProps) {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {marketers.map((marketer) => (
-            <Card3D key={marketer.id}>
+            <Card3D key={marketer.id} interactive={false}>
               <div className="p-6 bg-white">
                 <div className="flex items-start justify-between mb-6">
                   <div className="flex items-center gap-3">

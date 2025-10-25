@@ -109,7 +109,7 @@ export function DocumentationView({ onBack }: DocumentationViewProps) {
             const StatusIcon = statusInfo.icon;
 
             return (
-              <Card3D key={cert.id}>
+              <Card3D key={cert.id} interactive={false}>
                 <div className="p-6 bg-white border-2 border-amber-200">
                   <div className="flex items-start justify-between mb-6">
                     <div className="flex items-center gap-3">

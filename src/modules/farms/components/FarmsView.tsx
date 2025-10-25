@@ -459,7 +459,7 @@ export function FarmsView({ onBack }: FarmsViewProps) {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredFarms.map((farm) => (
-              <Card3D key={farm.id}>
+              <Card3D key={farm.id} interactive={false}>
                 <div
                   className={`relative bg-white rounded-2xl overflow-hidden border-4 ${getStatusColor(
                     farm.status

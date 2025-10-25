@@ -160,7 +160,7 @@ export function InvestorsView({ onBack }: InvestorsViewProps) {
             const balance = investor.wallet?.[0]?.balance || 0;
 
             return (
-              <Card3D key={investor.id}>
+              <Card3D key={investor.id} interactive={false}>
                 <div className="p-6 bg-white">
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center gap-3">

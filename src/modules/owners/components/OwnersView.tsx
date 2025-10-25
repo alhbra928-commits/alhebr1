@@ -458,7 +458,7 @@ export function OwnersView({ onBack }: OwnersViewProps) {
               const StatusIcon = config.icon;
 
               return (
-                <Card3D key={owner.id}>
+                <Card3D key={owner.id} interactive={false}>
                   <div className="bg-white rounded-2xl overflow-hidden border-2 border-gray-100 hover:border-[#C9A962] transition-all duration-300 group">
                     {/* Header with Gradient */}
                     <div className={`bg-gradient-to-br ${config.bg} p-6 relative overflow-hidden`}>
