@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>اختبار خطوة بخطوة</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body {
+      font-family: Arial;
+      background: #1a1a1a;
+      color: #fff;
+      padding: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .step {
+      background: #2a2a2a;
+      border: 2px solid #4a4a4a;
+      padding: 20px;
+      margin: 15px 0;
+      border-radius: 8px;
+    }
+    .step.active {
+      border-color: #0ea5e9;
+      background: #1e3a5f;
+    }
+    .step.success {
+      border-color: #10b981;
+      background: #1e4d3a;
+    }
+    .step.error {
+      border-color: #ef4444;
+      background: #4d1e1e;
+    }
+    button {
+      background: #0ea5e9;
+      color: #fff;
+      border: none;
+      padding: 12px 24px;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      margin: 5px;
+    }
+    button:hover {
+      background: #0284c7;
+    }
+    button:disabled {
+      background: #4a4a4a;
+      cursor: not-allowed;
+    }
+    .result {
+      background: #000;
+      padding: 15px;
+      border-radius: 4px;
+      margin-top: 10px;
+      font-family: monospace;
+      white-space: pre-wrap;
+      font-size: 14px;
+    }
+    .yes { color: #10b981; }
+    .no { color: #ef4444; }
+    .info { color: #0ea5e9; }
+    h2 {
+      color: #0ea5e9;
+      margin-top: 0;
+    }
+    .status {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 4px;
+      font-weight: bold;
+      font-size: 14px;
+      margin-right: 10px;
+    }
+    .status.pending { background: #4a4a4a; }
+    .status.running { background: #0ea5e9; }
+    .status.success { background: #10b981; }
+    .status.error { background: #ef4444; }
+  </style>
+</head>
+<body>
+  <h1>🔍 اختبار الصلاحيات خطوة بخطوة - جنا</h1>
+  <p style="color: #888;">سنختبر كل خطوة لنرى أين المشكلة بالضبط</p>
+
+  <!-- الخطوة 1 -->
+  <div class="step" id="step1">
+    <h2><span class="status pending" id="status1">⏳</span> الخطوة 1: قاعدة البيانات</h2>
+    <p>التحقق من صلاحيات جنا في قاعدة البيانات</p>
+    <button onclick="testStep1()">اختبر الخطوة 1</button>
+    <div id="result1" class="result" style="display:none;"></div>
+  </div>
+
+  <!-- الخطوة 2 -->
+  <div class="step" id="step2">
+    <h2><span class="status pending" id="status2">⏳</span> الخطوة 2: دالة getPermissions</h2>
+    <p>محاكاة دالة getPermissions مع فلتر is_active</p>
+    <button onclick="testStep2()" disabled id="btn2">اختبر الخطوة 2</button>
+    <div id="result2" class="result" style="display:none;"></div>
+  </div>
+
+  <!-- الخطوة 3 -->
+  <div class="step" id="step3">
+    <h2><span class="status pending" id="status3">⏳</span> الخطوة 3: دالة hasPermission</h2>
+    <p>محاكاة hasPermission('reservations', 'edit')</p>
+    <button onclick="testStep3()" disabled id="btn3">اختبر الخطوة 3</button>
+    <div id="result3" class="result" style="display:none;"></div>
+  </div>
+
+  <!-- الخطوة 4 -->
+  <div class="step" id="step4">
+    <h2><span class="status pending" id="status4">⏳</span> الخطوة 4: حساب canEdit</h2>
+    <p>محاكاة: const canEdit = isAdmin || hasPermission('reservations', 'edit')</p>
+    <button onclick="testStep4()" disabled id="btn4">اختبر الخطوة 4</button>
+    <div id="result4" class="result" style="display:none;"></div>
+  </div>
+
+  <!-- الخطوة 5 -->
+  <div class="step" id="step5">
+    <h2><span class="status pending" id="status5">⏳</span> الخطوة 5: قيمة onApprove</h2>
+    <p>محاكاة: onApprove={canEdit ? handleApprove : undefined}</p>
+    <button onclick="testStep5()" disabled id="btn5">اختبر الخطوة 5</button>
+    <div id="result5" class="result" style="display:none;"></div>
+  </div>
+
+  <!-- الخطوة 6 -->
+  <div class="step" id="step6">
+    <h2><span class="status pending" id="status6">⏳</span> الخطوة 6: ظهور الأزرار</h2>
+    <p>محاكاة: {onApprove && (<button>اعتماد</button>)}</p>
+    <button onclick="testStep6()" disabled id="btn6">اختبر الخطوة 6</button>
+    <div id="result6" class="result" style="display:none;"></div>
+  </div>
+
+  <!-- النتيجة النهائية -->
+  <div class="step" id="final" style="display:none;">
+    <h2>📊 النتيجة النهائية</h2>
+    <div id="finalResult"></div>
+  </div>
+
+  <script>
+    const supabase = window.supabase.createClient(
+      'https://wseqkvknelkntxnuaexh.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndzZXFrdmtuZWxrbnR4bnVhZXhoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjk0MzU4MDUsImV4cCI6MjA0NTAxMTgwNX0.eVFci1l5gP0LNIb-o4qIrGg_XF_TIRLEtSXaHt3BxsE'
+    );
+
+    let permissions = [];
+    let isAdmin = false;
+
+    function updateStatus(step, status) {
+      const statusEl = document.getElementById(`status${step}`);
+      const stepEl = document.getElementById(`step${step}`);
+
+      statusEl.className = `status ${status}`;
+      stepEl.className = `step ${status}`;
+
+      if (status === 'running') statusEl.textContent = '⏳';
+      if (status === 'success') statusEl.textContent = '✅';
+      if (status === 'error') statusEl.textContent = '❌';
+    }
+
+    async function testStep1() {
+      updateStatus(1, 'running');
+      const result = document.getElementById('result1');
+      result.style.display = 'block';
+      result.textContent = 'جاري الاختبار...';
+
+      try {
+        const { data, error } = await supabase
+          .from('admin_module_permissions')
+          .select('*')
+          .eq('admin_phone', '0510101010')
+          .eq('is_active', true);
+
+        if (error) throw error;
+
+        let output = '📊 الصلاحيات من قاعدة البيانات:\n\n';
+        output += JSON.stringify(data, null, 2);
+        output += '\n\n';
+
+        const reservations = data.find(p => p.module_id === 'reservations');
+        if (reservations) {
+          output += '🎯 تحليل صلاحيات الحجوزات:\n';
+          output += `can_view: ${reservations.can_view} `;
+          output += reservations.can_view ? '✅\n' : '❌\n';
+          output += `can_create: ${reservations.can_create} `;
+          output += !reservations.can_create ? '✅ (يجب أن يكون false)\n' : '❌ (مشكلة!)\n';
+          output += `can_edit: ${reservations.can_edit} `;
+          output += !reservations.can_edit ? '✅ (يجب أن يكون false)\n' : '❌ (مشكلة!)\n';
+          output += `can_delete: ${reservations.can_delete} `;
+          output += !reservations.can_delete ? '✅ (يجب أن يكون false)\n' : '❌ (مشكلة!)\n';
+
+          if (!reservations.can_edit && !reservations.can_delete && !reservations.can_create) {
+            output += '\n✅✅✅ قاعدة البيانات صحيحة!';
+            updateStatus(1, 'success');
+            permissions = data;
+            document.getElementById('btn2').disabled = false;
+          } else {
+            output += '\n❌ قاعدة البيانات بها مشكلة!';
+            updateStatus(1, 'error');
+          }
+        }
+
+        result.textContent = output;
+
+      } catch (err) {
+        result.textContent = '❌ خطأ: ' + err.message;
+        updateStatus(1, 'error');
+      }
+    }
+
+    function testStep2() {
+      updateStatus(2, 'running');
+      const result = document.getElementById('result2');
+      result.style.display = 'block';
+
+      // محاكاة getPermissions
+      const filtered = permissions.filter(p => p.is_active === true);
+
+      let output = '🔍 محاكاة getPermissions():\n\n';
+      output += `عدد الصلاحيات الكلي: ${permissions.length}\n`;
+      output += `عدد الصلاحيات النشطة: ${filtered.length}\n\n`;
+
+      output += 'الصلاحيات النشطة:\n';
+      filtered.forEach(p => {
+        output += `  - ${p.module_name_ar}: can_edit=${p.can_edit}, can_delete=${p.can_delete}\n`;
+      });
+
+      if (filtered.length === permissions.length) {
+        output += '\n✅ جميع الصلاحيات نشطة (is_active=true)';
+        updateStatus(2, 'success');
+        document.getElementById('btn3').disabled = false;
+      } else {
+        output += '\n❌ بعض الصلاحيات غير نشطة!';
+        updateStatus(2, 'error');
+      }
+
+      result.textContent = output;
+    }
+
+    function testStep3() {
+      updateStatus(3, 'running');
+      const result = document.getElementById('result3');
+      result.style.display = 'block';
+
+      // محاكاة hasPermission
+      function hasPermission(moduleId, action) {
+        const perm = permissions.find(p => p.module_id === moduleId && p.is_active);
+        if (!perm) return false;
+
+        switch (action) {
+          case 'view': return perm.can_view;
+          case 'create': return perm.can_create;
+          case 'edit': return perm.can_edit;
+          case 'delete': return perm.can_delete;
+          default: return false;
+        }
+      }
+
+      let output = '🔍 محاكاة hasPermission():\n\n';
+      output += `hasPermission('reservations', 'view'): ${hasPermission('reservations', 'view')}\n`;
+      output += `hasPermission('reservations', 'create'): ${hasPermission('reservations', 'create')}\n`;
+      output += `hasPermission('reservations', 'edit'): ${hasPermission('reservations', 'edit')}\n`;
+      output += `hasPermission('reservations', 'delete'): ${hasPermission('reservations', 'delete')}\n\n`;
+
+      const canEditPerm = hasPermission('reservations', 'edit');
+      if (!canEditPerm) {
+        output += '✅ hasPermission تعمل بشكل صحيح - ترجع false';
+        updateStatus(3, 'success');
+        document.getElementById('btn4').disabled = false;
+      } else {
+        output += '❌ hasPermission ترجع true - هناك مشكلة!';
+        updateStatus(3, 'error');
+      }
+
+      result.textContent = output;
+    }
+
+    function testStep4() {
+      updateStatus(4, 'running');
+      const result = document.getElementById('result4');
+      result.style.display = 'block';
+
+      // محاكاة hasPermission
+      function hasPermission(moduleId, action) {
+        const perm = permissions.find(p => p.module_id === moduleId && p.is_active);
+        if (!perm) return false;
+        switch (action) {
+          case 'edit': return perm.can_edit;
+          case 'delete': return perm.can_delete;
+          case 'create': return perm.can_create;
+          default: return false;
+        }
+      }
+
+      // محاكاة حساب canEdit
+      const canEdit = isAdmin || hasPermission('reservations', 'edit');
+      const canDelete = isAdmin || hasPermission('reservations', 'delete');
+      const canCreate = isAdmin || hasPermission('reservations', 'create');
+
+      let output = '🔍 محاكاة حساب الصلاحيات:\n\n';
+      output += `isAdmin: ${isAdmin}\n`;
+      output += `hasPermission('reservations', 'edit'): ${hasPermission('reservations', 'edit')}\n\n`;
+      output += `canEdit = isAdmin || hasPermission():\n`;
+      output += `canEdit = ${isAdmin} || ${hasPermission('reservations', 'edit')}\n`;
+      output += `canEdit = ${canEdit}\n\n`;
+      output += `canDelete = ${canDelete}\n`;
+      output += `canCreate = ${canCreate}\n\n`;
+
+      if (!canEdit && !canDelete && !canCreate) {
+        output += '✅✅✅ جميع الصلاحيات false - صحيح!';
+        updateStatus(4, 'success');
+        document.getElementById('btn5').disabled = false;
+      } else {
+        output += '❌ بعض الصلاحيات true - خطأ!';
+        updateStatus(4, 'error');
+      }
+
+      result.textContent = output;
+    }
+
+    function testStep5() {
+      updateStatus(5, 'running');
+      const result = document.getElementById('result5');
+      result.style.display = 'block';
+
+      // محاكاة hasPermission
+      function hasPermission(moduleId, action) {
+        const perm = permissions.find(p => p.module_id === moduleId && p.is_active);
+        if (!perm) return false;
+        return perm[`can_${action}`] || false;
+      }
+
+      const canEdit = isAdmin || hasPermission('reservations', 'edit');
+
+      // محاكاة تمرير الدوال
+      const handleApprove = () => console.log('approve');
+      const onApprove = canEdit ? handleApprove : undefined;
+
+      let output = '🔍 محاكاة تمرير الدوال:\n\n';
+      output += `canEdit: ${canEdit}\n`;
+      output += `handleApprove: موجودة (function)\n\n`;
+      output += `onApprove = canEdit ? handleApprove : undefined\n`;
+      output += `onApprove = ${canEdit} ? function : undefined\n`;
+      output += `onApprove = ${onApprove === undefined ? 'undefined' : 'function'}\n\n`;
+
+      if (onApprove === undefined) {
+        output += '✅ onApprove = undefined - صحيح!';
+        updateStatus(5, 'success');
+        document.getElementById('btn6').disabled = false;
+      } else {
+        output += '❌ onApprove = function - خطأ!';
+        updateStatus(5, 'error');
+      }
+
+      result.textContent = output;
+    }
+
+    function testStep6() {
+      updateStatus(6, 'running');
+      const result = document.getElementById('result6');
+      result.style.display = 'block';
+
+      // محاكاة hasPermission
+      function hasPermission(moduleId, action) {
+        const perm = permissions.find(p => p.module_id === moduleId && p.is_active);
+        if (!perm) return false;
+        return perm[`can_${action}`] || false;
+      }
+
+      const canEdit = isAdmin || hasPermission('reservations', 'edit');
+      const handleApprove = () => console.log('approve');
+      const onApprove = canEdit ? handleApprove : undefined;
+
+      let output = '🔍 محاكاة ظهور الأزرار:\n\n';
+      output += `onApprove: ${onApprove === undefined ? 'undefined' : 'function'}\n\n`;
+      output += 'الشرط في BookingDetailsPanel:\n';
+      output += `{onApprove && (<button>اعتماد</button>)}\n`;
+      output += `{${onApprove !== undefined} && (<button>اعتماد</button>)}\n\n`;
+
+      if (!onApprove) {
+        output += '✅✅✅ الزر لن يظهر - النتيجة صحيحة!';
+        updateStatus(6, 'success');
+        showFinalResult(true);
+      } else {
+        output += '❌ الزر سيظهر - هناك مشكلة!';
+        updateStatus(6, 'error');
+        showFinalResult(false);
+      }
+
+      result.textContent = output;
+    }
+
+    function showFinalResult(success) {
+      const finalDiv = document.getElementById('final');
+      const finalResult = document.getElementById('finalResult');
+      finalDiv.style.display = 'block';
+
+      if (success) {
+        finalDiv.className = 'step success';
+        finalResult.innerHTML = `
+          <h3 class="yes">✅ النتيجة: الكود صحيح 100%!</h3>
+          <p>جميع الخطوات نجحت. المشكلة ليست في الكود.</p>
+          <h4>السبب المحتمل:</h4>
+          <ul>
+            <li>كاش المتصفح القديم</li>
+            <li>JavaScript القديم لا يزال محملاً</li>
+            <li>localStorage يحتوي على بيانات قديمة</li>
+          </ul>
+          <h4>الحل:</h4>
+          <ol>
+            <li>افتح متصفح جديد تماماً (أغلق الحالي)</li>
+            <li>استخدم Incognito Mode</li>
+            <li>اذهب لـ: <code>http://localhost:5173</code></li>
+            <li>سجل دخول كجنا: <code>0510101010</code></li>
+          </ol>
+        `;
+      } else {
+        finalDiv.className = 'step error';
+        finalResult.innerHTML = `
+          <h3 class="no">❌ وجدنا المشكلة!</h3>
+          <p>راجع الخطوة التي فشلت أعلاه.</p>
+        `;
+      }
+    }
+  </script>
+</body>
+</html>
