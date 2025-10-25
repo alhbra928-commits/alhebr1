@@ -447,21 +447,21 @@ export const FarmOwnerDashboard: React.FC<FarmOwnerDashboardProps> = ({ profileI
   );
 };
 
-// تبويب النموذج (مبسط - سيتم توسيعه)
+// تبويب بياناتي الشخصية (معلومات المالك والبنك فقط)
 const FormTab: React.FC<{ profile: FarmOwnerProfile | null; profileId: string; onUpdate: () => void }> = ({ profile, profileId, onUpdate }) => {
-  const [SmartFarmDataForm, setSmartFarmDataForm] = React.useState<any>(null);
+  const [OwnerProfileForm, setOwnerProfileForm] = React.useState<any>(null);
 
   React.useEffect(() => {
-    import('./SmartFarmDataForm').then((module) => {
-      setSmartFarmDataForm(() => module.SmartFarmDataForm);
+    import('./OwnerProfileForm').then((module) => {
+      setOwnerProfileForm(() => module.OwnerProfileForm);
     });
   }, []);
 
-  if (!SmartFarmDataForm) {
+  if (!OwnerProfileForm) {
     return (
       <div className="bg-white rounded-3xl p-8 border-2 border-gray-200 text-center">
         <div className="inline-block w-12 h-12 border-4 border-t-transparent rounded-full animate-spin"
-             style={{ borderColor: '#8BC34A', borderTopColor: 'transparent' }} />
+             style={{ borderColor: '#3B82F6', borderTopColor: 'transparent' }} />
         <p className="mt-4 text-gray-600">جاري تحميل النموذج...</p>
       </div>
     );
@@ -470,24 +470,18 @@ const FormTab: React.FC<{ profile: FarmOwnerProfile | null; profileId: string; o
   return (
     <div>
       <div className="mb-6">
-        <h2 className="text-2xl font-black mb-2" style={{ color: '#8BC34A' }}>
-          📝 بياناتي الزراعية
+        <h2 className="text-2xl font-black mb-2" style={{ color: '#3B82F6' }}>
+          👤 بياناتي الشخصية
         </h2>
         <p className="text-gray-600">
-          {profile?.status === 'pending' && !profile.full_name
-            ? 'املأ النموذج أدناه لإرسال بيانات مزرعتك للمراجعة'
-            : profile?.status === 'pending'
-            ? 'طلبك قيد المراجعة من قبل الإدارة'
-            : profile?.status === 'rejected'
-            ? 'تم رفض الطلب. يمكنك تعديل البيانات وإعادة الإرسال'
-            : 'يمكنك تعديل بياناتك وإعادة الإرسال'}
+          قم بتحديث معلوماتك الشخصية ومعلومات حسابك البنكي
         </p>
       </div>
 
-      <SmartFarmDataForm
+      <OwnerProfileForm
         profileId={profileId}
-        onSuccess={onUpdate}
         initialData={profile}
+        onSuccess={onUpdate}
       />
     </div>
   );

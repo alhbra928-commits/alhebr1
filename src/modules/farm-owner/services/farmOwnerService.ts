@@ -26,6 +26,11 @@ export interface FarmOwnerProfile {
   admin_notes: string | null;
   rejection_reason: string | null;
   farm_owner_id: string | null;
+  bank_name: string | null;
+  bank_account_number: string | null;
+  bank_iban: string | null;
+  bank_account_holder_name: string | null;
+  bank_branch: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -679,6 +684,36 @@ class FarmOwnerService {
     } catch (error: any) {
       console.error('خطأ في عد الإشعارات:', error);
       return 0;
+    }
+  }
+
+  /**
+   * تحديث المعلومات الشخصية للمالك
+   */
+  async updateProfile(profileId: string, data: {
+    full_name?: string;
+    national_id?: string;
+    bank_name?: string | null;
+    bank_account_number?: string | null;
+    bank_iban?: string | null;
+    bank_account_holder_name?: string | null;
+    bank_branch?: string | null;
+  }) {
+    try {
+      const { error } = await supabase
+        .from('farm_owner_profiles')
+        .update({
+          ...data,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', profileId);
+
+      if (error) throw error;
+
+      return { success: true };
+    } catch (error: any) {
+      console.error('خطأ في تحديث الملف الشخصي:', error);
+      return { success: false, error: error.message };
     }
   }
 
