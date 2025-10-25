@@ -13,6 +13,7 @@ import {
   TrendingUp,
   Sprout
 } from 'lucide-react';
+import { usePermissions } from '../../contexts/PermissionsContext';
 
 interface SidebarProps {
   activeModule: string;
@@ -36,14 +37,17 @@ const menuItems: MenuItem[] = [
   { id: 'agriculture', label: 'الخدمات الزراعية', icon: Sprout, color: 'text-green-600' },
   { id: 'documentation', label: 'التوثيق', icon: Award, color: 'text-blue-600' },
   { id: 'marketing', label: 'التسويق', icon: TrendingUp, color: 'text-pink-600' },
-  { id: 'audit', label: 'سجل العمليات', icon: Shield, color: 'text-red-600' },
-  { id: 'reports', label: 'التقارير', icon: FileText, color: 'text-indigo-600' },
+  { id: 'whatsapp', label: 'واتساب', icon: Shield, color: 'text-green-600' },
+  { id: 'wallets', label: 'المحافظ', icon: Wallet, color: 'text-purple-600' },
+  { id: 'permissions', label: 'إدارة الصلاحيات', icon: Shield, color: 'text-red-600' },
   { id: 'settings', label: 'الإعدادات', icon: Settings, color: 'text-gray-600' },
 ];
 
 export function Sidebar({ activeModule, onModuleChange }: SidebarProps) {
+  const { canAccessModule, isAdmin, loading } = usePermissions();
+
   return (
-    <div className="h-screen w-64 bg-gradient-to-b from-amber-900 via-amber-800 to-orange-900 text-white fixed right-0 top-0 shadow-2xl" dir="rtl">
+    <div className="h-screen w-64 bg-gradient-to-b from-amber-900 via-amber-800 to-orange-900 text-white fixed right-0 top-0 shadow-2xl overflow-y-auto" dir="rtl">
       <div className="p-6">
         <div className="flex items-center gap-3 mb-8">
           <div className="w-12 h-12 bg-gradient-to-br from-amber-400 to-orange-500 rounded-xl flex items-center justify-center shadow-lg">
@@ -59,6 +63,34 @@ export function Sidebar({ activeModule, onModuleChange }: SidebarProps) {
           {menuItems.map((item) => {
             const Icon = item.icon;
             const isActive = activeModule === item.id;
+
+            if (item.id === 'dashboard' || isAdmin) {
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => onModuleChange(item.id)}
+                  className={`
+                    w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200
+                    ${isActive
+                      ? 'bg-gradient-to-r from-amber-400 to-orange-500 text-white shadow-lg transform scale-105'
+                      : 'text-amber-100 hover:bg-amber-700 hover:text-white'
+                    }
+                  `}
+                >
+                  <Icon className={`h-5 w-5 ${isActive ? item.color : ''}`} />
+                  <span className="font-medium">{item.label}</span>
+                  {isActive && (
+                    <div className="mr-auto w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                  )}
+                </button>
+              );
+            }
+
+            const hasAccess = canAccessModule(item.id);
+
+            if (!hasAccess && !loading) {
+              return null;
+            }
 
             return (
               <button

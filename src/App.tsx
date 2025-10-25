@@ -4,6 +4,7 @@ import { SmartAdminLoginPage } from './modules/admin/components/SmartAdminLoginP
 import { IdleSessionWarning } from './modules/admin/components/IdleSessionWarning';
 import { LoginNotification } from './modules/admin/components/LoginNotification';
 import { AdminSessionService } from './modules/admin/services/adminSessionService';
+import { PermissionsProvider } from './contexts/PermissionsContext';
 
 const PublicPlatformRouter = lazy(() => import('./modules/public/components/PublicPlatformRouter').then(m => ({ default: m.PublicPlatformRouter })));
 const FarmOwnerRouter = lazy(() => import('./modules/farm-owner/components/FarmOwnerRouter').then(m => ({ default: m.FarmOwnerRouter })));
@@ -173,46 +174,48 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F9F8F6]" dir="rtl">
-      {showAdminLogin && (
-        <SmartAdminLoginPage
-          onLoginSuccess={handleAdminLogin}
-          onCancel={() => setShowAdminLogin(false)}
-        />
-      )}
+    <PermissionsProvider>
+      <div className="min-h-screen bg-[#F9F8F6]" dir="rtl">
+        {showAdminLogin && (
+          <SmartAdminLoginPage
+            onLoginSuccess={handleAdminLogin}
+            onCancel={() => setShowAdminLogin(false)}
+          />
+        )}
 
-      {showIdleWarning && (
-        <IdleSessionWarning
-          onContinue={() => {
-            setShowIdleWarning(false);
-            setLastActivity(Date.now());
-          }}
-          onLogout={handleLogout}
-        />
-      )}
+        {showIdleWarning && (
+          <IdleSessionWarning
+            onContinue={() => {
+              setShowIdleWarning(false);
+              setLastActivity(Date.now());
+            }}
+            onLogout={handleLogout}
+          />
+        )}
 
-      {showLoginNotification && adminSession && (
-        <LoginNotification
-          adminName={adminSession.name}
-          adminPhone={adminSession.phone}
-          module="لوحة التحكم"
+        {showLoginNotification && adminSession && (
+          <LoginNotification
+            adminName={adminSession.name}
+            adminPhone={adminSession.phone}
+            module="لوحة التحكم"
           onClose={() => setShowLoginNotification(false)}
         />
       )}
 
-      <Suspense fallback={
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#F9F8F6] to-[#E8E6E1]">
-          <div className="text-center">
-            <div className="flex justify-center mb-4">
-              <SimpleLoader size="lg" color="#C89B3C" />
+        <Suspense fallback={
+          <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#F9F8F6] to-[#E8E6E1]">
+            <div className="text-center">
+              <div className="flex justify-center mb-4">
+                <SimpleLoader size="lg" color="#C89B3C" />
+              </div>
+              <p className="text-xl font-bold text-[#3D5B4B]">جاري التحميل...</p>
             </div>
-            <p className="text-xl font-bold text-[#3D5B4B]">جاري التحميل...</p>
           </div>
-        </div>
-      }>
-        {renderModule()}
-      </Suspense>
-    </div>
+        }>
+          {renderModule()}
+        </Suspense>
+      </div>
+    </PermissionsProvider>
   );
 }
 
