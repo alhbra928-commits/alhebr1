@@ -22,9 +22,9 @@ import { Investor } from '../investorsService';
 interface InvestorCard3DProps {
   investor: Investor;
   onView: (investor: Investor) => void;
-  onEdit: (investor: Investor) => void;
-  onToggleStatus: (investor: Investor) => void;
-  onDelete: (investor: Investor) => void;
+  onEdit?: (investor: Investor) => void;
+  onToggleStatus?: (investor: Investor) => void;
+  onDelete?: (investor: Investor) => void;
 }
 
 export function InvestorCard3D({
@@ -173,42 +173,48 @@ export function InvestorCard3D({
                 عرض
               </button>
 
-              <button
-                onClick={() => onEdit(investor)}
-                className="flex items-center justify-center gap-1 px-3 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-bold text-xs transition-all"
-              >
-                <Edit className="h-3 w-3" />
-                تعديل
-              </button>
+              {onEdit && (
+                <button
+                  onClick={() => onEdit(investor)}
+                  className="flex items-center justify-center gap-1 px-3 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-bold text-xs transition-all"
+                >
+                  <Edit className="h-3 w-3" />
+                  تعديل
+                </button>
+              )}
 
-              <button
-                onClick={() => onToggleStatus(investor)}
-                className={`flex items-center justify-center gap-1 px-3 py-2 ${
-                  investor.status === 'active'
-                    ? 'bg-blue-500 hover:bg-blue-600'
-                    : 'bg-green-500 hover:bg-green-600'
-                } text-white rounded-lg font-bold text-xs transition-all`}
-              >
-                {investor.status === 'active' ? (
-                  <>
-                    <Snowflake className="h-3 w-3" />
-                    تجميد
-                  </>
-                ) : (
-                  <>
-                    <CheckCircle className="h-3 w-3" />
-                    تفعيل
-                  </>
-                )}
-              </button>
+              {onToggleStatus && (
+                <button
+                  onClick={() => onToggleStatus(investor)}
+                  className={`flex items-center justify-center gap-1 px-3 py-2 ${
+                    investor.status === 'active'
+                      ? 'bg-blue-500 hover:bg-blue-600'
+                      : 'bg-green-500 hover:bg-green-600'
+                  } text-white rounded-lg font-bold text-xs transition-all`}
+                >
+                  {investor.status === 'active' ? (
+                    <>
+                      <Snowflake className="h-3 w-3" />
+                      تجميد
+                    </>
+                  ) : (
+                    <>
+                      <CheckCircle className="h-3 w-3" />
+                      تفعيل
+                    </>
+                  )}
+                </button>
+              )}
 
-              <button
-                onClick={() => onDelete(investor)}
-                className="flex items-center justify-center gap-1 px-3 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-bold text-xs transition-all"
-              >
-                <Trash2 className="h-3 w-3" />
-                حذف
-              </button>
+              {onDelete && (
+                <button
+                  onClick={() => onDelete(investor)}
+                  className="flex items-center justify-center gap-1 px-3 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-bold text-xs transition-all"
+                >
+                  <Trash2 className="h-3 w-3" />
+                  حذف
+                </button>
+              )}
             </div>
           </div>
         </div>

@@ -37,12 +37,19 @@ export function AdvancedInvestorsView({ onBack }: AdvancedInvestorsViewProps) {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingInvestor, setEditingInvestor] = useState<Investor | null>(null);
 
-  const { hasPermission, isAdmin } = usePermissions();
-  const canCreate = isAdmin || hasPermission('investors', 'create');
-  const canEdit = isAdmin || hasPermission('investors', 'edit');
-  const canDelete = isAdmin || hasPermission('investors', 'delete');
+  // استخدام النظام المركزي الجديد للصلاحيات
+  const { isAdmin, canCreate, canEdit, canDelete } = usePermissions();
 
-  console.log('🔍 [AdvancedInvestorsView] Permissions:', { canCreate, canEdit, canDelete });
+  const hasCreatePermission = canCreate('investors');
+  const hasEditPermission = canEdit('investors');
+  const hasDeletePermission = canDelete('investors');
+
+  console.log('🔍 [AdvancedInvestorsView] Permissions:', {
+    isAdmin,
+    canCreate: hasCreatePermission,
+    canEdit: hasEditPermission,
+    canDelete: hasDeletePermission
+  });
 
   useEffect(() => {
     loadData();
@@ -315,13 +322,15 @@ export function AdvancedInvestorsView({ onBack }: AdvancedInvestorsViewProps) {
                 <option value="pending">قيد المراجعة</option>
               </select>
 
-              <button
-                onClick={handleAddInvestor}
-                className="p-3 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-colors"
-                title="إضافة مستثمر"
-              >
-                <UserPlus className="h-5 w-5" />
-              </button>
+              {hasCreatePermission && (
+                <button
+                  onClick={handleAddInvestor}
+                  className="p-3 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-colors"
+                  title="إضافة مستثمر"
+                >
+                  <UserPlus className="h-5 w-5" />
+                </button>
+              )}
 
               <button
                 onClick={loadData}
@@ -338,12 +347,14 @@ export function AdvancedInvestorsView({ onBack }: AdvancedInvestorsViewProps) {
             <Users className="h-24 w-24 text-gray-300 mx-auto mb-4" />
             <h3 className="text-2xl font-black text-gray-400 mb-2">لا يوجد مستثمرون</h3>
             <p className="text-gray-400 mb-4">ابدأ بإضافة مستثمرين جدد</p>
-            <button
-              onClick={handleAddInvestor}
-              className="px-6 py-3 bg-[#C89B3C] hover:bg-[#B8894E] text-white rounded-xl font-bold transition-all"
-            >
-              إضافة مستثمر أول
-            </button>
+            {hasCreatePermission && (
+              <button
+                onClick={handleAddInvestor}
+                className="px-6 py-3 bg-[#C89B3C] hover:bg-[#B8894E] text-white rounded-xl font-bold transition-all"
+              >
+                إضافة مستثمر أول
+              </button>
+            )}
           </div>
         ) : (
           <div className="space-y-8">
@@ -359,9 +370,9 @@ export function AdvancedInvestorsView({ onBack }: AdvancedInvestorsViewProps) {
                       key={investor.id}
                       investor={investor}
                       onView={handleViewInvestor}
-                      onEdit={handleEditInvestor}
-                      onToggleStatus={handleToggleStatus}
-                      onDelete={handleDeleteInvestor}
+                      onEdit={hasEditPermission ? handleEditInvestor : undefined}
+                      onToggleStatus={hasEditPermission ? handleToggleStatus : undefined}
+                      onDelete={hasDeletePermission ? handleDeleteInvestor : undefined}
                     />
                   ))}
                 </div>
@@ -380,9 +391,9 @@ export function AdvancedInvestorsView({ onBack }: AdvancedInvestorsViewProps) {
                       key={investor.id}
                       investor={investor}
                       onView={handleViewInvestor}
-                      onEdit={handleEditInvestor}
-                      onToggleStatus={handleToggleStatus}
-                      onDelete={handleDeleteInvestor}
+                      onEdit={hasEditPermission ? handleEditInvestor : undefined}
+                      onToggleStatus={hasEditPermission ? handleToggleStatus : undefined}
+                      onDelete={hasDeletePermission ? handleDeleteInvestor : undefined}
                     />
                   ))}
                 </div>
@@ -401,9 +412,9 @@ export function AdvancedInvestorsView({ onBack }: AdvancedInvestorsViewProps) {
                       key={investor.id}
                       investor={investor}
                       onView={handleViewInvestor}
-                      onEdit={handleEditInvestor}
-                      onToggleStatus={handleToggleStatus}
-                      onDelete={handleDeleteInvestor}
+                      onEdit={hasEditPermission ? handleEditInvestor : undefined}
+                      onToggleStatus={hasEditPermission ? handleToggleStatus : undefined}
+                      onDelete={hasDeletePermission ? handleDeleteInvestor : undefined}
                     />
                   ))}
                 </div>
