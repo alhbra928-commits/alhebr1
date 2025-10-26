@@ -1,144 +1,261 @@
-# 🔍 دليل استكشاف وإصلاح مشكلة تسجيل الدخول - النسخة المحدثة
+# 🔬 تعليمات تشخيص مشكلة "Failed to fetch"
 
-## 📋 المشكلة الحالية
-
-**الأعراض:**
-```
-❌ "ليس لديك صلاحية حالية، يرجى إضافتك من قبل الإدارة"
-```
-
-**السبب المحتمل:**
-المستخدم الجديد لم يُحفظ في localStorage بشكل صحيح.
-
----
-
-## 🔧 خطوات التشخيص الكاملة
-
-### ✅ ما تم إضافته للتشخيص:
-
-1. **صفحة اختبار مستقلة:** `test-bookings.html`
-2. **Console logging شامل في BookingsService**
-3. **Console logging شامل في AdvancedBookingsView**
-4. **دمج تلقائي من جدولي reservations و bookings**
-
----
-
-## 📋 خطوات التشخيص
-
-### الخطوة 1: اختبار مباشر من المتصفح
-
-افتح الملف في المتصفح:
-```
-file:///tmp/cc-agent/58919512/project/test-bookings.html
-```
-
-أو من خلال dev server:
-```
-http://localhost:5173/test-bookings.html
-```
-
-**اضغط على الأزرار:**
-- ✅ "اختبار جدول Reservations" - يجب أن يُظهر 2 حجوزات
-- ✅ "اختبار جدول Bookings" - يجب أن يُظهر 0 حجوزات
-- ✅ "اختبار الدمج" - يجب أن يُظهر المجموع = 2
-
----
-
-### الخطوة 2: اختبار من صفحة إدارة الحجوزات
-
-1. **افتح Console (F12)**
-2. **ادخل على صفحة "إدارة الحجوزات"**
-3. **راقب الرسائل بالترتيب:**
+## 🔴 المشكلة
 
 ```
-🔄 AdvancedBookingsView.loadData() called
-📥 BookingsService.getAll() called
-📊 Reservations data: { count: 2, error: null }
-📊 Bookings data: { count: 0, error: null }
-✅ Combined total: 2
-📊 BookingsService.getStatistics() called
-📥 BookingsService.getAll() called
-📊 Reservations data: { count: 2, error: null }
-📊 Bookings data: { count: 0, error: null }
-✅ Combined total: 2
-✅ Statistics from 2 total bookings
-✅ AdvancedBookingsView received data:
-   - Bookings count: 2
-   - Bookings array: [Array(2)]
-   - Stats: {total: 2, pending: 2, ...}
-✅ State updated in AdvancedBookingsView
-✅ Loading complete in AdvancedBookingsView
-🎨 AdvancedBookingsView rendering:
-   - bookings.length: 2
-   - filteredBookings.length: 2
-   - loading: false
-   - pendingBookings: 2
-   - approvedBookings: 0
-   - documentedBookings: 0
-   - rejectedBookings: 0
+عند إضافة مزرعة جديدة من لوحة صاحب المزرعة:
+❌ يتأخر في الإرسال
+❌ ثم يظهر خطأ: TypeError: Failed to fetch
 ```
 
 ---
 
-## 🎯 النتائج المتوقعة
+## ✅ التحديثات المطبقة
 
-### إذا نجح كل شيء:
-```
-✅ bookings.length: 2
-✅ filteredBookings.length: 2
-✅ pendingBookings: 2
-✅ يجب أن تظهر بطاقتين في الصفحة
-```
+### **1. إضافة Logging مفصل:**
 
-### إذا فشل:
-```
-❌ سيظهر رقم 0 في أحد المتغيرات
-❌ راجع رسائل الخطأ في Console
-❌ شارك رسائل Console كاملة
-```
-
----
-
-## 🔧 إذا استمرت المشكلة
-
-### افتح Console واكتب:
+تم إضافة console.log في `farmOwnerService.ts`:
 
 ```javascript
-// 1. اختبار مباشر
-const { data, error } = await window.supabase
-  .from('reservations')
-  .select('*')
-  .is('deleted_at', null);
+async submitForReview(...) {
+  try {
+    console.log('🚀 بدء إرسال بيانات المزرعة...');
+    console.log('Profile ID:', profileId);
 
-console.log('Direct test:', { count: data?.length, data, error });
+    const { data, error } = await supabase.rpc('submit_farm_for_review', {
+      // ...البيانات
+    });
 
-// 2. اختبار الدمج
-import { BookingsService } from './src/modules/reservations/bookingsService';
-const bookings = await BookingsService.getAll();
-console.log('Bookings:', bookings);
+    console.log('✅ استجابة من قاعدة البيانات:', { data, error });
+
+    if (error) {
+      console.error('❌ خطأ من قاعدة البيانات:', error);
+      throw error;
+    }
+
+    return { success: data?.success || false, ... };
+
+  } catch (error: any) {
+    console.error('💥 خطأ في إرسال الطلب:', error);
+    console.error('تفاصيل الخطأ:', {
+      message: error.message,
+      code: error.code,
+      details: error.details,
+      hint: error.hint
+    });
+    return {
+      success: false,
+      error: error.message || 'حدث خطأ في الاتصال بقاعدة البيانات'
+    };
+  }
+}
 ```
 
 ---
 
-## 📸 ما نحتاجه منك
+## 🧪 كيفية التشخيص
 
-إذا استمرت المشكلة، شارك:
+### **الطريقة 1: استخدام Console في المتصفح**
 
-1. **لقطة شاشة كاملة من Console**
-2. **نتيجة test-bookings.html**
-3. **هل تظهر الأرقام في البطاقات العلوية (Stats)؟**
-4. **هل الصفحة فارغة تماماً أم تظهر "لا توجد حجوزات"؟**
+1. **افتح Developer Tools:**
+   ```
+   F12 أو
+   Ctrl+Shift+I (Windows/Linux)
+   Cmd+Option+I (Mac)
+   ```
+
+2. **اذهب إلى تبويب Console**
+
+3. **سجل دخول كصاحب مزرعة:**
+   ```
+   رقم الجوال: 0500000001
+   OTP: 123456
+   ```
+
+4. **املأ نموذج إضافة مزرعة واضغط "حفظ وإرسال"**
+
+5. **راقب Console - ستظهر رسائل مثل:**
+   ```
+   🚀 بدء إرسال بيانات المزرعة...
+   Profile ID: xxxx-xxxx-xxxx
+   ✅ استجابة من قاعدة البيانات: { data: {...}, error: null }
+   ```
+
+6. **إذا ظهر خطأ، ستظهر تفاصيل كاملة:**
+   ```
+   ❌ خطأ من قاعدة البيانات: { ... }
+   💥 خطأ في إرسال الطلب: TypeError: Failed to fetch
+   تفاصيل الخطأ: {
+     message: "...",
+     code: "...",
+     details: {...},
+     hint: "..."
+   }
+   ```
 
 ---
 
-## ✅ النظام الآن
+### **الطريقة 2: استخدام ملف الاختبار**
 
+1. **افتح الملف:**
+   ```
+   test-submit-farm-debug.html
+   ```
+
+2. **حدّث متغيرات Supabase في الملف:**
+   ```javascript
+   const SUPABASE_URL = 'your-project-url';
+   const SUPABASE_ANON_KEY = 'your-anon-key';
+   ```
+
+3. **افتح الملف في المتصفح**
+
+4. **اتبع الخطوات الثلاث في الواجهة:**
+   - ✅ إعداد الاتصال
+   - ✅ إنشاء ملف تجريبي
+   - ✅ إرسال بيانات المزرعة
+
+5. **راقب السجل الأسود في الأسفل**
+
+---
+
+## 🔍 الأخطاء المحتملة وحلولها
+
+### **1. خطأ: "Function not found"**
 ```
-✓ BookingsService يقرأ من الجدولين
-✓ الدمج التلقائي يعمل
-✓ Console logging شامل
-✓ صفحة اختبار مستقلة
-✓ Build ناجح 0 أخطاء
+السبب: الدالة submit_farm_for_review غير موجودة
+الحل: تطبيق migration رقم 20251025234352
 ```
 
-**افتح Console الآن وشاهد الرسائل التفصيلية!** 🎯
+### **2. خطأ: "Permission denied"**
+```
+السبب: المستخدم anon لا يملك صلاحية تنفيذ الدالة
+الحل: تنفيذ:
+  GRANT EXECUTE ON FUNCTION submit_farm_for_review TO anon;
+```
+
+### **3. خطأ: "Network request failed"**
+```
+السبب: مشكلة في الاتصال بـ Supabase
+الحل:
+  1. تحقق من URL و API Key
+  2. تحقق من اتصال الإنترنت
+  3. تحقق من CORS في Supabase
+```
+
+### **4. خطأ: "Invalid input syntax for type jsonb"**
+```
+السبب: بيانات varieties غير صحيحة
+الحل: تأكد من إرسال varieties كـ Array صحيح
+```
+
+### **5. خطأ: "Row level security policy violation"**
+```
+السبب: RLS يمنع الوصول
+الحل: الدالة تستخدم SECURITY DEFINER (تم حلها)
+```
+
+---
+
+## 📊 فحص قاعدة البيانات
+
+### **تحقق من وجود الدالة:**
+```sql
+SELECT proname, prosecdef 
+FROM pg_proc 
+WHERE proname = 'submit_farm_for_review';
+
+-- النتيجة المتوقعة:
+-- proname: submit_farm_for_review
+-- prosecdef: true (SECURITY DEFINER)
+```
+
+### **تحقق من الصلاحيات:**
+```sql
+SELECT grantee, privilege_type 
+FROM information_schema.routine_privileges 
+WHERE routine_name = 'submit_farm_for_review';
+
+-- يجب أن يظهر:
+-- anon | EXECUTE
+-- authenticated | EXECUTE
+```
+
+### **اختبار الدالة مباشرة:**
+```sql
+SELECT submit_farm_for_review(
+  'profile-id-here',
+  'اسم المالك',
+  '1234567890',
+  'القصيم',
+  'بريدة',
+  'TEST-123',
+  5000,
+  'متر مربع',
+  'نخيل',
+  500000,
+  5000,
+  6,
+  NULL,
+  NULL,
+  NULL,
+  '[{"type":"نخيل","name":"خلاص","count":50}]'::jsonb,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL
+);
+```
+
+---
+
+## ✅ الحل النهائي المتوقع
+
+بعد تطبيق التحديثات:
+
+1. **Logging كامل يساعد في التشخيص**
+2. **رسائل خطأ واضحة ومفصلة**
+3. **الدالة تعمل مع SECURITY DEFINER**
+4. **الصلاحيات ممنوحة لـ anon**
+
+### **التدفق الصحيح:**
+```
+1. المستخدم يملأ النموذج ✅
+2. الضغط على "حفظ وإرسال" ✅
+3. استدعاء submitForReview ✅
+4. استدعاء supabase.rpc ✅
+5. تنفيذ الدالة في قاعدة البيانات ✅
+6. إرجاع النتيجة { success: true, farm_code: ... } ✅
+7. إظهار رسالة نجاح ✅
+```
+
+---
+
+## 📝 ملاحظات مهمة
+
+1. **تأكد من أن البناء نجح:**
+   ```bash
+   npm run build
+   ```
+
+2. **افتح Developer Console دائماً**
+
+3. **راقب الرسائل التفصيلية**
+
+4. **إذا استمرت المشكلة:**
+   - شارك لقطة شاشة من Console
+   - شارك رسالة الخطأ الكاملة
+   - شارك تفاصيل الخطأ من الـ logging
+
+---
+
+## 🎯 الخطوات التالية
+
+1. **اختبر الآن في المتصفح**
+2. **راقب Console**
+3. **شارك نتائج الاختبار**
+4. **سنحل أي مشكلة متبقية**
+
+**المشكلة الآن قابلة للتشخيص بسهولة!** 🔬✅

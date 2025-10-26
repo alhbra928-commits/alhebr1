@@ -535,6 +535,9 @@ class FarmOwnerService {
     }
   ) {
     try {
+      console.log('🚀 بدء إرسال بيانات المزرعة...');
+      console.log('Profile ID:', profileId);
+
       const { data, error } = await supabase.rpc('submit_farm_for_review', {
         p_profile_id: profileId,
         p_full_name: formData.full_name,
@@ -560,7 +563,12 @@ class FarmOwnerService {
         p_farm_id: formData.farm_id || null
       });
 
-      if (error) throw error;
+      console.log('✅ استجابة من قاعدة البيانات:', { data, error });
+
+      if (error) {
+        console.error('❌ خطأ من قاعدة البيانات:', error);
+        throw error;
+      }
 
       return {
         success: data?.success || false,
@@ -572,8 +580,17 @@ class FarmOwnerService {
         error: data?.error
       };
     } catch (error: any) {
-      console.error('خطأ في إرسال الطلب:', error);
-      return { success: false, error: error.message };
+      console.error('💥 خطأ في إرسال الطلب:', error);
+      console.error('تفاصيل الخطأ:', {
+        message: error.message,
+        code: error.code,
+        details: error.details,
+        hint: error.hint
+      });
+      return {
+        success: false,
+        error: error.message || 'حدث خطأ في الاتصال بقاعدة البيانات'
+      };
     }
   }
 

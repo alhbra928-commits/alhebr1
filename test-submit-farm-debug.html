@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار إضافة مزرعة - Debug Mode</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 600px;
+            width: 100%;
+        }
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 28px;
+            text-align: center;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        .step {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border-right: 4px solid #667eea;
+        }
+        .step h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 10px;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .log {
+            background: #1e1e1e;
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 15px;
+            white-space: pre-wrap;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            border-right: 4px solid #28a745;
+            margin-top: 15px;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            border-right: 4px solid #dc3545;
+            margin-top: 15px;
+        }
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔬 اختبار إضافة مزرعة</h1>
+        <p class="subtitle">وضع التشخيص المتقدم</p>
+
+        <div class="step">
+            <h3>📋 الخطوة 1: إعداد البيئة</h3>
+            <button onclick="setupEnvironment()">إعداد الاتصال</button>
+            <div id="setup-log"></div>
+        </div>
+
+        <div class="step">
+            <h3>👤 الخطوة 2: إنشاء حساب تجريبي</h3>
+            <button onclick="createTestProfile()" id="create-btn" disabled>إنشاء ملف تجريبي</button>
+            <div id="profile-log"></div>
+        </div>
+
+        <div class="step">
+            <h3>🌳 الخطوة 3: إضافة مزرعة</h3>
+            <button onclick="submitFarm()" id="submit-btn" disabled>إرسال بيانات المزرعة</button>
+            <div id="submit-log"></div>
+        </div>
+
+        <div class="log" id="console-log">
+> انتظر... سيتم عرض السجلات هنا
+        </div>
+    </div>
+
+    <script>
+        let supabase;
+        let testProfileId;
+
+        function log(message, type = 'info') {
+            const console_log = document.getElementById('console-log');
+            const timestamp = new Date().toLocaleTimeString('ar-SA');
+            const icon = type === 'error' ? '❌' : type === 'success' ? '✅' : '📝';
+            console_log.textContent += `\n[${timestamp}] ${icon} ${message}`;
+            console_log.scrollTop = console_log.scrollHeight;
+            console.log(message);
+        }
+
+        async function setupEnvironment() {
+            const setupLog = document.getElementById('setup-log');
+            setupLog.innerHTML = '<div class="spinner"></div>';
+            log('🔧 بدء إعداد البيئة...');
+
+            try {
+                const SUPABASE_URL = 'YOUR_SUPABASE_URL'; // سيتم استبدالها
+                const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY'; // سيتم استبدالها
+
+                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                log('✅ تم إنشاء عميل Supabase بنجاح', 'success');
+
+                // اختبار الاتصال
+                const { data, error } = await supabase.from('farm_owner_profiles').select('count').limit(1);
+                if (error) throw error;
+
+                log('✅ الاتصال بقاعدة البيانات ناجح', 'success');
+                setupLog.innerHTML = '<div class="success">✅ تم إعداد البيئة بنجاح</div>';
+                document.getElementById('create-btn').disabled = false;
+
+            } catch (error) {
+                log('❌ فشل إعداد البيئة: ' + error.message, 'error');
+                setupLog.innerHTML = '<div class="error">❌ فشل: ' + error.message + '</div>';
+            }
+        }
+
+        async function createTestProfile() {
+            const profileLog = document.getElementById('profile-log');
+            profileLog.innerHTML = '<div class="spinner"></div>';
+            log('👤 إنشاء ملف تجريبي...');
+
+            try {
+                const testMobile = '05' + Math.floor(Math.random() * 100000000);
+                log('📱 رقم الجوال التجريبي: ' + testMobile);
+
+                const { data, error } = await supabase
+                    .from('farm_owner_profiles')
+                    .insert([{
+                        mobile_number: testMobile,
+                        full_name: 'اختبار - مالك تجريبي',
+                        status: 'pending'
+                    }])
+                    .select()
+                    .single();
+
+                if (error) throw error;
+
+                testProfileId = data.id;
+                log('✅ تم إنشاء الملف بنجاح: ' + testProfileId, 'success');
+                profileLog.innerHTML = '<div class="success">✅ تم إنشاء الملف: ' + testMobile + '<br>ID: ' + testProfileId + '</div>';
+                document.getElementById('submit-btn').disabled = false;
+
+            } catch (error) {
+                log('❌ فشل إنشاء الملف: ' + error.message, 'error');
+                profileLog.innerHTML = '<div class="error">❌ فشل: ' + error.message + '</div>';
+            }
+        }
+
+        async function submitFarm() {
+            const submitLog = document.getElementById('submit-log');
+            submitLog.innerHTML = '<div class="spinner"></div>';
+            log('🌳 بدء إرسال بيانات المزرعة...');
+
+            try {
+                log('📊 إعداد البيانات...');
+                const farmData = {
+                    p_profile_id: testProfileId,
+                    p_full_name: 'مالك مزرعة تجريبي',
+                    p_national_id: '1234567890',
+                    p_region: 'القصيم',
+                    p_city: 'بريدة',
+                    p_deed_number: 'TEST-' + Date.now(),
+                    p_total_farm_area: 5000,
+                    p_farm_area_unit: 'متر مربع',
+                    p_farm_type: 'نخيل',
+                    p_actual_total_price: 500000,
+                    p_price_per_tree: 5000,
+                    p_payment_grace_period: 6,
+                    p_varieties: [
+                        { type: 'نخيل', name: 'خلاص', count: 50 },
+                        { type: 'نخيل', name: 'سكري', count: 50 }
+                    ],
+                    p_bank_name: 'البنك التجريبي',
+                    p_bank_account_number: 'TEST123456'
+                };
+
+                log('📤 إرسال البيانات إلى submit_farm_for_review...');
+                console.log('البيانات المرسلة:', farmData);
+
+                const { data, error } = await supabase.rpc('submit_farm_for_review', farmData);
+
+                log('📥 استلام الاستجابة من قاعدة البيانات');
+                console.log('الاستجابة:', { data, error });
+
+                if (error) {
+                    log('❌ خطأ من قاعدة البيانات:', 'error');
+                    log('  - الرسالة: ' + error.message, 'error');
+                    log('  - الكود: ' + error.code, 'error');
+                    log('  - التفاصيل: ' + JSON.stringify(error.details), 'error');
+                    throw error;
+                }
+
+                if (data && data.success) {
+                    log('✅ نجح الإرسال!', 'success');
+                    log('  - كود المزرعة: ' + data.farm_code, 'success');
+                    log('  - إجمالي الأشجار: ' + data.total_trees, 'success');
+                    submitLog.innerHTML = `
+                        <div class="success">
+                            ✅ تم إرسال المزرعة بنجاح!<br>
+                            <strong>كود المزرعة:</strong> ${data.farm_code}<br>
+                            <strong>إجمالي الأشجار:</strong> ${data.total_trees}<br>
+                            <strong>Farm ID:</strong> ${data.farm_id}
+                        </div>
+                    `;
+                } else {
+                    log('⚠️ فشل الإرسال: ' + (data.error || 'خطأ غير معروف'), 'error');
+                    submitLog.innerHTML = '<div class="error">⚠️ فشل: ' + (data.error || 'خطأ غير معروف') + '</div>';
+                }
+
+            } catch (error) {
+                log('💥 خطأ غير متوقع: ' + error.message, 'error');
+                console.error('تفاصيل الخطأ الكاملة:', error);
+                submitLog.innerHTML = '<div class="error">💥 خطأ: ' + error.message + '</div>';
+            }
+        }
+    </script>
+</body>
+</html>
