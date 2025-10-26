@@ -118,11 +118,17 @@ export class AdminSessionService {
         })
         .eq('session_token', sessionToken);
 
-      localStorage.removeItem('admin_session_token');
-      localStorage.removeItem('admin_data');
+      this.clearSession();
     } catch (error) {
       console.error('Error terminating session:', error);
     }
+  }
+
+  static clearSession() {
+    // تنظيف كامل لجميع بيانات الجلسة
+    localStorage.removeItem('admin_session_token');
+    localStorage.removeItem('admin_data');
+    sessionStorage.clear();
   }
 
   static async getAllActiveSessions(): Promise<AdminSession[]> {

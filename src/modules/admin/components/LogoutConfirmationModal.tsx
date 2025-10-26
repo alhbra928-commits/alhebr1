@@ -35,9 +35,11 @@ export function LogoutConfirmationModal({ onConfirm, onCancel }: LogoutConfirmat
           className="mb-6 text-center text-base font-bold leading-relaxed"
           style={{ color: brandColors.text.secondary }}
         >
-          هل ترغب بالخروج من لوحة الإدارة؟
+          هل ترغب بالخروج من المنصة بالكامل؟
           <br />
-          <span className="text-sm">سيتم إغلاق جلستك الحالية وإنهاء جميع الأنشطة</span>
+          <span className="text-sm font-extrabold text-red-600">
+            سيتم إنهاء جلستك نهائياً والخروج الكامل من النظام
+          </span>
         </p>
 
         <div
@@ -48,7 +50,10 @@ export function LogoutConfirmationModal({ onConfirm, onCancel }: LogoutConfirmat
           }}
         >
           <p className="text-center text-sm font-bold" style={{ color: '#DC2626' }}>
-            📌 ملاحظة: سيُطلب منك تسجيل الدخول مرة أخرى
+            🚪 سيتم الخروج الكامل والعودة للصفحة الرئيسية
+          </p>
+          <p className="text-center text-xs mt-2 font-semibold" style={{ color: '#DC2626' }}>
+            للدخول مجدداً، سيُطلب منك تسجيل الدخول بالكامل
           </p>
         </div>
 
@@ -62,7 +67,7 @@ export function LogoutConfirmationModal({ onConfirm, onCancel }: LogoutConfirmat
             }}
           >
             <LogOut className="h-5 w-5 transition-transform group-hover:translate-x-1" />
-            <span>✅ نعم، خروج</span>
+            <span>✅ نعم، خروج كامل</span>
           </button>
 
           <button

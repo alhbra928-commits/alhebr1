@@ -89,10 +89,25 @@ function App() {
       if (token) {
         await AdminSessionService.terminateSession(token);
       }
+
+      // تنظيف كامل للجلسة
+      AdminSessionService.clearSession();
       setAdminSession(null);
       setActiveModule('public');
+
+      // إعادة تحميل الصفحة للتأكد من الخروج الكامل
+      setTimeout(() => {
+        window.location.reload();
+      }, 100);
     } catch (error) {
       console.error('Logout error:', error);
+      // حتى لو حدث خطأ، نخرج
+      AdminSessionService.clearSession();
+      setAdminSession(null);
+      setActiveModule('public');
+      setTimeout(() => {
+        window.location.reload();
+      }, 100);
     }
   };
 
