@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode, useMemo, useCallback } from 'react';
 import { AdminSessionService, AdminPermission } from '../modules/admin/services/adminSessionService';
 
 export interface PermissionCheck {
@@ -194,35 +194,46 @@ export function PermissionsProvider({ children }: { children: ReactNode }) {
     };
   };
 
-  const refreshPermissions = async () => {
+  const refreshPermissions = useCallback(async () => {
     console.log('🔄 [PermissionsContext] Manual refresh requested');
     await loadPermissions();
-  };
+  }, []);
 
-  // دوال مركزية للتحكم في الإجراءات
-  const checkCanCreate = (moduleId: string) => isAdmin || hasPermission(moduleId, 'create');
-  const checkCanEdit = (moduleId: string) => isAdmin || hasPermission(moduleId, 'edit');
-  const checkCanDelete = (moduleId: string) => isAdmin || hasPermission(moduleId, 'delete');
-  const checkCanView = (moduleId: string) => isAdmin || hasPermission(moduleId, 'view');
+  // دوال مركزية للتحكم في الإجراءات - memoized
+  const checkCanCreate = useCallback((moduleId: string) => isAdmin || hasPermission(moduleId, 'create'), [isAdmin, permissions]);
+  const checkCanEdit = useCallback((moduleId: string) => isAdmin || hasPermission(moduleId, 'edit'), [isAdmin, permissions]);
+  const checkCanDelete = useCallback((moduleId: string) => isAdmin || hasPermission(moduleId, 'delete'), [isAdmin, permissions]);
+  const checkCanView = useCallback((moduleId: string) => isAdmin || hasPermission(moduleId, 'view'), [isAdmin, permissions]);
+
+  const contextValue = useMemo(() => ({
+    permissions,
+    loading,
+    hasPermission,
+    canAccessModule,
+    getModulePermissions,
+    refreshPermissions,
+    isAdmin,
+    canCreate: checkCanCreate,
+    canEdit: checkCanEdit,
+    canDelete: checkCanDelete,
+    canView: checkCanView,
+    currentAdminPhone,
+    currentAdminRole,
+  }), [
+    permissions,
+    loading,
+    isAdmin,
+    checkCanCreate,
+    checkCanEdit,
+    checkCanDelete,
+    checkCanView,
+    currentAdminPhone,
+    currentAdminRole,
+    refreshPermissions
+  ]);
 
   return (
-    <PermissionsContext.Provider
-      value={{
-        permissions,
-        loading,
-        hasPermission,
-        canAccessModule,
-        getModulePermissions,
-        refreshPermissions,
-        isAdmin,
-        canCreate: checkCanCreate,
-        canEdit: checkCanEdit,
-        canDelete: checkCanDelete,
-        canView: checkCanView,
-        currentAdminPhone,
-        currentAdminRole,
-      }}
-    >
+    <PermissionsContext.Provider value={contextValue}>
       {children}
     </PermissionsContext.Provider>
   );

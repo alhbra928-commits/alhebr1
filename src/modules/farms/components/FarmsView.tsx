@@ -49,13 +49,6 @@ export function FarmsView({ onBack }: FarmsViewProps) {
   const hasEditPermission = canEdit('farms');
   const hasDeletePermission = canDelete('farms');
 
-  console.log('🔍 [FarmsView] Permissions:', {
-    isAdmin,
-    canCreate: hasCreatePermission,
-    canEdit: hasEditPermission,
-    canDelete: hasDeletePermission
-  });
-
   useEffect(() => {
     loadData();
 
