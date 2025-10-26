@@ -3,122 +3,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⚠️ مسح الكاش مطلوب الآن</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>🚨 تعليمات مهمة جداً</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@700;900&display=swap');
-        body { font-family: 'Cairo', sans-serif; }
-        .pulse-red { animation: pulse-red 1s infinite; }
-        @keyframes pulse-red {
-            0%, 100% { background-color: #dc2626; }
-            50% { background-color: #ef4444; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 30px;
+            padding: 50px;
+            max-width: 800px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #e53e3e;
+            font-size: 48px;
+            margin-bottom: 30px;
+            text-align: center;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        .step {
+            background: #f7fafc;
+            border-right: 6px solid #4299e1;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .important {
+            background: #fff5f5;
+            border: 3px solid #fc8181;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+        }
+        .success {
+            background: #f0fff4;
+            border: 3px solid #68d391;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+        code {
+            background: #2d3748;
+            color: #68d391;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 18px;
         }
     </style>
 </head>
-<body class="bg-gray-900 text-white p-8">
-    <div class="max-w-4xl mx-auto">
-        <!-- عنوان رئيسي -->
-        <div class="pulse-red text-center py-8 rounded-3xl mb-8 shadow-2xl">
-            <h1 class="text-6xl font-black mb-4">⚠️ تحذير ⚠️</h1>
-            <p class="text-3xl font-black">الأزرار موجودة لكن المتصفح يستخدم ملف قديم!</p>
+<body>
+    <div class="container">
+        <h1>🚨 التعليمات الإلزامية 🚨</h1>
+        
+        <div class="important">
+            <h2 style="color: #e53e3e; font-size: 32px;">⚠️ المشكلة:</h2>
+            <p style="font-size: 22px;">المتصفح يستخدم الملفات القديمة من الـ Cache!</p>
+            <p style="font-size: 20px; color: #718096;">لن ترى التغييرات الجديدة بدون مسح الـ Cache</p>
         </div>
 
-        <!-- الملف الجديد -->
-        <div class="bg-green-600 rounded-2xl p-8 mb-8 shadow-2xl">
-            <h2 class="text-4xl font-black mb-4">✅ الملف الجديد</h2>
-            <div class="bg-white text-gray-900 rounded-xl p-6 font-mono text-2xl">
-                OwnersView-<span class="bg-yellow-300 px-2">DxSPMuts</span>.js
-            </div>
-            <p class="text-2xl font-bold mt-4">هذا الملف يحتوي على:</p>
-            <ul class="text-xl mt-2 space-y-2">
-                <li>✅ علامة حمراء نابضة "الأزرار هنا"</li>
-                <li>✅ خلفية صفراء برتقالية</li>
-                <li>✅ 3 أزرار كاملة</li>
+        <h2 style="color: #4299e1; font-size: 32px; margin-top: 40px;">✅ الخطوات (بالترتيب):</h2>
+
+        <div class="step">
+            <strong>1️⃣ افتح Developer Tools</strong>
+            <p style="margin: 10px 0; font-size: 18px;">اضغط <code>F12</code> على الكيبورد</p>
+        </div>
+
+        <div class="step">
+            <strong>2️⃣ اذهب إلى Application</strong>
+            <p style="margin: 10px 0; font-size: 18px;">اضغط على تبويب <code>Application</code> في الأعلى</p>
+        </div>
+
+        <div class="step">
+            <strong>3️⃣ اذهب إلى Storage</strong>
+            <p style="margin: 10px 0; font-size: 18px;">من القائمة اليسرى، اضغط <code>Storage</code></p>
+        </div>
+
+        <div class="step">
+            <strong>4️⃣ امسح كل شيء</strong>
+            <p style="margin: 10px 0; font-size: 18px;">اضغط <code>Clear site data</code></p>
+        </div>
+
+        <div class="step">
+            <strong>5️⃣ Hard Reload</strong>
+            <p style="margin: 10px 0; font-size: 18px;">اضغط <code>Ctrl + Shift + R</code> معاً</p>
+        </div>
+
+        <div class="step">
+            <strong>6️⃣ سجل دخول</strong>
+            <p style="margin: 10px 0; font-size: 18px;">رقم الجوال: <code>0500000000</code></p>
+        </div>
+
+        <div class="step">
+            <strong>7️⃣ اذهب إلى إدارة الحجوزات</strong>
+            <p style="margin: 10px 0; font-size: 18px;">من القائمة الرئيسية</p>
+        </div>
+
+        <div class="step">
+            <strong>8️⃣ اضغط "عرض التفاصيل والإجراءات"</strong>
+            <p style="margin: 10px 0; font-size: 18px;">على أي حجز</p>
+        </div>
+
+        <div class="step">
+            <strong>9️⃣ اضغط "اعتماد"</strong>
+            <p style="margin: 10px 0; font-size: 18px;">في Panel من الجانب</p>
+        </div>
+
+        <div class="success">
+            <h3 style="color: #38a169; font-size: 28px;">🎉 النتيجة المتوقعة:</h3>
+            <ul style="font-size: 20px; line-height: 2;">
+                <li>✅ Modal أخضر جميل يظهر</li>
+                <li>✅ معلومات الحجز كاملة</li>
+                <li>✅ شرح واضح للإجراء</li>
+                <li>✅ زر "تأكيد الاعتماد" مميز</li>
+                <li>✅ زر "إلغاء" واضح</li>
+                <li>✅ تصميم احترافي 100%</li>
             </ul>
         </div>
 
-        <!-- الملف القديم -->}
-        <div class="bg-red-600 rounded-2xl p-8 mb-8 shadow-2xl">
-            <h2 class="text-4xl font-black mb-4">❌ الملف القديم (في الكاش)</h2>
-            <div class="bg-white text-gray-900 rounded-xl p-6 font-mono text-2xl line-through">
-                OwnersView-<span class="bg-gray-300 px-2">CCQRYAbm</span>.js
-            </div>
-            <p class="text-2xl font-bold mt-4">المتصفح يستخدم هذا الملف القديم!</p>
+        <div class="important" style="margin-top: 40px;">
+            <h3 style="color: #e53e3e; font-size: 24px;">⚠️ تنبيه مهم جداً:</h3>
+            <p style="font-size: 20px;">إذا لم تمسح الـ Cache، سترى الشاشة السوداء القديمة!</p>
+            <p style="font-size: 18px; color: #718096;">الكود الجديد موجود في:</p>
+            <code style="display: block; margin: 10px 0;">dist/assets/reservations-module-CckYifhs.js</code>
+            <p style="font-size: 18px; color: #718096;">حجم الملف: <strong>64.37 kB</strong> (تم البناء بنجاح!)</p>
         </div>
 
-        <!-- الحل -->
-        <div class="bg-blue-600 rounded-2xl p-8 shadow-2xl">
-            <h2 class="text-5xl font-black mb-6 text-center">🔧 الحل: مسح الكاش</h2>
-            
-            <div class="space-y-6">
-                <!-- الطريقة 1 -->
-                <div class="bg-white text-gray-900 rounded-xl p-6">
-                    <h3 class="text-3xl font-black mb-4">1️⃣ إعادة تحميل قوية</h3>
-                    <div class="bg-yellow-100 border-4 border-yellow-500 rounded-lg p-4">
-                        <p class="text-4xl font-black text-center">Ctrl + Shift + R</p>
-                        <p class="text-xl text-center mt-2">(أو Ctrl + F5)</p>
-                    </div>
-                </div>
-
-                <!-- الطريقة 2 -->
-                <div class="bg-white text-gray-900 rounded-xl p-6">
-                    <h3 class="text-3xl font-black mb-4">2️⃣ مسح الكاش الكامل</h3>
-                    <div class="bg-yellow-100 border-4 border-yellow-500 rounded-lg p-4">
-                        <p class="text-4xl font-black text-center mb-4">Ctrl + Shift + Delete</p>
-                        <ol class="text-xl space-y-2 text-right">
-                            <li>✅ اختر "Cached images and files"</li>
-                            <li>✅ اختر "All time"</li>
-                            <li>✅ اضغط "Clear data"</li>
-                        </ol>
-                    </div>
-                </div>
-
-                <!-- الطريقة 3 -->
-                <div class="bg-white text-gray-900 rounded-xl p-6">
-                    <h3 class="text-3xl font-black mb-4">3️⃣ وضع التصفح الخفي</h3>
-                    <div class="bg-yellow-100 border-4 border-yellow-500 rounded-lg p-4">
-                        <p class="text-4xl font-black text-center">Ctrl + Shift + N</p>
-                        <p class="text-xl text-center mt-2">(Chrome / Edge)</p>
-                    </div>
-                </div>
-
-                <!-- الطريقة 4 -->
-                <div class="bg-white text-gray-900 rounded-xl p-6">
-                    <h3 class="text-3xl font-black mb-4">4️⃣ تعطيل الكاش مؤقتاً</h3>
-                    <div class="bg-yellow-100 border-4 border-yellow-500 rounded-lg p-4">
-                        <ol class="text-xl space-y-2 text-right">
-                            <li>1. اضغط F12</li>
-                            <li>2. اذهب إلى "Network" tab</li>
-                            <li>3. ✅ فعّل "Disable cache"</li>
-                            <li>4. أعد تحميل الصفحة</li>
-                        </ol>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ما يجب أن تراه -->
-        <div class="bg-purple-600 rounded-2xl p-8 mt-8 shadow-2xl">
-            <h2 class="text-5xl font-black mb-6 text-center">👁️ ما يجب أن تراه</h2>
-            <div class="bg-white text-gray-900 rounded-xl p-6 space-y-4">
-                <div class="bg-red-500 text-white text-center py-4 rounded-lg text-2xl font-black animate-pulse">
-                    ⚠️ الأزرار هنا - إصدار جديد ⚠️
-                </div>
-                <div class="bg-gradient-to-r from-yellow-100 to-orange-100 border-t-4 border-yellow-500 p-4 rounded-lg">
-                    <p class="text-xl font-black mb-2">خلفية صفراء برتقالية</p>
-                    <div class="space-y-2">
-                        <div class="bg-amber-100 border-2 border-amber-400 p-3 rounded-lg font-bold">👁️ عرض النموذج المرفوع</div>
-                        <div class="bg-blue-100 border-2 border-blue-400 p-3 rounded-lg font-bold">✏️ تعديل البيانات</div>
-                        <div class="bg-red-100 border-2 border-red-400 p-3 rounded-lg font-bold">🗑️ حذف نهائي</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- تأكيد نهائي -->
-        <div class="text-center mt-8 bg-green-500 rounded-2xl p-8 shadow-2xl">
-            <p class="text-4xl font-black mb-4">إذا رأيت العلامة الحمراء النابضة</p>
-            <p class="text-3xl font-black">✅ الأزرار ظاهرة بنجاح!</p>
+        <div style="text-align: center; margin-top: 40px; font-size: 24px; color: #4299e1; font-weight: bold;">
+            🚀 التغييرات موجودة وجاهزة! فقط امسح الـ Cache!
         </div>
     </div>
 </body>

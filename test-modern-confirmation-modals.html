@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار Modals الحديثة</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes zoomIn {
+            from { transform: scale(0.95); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .animate-in {
+            animation: fadeIn 0.2s ease-out;
+        }
+        .zoom-in {
+            animation: zoomIn 0.2s ease-out;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 min-h-screen p-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-4xl font-black text-slate-800 mb-8 text-center">
+            اختبار Modals التأكيد الحديثة
+        </h1>
+
+        <div class="bg-white rounded-2xl shadow-lg p-8 mb-6">
+            <h2 class="text-2xl font-bold mb-4">معلومات الحجز التجريبي:</h2>
+            <div class="space-y-2 text-lg">
+                <p><strong>رقم الحجز:</strong> RES-c494d903</p>
+                <p><strong>اسم المستثمر:</strong> محمد بن إبراهيم</p>
+                <p><strong>رقم الجوال:</strong> 0501234567</p>
+                <p><strong>عدد الأشجار:</strong> 10</p>
+                <p><strong>المبلغ:</strong> 15,000 ر.س</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+            <button onclick="showApproveModal()" 
+                class="px-6 py-4 bg-gradient-to-r from-emerald-600 to-green-600 text-white rounded-xl font-bold hover:from-emerald-700 hover:to-green-700 transition-all shadow-lg">
+                اعتماد الحجز
+            </button>
+
+            <button onclick="showRejectModal()" 
+                class="px-6 py-4 bg-gradient-to-r from-red-600 to-rose-600 text-white rounded-xl font-bold hover:from-red-700 hover:to-rose-700 transition-all shadow-lg">
+                رفض الحجز
+            </button>
+
+            <button onclick="showDeleteModal()" 
+                class="px-6 py-4 bg-gradient-to-r from-slate-700 to-slate-900 text-white rounded-xl font-bold hover:from-slate-800 hover:to-black transition-all shadow-lg">
+                حذف الحجز
+            </button>
+
+            <button onclick="showCertificateModal()" 
+                class="px-6 py-4 bg-gradient-to-r from-purple-600 to-violet-600 text-white rounded-xl font-bold hover:from-purple-700 hover:to-violet-700 transition-all shadow-lg">
+                إصدار الشهادة
+            </button>
+        </div>
+
+        <!-- Approve Modal -->
+        <div id="approveModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in">
+            <div class="bg-white rounded-3xl max-w-lg w-full shadow-2xl zoom-in">
+                <div class="bg-gradient-to-r from-emerald-500 to-green-600 text-white p-6 rounded-t-3xl">
+                    <div class="flex items-center gap-4">
+                        <div class="bg-white/20 p-3 rounded-2xl">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-black">تأكيد اعتماد الحجز</h3>
+                            <p class="text-emerald-100 text-sm mt-1">الرجاء مراجعة التفاصيل قبل الاعتماد</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-6 space-y-4">
+                    <div class="bg-emerald-50 border-2 border-emerald-200 rounded-xl p-4">
+                        <p class="text-lg font-bold text-slate-800 mb-3">معلومات الحجز:</p>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between">
+                                <span class="text-slate-600">رقم الحجز:</span>
+                                <span class="font-bold text-slate-800">RES-c494d903</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-slate-600">اسم المستثمر:</span>
+                                <span class="font-bold text-slate-800">محمد بن إبراهيم</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-slate-600">رقم الجوال:</span>
+                                <span class="font-bold text-slate-800" dir="ltr">0501234567</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-slate-600">عدد الأشجار:</span>
+                                <span class="font-bold text-slate-800">10</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-slate-600">المبلغ الإجمالي:</span>
+                                <span class="font-bold text-green-600">15,000 ر.س</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-blue-50 border-2 border-blue-200 rounded-xl p-4">
+                        <p class="text-sm text-blue-900">
+                            <strong>ملاحظة:</strong> بعد الاعتماد:
+                        </p>
+                        <ul class="text-sm text-blue-800 mt-2 space-y-1 mr-4">
+                            <li>• سيتم نقل الحجز إلى قسم "المقبولة"</li>
+                            <li>• سيتم إرسال إشعار للمستثمر</li>
+                            <li>• سيتمكن المستثمر من رفع إيصال السداد</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="p-6 bg-slate-50 rounded-b-3xl flex gap-3">
+                    <button onclick="closeModal('approveModal')" 
+                        class="flex-1 px-6 py-4 bg-slate-200 text-slate-700 rounded-xl font-bold hover:bg-slate-300 transition-all">
+                        إلغاء
+                    </button>
+                    <button onclick="confirmAction('اعتماد')" 
+                        class="flex-1 px-6 py-4 bg-gradient-to-r from-emerald-600 to-green-600 text-white rounded-xl font-bold hover:from-emerald-700 hover:to-green-700 transition-all shadow-lg">
+                        تأكيد الاعتماد
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Similar structure for other modals... -->
+    </div>
+
+    <script>
+        function showApproveModal() {
+            document.getElementById('approveModal').classList.remove('hidden');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+        }
+
+        function confirmAction(action) {
+            closeModal('approveModal');
+            alert('تم ' + action + ' الحجز بنجاح! ✅\n\nفي التطبيق الحقيقي:\n✅ شاشة معالجة ضخمة\n✅ شاشة نجاح خضراء\n✅ إشعار للمستثمر');
+        }
+
+        function showRejectModal() {
+            alert('Modal الرفض - قيد التطوير');
+        }
+
+        function showDeleteModal() {
+            alert('Modal الحذف - قيد التطوير');
+        }
+
+        function showCertificateModal() {
+            alert('Modal الشهادة - قيد التطوير');
+        }
+    </script>
+
+    <div class="mt-8 bg-yellow-50 border-2 border-yellow-400 rounded-xl p-6">
+        <h3 class="text-xl font-bold text-yellow-900 mb-3">⚠️ تعليمات مهمة:</h3>
+        <ol class="space-y-2 text-yellow-800">
+            <li><strong>1.</strong> افتح Developer Tools (F12)</li>
+            <li><strong>2.</strong> اذهب إلى Application → Storage → Clear site data</li>
+            <li><strong>3.</strong> اضغط Ctrl + Shift + R (Hard Reload)</li>
+            <li><strong>4.</strong> سجل دخول: 0500000000</li>
+            <li><strong>5.</strong> اذهب إلى إدارة الحجوزات</li>
+            <li><strong>6.</strong> اضغط "عرض التفاصيل والإجراءات"</li>
+            <li><strong>7.</strong> اضغط "اعتماد"</li>
+            <li><strong>8.</strong> شاهد Modal الأخضر الجميل! ✨</li>
+        </ol>
+    </div>
+</body>
+</html>
