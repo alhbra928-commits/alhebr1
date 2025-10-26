@@ -79,6 +79,10 @@ export function AdvancedInvestorsView({ onBack }: AdvancedInvestorsViewProps) {
   };
 
   const applyFilters = () => {
+    if (!Array.isArray(investors)) {
+      setFilteredInvestors([]);
+      return;
+    }
     let filtered = [...investors];
 
     if (searchTerm) {

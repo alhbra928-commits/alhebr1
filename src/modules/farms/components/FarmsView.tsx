@@ -127,6 +127,10 @@ export function FarmsView({ onBack }: FarmsViewProps) {
   };
 
   const applyFilters = () => {
+    if (!Array.isArray(farms)) {
+      setFilteredFarms([]);
+      return;
+    }
     let filtered = [...farms];
 
     if (searchTerm) {

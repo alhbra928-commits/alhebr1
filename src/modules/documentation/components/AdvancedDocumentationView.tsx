@@ -80,6 +80,10 @@ export function AdvancedDocumentationView({ onBack }: AdvancedDocumentationViewP
   };
 
   const applyFilters = () => {
+    if (!Array.isArray(certificates)) {
+      setFilteredCertificates([]);
+      return;
+    }
     let filtered = [...certificates];
 
     if (searchTerm) {

@@ -49,6 +49,10 @@ export function AdvancedBookingsView({ onBack }: AdvancedBookingsViewProps) {
   };
 
   const applyFilters = () => {
+    if (!Array.isArray(bookings)) {
+      setFilteredBookings([]);
+      return;
+    }
     let filtered = [...bookings];
     if (searchTerm) {
       filtered = filtered.filter(b =>

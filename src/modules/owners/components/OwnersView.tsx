@@ -115,6 +115,10 @@ export function OwnersView({ onBack }: OwnersViewProps) {
   };
 
   const applyFilters = () => {
+    if (!Array.isArray(owners)) {
+      setFilteredOwners([]);
+      return;
+    }
     let filtered = [...owners];
 
     if (searchTerm) {
