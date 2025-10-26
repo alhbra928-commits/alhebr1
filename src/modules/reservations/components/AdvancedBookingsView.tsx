@@ -76,46 +76,55 @@ export function AdvancedBookingsView({ onBack }: AdvancedBookingsViewProps) {
   };
 
   const handleViewDetails = (booking: any) => {
+    console.log('📋 [handleViewDetails] Called with:', booking);
     setSelectedBooking(booking);
     setShowDetailsPanel(true);
   };
 
-  const handleApprove = async (booking: any) => {
+  const handleApprove = async (bookingId: string) => {
     try {
-      await BookingsService.approve(booking.id);
+      console.log('✅ [handleApprove] Approving booking:', bookingId);
+      await BookingsService.approve(bookingId);
       await loadData();
+      alert('تم اعتماد الحجز بنجاح');
     } catch (err) {
       console.error('Error approving:', err);
       alert('حدث خطأ أثناء قبول الحجز');
     }
   };
 
-  const handleReject = async (booking: any) => {
+  const handleReject = async (bookingId: string) => {
     try {
-      await BookingsService.reject(booking.id);
+      console.log('❌ [handleReject] Rejecting booking:', bookingId);
+      await BookingsService.reject(bookingId);
       await loadData();
+      alert('تم رفض الحجز');
     } catch (err) {
       console.error('Error rejecting:', err);
       alert('حدث خطأ أثناء رفض الحجز');
     }
   };
 
-  const handleDelete = async (booking: any) => {
+  const handleDelete = async (bookingId: string) => {
     if (!confirm('هل أنت متأكد من حذف هذا الحجز؟')) return;
 
     try {
-      await BookingsService.deletePermanently(booking.id);
+      console.log('🗑️ [handleDelete] Deleting booking:', bookingId);
+      await BookingsService.deletePermanently(bookingId);
       await loadData();
+      alert('تم حذف الحجز');
     } catch (err) {
       console.error('Error deleting:', err);
       alert('حدث خطأ أثناء حذف الحجز');
     }
   };
 
-  const handleIssueCertificate = async (booking: any) => {
+  const handleIssueCertificate = async (bookingId: string) => {
     try {
-      await BookingsService.issueCertificate(booking.id);
+      console.log('📜 [handleIssueCertificate] Issuing certificate for:', bookingId);
+      await BookingsService.issueCertificate(bookingId);
       await loadData();
+      alert('تم إصدار الشهادة بنجاح');
     } catch (err) {
       console.error('Error issuing certificate:', err);
       alert('حدث خطأ أثناء إصدار الشهادة');
@@ -341,11 +350,15 @@ export function AdvancedBookingsView({ onBack }: AdvancedBookingsViewProps) {
       {showDetailsPanel && selectedBooking && (
         <BookingDetailsPanel
           booking={selectedBooking}
+          isOpen={showDetailsPanel}
           onClose={() => {
             setShowDetailsPanel(false);
             setSelectedBooking(null);
           }}
-          onUpdate={loadData}
+          onApprove={hasEditPermission ? handleApprove : undefined}
+          onReject={hasEditPermission ? handleReject : undefined}
+          onDelete={hasDeletePermission ? handleDelete : undefined}
+          onIssueCertificate={hasEditPermission ? handleIssueCertificate : undefined}
         />
       )}
     </div>
