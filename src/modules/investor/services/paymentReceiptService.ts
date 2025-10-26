@@ -157,11 +157,13 @@ export class PaymentReceiptService {
     verifiedBy: string,
     verificationNotes?: string
   ): Promise<PaymentReceipt> {
+    console.log('✅ Starting verifyReceipt:', { receiptId, verifiedBy });
+
     const { data, error } = await supabase
       .from('payment_receipts')
       .update({
         status: 'verified',
-        verified_by: null,
+        verified_by: verifiedBy,
         verified_at: new Date().toISOString(),
         verification_notes: verificationNotes || null,
         updated_at: new Date().toISOString()
@@ -171,10 +173,11 @@ export class PaymentReceiptService {
       .single();
 
     if (error) {
-      console.error('Error verifying receipt:', error);
+      console.error('❌ Error verifying receipt:', error);
       throw new Error(`فشل اعتماد الإيصال: ${error.message}`);
     }
 
+    console.log('✅ Receipt verified successfully:', data);
     return data as PaymentReceipt;
   }
 
@@ -207,7 +210,7 @@ export class PaymentReceiptService {
       .from('payment_receipts')
       .update({
         status: 'rejected',
-        verified_by: null,
+        verified_by: verifiedBy,
         verified_at: new Date().toISOString(),
         verification_notes: verificationNotes,
         updated_at: new Date().toISOString()
