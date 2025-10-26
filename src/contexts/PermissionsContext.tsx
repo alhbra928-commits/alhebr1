@@ -52,28 +52,24 @@ export function PermissionsProvider({ children }: { children: ReactNode }) {
       setCurrentAdminPhone(admin.phone);
       setCurrentAdminRole(admin.role);
 
-      // Admin info loaded
-
-      const SUPER_ADMIN_PHONES = ['0500000000', '0500000001'];
-      const isSuperAdmin = SUPER_ADMIN_PHONES.includes(admin.phone);
+      // التحقق من Super Admin
+      const SUPER_ADMIN_PHONES = ['0500000000', '0500000001', '0569335257'];
+      const isSuperAdmin = SUPER_ADMIN_PHONES.includes(admin.phone) || admin.role === 'super_admin';
 
       if (isSuperAdmin) {
-        // Super admin access granted
         setIsAdmin(true);
         setPermissions([]);
+        setLoading(false);
         return;
       }
 
-      // Loading permissions
-
+      // مستخدم عادي - تحميل الصلاحيات
       setIsAdmin(false);
 
       const userPermissions = await AdminSessionService.getPermissions(admin.phone);
 
-      // Loaded permissions
-
       if (!userPermissions || userPermissions.length === 0) {
-        console.warn('⚠️ [PermissionsContext] No permissions found');
+        console.warn('⚠️ [PermissionsContext] No permissions found for:', admin.phone);
       }
 
       setPermissions(userPermissions);

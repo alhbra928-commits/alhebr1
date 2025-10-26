@@ -404,10 +404,15 @@ export function EnhancedDashboard({ onModuleSelect, onLogout, onGoToPublic, onSh
               const Icon = module.icon;
               const isHovered = hoveredCard === module.id;
 
-              const hasAccess = isAdmin || canAccessModule(module.id);
-
-              if (!hasAccess && !permissionsLoading) {
-                return null;
+              // إذا لا يزال يحمل - عرض الكل
+              if (permissionsLoading) {
+                // لا نخفي شيء أثناء التحميل
+              } else {
+                // بعد التحميل: تحقق من الصلاحيات
+                const hasAccess = isAdmin || canAccessModule(module.id);
+                if (!hasAccess) {
+                  return null;
+                }
               }
 
               return (
