@@ -85,8 +85,8 @@ export function OwnersView({ onBack }: OwnersViewProps) {
     try {
       setLoading(true);
 
-      // تحميل البيانات الأساسية أولاً
-      const ownersData = await OwnersService.getOwnersList().catch(err => {
+      // تحميل البيانات الأساسية أولاً مع cache
+      const ownersData = await OwnersService.getOwnersList(undefined, true).catch(err => {
         console.error('Error loading owners:', err);
         return [];
       });

@@ -50,6 +50,10 @@ export interface OwnerStatistics {
 }
 
 export class OwnersService {
+  // Cache بسيط للأداء السريع
+  private static ownersCache: { data: FarmOwner[]; timestamp: number } | null = null;
+  private static CACHE_DURATION = 30000; // 30 ثانية
+
   /**
    * الحصول على طلبات المراجعة المعلقة
    */
@@ -84,7 +88,23 @@ export class OwnersService {
     }
   }
 
-  static async getOwnersList(status?: string): Promise<FarmOwner[]> {
+  static async getOwnersList(status?: string, useCache: boolean = true): Promise<FarmOwner[]> {
+    // التحقق من الـ cache
+    if (useCache && this.ownersCache) {
+      const now = Date.now();
+      if (now - this.ownersCache.timestamp < this.CACHE_DURATION) {
+        console.log('✅ Using cached owners data');
+
+        // تطبيق الفلتر على الـ cache
+        let filtered = this.ownersCache.data;
+        if (status) {
+          filtered = filtered.filter(o => o.status === status);
+        }
+        return filtered;
+      }
+    }
+
+    // جلب البيانات من Supabase
     let query = supabase
       .from('farm_owners')
       .select(`
@@ -110,7 +130,21 @@ export class OwnersService {
     const { data, error } = await query;
 
     if (error) throw error;
+
+    // حفظ في الـ cache
+    if (!status) {
+      this.ownersCache = {
+        data: data as FarmOwner[] || [],
+        timestamp: Date.now()
+      };
+    }
+
     return data as FarmOwner[] || [];
+  }
+
+  // دالة لمسح الـ cache عند الحاجة
+  static clearCache() {
+    this.ownersCache = null;
   }
 
   static async getOwnerById(id: string): Promise<FarmOwner> {
@@ -167,6 +201,10 @@ export class OwnersService {
       .single();
 
     if (error) throw error;
+
+    // مسح الـ cache بعد الإضافة
+    this.clearCache();
+
     return data;
   }
 
@@ -186,6 +224,10 @@ export class OwnersService {
       .single();
 
     if (error) throw error;
+
+    // مسح الـ cache بعد التحديث
+    this.clearCache();
+
     return data;
   }
 
@@ -197,6 +239,10 @@ export class OwnersService {
     });
 
     if (error) throw error;
+
+    // مسح الـ cache بعد تغيير الحالة
+    this.clearCache();
+
     return data;
   }
 
@@ -207,6 +253,10 @@ export class OwnersService {
     });
 
     if (error) throw error;
+
+    // مسح الـ cache بعد الحذف
+    this.clearCache();
+
     return data;
   }
 
