@@ -339,7 +339,10 @@ class FloatingWhatsAppService {
         })
         .eq('id', id);
 
-      if (error) return [];
+      if (error) {
+        console.error('Error updating contact number:', error);
+        return false;
+      }
       return true;
     } catch (error) {
       console.error('Error updating contact number:', error);
@@ -353,7 +356,10 @@ class FloatingWhatsAppService {
         .from('whatsapp_contact_numbers')
         .insert([contact]);
 
-      if (error) return [];
+      if (error) {
+        console.error('Error adding contact number:', error);
+        return false;
+      }
       return true;
     } catch (error) {
       console.error('Error adding contact number:', error);

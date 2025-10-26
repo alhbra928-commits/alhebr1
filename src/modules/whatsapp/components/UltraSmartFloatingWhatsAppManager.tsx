@@ -84,6 +84,12 @@ export function UltraSmartFloatingWhatsAppManager() {
   const handleSaveContact = async () => {
     if (!editingContact) return;
 
+    // التحقق من الحقول المطلوبة
+    if (!editingContact.department_name_ar || !editingContact.department || !editingContact.phone_number) {
+      alert('يرجى ملء جميع الحقول المطلوبة (الاسم، المعرف، رقم الهاتف)');
+      return;
+    }
+
     const contactData = {
       ...editingContact,
       user_types: editingContact.user_types || ['visitor', 'investor', 'owner', 'admin']
@@ -94,9 +100,12 @@ export function UltraSmartFloatingWhatsAppManager() {
       : await floatingWhatsAppService.addContactNumber(contactData);
 
     if (success) {
+      alert(editingContact.id ? 'تم تحديث القسم بنجاح' : 'تم إضافة القسم بنجاح');
       setShowContactModal(false);
       setEditingContact(null);
       loadData();
+    } else {
+      alert('حدث خطأ أثناء حفظ القسم. يرجى المحاولة مرة أخرى.');
     }
   };
 
