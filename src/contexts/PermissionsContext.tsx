@@ -59,19 +59,19 @@ export function PermissionsProvider({ children }: { children: ReactNode }) {
       const isSuperAdmin = SUPER_ADMIN_PHONES.includes(admin.phone);
 
       if (isSuperAdmin) {
-        console.log('✅ [PermissionsContext] Super admin access granted');
+        // Super admin access granted
         setIsAdmin(true);
         setPermissions([]);
         return;
       }
 
-      console.log('📞 [PermissionsContext] Loading permissions...');
+      // Loading permissions
 
       setIsAdmin(false);
 
       const userPermissions = await AdminSessionService.getPermissions(admin.phone);
 
-      console.log('📋 [PermissionsContext] Loaded', userPermissions.length, 'permissions');
+      // Loaded permissions
 
       if (!userPermissions || userPermissions.length === 0) {
         console.warn('⚠️ [PermissionsContext] No permissions found');
@@ -91,18 +91,7 @@ export function PermissionsProvider({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
-    console.log('🔄 [PermissionsContext] Initial load');
     loadPermissions();
-
-    const interval = setInterval(() => {
-      const { admin } = AdminSessionService.getCurrentSession();
-      if (admin && admin.phone !== currentAdminPhone) {
-        console.log('🔄 [PermissionsContext] Admin changed, reloading permissions');
-        loadPermissions();
-      }
-    }, 10000);
-
-    return () => clearInterval(interval);
   }, []);
 
   const hasPermission = (moduleId: string, action: 'view' | 'create' | 'edit' | 'delete'): boolean => {
