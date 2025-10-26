@@ -31,6 +31,7 @@ export function BookingDetailsPanel({
   const [receiptToReject, setReceiptToReject] = useState<string | null>(null);
   const [rejectLoading, setRejectLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string>('');
+  const [actionInProgress, setActionInProgress] = useState(false);
 
   const { isAdmin } = usePermissions();
 

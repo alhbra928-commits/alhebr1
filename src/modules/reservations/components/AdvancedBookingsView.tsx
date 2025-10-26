@@ -19,6 +19,8 @@ export function AdvancedBookingsView({ onBack }: AdvancedBookingsViewProps) {
   const [showDetailsPanel, setShowDetailsPanel] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [actionLoading, setActionLoading] = useState(false);
+  const [actionMessage, setActionMessage] = useState<{ type: 'success' | 'error' | 'info', text: string } | null>(null);
 
   const hasCreatePermission = isAdmin || canCreate('reservations');
   const hasEditPermission = isAdmin || canEdit('reservations');
@@ -81,53 +83,88 @@ export function AdvancedBookingsView({ onBack }: AdvancedBookingsViewProps) {
     setShowDetailsPanel(true);
   };
 
+  const showMessage = (type: 'success' | 'error' | 'info', text: string) => {
+    setActionMessage({ type, text });
+    setTimeout(() => setActionMessage(null), 5000);
+  };
+
   const handleApprove = async (bookingId: string) => {
+    setActionLoading(true);
+    showMessage('info', '🔄 جاري اعتماد الحجز...');
+
     try {
       console.log('✅ [handleApprove] Approving booking:', bookingId);
       await BookingsService.approve(bookingId);
       await loadData();
-      alert('تم اعتماد الحجز بنجاح');
+      showMessage('success', '✅ تم اعتماد الحجز بنجاح! تم نقله إلى قسم "المقبولة"');
+      setShowDetailsPanel(false);
+      setSelectedBooking(null);
     } catch (err) {
       console.error('Error approving:', err);
-      alert('حدث خطأ أثناء قبول الحجز');
+      showMessage('error', '❌ حدث خطأ أثناء اعتماد الحجز. حاول مرة أخرى.');
+    } finally {
+      setActionLoading(false);
     }
   };
 
   const handleReject = async (bookingId: string) => {
+    if (!confirm('هل أنت متأكد من رفض هذا الحجز؟')) return;
+
+    setActionLoading(true);
+    showMessage('info', '🔄 جاري رفض الحجز...');
+
     try {
       console.log('❌ [handleReject] Rejecting booking:', bookingId);
       await BookingsService.reject(bookingId);
       await loadData();
-      alert('تم رفض الحجز');
+      showMessage('success', '✅ تم رفض الحجز. تم نقله إلى قسم "المرفوضة"');
+      setShowDetailsPanel(false);
+      setSelectedBooking(null);
     } catch (err) {
       console.error('Error rejecting:', err);
-      alert('حدث خطأ أثناء رفض الحجز');
+      showMessage('error', '❌ حدث خطأ أثناء رفض الحجز. حاول مرة أخرى.');
+    } finally {
+      setActionLoading(false);
     }
   };
 
   const handleDelete = async (bookingId: string) => {
-    if (!confirm('هل أنت متأكد من حذف هذا الحجز؟')) return;
+    if (!confirm('⚠️ هل أنت متأكد من حذف هذا الحجز نهائياً؟\n\nلا يمكن التراجع عن هذا الإجراء!')) return;
+
+    setActionLoading(true);
+    showMessage('info', '🔄 جاري حذف الحجز...');
 
     try {
       console.log('🗑️ [handleDelete] Deleting booking:', bookingId);
       await BookingsService.deletePermanently(bookingId);
       await loadData();
-      alert('تم حذف الحجز');
+      showMessage('success', '✅ تم حذف الحجز نهائياً من النظام');
+      setShowDetailsPanel(false);
+      setSelectedBooking(null);
     } catch (err) {
       console.error('Error deleting:', err);
-      alert('حدث خطأ أثناء حذف الحجز');
+      showMessage('error', '❌ حدث خطأ أثناء حذف الحجز. حاول مرة أخرى.');
+    } finally {
+      setActionLoading(false);
     }
   };
 
   const handleIssueCertificate = async (bookingId: string) => {
+    setActionLoading(true);
+    showMessage('info', '🔄 جاري إصدار الشهادة...');
+
     try {
       console.log('📜 [handleIssueCertificate] Issuing certificate for:', bookingId);
       await BookingsService.issueCertificate(bookingId);
       await loadData();
-      alert('تم إصدار الشهادة بنجاح');
+      showMessage('success', '✅ تم إصدار الشهادة بنجاح! تم نقل الحجز إلى قسم "الموثقة"');
+      setShowDetailsPanel(false);
+      setSelectedBooking(null);
     } catch (err) {
       console.error('Error issuing certificate:', err);
-      alert('حدث خطأ أثناء إصدار الشهادة');
+      showMessage('error', '❌ حدث خطأ أثناء إصدار الشهادة. حاول مرة أخرى.');
+    } finally {
+      setActionLoading(false);
     }
   };
 
@@ -152,6 +189,36 @@ export function AdvancedBookingsView({ onBack }: AdvancedBookingsViewProps) {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-6" dir="rtl">
       <div className="max-w-7xl mx-auto">
+        {/* Action Message Notification */}
+        {actionMessage && (
+          <div
+            className={`fixed top-6 left-1/2 transform -translate-x-1/2 z-50 px-6 py-4 rounded-xl shadow-2xl border-2 transition-all duration-300 animate-bounce ${
+              actionMessage.type === 'success'
+                ? 'bg-green-50 border-green-500 text-green-800'
+                : actionMessage.type === 'error'
+                ? 'bg-red-50 border-red-500 text-red-800'
+                : 'bg-blue-50 border-blue-500 text-blue-800'
+            }`}
+          >
+            <div className="flex items-center gap-3">
+              <div className="text-2xl">
+                {actionMessage.type === 'success' ? '✅' : actionMessage.type === 'error' ? '❌' : '🔄'}
+              </div>
+              <p className="font-bold text-lg">{actionMessage.text}</p>
+            </div>
+          </div>
+        )}
+
+        {/* Loading Overlay */}
+        {actionLoading && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 z-40 flex items-center justify-center">
+            <div className="bg-white rounded-2xl p-8 shadow-2xl">
+              <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-500 border-t-transparent mx-auto mb-4"></div>
+              <p className="text-slate-700 text-lg font-bold">جاري تنفيذ العملية...</p>
+            </div>
+          </div>
+        )}
+
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-4">
