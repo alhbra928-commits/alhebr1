@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>اختبار الخطأ الفعلي</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body { font-family: Arial; padding: 40px; background: #f5f5f5; }
+        .box { background: white; padding: 30px; border-radius: 10px; max-width: 800px; margin: 0 auto; }
+        .error { background: #ffebee; color: #c62828; padding: 20px; border-radius: 8px; margin: 20px 0; white-space: pre-wrap; font-family: monospace; }
+        .success { background: #e8f5e9; color: #2e7d32; padding: 20px; border-radius: 8px; margin: 20px 0; }
+        button { background: #1976d2; color: white; padding: 15px 30px; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; margin: 10px; }
+        button:hover { background: #1565c0; }
+        .info { background: #e3f2fd; padding: 15px; border-radius: 8px; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h1>🔍 اختبار الخطأ الفعلي في اعتماد الإيصال</h1>
+        
+        <div class="info">
+            <strong>الإيصال:</strong> d3f8129e-3439-4db4-92a2-14ec43720974<br>
+            <strong>المستثمر:</strong> محمد بن إبراهيم (500111111)<br>
+            <strong>الحجز:</strong> c494d903-9472-420f-86d9-24b2898b312c
+        </div>
+
+        <button onclick="testVerify()">✅ اعتماد الإيصال الآن</button>
+        <button onclick="checkCurrent()">🔍 فحص الحالة الحالية</button>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = 'REPLACE_WITH_YOUR_URL';
+        const SUPABASE_KEY = 'REPLACE_WITH_YOUR_KEY';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        const RECEIPT_ID = 'd3f8129e-3439-4db4-92a2-14ec43720974';
+
+        window.checkCurrent = async () => {
+            const result = document.getElementById('result');
+            result.innerHTML = '<p>جاري الفحص...</p>';
+
+            try {
+                const { data, error } = await supabase
+                    .from('payment_receipts')
+                    .select('*')
+                    .eq('id', RECEIPT_ID)
+                    .single();
+
+                if (error) throw error;
+
+                result.innerHTML = `
+                    <div class="success">
+                        <h3>✅ الحالة الحالية:</h3>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    </div>
+                `;
+            } catch (err) {
+                result.innerHTML = `
+                    <div class="error">
+                        <h3>❌ خطأ:</h3>
+                        ${err.message}
+                        <hr>
+                        <pre>${JSON.stringify(err, null, 2)}</pre>
+                    </div>
+                `;
+            }
+        };
+
+        window.testVerify = async () => {
+            const result = document.getElementById('result');
+            result.innerHTML = '<p>جاري الاعتماد...</p>';
+
+            try {
+                console.log('🚀 Starting verification...');
+                
+                const { data, error } = await supabase
+                    .from('payment_receipts')
+                    .update({
+                        status: 'verified',
+                        verified_by: 'admin',
+                        verified_at: new Date().toISOString(),
+                        verification_notes: 'تم التحقق',
+                        updated_at: new Date().toISOString()
+                    })
+                    .eq('id', RECEIPT_ID)
+                    .select()
+                    .single();
+
+                if (error) {
+                    console.error('❌ Error:', error);
+                    throw error;
+                }
+
+                console.log('✅ Success:', data);
+
+                result.innerHTML = `
+                    <div class="success">
+                        <h3>✅ تم الاعتماد بنجاح!</h3>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                        
+                        <p style="margin-top: 20px;">
+                            <strong>الحالة:</strong> ${data.status}<br>
+                            <strong>verified_by:</strong> ${data.verified_by}<br>
+                            <strong>verified_at:</strong> ${data.verified_at}
+                        </p>
+                    </div>
+                `;
+
+                // Check reservation status
+                setTimeout(async () => {
+                    const { data: res } = await supabase
+                        .from('reservations')
+                        .select('booking_status, payment_status')
+                        .eq('id', 'c494d903-9472-420f-86d9-24b2898b312c')
+                        .single();
+                    
+                    result.innerHTML += `
+                        <div class="info">
+                            <h4>حالة الحجز بعد الاعتماد:</h4>
+                            booking_status: <strong>${res.booking_status}</strong><br>
+                            payment_status: <strong>${res.payment_status}</strong>
+                        </div>
+                    `;
+                }, 1500);
+
+            } catch (err) {
+                console.error('❌ Full Error:', err);
+                
+                result.innerHTML = `
+                    <div class="error">
+                        <h3>❌ فشل الاعتماد!</h3>
+                        <strong>Message:</strong> ${err.message}<br>
+                        <strong>Code:</strong> ${err.code || 'N/A'}<br>
+                        <strong>Details:</strong> ${err.details || 'N/A'}<br>
+                        <strong>Hint:</strong> ${err.hint || 'N/A'}<br>
+                        <hr>
+                        <h4>Full Error Object:</h4>
+                        <pre>${JSON.stringify(err, null, 2)}</pre>
+                    </div>
+                `;
+            }
+        };
+
+        // Auto check on load
+        window.onload = () => {
+            console.log('Page loaded. Ready to test.');
+            checkCurrent();
+        };
+    </script>
+</body>
+</html>
