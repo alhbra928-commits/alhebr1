@@ -37,7 +37,7 @@ interface EnhancedDashboardProps {
 
 export function EnhancedDashboard({ onModuleSelect, onLogout, onGoToPublic, onShowLogin }: EnhancedDashboardProps) {
   const [stats, setStats] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false); // ✅ false للعرض الفوري
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [showSessionTerminated, setShowSessionTerminated] = useState(false);
@@ -47,18 +47,36 @@ export function EnhancedDashboard({ onModuleSelect, onLogout, onGoToPublic, onSh
   const { canAccessModule, isAdmin, loading: permissionsLoading } = usePermissions();
 
   useEffect(() => {
-    // تحميل بيانات فقط - بدون LiveFinancialSystem
-    const timer = setTimeout(() => {
-      loadStats();
-      loadAdminInfo();
-    }, 50);
+    // تحميل سريع: معلومات المدير من localStorage أولاً
+    loadAdminInfoFromLocalStorage();
 
-    return () => {
-      clearTimeout(timer);
-    };
+    // تحميل الإحصائيات في الخلفية (بدون انتظار)
+    loadStats();
+
+    // تحميل معلومات المدير من Database في الخلفية
+    loadAdminInfoFromDB();
   }, []);
 
-  const loadAdminInfo = async () => {
+  const loadAdminInfoFromLocalStorage = () => {
+    // تحميل فوري من localStorage (0ms)
+    try {
+      const { admin } = AdminSessionService.getCurrentSession();
+      if (admin) {
+        setAdminInfo({
+          phone: admin.phone,
+          name: admin.name,
+          jobTitle: admin.jobTitle,
+          jobTitleEn: admin.jobTitleEn,
+          role: admin.role,
+        });
+      }
+    } catch (err) {
+      // تجاهل الأخطاء
+    }
+  };
+
+  const loadAdminInfoFromDB = async () => {
+    // تحديث من Database في الخلفية (بدون انتظار)
     try {
       const { admin } = AdminSessionService.getCurrentSession();
       if (admin?.phone) {
@@ -80,7 +98,7 @@ export function EnhancedDashboard({ onModuleSelect, onLogout, onGoToPublic, onSh
         }
       }
     } catch (err) {
-      console.error('Error loading admin info:', err);
+      // Database غير متوفر - لا مشكلة، نستخدم localStorage
     }
   };
 
@@ -96,13 +114,15 @@ export function EnhancedDashboard({ onModuleSelect, onLogout, onGoToPublic, onSh
 
   const loadStats = async () => {
     try {
-      setLoading(true);
+      // عرض الصفحة فوراً بدون انتظار
+      setLoading(false);
+
+      // تحميل الإحصائيات في الخلفية
       const data = await DashboardService.getOverallStatistics();
       setStats(data);
     } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
+      // Database غير متوفر - لا مشكلة
+      setStats(null);
     }
   };
 
@@ -386,14 +406,9 @@ export function EnhancedDashboard({ onModuleSelect, onLogout, onGoToPublic, onSh
 
               const hasAccess = isAdmin || canAccessModule(module.id);
 
-              console.log(`🔍 [EnhancedDashboard] Module ${module.id}: isAdmin=${isAdmin}, hasAccess=${hasAccess}`);
-
               if (!hasAccess && !permissionsLoading) {
-                console.log(`❌ [EnhancedDashboard] Module ${module.id}: HIDDEN (no access)`);
                 return null;
               }
-
-              console.log(`✅ [EnhancedDashboard] Module ${module.id}: SHOWN`);
 
               return (
                 <div
