@@ -38,6 +38,26 @@ function App() {
   const [lastActivity, setLastActivity] = useState(Date.now());
 
   useEffect(() => {
+    // التحقق من الجلسة المحفوظة عند بداية التطبيق
+    const savedToken = localStorage.getItem('admin_session_token');
+    const savedAdminData = localStorage.getItem('admin_data');
+
+    if (savedToken && savedAdminData && !adminSession) {
+      try {
+        const adminData = JSON.parse(savedAdminData);
+        setAdminSession({
+          ...adminData,
+          session: { session_token: savedToken },
+          permissions: adminData.permissions || []
+        });
+        setActiveModule('dashboard');
+      } catch (error) {
+        console.error('Error restoring session:', error);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
     if (adminSession && activeModule !== 'public') {
       const idleCheckInterval = setInterval(() => {
         const idleTime = Date.now() - lastActivity;
@@ -50,10 +70,6 @@ function App() {
 
       const activityHandler = () => {
         setLastActivity(Date.now());
-        const { token } = AdminSessionService.getCurrentSession();
-        if (token) {
-          AdminSessionService.updateActivity(token, activeModule);
-        }
       };
 
       window.addEventListener('mousemove', activityHandler);
