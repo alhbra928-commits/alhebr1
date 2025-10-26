@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, ReactNode, useMemo, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode, useMemo, useCallback } from 'react';
 import { AdminSessionService, AdminPermission } from '../modules/admin/services/adminSessionService';
 
 export interface PermissionCheck {
@@ -33,9 +33,13 @@ export function PermissionsProvider({ children }: { children: ReactNode }) {
   const [isAdmin, setIsAdmin] = useState(false);
   const [currentAdminPhone, setCurrentAdminPhone] = useState<string | null>(null);
   const [currentAdminRole, setCurrentAdminRole] = useState<string | null>(null);
+  const isLoadingRef = React.useRef(false);
 
   const loadPermissions = useCallback(async () => {
+    if (isLoadingRef.current) return;
+
     try {
+      isLoadingRef.current = true;
       setLoading(true);
       const { admin } = AdminSessionService.getCurrentSession();
 
@@ -62,22 +66,16 @@ export function PermissionsProvider({ children }: { children: ReactNode }) {
       }
 
       setIsAdmin(false);
-
       const userPermissions = await AdminSessionService.getPermissions(admin.phone);
-
-      if (!userPermissions || userPermissions.length === 0) {
-        console.warn('⚠️ [PermissionsContext] No permissions found for:', admin.phone);
-      }
-
-      setPermissions(userPermissions);
+      setPermissions(userPermissions || []);
     } catch (error) {
-      console.error('❌❌❌ [PermissionsContext] ERROR LOADING PERMISSIONS:', error);
       setPermissions([]);
       setIsAdmin(false);
       setCurrentAdminPhone(null);
       setCurrentAdminRole(null);
     } finally {
       setLoading(false);
+      isLoadingRef.current = false;
     }
   }, []);
 
@@ -88,9 +86,8 @@ export function PermissionsProvider({ children }: { children: ReactNode }) {
     const handleStorageChange = () => {
       clearTimeout(debounceTimer);
       debounceTimer = setTimeout(() => {
-        console.log('🔄 [PermissionsContext] Storage changed, reloading permissions');
         loadPermissions();
-      }, 300);
+      }, 500);
     };
 
     window.addEventListener('storage', handleStorageChange);
@@ -101,7 +98,7 @@ export function PermissionsProvider({ children }: { children: ReactNode }) {
       window.removeEventListener('storage', handleStorageChange);
       window.removeEventListener('admin-session-changed', handleStorageChange);
     };
-  }, [loadPermissions]);
+  }, []);
 
   const hasPermission = useCallback((moduleId: string, action: 'view' | 'create' | 'edit' | 'delete'): boolean => {
     if (isAdmin) {
@@ -178,7 +175,6 @@ export function PermissionsProvider({ children }: { children: ReactNode }) {
   }, [isAdmin, permissions]);
 
   const refreshPermissions = useCallback(async () => {
-    console.log('🔄 [PermissionsContext] Manual refresh requested');
     await loadPermissions();
   }, [loadPermissions]);
 

@@ -56,18 +56,9 @@ export function FarmsView({ onBack }: FarmsViewProps) {
       {
         name: 'farms',
         callbacks: {
-          onInsert: () => {
-            console.log('🔄 New farm detected, reloading...');
-            loadData();
-          },
-          onUpdate: () => {
-            console.log('🔄 Farm updated, reloading...');
-            loadData();
-          },
-          onDelete: () => {
-            console.log('🔄 Farm deleted, reloading...');
-            loadData();
-          }
+          onInsert: () => loadData(),
+          onUpdate: () => loadData(),
+          onDelete: () => loadData()
         }
       },
       {
@@ -80,13 +71,13 @@ export function FarmsView({ onBack }: FarmsViewProps) {
     ]);
 
     return () => unsubscribe();
-  }, []);
+  }, [loadData]);
 
   useEffect(() => {
     applyFilters();
   }, [farms, searchTerm, filterType, filterStatus]);
 
-  const loadData = async () => {
+  const loadData = React.useCallback(async () => {
     try {
       setLoading(true);
       const results = await Promise.allSettled([
@@ -110,14 +101,13 @@ export function FarmsView({ onBack }: FarmsViewProps) {
       });
     } catch (err: any) {
       console.error('Load data error:', err);
-      // لا نعرض alert - فقط نسجل الخطأ
       setFarms([]);
       setOwners([]);
       setStats({ total: 0, active: 0, frozen: 0, total_trees: 0, avg_marketing_price: 0 });
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   const applyFilters = () => {
     if (!Array.isArray(farms)) {
