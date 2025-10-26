@@ -76,30 +76,9 @@ export function EnhancedDashboard({ onModuleSelect, onLogout, onGoToPublic, onSh
   };
 
   const loadAdminInfoFromDB = async () => {
-    // تحديث من Database في الخلفية (بدون انتظار)
-    try {
-      const { admin } = AdminSessionService.getCurrentSession();
-      if (admin?.phone) {
-        const { data, error } = await supabase
-          .from('admin_users')
-          .select('phone, full_name, job_title, job_title_en, role_id')
-          .eq('phone', admin.phone)
-          .is('deleted_at', null)
-          .maybeSingle();
-
-        if (data && !error) {
-          setAdminInfo({
-            phone: data.phone,
-            name: data.full_name,
-            jobTitle: data.job_title,
-            jobTitleEn: data.job_title_en,
-            role: data.role_id,
-          });
-        }
-      }
-    } catch (err) {
-      // Database غير متوفر - لا مشكلة، نستخدم localStorage
-    }
+    // تعطيل - نستخدم localStorage فقط لتسريع التحميل
+    // Database queries تسبب بطء شديد
+    return;
   };
 
   // الاستماع لتغيرات وضع ملء الشاشة

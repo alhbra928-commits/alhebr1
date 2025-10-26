@@ -55,14 +55,20 @@ export function AdvancedDocumentationView({ onBack }: AdvancedDocumentationViewP
       } else {
         setLoading(true);
       }
-      const [certificatesData, statsData] = await Promise.all([
+      const results = await Promise.allSettled([
         DocumentationService.getAll(),
         DocumentationService.getStatistics()
       ]);
+
+      const certificatesData = results[0].status === 'fulfilled' ? results[0].value : [];
+      const statsData = results[1].status === 'fulfilled' ? results[1].value : {};
+
       setCertificates(certificatesData);
       setStats(statsData);
     } catch (err) {
       console.error('Error loading certificates:', err);
+      setCertificates([]);
+      setStats({});
     } finally {
       setLoading(false);
       setRefreshing(false);

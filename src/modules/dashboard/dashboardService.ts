@@ -8,15 +8,7 @@ export class DashboardService {
   static async getOverallStatistics() {
     try {
       // استعلام واحد مباشر بدلاً من استدعاء services
-      const [
-        { count: farmsCount },
-        { count: reservationsCount },
-        { count: investorsCount },
-        { count: ownersCount },
-        { count: adminsCount },
-        { data: platformWallet },
-        { data: finances }
-      ] = await Promise.all([
+      const results = await Promise.allSettled([
         supabase.from('farms').select('*', { count: 'exact', head: true }).is('deleted_at', null),
         supabase.from('reservations').select('*', { count: 'exact', head: true }).is('deleted_at', null),
         supabase.from('investors').select('*', { count: 'exact', head: true }).is('deleted_at', null),
@@ -25,6 +17,14 @@ export class DashboardService {
         supabase.from('platform_wallet').select('total_balance, net_profit').eq('id', '00000000-0000-0000-0000-000000000002').maybeSingle(),
         supabase.from('smart_farm_finances').select('collected_from_investors').is('deleted_at', null)
       ]);
+
+      const farmsCount = results[0].status === 'fulfilled' ? results[0].value.count : 0;
+      const reservationsCount = results[1].status === 'fulfilled' ? results[1].value.count : 0;
+      const investorsCount = results[2].status === 'fulfilled' ? results[2].value.count : 0;
+      const ownersCount = results[3].status === 'fulfilled' ? results[3].value.count : 0;
+      const adminsCount = results[4].status === 'fulfilled' ? results[4].value.count : 0;
+      const platformWallet = results[5].status === 'fulfilled' ? results[5].value.data : null;
+      const finances = results[6].status === 'fulfilled' ? results[6].value.data : [];
 
       const totalRevenue = finances?.reduce((sum, f) => sum + Number(f.collected_from_investors || 0), 0) || 0;
 
@@ -67,7 +67,17 @@ export class DashboardService {
       };
     } catch (error) {
       console.error('Error fetching dashboard statistics:', error);
-      throw error;
+      // إرجاع بيانات فارغة بدلاً من throw
+      return {
+        farms: { total: 0, active: 0, palmFarms: 0, oliveFarms: 0, totalTrees: 0 },
+        reservations: { total: 0, pending: 0, confirmed: 0, cancelled: 0 },
+        wallets: { totalBalance: 0 },
+        documentation: { total: 0 },
+        owners: { total: 0 },
+        users: { totalInvestors: 0, totalOwners: 0 },
+        admins: { total: 0 },
+        revenue: { total: 0, paid: 0, platformBalance: 0, netProfit: 0 }
+      };
     }
   }
 

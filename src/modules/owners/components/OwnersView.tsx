@@ -179,10 +179,10 @@ export function OwnersView({ onBack }: OwnersViewProps) {
     try {
       if (modalMode === 'create') {
         await OwnersService.createOwner(data);
-        alert('تم إضافة المالك بنجاح!');
+        console.log('تم إضافة المالك بنجاح!');
       } else if (selectedOwner) {
         await OwnersService.updateOwner(selectedOwner.id, data);
-        alert('تم تحديث بيانات المالك بنجاح!');
+        console.log('تم تحديث بيانات المالك بنجاح!');
       }
       await loadData();
       setShowModal(false);
@@ -199,7 +199,7 @@ export function OwnersView({ onBack }: OwnersViewProps) {
       await OwnersService.toggleStatus(owner.id, newStatus, 'تغيير الحالة من لوحة التحكم');
       await loadData();
     } catch (err: any) {
-      alert('حدث خطأ: ' + err.message);
+      console.log('حدث خطأ: ' + err.message);
     }
   };
 
@@ -221,11 +221,11 @@ export function OwnersView({ onBack }: OwnersViewProps) {
     try {
       console.log('🗑️ حذف المالك:', owner.full_name, owner.id);
       await OwnersService.deleteOwnerPermanently(owner.id, 'حذف نهائي من لوحة التحكم');
-      alert('✅ تم حذف المالك نهائياً\n\n✓ تم حفظ نسخة احتياطية JSON\n✓ تم تحديث قاعدة البيانات');
+      console.log('✅ تم حذف المالك نهائياً\n\n✓ تم حفظ نسخة احتياطية JSON\n✓ تم تحديث قاعدة البيانات');
       await loadData();
     } catch (err: any) {
       console.error('❌ خطأ في الحذف:', err);
-      alert('❌ حدث خطأ في الحذف:\n\n' + err.message);
+      console.log('❌ حدث خطأ في الحذف:\n\n' + err.message);
     }
   };
 
@@ -240,7 +240,7 @@ export function OwnersView({ onBack }: OwnersViewProps) {
 
   const handleViewFinancials = (owner: FarmOwner, e: React.MouseEvent) => {
     e.stopPropagation();
-    alert(`عرض المعاملات المالية لـ ${owner.full_name}\n\nهذه الميزة قيد التطوير...`);
+    console.log(`عرض المعاملات المالية لـ ${owner.full_name}\n\nهذه الميزة قيد التطوير...`);
   };
 
   const toggleExpandedActions = (ownerId: string, e: React.MouseEvent) => {
@@ -403,10 +403,10 @@ export function OwnersView({ onBack }: OwnersViewProps) {
                         if (confirm('الموافقة على الطلب؟')) {
                           try {
                             await OwnersService.approveSubmission(sub.id);
-                            alert('تم بنجاح');
+                            console.log('تم بنجاح');
                             loadData();
                           } catch (e) {
-                            alert('خطأ');
+                            console.log('خطأ');
                           }
                         }
                       }}
@@ -600,13 +600,13 @@ export function OwnersView({ onBack }: OwnersViewProps) {
                       let finalReason = selectedRejectionReason;
 
                       if (!finalReason) {
-                        alert('⚠️ الرجاء اختيار سبب الرفض');
+                        console.log('⚠️ الرجاء اختيار سبب الرفض');
                         return;
                       }
 
                       if (finalReason === 'سبب آخر (أدخل تفاصيل أدناه)') {
                         if (!customRejectionReason.trim()) {
-                          alert('⚠️ الرجاء إدخال تفاصيل سبب الرفض');
+                          console.log('⚠️ الرجاء إدخال تفاصيل سبب الرفض');
                           return;
                         }
                         finalReason = customRejectionReason.trim();
@@ -614,13 +614,13 @@ export function OwnersView({ onBack }: OwnersViewProps) {
 
                       try {
                         await OwnersService.rejectSubmission(submissionToReject.id, finalReason);
-                        alert('✅ تم رفض الطلب بنجاح');
+                        console.log('✅ تم رفض الطلب بنجاح');
                         setShowRejectModal(false);
                         setSubmissionToReject(null);
                         loadData();
                       } catch (e) {
                         console.error(e);
-                        alert('❌ حدث خطأ أثناء رفض الطلب');
+                        console.log('❌ حدث خطأ أثناء رفض الطلب');
                       }
                     }}
                     disabled={!selectedRejectionReason}

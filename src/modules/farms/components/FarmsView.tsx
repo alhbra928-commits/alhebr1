@@ -96,11 +96,16 @@ export function FarmsView({ onBack }: FarmsViewProps) {
   const loadData = async () => {
     try {
       setLoading(true);
-      const [farmsResult, ownersData, statsData] = await Promise.all([
+      const results = await Promise.allSettled([
         FarmsService.getAll(100, 0),
         OwnersService.getOwnersList(),
         FarmsService.getStatistics()
       ]);
+
+      const farmsResult = results[0].status === 'fulfilled' ? results[0].value : { data: [] };
+      const ownersData = results[1].status === 'fulfilled' ? results[1].value : [];
+      const statsData = results[2].status === 'fulfilled' ? results[2].value : {};
+
       setFarms(farmsResult?.data || []);
       setOwners(ownersData || []);
       setStats(statsData || {
@@ -112,7 +117,10 @@ export function FarmsView({ onBack }: FarmsViewProps) {
       });
     } catch (err: any) {
       console.error('Load data error:', err);
-      alert('حدث خطأ أثناء تحميل البيانات: ' + (err.message || 'خطأ غير معروف'));
+      // لا نعرض alert - فقط نسجل الخطأ
+      setFarms([]);
+      setOwners([]);
+      setStats({ total: 0, active: 0, frozen: 0, total_trees: 0, avg_marketing_price: 0 });
     } finally {
       setLoading(false);
     }
