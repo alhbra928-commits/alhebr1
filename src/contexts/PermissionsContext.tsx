@@ -34,13 +34,12 @@ export function PermissionsProvider({ children }: { children: ReactNode }) {
   const [currentAdminPhone, setCurrentAdminPhone] = useState<string | null>(null);
   const [currentAdminRole, setCurrentAdminRole] = useState<string | null>(null);
 
-  const loadPermissions = async () => {
+  const loadPermissions = useCallback(async () => {
     try {
       setLoading(true);
       const { admin } = AdminSessionService.getCurrentSession();
 
       if (!admin || !admin.phone) {
-        // لا جلسة نشطة - طبيعي عند بداية التطبيق
         setPermissions([]);
         setIsAdmin(false);
         setCurrentAdminPhone(null);
@@ -52,7 +51,6 @@ export function PermissionsProvider({ children }: { children: ReactNode }) {
       setCurrentAdminPhone(admin.phone);
       setCurrentAdminRole(admin.role);
 
-      // التحقق من Super Admin
       const SUPER_ADMIN_PHONES = ['0500000000', '0500000001', '0569335257'];
       const isSuperAdmin = SUPER_ADMIN_PHONES.includes(admin.phone) || admin.role === 'super_admin';
 
@@ -63,7 +61,6 @@ export function PermissionsProvider({ children }: { children: ReactNode }) {
         return;
       }
 
-      // مستخدم عادي - تحميل الصلاحيات
       setIsAdmin(false);
 
       const userPermissions = await AdminSessionService.getPermissions(admin.phone);
@@ -80,28 +77,23 @@ export function PermissionsProvider({ children }: { children: ReactNode }) {
       setCurrentAdminPhone(null);
       setCurrentAdminRole(null);
     } finally {
-      // Loading complete
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     loadPermissions();
 
-    // الاستماع لتغييرات localStorage (عند تسجيل الدخول/الخروج)
     let debounceTimer: NodeJS.Timeout;
     const handleStorageChange = () => {
-      // منع Re-render Loop باستخدام debounce
       clearTimeout(debounceTimer);
       debounceTimer = setTimeout(() => {
         console.log('🔄 [PermissionsContext] Storage changed, reloading permissions');
         loadPermissions();
-      }, 300); // انتظر 300ms قبل التحميل
+      }, 300);
     };
 
     window.addEventListener('storage', handleStorageChange);
-
-    // استمع أيضاً لحدث مخصص من App.tsx
     window.addEventListener('admin-session-changed', handleStorageChange);
 
     return () => {
@@ -109,7 +101,7 @@ export function PermissionsProvider({ children }: { children: ReactNode }) {
       window.removeEventListener('storage', handleStorageChange);
       window.removeEventListener('admin-session-changed', handleStorageChange);
     };
-  }, []);
+  }, [loadPermissions]);
 
   const hasPermission = (moduleId: string, action: 'view' | 'create' | 'edit' | 'delete'): boolean => {
     // Super Admin لديه صلاحيات كاملة
@@ -197,7 +189,7 @@ export function PermissionsProvider({ children }: { children: ReactNode }) {
   const refreshPermissions = useCallback(async () => {
     console.log('🔄 [PermissionsContext] Manual refresh requested');
     await loadPermissions();
-  }, []);
+  }, [loadPermissions]);
 
   // دوال مركزية للتحكم في الإجراءات - memoized
   const checkCanCreate = useCallback((moduleId: string) => isAdmin || hasPermission(moduleId, 'create'), [isAdmin, permissions]);
