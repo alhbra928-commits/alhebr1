@@ -10,12 +10,17 @@ type TableChangeCallback = {
 
 class RealtimeSyncService {
   private channels: Map<string, RealtimeChannel> = new Map();
+  private enabled = false; // Disabled by default to reduce load
 
   subscribeToTable(
     tableName: string,
     callbacks: TableChangeCallback,
     filter?: string
   ): () => void {
+    if (!this.enabled) {
+      return () => {};
+    }
+
     const channelName = `${tableName}_${Date.now()}`;
 
     let channelBuilder = supabase
@@ -69,6 +74,15 @@ class RealtimeSyncService {
       supabase.removeChannel(channel);
     });
     this.channels.clear();
+  }
+
+  enableRealtime(): void {
+    this.enabled = true;
+  }
+
+  disableRealtime(): void {
+    this.enabled = false;
+    this.unsubscribeAll();
   }
 }
 
