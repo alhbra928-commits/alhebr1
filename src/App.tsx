@@ -70,44 +70,36 @@ function App() {
   }, [adminSession, activeModule, lastActivity]);
 
   const handleAdminLogin = async (adminData: any) => {
+    // إنشاء جلسة محلية فوراً (بدون انتظار Database)
+    const localSession = {
+      session_token: crypto.randomUUID(),
+      admin_phone: adminData.phone,
+      admin_name: adminData.name,
+      admin_role: adminData.role,
+      session_status: 'active',
+      started_at: new Date().toISOString(),
+    };
+
+    // حفظ في localStorage فوراً
+    localStorage.setItem('admin_session_token', localSession.session_token);
+    localStorage.setItem('admin_data', JSON.stringify(adminData));
+
+    // عرض لوحة الإدارة فوراً
+    setAdminSession({
+      ...adminData,
+      session: localSession,
+      permissions: adminData.permissions || []
+    });
+    setShowAdminLogin(false);
+    setActiveModule('dashboard');
+    setShowLoginNotification(true);
+    setLastActivity(Date.now());
+
+    // محاولة حفظ في Database في الخلفية (بدون انتظار)
     try {
-      // محاولة إنشاء جلسة في Database
-      const { session, permissions } = await AdminSessionService.createSession(adminData);
-      setAdminSession({ ...adminData, session, permissions });
-      setShowAdminLogin(false);
-      setActiveModule('dashboard');
-      setShowLoginNotification(true);
-      setLastActivity(Date.now());
+      await AdminSessionService.createSession(adminData);
     } catch (error) {
-      console.error('Failed to create session in DB:', error);
-
-      // Fallback: العمل بدون Database (localStorage فقط)
-      console.log('⚠️ Using localStorage-only mode (no database connection)');
-
-      // إنشاء جلسة محلية
-      const localSession = {
-        session_token: crypto.randomUUID(),
-        admin_phone: adminData.phone,
-        admin_name: adminData.name,
-        admin_role: adminData.role,
-        session_status: 'active',
-        started_at: new Date().toISOString(),
-      };
-
-      // حفظ في localStorage
-      localStorage.setItem('admin_session_token', localSession.session_token);
-      localStorage.setItem('admin_data', JSON.stringify(adminData));
-
-      // المتابعة بدون مشاكل
-      setAdminSession({
-        ...adminData,
-        session: localSession,
-        permissions: adminData.permissions || []
-      });
-      setShowAdminLogin(false);
-      setActiveModule('dashboard');
-      setShowLoginNotification(true);
-      setLastActivity(Date.now());
+      // تجاهل أخطاء Database
     }
   };
 
