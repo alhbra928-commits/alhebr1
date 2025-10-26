@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>اختبار النظام المالي المحدّث</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 40px 20px; }
+    .container { max-width: 1200px; margin: 0 auto; }
+    h1 { color: white; text-align: center; font-size: 2.5rem; margin-bottom: 40px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+    .card { background: white; border-radius: 20px; padding: 30px; margin-bottom: 30px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+    .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px; }
+    .stat-card { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 25px; border-radius: 15px; text-align: center; }
+    .stat-value { font-size: 2rem; font-weight: bold; margin: 10px 0; }
+    .stat-label { font-size: 0.9rem; opacity: 0.9; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 15px; text-align: right; border-bottom: 1px solid #e0e0e0; }
+    th { background: #f5f5f5; font-weight: 600; color: #333; }
+    .success { color: #10b981; font-weight: bold; }
+    .pending { color: #f59e0b; font-weight: bold; }
+    .loading { text-align: center; padding: 40px; color: white; font-size: 1.2rem; }
+    .error { background: #fee; color: #c00; padding: 20px; border-radius: 10px; margin: 20px 0; }
+    .badge { display: inline-block; padding: 5px 15px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; }
+    .badge-success { background: #d1fae5; color: #065f46; }
+    .badge-warning { background: #fef3c7; color: #92400e; }
+    .badge-info { background: #dbeafe; color: #1e40af; }
+    .progress-bar { background: #e0e0e0; height: 8px; border-radius: 10px; overflow: hidden; margin: 5px 0; }
+    .progress-fill { background: linear-gradient(90deg, #10b981, #059669); height: 100%; transition: width 0.3s; }
+    .refresh-btn { background: #10b981; color: white; border: none; padding: 12px 30px; border-radius: 10px; font-size: 1rem; cursor: pointer; margin: 20px 0; }
+    .refresh-btn:hover { background: #059669; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🏦 النظام المالي المحدّث - اختبار مباشر</h1>
+
+    <div id="loading" class="loading">⏳ جاري تحميل البيانات المالية...</div>
+    <div id="error" class="error" style="display: none;"></div>
+
+    <div id="content" style="display: none;">
+      <!-- الإحصائيات الإجمالية -->
+      <div class="card">
+        <h2 style="margin-bottom: 20px; color: #333;">📊 الإحصائيات الإجمالية</h2>
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="stat-label">إجمالي الإيرادات</div>
+            <div class="stat-value" id="totalRevenue">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">ربح المنصة</div>
+            <div class="stat-value" id="totalProfit">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">مبلغ الصدقة</div>
+            <div class="stat-value" id="totalCharity">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">عدد المزارع</div>
+            <div class="stat-value" id="totalFarms">0</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- تفاصيل المزارع -->
+      <div class="card">
+        <h2 style="margin-bottom: 20px; color: #333;">🌾 تفاصيل المزارع المالية</h2>
+        <button class="refresh-btn" onclick="loadData()">🔄 تحديث البيانات</button>
+        <table id="farmsTable">
+          <thead>
+            <tr>
+              <th>المزرعة</th>
+              <th>الإيرادات</th>
+              <th>ربح المنصة</th>
+              <th>الصدقة</th>
+              <th>المستثمرون</th>
+              <th>الاكتمال</th>
+              <th>الحالة</th>
+            </tr>
+          </thead>
+          <tbody id="farmsBody"></tbody>
+        </table>
+      </div>
+
+      <!-- محفظة الصدقة -->
+      <div class="card">
+        <h2 style="margin-bottom: 20px; color: #333;">💚 محفظة الصدقة</h2>
+        <div class="stat-grid">
+          <div class="stat-card" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+            <div class="stat-label">الرصيد الحالي</div>
+            <div class="stat-value" id="charityBalance">0</div>
+          </div>
+          <div class="stat-card" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);">
+            <div class="stat-label">إجمالي المستلم</div>
+            <div class="stat-value" id="charityReceived">0</div>
+          </div>
+          <div class="stat-card" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
+            <div class="stat-label">المزارع المساهمة</div>
+            <div class="stat-value" id="charityFarms">0</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    const SUPABASE_URL = 'https://zwtpanqzcfrcctvdzoir.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp3dHBhbnF6Y2ZyY2N0dmR6b2lyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjk0MTcxNTAsImV4cCI6MjA0NDk5MzE1MH0.gfJH4tWZ3oSEV1e7IiQFfWJdDf0uQJ6u7n9_XQ2IQAI';
+
+    const { createClient } = supabase;
+    const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const formatCurrency = (amount) => {
+      return new Intl.NumberFormat('ar-SA', {
+        style: 'currency',
+        currency: 'SAR',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      }).format(amount);
+    };
+
+    window.loadData = async function() {
+      try {
+        document.getElementById('loading').style.display = 'block';
+        document.getElementById('error').style.display = 'none';
+        document.getElementById('content').style.display = 'none';
+
+        console.log('🔍 جاري جلب البيانات من smart_farm_finances...');
+
+        // جلب بيانات المزارع
+        const { data: farms, error: farmsError } = await supabaseClient
+          .from('smart_farm_finances')
+          .select('*')
+          .is('deleted_at', null)
+          .order('created_at', { ascending: false });
+
+        if (farmsError) {
+          throw new Error(`خطأ في جلب المزارع: ${farmsError.message}`);
+        }
+
+        console.log('✅ تم جلب البيانات:', farms);
+
+        // جلب محفظة الصدقة
+        const { data: charity, error: charityError } = await supabaseClient
+          .from('charity_wallet')
+          .select('*')
+          .limit(1)
+          .single();
+
+        if (charityError && charityError.code !== 'PGRST116') {
+          console.warn('تحذير في جلب محفظة الصدقة:', charityError);
+        }
+
+        // حساب الإحصائيات
+        const stats = farms.reduce((acc, farm) => ({
+          totalRevenue: acc.totalRevenue + Number(farm.total_revenue_collected || 0),
+          totalProfit: acc.totalProfit + Number(farm.platform_profit || 0),
+          totalCharity: acc.totalCharity + Number(farm.charity_amount || 0),
+        }), { totalRevenue: 0, totalProfit: 0, totalCharity: 0 });
+
+        // عرض الإحصائيات
+        document.getElementById('totalRevenue').textContent = formatCurrency(stats.totalRevenue);
+        document.getElementById('totalProfit').textContent = formatCurrency(stats.totalProfit);
+        document.getElementById('totalCharity').textContent = formatCurrency(stats.totalCharity);
+        document.getElementById('totalFarms').textContent = farms.length;
+
+        // عرض محفظة الصدقة
+        if (charity) {
+          document.getElementById('charityBalance').textContent = formatCurrency(charity.total_balance || 0);
+          document.getElementById('charityReceived').textContent = formatCurrency(charity.total_received || 0);
+          document.getElementById('charityFarms').textContent = charity.farms_contributed || 0;
+        }
+
+        // عرض جدول المزارع
+        const tbody = document.getElementById('farmsBody');
+        tbody.innerHTML = farms.map(farm => `
+          <tr>
+            <td>
+              <strong>${farm.farm_name || 'غير معروف'}</strong><br>
+              <small style="color: #666;">${farm.farm_code}</small>
+            </td>
+            <td><strong>${formatCurrency(farm.total_revenue_collected || 0)}</strong></td>
+            <td class="success">${formatCurrency(farm.platform_profit || 0)}</td>
+            <td style="color: #8b5cf6; font-weight: bold;">${formatCurrency(farm.charity_amount || 0)}</td>
+            <td>${farm.total_investors || 0} مستثمر</td>
+            <td>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: ${Math.min(farm.financial_completion_percentage || 0, 100)}%"></div>
+              </div>
+              <small>${(farm.financial_completion_percentage || 0).toFixed(1)}%</small>
+            </td>
+            <td>
+              <span class="badge ${farm.status === 'active' ? 'badge-success' : 'badge-warning'}">
+                ${farm.status}
+              </span>
+            </td>
+          </tr>
+        `).join('');
+
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('content').style.display = 'block';
+
+      } catch (error) {
+        console.error('❌ خطأ:', error);
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('error').style.display = 'block';
+        document.getElementById('error').textContent = `خطأ: ${error.message}`;
+      }
+    };
+
+    // تحميل البيانات عند فتح الصفحة
+    loadData();
+
+    // Realtime subscription
+    const channel = supabaseClient
+      .channel('financial_updates')
+      .on('postgres_changes', {
+        event: '*',
+        schema: 'public',
+        table: 'smart_farm_finances'
+      }, (payload) => {
+        console.log('🔄 تحديث في البيانات المالية:', payload);
+        loadData();
+      })
+      .subscribe();
+  </script>
+</body>
+</html>
