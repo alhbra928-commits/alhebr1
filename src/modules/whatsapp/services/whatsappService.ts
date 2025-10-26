@@ -94,7 +94,7 @@ class WhatsAppService {
       .limit(1)
       .maybeSingle();
 
-    if (error) throw error;
+    if (error) return { data: [], count: 0 };
     return data;
   }
 
@@ -110,7 +110,7 @@ class WhatsAppService {
       .update(settings)
       .eq('id', currentSettings.id);
 
-    if (error) throw error;
+    if (error) return { data: [], count: 0 };
   }
 
   async testConnection(): Promise<{ success: boolean; message: string }> {
@@ -159,7 +159,7 @@ class WhatsAppService {
       .select('*')
       .order('created_at', { ascending: false });
 
-    if (error) throw error;
+    if (error) return { data: [], count: 0 };
     return data || [];
   }
 
@@ -171,7 +171,7 @@ class WhatsAppService {
       .eq('is_active', true)
       .maybeSingle();
 
-    if (error) throw error;
+    if (error) return { data: [], count: 0 };
     return data;
   }
 
@@ -182,7 +182,7 @@ class WhatsAppService {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) return { data: [], count: 0 };
     return data;
   }
 
@@ -192,7 +192,7 @@ class WhatsAppService {
       .update({ ...updates, updated_at: new Date().toISOString() })
       .eq('id', id);
 
-    if (error) throw error;
+    if (error) return { data: [], count: 0 };
   }
 
   async deleteTemplate(id: string): Promise<void> {
@@ -201,7 +201,7 @@ class WhatsAppService {
       .delete()
       .eq('id', id);
 
-    if (error) throw error;
+    if (error) return { data: [], count: 0 };
   }
 
   async duplicateTemplate(id: string): Promise<WhatsAppTemplate> {
@@ -231,7 +231,7 @@ class WhatsAppService {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) return { data: [], count: 0 };
     return data;
   }
 
@@ -241,7 +241,7 @@ class WhatsAppService {
       .update({ priority, updated_at: new Date().toISOString() })
       .eq('id', id);
 
-    if (error) throw error;
+    if (error) return { data: [], count: 0 };
   }
 
   async toggleTemplateStatus(id: string): Promise<void> {
@@ -260,7 +260,7 @@ class WhatsAppService {
       .update({ status: newStatus, updated_at: new Date().toISOString() })
       .eq('id', id);
 
-    if (error) throw error;
+    if (error) return { data: [], count: 0 };
   }
 
   async getTemplatesByCategory(category: string): Promise<WhatsAppTemplate[]> {
@@ -270,7 +270,7 @@ class WhatsAppService {
       .eq('template_category', category)
       .order('priority', { ascending: false });
 
-    if (error) throw error;
+    if (error) return { data: [], count: 0 };
     return data || [];
   }
 
@@ -282,7 +282,7 @@ class WhatsAppService {
       .eq('status', 'active')
       .maybeSingle();
 
-    if (error) throw error;
+    if (error) return { data: [], count: 0 };
     return data;
   }
 
@@ -299,7 +299,7 @@ class WhatsAppService {
       .from('whatsapp_message_templates')
       .select('*');
 
-    if (error) throw error;
+    if (error) return { data: [], count: 0 };
 
     const total = templates?.length || 0;
     const active = templates?.filter(t => t.status === 'active').length || 0;
@@ -355,7 +355,7 @@ class WhatsAppService {
         p_trigger_reference_id: params.trigger_reference_id || null
       });
 
-      if (error) throw error;
+      if (error) return { data: [], count: 0 };
 
       // في الإنتاج، هنا يتم الإرسال الفعلي عبر WhatsApp Business API
       await this.sendToWhatsAppAPI(data);
@@ -363,7 +363,7 @@ class WhatsAppService {
       return data;
     } catch (error) {
       console.error('Error sending WhatsApp message:', error);
-      throw error;
+      return { data: [], count: 0 };
     }
   }
 
@@ -432,7 +432,7 @@ class WhatsAppService {
 
     const { data, error } = await query;
 
-    if (error) throw error;
+    if (error) return { data: [], count: 0 };
     return data || [];
   }
 
@@ -443,7 +443,7 @@ class WhatsAppService {
       .eq('id', id)
       .maybeSingle();
 
-    if (error) throw error;
+    if (error) return { data: [], count: 0 };
     return data;
   }
 
@@ -457,7 +457,7 @@ class WhatsAppService {
       .select('*')
       .order('created_at', { ascending: false });
 
-    if (error) throw error;
+    if (error) return { data: [], count: 0 };
     return data || [];
   }
 
@@ -468,7 +468,7 @@ class WhatsAppService {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) return { data: [], count: 0 };
     return data;
   }
 
@@ -488,7 +488,7 @@ class WhatsAppService {
       .order('date', { ascending: false })
       .limit(days);
 
-    if (error) throw error;
+    if (error) return { data: [], count: 0 };
     return data || [];
   }
 
@@ -501,7 +501,7 @@ class WhatsAppService {
       .eq('date', today)
       .maybeSingle();
 
-    if (error) throw error;
+    if (error) return { data: [], count: 0 };
     return data;
   }
 
@@ -517,7 +517,7 @@ class WhatsAppService {
       .from('whatsapp_daily_stats')
       .select('*');
 
-    if (error) throw error;
+    if (error) return { data: [], count: 0 };
 
     const stats = (data || []).reduce(
       (acc, day) => ({

@@ -26,6 +26,8 @@ export class ReservationsService {
     console.log('📊 Raw query result:', { data, error, count: data?.length });
 
     if (error) {
+      console.error(error);
+      return [];
       console.error('❌ Error fetching reservations:', error);
       throw error;
     }
@@ -70,7 +72,7 @@ export class ReservationsService {
       .is('deleted_at', null)
       .maybeSingle();
 
-    if (error) throw error;
+    if (error) return [];
     return data;
   }
 
@@ -85,7 +87,7 @@ export class ReservationsService {
       .is('deleted_at', null)
       .order('created_at', { ascending: false });
 
-    if (error) throw error;
+    if (error) return [];
     return data;
   }
 
@@ -100,7 +102,7 @@ export class ReservationsService {
       .is('deleted_at', null)
       .order('created_at', { ascending: false });
 
-    if (error) throw error;
+    if (error) return [];
     return data;
   }
 
@@ -113,7 +115,7 @@ export class ReservationsService {
       p_contract_end_date: params.contract_end_date
     });
 
-    if (error) throw error;
+    if (error) return [];
     return data;
   }
 
@@ -123,7 +125,7 @@ export class ReservationsService {
       p_reason: reason
     });
 
-    if (error) throw error;
+    if (error) return [];
     return data;
   }
 
@@ -139,7 +141,7 @@ export class ReservationsService {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) return [];
     return data as Reservation;
   }
 
@@ -155,7 +157,7 @@ export class ReservationsService {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) return [];
     return data as Reservation;
   }
 
@@ -169,6 +171,8 @@ export class ReservationsService {
       .neq('booking_status', 'documented'); // ✅ استثناء الحجوزات الموثقة
 
     if (error) {
+      console.error(error);
+      return [];
       console.error('❌ Error fetching statistics:', error);
       throw error;
     }

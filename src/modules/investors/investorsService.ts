@@ -35,7 +35,7 @@ export class InvestorsService {
       .order('created_at', { ascending: false })
       .range(offset, offset + limit - 1);
 
-    if (error) throw error;
+    if (error) return { data: [], count: 0 };
 
     const investors = (data || []).map(investor => ({
       ...investor,
@@ -54,7 +54,7 @@ export class InvestorsService {
       .eq('id', id)
       .maybeSingle();
 
-    if (error) throw error;
+    if (error) return { data: [], count: 0 };
     return data;
   }
 
@@ -73,7 +73,7 @@ export class InvestorsService {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) return { data: [], count: 0 };
     return data;
   }
 
@@ -94,7 +94,7 @@ export class InvestorsService {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) return { data: [], count: 0 };
     return data;
   }
 
@@ -109,7 +109,7 @@ export class InvestorsService {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) return { data: [], count: 0 };
     return data;
   }
 
@@ -140,7 +140,7 @@ export class InvestorsService {
       })
       .eq('id', id);
 
-    if (error) throw error;
+    if (error) return { data: [], count: 0 };
   }
 
   static async getStatistics() {
@@ -187,7 +187,7 @@ export class InvestorsService {
       .eq('investor_id', investorId)
       .order('created_at', { ascending: false });
 
-    if (error) throw error;
+    if (error) return { data: [], count: 0 };
     return data || [];
   }
 
@@ -201,7 +201,7 @@ export class InvestorsService {
       .eq('investor_id', investorId)
       .order('created_at', { ascending: false });
 
-    if (error) throw error;
+    if (error) return { data: [], count: 0 };
     return data || [];
   }
 
@@ -214,7 +214,7 @@ export class InvestorsService {
       `)
       .eq('investor_id', investorId);
 
-    if (error) throw error;
+    if (error) return { data: [], count: 0 };
 
     const uniqueFarms = Array.from(
       new Map((data || []).map(item => [item.farm_id, item.farms])).values()

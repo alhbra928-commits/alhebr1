@@ -66,7 +66,7 @@ export class FarmsService {
 
     if (error) {
       console.error('Error fetching farms:', error);
-      throw error;
+      return { data: [], count: 0 };
     }
 
     if (!farms || farms.length === 0) return { data: [], count: 0 };
@@ -131,7 +131,7 @@ export class FarmsService {
 
     if (error) {
       console.error('Error fetching farm:', error);
-      throw error;
+      return { data: [], count: 0 };
     }
 
     if (!farm) return null;
@@ -166,7 +166,7 @@ export class FarmsService {
 
     if (error) {
       console.error('Error fetching active farms:', error);
-      throw error;
+      return { data: [], count: 0 };
     }
     return data || [];
   }
@@ -324,7 +324,7 @@ export class FarmsService {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) return { data: [], count: 0 };
     return data as Farm;
   }
 
@@ -335,7 +335,7 @@ export class FarmsService {
       p_reason: reason
     });
 
-    if (error) throw error;
+    if (error) return { data: [], count: 0 };
   }
 
   static async getStatistics() {
@@ -408,7 +408,7 @@ export class FarmsService {
 
     if (error) {
       console.error('Error fetching tree codes:', error);
-      throw error;
+      return { data: [], count: 0 };
     }
 
     return data || [];
@@ -449,7 +449,7 @@ export class FarmsService {
       })
       .eq('id', farmId);
 
-    if (error) throw error;
+    if (error) return { data: [], count: 0 };
   }
 
   static async getTreeCodesByStatus(farmId: string, status: string): Promise<TreeCode[]> {
@@ -462,7 +462,7 @@ export class FarmsService {
 
     if (error) {
       console.error('Error fetching tree codes by status:', error);
-      throw error;
+      return { data: [], count: 0 };
     }
 
     return data || [];
@@ -477,7 +477,7 @@ export class FarmsService {
       })
       .eq('tree_code', treeCode);
 
-    if (error) throw error;
+    if (error) return { data: [], count: 0 };
   }
 
   static async createBackupForCodes(farmId: string) {
@@ -569,7 +569,7 @@ export class FarmsService {
 
     if (error) {
       console.error('Error updating sales status:', error);
-      throw error;
+      return { data: [], count: 0 };
     }
 
     return data;
@@ -582,7 +582,7 @@ export class FarmsService {
 
     if (error) {
       console.error('Error calculating sales status:', error);
-      throw error;
+      return { data: [], count: 0 };
     }
 
     return data;

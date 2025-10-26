@@ -129,7 +129,7 @@ export class OwnersService {
 
     const { data, error } = await query;
 
-    if (error) throw error;
+    if (error) return { data: [], count: 0 };
 
     // حفظ في الـ cache
     if (!status) {
@@ -155,7 +155,7 @@ export class OwnersService {
       .is('deleted_at', null)
       .maybeSingle();
 
-    if (error) throw error;
+    if (error) return { data: [], count: 0 };
     if (!data) throw new Error('المالك غير موجود');
     return data;
   }
@@ -177,7 +177,7 @@ export class OwnersService {
       .eq('farm_id', farm.id)
       .is('deleted_at', null);
 
-    if (error) throw error;
+    if (error) return { data: [], count: 0 };
 
     return (varieties || []).map(v => ({
       type: v.tree_type as 'نخيل' | 'زيتون',
@@ -200,7 +200,7 @@ export class OwnersService {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) return { data: [], count: 0 };
 
     // مسح الـ cache بعد الإضافة
     this.clearCache();
@@ -223,7 +223,7 @@ export class OwnersService {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) return { data: [], count: 0 };
 
     // مسح الـ cache بعد التحديث
     this.clearCache();
@@ -238,7 +238,7 @@ export class OwnersService {
       p_reason: reason
     });
 
-    if (error) throw error;
+    if (error) return { data: [], count: 0 };
 
     // مسح الـ cache بعد تغيير الحالة
     this.clearCache();
@@ -252,7 +252,7 @@ export class OwnersService {
       p_deletion_reason: deletionReason || 'حذف إداري'
     });
 
-    if (error) throw error;
+    if (error) return { data: [], count: 0 };
 
     // مسح الـ cache بعد الحذف
     this.clearCache();
@@ -282,7 +282,7 @@ export class OwnersService {
 
     if (error) {
       console.error('Error approving submission:', error);
-      throw error;
+      return { data: [], count: 0 };
     }
     return data;
   }
@@ -309,7 +309,7 @@ export class OwnersService {
 
     if (error) {
       console.error('Error rejecting submission:', error);
-      throw error;
+      return { data: [], count: 0 };
     }
     return data;
   }

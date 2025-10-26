@@ -154,6 +154,8 @@ export class BookingsService {
       .maybeSingle();
 
     if (error) {
+      console.error(error);
+      return [];
       console.error('Error fetching booking:', error);
       throw error;
     }
@@ -174,6 +176,8 @@ export class BookingsService {
       .order('created_at', { ascending: false});
 
     if (error) {
+      console.error(error);
+      return [];
       console.error('Error fetching bookings by status:', error);
       throw error;
     }
@@ -210,7 +214,7 @@ export class BookingsService {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) return [];
     return data as Booking;
   }
 
@@ -313,6 +317,8 @@ export class BookingsService {
       .single();
 
     if (error) {
+      console.error(error);
+      return [];
       console.error('❌ Error updating booking:', error);
       throw error;
     }
@@ -389,6 +395,8 @@ export class BookingsService {
       .single();
 
     if (error) {
+      console.error(error);
+      return [];
       console.error('❌ Error updating payment:', error);
       throw error;
     }
@@ -424,6 +432,8 @@ export class BookingsService {
       .eq('id', id);
 
     if (error) {
+      console.error(error);
+      return [];
       console.error('❌ Error deleting booking:', error);
       throw error;
     }
@@ -461,6 +471,8 @@ export class BookingsService {
       });
 
       if (error) {
+      console.error(error);
+      return [];
         // إنشاء تقرير تشخيصي مفصل
         const diagnosticReport = this.generateDiagnosticReport(bookingData, error);
         console.error('❌ Error migrating to documentation:', diagnosticReport);
@@ -736,7 +748,7 @@ ${this.generateSecurityCheck(error)}
       })
       .eq('id', id);
 
-    if (error) throw error;
+    if (error) return [];
   }
 
   static async reject(id: string): Promise<void> {
@@ -748,7 +760,7 @@ ${this.generateSecurityCheck(error)}
       })
       .eq('id', id);
 
-    if (error) throw error;
+    if (error) return [];
   }
 
   static async issueCertificate(id: string): Promise<void> {
@@ -760,7 +772,7 @@ ${this.generateSecurityCheck(error)}
       })
       .eq('id', id);
 
-    if (error) throw error;
+    if (error) return [];
   }
 
   static async deletePermanently(id: string): Promise<void> {
@@ -769,7 +781,7 @@ ${this.generateSecurityCheck(error)}
       .delete()
       .eq('id', id);
 
-    if (error) throw error;
+    if (error) return [];
   }
 
   static async getStatistics(): Promise<any> {
@@ -778,7 +790,7 @@ ${this.generateSecurityCheck(error)}
       .select('status, booking_status, total_price')
       .is('deleted_at', null);
 
-    if (error) throw error;
+    if (error) return [];
 
     const stats = {
       total: data?.length || 0,

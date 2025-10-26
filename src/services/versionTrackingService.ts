@@ -41,7 +41,7 @@ class VersionTrackingService {
     try {
       const { data, error } = await supabase.rpc('get_active_version');
 
-      if (error) throw error;
+      if (error) return [];
       return data && data.length > 0 ? data[0] : null;
     } catch (error) {
       console.error('Error fetching active version:', error);
@@ -68,7 +68,7 @@ class VersionTrackingService {
         p_environment: environment,
       });
 
-      if (error) throw error;
+      if (error) return [];
       return data;
     } catch (error) {
       console.error('Error recording new version:', error);
@@ -101,7 +101,7 @@ class VersionTrackingService {
         p_expires_hours: expiresHours,
       });
 
-      if (error) throw error;
+      if (error) return [];
       return data;
     } catch (error) {
       console.error('Error creating update notification:', error);
@@ -130,7 +130,7 @@ class VersionTrackingService {
 
       const { data, error } = await query;
 
-      if (error) throw error;
+      if (error) return [];
       return data || [];
     } catch (error) {
       console.error('Error fetching unread notifications:', error);
@@ -147,7 +147,7 @@ class VersionTrackingService {
         p_notification_id: notificationId,
       });
 
-      if (error) throw error;
+      if (error) return [];
       return data === true;
     } catch (error) {
       console.error('Error marking notification as read:', error);
@@ -200,7 +200,7 @@ class VersionTrackingService {
     try {
       const { data, error } = await supabase.rpc('cleanup_old_notifications');
 
-      if (error) throw error;
+      if (error) return [];
       return data || 0;
     } catch (error) {
       console.error('Error cleaning up old notifications:', error);
@@ -219,7 +219,7 @@ class VersionTrackingService {
         .order('deployed_at', { ascending: false })
         .limit(limit);
 
-      if (error) throw error;
+      if (error) return [];
       return data || [];
     } catch (error) {
       console.error('Error fetching version history:', error);

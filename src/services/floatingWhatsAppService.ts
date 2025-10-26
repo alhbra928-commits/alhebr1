@@ -100,7 +100,7 @@ class FloatingWhatsAppService {
         .limit(1)
         .maybeSingle();
 
-      if (error) throw error;
+      if (error) return [];
       return data;
     } catch (error) {
       console.error('Error loading floating WhatsApp settings:', error);
@@ -116,7 +116,7 @@ class FloatingWhatsAppService {
         .eq('is_active', true)
         .order('display_order', { ascending: true });
 
-      if (error) throw error;
+      if (error) return [];
 
       return (data || []).filter(contact =>
         contact.user_types.includes(userType)
@@ -144,13 +144,13 @@ class FloatingWhatsAppService {
           })
           .eq('session_id', session.session_id);
 
-        if (error) throw error;
+        if (error) return [];
       } else {
         const { error } = await supabase
           .from('whatsapp_user_sessions')
           .insert([session]);
 
-        if (error) throw error;
+        if (error) return [];
       }
 
       this.startActivityTracking();
@@ -196,7 +196,7 @@ class FloatingWhatsAppService {
         .from('whatsapp_context_logs')
         .insert([log]);
 
-      if (error) throw error;
+      if (error) return [];
       return true;
     } catch (error) {
       console.error('Error logging context:', error);
@@ -295,7 +295,7 @@ class FloatingWhatsAppService {
         .eq('is_active', true)
         .order('last_activity_at', { ascending: false });
 
-      if (error) throw error;
+      if (error) return [];
       return data || [];
     } catch (error) {
       console.error('Error loading active sessions:', error);
@@ -311,7 +311,7 @@ class FloatingWhatsAppService {
         .order('created_at', { ascending: false })
         .limit(limit);
 
-      if (error) throw error;
+      if (error) return [];
       return data || [];
     } catch (error) {
       console.error('Error loading context logs:', error);
@@ -329,7 +329,7 @@ class FloatingWhatsAppService {
         })
         .eq('id', '00000000-0000-0000-0000-000000000001');
 
-      if (error) throw error;
+      if (error) return [];
       return true;
     } catch (error) {
       console.error('Error updating settings:', error);
@@ -347,7 +347,7 @@ class FloatingWhatsAppService {
         })
         .eq('id', id);
 
-      if (error) throw error;
+      if (error) return [];
       return true;
     } catch (error) {
       console.error('Error updating contact number:', error);
@@ -361,7 +361,7 @@ class FloatingWhatsAppService {
         .from('whatsapp_contact_numbers')
         .insert([contact]);
 
-      if (error) throw error;
+      if (error) return [];
       return true;
     } catch (error) {
       console.error('Error adding contact number:', error);
@@ -376,7 +376,7 @@ class FloatingWhatsAppService {
         .delete()
         .eq('id', id);
 
-      if (error) throw error;
+      if (error) return [];
       return true;
     } catch (error) {
       console.error('Error deleting contact number:', error);

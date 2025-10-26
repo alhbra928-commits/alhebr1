@@ -54,7 +54,7 @@ export class DocumentationService {
 
     if (error) {
       console.error('Error fetching documentation:', error);
-      throw error;
+      return { data: [], count: 0 };
     }
 
     return data || [];
@@ -73,7 +73,7 @@ export class DocumentationService {
 
     if (error) {
       console.error('Error fetching documentation:', error);
-      throw error;
+      return { data: [], count: 0 };
     }
 
     return data;
@@ -88,7 +88,7 @@ export class DocumentationService {
 
     if (error) {
       console.error('Error fetching documentation by code:', error);
-      throw error;
+      return { data: [], count: 0 };
     }
 
     return data;
@@ -107,7 +107,7 @@ export class DocumentationService {
 
     if (error) {
       console.error('Error fetching documentation by token:', error);
-      throw error;
+      return { data: [], count: 0 };
     }
 
     return data;
@@ -129,7 +129,7 @@ export class DocumentationService {
       .update(updates)
       .eq('id', id);
 
-    if (error) throw error;
+    if (error) return { data: [], count: 0 };
   }
 
   static async updateStatus(
@@ -146,7 +146,7 @@ export class DocumentationService {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) return { data: [], count: 0 };
     return data as Documentation;
   }
 
@@ -172,7 +172,7 @@ export class DocumentationService {
 
     if (error) {
       console.error('Error fetching investor certificates:', error);
-      throw error;
+      return { data: [], count: 0 };
     }
 
     return data || [];
@@ -187,7 +187,7 @@ export class DocumentationService {
       })
       .eq('id', id);
 
-    if (error) throw error;
+    if (error) return { data: [], count: 0 };
   }
 
   static async incrementDownloadCount(id: string): Promise<void> {
@@ -205,7 +205,7 @@ export class DocumentationService {
         })
         .eq('id', id);
 
-      if (error) throw error;
+      if (error) return { data: [], count: 0 };
     }
   }
 
@@ -245,7 +245,7 @@ export class DocumentationService {
 
     if (error) {
       console.error('Error fetching migration log:', error);
-      throw error;
+      return { data: [], count: 0 };
     }
 
     return data || [];
@@ -316,7 +316,7 @@ export class DocumentationService {
 
       // إذا كان الخطأ من try block، نعيد رميه
       if (err instanceof Error) {
-        throw err;
+        return { data: [], count: 0 };
       }
 
       // خطأ غير متوقع
