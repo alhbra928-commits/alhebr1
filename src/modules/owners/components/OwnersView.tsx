@@ -1,37 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Users,
-  Plus,
-  Edit,
-  Trash2,
-  CheckCircle,
-  Snowflake,
-  UserCheck,
-  Phone,
-  MapPin,
-  Search,
-  Filter,
-  Eye,
-  Clock,
-  X,
-  XCircle,
-  MessageSquare,
-  Wallet,
-  MoreHorizontal,
-  TreePine,
-  Calendar,
-  Home,
-  FileText,
-  DollarSign,
-  CreditCard,
-  Building
-} from 'lucide-react';
-import { Card3D } from '../../../components/ui/Card3D';
+import { Users, Plus, Search } from 'lucide-react';
 import { BackButton } from '../../../components/common/BackButton';
 import { OwnersService, FarmOwner } from '../ownersService';
-import { FarmsService } from '../../farms/farmsService';
-import { OwnerFormModal } from './OwnerFormModal';
 import { AdvancedOwnerCard3D } from './AdvancedOwnerCard3D';
+import { OwnerFormModal } from './OwnerFormModal';
 import { SubmittedDataModal } from './SubmittedDataModal';
 import { usePermissions } from '../../../contexts/PermissionsContext';
 
@@ -41,75 +13,33 @@ interface OwnersViewProps {
 
 export function OwnersView({ onBack }: OwnersViewProps) {
   const [owners, setOwners] = useState<FarmOwner[]>([]);
-  const [pendingSubmissions, setPendingSubmissions] = useState<any[]>([]);
   const [filteredOwners, setFilteredOwners] = useState<FarmOwner[]>([]);
-  const [stats, setStats] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [selectedOwner, setSelectedOwner] = useState<FarmOwner | null>(null);
   const [modalMode, setModalMode] = useState<'create' | 'edit'>('create');
   const [searchTerm, setSearchTerm] = useState('');
-  const [filterStatus, setFilterStatus] = useState<string>('all');
-  const [filterRegion, setFilterRegion] = useState<string>('all');
-  const [showDetailsPanel, setShowDetailsPanel] = useState(false);
-  const [selectedOwnerDetails, setSelectedOwnerDetails] = useState<any>(null);
-  const [ownerFarms, setOwnerFarms] = useState<any[]>([]);
   const [showSubmittedDataModal, setShowSubmittedDataModal] = useState(false);
   const [selectedOwnerForData, setSelectedOwnerForData] = useState<FarmOwner | null>(null);
 
   const { isAdmin, canCreate, canEdit, canDelete } = usePermissions();
 
-  const hasCreatePermission = isAdmin || canCreate('farm_owners');
-  const hasEditPermission = isAdmin || canEdit('farm_owners');
-  const hasDeletePermission = isAdmin || canDelete('farm_owners');
-
-  // Rejection modal state
-  const [showRejectModal, setShowRejectModal] = useState(false);
-  const [submissionToReject, setSubmissionToReject] = useState<any>(null);
-  const [selectedRejectionReason, setSelectedRejectionReason] = useState('');
-  const [customRejectionReason, setCustomRejectionReason] = useState('');
-
   useEffect(() => {
-    // تأخير التحميل قليلاً لتحسين الأداء
-    const timer = setTimeout(() => {
-      loadData();
-    }, 100);
-    return () => clearTimeout(timer);
+    loadData();
   }, []);
 
   useEffect(() => {
     applyFilters();
-  }, [owners, searchTerm, filterStatus, filterRegion]);
+  }, [owners, searchTerm]);
 
   const loadData = async () => {
     try {
       setLoading(true);
-
-      // تحميل البيانات الأساسية أولاً مع cache
-      const ownersData = await OwnersService.getOwnersList(undefined, true).catch(err => {
-        console.error('Error loading owners:', err);
-        return [];
-      });
-
+      const ownersData = await OwnersService.getOwnersList(undefined, true);
       setOwners(ownersData);
-      setLoading(false);
-
-      // تحميل الإحصائيات والطلبات المعلقة في الخلفية
-      Promise.all([
-        OwnersService.getStatistics().catch(err => {
-          console.error('Error loading stats:', err);
-          return { total: 0, active: 0, frozen: 0 };
-        }),
-        OwnersService.getPendingSubmissions().catch(err => {
-          console.error('Error loading pending submissions:', err);
-          return [];
-        })
-      ]).then(([statsData, pendingData]) => {
-        setStats(statsData);
-        setPendingSubmissions(pendingData);
-      });
     } catch (err) {
-      console.error('❌ Error loading data:', err);
+      console.error('Error loading owners:', err);
+    } finally {
       setLoading(false);
     }
   };
@@ -120,25 +50,11 @@ export function OwnersView({ onBack }: OwnersViewProps) {
     if (searchTerm) {
       filtered = filtered.filter(owner =>
         owner.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        owner.mobile_number.includes(searchTerm) ||
-        owner.city?.toLowerCase().includes(searchTerm.toLowerCase())
+        owner.mobile_number.includes(searchTerm)
       );
     }
 
-    if (filterStatus !== 'all') {
-      filtered = filtered.filter(owner => owner.status === filterStatus);
-    }
-
-    if (filterRegion !== 'all') {
-      filtered = filtered.filter(owner => owner.region === filterRegion);
-    }
-
     setFilteredOwners(filtered);
-  };
-
-  const getUniqueRegions = () => {
-    const regions = owners.map(o => o.region).filter(Boolean);
-    return [...new Set(regions)];
   };
 
   const handleCreateOwner = () => {
@@ -147,32 +63,15 @@ export function OwnersView({ onBack }: OwnersViewProps) {
     setShowModal(true);
   };
 
-  const handleEditOwner = (owner: FarmOwner, e: React.MouseEvent) => {
-    e.stopPropagation();
+  const handleEditOwner = (owner: FarmOwner) => {
     setSelectedOwner(owner);
     setModalMode('edit');
     setShowModal(true);
   };
 
-  const handleViewDetails = async (owner: FarmOwner, e?: React.MouseEvent) => {
-    if (e) e.stopPropagation();
+  const handleViewDetails = (owner: FarmOwner) => {
     setSelectedOwnerForData(owner);
     setShowSubmittedDataModal(true);
-  };
-
-  const handleViewDetailsOld = async (owner: FarmOwner, e: React.MouseEvent) => {
-    e.stopPropagation();
-    setSelectedOwnerDetails(owner);
-    setShowDetailsPanel(true);
-
-    try {
-      const farms = await FarmsService.getAll();
-      const ownerFarmsData = farms.filter(f => f.owner_id === owner.id);
-      setOwnerFarms(ownerFarmsData);
-    } catch (error) {
-      console.error('Error loading farms:', error);
-      setOwnerFarms([]);
-    }
   };
 
   const handleSubmitOwner = async (data: any) => {
@@ -191,477 +90,143 @@ export function OwnersView({ onBack }: OwnersViewProps) {
     }
   };
 
-  const handleToggleStatus = async (owner: FarmOwner, e: React.MouseEvent) => {
-    e.stopPropagation();
+  const handleToggleStatus = async (owner: FarmOwner) => {
     const newStatus = owner.status === 'active' ? 'frozen' : 'active';
-
     try {
-      await OwnersService.toggleStatus(owner.id, newStatus, 'تغيير الحالة من لوحة التحكم');
+      await OwnersService.toggleStatus(owner.id, newStatus);
       await loadData();
     } catch (err: any) {
       alert('حدث خطأ: ' + err.message);
     }
   };
 
-  const handleDeleteOwner = async (owner: FarmOwner, e: React.MouseEvent) => {
-    e.stopPropagation();
-
-    const confirmMessage = `⚠️ تحذير: حذف نهائي ⚠️\n\n` +
-      `هل أنت متأكد من حذف المالك "${owner.full_name}" نهائياً؟\n\n` +
-      `📱 الجوال: ${owner.mobile_number}\n` +
-      `📍 المنطقة: ${owner.region} - ${owner.city}\n` +
-      `🏠 عدد المزارع: ${owner.farms_count || 0}\n\n` +
-      `⚠️ هذا الإجراء لا يمكن التراجع عنه!\n` +
-      `✅ سيتم حفظ نسخة احتياطية JSON تلقائياً.`;
-
-    if (!confirm(confirmMessage)) {
-      return;
-    }
+  const handleDeleteOwner = async (owner: FarmOwner) => {
+    if (!confirm(`هل أنت متأكد من حذف المالك "${owner.full_name}"؟`)) return;
 
     try {
-      console.log('🗑️ حذف المالك:', owner.full_name, owner.id);
-      await OwnersService.deleteOwnerPermanently(owner.id, 'حذف نهائي من لوحة التحكم');
-      alert('✅ تم حذف المالك نهائياً\n\n✓ تم حفظ نسخة احتياطية JSON\n✓ تم تحديث قاعدة البيانات');
+      await OwnersService.deleteOwnerPermanently(owner.id);
+      alert('تم حذف المالك بنجاح');
       await loadData();
     } catch (err: any) {
-      console.error('❌ خطأ في الحذف:', err);
-      alert('❌ حدث خطأ في الحذف:\n\n' + err.message);
-    }
-  };
-
-  const handleSendMessage = (owner: FarmOwner, e: React.MouseEvent) => {
-    e.stopPropagation();
-    const message = prompt(`أرسل رسالة إلى ${owner.full_name}:`);
-    if (message) {
-      const whatsappUrl = `https://wa.me/${owner.mobile_number.replace(/\D/g, '')}?text=${encodeURIComponent(message)}`;
-      window.open(whatsappUrl, '_blank');
-    }
-  };
-
-  const handleViewFinancials = (owner: FarmOwner, e: React.MouseEvent) => {
-    e.stopPropagation();
-    alert(`عرض المعاملات المالية لـ ${owner.full_name}\n\nهذه الميزة قيد التطوير...`);
-  };
-
-  const toggleExpandedActions = (ownerId: string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    setExpandedActions(prev => ({
-      ...prev,
-      [ownerId]: !prev[ownerId]
-    }));
-  };
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'active':
-        return 'border-green-400 bg-green-50';
-      case 'frozen':
-        return 'border-blue-400 bg-blue-50';
-      case 'under_review':
-        return 'border-yellow-400 bg-yellow-50';
-      default:
-        return 'border-gray-400 bg-gray-50';
-    }
-  };
-
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case 'active':
-        return <CheckCircle className="h-4 w-4 text-green-600" />;
-      case 'frozen':
-        return <Snowflake className="h-4 w-4 text-blue-600" />;
-      case 'under_review':
-        return <Clock className="h-4 w-4 text-yellow-600" />;
-      default:
-        return null;
-    }
-  };
-
-  const getStatusLabel = (status: string) => {
-    switch (status) {
-      case 'active':
-        return 'نشط';
-      case 'frozen':
-        return 'مجمد';
-      case 'under_review':
-        return 'تحت المراجعة';
-      default:
-        return status;
+      alert('حدث خطأ: ' + err.message);
     }
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#F5F1E8] to-[#E8DCC4] flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-[#C9A962] mx-auto mb-4"></div>
-          <p className="text-[#2C2C2C] font-medium">جارٍ تحميل أصحاب المزارع...</p>
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex items-center gap-4 mb-8">
+            <BackButton onClick={onBack} />
+            <Users className="w-8 h-8 text-emerald-600" />
+            <h1 className="text-3xl font-bold text-slate-900">إدارة أصحاب المزارع</h1>
+          </div>
+          <div className="text-center py-12">
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-emerald-500 border-t-transparent"></div>
+            <p className="mt-4 text-slate-600">جاري التحميل...</p>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#F5F1E8] to-[#E8DCC4] p-8" dir="rtl">
-      <div className="max-w-[1400px] mx-auto">
-        {onBack && <BackButton onClick={onBack} />}
-
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-6">
+      <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-black text-[#2C2C2C] mb-2 flex items-center gap-3">
-            <Users className="h-10 w-10 text-[#C9A962]" />
-            إدارة أصحاب المزارع
-          </h1>
-          <p className="text-[#2C2C2C]/70">إدارة متكاملة لأصحاب المزارع ومتابعة مزارعهم المرتبطة</p>
+        <div className="flex items-center gap-4 mb-8">
+          <BackButton onClick={onBack} />
+          <Users className="w-8 h-8 text-emerald-600" />
+          <h1 className="text-3xl font-bold text-slate-900">إدارة أصحاب المزارع</h1>
         </div>
 
-        {/* Statistics Bar */}
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
-          <Card3D interactive={false}>
-            <div className="p-6 bg-gradient-to-br from-[#C9A962]/10 to-[#D4B574]/10">
-              <div className="flex items-center justify-between mb-3">
-                <div className="w-12 h-12 bg-gradient-to-br from-[#C9A962] to-[#D4B574] rounded-xl flex items-center justify-center shadow-lg">
-                  <Users className="h-6 w-6 text-white" />
-                </div>
-              </div>
-              <p className="text-3xl font-black text-[#C9A962] mb-1">{stats?.total || 0}</p>
-              <p className="text-sm text-[#2C2C2C]/70">إجمالي الملاك</p>
-            </div>
-          </Card3D>
-
-          <Card3D interactive={false}>
-            <div className="p-6 bg-gradient-to-br from-green-50 to-emerald-50">
-              <div className="flex items-center justify-between mb-3">
-                <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center shadow-lg">
-                  <UserCheck className="h-6 w-6 text-white" />
-                </div>
-              </div>
-              <p className="text-3xl font-black text-green-600 mb-1">{stats?.active || 0}</p>
-              <p className="text-sm text-[#2C2C2C]/70">النشطون</p>
-            </div>
-          </Card3D>
-
-          <Card3D interactive={false}>
-            <div className="p-6 bg-gradient-to-br from-blue-50 to-indigo-50">
-              <div className="flex items-center justify-between mb-3">
-                <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
-                  <Snowflake className="h-6 w-6 text-white" />
-                </div>
-              </div>
-              <p className="text-3xl font-black text-blue-600 mb-1">{stats?.frozen || 0}</p>
-              <p className="text-sm text-[#2C2C2C]/70">المجمدون</p>
-            </div>
-          </Card3D>
-
-          <Card3D interactive={false}>
-            <div className="p-6 bg-gradient-to-br from-yellow-50 to-amber-50">
-              <div className="flex items-center justify-between mb-3">
-                <div className="w-12 h-12 bg-gradient-to-br from-yellow-500 to-amber-600 rounded-xl flex items-center justify-center shadow-lg">
-                  <Clock className="h-6 w-6 text-white" />
-                </div>
-              </div>
-              <p className="text-3xl font-black text-yellow-600 mb-1">{pendingSubmissions.length}</p>
-              <p className="text-sm text-[#2C2C2C]/70">تحت المراجعة</p>
-            </div>
-          </Card3D>
-
-          <Card3D interactive={false}>
-            <div className="p-6 bg-gradient-to-br from-[#3D5B4B]/10 to-[#4A6F5C]/10">
-              <div className="flex items-center justify-between mb-3">
-                <div className="w-12 h-12 bg-gradient-to-br from-[#3D5B4B] to-[#4A6F5C] rounded-xl flex items-center justify-center shadow-lg">
-                  <Home className="h-6 w-6 text-white" />
-                </div>
-              </div>
-              <p className="text-3xl font-black text-[#3D5B4B] mb-1">{stats?.total_farms || 0}</p>
-              <p className="text-sm text-[#2C2C2C]/70">إجمالي المزارع</p>
-            </div>
-          </Card3D>
-        </div>
-
-        {/* Simple Pending Submissions Display */}
-        {pendingSubmissions.length > 0 && (
-          <div className="bg-yellow-50 border-4 border-yellow-200 rounded-2xl p-6 mb-8">
-            <h2 className="text-2xl font-black text-yellow-800 mb-4 flex items-center gap-2">
-              <Clock className="h-6 w-6" />
-              طلبات المراجعة المعلقة ({pendingSubmissions.length})
-            </h2>
-            <div className="space-y-4">
-              {pendingSubmissions.map((sub: any) => (
-                <div key={sub.id} className="bg-white rounded-xl p-4 border-2 border-yellow-300">
-                  <div className="flex justify-between items-start mb-3">
-                    <div>
-                      <h3 className="font-bold text-lg">{sub.submitted_data?.full_name}</h3>
-                      <p className="text-sm text-gray-600">{sub.farm_owner_profiles?.mobile_number}</p>
-                    </div>
-                    <span className="text-xs px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full font-bold">
-                      معلق
-                    </span>
-                  </div>
-                  <div className="flex gap-2">
-                    <button
-                      onClick={async () => {
-                        if (confirm('الموافقة على الطلب؟')) {
-                          try {
-                            await OwnersService.approveSubmission(sub.id);
-                            alert('تم بنجاح');
-                            loadData();
-                          } catch (e) {
-                            alert('خطأ');
-                          }
-                        }
-                      }}
-                      className="px-4 py-2 bg-green-600 text-white rounded-lg font-bold"
-                    >
-                      موافقة
-                    </button>
-                    <button
-                      onClick={() => {
-                        setSubmissionToReject(sub);
-                        setShowRejectModal(true);
-                        setSelectedRejectionReason('');
-                        setCustomRejectionReason('');
-                      }}
-                      className="px-4 py-2 bg-red-600 text-white rounded-lg font-bold"
-                    >
-                      رفض
-                    </button>
-                  </div>
-                </div>
-              ))}
+        {/* Stats Bar */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <div className="bg-white rounded-xl shadow-sm p-4 border border-slate-200">
+            <div className="text-sm text-slate-600 mb-1">إجمالي الملاك</div>
+            <div className="text-2xl font-bold text-slate-900">{owners.length}</div>
+          </div>
+          <div className="bg-white rounded-xl shadow-sm p-4 border border-slate-200">
+            <div className="text-sm text-slate-600 mb-1">النشطون</div>
+            <div className="text-2xl font-bold text-emerald-600">
+              {owners.filter(o => o.status === 'active').length}
             </div>
           </div>
-        )}
+          <div className="bg-white rounded-xl shadow-sm p-4 border border-slate-200">
+            <div className="text-sm text-slate-600 mb-1">المجمدون</div>
+            <div className="text-2xl font-bold text-orange-600">
+              {owners.filter(o => o.status === 'frozen').length}
+            </div>
+          </div>
+        </div>
 
-        {/* Toolbar */}
-        <div className="bg-white rounded-2xl shadow-xl p-6 mb-8">
-          <div className="flex gap-4 items-center">
+        {/* Search & Actions */}
+        <div className="flex gap-4 mb-6">
+          <div className="flex-1 relative">
+            <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
             <input
               type="text"
+              placeholder="ابحث بالاسم أو رقم الجوال..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="البحث..."
-              className="flex-1 px-4 py-3 rounded-xl border-2"
+              className="w-full pr-10 pl-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
             />
+          </div>
+
+          {(isAdmin || canCreate('farm_owners')) && (
             <button
               onClick={handleCreateOwner}
-              className="px-6 py-3 bg-gradient-to-br from-[#C9A962] to-[#D4B574] text-white rounded-xl font-bold hover:shadow-xl transform hover:-translate-y-0.5 transition-all"
-              title="إضافة مالك جديد"
+              className="px-6 py-3 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition-colors flex items-center gap-2 shadow-lg hover:shadow-xl"
             >
-              <Plus className="h-5 w-5 inline-block ml-2" />
-              إضافة مالك
+              <Plus className="w-5 h-5" />
+              <span>إضافة مالك</span>
             </button>
-          </div>
+          )}
         </div>
 
         {/* Owners Grid */}
-        {filteredOwners.length === 0 ? (
-          <div className="text-center py-16">
-            <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br from-[#C9A962]/20 to-[#D4B574]/20 mb-6">
-              <Users className="h-12 w-12 text-[#C9A962]" />
-            </div>
-            <h3 className="text-2xl font-black text-[#2C2C2C] mb-2">لا يوجد ملاك</h3>
-            <p className="text-[#2C2C2C]/60 mb-6">ابدأ بإضافة أول مالك مزرعة</p>
-            <button
-              onClick={handleCreateOwner}
-              className="px-8 py-3 bg-gradient-to-br from-[#C9A962] to-[#D4B574] text-white rounded-xl font-bold hover:shadow-xl transform hover:-translate-y-0.5 transition-all"
-              title="إضافة مالك جديد"
-            >
-              <Plus className="h-5 w-5 inline-block ml-2" />
-              إضافة مالك جديد
-            </button>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredOwners.map(owner => (
+            <AdvancedOwnerCard3D
+              key={owner.id}
+              owner={owner}
+              onEdit={handleEditOwner}
+              onDelete={handleDeleteOwner}
+              onToggleStatus={handleToggleStatus}
+              onViewDetails={handleViewDetails}
+              canEdit={isAdmin || canEdit('farm_owners')}
+              canDelete={isAdmin || canDelete('farm_owners')}
+            />
+          ))}
+        </div>
+
+        {filteredOwners.length === 0 && (
+          <div className="text-center py-12">
+            <Users className="w-16 h-16 text-slate-300 mx-auto mb-4" />
+            <p className="text-slate-600">لا يوجد ملاك مطابقين للبحث</p>
           </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredOwners.map((owner) => (
-              <AdvancedOwnerCard3D
-                key={owner.id}
-                owner={owner}
-                onEdit={hasEditPermission ? handleEditOwner : undefined}
-                onDelete={hasDeletePermission ? handleDeleteOwner : undefined}
-                onViewSubmittedData={handleViewDetails}
-                hasEditPermission={hasEditPermission}
-                hasDeletePermission={hasDeletePermission}
-              />
-            ))}
-          </div>
-        )}
-
-        {/* Rejection Reason Modal */}
-        {showRejectModal && submissionToReject && (
-          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <div
-              className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {/* Header */}
-              <div className="bg-gradient-to-br from-red-500 to-red-600 p-6 rounded-t-3xl">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur">
-                      <XCircle className="h-6 w-6 text-white" />
-                    </div>
-                    <div>
-                      <h2 className="text-2xl font-black text-white">رفض الطلب</h2>
-                      <p className="text-red-100 text-sm">اختر سبب الرفض من القائمة أو أدخل سبباً مخصصاً</p>
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => {
-                      setShowRejectModal(false);
-                      setSubmissionToReject(null);
-                    }}
-                    className="w-10 h-10 rounded-xl bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
-                  >
-                    <X className="h-5 w-5 text-white" />
-                  </button>
-                </div>
-              </div>
-
-              {/* Content */}
-              <div className="p-6 space-y-6">
-                {/* Submission Info */}
-                <div className="bg-red-50 rounded-2xl p-4 border-2 border-red-200">
-                  <h3 className="font-bold text-lg text-[#2C2C2C] mb-2">
-                    {submissionToReject.submitted_data?.full_name}
-                  </h3>
-                  <p className="text-sm text-[#2C2C2C]/70">
-                    {submissionToReject.farm_owner_profiles?.mobile_number}
-                  </p>
-                </div>
-
-                {/* Predefined Reasons */}
-                <div>
-                  <label className="block text-sm font-bold text-[#2C2C2C] mb-3">
-                    اختر سبب الرفض:
-                  </label>
-                  <div className="space-y-2">
-                    {[
-                      'معلومات غير كاملة أو ناقصة',
-                      'بيانات غير صحيحة أو مزورة',
-                      'عدم توافق المزرعة مع الشروط المطلوبة',
-                      'المستندات المرفقة غير واضحة',
-                      'تكرار الطلب',
-                      'موقع المزرعة غير مناسب',
-                      'عدد الأشجار غير مطابق للواقع',
-                      'السعر المطلوب غير معقول',
-                      'سبب آخر (أدخل تفاصيل أدناه)'
-                    ].map((reason, idx) => (
-                      <label
-                        key={idx}
-                        className={`flex items-start gap-3 p-4 rounded-xl border-2 cursor-pointer transition-all ${
-                          selectedRejectionReason === reason
-                            ? 'bg-red-50 border-red-500 shadow-lg'
-                            : 'bg-gray-50 border-gray-200 hover:border-red-300 hover:bg-red-50/50'
-                        }`}
-                      >
-                        <input
-                          type="radio"
-                          name="rejectionReason"
-                          value={reason}
-                          checked={selectedRejectionReason === reason}
-                          onChange={(e) => setSelectedRejectionReason(e.target.value)}
-                          className="mt-1 w-5 h-5 text-red-600"
-                        />
-                        <span className="flex-1 font-medium text-[#2C2C2C]">{reason}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Custom Reason Input */}
-                {selectedRejectionReason === 'سبب آخر (أدخل تفاصيل أدناه)' && (
-                  <div>
-                    <label className="block text-sm font-bold text-[#2C2C2C] mb-2">
-                      تفاصيل سبب الرفض:
-                    </label>
-                    <textarea
-                      value={customRejectionReason}
-                      onChange={(e) => setCustomRejectionReason(e.target.value)}
-                      placeholder="اكتب سبب الرفض بالتفصيل..."
-                      rows={4}
-                      className="w-full px-4 py-3 rounded-xl border-2 border-gray-300 focus:border-red-500 focus:outline-none resize-none"
-                    />
-                  </div>
-                )}
-
-                {/* Actions */}
-                <div className="flex gap-3 pt-4 border-t-2">
-                  <button
-                    onClick={() => {
-                      setShowRejectModal(false);
-                      setSubmissionToReject(null);
-                    }}
-                    className="flex-1 px-6 py-3 bg-gray-200 text-[#2C2C2C] rounded-xl font-bold hover:bg-gray-300 transition-colors"
-                  >
-                    إلغاء
-                  </button>
-                  <button
-                    onClick={async () => {
-                      let finalReason = selectedRejectionReason;
-
-                      if (!finalReason) {
-                        alert('⚠️ الرجاء اختيار سبب الرفض');
-                        return;
-                      }
-
-                      if (finalReason === 'سبب آخر (أدخل تفاصيل أدناه)') {
-                        if (!customRejectionReason.trim()) {
-                          alert('⚠️ الرجاء إدخال تفاصيل سبب الرفض');
-                          return;
-                        }
-                        finalReason = customRejectionReason.trim();
-                      }
-
-                      try {
-                        await OwnersService.rejectSubmission(submissionToReject.id, finalReason);
-                        alert('✅ تم رفض الطلب بنجاح');
-                        setShowRejectModal(false);
-                        setSubmissionToReject(null);
-                        loadData();
-                      } catch (e) {
-                        console.error(e);
-                        alert('❌ حدث خطأ أثناء رفض الطلب');
-                      }
-                    }}
-                    disabled={!selectedRejectionReason}
-                    className={`flex-1 px-6 py-3 rounded-xl font-bold transition-all flex items-center justify-center gap-2 ${
-                      selectedRejectionReason
-                        ? 'bg-gradient-to-br from-red-500 to-red-600 text-white hover:shadow-xl transform hover:-translate-y-0.5'
-                        : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                    }`}
-                  >
-                    <XCircle className="h-5 w-5" />
-                    تأكيد الرفض
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Owner Form Modal */}
-        <OwnerFormModal
-          isOpen={showModal}
-          onClose={() => setShowModal(false)}
-          onSubmit={handleSubmitOwner}
-          initialData={selectedOwner}
-          mode={modalMode}
-        />
-
-        {/* Submitted Data Modal */}
-        {showSubmittedDataModal && selectedOwnerForData && (
-          <SubmittedDataModal
-            owner={selectedOwnerForData}
-            onClose={() => {
-              setShowSubmittedDataModal(false);
-              setSelectedOwnerForData(null);
-            }}
-            onApprove={() => {
-              loadData();
-            }}
-          />
         )}
       </div>
+
+      {/* Modals */}
+      {showModal && (
+        <OwnerFormModal
+          owner={selectedOwner}
+          mode={modalMode}
+          onClose={() => setShowModal(false)}
+          onSubmit={handleSubmitOwner}
+        />
+      )}
+
+      {showSubmittedDataModal && selectedOwnerForData && (
+        <SubmittedDataModal
+          owner={selectedOwnerForData}
+          onClose={() => {
+            setShowSubmittedDataModal(false);
+            setSelectedOwnerForData(null);
+          }}
+        />
+      )}
     </div>
   );
 }
