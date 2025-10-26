@@ -234,38 +234,38 @@ function App() {
   };
 
   return (
-    <PermissionsProvider>
-      <div className="min-h-screen bg-[#F9F8F6]" dir="rtl">
-        {showAdminLogin && (
-          <SmartAdminLoginPage
-            onLoginSuccess={handleAdminLogin}
-            onCancel={() => setShowAdminLogin(false)}
-          />
-        )}
+    <div className="min-h-screen bg-[#F9F8F6]" dir="rtl">
+      {showAdminLogin && (
+        <SmartAdminLoginPage
+          onLoginSuccess={handleAdminLogin}
+          onCancel={() => setShowAdminLogin(false)}
+        />
+      )}
 
-        {showIdleWarning && (
-          <IdleSessionWarning
-            onContinue={() => {
-              setShowIdleWarning(false);
-              setLastActivity(Date.now());
-            }}
-            onLogout={handleLogout}
-          />
-        )}
+      {showIdleWarning && (
+        <IdleSessionWarning
+          onContinue={() => {
+            setShowIdleWarning(false);
+            setLastActivity(Date.now());
+          }}
+          onLogout={handleLogout}
+        />
+      )}
 
-        {adminSession && activeModule !== 'public' && (
-          <UpdateNotificationBanner userRole="admin" />
-        )}
+      {adminSession && activeModule !== 'public' && (
+        <UpdateNotificationBanner userRole="admin" />
+      )}
 
-        {showLoginNotification && adminSession && (
-          <LoginNotification
-            adminName={adminSession.name}
-            adminPhone={adminSession.phone}
-            module="لوحة التحكم"
+      {showLoginNotification && adminSession && (
+        <LoginNotification
+          adminName={adminSession.name}
+          adminPhone={adminSession.phone}
+          module="لوحة التحكم"
           onClose={() => setShowLoginNotification(false)}
         />
       )}
 
+      <PermissionsProvider>
         <Suspense fallback={
           <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#F9F8F6] to-[#E8E6E1]">
             <div className="text-center">
@@ -278,8 +278,8 @@ function App() {
         }>
           {renderModule()}
         </Suspense>
-      </div>
-    </PermissionsProvider>
+      </PermissionsProvider>
+    </div>
   );
 }
 
