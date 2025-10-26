@@ -39,8 +39,7 @@ export function PermissionsProvider({ children }: { children: ReactNode }) {
       setLoading(true);
       const { admin } = AdminSessionService.getCurrentSession();
 
-      console.log('🔍🔍🔍 [PermissionsContext] ======================');
-      console.log('🔍 [PermissionsContext] Current admin:', JSON.stringify(admin, null, 2));
+      // console.log('🔍 [PermissionsContext] Current admin:', admin.phone);
 
       if (!admin || !admin.phone) {
         console.warn('⚠️ [PermissionsContext] NO ADMIN SESSION FOUND');
@@ -54,45 +53,31 @@ export function PermissionsProvider({ children }: { children: ReactNode }) {
       setCurrentAdminPhone(admin.phone);
       setCurrentAdminRole(admin.role);
 
-      console.log('🔍 [PermissionsContext] Admin Phone:', admin.phone);
-      console.log('🔍 [PermissionsContext] Admin Role:', admin.role);
-      console.log('🔍 [PermissionsContext] Admin Name:', admin.name);
+      // Admin info loaded
 
       const SUPER_ADMIN_PHONES = ['0500000000', '0500000001'];
       const isSuperAdmin = SUPER_ADMIN_PHONES.includes(admin.phone);
 
       if (isSuperAdmin) {
-        console.log('✅✅✅ [PermissionsContext] SUPER ADMIN DETECTED (by phone) - Full permissions granted');
+        console.log('✅ [PermissionsContext] Super admin access granted');
         setIsAdmin(true);
         setPermissions([]);
         return;
       }
 
-      console.log('⚠️⚠️⚠️ [PermissionsContext] EMPLOYEE ROLE DETECTED');
-      console.log('📞 [PermissionsContext] Fetching permissions for phone:', admin.phone);
+      console.log('📞 [PermissionsContext] Loading permissions...');
 
       setIsAdmin(false);
 
       const userPermissions = await AdminSessionService.getPermissions(admin.phone);
 
-      console.log('📋📋📋 [PermissionsContext] RAW PERMISSIONS RESPONSE:', JSON.stringify(userPermissions, null, 2));
-      console.log('📋 [PermissionsContext] Permissions COUNT:', userPermissions.length);
+      console.log('📋 [PermissionsContext] Loaded', userPermissions.length, 'permissions');
 
       if (!userPermissions || userPermissions.length === 0) {
-        console.error('❌❌❌ [PermissionsContext] NO PERMISSIONS FOUND FOR', admin.phone);
-        console.error('❌ [PermissionsContext] USER WILL HAVE NO ACCESS TO ANY MODULE');
-      } else {
-        console.log('✅ [PermissionsContext] Permissions loaded successfully:');
-        userPermissions.forEach((perm, index) => {
-          console.log(`  ${index + 1}. Module: ${perm.module_id} (${perm.module_name_ar})`);
-          console.log(`     View: ${perm.can_view}, Create: ${perm.can_create}, Edit: ${perm.can_edit}, Delete: ${perm.can_delete}`);
-          console.log(`     Active: ${perm.is_active}`);
-        });
+        console.warn('⚠️ [PermissionsContext] No permissions found');
       }
 
       setPermissions(userPermissions);
-      console.log('✅ [PermissionsContext] Permissions SET in state:', userPermissions.length);
-      console.log('🔍🔍🔍 [PermissionsContext] ======================');
     } catch (error) {
       console.error('❌❌❌ [PermissionsContext] ERROR LOADING PERMISSIONS:', error);
       setPermissions([]);
@@ -100,13 +85,13 @@ export function PermissionsProvider({ children }: { children: ReactNode }) {
       setCurrentAdminPhone(null);
       setCurrentAdminRole(null);
     } finally {
-      console.log('⏳ [PermissionsContext] Setting loading = false');
+      // Loading complete
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    console.log('🔄🔄🔄 [PermissionsContext] useEffect triggered - loading permissions');
+    console.log('🔄 [PermissionsContext] Initial load');
     loadPermissions();
 
     const interval = setInterval(() => {
@@ -115,30 +100,23 @@ export function PermissionsProvider({ children }: { children: ReactNode }) {
         console.log('🔄 [PermissionsContext] Admin changed, reloading permissions');
         loadPermissions();
       }
-    }, 5000);
+    }, 10000);
 
     return () => clearInterval(interval);
-  }, [currentAdminPhone]);
+  }, []);
 
   const hasPermission = (moduleId: string, action: 'view' | 'create' | 'edit' | 'delete'): boolean => {
-    console.log(`🔍 [hasPermission] Checking ${action} for module: ${moduleId}`);
-    console.log(`🔍 [hasPermission] isAdmin: ${isAdmin}`);
-    console.log(`🔍 [hasPermission] permissions count: ${permissions.length}`);
-
     if (isAdmin) {
-      console.log(`✅ [hasPermission] ADMIN - Access granted`);
       return true;
     }
 
     if (permissions.length === 0) {
-      console.log(`❌ [hasPermission] NO PERMISSIONS - Access denied`);
       return false;
     }
 
     const permission = permissions.find(p => p.module_id === moduleId && p.is_active);
 
     if (!permission) {
-      console.log(`❌ [hasPermission] Module "${moduleId}" NOT FOUND in permissions - Access denied`);
       return false;
     }
 
@@ -160,52 +138,29 @@ export function PermissionsProvider({ children }: { children: ReactNode }) {
         result = false;
     }
 
-    console.log(`${result ? '✅' : '❌'} [hasPermission] ${action} permission for ${moduleId}: ${result}`);
     return result;
   };
 
   const canAccessModule = (moduleId: string): boolean => {
-    console.log(`🔍🔍🔍 [canAccessModule] ===== Checking: ${moduleId} =====`);
-    console.log(`  📊 isAdmin: ${isAdmin}`);
-    console.log(`  📋 Total Permissions: ${permissions.length}`);
-    console.log(`  ⏳ Loading: ${loading}`);
-
     if (moduleId === 'dashboard') {
-      console.log(`✅ [canAccessModule] Dashboard always accessible`);
       return true;
     }
 
     if (isAdmin) {
-      console.log(`✅✅✅ [canAccessModule] ADMIN - Full access to ${moduleId}`);
       return true;
     }
 
     if (permissions.length === 0) {
-      console.log(`❌❌❌ [canAccessModule] NO PERMISSIONS ARRAY - Access DENIED for ${moduleId}`);
       return false;
     }
 
     const permission = permissions.find(p => p.module_id === moduleId && p.is_active);
 
     if (!permission) {
-      console.log(`❌ [canAccessModule] Module "${moduleId}" NOT FOUND in permissions array`);
-      console.log(`  Available modules:`, permissions.map(p => p.module_id));
       return false;
     }
 
-    const canAccess = permission.can_view;
-    console.log(`${canAccess ? '✅✅✅' : '❌❌❌'} [canAccessModule] ${moduleId}: can_view = ${canAccess}`);
-    console.log(`  Permission:`, {
-      module_id: permission.module_id,
-      module_name_ar: permission.module_name_ar,
-      can_view: permission.can_view,
-      can_create: permission.can_create,
-      can_edit: permission.can_edit,
-      can_delete: permission.can_delete,
-      is_active: permission.is_active
-    });
-
-    return canAccess;
+    return permission.can_view;
   };
 
   const getModulePermissions = (moduleId: string): PermissionCheck | null => {
