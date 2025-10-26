@@ -54,41 +54,35 @@ export const FarmOwnerDashboard: React.FC<FarmOwnerDashboardProps> = ({ profileI
   }, [profileId]);
 
   const loadData = async () => {
-    setLoading(true);
+    // إظهار الواجهة فوراً
+    setLoading(false);
 
     try {
-      // تحميل البيانات الأساسية أولاً (أسرع)
-      const profileData = await farmOwnerService.getProfile(profileId);
+      // تحميل كل شيء في الخلفية بدون انتظار
+      farmOwnerService.getProfile(profileId).then(profileData => {
+        if (profileData) {
+          setProfile(profileData);
 
-      if (profileData) {
-        setProfile(profileData);
-        setLoading(false); // إظهار الواجهة فوراً
-
-        // Check if first visit
-        const hasSeenWelcome = localStorage.getItem(`farm_owner_welcome_${profileId}`);
-        if (!hasSeenWelcome) {
-          setShowWelcome(true);
+          // Check if first visit
+          const hasSeenWelcome = localStorage.getItem(`farm_owner_welcome_${profileId}`);
+          if (!hasSeenWelcome) {
+            setShowWelcome(true);
+          }
         }
+      }).catch(error => {
+        console.error('خطأ في تحميل الملف الشخصي:', error);
+      });
 
-        // تحميل البيانات الثانوية في الخلفية
-        Promise.all([
-          farmOwnerService.getFarmStatus(profileId),
-          farmOwnerService.getNotifications(profileId)
-        ]).then(([statusData, notificationsData]) => {
-          setFarmStatus(statusData);
-          setNotifications(notificationsData);
+      // تحميل البيانات الأخرى بشكل مستقل
+      farmOwnerService.getFarmStatus(profileId).then(setFarmStatus).catch(console.error);
+      farmOwnerService.getNotifications(profileId).then(notificationsData => {
+        setNotifications(notificationsData);
+        const unread = notificationsData.filter(n => !n.is_read).length;
+        setUnreadCount(unread);
+      }).catch(console.error);
 
-          const unread = notificationsData.filter(n => !n.is_read).length;
-          setUnreadCount(unread);
-        }).catch(error => {
-          console.error('خطأ في تحميل البيانات الثانوية:', error);
-        });
-      } else {
-        setLoading(false);
-      }
     } catch (error) {
       console.error('خطأ في تحميل البيانات:', error);
-      setLoading(false);
     }
   };
 

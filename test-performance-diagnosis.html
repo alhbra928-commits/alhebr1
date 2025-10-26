@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚡ تشخيص الأداء - لوحة صاحب المزرعة</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }
+        .container { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); max-width: 900px; margin: 0 auto; }
+        h1 { color: #667eea; margin-bottom: 30px; text-align: center; }
+        button { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 15px 30px; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; width: 100%; transition: transform 0.2s; }
+        button:hover { transform: translateY(-2px); }
+        .result { background: #f8f9fa; padding: 20px; border-radius: 12px; margin-top: 20px; font-family: 'Courier New', monospace; font-size: 14px; }
+        .fast { color: #28a745; font-weight: bold; }
+        .slow { color: #dc3545; font-weight: bold; }
+        .medium { color: #ffc107; font-weight: bold; }
+        .timing { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #ddd; }
+        .total { background: #667eea; color: white; padding: 20px; border-radius: 10px; margin-top: 20px; text-align: center; font-size: 24px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⚡ تشخيص الأداء - لوحة صاحب المزرعة</h1>
+        
+        <button onclick="runDiagnosis()">🔍 بدء التشخيص</button>
+        
+        <div id="result"></div>
+        <div id="total"></div>
+    </div>
+
+    <script>
+        let supabase;
+        const PROFILE_ID = '34a6090b-6c18-4c04-b298-a7243f5d7926'; // استبدل بـ ID حقيقي
+
+        async function runDiagnosis() {
+            const resultDiv = document.getElementById('result');
+            const totalDiv = document.getElementById('total');
+            resultDiv.innerHTML = '<div style="text-align:center; padding:20px;">⏳ جاري التشخيص...</div>';
+            totalDiv.innerHTML = '';
+
+            // إعداد Supabase
+            const SUPABASE_URL = 'YOUR_URL';
+            const SUPABASE_ANON_KEY = 'YOUR_KEY';
+            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+            const results = [];
+            let totalTime = 0;
+
+            // 1. getProfile
+            const t1 = performance.now();
+            const { data: profile, error: e1 } = await supabase
+                .from('farm_owner_profiles')
+                .select('id, mobile_number, full_name, national_id, status, bank_name, bank_account_number, bank_iban, created_at')
+                .eq('id', PROFILE_ID)
+                .is('deleted_at', null)
+                .maybeSingle();
+            const d1 = performance.now() - t1;
+            results.push({ name: 'getProfile', time: d1, status: e1 ? 'error' : 'ok' });
+            totalTime += d1;
+
+            // 2. getFarmStatus
+            const t2 = performance.now();
+            const { data: status, error: e2 } = await supabase
+                .from('farm_owner_profiles')
+                .select('status, farm_owner_id')
+                .eq('id', PROFILE_ID)
+                .is('deleted_at', null)
+                .maybeSingle();
+            const d2 = performance.now() - t2;
+            results.push({ name: 'getFarmStatus', time: d2, status: e2 ? 'error' : 'ok' });
+            totalTime += d2;
+
+            // 3. getNotifications
+            const t3 = performance.now();
+            const { data: notifications, error: e3 } = await supabase
+                .from('farm_owner_notifications')
+                .select('*')
+                .eq('profile_id', PROFILE_ID)
+                .order('created_at', { ascending: false })
+                .limit(20);
+            const d3 = performance.now() - t3;
+            results.push({ name: 'getNotifications', time: d3, status: e3 ? 'error' : 'ok' });
+            totalTime += d3;
+
+            // 4. getOwnerFarms
+            const t4 = performance.now();
+            const { data: farms, error: e4 } = await supabase
+                .from('farms')
+                .select('id, farm_code, region_ar, city_ar, tree_type_ar, total_trees, reserved_trees, available_trees, actual_total_price, price_per_tree, submission_status, status, created_at')
+                .eq('owner_id', PROFILE_ID)
+                .is('deleted_at', null)
+                .order('created_at', { ascending: false });
+            const d4 = performance.now() - t4;
+            results.push({ name: 'getOwnerFarms', time: d4, status: e4 ? 'error' : 'ok', count: farms?.length || 0 });
+            totalTime += d4;
+
+            // 5. Check farm_financial_states
+            const t5 = performance.now();
+            const { data: financial, error: e5 } = await supabase
+                .from('farm_financial_states')
+                .select('*')
+                .limit(1);
+            const d5 = performance.now() - t5;
+            results.push({ name: 'farm_financial_states (check)', time: d5, status: e5 ? 'error' : 'ok' });
+            totalTime += d5;
+
+            // عرض النتائج
+            let html = '<div class="result">';
+            results.forEach(r => {
+                const color = r.time < 100 ? 'fast' : r.time < 500 ? 'medium' : 'slow';
+                html += `<div class="timing">
+                    <span>${r.name}${r.count ? ` (${r.count} rows)` : ''}</span>
+                    <span class="${color}">${r.time.toFixed(0)}ms</span>
+                </div>`;
+            });
+            html += '</div>';
+
+            resultDiv.innerHTML = html;
+
+            const totalColor = totalTime < 500 ? 'fast' : totalTime < 1500 ? 'medium' : 'slow';
+            totalDiv.innerHTML = `<div class="total" style="background: ${totalColor === 'fast' ? '#28a745' : totalColor === 'medium' ? '#ffc107' : '#dc3545'}">
+                ⏱️ الوقت الإجمالي: ${totalTime.toFixed(0)}ms
+            </div>`;
+
+            console.log('نتائج التشخيص:', results);
+            console.log('الوقت الإجمالي:', totalTime, 'ms');
+        }
+    </script>
+</body>
+</html>
