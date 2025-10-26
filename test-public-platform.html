@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار المنصة الرئيسية</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            margin: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #2d3748;
+            text-align: center;
+            font-size: 32px;
+            margin-bottom: 30px;
+        }
+        .test-section {
+            background: #f7fafc;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+        .test-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2d3748;
+            margin-bottom: 15px;
+        }
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: 10px;
+            transition: all 0.3s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        .status {
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        .success {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+        .error {
+            background: #fed7d7;
+            color: #742a2a;
+        }
+        .info {
+            background: #bee3f8;
+            color: #2c5282;
+        }
+        pre {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 اختبار المنصة الرئيسية</h1>
+
+        <div class="test-section">
+            <div class="test-title">1️⃣ اختبار تحميل المزارع</div>
+            <button onclick="testLoadFarms()">اختبار تحميل المزارع</button>
+            <div id="farms-result"></div>
+        </div>
+
+        <div class="test-section">
+            <div class="test-title">2️⃣ اختبار خدمة الواتساب</div>
+            <button onclick="testWhatsAppService()">اختبار خدمة الواتساب</button>
+            <div id="whatsapp-result"></div>
+        </div>
+
+        <div class="test-section">
+            <div class="test-title">3️⃣ اختبار الاتصال بقاعدة البيانات</div>
+            <button onclick="testDatabaseConnection()">اختبار الاتصال</button>
+            <div id="db-result"></div>
+        </div>
+
+        <div class="test-section">
+            <div class="test-title">4️⃣ اختبار فتح المنصة الرئيسية</div>
+            <button onclick="window.location.href='/'">فتح المنصة الرئيسية</button>
+            <div class="info status">سيتم فتح المنصة الرئيسية في نفس النافذة</div>
+        </div>
+
+        <div class="test-section">
+            <div class="test-title">📋 سجل Console</div>
+            <button onclick="showConsoleLog()">عرض آخر رسائل Console</button>
+            <div id="console-log"></div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+        const supabaseUrl = import.meta.env?.VITE_SUPABASE_URL || localStorage.getItem('supabase_url');
+        const supabaseKey = import.meta.env?.VITE_SUPABASE_ANON_KEY || localStorage.getItem('supabase_key');
+
+        let supabase;
+        if (supabaseUrl && supabaseKey) {
+            supabase = createClient(supabaseUrl, supabaseKey);
+        }
+
+        window.testLoadFarms = async function() {
+            const resultDiv = document.getElementById('farms-result');
+            resultDiv.innerHTML = '<div class="info status">جاري الاختبار...</div>';
+
+            try {
+                if (!supabase) {
+                    throw new Error('Supabase غير متصل');
+                }
+
+                const { data, error } = await supabase
+                    .from('farms')
+                    .select('*')
+                    .eq('deleted_at', null)
+                    .limit(5);
+
+                if (error) throw error;
+
+                resultDiv.innerHTML = `
+                    <div class="success status">
+                        ✅ تم تحميل ${data.length} مزارع بنجاح
+                    </div>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error status">
+                        ❌ خطأ: ${error.message}
+                    </div>
+                    <pre>${JSON.stringify(error, null, 2)}</pre>
+                `;
+                console.error('Error loading farms:', error);
+            }
+        };
+
+        window.testWhatsAppService = async function() {
+            const resultDiv = document.getElementById('whatsapp-result');
+            resultDiv.innerHTML = '<div class="info status">جاري الاختبار...</div>';
+
+            try {
+                if (!supabase) {
+                    throw new Error('Supabase غير متصل');
+                }
+
+                const { data, error } = await supabase
+                    .from('whatsapp_contact_numbers')
+                    .select('*')
+                    .limit(3);
+
+                if (error) throw error;
+
+                resultDiv.innerHTML = `
+                    <div class="success status">
+                        ✅ تم تحميل ${data.length} أقسام واتساب
+                    </div>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error status">
+                        ❌ خطأ: ${error.message}
+                    </div>
+                    <pre>${JSON.stringify(error, null, 2)}</pre>
+                `;
+                console.error('Error loading WhatsApp:', error);
+            }
+        };
+
+        window.testDatabaseConnection = async function() {
+            const resultDiv = document.getElementById('db-result');
+            resultDiv.innerHTML = '<div class="info status">جاري الاختبار...</div>';
+
+            try {
+                if (!supabase) {
+                    throw new Error('Supabase غير متصل - تحقق من .env');
+                }
+
+                const { data, error } = await supabase
+                    .from('farms')
+                    .select('count', { count: 'exact', head: true });
+
+                if (error) throw error;
+
+                resultDiv.innerHTML = `
+                    <div class="success status">
+                        ✅ الاتصال بقاعدة البيانات يعمل بنجاح
+                    </div>
+                    <div class="info status">
+                        الاتصال: ${supabaseUrl ? '✅ موجود' : '❌ غير موجود'}
+                    </div>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error status">
+                        ❌ خطأ في الاتصال: ${error.message}
+                    </div>
+                    <pre>${JSON.stringify(error, null, 2)}</pre>
+                `;
+                console.error('Database connection error:', error);
+            }
+        };
+
+        window.showConsoleLog = function() {
+            const resultDiv = document.getElementById('console-log');
+            resultDiv.innerHTML = `
+                <div class="info status">
+                    افتح Console (F12) لرؤية جميع الرسائل
+                </div>
+            `;
+        };
+
+        // اختبار تلقائي عند التحميل
+        console.log('✅ صفحة الاختبار محملة');
+        console.log('Supabase URL:', supabaseUrl ? 'موجود' : 'غير موجود');
+    </script>
+</body>
+</html>

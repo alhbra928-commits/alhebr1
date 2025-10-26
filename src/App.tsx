@@ -155,15 +155,16 @@ function App() {
   };
 
   const renderModule = () => {
-    switch (activeModule) {
-      case 'public':
-        return (
-          <PublicPlatformRouter
-            onAdminLogin={() => setShowAdminLogin(true)}
-            onBackToAdmin={() => setActiveModule('dashboard')}
-            onFarmOwnerLogin={() => setActiveModule('farm-owner')}
-          />
-        );
+    try {
+      switch (activeModule) {
+        case 'public':
+          return (
+            <PublicPlatformRouter
+              onAdminLogin={() => setShowAdminLogin(true)}
+              onBackToAdmin={() => setActiveModule('dashboard')}
+              onFarmOwnerLogin={() => setActiveModule('farm-owner')}
+            />
+          );
       case 'farm-owner':
         return <FarmOwnerRouter />;
       case 'dashboard':
@@ -218,16 +219,39 @@ function App() {
         );
       case 'reservations-debug':
         return <ReservationsDebugView />;
-      default:
-        return (
-          <EnhancedDashboard
-            onModuleSelect={setActiveModule}
-            activeModule={activeModule}
-            onLogout={handleLogout}
-            onGoToPublic={() => setActiveModule('public')}
-            onShowLogin={() => setShowAdminLogin(true)}
-          />
-        );
+        default:
+          return (
+            <EnhancedDashboard
+              onModuleSelect={setActiveModule}
+              activeModule={activeModule}
+              onLogout={handleLogout}
+              onGoToPublic={() => setActiveModule('public')}
+              onShowLogin={() => setShowAdminLogin(true)}
+            />
+          );
+      }
+    } catch (error) {
+      console.error('[App] Error rendering module:', error);
+      return (
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-50 to-red-100 p-6" dir="rtl">
+          <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-lg text-center">
+            <div className="text-6xl mb-4">⚠️</div>
+            <h2 className="text-3xl font-black text-red-600 mb-4">حدث خطأ غير متوقع</h2>
+            <p className="text-lg text-gray-700 mb-6">
+              عذراً، حدث خطأ أثناء تحميل الصفحة. يرجى تحديث الصفحة والمحاولة مرة أخرى.
+            </p>
+            <button
+              onClick={() => window.location.reload()}
+              className="px-8 py-4 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-xl font-bold text-lg hover:shadow-lg transition-all"
+            >
+              تحديث الصفحة
+            </button>
+            <p className="text-sm text-gray-500 mt-4">
+              افتح Console (F12) لرؤية تفاصيل الخطأ
+            </p>
+          </div>
+        </div>
+      );
     }
   };
 

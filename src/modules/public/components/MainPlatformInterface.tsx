@@ -48,10 +48,14 @@ export function MainPlatformInterface({
 
   const loadData = async () => {
     try {
+      console.log('[MainPlatform] Loading farms data...');
       const farmsData = await PublicFarmService.getAllFarms();
+      console.log('[MainPlatform] Farms loaded:', farmsData.length);
       setFarms(farmsData);
     } catch (error) {
-      console.error('Error loading data:', error);
+      console.error('[MainPlatform] Error loading data:', error);
+      // عرض رسالة للمستخدم
+      alert('حدث خطأ في تحميل المزارع. يرجى تحديث الصفحة.');
     }
   };
 
