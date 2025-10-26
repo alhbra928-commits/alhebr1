@@ -51,6 +51,11 @@ function App() {
           permissions: adminData.permissions || []
         });
         setActiveModule('dashboard');
+
+        // إبلاغ PermissionsContext بالتغيير
+        setTimeout(() => {
+          window.dispatchEvent(new Event('admin-session-changed'));
+        }, 100);
       } catch (error) {
         console.error('Error restoring session:', error);
       }
@@ -110,6 +115,9 @@ function App() {
     setActiveModule('dashboard');
     setShowLoginNotification(true);
     setLastActivity(Date.now());
+
+    // إبلاغ PermissionsContext بالتغيير
+    window.dispatchEvent(new Event('admin-session-changed'));
 
     // محاولة حفظ في Database في الخلفية (بدون انتظار)
     try {

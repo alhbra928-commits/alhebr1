@@ -87,6 +87,22 @@ export function PermissionsProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     loadPermissions();
+
+    // الاستماع لتغييرات localStorage (عند تسجيل الدخول/الخروج)
+    const handleStorageChange = () => {
+      console.log('🔄 [PermissionsContext] Storage changed, reloading permissions');
+      loadPermissions();
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+
+    // استمع أيضاً لحدث مخصص من App.tsx
+    window.addEventListener('admin-session-changed', handleStorageChange);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('admin-session-changed', handleStorageChange);
+    };
   }, []);
 
   const hasPermission = (moduleId: string, action: 'view' | 'create' | 'edit' | 'delete'): boolean => {
