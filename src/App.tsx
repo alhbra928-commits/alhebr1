@@ -12,7 +12,7 @@ const FarmOwnerRouter = lazy(() => import('./modules/farm-owner/components/FarmO
 const EnhancedDashboard = lazy(() => import('./modules/dashboard/EnhancedDashboard').then(m => ({ default: m.EnhancedDashboard })));
 const OwnersView = lazy(() => import('./modules/owners/components/OwnersView').then(m => ({ default: m.OwnersView })));
 const FarmsView = lazy(() => import('./modules/farms/components/FarmsView').then(m => ({ default: m.FarmsView })));
-const AdvancedBookingsView = lazy(() => import('./modules/reservations/components/AdvancedBookingsView').then(m => ({ default: m.AdvancedBookingsView })));
+const ModernBookingsInterface = lazy(() => import('./modules/reservations/components/ModernBookingsInterface').then(m => ({ default: m.ModernBookingsInterface })));
 const AdvancedInvestorsView = lazy(() => import('./modules/investors/components/AdvancedInvestorsView').then(m => ({ default: m.AdvancedInvestorsView })));
 const WalletsView = lazy(() => import('./modules/wallets/components/WalletsView').then(m => ({ default: m.WalletsView })));
 const AdvancedFinancialDashboard = lazy(() => import('./modules/finance/components/AdvancedFinancialDashboard').then(m => ({ default: m.AdvancedFinancialDashboard })));
@@ -182,7 +182,7 @@ function App() {
       case 'farms':
         return <FarmsView onBack={() => setActiveModule('dashboard')} />;
       case 'reservations':
-        return <AdvancedBookingsView onBack={() => setActiveModule('dashboard')} />;
+        return <ModernBookingsInterface onBack={() => setActiveModule('dashboard')} />;
       case 'investors':
         return <AdvancedInvestorsView onBack={() => setActiveModule('dashboard')} />;
       case 'wallets':
