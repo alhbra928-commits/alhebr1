@@ -24,14 +24,6 @@ export function AdvancedBookingsView({ onBack }: AdvancedBookingsViewProps) {
   const hasEditPermission = isAdmin || canEdit('reservations');
   const hasDeletePermission = isAdmin || canDelete('reservations');
 
-  useEffect(() => {
-    loadData();
-  }, []);
-
-  useEffect(() => {
-    applyFilters();
-  }, [bookings, searchTerm, statusFilter]);
-
   const loadData = React.useCallback(async () => {
     try {
       setLoading(true);
@@ -47,6 +39,14 @@ export function AdvancedBookingsView({ onBack }: AdvancedBookingsViewProps) {
       setLoading(false);
     }
   }, []);
+
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
+
+  useEffect(() => {
+    applyFilters();
+  }, [bookings, searchTerm, statusFilter]);
 
   const applyFilters = () => {
     if (!Array.isArray(bookings)) {

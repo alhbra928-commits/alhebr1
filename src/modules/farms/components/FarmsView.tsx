@@ -49,34 +49,6 @@ export function FarmsView({ onBack }: FarmsViewProps) {
   const hasEditPermission = canEdit('farms');
   const hasDeletePermission = canDelete('farms');
 
-  useEffect(() => {
-    loadData();
-
-    const unsubscribe = useRealtimeTables([
-      {
-        name: 'farms',
-        callbacks: {
-          onInsert: () => loadData(),
-          onUpdate: () => loadData(),
-          onDelete: () => loadData()
-        }
-      },
-      {
-        name: 'reservations',
-        callbacks: {
-          onInsert: () => loadData(),
-          onUpdate: () => loadData()
-        }
-      }
-    ]);
-
-    return () => unsubscribe();
-  }, [loadData]);
-
-  useEffect(() => {
-    applyFilters();
-  }, [farms, searchTerm, filterType, filterStatus]);
-
   const loadData = React.useCallback(async () => {
     try {
       setLoading(true);
@@ -108,6 +80,34 @@ export function FarmsView({ onBack }: FarmsViewProps) {
       setLoading(false);
     }
   }, []);
+
+  useEffect(() => {
+    loadData();
+
+    const unsubscribe = useRealtimeTables([
+      {
+        name: 'farms',
+        callbacks: {
+          onInsert: () => loadData(),
+          onUpdate: () => loadData(),
+          onDelete: () => loadData()
+        }
+      },
+      {
+        name: 'reservations',
+        callbacks: {
+          onInsert: () => loadData(),
+          onUpdate: () => loadData()
+        }
+      }
+    ]);
+
+    return () => unsubscribe();
+  }, [loadData]);
+
+  useEffect(() => {
+    applyFilters();
+  }, [farms, searchTerm, filterType, filterStatus]);
 
   const applyFilters = () => {
     if (!Array.isArray(farms)) {
