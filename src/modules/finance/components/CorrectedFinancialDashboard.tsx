@@ -72,20 +72,26 @@ export function CorrectedFinancialDashboard({ onBack }: CorrectedFinancialDashbo
     try {
       setExecutingSettlement(farmId);
 
-      // TODO: Get actual admin ID from session
-      const adminId = 'admin-temp-id';
+      // استخدام UUID صالح للمدير
+      const adminId = '00000000-0000-0000-0000-000000000000';
+
+      console.log('🚀 Starting settlement for farm:', farmId);
 
       const result = await CorrectedFinancialService.executeManualSettlement(farmId, adminId);
 
-      if (result.success) {
+      console.log('📊 Settlement result:', result);
+
+      if (result && result.success) {
         alert(`✅ تمت التسوية بنجاح!\n\nرقم العملية: ${result.transaction_id}\nالمبلغ: ${CorrectedFinancialService.formatCurrency(result.amount)}`);
         await loadData();
       } else {
-        alert(`❌ فشلت التسوية: ${result.error}`);
+        const errorMsg = result?.error || 'خطأ غير معروف';
+        alert(`❌ فشلت التسوية: ${errorMsg}`);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('❌ خطأ في تنفيذ التسوية:', error);
-      alert('❌ حدث خطأ أثناء تنفيذ التسوية');
+      const errorDetails = error?.message || error?.details || error?.hint || 'حدث خطأ أثناء تنفيذ التسوية';
+      alert(`❌ خطأ: ${errorDetails}`);
     } finally {
       setExecutingSettlement(null);
     }

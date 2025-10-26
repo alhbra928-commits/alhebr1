@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>اختبار التسوية المباشر</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body { font-family: Arial; padding: 20px; background: #f5f5f5; }
+    .btn { padding: 12px 24px; margin: 10px; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; }
+    .btn-primary { background: #3b82f6; color: white; }
+    .btn-success { background: #22c55e; color: white; }
+    .result { background: white; padding: 20px; margin: 15px 0; border-radius: 8px; }
+    .error { color: #ef4444; }
+    .success { color: #22c55e; }
+    pre { background: #f9f9f9; padding: 15px; border-radius: 5px; overflow-x: auto; }
+  </style>
+</head>
+<body>
+  <h1>🔍 اختبار التسوية المالية المباشر</h1>
+
+  <div style="background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+    <h2>🎯 خطوات الاختبار:</h2>
+    <ol>
+      <li>جلب مزرعة جاهزة للتسوية</li>
+      <li>استدعاء دالة execute_manual_settlement مباشرة</li>
+      <li>عرض النتيجة والخطأ إن وجد</li>
+    </ol>
+  </div>
+
+  <button class="btn btn-primary" onclick="testSettlement()">▶️ بدء الاختبار</button>
+
+  <div id="results"></div>
+
+  <script type="module">
+    const supabaseUrl = 'https://pbxxjbuvduhdogulhuhw.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBieHhqYnV2ZHVoZG9ndWxodWh3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjk0MTY0NzksImV4cCI6MjA0NDk5MjQ3OX0.1GvIELQ1dPNtVE_kR9WrU7L8uSrUPLiRo5_MYNPyFis';
+    const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+    const results = document.getElementById('results');
+
+    window.testSettlement = async function() {
+      results.innerHTML = '<div class="result">⏳ جاري التنفيذ...</div>';
+
+      try {
+        // Step 1: جلب مزرعة جاهزة
+        console.log('Step 1: جلب مزرعة جاهزة للتسوية...');
+        results.innerHTML += '<div class="result"><h3>📊 Step 1: جلب المزارع</h3><p>جاري الفحص...</p></div>';
+
+        const { data: farms, error: farmError } = await supabase
+          .from('farm_finance')
+          .select('*')
+          .is('deleted_at', null)
+          .eq('settlement_ready', true)
+          .eq('settlement_executed', false)
+          .limit(1);
+
+        if (farmError) {
+          results.innerHTML += `<div class="result error">
+            <h3>❌ خطأ في جلب المزارع</h3>
+            <p><strong>Message:</strong> ${farmError.message}</p>
+            <p><strong>Code:</strong> ${farmError.code}</p>
+            <p><strong>Details:</strong> ${farmError.details}</p>
+            <pre>${JSON.stringify(farmError, null, 2)}</pre>
+          </div>`;
+          return;
+        }
+
+        if (!farms || farms.length === 0) {
+          results.innerHTML += '<div class="result error">⚠️ لا توجد مزارع جاهزة للتسوية</div>';
+          return;
+        }
+
+        const farm = farms[0];
+        results.innerHTML += `<div class="result success">
+          <h3>✅ تم جلب المزرعة</h3>
+          <ul>
+            <li><strong>الكود:</strong> ${farm.farm_code}</li>
+            <li><strong>الاسم:</strong> ${farm.farm_name}</li>
+            <li><strong>المحصل:</strong> ${Number(farm.collected_from_investors).toLocaleString('ar')} ريال</li>
+            <li><strong>المستهدف:</strong> ${Number(farm.owner_amount_target).toLocaleString('ar')} ريال</li>
+            <li><strong>Farm ID:</strong> ${farm.farm_id}</li>
+          </ul>
+        </div>`;
+
+        // Step 2: استدعاء دالة التسوية
+        console.log('Step 2: استدعاء دالة execute_manual_settlement...');
+        results.innerHTML += '<div class="result"><h3>📝 Step 2: تنفيذ التسوية</h3><p>جاري الاستدعاء...</p></div>';
+
+        const testAdminId = '00000000-0000-0000-0000-000000000000';
+
+        console.log('Calling RPC with:', {
+          p_farm_id: farm.farm_id,
+          p_admin_id: testAdminId
+        });
+
+        const { data: settlementResult, error: settlementError } = await supabase
+          .rpc('execute_manual_settlement', {
+            p_farm_id: farm.farm_id,
+            p_admin_id: testAdminId
+          });
+
+        console.log('RPC Result:', { data: settlementResult, error: settlementError });
+
+        if (settlementError) {
+          results.innerHTML += `<div class="result error">
+            <h3>❌ خطأ في تنفيذ التسوية</h3>
+            <p><strong>Message:</strong> ${settlementError.message}</p>
+            <p><strong>Code:</strong> ${settlementError.code || 'N/A'}</p>
+            <p><strong>Details:</strong> ${settlementError.details || 'N/A'}</p>
+            <p><strong>Hint:</strong> ${settlementError.hint || 'N/A'}</p>
+            <h4>Full Error Object:</h4>
+            <pre>${JSON.stringify(settlementError, null, 2)}</pre>
+          </div>`;
+          return;
+        }
+
+        results.innerHTML += `<div class="result success">
+          <h3>✅ نجحت التسوية!</h3>
+          <p><strong>Transaction ID:</strong> ${settlementResult.transaction_id}</p>
+          <p><strong>Amount:</strong> ${Number(settlementResult.amount).toLocaleString('ar')} ريال</p>
+          <p><strong>Farm Code:</strong> ${settlementResult.farm_code}</p>
+          <h4>Full Result:</h4>
+          <pre>${JSON.stringify(settlementResult, null, 2)}</pre>
+        </div>`;
+
+        // Step 3: التحقق من التحديثات
+        console.log('Step 3: التحقق من التحديثات...');
+        results.innerHTML += '<div class="result"><h3>🔍 Step 3: التحقق من التحديثات</h3></div>';
+
+        const { data: updatedFarm, error: updateError } = await supabase
+          .from('farm_finance')
+          .select('*')
+          .eq('farm_id', farm.farm_id)
+          .single();
+
+        if (updateError) {
+          results.innerHTML += `<div class="result error">❌ خطأ في جلب التحديثات: ${updateError.message}</div>`;
+        } else {
+          results.innerHTML += `<div class="result success">
+            <h3>✅ البيانات المحدثة</h3>
+            <ul>
+              <li><strong>المرحلة:</strong> ${updatedFarm.stage}</li>
+              <li><strong>تم التسوية:</strong> ${updatedFarm.settlement_executed ? '✅ نعم' : '❌ لا'}</li>
+              <li><strong>المحول للمالك:</strong> ${Number(updatedFarm.owner_amount_transferred).toLocaleString('ar')} ريال</li>
+              <li><strong>وقت التسوية:</strong> ${updatedFarm.settlement_executed_at || 'غير محدد'}</li>
+            </ul>
+          </div>`;
+        }
+
+      } catch (err) {
+        console.error('Exception:', err);
+        results.innerHTML += `<div class="result error">
+          <h3>❌ Exception</h3>
+          <p><strong>Message:</strong> ${err.message}</p>
+          <p><strong>Stack:</strong></p>
+          <pre>${err.stack}</pre>
+        </div>`;
+      }
+    };
+  </script>
+</body>
+</html>

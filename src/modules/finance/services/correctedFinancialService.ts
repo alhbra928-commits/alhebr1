@@ -128,16 +128,29 @@ export class CorrectedFinancialService {
    */
   static async executeManualSettlement(farmId: string, adminId: string): Promise<any> {
     try {
+      console.log('🔧 executeManualSettlement called with:', { farmId, adminId });
+
       const { data, error } = await supabase.rpc('execute_manual_settlement', {
         p_farm_id: farmId,
         p_admin_id: adminId,
       });
 
-      if (error) throw error;
+      console.log('📊 RPC Response:', { data, error });
+
+      if (error) {
+        console.error('❌ RPC Error:', error);
+        throw error;
+      }
 
       return data;
-    } catch (error) {
+    } catch (error: any) {
       console.error('❌ خطأ في تنفيذ التسوية:', error);
+      console.error('❌ Error details:', {
+        message: error?.message,
+        code: error?.code,
+        details: error?.details,
+        hint: error?.hint
+      });
       throw error;
     }
   }
