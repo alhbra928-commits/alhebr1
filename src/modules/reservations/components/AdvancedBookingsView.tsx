@@ -32,7 +32,7 @@ export function AdvancedBookingsView({ onBack }: AdvancedBookingsViewProps) {
     applyFilters();
   }, [bookings, searchTerm, statusFilter]);
 
-  const loadData = async () => {
+  const loadData = React.useCallback(async () => {
     try {
       setLoading(true);
       const [bookingsData, statsData] = await Promise.all([
@@ -46,7 +46,7 @@ export function AdvancedBookingsView({ onBack }: AdvancedBookingsViewProps) {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   const applyFilters = () => {
     if (!Array.isArray(bookings)) {

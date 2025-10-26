@@ -53,7 +53,7 @@ export function AdvancedInvestorsView({ onBack }: AdvancedInvestorsViewProps) {
     applyFilters();
   }, [investors, searchTerm, statusFilter]);
 
-  const loadData = async (isRefresh = false) => {
+  const loadData = React.useCallback(async (isRefresh = false) => {
     try {
       if (isRefresh) {
         setRefreshing(true);
@@ -72,7 +72,7 @@ export function AdvancedInvestorsView({ onBack }: AdvancedInvestorsViewProps) {
       setLoading(false);
       setRefreshing(false);
     }
-  };
+  }, []);
 
   const handleRefresh = () => {
     loadData(true);

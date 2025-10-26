@@ -69,23 +69,10 @@ export function OwnersView({ onBack }: OwnersViewProps) {
   const [selectedRejectionReason, setSelectedRejectionReason] = useState('');
   const [customRejectionReason, setCustomRejectionReason] = useState('');
 
-  useEffect(() => {
-    // تأخير التحميل قليلاً لتحسين الأداء
-    const timer = setTimeout(() => {
-      loadData();
-    }, 100);
-    return () => clearTimeout(timer);
-  }, []);
-
-  useEffect(() => {
-    applyFilters();
-  }, [owners, searchTerm, filterStatus, filterRegion]);
-
-  const loadData = async () => {
+  const loadData = React.useCallback(async () => {
     try {
       setLoading(true);
 
-      // تحميل البيانات الأساسية أولاً مع cache
       const ownersData = await OwnersService.getOwnersList(undefined, true).catch(err => {
         console.error('Error loading owners:', err);
         return [];
@@ -94,7 +81,6 @@ export function OwnersView({ onBack }: OwnersViewProps) {
       setOwners(ownersData);
       setLoading(false);
 
-      // تحميل الإحصائيات والطلبات المعلقة في الخلفية
       Promise.all([
         OwnersService.getStatistics().catch(err => {
           console.error('Error loading stats:', err);
@@ -109,10 +95,21 @@ export function OwnersView({ onBack }: OwnersViewProps) {
         setPendingSubmissions(pendingData);
       });
     } catch (err) {
-      console.error('❌ Error loading data:', err);
+      console.error('Error loading data:', err);
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      loadData();
+    }, 100);
+    return () => clearTimeout(timer);
+  }, [loadData]);
+
+  useEffect(() => {
+    applyFilters();
+  }, [owners, searchTerm, filterStatus, filterRegion]);
 
   const applyFilters = () => {
     if (!Array.isArray(owners)) {

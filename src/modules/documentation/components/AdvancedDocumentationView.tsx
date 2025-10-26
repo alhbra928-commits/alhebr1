@@ -48,7 +48,7 @@ export function AdvancedDocumentationView({ onBack }: AdvancedDocumentationViewP
     applyFilters();
   }, [certificates, searchTerm, statusFilter]);
 
-  const loadData = async (isRefresh = false) => {
+  const loadData = React.useCallback(async (isRefresh = false) => {
     try {
       if (isRefresh) {
         setRefreshing(true);
@@ -73,7 +73,7 @@ export function AdvancedDocumentationView({ onBack }: AdvancedDocumentationViewP
       setLoading(false);
       setRefreshing(false);
     }
-  };
+  }, []);
 
   const handleRefresh = () => {
     loadData(true);
