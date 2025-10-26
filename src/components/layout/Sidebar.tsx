@@ -11,7 +11,8 @@ import {
   Building,
   Award,
   TrendingUp,
-  Sprout
+  Sprout,
+  MessageCircle
 } from 'lucide-react';
 import { usePermissions } from '../../contexts/PermissionsContext';
 
@@ -36,6 +37,7 @@ const menuItems: MenuItem[] = [
   { id: 'finance', label: 'النظام المالي الذكي', icon: Wallet, color: 'text-emerald-600' },
   { id: 'agriculture', label: 'الخدمات الزراعية', icon: Sprout, color: 'text-green-600' },
   { id: 'documentation', label: 'التوثيق', icon: Award, color: 'text-blue-600' },
+  { id: 'whatsapp', label: 'إدارة الواتساب', icon: MessageCircle, color: 'text-green-600' },
   { id: 'marketing', label: 'التسويق', icon: TrendingUp, color: 'text-pink-600' },
   { id: 'wallets', label: 'المحافظ', icon: Wallet, color: 'text-purple-600' },
   { id: 'permissions', label: 'إدارة الصلاحيات', icon: Shield, color: 'text-red-600' },
