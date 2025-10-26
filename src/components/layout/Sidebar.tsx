@@ -14,7 +14,6 @@ import {
   Sprout
 } from 'lucide-react';
 import { usePermissions } from '../../contexts/PermissionsContext';
-import { WhatsAppNotificationBadge } from '../../modules/whatsapp/components/WhatsAppNotificationBadge';
 
 interface SidebarProps {
   activeModule: string;
@@ -38,7 +37,6 @@ const menuItems: MenuItem[] = [
   { id: 'agriculture', label: 'الخدمات الزراعية', icon: Sprout, color: 'text-green-600' },
   { id: 'documentation', label: 'التوثيق', icon: Award, color: 'text-blue-600' },
   { id: 'marketing', label: 'التسويق', icon: TrendingUp, color: 'text-pink-600' },
-  { id: 'whatsapp', label: 'واتساب', icon: Shield, color: 'text-green-600' },
   { id: 'wallets', label: 'المحافظ', icon: Wallet, color: 'text-purple-600' },
   { id: 'permissions', label: 'إدارة الصلاحيات', icon: Shield, color: 'text-red-600' },
   { id: 'settings', label: 'الإعدادات', icon: Settings, color: 'text-gray-600' },
@@ -175,12 +173,7 @@ export function Sidebar({ activeModule, onModuleChange }: SidebarProps) {
               >
                 <Icon className={`h-5 w-5 ${isActive ? item.color : ''}`} />
                 <span className="font-medium">{item.label}</span>
-                {item.id === 'whatsapp' && (
-                  <div className="mr-auto">
-                    <WhatsAppNotificationBadge variant="icon" className="scale-75" />
-                  </div>
-                )}
-                {isActive && item.id !== 'whatsapp' && (
+                {isActive && (
                   <div className="mr-auto w-2 h-2 bg-green-500 rounded-full animate-pulse" />
                 )}
               </button>

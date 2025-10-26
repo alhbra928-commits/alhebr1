@@ -5,8 +5,6 @@ import { InvestorService } from '../services/investorService';
 import { SessionManager } from '../services/sessionManager';
 import { Loader } from 'lucide-react';
 import { brandColors, brandGradients } from '../../finance/styles/brandColors';
-import { SmartFloatingWhatsApp } from '../../../components/common/SmartFloatingWhatsApp';
-import { floatingWhatsAppService } from '../../../services/floatingWhatsAppService';
 
 interface InvestorRouterProps {
   onBack: () => void;
@@ -140,23 +138,11 @@ export function InvestorRouter({ onBack, autoLoginPhone, autoLoginName }: Invest
     );
   }
 
-  const whatsappContext = {
-    userType: 'investor' as const,
-    userId: investorPhone,
-    userName: autoLoginName,
-    userPhone: investorPhone,
-    currentPage: 'investor-dashboard',
-    sessionId: floatingWhatsAppService.getSessionId()
-  };
-
   return (
-    <>
-      <InvestorDashboard
-        phone={investorPhone}
-        onLogout={handleLogout}
-        isFirstTimeLogin={isFirstTimeLogin}
-      />
-      <SmartFloatingWhatsApp context={whatsappContext} />
-    </>
+    <InvestorDashboard
+      phone={investorPhone}
+      onLogout={handleLogout}
+      isFirstTimeLogin={isFirstTimeLogin}
+    />
   );
 }

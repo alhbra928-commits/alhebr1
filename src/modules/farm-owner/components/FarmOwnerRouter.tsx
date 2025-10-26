@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { FarmOwnerLoginPage } from './FarmOwnerLoginPage';
 import { FarmOwnerDashboard } from './FarmOwnerDashboard';
 import { farmOwnerService } from '../services/farmOwnerService';
-import { SmartFloatingWhatsApp } from '../../../components/common/SmartFloatingWhatsApp';
-import { floatingWhatsAppService } from '../../../services/floatingWhatsAppService';
 
 export const FarmOwnerRouter: React.FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -78,13 +76,6 @@ export const FarmOwnerRouter: React.FC = () => {
     return <FarmOwnerLoginPage onLoginSuccess={handleLoginSuccess} />;
   }
 
-  const whatsappContext = {
-    userType: 'owner' as const,
-    userId: profileId,
-    currentPage: 'owner-dashboard',
-    sessionId: floatingWhatsAppService.getSessionId()
-  };
-
   // إذا كان المستخدم يريد رؤية المنصة العامة
   if (showPublicPlatform) {
     return (
@@ -134,20 +125,15 @@ export const FarmOwnerRouter: React.FC = () => {
             </div>
           </div>
         </div>
-
-        <SmartFloatingWhatsApp context={whatsappContext} />
       </>
     );
   }
 
   return (
-    <>
-      <FarmOwnerDashboard
-        profileId={profileId}
-        onLogout={handleLogout}
-        onBackToPublic={handleBackToPublic}
-      />
-      <SmartFloatingWhatsApp context={whatsappContext} />
-    </>
+    <FarmOwnerDashboard
+      profileId={profileId}
+      onLogout={handleLogout}
+      onBackToPublic={handleBackToPublic}
+    />
   );
 };

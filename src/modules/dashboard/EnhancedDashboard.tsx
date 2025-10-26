@@ -22,8 +22,6 @@ import { LogoutConfirmationModal } from '../admin/components/LogoutConfirmationM
 import { SessionTerminatedMessage } from '../admin/components/SessionTerminatedMessage';
 import { LiveFinancialSystem } from '../../services/liveFinancialSystem';
 import { NotificationSoundControl } from '../../components/common/NotificationSoundControl';
-import { SmartFloatingWhatsApp } from '../../components/common/SmartFloatingWhatsApp';
-import { floatingWhatsAppService } from '../../services/floatingWhatsAppService';
 import { usePermissions } from '../../contexts/PermissionsContext';
 import { supabase } from '../../lib/supabase';
 
@@ -582,15 +580,6 @@ export function EnhancedDashboard({ onModuleSelect, onLogout, onGoToPublic, onSh
 
       {/* التحكم في الإشعارات الصوتية */}
       <NotificationSoundControl />
-
-      {/* زر الواتساب العائم الذكي */}
-      <SmartFloatingWhatsApp
-        context={{
-          userType: 'admin',
-          currentPage: 'admin-dashboard',
-          sessionId: floatingWhatsAppService.getSessionId()
-        }}
-      />
     </div>
   );
 }

@@ -25,8 +25,6 @@ const ReservationsDebugView = lazy(() => import('./modules/reservations/componen
 const LiveSessionsMonitor = lazy(() => import('./modules/admin/components/LiveSessionsMonitor').then(m => ({ default: m.LiveSessionsMonitor })));
 const AdvancedPermissionsManager = lazy(() => import('./modules/admin/components/AdvancedPermissionsManager').then(m => ({ default: m.AdvancedPermissionsManager })));
 const ControlOversightView = lazy(() => import('./modules/admin/components/ControlOversightView').then(m => ({ default: m.ControlOversightView })));
-const ModernWhatsAppDashboard = lazy(() => import('./modules/whatsapp/components/ModernWhatsAppDashboard').then(m => ({ default: m.ModernWhatsAppDashboard })));
-const ModernMessagesLog = lazy(() => import('./modules/whatsapp/components/ModernMessagesLog').then(m => ({ default: m.ModernMessagesLog })));
 
 function App() {
   const [activeModule, setActiveModule] = useState('public');
@@ -198,8 +196,6 @@ function App() {
         return <MarketingView onBack={() => setActiveModule('dashboard')} />;
       case 'settings':
         return <SettingsView onBack={() => setActiveModule('dashboard')} />;
-      case 'whatsapp':
-        return <ModernWhatsAppDashboard onBack={() => setActiveModule('dashboard')} />;
       case 'permissions':
         return <ControlOversightView onBack={() => setActiveModule('dashboard')} />;
       case 'sessions':
