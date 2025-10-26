@@ -44,12 +44,6 @@ export function AdvancedInvestorsView({ onBack }: AdvancedInvestorsViewProps) {
   const hasEditPermission = canEdit('investors');
   const hasDeletePermission = canDelete('investors');
 
-  console.log('🔍 [AdvancedInvestorsView] Permissions:', {
-    isAdmin,
-    canCreate: hasCreatePermission,
-    canEdit: hasEditPermission,
-    canDelete: hasDeletePermission
-  });
 
   useEffect(() => {
     loadData();

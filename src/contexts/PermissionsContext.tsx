@@ -89,9 +89,14 @@ export function PermissionsProvider({ children }: { children: ReactNode }) {
     loadPermissions();
 
     // الاستماع لتغييرات localStorage (عند تسجيل الدخول/الخروج)
+    let debounceTimer: NodeJS.Timeout;
     const handleStorageChange = () => {
-      console.log('🔄 [PermissionsContext] Storage changed, reloading permissions');
-      loadPermissions();
+      // منع Re-render Loop باستخدام debounce
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => {
+        console.log('🔄 [PermissionsContext] Storage changed, reloading permissions');
+        loadPermissions();
+      }, 300); // انتظر 300ms قبل التحميل
     };
 
     window.addEventListener('storage', handleStorageChange);
@@ -100,6 +105,7 @@ export function PermissionsProvider({ children }: { children: ReactNode }) {
     window.addEventListener('admin-session-changed', handleStorageChange);
 
     return () => {
+      clearTimeout(debounceTimer);
       window.removeEventListener('storage', handleStorageChange);
       window.removeEventListener('admin-session-changed', handleStorageChange);
     };

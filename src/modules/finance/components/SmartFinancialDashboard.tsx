@@ -26,10 +26,6 @@ export function SmartFinancialDashboard({ onBack }: SmartFinancialDashboardProps
 
   const hasEditPermission = canEdit('finance');
 
-  console.log('🔍 [SmartFinancialDashboard] Permissions:', {
-    isAdmin,
-    canEdit: hasEditPermission
-  });
   const [stats, setStats] = useState({
     totalFarms: 0,
     totalMarketingAmount: 0,
