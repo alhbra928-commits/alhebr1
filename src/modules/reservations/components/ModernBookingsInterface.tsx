@@ -27,6 +27,13 @@ export function ModernBookingsInterface({ onBack }: ModernBookingsInterfaceProps
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
+  // Confirmation Modals
+  const [showApproveConfirm, setShowApproveConfirm] = useState(false);
+  const [showRejectConfirm, setShowRejectConfirm] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [showCertificateConfirm, setShowCertificateConfirm] = useState(false);
+  const [pendingAction, setPendingAction] = useState<{ id: string, type: string, data?: any } | null>(null);
+
   const hasEditPermission = isAdmin || canEdit('reservations');
   const hasDeletePermission = isAdmin || canDelete('reservations');
 
@@ -95,12 +102,21 @@ export function ModernBookingsInterface({ onBack }: ModernBookingsInterfaceProps
     setShowErrorModal(true);
   };
 
-  const handleApprove = async (bookingId: string) => {
+  const handleApproveRequest = (bookingId: string) => {
+    const booking = bookings.find(b => b.id === bookingId);
+    setPendingAction({ id: bookingId, type: 'approve', data: booking });
+    setShowApproveConfirm(true);
+  };
+
+  const handleApproveConfirm = async () => {
+    if (!pendingAction) return;
+
+    setShowApproveConfirm(false);
     showProcessing('جاري اعتماد الحجز...');
 
     try {
-      console.log('🔄 [handleApprove] Starting approval for:', bookingId);
-      await BookingsService.approve(bookingId);
+      console.log('🔄 [handleApprove] Starting approval for:', pendingAction.id);
+      await BookingsService.approve(pendingAction.id);
       console.log('✅ [handleApprove] Approval successful');
 
       await loadData();
@@ -109,53 +125,80 @@ export function ModernBookingsInterface({ onBack }: ModernBookingsInterfaceProps
       showSuccess('تم اعتماد الحجز بنجاح!\nتم نقل الحجز إلى قسم "المقبولة"\nتم إرسال إشعار للمستثمر');
       setSelectedBooking(null);
       setShowDetailsPanel(false);
+      setPendingAction(null);
     } catch (err: any) {
       console.error('❌ [handleApprove] Error:', err);
       showError('فشل اعتماد الحجز!\n' + (err.message || 'حدث خطأ غير متوقع'));
     }
   };
 
-  const handleReject = async (bookingId: string) => {
-    if (!confirm('هل أنت متأكد من رفض هذا الحجز؟')) return;
+  const handleRejectRequest = (bookingId: string) => {
+    const booking = bookings.find(b => b.id === bookingId);
+    setPendingAction({ id: bookingId, type: 'reject', data: booking });
+    setShowRejectConfirm(true);
+  };
 
+  const handleRejectConfirm = async () => {
+    if (!pendingAction) return;
+
+    setShowRejectConfirm(false);
     showProcessing('جاري رفض الحجز...');
 
     try {
-      await BookingsService.reject(bookingId);
+      await BookingsService.reject(pendingAction.id);
       await loadData();
       showSuccess('تم رفض الحجز\nتم نقل الحجز إلى قسم "المرفوضة"');
       setSelectedBooking(null);
       setShowDetailsPanel(false);
+      setPendingAction(null);
     } catch (err: any) {
       showError('فشل رفض الحجز!\n' + (err.message || 'حدث خطأ غير متوقع'));
     }
   };
 
-  const handleDelete = async (bookingId: string) => {
-    if (!confirm('⚠️ هل أنت متأكد من حذف هذا الحجز نهائياً؟\n\nلا يمكن التراجع عن هذا الإجراء!')) return;
+  const handleDeleteRequest = (bookingId: string) => {
+    const booking = bookings.find(b => b.id === bookingId);
+    setPendingAction({ id: bookingId, type: 'delete', data: booking });
+    setShowDeleteConfirm(true);
+  };
 
+  const handleDeleteConfirm = async () => {
+    if (!pendingAction) return;
+
+    setShowDeleteConfirm(false);
     showProcessing('جاري حذف الحجز...');
 
     try {
-      await BookingsService.deletePermanently(bookingId);
+      await BookingsService.deletePermanently(pendingAction.id);
       await loadData();
       showSuccess('تم حذف الحجز نهائياً\nتم إزالة الحجز من النظام');
       setSelectedBooking(null);
       setShowDetailsPanel(false);
+      setPendingAction(null);
     } catch (err: any) {
       showError('فشل حذف الحجز!\n' + (err.message || 'حدث خطأ غير متوقع'));
     }
   };
 
-  const handleIssueCertificate = async (bookingId: string) => {
+  const handleCertificateRequest = (bookingId: string) => {
+    const booking = bookings.find(b => b.id === bookingId);
+    setPendingAction({ id: bookingId, type: 'certificate', data: booking });
+    setShowCertificateConfirm(true);
+  };
+
+  const handleCertificateConfirm = async () => {
+    if (!pendingAction) return;
+
+    setShowCertificateConfirm(false);
     showProcessing('جاري إصدار الشهادة...');
 
     try {
-      await BookingsService.issueCertificate(bookingId);
+      await BookingsService.issueCertificate(pendingAction.id);
       await loadData();
       showSuccess('تم إصدار الشهادة بنجاح!\nتم نقل الحجز إلى قسم "الموثقة"');
       setSelectedBooking(null);
       setShowDetailsPanel(false);
+      setPendingAction(null);
     } catch (err: any) {
       showError('فشل إصدار الشهادة!\n' + (err.message || 'حدث خطأ غير متوقع'));
     }
@@ -406,11 +449,288 @@ export function ModernBookingsInterface({ onBack }: ModernBookingsInterfaceProps
           setShowDetailsPanel(false);
           setSelectedBooking(null);
         }}
-        onApprove={hasEditPermission ? handleApprove : undefined}
-        onReject={hasEditPermission ? handleReject : undefined}
-        onDelete={hasDeletePermission ? handleDelete : undefined}
-        onIssueCertificate={hasEditPermission ? handleIssueCertificate : undefined}
+        onApprove={hasEditPermission ? handleApproveRequest : undefined}
+        onReject={hasEditPermission ? handleRejectRequest : undefined}
+        onDelete={hasDeletePermission ? handleDeleteRequest : undefined}
+        onIssueCertificate={hasEditPermission ? handleCertificateRequest : undefined}
       />
+
+      {/* Approve Confirmation Modal */}
+      {showApproveConfirm && pendingAction && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in">
+          <div className="bg-white rounded-3xl max-w-lg w-full shadow-2xl animate-in zoom-in">
+            {/* Header */}
+            <div className="bg-gradient-to-r from-emerald-500 to-green-600 text-white p-6 rounded-t-3xl">
+              <div className="flex items-center gap-4">
+                <div className="bg-white/20 p-3 rounded-2xl">
+                  <CheckCircle className="w-8 h-8" />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-black">تأكيد اعتماد الحجز</h3>
+                  <p className="text-emerald-100 text-sm mt-1">الرجاء مراجعة التفاصيل قبل الاعتماد</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Body */}
+            <div className="p-6 space-y-4">
+              <div className="bg-emerald-50 border-2 border-emerald-200 rounded-xl p-4">
+                <p className="text-lg font-bold text-slate-800 mb-3">معلومات الحجز:</p>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-slate-600">رقم الحجز:</span>
+                    <span className="font-bold text-slate-800">{pendingAction.data?.booking_code || 'RES-' + pendingAction.id.substring(0, 8)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-600">اسم المستثمر:</span>
+                    <span className="font-bold text-slate-800">{pendingAction.data?.investor_name}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-600">رقم الجوال:</span>
+                    <span className="font-bold text-slate-800" dir="ltr">{pendingAction.data?.investor_mobile}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-600">عدد الأشجار:</span>
+                    <span className="font-bold text-slate-800">{pendingAction.data?.reserved_trees}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-600">المبلغ الإجمالي:</span>
+                    <span className="font-bold text-green-600">{pendingAction.data?.total_price?.toLocaleString('ar-SA')} ر.س</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-blue-50 border-2 border-blue-200 rounded-xl p-4">
+                <p className="text-sm text-blue-900">
+                  <strong>ملاحظة:</strong> بعد الاعتماد:
+                </p>
+                <ul className="text-sm text-blue-800 mt-2 space-y-1 mr-4">
+                  <li>• سيتم نقل الحجز إلى قسم "المقبولة"</li>
+                  <li>• سيتم إرسال إشعار للمستثمر</li>
+                  <li>• سيتمكن المستثمر من رفع إيصال السداد</li>
+                </ul>
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="p-6 bg-slate-50 rounded-b-3xl flex gap-3">
+              <button
+                onClick={() => {
+                  setShowApproveConfirm(false);
+                  setPendingAction(null);
+                }}
+                className="flex-1 px-6 py-4 bg-slate-200 text-slate-700 rounded-xl font-bold hover:bg-slate-300 transition-all"
+              >
+                إلغاء
+              </button>
+              <button
+                onClick={handleApproveConfirm}
+                className="flex-1 px-6 py-4 bg-gradient-to-r from-emerald-600 to-green-600 text-white rounded-xl font-bold hover:from-emerald-700 hover:to-green-700 transition-all shadow-lg"
+              >
+                تأكيد الاعتماد
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Reject Confirmation Modal */}
+      {showRejectConfirm && pendingAction && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in">
+          <div className="bg-white rounded-3xl max-w-lg w-full shadow-2xl animate-in zoom-in">
+            <div className="bg-gradient-to-r from-red-500 to-rose-600 text-white p-6 rounded-t-3xl">
+              <div className="flex items-center gap-4">
+                <div className="bg-white/20 p-3 rounded-2xl">
+                  <XCircle className="w-8 h-8" />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-black">تأكيد رفض الحجز</h3>
+                  <p className="text-red-100 text-sm mt-1">الرجاء التأكد من قرار الرفض</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="p-6 space-y-4">
+              <div className="bg-red-50 border-2 border-red-200 rounded-xl p-4">
+                <p className="text-lg font-bold text-slate-800 mb-3">معلومات الحجز:</p>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-slate-600">رقم الحجز:</span>
+                    <span className="font-bold text-slate-800">{pendingAction.data?.booking_code || 'RES-' + pendingAction.id.substring(0, 8)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-600">اسم المستثمر:</span>
+                    <span className="font-bold text-slate-800">{pendingAction.data?.investor_name}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-amber-50 border-2 border-amber-300 rounded-xl p-4">
+                <p className="text-sm text-amber-900">
+                  <strong>⚠️ تحذير:</strong> بعد الرفض:
+                </p>
+                <ul className="text-sm text-amber-800 mt-2 space-y-1 mr-4">
+                  <li>• سيتم نقل الحجز إلى قسم "المرفوضة"</li>
+                  <li>• سيتم إشعار المستثمر بالرفض</li>
+                  <li>• لن يتمكن المستثمر من رفع إيصال</li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="p-6 bg-slate-50 rounded-b-3xl flex gap-3">
+              <button
+                onClick={() => {
+                  setShowRejectConfirm(false);
+                  setPendingAction(null);
+                }}
+                className="flex-1 px-6 py-4 bg-slate-200 text-slate-700 rounded-xl font-bold hover:bg-slate-300 transition-all"
+              >
+                إلغاء
+              </button>
+              <button
+                onClick={handleRejectConfirm}
+                className="flex-1 px-6 py-4 bg-gradient-to-r from-red-600 to-rose-600 text-white rounded-xl font-bold hover:from-red-700 hover:to-rose-700 transition-all shadow-lg"
+              >
+                تأكيد الرفض
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteConfirm && pendingAction && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in">
+          <div className="bg-white rounded-3xl max-w-lg w-full shadow-2xl animate-in zoom-in">
+            <div className="bg-gradient-to-r from-slate-700 to-slate-900 text-white p-6 rounded-t-3xl">
+              <div className="flex items-center gap-4">
+                <div className="bg-white/20 p-3 rounded-2xl">
+                  <Trash2 className="w-8 h-8" />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-black">تأكيد الحذف النهائي</h3>
+                  <p className="text-slate-300 text-sm mt-1">هذا الإجراء لا يمكن التراجع عنه!</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="p-6 space-y-4">
+              <div className="bg-slate-50 border-2 border-slate-200 rounded-xl p-4">
+                <p className="text-lg font-bold text-slate-800 mb-3">معلومات الحجز:</p>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-slate-600">رقم الحجز:</span>
+                    <span className="font-bold text-slate-800">{pendingAction.data?.booking_code || 'RES-' + pendingAction.id.substring(0, 8)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-600">اسم المستثمر:</span>
+                    <span className="font-bold text-slate-800">{pendingAction.data?.investor_name}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-red-50 border-2 border-red-400 rounded-xl p-4">
+                <p className="text-sm text-red-900 font-bold">
+                  ⚠️ تحذير شديد:
+                </p>
+                <ul className="text-sm text-red-800 mt-2 space-y-1 mr-4">
+                  <li>• سيتم حذف الحجز نهائياً من النظام</li>
+                  <li>• لا يمكن استرجاع البيانات بعد الحذف</li>
+                  <li>• ستفقد جميع السجلات المرتبطة</li>
+                  <li>• هذا الإجراء غير قابل للتراجع!</li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="p-6 bg-slate-50 rounded-b-3xl flex gap-3">
+              <button
+                onClick={() => {
+                  setShowDeleteConfirm(false);
+                  setPendingAction(null);
+                }}
+                className="flex-1 px-6 py-4 bg-slate-200 text-slate-700 rounded-xl font-bold hover:bg-slate-300 transition-all"
+              >
+                إلغاء
+              </button>
+              <button
+                onClick={handleDeleteConfirm}
+                className="flex-1 px-6 py-4 bg-gradient-to-r from-slate-700 to-slate-900 text-white rounded-xl font-bold hover:from-slate-800 hover:to-black transition-all shadow-lg"
+              >
+                حذف نهائي
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Certificate Confirmation Modal */}
+      {showCertificateConfirm && pendingAction && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in">
+          <div className="bg-white rounded-3xl max-w-lg w-full shadow-2xl animate-in zoom-in">
+            <div className="bg-gradient-to-r from-purple-500 to-violet-600 text-white p-6 rounded-t-3xl">
+              <div className="flex items-center gap-4">
+                <div className="bg-white/20 p-3 rounded-2xl">
+                  <FileText className="w-8 h-8" />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-black">تأكيد إصدار الشهادة</h3>
+                  <p className="text-purple-100 text-sm mt-1">توثيق الحجز وإصدار شهادة الملكية</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="p-6 space-y-4">
+              <div className="bg-purple-50 border-2 border-purple-200 rounded-xl p-4">
+                <p className="text-lg font-bold text-slate-800 mb-3">معلومات الحجز:</p>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-slate-600">رقم الحجز:</span>
+                    <span className="font-bold text-slate-800">{pendingAction.data?.booking_code || 'RES-' + pendingAction.id.substring(0, 8)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-600">اسم المستثمر:</span>
+                    <span className="font-bold text-slate-800">{pendingAction.data?.investor_name}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-600">عدد الأشجار:</span>
+                    <span className="font-bold text-slate-800">{pendingAction.data?.reserved_trees}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-blue-50 border-2 border-blue-200 rounded-xl p-4">
+                <p className="text-sm text-blue-900">
+                  <strong>ℹ️ معلومة:</strong> بعد إصدار الشهادة:
+                </p>
+                <ul className="text-sm text-blue-800 mt-2 space-y-1 mr-4">
+                  <li>• سيتم نقل الحجز إلى قسم "الموثقة"</li>
+                  <li>• سيتم إنشاء شهادة ملكية رسمية</li>
+                  <li>• سيتمكن المستثمر من تحميل الشهادة</li>
+                  <li>• سيتم إشعار المستثمر بإصدار الشهادة</li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="p-6 bg-slate-50 rounded-b-3xl flex gap-3">
+              <button
+                onClick={() => {
+                  setShowCertificateConfirm(false);
+                  setPendingAction(null);
+                }}
+                className="flex-1 px-6 py-4 bg-slate-200 text-slate-700 rounded-xl font-bold hover:bg-slate-300 transition-all"
+              >
+                إلغاء
+              </button>
+              <button
+                onClick={handleCertificateConfirm}
+                className="flex-1 px-6 py-4 bg-gradient-to-r from-purple-600 to-violet-600 text-white rounded-xl font-bold hover:from-purple-700 hover:to-violet-700 transition-all shadow-lg"
+              >
+                إصدار الشهادة
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
