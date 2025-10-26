@@ -4,7 +4,6 @@ import { Bell, LogOut, FileText, DollarSign, Home, HelpCircle, Phone, ArrowLeft,
 import { FarmOwnerWelcome } from './FarmOwnerWelcome';
 import { AdvancedFinanceTab } from './AdvancedFinanceTab';
 import { ModernHomeTab } from './ModernHomeTab';
-import { MultiFarmManager } from './MultiFarmManager';
 
 interface FarmOwnerDashboardProps {
   profileId: string;
@@ -17,7 +16,7 @@ export const FarmOwnerDashboard: React.FC<FarmOwnerDashboardProps> = ({ profileI
   const [farmStatus, setFarmStatus] = useState<FarmStatus | null>(null);
   const [notifications, setNotifications] = useState<FarmOwnerNotification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
-  const [activeTab, setActiveTab] = useState<'home' | 'farms' | 'form' | 'finance' | 'notifications' | 'support' | 'faq'>('home');
+  const [activeTab, setActiveTab] = useState<'home' | 'form' | 'finance' | 'notifications' | 'support' | 'faq'>('home');
   const [loading, setLoading] = useState(true);
   const [showWelcome, setShowWelcome] = useState(false);
 
@@ -296,7 +295,6 @@ export const FarmOwnerDashboard: React.FC<FarmOwnerDashboardProps> = ({ profileI
           <div className="relative flex gap-1 sm:gap-2 overflow-x-auto scrollbar-hide pb-1">
             {[
               { id: 'home', label: 'الرئيسية', icon: Home, color: '#10B981', gradient: 'from-emerald-500 to-green-600' },
-              { id: 'farms', label: 'مزارعي', icon: Layers, color: '#8BC34A', gradient: 'from-green-500 to-teal-600' },
               { id: 'form', label: 'بياناتي', icon: FileText, color: '#3B82F6', gradient: 'from-blue-500 to-cyan-600' },
               { id: 'finance', label: 'المالية', icon: DollarSign, color: '#D4AF37', gradient: 'from-yellow-500 to-amber-600' },
               { id: 'notifications', label: 'الإشعارات', icon: Bell, badge: unreadCount, color: '#F59E0B', gradient: 'from-orange-500 to-amber-600' },
@@ -435,9 +433,6 @@ export const FarmOwnerDashboard: React.FC<FarmOwnerDashboardProps> = ({ profileI
             farmStatus={farmStatus}
             onNavigateToData={() => setActiveTab('form')}
           />
-        )}
-        {activeTab === 'farms' && (
-          <MultiFarmManager profileId={profileId} />
         )}
         {activeTab === 'form' && (
           <FormTab profile={profile} profileId={profileId} onUpdate={loadData} />
