@@ -50,6 +50,9 @@ export function SmartAdminLoginPage({ onLoginSuccess, onCancel }: SmartAdminLogi
         return;
       }
 
+      // حفظ رقم الهاتف في localStorage للاستخدام في الصلاحيات
+      localStorage.setItem('admin_phone', phone);
+
       const welcomeMessage = result.user?.role === 'super_admin'
         ? '👑 مرحباً بالقائد'
         : '🌿 مرحباً بفريق العمل';

@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار نظام الأرشفة المالية - مباشر</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .section {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .section h2 {
+            color: #667eea;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .test-group {
+            margin-bottom: 30px;
+        }
+
+        .test-group h3 {
+            color: #764ba2;
+            font-size: 1.3em;
+            margin-bottom: 15px;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 5px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .result {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .result pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-size: 0.9em;
+            line-height: 1.6;
+        }
+
+        .success {
+            background: #d4edda;
+            border-left-color: #28a745;
+            color: #155724;
+        }
+
+        .error {
+            background: #f8d7da;
+            border-left-color: #dc3545;
+            color: #721c24;
+        }
+
+        .info {
+            background: #d1ecf1;
+            border-left-color: #17a2b8;
+            color: #0c5460;
+        }
+
+        .warning {
+            background: #fff3cd;
+            border-left-color: #ffc107;
+            color: #856404;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+            margin: 5px;
+        }
+
+        .badge-active {
+            background: #28a745;
+            color: white;
+        }
+
+        .badge-archived {
+            background: #6c757d;
+            color: white;
+        }
+
+        .badge-settled {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .farm-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 10px 0;
+            border: 2px solid #dee2e6;
+        }
+
+        .farm-card h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        input {
+            padding: 10px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 1em;
+            margin: 5px;
+            width: 200px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🗃️ اختبار نظام الأرشفة المالية</h1>
+            <p>اختبار شامل لنظام الأرشفة المالية مع الصلاحيات</p>
+        </div>
+
+        <!-- القسم 1: الإعدادات -->
+        <div class="section">
+            <h2>⚙️ الإعدادات</h2>
+            <div class="test-group">
+                <h3>رقم الهاتف للاختبار:</h3>
+                <input type="text" id="phoneInput" value="0500000000" placeholder="05xxxxxxxx">
+                <button onclick="savePhone()">💾 حفظ الرقم</button>
+                <div id="phoneResult" class="result info" style="display: none;"></div>
+            </div>
+        </div>
+
+        <!-- القسم 2: فحص الصلاحيات -->
+        <div class="section">
+            <h2>🔒 فحص الصلاحيات</h2>
+            <div class="test-group">
+                <h3>التحقق من صلاحية الأرشفة:</h3>
+                <button onclick="checkPermission()">🔍 فحص الصلاحية</button>
+                <button onclick="grantPermission()">✅ منح الصلاحية</button>
+                <div id="permissionResult"></div>
+            </div>
+        </div>
+
+        <!-- القسم 3: المزارع النشطة -->
+        <div class="section">
+            <h2>⚡ المزارع النشطة</h2>
+            <div class="test-group">
+                <button onclick="loadActiveFarms()">📊 تحميل المزارع النشطة</button>
+                <div id="activeFarmsResult"></div>
+            </div>
+        </div>
+
+        <!-- القسم 4: الأرشفة -->
+        <div class="section">
+            <h2>🗃️ عملية الأرشفة</h2>
+            <div class="test-group">
+                <h3>أرشفة مزرعة:</h3>
+                <input type="text" id="farmIdInput" placeholder="Farm ID">
+                <input type="text" id="notesInput" placeholder="ملاحظات (اختياري)">
+                <button onclick="archiveFarm()">🗃️ أرشفة الآن</button>
+                <div id="archiveResult"></div>
+            </div>
+        </div>
+
+        <!-- القسم 5: المزارع المؤرشفة -->
+        <div class="section">
+            <h2>📚 المزارع المؤرشفة</h2>
+            <div class="test-group">
+                <button onclick="loadArchivedFarms()">📖 عرض المزارع المؤرشفة</button>
+                <div id="archivedFarmsResult"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // إعداد Supabase
+        const SUPABASE_URL = 'https://rkshdalynndsqmuujqnx.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJrc2hkYWx5bm5kc3FtdXVqcW54Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzAwMzI0ODIsImV4cCI6MjA0NTYwODQ4Mn0.N3lUW3sW-eFMZLFk2OHYHcTc5g48yxf7xUn42I3OT3w';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        let currentPhone = '0500000000';
+
+        // حفظ رقم الهاتف
+        function savePhone() {
+            currentPhone = document.getElementById('phoneInput').value;
+            localStorage.setItem('admin_phone', currentPhone);
+            showResult('phoneResult', 'تم حفظ رقم الهاتف: ' + currentPhone, 'success');
+        }
+
+        // فحص الصلاحية
+        async function checkPermission() {
+            try {
+                const { data, error } = await supabase.rpc('check_archiving_permission', {
+                    p_admin_phone: currentPhone
+                });
+
+                if (error) throw error;
+
+                const hasPermission = data === true;
+                const message = hasPermission
+                    ? '✅ لديك صلاحية الأرشفة المالية!'
+                    : '❌ ليس لديك صلاحية الأرشفة';
+
+                showResult('permissionResult', message, hasPermission ? 'success' : 'warning');
+            } catch (error) {
+                showResult('permissionResult', 'خطأ: ' + error.message, 'error');
+            }
+        }
+
+        // منح الصلاحية
+        async function grantPermission() {
+            try {
+                const { error } = await supabase
+                    .from('admin_module_permissions')
+                    .upsert({
+                        admin_phone: currentPhone,
+                        module_id: 'finance',
+                        module_name_ar: 'الإدارة المالية',
+                        module_name_en: 'Financial Management',
+                        can_view: true,
+                        can_create: true,
+                        can_edit: true,
+                        can_delete: true,
+                        icon: 'DollarSign',
+                        is_active: true
+                    }, {
+                        onConflict: 'admin_phone,module_id'
+                    });
+
+                if (error) throw error;
+
+                showResult('permissionResult', '✅ تم منح صلاحية الأرشفة بنجاح!', 'success');
+            } catch (error) {
+                showResult('permissionResult', 'خطأ: ' + error.message, 'error');
+            }
+        }
+
+        // تحميل المزارع النشطة
+        async function loadActiveFarms() {
+            try {
+                const { data, error } = await supabase
+                    .from('farm_finance')
+                    .select('*')
+                    .eq('is_archived', false)
+                    .is('deleted_at', null)
+                    .order('updated_at', { ascending: false });
+
+                if (error) throw error;
+
+                let html = '<div class="grid">';
+                if (data && data.length > 0) {
+                    data.forEach(farm => {
+                        const canArchive = farm.settlement_executed &&
+                                         farm.collected_from_investors >= farm.owner_amount_target;
+
+                        html += `
+                            <div class="farm-card">
+                                <h4>${farm.farm_name} (${farm.farm_code})</h4>
+                                <div>
+                                    ${farm.settlement_executed ? '<span class="status-badge badge-settled">تمت التسوية</span>' : '<span class="status-badge badge-active">نشط</span>'}
+                                    ${canArchive ? '<span class="status-badge badge-active">جاهز للأرشفة</span>' : ''}
+                                </div>
+                                <p style="margin-top: 10px;">
+                                    <strong>المحصل:</strong> ${farm.collected_from_investors.toLocaleString()} ريال<br>
+                                    <strong>المطلوب:</strong> ${farm.owner_amount_target.toLocaleString()} ريال
+                                </p>
+                                ${canArchive ? `<button onclick="document.getElementById('farmIdInput').value='${farm.farm_id}'">اختيار للأرشفة</button>` : ''}
+                            </div>
+                        `;
+                    });
+                } else {
+                    html += '<p>لا توجد مزارع نشطة</p>';
+                }
+                html += '</div>';
+
+                showResult('activeFarmsResult', html, 'info');
+            } catch (error) {
+                showResult('activeFarmsResult', 'خطأ: ' + error.message, 'error');
+            }
+        }
+
+        // أرشفة مزرعة
+        async function archiveFarm() {
+            const farmId = document.getElementById('farmIdInput').value;
+            const notes = document.getElementById('notesInput').value;
+
+            if (!farmId) {
+                showResult('archiveResult', 'يرجى إدخال Farm ID', 'warning');
+                return;
+            }
+
+            try {
+                const { data, error } = await supabase.rpc('archive_farm_finance', {
+                    p_farm_id: farmId,
+                    p_admin_phone: currentPhone,
+                    p_notes: notes || null
+                });
+
+                if (error) throw error;
+
+                if (data && data.success) {
+                    const message = `
+                        <h3>✅ تمت الأرشفة بنجاح!</h3>
+                        <p><strong>المزرعة:</strong> ${data.farm_name} (${data.farm_code})</p>
+                        <p><strong>التاريخ:</strong> ${new Date(data.archived_at).toLocaleString('ar-SA')}</p>
+                    `;
+                    showResult('archiveResult', message, 'success');
+
+                    // تحديث القوائم
+                    setTimeout(() => {
+                        loadActiveFarms();
+                        loadArchivedFarms();
+                    }, 1000);
+                } else {
+                    showResult('archiveResult', '❌ فشلت الأرشفة: ' + (data.error || 'خطأ غير معروف'), 'error');
+                }
+            } catch (error) {
+                showResult('archiveResult', 'خطأ: ' + error.message, 'error');
+            }
+        }
+
+        // تحميل المزارع المؤرشفة
+        async function loadArchivedFarms() {
+            try {
+                const { data, error } = await supabase.rpc('get_archived_farms');
+
+                if (error) throw error;
+
+                let html = '<div class="grid">';
+                if (data && data.length > 0) {
+                    data.forEach(farm => {
+                        html += `
+                            <div class="farm-card" style="border-color: #6c757d;">
+                                <h4>${farm.farm_name} (${farm.farm_code})</h4>
+                                <span class="status-badge badge-archived">مؤرشف</span>
+                                <p style="margin-top: 10px;">
+                                    <strong>المحصل:</strong> ${farm.collected_from_investors.toLocaleString()} ريال<br>
+                                    <strong>المحول:</strong> ${farm.owner_amount_transferred.toLocaleString()} ريال<br>
+                                    <strong>تاريخ الأرشفة:</strong> ${new Date(farm.archived_at).toLocaleString('ar-SA')}<br>
+                                    <strong>بواسطة:</strong> ${farm.archived_by}
+                                </p>
+                                ${farm.archive_notes ? `<p><em>ملاحظات: ${farm.archive_notes}</em></p>` : ''}
+                            </div>
+                        `;
+                    });
+                } else {
+                    html += '<p>لا توجد مزارع مؤرشفة</p>';
+                }
+                html += '</div>';
+
+                showResult('archivedFarmsResult', html, 'info');
+            } catch (error) {
+                showResult('archivedFarmsResult', 'خطأ: ' + error.message, 'error');
+            }
+        }
+
+        // عرض النتيجة
+        function showResult(elementId, message, type = 'info') {
+            const element = document.getElementById(elementId);
+            element.innerHTML = message;
+            element.className = 'result ' + type;
+            element.style.display = 'block';
+        }
+
+        // التحميل التلقائي عند فتح الصفحة
+        window.onload = function() {
+            // استرجاع رقم الهاتف من localStorage إن وجد
+            const savedPhone = localStorage.getItem('admin_phone');
+            if (savedPhone) {
+                currentPhone = savedPhone;
+                document.getElementById('phoneInput').value = savedPhone;
+                showResult('phoneResult', 'تم تحميل رقم الهاتف: ' + savedPhone, 'info');
+            }
+
+            // فحص الصلاحية تلقائياً
+            checkPermission();
+
+            // تحميل المزارع
+            loadActiveFarms();
+            loadArchivedFarms();
+        };
+    </script>
+</body>
+</html>
