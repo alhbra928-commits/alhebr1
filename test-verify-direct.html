@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار اعتماد الإيصال المباشر</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+        .section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            border-right: 4px solid #667eea;
+        }
+        .section h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+        .info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            line-height: 1.8;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-right: 4px solid #28a745;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-right: 4px solid #dc3545;
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+        }
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 35px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 10px 5px;
+            transition: all 0.3s ease;
+        }
+        button:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .log {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            max-height: 500px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            line-height: 1.6;
+        }
+        .log .success-line { color: #4ec9b0; }
+        .log .error-line { color: #f48771; }
+        .log .info-line { color: #569cd6; }
+        .receipt-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: bold;
+            margin: 0 5px;
+        }
+        .badge-pending { background: #fff3cd; color: #856404; }
+        .badge-verified { background: #d4edda; color: #155724; }
+        .badge-rejected { background: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 اختبار اعتماد إيصال السداد - محاكاة الكود الفعلي</h1>
+
+        <div class="section">
+            <h3>📱 معلومات الاختبار</h3>
+            <div class="info">
+                <strong>المستثمر:</strong> محمد بن إبراهيم<br>
+                <strong>الهاتف:</strong> 500111111<br>
+                <strong>الحجز:</strong> c494d903-9472-420f-86d9-24b2898b312c<br>
+                <strong>الإيصال:</strong> d3f8129e-3439-4db4-92a2-14ec43720974
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>🎯 إجراءات</h3>
+            <button id="btnLoad" onclick="loadReceipt()">📥 تحميل بيانات الإيصال</button>
+            <button id="btnVerify" onclick="verifyReceipt()" disabled>✅ اعتماد الإيصال (محاكاة الكود)</button>
+            <button id="btnCheck" onclick="checkStatus()">🔍 فحص الحالة بعد الاعتماد</button>
+        </div>
+
+        <div id="receiptInfo"></div>
+
+        <div class="section">
+            <h3>📊 سجل التنفيذ</h3>
+            <div id="log" class="log">جاري التحضير...</div>
+        </div>
+
+        <div id="result"></div>
+    </div>
+
+    <script type="module">
+        // استخدم بيانات الاتصال الخاصة بك
+        const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || 'YOUR_SUPABASE_URL';
+        const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || 'YOUR_SUPABASE_KEY';
+
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        const RECEIPT_ID = 'd3f8129e-3439-4db4-92a2-14ec43720974';
+        const RESERVATION_ID = 'c494d903-9472-420f-86d9-24b2898b312c';
+        const INVESTOR_ID = 'faf83c87-dc19-4a2e-9fd5-d5e7ace8b626';
+
+        let currentReceipt = null;
+
+        function log(msg, type = 'info') {
+            const logEl = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString('ar-SA', { hour12: false });
+            const className = type === 'error' ? 'error-line' : type === 'success' ? 'success-line' : 'info-line';
+            logEl.innerHTML += `\n<span class="${className}">[${timestamp}] ${msg}</span>`;
+            logEl.scrollTop = logEl.scrollHeight;
+            console.log(msg);
+        }
+
+        window.loadReceipt = async () => {
+            try {
+                log('════════════════════════════════════════════════════', 'info');
+                log('🔍 جاري تحميل بيانات الإيصال...', 'info');
+
+                const { data, error } = await supabase
+                    .from('payment_receipts')
+                    .select('*')
+                    .eq('id', RECEIPT_ID)
+                    .single();
+
+                if (error) throw error;
+
+                currentReceipt = data;
+                log('✅ تم تحميل الإيصال بنجاح', 'success');
+                log(`   الحالة: ${data.status}`, 'info');
+                log(`   المبلغ: ${Number(data.amount).toLocaleString('ar-SA')} ريال`, 'info');
+
+                const statusBadge = data.status === 'pending' ? 'badge-pending' :
+                                   data.status === 'verified' ? 'badge-verified' : 'badge-rejected';
+                const statusText = data.status === 'pending' ? 'بانتظار التحقق' :
+                                  data.status === 'verified' ? 'تم التحقق' : 'مرفوض';
+
+                document.getElementById('receiptInfo').innerHTML = `
+                    <div class="section">
+                        <h3>📄 تفاصيل الإيصال</h3>
+                        <div class="info">
+                            <strong>الحالة:</strong> <span class="receipt-badge ${statusBadge}">${statusText}</span><br>
+                            <strong>المبلغ:</strong> ${Number(data.amount).toLocaleString('ar-SA')} ريال<br>
+                            <strong>تاريخ التحويل:</strong> ${new Date(data.transfer_date).toLocaleDateString('ar-SA')}<br>
+                            <strong>البنك:</strong> ${data.bank_name || 'غير محدد'}<br>
+                            <strong>تاريخ الرفع:</strong> ${new Date(data.created_at).toLocaleString('ar-SA')}
+                        </div>
+                    </div>
+                `;
+
+                if (data.status === 'pending') {
+                    document.getElementById('btnVerify').disabled = false;
+                    log('✅ الإيصال معلق - يمكنك اعتماده', 'success');
+                } else {
+                    document.getElementById('btnVerify').disabled = true;
+                    log(`⚠️ الإيصال غير معلق (${data.status}) - لا يمكن اعتماده`, 'error');
+                }
+
+            } catch (err) {
+                log(`❌ خطأ: ${err.message}`, 'error');
+                document.getElementById('result').innerHTML = `
+                    <div class="error">خطأ في تحميل الإيصال:\n${err.message}</div>
+                `;
+            }
+        };
+
+        // محاكاة دالة verifyReceipt من PaymentReceiptService
+        window.verifyReceipt = async () => {
+            const resultEl = document.getElementById('result');
+            resultEl.innerHTML = '';
+
+            try {
+                log('════════════════════════════════════════════════════', 'info');
+                log('🚀 بدء عملية الاعتماد (محاكاة الكود الفعلي)...', 'info');
+                log(`   receiptId: ${RECEIPT_ID}`, 'info');
+                log(`   verifiedBy: admin`, 'info');
+                log(`   verificationNotes: تم التحقق من الإيصال`, 'info');
+
+                // هذا هو الكود الفعلي من paymentReceiptService.ts
+                log('📤 إرسال طلب UPDATE إلى Supabase...', 'info');
+
+                const { data, error } = await supabase
+                    .from('payment_receipts')
+                    .update({
+                        status: 'verified',
+                        verified_by: 'admin',
+                        verified_at: new Date().toISOString(),
+                        verification_notes: 'تم التحقق من الإيصال',
+                        updated_at: new Date().toISOString()
+                    })
+                    .eq('id', RECEIPT_ID)
+                    .select()
+                    .single();
+
+                if (error) {
+                    log(`❌ فشل الاعتماد!`, 'error');
+                    log(`   Error Message: ${error.message}`, 'error');
+                    log(`   Error Code: ${error.code}`, 'error');
+                    log(`   Error Details: ${error.details}`, 'error');
+                    throw error;
+                }
+
+                log('✅ تم اعتماد الإيصال بنجاح!', 'success');
+                log(`   الحالة الجديدة: ${data.status}`, 'success');
+                log(`   verified_by: ${data.verified_by}`, 'success');
+                log(`   verified_at: ${data.verified_at}`, 'success');
+
+                resultEl.innerHTML = `
+                    <div class="success">
+                        <h3>✅ تم اعتماد الإيصال بنجاح!</h3>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    </div>
+                `;
+
+                document.getElementById('btnVerify').disabled = true;
+
+                // الانتظار قليلاً للـ triggers
+                log('⏳ انتظار تنفيذ الـ Triggers...', 'info');
+                await new Promise(resolve => setTimeout(resolve, 2000));
+
+                await checkStatus();
+
+            } catch (err) {
+                log(`❌ خطأ غير متوقع: ${err.message}`, 'error');
+                resultEl.innerHTML = `
+                    <div class="error">
+                        ❌ فشل اعتماد الإيصال!
+
+Message: ${err.message}
+Code: ${err.code || 'N/A'}
+Details: ${err.details || 'N/A'}
+Hint: ${err.hint || 'N/A'}
+
+Full Error:
+${JSON.stringify(err, null, 2)}
+                    </div>
+                `;
+            }
+        };
+
+        window.checkStatus = async () => {
+            try {
+                log('════════════════════════════════════════════════════', 'info');
+                log('🔍 فحص الحالة النهائية...', 'info');
+
+                // فحص الإيصال
+                const { data: receipt } = await supabase
+                    .from('payment_receipts')
+                    .select('*')
+                    .eq('id', RECEIPT_ID)
+                    .single();
+
+                log(`📄 حالة الإيصال: ${receipt.status}`, 'info');
+
+                // فحص الحجز
+                const { data: reservation } = await supabase
+                    .from('reservations')
+                    .select('booking_status, payment_status')
+                    .eq('id', RESERVATION_ID)
+                    .single();
+
+                log(`📦 حالة الحجز:`, 'info');
+                log(`   booking_status: ${reservation.booking_status}`, 'info');
+                log(`   payment_status: ${reservation.payment_status}`, 'info');
+
+                // فحص الإشعارات
+                const { data: notifications } = await supabase
+                    .from('notifications')
+                    .select('type, title_ar, created_at')
+                    .eq('investor_id', INVESTOR_ID)
+                    .order('created_at', { ascending: false })
+                    .limit(5);
+
+                log(`🔔 آخر ${notifications.length} إشعارات:`, 'info');
+                notifications.forEach((n, i) => {
+                    log(`   ${i + 1}. [${n.type}] ${n.title_ar}`, 'info');
+                });
+
+                const expectedBookingStatus = receipt.status === 'verified' ? 'verified' : 'pending_verification';
+                const expectedPaymentStatus = receipt.status === 'verified' ? 'completed' : 'pending';
+
+                if (reservation.booking_status === expectedBookingStatus &&
+                    reservation.payment_status === expectedPaymentStatus) {
+                    log('✅ جميع الحالات صحيحة!', 'success');
+                } else {
+                    log('⚠️ الحالات لا تتطابق مع المتوقع!', 'error');
+                    log(`   المتوقع: booking_status=${expectedBookingStatus}, payment_status=${expectedPaymentStatus}`, 'error');
+                    log(`   الفعلي: booking_status=${reservation.booking_status}, payment_status=${reservation.payment_status}`, 'error');
+                }
+
+            } catch (err) {
+                log(`❌ خطأ في الفحص: ${err.message}`, 'error');
+            }
+        };
+
+        // تحميل أولي
+        window.onload = () => {
+            log('✅ تم تهيئة صفحة الاختبار', 'success');
+            log('اضغط "تحميل بيانات الإيصال" للبدء', 'info');
+        };
+    </script>
+</body>
+</html>
