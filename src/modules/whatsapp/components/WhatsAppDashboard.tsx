@@ -3,6 +3,7 @@ import { MessageCircle, Send, Inbox, FileText, Settings, BarChart3, Link2 } from
 import { WhatsAppProvidersHub } from './WhatsAppProvidersHub';
 import { TemplateStudio } from './TemplateStudio';
 import { EventConnector } from './EventConnector';
+import { SmartInboxPage } from './SmartInboxPage';
 import { whatsappService } from '../../../services/whatsappService';
 
 type TabType = 'overview' | 'providers' | 'templates' | 'events' | 'messages' | 'inbox';
@@ -151,13 +152,7 @@ export const WhatsAppDashboard: React.FC = () => {
         );
 
       case 'inbox':
-        return (
-          <div className="text-center py-12" dir="rtl">
-            <Inbox className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-            <h2 className="text-xl font-bold text-white mb-2">صندوق الوارد</h2>
-            <p className="text-gray-400">قريباً - المرحلة الرابعة</p>
-          </div>
-        );
+        return <SmartInboxPage />;
 
       default:
         return null;
