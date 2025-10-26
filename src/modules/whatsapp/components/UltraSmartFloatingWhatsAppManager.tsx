@@ -90,10 +90,17 @@ export function UltraSmartFloatingWhatsAppManager() {
       return;
     }
 
+    console.log('Saving contact with data:', editingContact);
+
+    // تنظيف البيانات: إزالة الحقول غير الموجودة في الجدول
+    const { availability_status, ...cleanData } = editingContact;
+
     const contactData = {
-      ...editingContact,
-      user_types: editingContact.user_types || ['visitor', 'investor', 'owner', 'admin']
+      ...cleanData,
+      user_types: cleanData.user_types || ['visitor', 'investor', 'owner', 'admin']
     };
+
+    console.log('Final contact data to save:', contactData);
 
     const success = editingContact.id
       ? await floatingWhatsAppService.updateContactNumber(editingContact.id, contactData)
@@ -105,7 +112,7 @@ export function UltraSmartFloatingWhatsAppManager() {
       setEditingContact(null);
       loadData();
     } else {
-      alert('حدث خطأ أثناء حفظ القسم. يرجى المحاولة مرة أخرى.');
+      alert('حدث خطأ أثناء حفظ القسم. يرجى المحاولة مرة أخرى.\n\nافتح Console (F12) لرؤية تفاصيل الخطأ');
     }
   };
 
@@ -373,8 +380,7 @@ export function UltraSmartFloatingWhatsAppManager() {
                       is_active: true,
                       display_order: contacts.length + 1,
                       user_types: ['visitor', 'investor', 'owner', 'admin'],
-                      description_ar: '',
-                      availability_status: 'online'
+                      description_ar: ''
                     });
                     setShowContactModal(true);
                   }}

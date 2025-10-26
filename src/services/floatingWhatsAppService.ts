@@ -352,17 +352,28 @@ class FloatingWhatsAppService {
 
   async addContactNumber(contact: Omit<ContactNumber, 'id'>): Promise<boolean> {
     try {
-      const { error } = await supabase
+      console.log('Attempting to add contact:', contact);
+
+      const { data, error } = await supabase
         .from('whatsapp_contact_numbers')
-        .insert([contact]);
+        .insert([contact])
+        .select();
 
       if (error) {
         console.error('Error adding contact number:', error);
+        console.error('Error details:', {
+          message: error.message,
+          details: error.details,
+          hint: error.hint,
+          code: error.code
+        });
         return false;
       }
+
+      console.log('Contact added successfully:', data);
       return true;
     } catch (error) {
-      console.error('Error adding contact number:', error);
+      console.error('Unexpected error adding contact number:', error);
       return false;
     }
   }
