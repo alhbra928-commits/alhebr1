@@ -7,55 +7,56 @@ import { DocumentationService } from '../documentation/documentationService';
 export class DashboardService {
   static async getOverallStatistics() {
     try {
-      const [farmsStats, reservationsStats, walletsStats, documentationStats] = await Promise.all([
-        FarmsService.getStatistics(),
-        ReservationsService.getStatistics(),
-        WalletsService.getStatistics(),
-        DocumentationService.getStatistics()
+      // استعلام واحد مباشر بدلاً من استدعاء services
+      const [
+        { count: farmsCount },
+        { count: reservationsCount },
+        { count: investorsCount },
+        { count: ownersCount },
+        { count: adminsCount },
+        { data: platformWallet },
+        { data: finances }
+      ] = await Promise.all([
+        supabase.from('farms').select('*', { count: 'exact', head: true }).is('deleted_at', null),
+        supabase.from('reservations').select('*', { count: 'exact', head: true }).is('deleted_at', null),
+        supabase.from('investors').select('*', { count: 'exact', head: true }).is('deleted_at', null),
+        supabase.from('farm_owners').select('*', { count: 'exact', head: true }).is('deleted_at', null),
+        supabase.from('admin_users').select('*', { count: 'exact', head: true }).eq('is_active', true),
+        supabase.from('platform_wallet').select('total_balance, net_profit').eq('id', '00000000-0000-0000-0000-000000000002').maybeSingle(),
+        supabase.from('smart_farm_finances').select('collected_from_investors').is('deleted_at', null)
       ]);
-
-      const { count: investorsCount } = await supabase
-        .from('investors')
-        .select('*', { count: 'exact', head: true })
-        .is('deleted_at', null);
-
-      const { count: ownersCount } = await supabase
-        .from('farm_owners')
-        .select('*', { count: 'exact', head: true })
-        .is('deleted_at', null);
-
-      const { count: adminsCount } = await supabase
-        .from('admin_users')
-        .select('*', { count: 'exact', head: true })
-        .eq('is_active', true);
-
-      const { data: platformWallet } = await supabase
-        .from('platform_wallet')
-        .select('total_balance, net_profit')
-        .eq('id', '00000000-0000-0000-0000-000000000002')
-        .single();
-
-      const { data: finances } = await supabase
-        .from('smart_farm_finances')
-        .select('collected_from_investors')
-        .is('deleted_at', null);
 
       const totalRevenue = finances?.reduce((sum, f) => sum + Number(f.collected_from_investors || 0), 0) || 0;
 
       return {
-        farms: farmsStats,
-        reservations: reservationsStats,
-        wallets: walletsStats,
-        documentation: documentationStats,
+        farms: {
+          total: farmsCount || 0,
+          active: farmsCount || 0,
+          palmFarms: 0,
+          oliveFarms: 0,
+          totalTrees: 0
+        },
+        reservations: {
+          total: reservationsCount || 0,
+          pending: 0,
+          confirmed: 0,
+          cancelled: 0
+        },
+        wallets: {
+          totalBalance: Number(platformWallet?.total_balance || 0)
+        },
+        documentation: {
+          total: 0
+        },
         owners: {
-          total: ownersCount || 0,
+          total: ownersCount || 0
         },
         users: {
           totalInvestors: investorsCount || 0,
-          totalOwners: ownersCount || 0,
+          totalOwners: ownersCount || 0
         },
         admins: {
-          total: adminsCount || 0,
+          total: adminsCount || 0
         },
         revenue: {
           total: totalRevenue,
