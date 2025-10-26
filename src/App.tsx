@@ -15,8 +15,9 @@ const FarmsView = lazy(() => import('./modules/farms/components/FarmsView').then
 const ModernBookingsInterface = lazy(() => import('./modules/reservations/components/ModernBookingsInterface').then(m => ({ default: m.ModernBookingsInterface })));
 const AdvancedInvestorsView = lazy(() => import('./modules/investors/components/AdvancedInvestorsView').then(m => ({ default: m.AdvancedInvestorsView })));
 const WalletsView = lazy(() => import('./modules/wallets/components/WalletsView').then(m => ({ default: m.WalletsView })));
-const AdvancedFinancialDashboard = lazy(() => import('./modules/finance/components/AdvancedFinancialDashboard').then(m => ({ default: m.AdvancedFinancialDashboard })));
-const SmartFinancialDashboard = lazy(() => import('./modules/finance/components/SmartFinancialDashboard').then(m => ({ default: m.SmartFinancialDashboard })));
+// Finance module removed - awaiting redevelopment
+// const AdvancedFinancialDashboard = lazy(() => import('./modules/finance/components/AdvancedFinancialDashboard').then(m => ({ default: m.AdvancedFinancialDashboard })));
+// const SmartFinancialDashboard = lazy(() => import('./modules/finance/components/SmartFinancialDashboard').then(m => ({ default: m.SmartFinancialDashboard })));
 const AgricultureView = lazy(() => import('./modules/agriculture/components/AgricultureView').then(m => ({ default: m.AgricultureView })));
 const AdvancedDocumentationView = lazy(() => import('./modules/documentation/components/AdvancedDocumentationView').then(m => ({ default: m.AdvancedDocumentationView })));
 const MarketingView = lazy(() => import('./modules/marketing/components/MarketingView').then(m => ({ default: m.MarketingView })));
@@ -188,9 +189,25 @@ function App() {
       case 'wallets':
         return <WalletsView onBack={() => setActiveModule('dashboard')} />;
       case 'finance':
-        return <SmartFinancialDashboard onBack={() => setActiveModule('dashboard')} />;
       case 'finance-old':
-        return <AdvancedFinancialDashboard onBack={() => setActiveModule('dashboard')} />;
+        return (
+          <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-8">
+            <div className="max-w-2xl w-full bg-white/10 backdrop-blur-lg rounded-3xl p-12 shadow-2xl border border-white/20">
+              <div className="text-center">
+                <div className="text-6xl mb-6">🏗️</div>
+                <h1 className="text-4xl font-bold text-white mb-4">الإدارة المالية</h1>
+                <p className="text-xl text-white/80 mb-8">قيد التطوير</p>
+                <p className="text-white/60 mb-8">تم حذف النظام المالي القديم استعداداً لبناء نظام جديد متطور.</p>
+                <button
+                  onClick={() => setActiveModule('dashboard')}
+                  className="px-8 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl font-semibold hover:from-blue-600 hover:to-blue-700 transition-all"
+                >
+                  العودة للوحة التحكم
+                </button>
+              </div>
+            </div>
+          </div>
+        );
       case 'agriculture':
         return <AgricultureView onBack={() => setActiveModule('dashboard')} />;
       case 'documentation':
