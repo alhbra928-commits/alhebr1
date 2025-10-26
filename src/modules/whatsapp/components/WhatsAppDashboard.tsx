@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { MessageCircle, Send, Inbox, FileText, Settings, BarChart3, Link2, Link as LinkIcon } from 'lucide-react';
+import { MessageCircle, Send, Inbox, FileText, Settings, BarChart3, Link2, Link as LinkIcon, Zap } from 'lucide-react';
 import { WhatsAppProvidersHub } from './WhatsAppProvidersHub';
 import { TemplateStudio } from './TemplateStudio';
 import { EventConnector } from './EventConnector';
 import { SmartInboxPage } from './SmartInboxPage';
 import { AnalyticsReports } from './AnalyticsReports';
 import { ExternalIntegration } from './ExternalIntegration';
+import { SystemTesting } from './SystemTesting';
 import { whatsappService } from '../../../services/whatsappService';
 
-type TabType = 'overview' | 'integration' | 'templates' | 'events' | 'analytics' | 'inbox';
+type TabType = 'overview' | 'integration' | 'templates' | 'events' | 'analytics' | 'inbox' | 'testing';
 
 export const WhatsAppDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabType>('overview');
@@ -42,7 +43,8 @@ export const WhatsAppDashboard: React.FC = () => {
     { id: 'templates' as TabType, label: 'القوالب', icon: FileText },
     { id: 'events' as TabType, label: 'ربط الأحداث', icon: Link2 },
     { id: 'analytics' as TabType, label: 'التقارير', icon: BarChart3 },
-    { id: 'inbox' as TabType, label: 'صندوق الوارد', icon: Inbox }
+    { id: 'inbox' as TabType, label: 'صندوق الوارد', icon: Inbox },
+    { id: 'testing' as TabType, label: 'الاختبارات', icon: Zap }
   ];
 
   const renderContent = () => {
@@ -149,6 +151,9 @@ export const WhatsAppDashboard: React.FC = () => {
 
       case 'inbox':
         return <SmartInboxPage />;
+
+      case 'testing':
+        return <SystemTesting />;
 
       default:
         return null;
