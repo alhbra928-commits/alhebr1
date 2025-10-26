@@ -1,7 +1,13 @@
 // Brand colors for the financial system
 
 export const brandColors = {
-  primary: { light: '#60a5fa', main: '#3b82f6', dark: '#2563eb' },
+  primary: {
+    light: '#60a5fa',
+    main: '#3b82f6',
+    dark: '#2563eb',
+    gold: '#C89B3C',
+    olive: '#8B7355'
+  },
   secondary: { light: '#a78bfa', main: '#8b5cf6', dark: '#7c3aed' },
   success: { light: '#4ade80', main: '#22c55e', dark: '#16a34a' },
   warning: { light: '#fbbf24', main: '#f59e0b', dark: '#d97706' },
@@ -12,6 +18,12 @@ export const brandColors = {
   revenue: { light: '#6ee7b7', main: '#10b981', dark: '#059669' },
   profit: { light: '#fcd34d', main: '#f59e0b', dark: '#d97706' },
   charity: { light: '#c084fc', main: '#a855f7', dark: '#9333ea' },
+  text: {
+    primary: '#2D3748',
+    secondary: '#718096',
+    light: '#A0AEC0',
+    dark: '#1A202C'
+  }
 };
 
 export const brandGradients = {
@@ -30,6 +42,8 @@ export const brandGradients = {
   investor: 'from-blue-600 to-indigo-700',
   owner: 'from-green-600 to-emerald-700',
   luxury: 'from-yellow-400 via-amber-500 to-orange-600',
+  gold: 'linear-gradient(135deg, #D4AF37 0%, #C4941F 100%)',
+  beige: 'linear-gradient(135deg, #F9F8F6 0%, #E8E6E1 100%)',
 };
 
 export default brandColors;
