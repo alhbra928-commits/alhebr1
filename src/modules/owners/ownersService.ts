@@ -54,40 +54,52 @@ export class OwnersService {
    * الحصول على طلبات المراجعة المعلقة
    */
   static async getPendingSubmissions(): Promise<any[]> {
-    const { data, error } = await supabase
-      .from('farm_submission_requests')
-      .select(`
-        id,
-        profile_id,
-        status,
-        submitted_data,
-        varieties_data,
-        submitted_at,
-        rejection_reason,
-        farm_owner_profiles (
-          mobile_number,
-          full_name,
-          national_id,
-          region,
-          city
-        )
-      `)
-      .eq('status', 'pending')
-      .is('deleted_at', null)
-      .order('submitted_at', { ascending: false });
+    try {
+      const { data, error } = await supabase
+        .from('farm_submission_requests')
+        .select(`
+          id,
+          profile_id,
+          status,
+          submitted_at,
+          farm_owner_profiles!inner (
+            mobile_number,
+            full_name
+          )
+        `)
+        .eq('status', 'pending')
+        .is('deleted_at', null)
+        .order('submitted_at', { ascending: false })
+        .limit(50);
 
-    if (error) {
-      console.error('Error fetching pending submissions:', error);
+      if (error) {
+        console.warn('⚠️ Failed to fetch pending submissions:', error);
+        return [];
+      }
+
+      return data || [];
+    } catch (err) {
+      console.warn('⚠️ Pending submissions completely failed');
       return [];
     }
-
-    return data || [];
   }
 
   static async getOwnersList(status?: string): Promise<FarmOwner[]> {
     let query = supabase
       .from('farm_owners')
-      .select('*')
+      .select(`
+        id,
+        full_name,
+        mobile_number,
+        email,
+        region,
+        city,
+        status,
+        farm_type,
+        actual_price,
+        created_at,
+        updated_at
+      `)
       .is('deleted_at', null)
       .order('created_at', { ascending: false });
 
@@ -98,7 +110,7 @@ export class OwnersService {
     const { data, error } = await query;
 
     if (error) throw error;
-    return data || [];
+    return data as FarmOwner[] || [];
   }
 
   static async getOwnerById(id: string): Promise<FarmOwner> {
@@ -253,10 +265,29 @@ export class OwnersService {
   }
 
   static async getStatistics(): Promise<OwnerStatistics> {
-    const { data, error } = await supabase.rpc('get_owners_statistics');
+    try {
+      const { data, error } = await supabase.rpc('get_owners_statistics');
 
-    if (error) throw error;
-    return data;
+      if (error) {
+        console.warn('⚠️ Statistics RPC failed, using fallback:', error);
+        // Fallback: حساب بسيط من البيانات الموجودة
+        const { data: owners } = await supabase
+          .from('farm_owners')
+          .select('status', { count: 'exact', head: true })
+          .is('deleted_at', null);
+
+        return {
+          total: owners?.length || 0,
+          active: owners?.filter(o => o.status === 'active').length || 0,
+          frozen: owners?.filter(o => o.status === 'frozen').length || 0
+        };
+      }
+
+      return data;
+    } catch (err) {
+      console.warn('⚠️ Statistics failed completely, returning zeros');
+      return { total: 0, active: 0, frozen: 0 };
+    }
   }
 
   static formatPrice(price: number): string {
