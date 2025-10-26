@@ -79,9 +79,10 @@ export class PaymentReceiptService {
     console.log('📥 Fetching receipts for reservation:', reservationId);
 
     const { data, error } = await supabase
-      .from('payment_receipts_summary')
+      .from('payment_receipts')
       .select('*')
       .eq('reservation_id', reservationId)
+      .is('deleted_at', null)
       .order('created_at', { ascending: false });
 
     if (error) {
@@ -95,9 +96,10 @@ export class PaymentReceiptService {
 
   static async getReceiptsByInvestor(investorId: string): Promise<PaymentReceipt[]> {
     const { data, error } = await supabase
-      .from('payment_receipts_summary')
+      .from('payment_receipts')
       .select('*')
       .eq('investor_id', investorId)
+      .is('deleted_at', null)
       .order('created_at', { ascending: false });
 
     if (error) {
@@ -129,7 +131,7 @@ export class PaymentReceiptService {
 
   static async getPendingReceipts(): Promise<PaymentReceipt[]> {
     const { data, error } = await supabase
-      .from('payment_receipts_summary')
+      .from('payment_receipts')
       .select(`
         *,
         reservations:reservation_id(
@@ -142,6 +144,7 @@ export class PaymentReceiptService {
         )
       `)
       .eq('status', 'pending')
+      .is('deleted_at', null)
       .order('created_at', { ascending: false });
 
     if (error) {

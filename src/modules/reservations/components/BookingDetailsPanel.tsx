@@ -38,14 +38,6 @@ export function BookingDetailsPanel({
   // لا نحسب الصلاحيات هنا - نعتمد فقط على الـ props المُمررة من الـ parent
   // إذا كانت الدالة undefined، معناها المستخدم ليس لديه صلاحية
 
-  console.log('🔍 [BookingDetailsPanel] Props Check:', {
-    isAdmin,
-    onApprove: onApprove ? 'موجودة ✅' : 'غير موجودة ❌',
-    onReject: onReject ? 'موجودة ✅' : 'غير موجودة ❌',
-    onDelete: onDelete ? 'موجودة ✅' : 'غير موجودة ❌',
-    onIssueCertificate: onIssueCertificate ? 'موجودة ✅' : 'غير موجودة ❌'
-  });
-
   useEffect(() => {
     if (isOpen && booking?.id) {
       loadReceipts();
