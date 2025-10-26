@@ -112,11 +112,13 @@ export function PermissionsProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const hasPermission = (moduleId: string, action: 'view' | 'create' | 'edit' | 'delete'): boolean => {
+    // Super Admin لديه صلاحيات كاملة
     if (isAdmin) {
       return true;
     }
 
-    if (permissions.length === 0) {
+    // المستخدمون العاديون بدون صلاحيات
+    if (!permissions || permissions.length === 0) {
       return false;
     }
 

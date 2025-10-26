@@ -40,9 +40,9 @@ export function AdvancedInvestorsView({ onBack }: AdvancedInvestorsViewProps) {
   // استخدام النظام المركزي الجديد للصلاحيات
   const { isAdmin, canCreate, canEdit, canDelete } = usePermissions();
 
-  const hasCreatePermission = canCreate('investors');
-  const hasEditPermission = canEdit('investors');
-  const hasDeletePermission = canDelete('investors');
+  const hasCreatePermission = isAdmin || canCreate('investors');
+  const hasEditPermission = isAdmin || canEdit('investors');
+  const hasDeletePermission = isAdmin || canDelete('investors');
 
 
   useEffect(() => {

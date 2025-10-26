@@ -37,9 +37,8 @@ export function AdvancedDocumentationView({ onBack }: AdvancedDocumentationViewP
 
   const { isAdmin, canEdit, canDelete } = usePermissions();
 
-  const hasEditPermission = canEdit('documentation');
-  const hasDeletePermission = canDelete('documentation');
-
+  const hasEditPermission = isAdmin || canEdit('documentation');
+  const hasDeletePermission = isAdmin || canDelete('documentation');
 
   useEffect(() => {
     loadData();
