@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { BookingsService } from '../bookingsService';
 import { ArrowRight, Calendar, CheckCircle, Clock } from 'lucide-react';
 import { BookingCard3D } from './BookingCard3D';
@@ -24,17 +24,23 @@ export function AdvancedBookingsView({ onBack }: AdvancedBookingsViewProps) {
   const hasEditPermission = isAdmin || canEdit('reservations');
   const hasDeletePermission = isAdmin || canDelete('reservations');
 
-  const loadData = React.useCallback(async () => {
+  const loadData = useCallback(async () => {
     try {
       setLoading(true);
-      const [bookingsData, statsData] = await Promise.all([
+      const results = await Promise.allSettled([
         BookingsService.getAll(),
         BookingsService.getStatistics()
       ]);
-      setBookings(bookingsData);
-      setStats(statsData);
+
+      const bookingsResult = results[0].status === 'fulfilled' ? results[0].value : { data: [], count: 0 };
+      const statsResult = results[1].status === 'fulfilled' ? results[1].value : { total: 0, pending: 0, approved: 0, rejected: 0, documented: 0 };
+
+      setBookings(bookingsResult.data || []);
+      setStats(statsResult);
     } catch (err) {
       console.error('Error loading bookings:', err);
+      setBookings([]);
+      setStats({ total: 0, pending: 0, approved: 0, rejected: 0, documented: 0 });
     } finally {
       setLoading(false);
     }
