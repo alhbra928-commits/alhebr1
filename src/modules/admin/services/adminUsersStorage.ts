@@ -100,26 +100,29 @@ export class AdminUsersStorage {
 
   static async getByPhoneFromDB(phone: string): Promise<AdminUser | null> {
     try {
-      console.log('🔍 [getByPhoneFromDB] Searching for phone:', phone);
-
-      const { data, error } = await supabase
+      // Timeout سريع (2 ثواني فقط)
+      const dbPromise = supabase
         .from('admin_users')
         .select('*')
         .eq('phone', phone)
         .is('deleted_at', null)
         .maybeSingle();
 
-      if (error) {
-        console.error('❌ [getByPhoneFromDB] Supabase error:', error);
+      const timeoutPromise = new Promise<null>((resolve) => {
+        setTimeout(() => resolve(null), 2000); // 2 ثواني فقط
+      });
+
+      const result = await Promise.race([dbPromise, timeoutPromise]);
+
+      if (!result) {
         return null;
       }
 
-      if (!data) {
-        console.error('❌ [getByPhoneFromDB] User not found in DB:', phone);
+      const { data, error } = result as any;
+
+      if (error || !data) {
         return null;
       }
-
-      console.log('✅ [getByPhoneFromDB] User found in DB:', data);
 
       return {
         phone: data.phone,
@@ -220,26 +223,20 @@ export class AdminUsersStorage {
   }
 
   static async verifyLogin(phone: string, secretCode: string): Promise<{ success: boolean; user?: AdminUser; message?: string }> {
-    console.log('🔍🔍🔍 [AdminUsersStorage] Verify Login START');
-    console.log('📞 Phone:', phone);
-    console.log('🔑 Secret Code:', secretCode);
+    // محاولة localStorage أولاً (سريع)
+    let user = this.getByPhone(phone);
 
-    let user = await this.getByPhoneFromDB(phone);
-
+    // إذا لم يوجد، محاولة Database (مع timeout)
     if (!user) {
-      console.log('⚠️ User not in DB, checking localStorage');
-      user = this.getByPhone(phone);
+      user = await this.getByPhoneFromDB(phone);
     }
 
     if (!user) {
-      console.log('❌ User NOT FOUND anywhere');
       return {
         success: false,
         message: 'ليس لديك صلاحية حالية، يرجى إضافتك من قبل الإدارة',
       };
     }
-
-    console.log('✅ User FOUND:', JSON.stringify(user, null, 2));
 
     if (user.status === 'frozen') {
       return {
@@ -256,9 +253,6 @@ export class AdminUsersStorage {
     }
 
     if (user.secretCode !== secretCode && secretCode !== '1234') {
-      console.log('❌ SECRET CODE MISMATCH');
-      console.log('Expected:', user.secretCode);
-      console.log('Received:', secretCode);
       return {
         success: false,
         message: 'رمز الدخول غير صحيح',
@@ -266,10 +260,6 @@ export class AdminUsersStorage {
     }
 
     this.updateLastLogin(phone);
-
-    console.log('✅✅✅ LOGIN SUCCESSFUL');
-    console.log('User Role:', user.role);
-    console.log('🔍🔍🔍 [AdminUsersStorage] Verify Login END');
 
     return {
       success: true,

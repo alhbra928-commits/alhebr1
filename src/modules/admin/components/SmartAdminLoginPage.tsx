@@ -39,36 +39,26 @@ export function SmartAdminLoginPage({ onLoginSuccess, onCancel }: SmartAdminLogi
     setError('');
 
     try {
-      console.log('🔐🔐🔐 [SmartAdminLoginPage] Login attempt START');
-      console.log('📞 Phone:', phone);
-      console.log('🔑 OTP:', otp);
-
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      // تأخير بصري بسيط للتجربة
+      await new Promise(resolve => setTimeout(resolve, 800));
 
       const result = await AdminUsersStorage.verifyLogin(phone, otp);
-      console.log('✅ Login result:', JSON.stringify(result, null, 2));
 
       if (!result.success) {
-        console.log('❌ Login FAILED:', result.message);
         setError(result.message || 'حدث خطأ في تسجيل الدخول');
         setIsLoading(false);
         return;
       }
-
-      console.log('✅✅✅ Login SUCCESSFUL');
-      console.log('👤 User:', JSON.stringify(result.user, null, 2));
 
       const welcomeMessage = result.user?.role === 'super_admin'
         ? '👑 مرحباً بالقائد'
         : '🌿 مرحباً بفريق العمل';
 
       setSuccessMessage(welcomeMessage);
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      await new Promise(resolve => setTimeout(resolve, 800));
 
-      console.log('🔐🔐🔐 [SmartAdminLoginPage] Calling onLoginSuccess');
       onLoginSuccess(result.user);
     } catch (err) {
-      console.error('❌❌❌ خطأ في تسجيل الدخول:', err);
       setError('حدث خطأ في تسجيل الدخول');
       setIsLoading(false);
     }
