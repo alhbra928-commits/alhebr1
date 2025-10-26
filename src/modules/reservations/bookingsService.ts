@@ -783,24 +783,4 @@ ${this.generateSecurityCheck(error)}
 
     if (error) return [];
   }
-
-  static async getStatistics(): Promise<any> {
-    const { data, error } = await supabase
-      .from('reservations')
-      .select('status, booking_status, total_price')
-      .is('deleted_at', null);
-
-    if (error) return [];
-
-    const stats = {
-      total: data?.length || 0,
-      pending: data?.filter(r => r.status === 'pending' || r.booking_status === 'pending').length || 0,
-      approved: data?.filter(r => r.status === 'approved' || r.booking_status === 'approved').length || 0,
-      documented: data?.filter(r => r.status === 'documented' || r.booking_status === 'documented').length || 0,
-      rejected: data?.filter(r => r.status === 'rejected' || r.booking_status === 'rejected').length || 0,
-      totalRevenue: data?.reduce((sum, r) => sum + (r.total_price || 0), 0) || 0
-    };
-
-    return stats;
-  }
 }

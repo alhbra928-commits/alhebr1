@@ -131,7 +131,7 @@ export class FarmsService {
 
     if (error) {
       console.error('Error fetching farm:', error);
-      return { data: [], count: 0 };
+      return null;
     }
 
     if (!farm) return null;
