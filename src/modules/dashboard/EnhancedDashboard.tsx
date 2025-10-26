@@ -202,7 +202,7 @@ export function EnhancedDashboard({ onModuleSelect, onLogout, onGoToPublic, onSh
       id: 'whatsapp',
       title: 'مركز الاتصالات والواتساب',
       subtitle: 'إدارة الرسائل والإشعارات',
-      value: 0,
+      value: stats?.whatsapp?.total || 0,
       icon: MessageCircle,
       gradient: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
       bgColor: 'bg-gradient-to-br from-green-500/10 to-emerald-600/10',

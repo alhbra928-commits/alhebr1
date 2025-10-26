@@ -11,35 +11,58 @@ export class DashboardService {
         supabase.from('farms').select('*', { count: 'exact', head: true }).is('deleted_at', null),
         supabase.from('reservations').select('*', { count: 'exact', head: true }).is('deleted_at', null),
         supabase.from('investors').select('*', { count: 'exact', head: true }).is('deleted_at', null),
-        supabase.from('farm_owners').select('*', { count: 'exact', head: true }).is('deleted_at', null)
+        supabase.from('farm_owners').select('*', { count: 'exact', head: true }).is('deleted_at', null),
+        supabase.from('documentation').select('*', { count: 'exact', head: true }).is('deleted_at', null),
+        supabase.from('reservations').select('booking_status').is('deleted_at', null),
+        supabase.from('reservations').select('total_amount').eq('payment_status', 'completed').is('deleted_at', null),
+        supabase.from('admin_users').select('*', { count: 'exact', head: true }).is('deleted_at', null),
+        supabase.from('whatsapp_messages').select('*', { count: 'exact', head: true }),
+        supabase.from('farms').select('tree_type, total_trees').is('deleted_at', null)
       ]);
 
       const farmsCount = results[0].status === 'fulfilled' ? results[0].value.count || 0 : 0;
       const reservationsCount = results[1].status === 'fulfilled' ? results[1].value.count || 0 : 0;
       const investorsCount = results[2].status === 'fulfilled' ? results[2].value.count || 0 : 0;
       const ownersCount = results[3].status === 'fulfilled' ? results[3].value.count || 0 : 0;
+      const documentationCount = results[4].status === 'fulfilled' ? results[4].value.count || 0 : 0;
 
-      const totalRevenue = 0;
+      const reservationsData = results[5].status === 'fulfilled' ? results[5].value.data || [] : [];
+      const pendingCount = reservationsData.filter((r: any) => r.booking_status === 'pending').length;
+      const approvedCount = reservationsData.filter((r: any) => r.booking_status === 'approved').length;
+      const documentedCount = reservationsData.filter((r: any) => r.booking_status === 'documented').length;
+
+      const revenueData = results[6].status === 'fulfilled' ? results[6].value.data || [] : [];
+      const totalRevenue = revenueData.reduce((sum: number, r: any) => sum + (Number(r.total_amount) || 0), 0);
+
+      const adminsCount = results[7].status === 'fulfilled' ? results[7].value.count || 0 : 0;
+      const whatsappCount = results[8].status === 'fulfilled' ? results[8].value.count || 0 : 0;
+
+      const farmsData = results[9].status === 'fulfilled' ? results[9].value.data || [] : [];
+      const palmFarms = farmsData.filter((f: any) => f.tree_type === 'نخيل' || f.tree_type === 'palm').length;
+      const oliveFarms = farmsData.filter((f: any) => f.tree_type === 'زيتون' || f.tree_type === 'olive').length;
+      const totalTrees = farmsData.reduce((sum: number, f: any) => sum + (Number(f.total_trees) || 0), 0);
 
       return {
         farms: {
           total: farmsCount || 0,
           active: farmsCount || 0,
-          palmFarms: 0,
-          oliveFarms: 0,
-          totalTrees: 0
+          palmFarms: palmFarms || 0,
+          oliveFarms: oliveFarms || 0,
+          totalTrees: totalTrees || 0
         },
         reservations: {
           total: reservationsCount || 0,
-          pending: 0,
-          confirmed: 0,
+          pending: pendingCount || 0,
+          approved: approvedCount || 0,
+          documented: documentedCount || 0,
+          confirmed: approvedCount + documentedCount || 0,
           cancelled: 0
         },
         wallets: {
-          totalBalance: Number(platformWallet?.total_balance || 0)
+          totalBalance: 0
         },
         documentation: {
-          total: 0
+          total: documentationCount || 0
         },
         owners: {
           total: ownersCount || 0
@@ -49,26 +72,29 @@ export class DashboardService {
           totalOwners: ownersCount || 0
         },
         admins: {
-          total: 0
+          total: adminsCount || 0
+        },
+        whatsapp: {
+          total: whatsappCount || 0
         },
         revenue: {
-          total: totalRevenue,
-          paid: totalRevenue,
+          total: totalRevenue || 0,
+          paid: totalRevenue || 0,
           platformBalance: 0,
           netProfit: 0
         }
       };
     } catch (error) {
       console.error('Error fetching dashboard statistics:', error);
-      // إرجاع بيانات فارغة بدلاً من throw
       return {
         farms: { total: 0, active: 0, palmFarms: 0, oliveFarms: 0, totalTrees: 0 },
-        reservations: { total: 0, pending: 0, confirmed: 0, cancelled: 0 },
+        reservations: { total: 0, pending: 0, approved: 0, documented: 0, confirmed: 0, cancelled: 0 },
         wallets: { totalBalance: 0 },
         documentation: { total: 0 },
         owners: { total: 0 },
         users: { totalInvestors: 0, totalOwners: 0 },
         admins: { total: 0 },
+        whatsapp: { total: 0 },
         revenue: { total: 0, paid: 0, platformBalance: 0, netProfit: 0 }
       };
     }
