@@ -4,9 +4,10 @@ import { WhatsAppProvidersHub } from './WhatsAppProvidersHub';
 import { TemplateStudio } from './TemplateStudio';
 import { EventConnector } from './EventConnector';
 import { SmartInboxPage } from './SmartInboxPage';
+import { AnalyticsReports } from './AnalyticsReports';
 import { whatsappService } from '../../../services/whatsappService';
 
-type TabType = 'overview' | 'providers' | 'templates' | 'events' | 'messages' | 'inbox';
+type TabType = 'overview' | 'providers' | 'templates' | 'events' | 'analytics' | 'inbox';
 
 export const WhatsAppDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabType>('overview');
@@ -39,7 +40,7 @@ export const WhatsAppDashboard: React.FC = () => {
     { id: 'providers' as TabType, label: 'ربط الشركات', icon: Settings },
     { id: 'templates' as TabType, label: 'القوالب', icon: FileText },
     { id: 'events' as TabType, label: 'ربط الأحداث', icon: Link2 },
-    { id: 'messages' as TabType, label: 'الرسائل', icon: Send },
+    { id: 'analytics' as TabType, label: 'التقارير', icon: BarChart3 },
     { id: 'inbox' as TabType, label: 'صندوق الوارد', icon: Inbox }
   ];
 
@@ -142,14 +143,8 @@ export const WhatsAppDashboard: React.FC = () => {
       case 'events':
         return <EventConnector />;
 
-      case 'messages':
-        return (
-          <div className="text-center py-12" dir="rtl">
-            <Send className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-            <h2 className="text-xl font-bold text-white mb-2">سجل الرسائل</h2>
-            <p className="text-gray-400">قريباً - المرحلة الثالثة</p>
-          </div>
-        );
+      case 'analytics':
+        return <AnalyticsReports />;
 
       case 'inbox':
         return <SmartInboxPage />;
