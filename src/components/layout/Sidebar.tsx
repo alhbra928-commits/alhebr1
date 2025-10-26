@@ -14,6 +14,7 @@ import {
   Sprout
 } from 'lucide-react';
 import { usePermissions } from '../../contexts/PermissionsContext';
+import { WhatsAppNotificationBadge } from '../../modules/whatsapp/components/WhatsAppNotificationBadge';
 
 interface SidebarProps {
   activeModule: string;
@@ -165,7 +166,7 @@ export function Sidebar({ activeModule, onModuleChange }: SidebarProps) {
                 key={item.id}
                 onClick={() => onModuleChange(item.id)}
                 className={`
-                  w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200
+                  w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 relative
                   ${isActive
                     ? 'bg-gradient-to-r from-amber-400 to-orange-500 text-white shadow-lg transform scale-105'
                     : 'text-amber-100 hover:bg-amber-700 hover:text-white'
@@ -174,7 +175,12 @@ export function Sidebar({ activeModule, onModuleChange }: SidebarProps) {
               >
                 <Icon className={`h-5 w-5 ${isActive ? item.color : ''}`} />
                 <span className="font-medium">{item.label}</span>
-                {isActive && (
+                {item.id === 'whatsapp' && (
+                  <div className="mr-auto">
+                    <WhatsAppNotificationBadge variant="icon" className="scale-75" />
+                  </div>
+                )}
+                {isActive && item.id !== 'whatsapp' && (
                   <div className="mr-auto w-2 h-2 bg-green-500 rounded-full animate-pulse" />
                 )}
               </button>

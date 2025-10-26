@@ -5,6 +5,7 @@ import {
   FileText, Sparkles, Activity, Clock, Target, Crown, ArrowLeft
 } from 'lucide-react';
 import { whatsappService, DailyStats } from '../services/whatsappService';
+import { whatsappRealtimeService, WhatsAppStats } from '../services/whatsappRealtimeService';
 import { AnimatedCounter } from '../../../components/ui/AnimatedCounter';
 import { UltraModernTemplatesManager } from './UltraModernTemplatesManager';
 import { ModernMessagesLog } from './ModernMessagesLog';
@@ -14,6 +15,8 @@ import { AdvancedAnalyticsReports } from './AdvancedAnalyticsReports';
 import { FloatingWhatsAppSettings } from './FloatingWhatsAppSettings';
 import { SmartStaffManagement } from './SmartStaffManagement';
 import { UltraSmartFloatingWhatsAppManager } from './UltraSmartFloatingWhatsAppManager';
+import { WhatsAppLiveNotifications } from './WhatsAppLiveNotifications';
+import { WhatsAppNotificationBadge } from './WhatsAppNotificationBadge';
 
 interface ModernWhatsAppDashboardProps {
   onBack?: () => void;
@@ -27,16 +30,31 @@ export function ModernWhatsAppDashboard({ onBack }: ModernWhatsAppDashboardProps
   const [loading, setLoading] = useState(true);
   const [connectionStatus, setConnectionStatus] = useState<'connected' | 'disconnected' | 'error'>('disconnected');
   const [lastRefresh, setLastRefresh] = useState(new Date());
+  const [realtimeStats, setRealtimeStats] = useState<WhatsAppStats | null>(null);
+  const [isRealtimeConnected, setIsRealtimeConnected] = useState(false);
 
   useEffect(() => {
     loadData();
     checkConnection();
 
-    const interval = setInterval(() => {
-      loadData();
-    }, 30000);
+    whatsappRealtimeService.connect();
 
-    return () => clearInterval(interval);
+    const unsubscribeStats = whatsappRealtimeService.onStatsUpdate((stats) => {
+      setRealtimeStats(stats);
+      setIsRealtimeConnected(true);
+      setLastRefresh(new Date());
+    });
+
+    const unsubscribeMessages = whatsappRealtimeService.onNewMessage(async () => {
+      const messages = await whatsappService.getMessages({ limit: 5 });
+      setRecentMessages(messages);
+    });
+
+    return () => {
+      unsubscribeStats();
+      unsubscribeMessages();
+      whatsappRealtimeService.disconnect();
+    };
   }, []);
 
   const loadData = async () => {
@@ -110,6 +128,8 @@ export function ModernWhatsAppDashboard({ onBack }: ModernWhatsAppDashboardProps
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-green-50">
+      <WhatsAppLiveNotifications />
+
       <div className="max-w-7xl mx-auto p-6 space-y-8">
         {/* Back Button */}
         {onBack && (
@@ -152,6 +172,15 @@ export function ModernWhatsAppDashboard({ onBack }: ModernWhatsAppDashboardProps
             </div>
 
             <div className="flex items-center gap-4">
+              {/* Realtime Status */}
+              {isRealtimeConnected && (
+                <div className="flex items-center gap-3 px-6 py-3 rounded-2xl backdrop-blur-sm border-2 bg-gradient-to-r from-green-500/20 to-emerald-500/20 border-green-300/50">
+                  <Zap className="h-5 w-5 text-yellow-300 animate-pulse" />
+                  <span className="text-white font-bold">متزامن فورياً</span>
+                  <div className="w-2.5 h-2.5 bg-green-300 rounded-full animate-ping"></div>
+                </div>
+              )}
+
               {/* Connection Status */}
               <div className={`flex items-center gap-3 px-6 py-3 rounded-2xl backdrop-blur-sm border-2 ${
                 connectionStatus === 'connected'

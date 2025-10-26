@@ -5,6 +5,7 @@ import {
   Zap, BarChart3, ChevronLeft, ChevronRight, Sparkles
 } from 'lucide-react';
 import { whatsappService, WhatsAppMessage } from '../services/whatsappService';
+import { whatsappRealtimeService } from '../services/whatsappRealtimeService';
 
 export function ModernMessagesLog() {
   const [messages, setMessages] = useState<WhatsAppMessage[]>([]);
@@ -19,11 +20,30 @@ export function ModernMessagesLog() {
   const [viewMode, setViewMode] = useState<'table' | 'timeline'>('timeline');
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 20;
+  const [isRealtimeConnected, setIsRealtimeConnected] = useState(false);
 
   useEffect(() => {
     loadMessages();
-    const interval = setInterval(loadMessages, 30000);
-    return () => clearInterval(interval);
+
+    whatsappRealtimeService.connect();
+
+    const unsubscribeMessages = whatsappRealtimeService.onNewMessage(async (newMessage) => {
+      setMessages(prev => [newMessage as any, ...prev]);
+      setIsRealtimeConnected(true);
+    });
+
+    const unsubscribeStatus = whatsappRealtimeService.onStatusChange(async ({ messageId, newStatus }) => {
+      setMessages(prev =>
+        prev.map(msg =>
+          msg.id === messageId ? { ...msg, status: newStatus as any } : msg
+        )
+      );
+    });
+
+    return () => {
+      unsubscribeMessages();
+      unsubscribeStatus();
+    };
   }, [selectedStatus, selectedType, selectedRecipientType, dateFrom, dateTo]);
 
   const loadMessages = async () => {
