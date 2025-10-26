@@ -9,7 +9,7 @@ import {
   Building2,
 } from 'lucide-react';
 import { CorrectedFinancialService, CorrectedFarmFinance, FinancialStats } from '../services/correctedFinancialService';
-import { CorrectedFarmFinanceCard } from './CorrectedFarmFinanceCard';
+import { SmartFinancialCard3D } from './SmartFinancialCard3D';
 import { AnimatedCounter } from '../../../components/ui/AnimatedCounter';
 import { BackButton } from '../../../components/common/BackButton';
 
@@ -119,10 +119,10 @@ export function CorrectedFinancialDashboard({ onBack }: CorrectedFinancialDashbo
               <div>
                 <div className="flex items-center gap-2">
                   <Zap className="w-8 h-8 text-yellow-500" />
-                  <h1 className="text-3xl font-bold text-gray-900">الإدارة المالية المصححة</h1>
+                  <h1 className="text-3xl font-bold text-gray-900">الإدارة المالية - البطاقات ثلاثية الأبعاد</h1>
                 </div>
                 <p className="text-sm text-gray-600 mt-1">
-                  التدفق الإجرائي الصحيح: تجميع → تنبيه → تسوية → أرباح
+                  💳 كل بطاقة تحتوي على المحافظ والتسويات والأرباح - اضغط على أي بطاقة للتفاصيل
                 </p>
               </div>
             </div>
@@ -140,94 +140,41 @@ export function CorrectedFinancialDashboard({ onBack }: CorrectedFinancialDashbo
       </div>
 
       <div className="max-w-7xl mx-auto px-6 py-8">
-        {/* الإحصائيات الإجمالية */}
+        {/* الإحصائيات المختصرة فقط */}
         {stats && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            {/* المبلغ المحصل من المستثمرين */}
-            <div className="bg-gradient-to-br from-blue-500 to-cyan-600 rounded-2xl p-6 text-white shadow-xl">
-              <div className="flex items-center justify-between mb-4">
-                <Users className="w-8 h-8" />
-                <div className="text-sm bg-white/20 px-3 py-1 rounded-full">محصّل</div>
-              </div>
-              <h3 className="text-sm font-medium mb-2 text-white/80">المبلغ المحصل</h3>
-              <p className="text-3xl font-bold">
-                <AnimatedCounter end={stats.totalCollectedFromInvestors} duration={1500} />
-              </p>
-              <p className="text-xs text-white/70 mt-2">
-                {CorrectedFinancialService.formatCurrency(stats.totalCollectedFromInvestors)}
-              </p>
-            </div>
-
-            {/* المبلغ المطلوب للملاك */}
-            <div className="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl p-6 text-white shadow-xl">
-              <div className="flex items-center justify-between mb-4">
-                <Target className="w-8 h-8" />
-                <div className="text-sm bg-white/20 px-3 py-1 rounded-full">مطلوب</div>
-              </div>
-              <h3 className="text-sm font-medium mb-2 text-white/80">المبلغ المطلوب</h3>
-              <p className="text-3xl font-bold">
-                <AnimatedCounter end={stats.totalOwnerAmountTarget} duration={1500} />
-              </p>
-              <p className="text-xs text-white/70 mt-2">
-                {CorrectedFinancialService.formatCurrency(stats.totalOwnerAmountTarget)}
-              </p>
-            </div>
-
-            {/* المزارع الجاهزة للتسوية */}
-            <div className="bg-gradient-to-br from-yellow-400 to-orange-500 rounded-2xl p-6 text-white shadow-xl">
-              <div className="flex items-center justify-between mb-4">
-                <Zap className="w-8 h-8" />
-                <div className="text-sm bg-white/20 px-3 py-1 rounded-full">وميض</div>
-              </div>
-              <h3 className="text-sm font-medium mb-2 text-white/80">جاهز للتسوية</h3>
-              <p className="text-5xl font-bold">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            {/* عدد المزارع الجاهزة */}
+            <div className="bg-gradient-to-br from-yellow-400 to-orange-500 rounded-2xl p-5 text-white shadow-xl hover:scale-105 transition-transform">
+              <Zap className="w-7 h-7 mb-2" />
+              <h3 className="text-xs font-medium mb-1 text-white/80">جاهز للتسوية</h3>
+              <p className="text-4xl font-bold">
                 <AnimatedCounter end={stats.farmsReadyForSettlement} duration={1000} />
               </p>
-              <p className="text-xs text-white/70 mt-2">مزرعة بحاجة للتسوية</p>
             </div>
 
-            {/* المزارع المسواة */}
-            <div className="bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl p-6 text-white shadow-xl">
-              <div className="flex items-center justify-between mb-4">
-                <CheckCircle className="w-8 h-8" />
-                <div className="text-sm bg-white/20 px-3 py-1 rounded-full">مسواة</div>
-              </div>
-              <h3 className="text-sm font-medium mb-2 text-white/80">تمت التسوية</h3>
-              <p className="text-5xl font-bold">
+            {/* عدد المزارع المسواة */}
+            <div className="bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl p-5 text-white shadow-xl hover:scale-105 transition-transform">
+              <CheckCircle className="w-7 h-7 mb-2" />
+              <h3 className="text-xs font-medium mb-1 text-white/80">تمت التسوية</h3>
+              <p className="text-4xl font-bold">
                 <AnimatedCounter end={stats.farmsSettled} duration={1000} />
               </p>
-              <p className="text-xs text-white/70 mt-2">مزرعة مسواة</p>
-            </div>
-          </div>
-        )}
-
-        {/* إحصائيات إضافية */}
-        {stats && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div className="bg-white rounded-xl p-6 shadow-md border border-gray-100">
-              <div className="flex items-center gap-3 mb-2">
-                <Building2 className="w-6 h-6 text-blue-600" />
-                <h4 className="font-semibold text-gray-900">قيد التجميع</h4>
-              </div>
-              <p className="text-3xl font-bold text-blue-600">{stats.farmsInCollection}</p>
             </div>
 
-            <div className="bg-white rounded-xl p-6 shadow-md border border-gray-100">
-              <div className="flex items-center gap-3 mb-2">
-                <TrendingUp className="w-6 h-6 text-green-600" />
-                <h4 className="font-semibold text-gray-900">المحوّل للملاك</h4>
-              </div>
-              <p className="text-2xl font-bold text-green-600">
-                {CorrectedFinancialService.formatCurrency(stats.totalOwnerAmountTransferred)}
+            {/* عدد المزارع قيد التجميع */}
+            <div className="bg-gradient-to-br from-blue-500 to-cyan-600 rounded-2xl p-5 text-white shadow-xl hover:scale-105 transition-transform">
+              <Building2 className="w-7 h-7 mb-2" />
+              <h3 className="text-xs font-medium mb-1 text-white/80">قيد التجميع</h3>
+              <p className="text-4xl font-bold">
+                <AnimatedCounter end={stats.farmsInCollection} duration={1000} />
               </p>
             </div>
 
-            <div className="bg-white rounded-xl p-6 shadow-md border border-gray-100">
-              <div className="flex items-center gap-3 mb-2">
-                <CheckCircle className="w-6 h-6 text-purple-600" />
-                <h4 className="font-semibold text-gray-900">إجمالي المزارع</h4>
-              </div>
-              <p className="text-3xl font-bold text-purple-600">{farms.length}</p>
+            {/* إجمالي المزارع */}
+            <div className="bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl p-5 text-white shadow-xl hover:scale-105 transition-transform">
+              <Users className="w-7 h-7 mb-2" />
+              <h3 className="text-xs font-medium mb-1 text-white/80">إجمالي المزارع</h3>
+              <p className="text-4xl font-bold">{farms.length}</p>
             </div>
           </div>
         )}
@@ -248,7 +195,7 @@ export function CorrectedFinancialDashboard({ onBack }: CorrectedFinancialDashbo
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
               {farms.map((farm) => (
-                <CorrectedFarmFinanceCard
+                <SmartFinancialCard3D
                   key={farm.id}
                   finance={farm}
                   onExecuteSettlement={executingSettlement ? undefined : handleExecuteSettlement}
