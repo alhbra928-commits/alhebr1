@@ -55,6 +55,13 @@ export class AdminSessionService {
     localStorage.setItem('admin_session_token', sessionToken);
     localStorage.setItem('admin_data', JSON.stringify(adminData));
 
+    // ✅ العودة فوراً بدون Database (معطل مؤقتاً)
+    return {
+      session: { ...sessionData, id: sessionToken } as any,
+      permissions: adminData.permissions || []
+    };
+
+    /*
     try {
       // Timeout سريع (2 ثانية)
       const dbPromise = Promise.all([
@@ -88,9 +95,14 @@ export class AdminSessionService {
         permissions: adminData.permissions || []
       };
     }
+    */
   }
 
   static async updateActivity(sessionToken: string, currentModule?: string) {
+    // ❌ معطل مؤقتاً لتجنب ERR_INSUFFICIENT_RESOURCES
+    return;
+
+    /*
     try {
       const updates: any = {
         last_activity_at: new Date().toISOString(),
@@ -108,9 +120,15 @@ export class AdminSessionService {
     } catch (error) {
       console.error('Error updating activity:', error);
     }
+    */
   }
 
   static async terminateSession(sessionToken: string) {
+    // ❌ معطل مؤقتاً
+    this.clearSession();
+    return;
+
+    /*
     try {
       await supabase
         .from('admin_active_sessions')
@@ -124,6 +142,7 @@ export class AdminSessionService {
     } catch (error) {
       console.error('Error terminating session:', error);
     }
+    */
   }
 
   static clearSession() {
