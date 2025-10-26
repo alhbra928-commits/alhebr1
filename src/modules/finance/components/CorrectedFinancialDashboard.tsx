@@ -7,6 +7,7 @@ import {
   Zap,
   TrendingUp,
   Building2,
+  Archive,
 } from 'lucide-react';
 import { CorrectedFinancialService, CorrectedFarmFinance, FinancialStats } from '../services/correctedFinancialService';
 import { SmartFinancialCard3D } from './SmartFinancialCard3D';
@@ -21,11 +22,16 @@ export function CorrectedFinancialDashboard({ onBack }: CorrectedFinancialDashbo
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [farms, setFarms] = useState<CorrectedFarmFinance[]>([]);
+  const [archivedFarms, setArchivedFarms] = useState<CorrectedFarmFinance[]>([]);
   const [stats, setStats] = useState<FinancialStats | null>(null);
   const [executingSettlement, setExecutingSettlement] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<'active' | 'archived'>('active');
+  const [hasArchivePermission, setHasArchivePermission] = useState(false);
+  const [adminPhone, setAdminPhone] = useState<string>('');
 
   useEffect(() => {
     loadData();
+    checkPermissions();
 
     const unsubscribe = CorrectedFinancialService.subscribeToFinancialUpdates((updatedFarms) => {
       setFarms(updatedFarms);
@@ -37,14 +43,25 @@ export function CorrectedFinancialDashboard({ onBack }: CorrectedFinancialDashbo
     };
   }, []);
 
+  const checkPermissions = async () => {
+    // جلب رقم الهاتف من localStorage أو session
+    const storedPhone = localStorage.getItem('admin_phone') || '0500000000';
+    setAdminPhone(storedPhone);
+
+    const hasPermission = await CorrectedFinancialService.checkArchivingPermission(storedPhone);
+    setHasArchivePermission(hasPermission);
+  };
+
   const loadData = async () => {
     try {
       setLoading(true);
-      const [farmsData, statsData] = await Promise.all([
+      const [farmsData, archivedData, statsData] = await Promise.all([
         CorrectedFinancialService.getAllFarmFinances(),
+        CorrectedFinancialService.getArchivedFarms(),
         CorrectedFinancialService.getFinancialStats(),
       ]);
       setFarms(farmsData);
+      setArchivedFarms(archivedData);
       setStats(statsData);
     } catch (error) {
       console.error('❌ خطأ في تحميل البيانات:', error);
@@ -94,6 +111,28 @@ export function CorrectedFinancialDashboard({ onBack }: CorrectedFinancialDashbo
       alert(`❌ خطأ: ${errorDetails}`);
     } finally {
       setExecutingSettlement(null);
+    }
+  };
+
+  const handleArchive = async (farmId: string) => {
+    try {
+      console.log('🗃️ Starting archive for farm:', farmId);
+
+      const result = await CorrectedFinancialService.archiveFarm(farmId, adminPhone);
+
+      console.log('📊 Archive result:', result);
+
+      if (result && result.success) {
+        alert(`✅ تمت الأرشفة بنجاح!\n\nالمزرعة: ${result.farm_name} (${result.farm_code})`);
+        await loadData();
+      } else {
+        const errorMsg = result?.error || 'خطأ غير معروف';
+        alert(`❌ فشلت الأرشفة: ${errorMsg}`);
+      }
+    } catch (error: any) {
+      console.error('❌ خطأ في الأرشفة:', error);
+      const errorDetails = error?.message || error?.details || error?.hint || 'حدث خطأ أثناء الأرشفة';
+      alert(`❌ خطأ: ${errorDetails}`);
     }
   };
 
@@ -179,29 +218,72 @@ export function CorrectedFinancialDashboard({ onBack }: CorrectedFinancialDashbo
           </div>
         )}
 
-        {/* بطاقات المزارع */}
+        {/* التبويبات */}
         <div className="mb-6">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-            <Zap className="w-6 h-6 text-yellow-500" />
-            البطاقات المالية للمزارع
-          </h2>
+          <div className="flex gap-4 mb-6 border-b-2 border-gray-200">
+            <button
+              onClick={() => setActiveTab('active')}
+              className={`px-6 py-3 font-bold text-lg transition-all ${
+                activeTab === 'active'
+                  ? 'text-blue-600 border-b-4 border-blue-600 -mb-0.5'
+                  : 'text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              <Zap className="w-5 h-5 inline mr-2" />
+              المزارع النشطة ({farms.length})
+            </button>
+            <button
+              onClick={() => setActiveTab('archived')}
+              className={`px-6 py-3 font-bold text-lg transition-all ${
+                activeTab === 'archived'
+                  ? 'text-slate-600 border-b-4 border-slate-600 -mb-0.5'
+                  : 'text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              <Archive className="w-5 h-5 inline mr-2" />
+              الأرشفة المالية ({archivedFarms.length})
+            </button>
+          </div>
 
-          {farms.length === 0 ? (
-            <div className="bg-white rounded-xl p-12 text-center shadow-md">
-              <Building2 className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">لا توجد بيانات مالية</h3>
-              <p className="text-gray-600">لم يتم العثور على أي مزارع مالية في النظام</p>
-            </div>
+          {activeTab === 'active' ? (
+            // المزارع النشطة
+            farms.length === 0 ? (
+              <div className="bg-white rounded-xl p-12 text-center shadow-md">
+                <Building2 className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">لا توجد مزارع نشطة</h3>
+                <p className="text-gray-600">جميع المزارع تم أرشفتها</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
+                {farms.map((farm) => (
+                  <SmartFinancialCard3D
+                    key={farm.id}
+                    finance={farm}
+                    onExecuteSettlement={executingSettlement ? undefined : handleExecuteSettlement}
+                    onArchive={handleArchive}
+                    hasArchivePermission={hasArchivePermission}
+                  />
+                ))}
+              </div>
+            )
           ) : (
-            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
-              {farms.map((farm) => (
-                <SmartFinancialCard3D
-                  key={farm.id}
-                  finance={farm}
-                  onExecuteSettlement={executingSettlement ? undefined : handleExecuteSettlement}
-                />
-              ))}
-            </div>
+            // المزارع المؤرشفة
+            archivedFarms.length === 0 ? (
+              <div className="bg-white rounded-xl p-12 text-center shadow-md">
+                <Archive className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">لا توجد مزارع مؤرشفة</h3>
+                <p className="text-gray-600">لم يتم أرشفة أي مزرعة بعد</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
+                {archivedFarms.map((farm) => (
+                  <SmartFinancialCard3D
+                    key={farm.id}
+                    finance={farm}
+                  />
+                ))}
+              </div>
+            )
           )}
         </div>
       </div>
