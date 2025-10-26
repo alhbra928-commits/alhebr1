@@ -6,6 +6,7 @@ import { LoginNotification } from './modules/admin/components/LoginNotification'
 import { AdminSessionService } from './modules/admin/services/adminSessionService';
 import { PermissionsProvider } from './contexts/PermissionsContext';
 import { UpdateNotificationBanner } from './components/common/UpdateNotificationBanner';
+import { SmartFloatingButton } from './components/common/SmartFloatingButton';
 
 const PublicPlatformRouter = lazy(() => import('./modules/public/components/PublicPlatformRouter').then(m => ({ default: m.PublicPlatformRouter })));
 const FarmOwnerRouter = lazy(() => import('./modules/farm-owner/components/FarmOwnerRouter').then(m => ({ default: m.FarmOwnerRouter })));
@@ -300,6 +301,9 @@ function App() {
           {renderModule()}
         </Suspense>
       </PermissionsProvider>
+
+      {/* Smart Floating WhatsApp Button - Shows on all pages */}
+      <SmartFloatingButton />
     </div>
   );
 }
