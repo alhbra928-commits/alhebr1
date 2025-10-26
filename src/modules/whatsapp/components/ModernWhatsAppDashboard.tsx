@@ -13,6 +13,7 @@ import { UltraModernWhatsAppSettings } from './UltraModernWhatsAppSettings';
 import { AdvancedAnalyticsReports } from './AdvancedAnalyticsReports';
 import { FloatingWhatsAppSettings } from './FloatingWhatsAppSettings';
 import { SmartStaffManagement } from './SmartStaffManagement';
+import { UltraSmartFloatingWhatsAppManager } from './UltraSmartFloatingWhatsAppManager';
 
 interface ModernWhatsAppDashboardProps {
   onBack?: () => void;
@@ -83,6 +84,7 @@ export function ModernWhatsAppDashboard({ onBack }: ModernWhatsAppDashboardProps
           {activeView === 'settings' && <UltraModernWhatsAppSettings />}
           {activeView === 'analytics' && <AdvancedAnalyticsReports />}
           {activeView === 'floating-settings' && <FloatingWhatsAppSettings />}
+          {activeView === 'ultra-floating' && <UltraSmartFloatingWhatsAppManager />}
           {activeView === 'staff' && <SmartStaffManagement />}
         </div>
       </div>
@@ -267,11 +269,11 @@ export function ModernWhatsAppDashboard({ onBack }: ModernWhatsAppDashboardProps
             onClick={() => setActiveView('settings')}
           />
           <ModernActionCard
-            title="الزر العائم"
-            subtitle="إدارة الزر"
+            title="الزر الذكي"
+            subtitle="نظام متطور"
             icon={Zap}
             gradient="from-[#556B2F] via-[#6B8E23] to-[#D4AF37]"
-            onClick={() => setActiveView('floating-settings')}
+            onClick={() => setActiveView('ultra-floating')}
             badge={<Sparkles className="h-4 w-4" />}
           />
           <ModernActionCard
