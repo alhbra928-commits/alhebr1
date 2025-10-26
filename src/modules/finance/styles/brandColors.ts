@@ -1,65 +1,17 @@
-// Temporary brand colors file - Finance module removed
-// This file exists only to prevent build errors from existing imports
-// Will be removed when finance module is redeveloped
+// Brand colors for the financial system
 
 export const brandColors = {
-  primary: {
-    light: '#60a5fa',
-    main: '#3b82f6',
-    dark: '#2563eb',
-  },
-  secondary: {
-    light: '#a78bfa',
-    main: '#8b5cf6',
-    dark: '#7c3aed',
-  },
-  success: {
-    light: '#4ade80',
-    main: '#22c55e',
-    dark: '#16a34a',
-  },
-  warning: {
-    light: '#fbbf24',
-    main: '#f59e0b',
-    dark: '#d97706',
-  },
-  error: {
-    light: '#f87171',
-    main: '#ef4444',
-    dark: '#dc2626',
-  },
-  info: {
-    light: '#38bdf8',
-    main: '#0ea5e9',
-    dark: '#0284c7',
-  },
-  // Farm types
-  palm: {
-    light: '#86efac',
-    main: '#22c55e',
-    dark: '#15803d',
-  },
-  olive: {
-    light: '#bef264',
-    main: '#84cc16',
-    dark: '#65a30d',
-  },
-  // Financial
-  revenue: {
-    light: '#6ee7b7',
-    main: '#10b981',
-    dark: '#059669',
-  },
-  profit: {
-    light: '#fcd34d',
-    main: '#f59e0b',
-    dark: '#d97706',
-  },
-  charity: {
-    light: '#c084fc',
-    main: '#a855f7',
-    dark: '#9333ea',
-  },
+  primary: { light: '#60a5fa', main: '#3b82f6', dark: '#2563eb' },
+  secondary: { light: '#a78bfa', main: '#8b5cf6', dark: '#7c3aed' },
+  success: { light: '#4ade80', main: '#22c55e', dark: '#16a34a' },
+  warning: { light: '#fbbf24', main: '#f59e0b', dark: '#d97706' },
+  error: { light: '#f87171', main: '#ef4444', dark: '#dc2626' },
+  info: { light: '#38bdf8', main: '#0ea5e9', dark: '#0284c7' },
+  palm: { light: '#86efac', main: '#22c55e', dark: '#15803d' },
+  olive: { light: '#bef264', main: '#84cc16', dark: '#65a30d' },
+  revenue: { light: '#6ee7b7', main: '#10b981', dark: '#059669' },
+  profit: { light: '#fcd34d', main: '#f59e0b', dark: '#d97706' },
+  charity: { light: '#c084fc', main: '#a855f7', dark: '#9333ea' },
 };
 
 export const brandGradients = {
