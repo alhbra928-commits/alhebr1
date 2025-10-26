@@ -46,24 +46,15 @@ export function EnhancedDashboard({ onModuleSelect, onLogout, onGoToPublic, onSh
 
   const { canAccessModule, isAdmin, loading: permissionsLoading } = usePermissions();
 
-  console.log('🔍🔍🔍 [EnhancedDashboard] Rendering...');
-  console.log('🔍 [EnhancedDashboard] isAdmin:', isAdmin);
-  console.log('🔍 [EnhancedDashboard] permissionsLoading:', permissionsLoading);
-
   useEffect(() => {
-    loadStats();
-    loadAdminInfo();
-
-    LiveFinancialSystem.initialize();
-
-    const unsubscribe = LiveFinancialSystem.subscribe((state) => {
-      if (state.isConnected) {
-        loadStats();
-      }
-    });
+    // تحميل بيانات فقط - بدون LiveFinancialSystem
+    const timer = setTimeout(() => {
+      loadStats();
+      loadAdminInfo();
+    }, 50);
 
     return () => {
-      unsubscribe();
+      clearTimeout(timer);
     };
   }, []);
 

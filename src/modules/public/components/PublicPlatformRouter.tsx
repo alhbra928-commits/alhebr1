@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { MainPlatformInterface } from './MainPlatformInterface';
 import { PreviewInspectionPage } from './PreviewInspectionPage';
 import { SmartFloatingWhatsApp } from '../../../components/common/SmartFloatingWhatsApp';
@@ -15,10 +15,9 @@ interface PublicPlatformRouterProps {
 export function PublicPlatformRouter({ onAdminLogin, onBackToAdmin, onFarmOwnerLogin }: PublicPlatformRouterProps) {
   const [currentView, setCurrentView] = useState<View>('main');
   const [selectedBarcode, setSelectedBarcode] = useState<string>('');
-  const sessionId = floatingWhatsAppService.getSessionId();
+  const [sessionId] = useState(() => floatingWhatsAppService.getSessionId());
 
   const handlePreviewSelect = (barcode: string) => {
-    console.log('handlePreviewSelect called with barcode:', barcode);
     setSelectedBarcode(barcode);
     setCurrentView('preview');
   };
@@ -32,14 +31,12 @@ export function PublicPlatformRouter({ onAdminLogin, onBackToAdmin, onFarmOwnerL
     setSelectedBarcode('');
   };
 
-  console.log('PublicPlatformRouter render - currentView:', currentView, 'barcode:', selectedBarcode);
-
-  const whatsappContext = {
+  const whatsappContext = useMemo(() => ({
     userType: 'visitor' as const,
     currentPage: currentView === 'preview' ? 'farm-detail' : 'home',
     currentFarmCode: selectedBarcode || undefined,
     sessionId
-  };
+  }), [currentView, selectedBarcode, sessionId]);
 
   switch (currentView) {
     case 'preview':
