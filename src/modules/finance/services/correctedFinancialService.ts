@@ -167,19 +167,53 @@ export class CorrectedFinancialService {
   }
 
   /**
-   * حساب الإحصائيات المالية
+   * حساب الإحصائيات المالية (تشمل جميع المزارع بما فيها المؤرشفة)
    */
   static async getFinancialStats(): Promise<FinancialStats> {
-    const farms = await this.getAllFarmFinances();
+    // جلب جميع المزارع (النشطة والمؤرشفة)
+    const { data, error } = await supabase
+      .from('farm_finance')
+      .select('*')
+      .is('deleted_at', null)
+      .order('updated_at', { ascending: false });
 
-    const stats = farms.reduce((acc, farm) => ({
+    if (error) {
+      console.error('❌ خطأ في جلب البيانات المالية للإحصائيات:', error);
+      return {
+        totalCollectedFromInvestors: 0,
+        totalOwnerAmountTarget: 0,
+        totalOwnerAmountTransferred: 0,
+        totalPlatformAmountReceived: 0,
+        totalCharityAmountDeducted: 0,
+        farmsInCollection: 0,
+        farmsReadyForSettlement: 0,
+        farmsSettled: 0,
+      };
+    }
+
+    const allFarms = (data || []).map(item => ({
+      collected_from_investors: Number(item.collected_from_investors) || 0,
+      owner_amount_target: Number(item.owner_amount_target) || 0,
+      owner_amount_transferred: Number(item.owner_amount_transferred) || 0,
+      platform_amount_received: Number(item.platform_amount_received) || 0,
+      charity_amount_deducted: Number(item.charity_amount_deducted) || 0,
+      stage: item.stage || 'collecting',
+      settlement_ready: item.settlement_ready || false,
+      settlement_executed: item.settlement_executed || false,
+      is_archived: item.is_archived || false,
+    }));
+
+    const stats = allFarms.reduce((acc, farm) => ({
       totalCollectedFromInvestors: acc.totalCollectedFromInvestors + farm.collected_from_investors,
       totalOwnerAmountTarget: acc.totalOwnerAmountTarget + farm.owner_amount_target,
       totalOwnerAmountTransferred: acc.totalOwnerAmountTransferred + farm.owner_amount_transferred,
       totalPlatformAmountReceived: acc.totalPlatformAmountReceived + farm.platform_amount_received,
       totalCharityAmountDeducted: acc.totalCharityAmountDeducted + farm.charity_amount_deducted,
-      farmsInCollection: farm.stage === 'collecting' ? acc.farmsInCollection + 1 : acc.farmsInCollection,
-      farmsReadyForSettlement: farm.settlement_ready && !farm.settlement_executed
+      // عد فقط المزارع النشطة (غير المؤرشفة)
+      farmsInCollection: !farm.is_archived && farm.stage === 'collecting'
+        ? acc.farmsInCollection + 1
+        : acc.farmsInCollection,
+      farmsReadyForSettlement: !farm.is_archived && farm.settlement_ready && !farm.settlement_executed
         ? acc.farmsReadyForSettlement + 1
         : acc.farmsReadyForSettlement,
       farmsSettled: farm.settlement_executed ? acc.farmsSettled + 1 : acc.farmsSettled,
