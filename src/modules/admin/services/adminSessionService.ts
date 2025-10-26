@@ -231,8 +231,6 @@ export class AdminSessionService {
 
   static async getPermissions(adminPhone: string): Promise<AdminPermission[]> {
     try {
-      console.log('🔍 [AdminSessionService] Fetching permissions for:', adminPhone);
-
       const { data, error } = await supabase
         .from('admin_module_permissions')
         .select('*')
@@ -241,23 +239,40 @@ export class AdminSessionService {
         .order('module_name_ar');
 
       if (error) {
-        console.error('❌ [AdminSessionService] Error fetching permissions:', error);
         throw error;
-      }
-
-      console.log('✅ [AdminSessionService] Permissions for', adminPhone, ':', data);
-      console.log('✅ [AdminSessionService] Active permissions count:', data?.length || 0);
-
-      // Log each permission detail
-      if (data && data.length > 0) {
-        data.forEach((perm, idx) => {
-          console.log(`  ${idx + 1}. ${perm.module_id}: view=${perm.can_view}, create=${perm.can_create}, edit=${perm.can_edit}, delete=${perm.can_delete}`);
-        });
       }
 
       return data || [];
     } catch (error) {
-      console.error('❌ [AdminSessionService] Error in getPermissions:', error);
+      console.warn('⚠️ [AdminSessionService] Could not fetch permissions from DB, using localStorage');
+
+      // Fallback: محاولة الحصول على الصلاحيات من localStorage
+      const adminData = localStorage.getItem('admin_data');
+      if (adminData) {
+        try {
+          const admin = JSON.parse(adminData);
+          if (admin.phone === adminPhone && admin.permissions) {
+            // تحويل permissions object إلى array بصيغة AdminPermission
+            const permissionsArray: AdminPermission[] = Object.entries(admin.permissions).map(([moduleId, perms]: [string, any]) => ({
+              id: crypto.randomUUID(),
+              admin_phone: adminPhone,
+              module_id: moduleId,
+              module_name_ar: moduleId,
+              module_name_en: moduleId,
+              can_view: perms.view || false,
+              can_create: perms.create || false,
+              can_edit: perms.edit || false,
+              can_delete: perms.delete || false,
+              icon: '',
+              is_active: true,
+            }));
+            return permissionsArray;
+          }
+        } catch (parseError) {
+          console.error('Error parsing admin_data:', parseError);
+        }
+      }
+
       return [];
     }
   }

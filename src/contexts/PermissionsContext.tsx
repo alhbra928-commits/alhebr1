@@ -39,14 +39,13 @@ export function PermissionsProvider({ children }: { children: ReactNode }) {
       setLoading(true);
       const { admin } = AdminSessionService.getCurrentSession();
 
-      // console.log('🔍 [PermissionsContext] Current admin:', admin.phone);
-
       if (!admin || !admin.phone) {
-        console.warn('⚠️ [PermissionsContext] NO ADMIN SESSION FOUND');
+        // لا جلسة نشطة - طبيعي عند بداية التطبيق
         setPermissions([]);
         setIsAdmin(false);
         setCurrentAdminPhone(null);
         setCurrentAdminRole(null);
+        setLoading(false);
         return;
       }
 
