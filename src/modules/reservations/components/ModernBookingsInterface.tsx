@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { BookingsService } from '../bookingsService';
-import { ArrowRight, Calendar, CheckCircle, Clock, XCircle, Search, Filter, Loader2, Check, AlertCircle, Trash2, FileText, Eye, User, TreeDeciduous, DollarSign, Phone } from 'lucide-react';
+import { ArrowRight, Calendar, CheckCircle, Clock, XCircle, Search, Filter, Loader2, Check, AlertCircle, Trash2, FileText, Eye, User, TreeDeciduous, DollarSign, Phone, Mail, MapPin, CreditCard, X } from 'lucide-react';
 import { usePermissions } from '../../../contexts/PermissionsContext';
+import { BookingDetailsPanel } from './BookingDetailsPanel';
 
 interface ModernBookingsInterfaceProps {
   onBack: () => void;
@@ -14,6 +15,7 @@ export function ModernBookingsInterface({ onBack }: ModernBookingsInterfaceProps
   const [stats, setStats] = useState<any>({});
   const [loading, setLoading] = useState(true);
   const [selectedBooking, setSelectedBooking] = useState<any>(null);
+  const [showDetailsPanel, setShowDetailsPanel] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
 
@@ -97,11 +99,18 @@ export function ModernBookingsInterface({ onBack }: ModernBookingsInterfaceProps
     showProcessing('جاري اعتماد الحجز...');
 
     try {
+      console.log('🔄 [handleApprove] Starting approval for:', bookingId);
       await BookingsService.approve(bookingId);
+      console.log('✅ [handleApprove] Approval successful');
+
       await loadData();
-      showSuccess('تم اعتماد الحجز بنجاح!\nتم نقل الحجز إلى قسم "المقبولة"');
+      console.log('✅ [handleApprove] Data reloaded');
+
+      showSuccess('تم اعتماد الحجز بنجاح!\nتم نقل الحجز إلى قسم "المقبولة"\nتم إرسال إشعار للمستثمر');
       setSelectedBooking(null);
+      setShowDetailsPanel(false);
     } catch (err: any) {
+      console.error('❌ [handleApprove] Error:', err);
       showError('فشل اعتماد الحجز!\n' + (err.message || 'حدث خطأ غير متوقع'));
     }
   };
@@ -116,6 +125,7 @@ export function ModernBookingsInterface({ onBack }: ModernBookingsInterfaceProps
       await loadData();
       showSuccess('تم رفض الحجز\nتم نقل الحجز إلى قسم "المرفوضة"');
       setSelectedBooking(null);
+      setShowDetailsPanel(false);
     } catch (err: any) {
       showError('فشل رفض الحجز!\n' + (err.message || 'حدث خطأ غير متوقع'));
     }
@@ -131,6 +141,7 @@ export function ModernBookingsInterface({ onBack }: ModernBookingsInterfaceProps
       await loadData();
       showSuccess('تم حذف الحجز نهائياً\nتم إزالة الحجز من النظام');
       setSelectedBooking(null);
+      setShowDetailsPanel(false);
     } catch (err: any) {
       showError('فشل حذف الحجز!\n' + (err.message || 'حدث خطأ غير متوقع'));
     }
@@ -144,9 +155,15 @@ export function ModernBookingsInterface({ onBack }: ModernBookingsInterfaceProps
       await loadData();
       showSuccess('تم إصدار الشهادة بنجاح!\nتم نقل الحجز إلى قسم "الموثقة"');
       setSelectedBooking(null);
+      setShowDetailsPanel(false);
     } catch (err: any) {
       showError('فشل إصدار الشهادة!\n' + (err.message || 'حدث خطأ غير متوقع'));
     }
+  };
+
+  const handleViewDetails = (booking: any) => {
+    setSelectedBooking(booking);
+    setShowDetailsPanel(true);
   };
 
   const getStatusColor = (status: string) => {
@@ -357,58 +374,15 @@ export function ModernBookingsInterface({ onBack }: ModernBookingsInterfaceProps
                   </div>
                 </div>
 
-                {/* Action Buttons */}
-                <div className="space-y-2 pt-4 border-t-2 border-white">
+                {/* Action Button */}
+                <div className="pt-4 border-t-2 border-white">
                   <button
-                    onClick={() => setSelectedBooking(selectedBooking?.id === booking.id ? null : booking)}
-                    className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-all shadow-md hover:shadow-lg"
+                    onClick={() => handleViewDetails(booking)}
+                    className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl font-bold hover:from-blue-700 hover:to-blue-800 transition-all shadow-md hover:shadow-lg"
                   >
                     <Eye className="w-5 h-5" />
-                    {selectedBooking?.id === booking.id ? 'إخفاء التفاصيل' : 'عرض التفاصيل'}
+                    عرض التفاصيل والإجراءات
                   </button>
-
-                  {selectedBooking?.id === booking.id && (
-                    <div className="space-y-2 animate-in fade-in slide-in-from-top-2">
-                      {booking.booking_status === 'pending' && hasEditPermission && (
-                        <div className="flex gap-2">
-                          <button
-                            onClick={() => handleApprove(booking.id)}
-                            className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-emerald-600 text-white rounded-xl font-bold hover:bg-emerald-700 transition-all shadow-md"
-                          >
-                            <CheckCircle className="w-5 h-5" />
-                            اعتماد
-                          </button>
-                          <button
-                            onClick={() => handleReject(booking.id)}
-                            className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-red-600 text-white rounded-xl font-bold hover:bg-red-700 transition-all shadow-md"
-                          >
-                            <XCircle className="w-5 h-5" />
-                            رفض
-                          </button>
-                        </div>
-                      )}
-
-                      {booking.booking_status === 'approved' && hasEditPermission && (
-                        <button
-                          onClick={() => handleIssueCertificate(booking.id)}
-                          className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-purple-600 to-violet-600 text-white rounded-xl font-bold hover:from-purple-700 hover:to-violet-700 transition-all shadow-md"
-                        >
-                          <FileText className="w-5 h-5" />
-                          إصدار الشهادة
-                        </button>
-                      )}
-
-                      {(booking.booking_status === 'pending' || booking.booking_status === 'rejected') && hasDeletePermission && (
-                        <button
-                          onClick={() => handleDelete(booking.id)}
-                          className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-slate-600 text-white rounded-xl font-bold hover:bg-slate-700 transition-all shadow-md"
-                        >
-                          <Trash2 className="w-5 h-5" />
-                          حذف نهائياً
-                        </button>
-                      )}
-                    </div>
-                  )}
                 </div>
               </div>
             );
@@ -423,6 +397,20 @@ export function ModernBookingsInterface({ onBack }: ModernBookingsInterfaceProps
           </div>
         )}
       </div>
+
+      {/* Booking Details Panel */}
+      <BookingDetailsPanel
+        booking={selectedBooking}
+        isOpen={showDetailsPanel}
+        onClose={() => {
+          setShowDetailsPanel(false);
+          setSelectedBooking(null);
+        }}
+        onApprove={hasEditPermission ? handleApprove : undefined}
+        onReject={hasEditPermission ? handleReject : undefined}
+        onDelete={hasDeletePermission ? handleDelete : undefined}
+        onIssueCertificate={hasEditPermission ? handleIssueCertificate : undefined}
+      />
     </div>
   );
 }
