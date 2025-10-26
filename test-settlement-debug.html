@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>اختبار التسوية المالية</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body { font-family: Arial; padding: 20px; background: #f5f5f5; }
+    .step { background: white; padding: 20px; margin: 15px 0; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .success { color: #22c55e; }
+    .error { color: #ef4444; }
+    .warning { color: #f59e0b; }
+    pre { background: #f9f9f9; padding: 15px; border-radius: 5px; overflow-x: auto; }
+  </style>
+</head>
+<body>
+  <h1>🔍 اختبار دالة التسوية المالية</h1>
+  <div id="results"></div>
+
+  <script type="module">
+    const supabaseUrl = 'https://pbxxjbuvduhdogulhuhw.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBieHhqYnV2ZHVoZG9ndWxodWh3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjk0MTY0NzksImV4cCI6MjA0NDk5MjQ3OX0.1GvIELQ1dPNtVE_kR9WrU7L8uSrUPLiRo5_MYNPyFis';
+    const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+    const results = document.getElementById('results');
+
+    function addStep(title, content, type = 'info') {
+      const div = document.createElement('div');
+      div.className = 'step';
+      div.innerHTML = `<h2>${title}</h2>${content}`;
+      results.appendChild(div);
+    }
+
+    async function test() {
+      addStep('📊 Step 1: فحص جدول farm_finance', '<p>جاري الفحص...</p>');
+
+      const { data: farms, error: farmError } = await supabase
+        .from('farm_finance')
+        .select('*')
+        .is('deleted_at', null)
+        .limit(3);
+
+      if (farmError) {
+        addStep('❌ خطأ في جلب المزارع', `<p class="error">${farmError.message}</p><pre>${JSON.stringify(farmError, null, 2)}</pre>`, 'error');
+        return;
+      }
+
+      if (!farms || farms.length === 0) {
+        addStep('⚠️ لا توجد مزارع', '<p class="warning">لا توجد مزارع في النظام المالي</p>', 'warning');
+        return;
+      }
+
+      addStep('✅ تم جلب المزارع', `<p class="success">عدد المزارع: ${farms.length}</p><pre>${JSON.stringify(farms, null, 2)}</pre>`);
+
+      const farm = farms[0];
+
+      addStep('📊 Step 2: فحص حالة المزرعة الأولى',
+        `<ul>
+          <li>Farm ID: ${farm.farm_id}</li>
+          <li>Farm Code: ${farm.farm_code}</li>
+          <li>المحصل: ${farm.collected_from_investors}</li>
+          <li>المستهدف: ${farm.owner_amount_target}</li>
+          <li>جاهز للتسوية: ${farm.settlement_ready ? '✅ نعم' : '❌ لا'}</li>
+          <li>تم التسوية: ${farm.settlement_executed ? '✅ نعم' : '❌ لا'}</li>
+        </ul>`
+      );
+
+      if (!farm.settlement_ready) {
+        addStep('⚠️ المزرعة غير جاهزة', '<p class="warning">المزرعة ليست جاهزة للتسوية بعد</p>', 'warning');
+        return;
+      }
+
+      if (farm.settlement_executed) {
+        addStep('⚠️ تمت التسوية مسبقاً', '<p class="warning">تم تنفيذ التسوية لهذه المزرعة من قبل</p>', 'warning');
+        return;
+      }
+
+      addStep('📊 Step 3: اختبار دالة execute_manual_settlement', '<p>جاري اختبار الدالة...</p>');
+
+      const testAdminId = '00000000-0000-0000-0000-000000000000';
+
+      try {
+        const { data: settlementResult, error: settlementError } = await supabase
+          .rpc('execute_manual_settlement', {
+            p_farm_id: farm.farm_id,
+            p_admin_id: testAdminId
+          });
+
+        if (settlementError) {
+          addStep('❌ خطأ في تنفيذ التسوية',
+            `<p class="error">رسالة الخطأ: ${settlementError.message}</p>
+             <p class="error">الكود: ${settlementError.code}</p>
+             <p class="error">التفاصيل: ${settlementError.details}</p>
+             <pre>${JSON.stringify(settlementError, null, 2)}</pre>`,
+            'error'
+          );
+        } else {
+          addStep('✅ نجحت التسوية!',
+            `<p class="success">تمت التسوية بنجاح!</p>
+             <pre>${JSON.stringify(settlementResult, null, 2)}</pre>`,
+            'success'
+          );
+        }
+      } catch (err) {
+        addStep('❌ Exception في تنفيذ الدالة',
+          `<p class="error">${err.message}</p>
+           <pre>${JSON.stringify(err, null, 2)}</pre>`,
+          'error'
+        );
+      }
+
+      addStep('📊 Step 4: فحص البيانات بعد التسوية', '<p>جاري فحص التحديثات...</p>');
+
+      const { data: updatedFarm, error: updateError } = await supabase
+        .from('farm_finance')
+        .select('*')
+        .eq('farm_id', farm.farm_id)
+        .single();
+
+      if (updateError) {
+        addStep('❌ خطأ في جلب التحديثات', `<p class="error">${updateError.message}</p>`, 'error');
+      } else {
+        addStep('✅ البيانات المحدثة',
+          `<ul>
+            <li>المرحلة: ${updatedFarm.stage}</li>
+            <li>جاهز للتسوية: ${updatedFarm.settlement_ready ? '✅' : '❌'}</li>
+            <li>تم التسوية: ${updatedFarm.settlement_executed ? '✅' : '❌'}</li>
+            <li>المحول للمالك: ${updatedFarm.owner_amount_transferred}</li>
+            <li>وقت التسوية: ${updatedFarm.settlement_executed_at || 'غير محدد'}</li>
+          </ul>
+          <pre>${JSON.stringify(updatedFarm, null, 2)}</pre>`
+        );
+      }
+    }
+
+    test().catch(err => {
+      addStep('❌ خطأ عام', `<p class="error">${err.message}</p><pre>${err.stack}</pre>`, 'error');
+    });
+  </script>
+</body>
+</html>
