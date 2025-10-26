@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { MessageCircle, Send, Inbox, FileText, Settings, BarChart3, Link2 } from 'lucide-react';
+import { MessageCircle, Send, Inbox, FileText, Settings, BarChart3, Link2, Link as LinkIcon } from 'lucide-react';
 import { WhatsAppProvidersHub } from './WhatsAppProvidersHub';
 import { TemplateStudio } from './TemplateStudio';
 import { EventConnector } from './EventConnector';
 import { SmartInboxPage } from './SmartInboxPage';
 import { AnalyticsReports } from './AnalyticsReports';
+import { ExternalIntegration } from './ExternalIntegration';
 import { whatsappService } from '../../../services/whatsappService';
 
-type TabType = 'overview' | 'providers' | 'templates' | 'events' | 'analytics' | 'inbox';
+type TabType = 'overview' | 'integration' | 'templates' | 'events' | 'analytics' | 'inbox';
 
 export const WhatsAppDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabType>('overview');
@@ -37,7 +38,7 @@ export const WhatsAppDashboard: React.FC = () => {
 
   const tabs = [
     { id: 'overview' as TabType, label: 'نظرة عامة', icon: BarChart3 },
-    { id: 'providers' as TabType, label: 'ربط الشركات', icon: Settings },
+    { id: 'integration' as TabType, label: 'الربط الخارجي', icon: LinkIcon },
     { id: 'templates' as TabType, label: 'القوالب', icon: FileText },
     { id: 'events' as TabType, label: 'ربط الأحداث', icon: Link2 },
     { id: 'analytics' as TabType, label: 'التقارير', icon: BarChart3 },
@@ -46,8 +47,8 @@ export const WhatsAppDashboard: React.FC = () => {
 
   const renderContent = () => {
     switch (activeTab) {
-      case 'providers':
-        return <WhatsAppProvidersHub />;
+      case 'integration':
+        return <ExternalIntegration />;
 
       case 'overview':
         return (
