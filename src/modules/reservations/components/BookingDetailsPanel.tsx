@@ -3,6 +3,7 @@ import { X, MapPin, User, Phone, Mail, Calendar, TreeDeciduous, DollarSign, Chec
 import { PaymentReceiptService } from '../../investor/services/paymentReceiptService';
 import { RejectReceiptModal } from './RejectReceiptModal';
 import { usePermissions } from '../../../contexts/PermissionsContext';
+import { SmartErrorModal } from '../../../components/common/SmartErrorModal';
 
 interface BookingDetailsPanelProps {
   booking: any;
@@ -32,6 +33,8 @@ export function BookingDetailsPanel({
   const [rejectLoading, setRejectLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string>('');
   const [actionInProgress, setActionInProgress] = useState(false);
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [errorDetails, setErrorDetails] = useState<any>(null);
 
   const { isAdmin } = usePermissions();
 
@@ -67,10 +70,42 @@ export function BookingDetailsPanel({
 
       await loadReceipts();
 
-      alert('✅ تم اعتماد الإيصال بنجاح');
-    } catch (error) {
+      setSuccessMessage('✅ تم اعتماد الإيصال بنجاح');
+      setTimeout(() => setSuccessMessage(''), 3000);
+    } catch (error: any) {
       console.error('❌ Error verifying receipt:', error);
-      alert('❌ حدث خطأ أثناء اعتماد الإيصال\n\n' + (error as any).message);
+
+      setErrorDetails({
+        title: '❌ فشل اعتماد الإيصال',
+        message: 'حدث خطأ أثناء محاولة اعتماد الإيصال. يرجى مراجعة التفاصيل التقنية أدناه.',
+        error: error,
+        errorType: error?.code ? 'database' : 'general',
+        errorDetails: {
+          timestamp: new Date(),
+          userAction: `اعتماد الإيصال (Receipt ID: ${receiptId})`,
+          apiEndpoint: '/rest/v1/payment_receipts',
+          statusCode: error?.status || error?.response?.status,
+          supabaseError: {
+            code: error?.code,
+            message: error?.message,
+            details: error?.details,
+            hint: error?.hint
+          },
+          requestData: {
+            receiptId: receiptId,
+            action: 'verify',
+            verifiedBy: 'admin'
+          },
+          responseData: error?.response || error
+        },
+        suggestions: [
+          'تأكد من أن الإيصال موجود ولم يتم حذفه',
+          'تحقق من صلاحيات المستخدم',
+          'راجع قيود قاعدة البيانات (Constraints)',
+          'تأكد من أن نوع الإشعار مسموح به في notifications_type_check'
+        ]
+      });
+      setShowErrorModal(true);
     } finally {
       setLoadingReceipts(false);
     }
@@ -787,6 +822,23 @@ export function BookingDetailsPanel({
         receiptId={receiptToReject || ''}
         loading={rejectLoading}
       />
+
+      {/* Smart Error Modal */}
+      {errorDetails && (
+        <SmartErrorModal
+          isOpen={showErrorModal}
+          onClose={() => {
+            setShowErrorModal(false);
+            setErrorDetails(null);
+          }}
+          title={errorDetails.title}
+          message={errorDetails.message}
+          error={errorDetails.error}
+          errorDetails={errorDetails.errorDetails}
+          errorType={errorDetails.errorType}
+          suggestions={errorDetails.suggestions}
+        />
+      )}
     </>
   );
 }
