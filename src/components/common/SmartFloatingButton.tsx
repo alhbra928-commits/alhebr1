@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { MessageCircle, X, Send } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { MessageCircle, X, Send, Bell, BellOff } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 
 interface Message {
@@ -8,6 +8,8 @@ interface Message {
   direction: 'inbound' | 'outbound';
   timestamp: string;
   isAutoResponse?: boolean;
+  isAdminResponse?: boolean;
+  adminName?: string;
 }
 
 export const SmartFloatingButton: React.FC = () => {
@@ -19,10 +21,16 @@ export const SmartFloatingButton: React.FC = () => {
   const [userId, setUserId] = useState<string | null>(null);
   const [sending, setSending] = useState(false);
   const [isPulsing, setIsPulsing] = useState(true);
+  const [hasNewMessage, setHasNewMessage] = useState(false);
+  const [notification, setNotification] = useState<string | null>(null);
+  const [soundEnabled, setSoundEnabled] = useState(true);
+  const conversationEndRef = useRef<HTMLDivElement>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
     initializeSession();
     detectUserType();
+    loadSoundPreference();
 
     // Pulse animation every 5 seconds
     const pulseInterval = setInterval(() => {
@@ -36,8 +44,14 @@ export const SmartFloatingButton: React.FC = () => {
   useEffect(() => {
     if (isOpen && sessionToken) {
       subscribeToMessages();
+      loadRecentMessages();
+      setHasNewMessage(false);
     }
   }, [isOpen, sessionToken]);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   const initializeSession = () => {
     let token = localStorage.getItem('smart_button_session');
@@ -48,12 +62,39 @@ export const SmartFloatingButton: React.FC = () => {
     setSessionToken(token);
   };
 
+  const loadSoundPreference = () => {
+    const savedPref = localStorage.getItem('smart_button_sound');
+    setSoundEnabled(savedPref !== 'false');
+  };
+
+  const toggleSound = () => {
+    const newValue = !soundEnabled;
+    setSoundEnabled(newValue);
+    localStorage.setItem('smart_button_sound', String(newValue));
+  };
+
+  const playNotificationSound = () => {
+    if (!soundEnabled) return;
+
+    try {
+      if (!audioRef.current) {
+        audioRef.current = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSlzw+zdjkMKEnC63u+rXRcJPJfe8b9pIQUreMTv34xAChJqt+futV8ZCTuV3/K0ZyEGLnnB7dqJPgkSZ7Tt76pZFgk7ldvy0HcpBSx4w+3aijwJEmaw7O6pWBYJOpPa8s92KQUqdsLs2Yk+CRJlrureqVcWCTmP2PG8aiEGKnLB69yJPwkSZK7p3KlYFgk5jtnyw3cqBSp1wevaiT4JEmOt6dyoVxYKOIvY8sFzKgUqcsHr2ow+CRJiruncqFcWCTiJ1vHCcywFKnHC69uNPgkSYa3n3KhWFgk3h9Xzw3QrBSpwwuvbjT4JEmCr5tynVhUJN4TW88N0KwUqcMLr240+CRJfq+XcplgWCTaD1fPDdSsFKm/C69uOPgkSXqvl3KdZFgk2gtXyw3YrBSpvwevcjT4IEl6q5dynWRYJNoHV88N2KwUqb8Lr3I0+CBJdquTbp1gXCTV/1fPDdy0FKm7A69yNPggSXarl26dYFwk1f9b0w3gtBSpuwevcjj4IEl2q5NunWBcJNX/V88N4LQUqbsHr3I4+CBJdquXbp1gXCTR+1vPDeCwFKm3B69uNPggSXKvj26dXFwkxfdTzw3YrBSptwera jj4IElup49qnVxYJM3zU8sN0KwUqbMHq2ow9').split(',')[1];
+      }
+      audioRef.current.play().catch(e => console.log('Could not play sound:', e));
+    } catch (e) {
+      console.log('Sound not supported:', e);
+    }
+  };
+
+  const scrollToBottom = () => {
+    conversationEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   const detectUserType = () => {
     const path = window.location.pathname;
 
     if (path.includes('/investor')) {
       setUserType('investor');
-      // Try to get investor ID from session storage or context
       const investorData = sessionStorage.getItem('investor_session');
       if (investorData) {
         try {
@@ -81,7 +122,7 @@ export const SmartFloatingButton: React.FC = () => {
 
   const subscribeToMessages = () => {
     const channel = supabase
-      .channel('smart_button_messages')
+      .channel(`smart_button_${sessionToken}`)
       .on(
         'postgres_changes',
         {
@@ -92,17 +133,36 @@ export const SmartFloatingButton: React.FC = () => {
         },
         (payload) => {
           const newMessage = payload.new as any;
-
-          // Only show messages related to this session
           const metadata = newMessage.metadata || {};
-          if (metadata.session_id || newMessage.direction === 'outbound') {
-            setMessages(prev => [...prev, {
+
+          // Check if this message is for this session
+          if (metadata.thread_id || newMessage.direction === 'outbound') {
+            const msg: Message = {
               id: newMessage.id,
               content: newMessage.content,
               direction: newMessage.direction,
               timestamp: newMessage.created_at,
-              isAutoResponse: metadata.auto_response
-            }]);
+              isAutoResponse: metadata.auto_response,
+              isAdminResponse: metadata.admin_response,
+              adminName: metadata.admin_name
+            };
+
+            setMessages(prev => [...prev, msg]);
+
+            // If window is closed and it's an outbound message, show notification
+            if (!isOpen && newMessage.direction === 'outbound') {
+              setHasNewMessage(true);
+              playNotificationSound();
+
+              if (metadata.admin_response) {
+                setNotification(`💬 رد جديد من ${metadata.admin_name || 'الإدارة'}`);
+              } else {
+                setNotification('💬 لديك رسالة جديدة');
+              }
+
+              // Clear notification after 5 seconds
+              setTimeout(() => setNotification(null), 5000);
+            }
           }
         }
       )
@@ -115,6 +175,8 @@ export const SmartFloatingButton: React.FC = () => {
 
   const handleOpen = async () => {
     setIsOpen(true);
+    setHasNewMessage(false);
+    setNotification(null);
 
     // Track button click
     try {
@@ -125,9 +187,6 @@ export const SmartFloatingButton: React.FC = () => {
     } catch (err) {
       console.error('Failed to track click:', err);
     }
-
-    // Load recent messages
-    loadRecentMessages();
   };
 
   const loadRecentMessages = async () => {
@@ -137,7 +196,7 @@ export const SmartFloatingButton: React.FC = () => {
         .select('*')
         .eq('source_type', 'smart_button')
         .order('created_at', { ascending: false })
-        .limit(10);
+        .limit(20);
 
       if (error) throw error;
 
@@ -148,7 +207,9 @@ export const SmartFloatingButton: React.FC = () => {
             content: msg.content,
             direction: msg.direction,
             timestamp: msg.created_at,
-            isAutoResponse: msg.metadata?.auto_response
+            isAutoResponse: msg.metadata?.auto_response,
+            isAdminResponse: msg.metadata?.admin_response,
+            adminName: msg.metadata?.admin_name
           }))
         );
       }
@@ -163,18 +224,25 @@ export const SmartFloatingButton: React.FC = () => {
     setSending(true);
 
     try {
-      const { data, error } = await supabase.rpc('handle_smart_button_message', {
+      const { data, error } = await supabase.rpc('handle_smart_button_message_v2', {
         p_session_token: sessionToken,
         p_message: inputMessage.trim(),
         p_user_type: userType,
         p_user_id: userId,
         p_phone_number: null,
-        p_page_url: window.location.href
+        p_page_url: window.location.href,
+        p_ip_address: null
       });
 
       if (error) throw error;
 
-      // Add user message to UI immediately
+      if (data?.rate_limited) {
+        alert(data.error || 'تم تجاوز الحد المسموح. يرجى الانتظار قليلاً.');
+        setSending(false);
+        return;
+      }
+
+      // Add user message to UI
       const userMessage: Message = {
         id: `temp_${Date.now()}`,
         content: inputMessage.trim(),
@@ -185,14 +253,14 @@ export const SmartFloatingButton: React.FC = () => {
 
       // If there's an auto response, add it
       if (data?.auto_response && data?.response) {
-        const autoMessage: Message = {
-          id: `auto_${Date.now()}`,
-          content: data.response,
-          direction: 'outbound',
-          timestamp: new Date().toISOString(),
-          isAutoResponse: true
-        };
         setTimeout(() => {
+          const autoMessage: Message = {
+            id: `auto_${Date.now()}`,
+            content: data.response,
+            direction: 'outbound',
+            timestamp: new Date().toISOString(),
+            isAutoResponse: true
+          };
           setMessages(prev => [...prev, autoMessage]);
         }, 500);
       }
@@ -217,26 +285,45 @@ export const SmartFloatingButton: React.FC = () => {
     }
   };
 
+  const getMessageSenderLabel = (message: Message) => {
+    if (message.direction === 'inbound') return 'أنت';
+    if (message.isAdminResponse && message.adminName) return message.adminName;
+    if (message.isAutoResponse) return 'مساعد آلي 🤖';
+    return 'الدعم';
+  };
+
   return (
     <>
+      {/* Floating Notification */}
+      {notification && !isOpen && (
+        <div
+          className="fixed bottom-24 right-6 z-50 bg-gradient-to-r from-[#8B7355] to-[#A0916A] text-white px-6 py-3 rounded-xl shadow-2xl animate-bounce"
+          style={{ minWidth: '200px' }}
+        >
+          <p className="text-sm font-semibold text-center">{notification}</p>
+        </div>
+      )}
+
       {/* Floating Button */}
       <button
         onClick={handleOpen}
         className={`fixed bottom-6 right-6 z-50 w-16 h-16 rounded-full shadow-2xl flex items-center justify-center transition-all duration-300 hover:scale-110 ${
-          isPulsing ? 'animate-pulse' : ''
+          isPulsing && !isOpen ? 'animate-pulse' : ''
         }`}
         style={{
           background: 'linear-gradient(135deg, #8B7355 0%, #A0916A 100%)',
-          boxShadow: '0 4px 20px rgba(139, 115, 85, 0.4)'
+          boxShadow: hasNewMessage
+            ? '0 4px 30px rgba(139, 115, 85, 0.8), 0 0 20px rgba(255, 215, 0, 0.6)'
+            : '0 4px 20px rgba(139, 115, 85, 0.4)'
         }}
         title="مركز التواصل الذكي"
       >
         <MessageCircle className="w-8 h-8 text-white" />
 
         {/* Notification badge */}
-        {messages.filter(m => m.direction === 'outbound' && !m.isAutoResponse).length > 0 && (
-          <div className="absolute -top-1 -right-1 w-6 h-6 bg-red-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
-            {messages.filter(m => m.direction === 'outbound' && !m.isAutoResponse).length}
+        {hasNewMessage && (
+          <div className="absolute -top-1 -right-1 w-6 h-6 bg-red-500 rounded-full flex items-center justify-center animate-ping">
+            <div className="absolute w-6 h-6 bg-red-500 rounded-full"></div>
           </div>
         )}
       </button>
@@ -244,7 +331,7 @@ export const SmartFloatingButton: React.FC = () => {
       {/* Chat Popup */}
       {isOpen && (
         <div
-          className="fixed bottom-24 right-6 z-50 w-96 h-[500px] bg-gray-900 rounded-2xl shadow-2xl flex flex-col overflow-hidden"
+          className="fixed bottom-24 right-6 z-50 w-96 h-[550px] bg-gray-900 rounded-2xl shadow-2xl flex flex-col overflow-hidden"
           style={{ maxHeight: 'calc(100vh - 140px)' }}
           dir="rtl"
         >
@@ -264,19 +351,37 @@ export const SmartFloatingButton: React.FC = () => {
                 <p className="text-white/80 text-xs">نحن هنا لمساعدتك</p>
               </div>
             </div>
-            <button
-              onClick={() => setIsOpen(false)}
-              className="w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors"
-            >
-              <X className="w-5 h-5 text-white" />
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={toggleSound}
+                className="w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors"
+                title={soundEnabled ? 'إيقاف الصوت' : 'تشغيل الصوت'}
+              >
+                {soundEnabled ? (
+                  <Bell className="w-4 h-4 text-white" />
+                ) : (
+                  <BellOff className="w-4 h-4 text-white" />
+                )}
+              </button>
+              <button
+                onClick={() => setIsOpen(false)}
+                className="w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors"
+              >
+                <X className="w-5 h-5 text-white" />
+              </button>
+            </div>
           </div>
 
           {/* User Type Badge */}
-          <div className="px-4 py-2 bg-gray-800 border-b border-gray-700">
+          <div className="px-4 py-2 bg-gray-800 border-b border-gray-700 flex items-center justify-between">
             <span className="text-xs text-gray-400">
               متصل كـ: <span className="text-[#A0916A] font-semibold">{getUserTypeLabel()}</span>
             </span>
+            {messages.length > 0 && (
+              <span className="text-xs text-gray-500">
+                {messages.length} رسالة
+              </span>
+            )}
           </div>
 
           {/* Messages Area */}
@@ -288,7 +393,7 @@ export const SmartFloatingButton: React.FC = () => {
                 <p className="text-gray-500 text-xs mt-2">نحن هنا للإجابة على استفساراتك</p>
               </div>
             ) : (
-              messages.slice(-10).map((message) => (
+              messages.slice(-15).map((message) => (
                 <div
                   key={message.id}
                   className={`flex ${message.direction === 'inbound' ? 'justify-end' : 'justify-start'}`}
@@ -299,13 +404,17 @@ export const SmartFloatingButton: React.FC = () => {
                         ? 'bg-[#8B7355] text-white'
                         : message.isAutoResponse
                         ? 'bg-blue-500/20 text-blue-200 border border-blue-500/30'
+                        : message.isAdminResponse
+                        ? 'bg-green-500/20 text-green-200 border border-green-500/30'
                         : 'bg-gray-700 text-white'
                     }`}
                   >
-                    <p className="text-sm whitespace-pre-wrap">{message.content}</p>
-                    {message.isAutoResponse && (
-                      <p className="text-xs text-blue-300 mt-1">رد تلقائي 🤖</p>
+                    {message.direction === 'outbound' && (
+                      <p className="text-xs opacity-70 mb-1">
+                        {getMessageSenderLabel(message)}
+                      </p>
                     )}
+                    <p className="text-sm whitespace-pre-wrap">{message.content}</p>
                     <p className="text-xs opacity-70 mt-1">
                       {new Date(message.timestamp).toLocaleTimeString('ar-SA', {
                         hour: '2-digit',
@@ -316,6 +425,7 @@ export const SmartFloatingButton: React.FC = () => {
                 </div>
               ))
             )}
+            <div ref={conversationEndRef} />
           </div>
 
           {/* Input Area */}
@@ -348,7 +458,7 @@ export const SmartFloatingButton: React.FC = () => {
               </button>
             </div>
             <p className="text-xs text-gray-500 mt-2 text-center">
-              سيتم الرد عليك في أقرب وقت ممكن
+              {soundEnabled ? '🔔' : '🔕'} سيتم الرد عليك في أقرب وقت ممكن
             </p>
           </div>
         </div>
