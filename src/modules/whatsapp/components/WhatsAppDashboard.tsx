@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { MessageCircle, Send, Inbox, FileText, Settings, BarChart3 } from 'lucide-react';
+import { MessageCircle, Send, Inbox, FileText, Settings, BarChart3, Link2 } from 'lucide-react';
 import { WhatsAppProvidersHub } from './WhatsAppProvidersHub';
+import { TemplateStudio } from './TemplateStudio';
+import { EventConnector } from './EventConnector';
 import { whatsappService } from '../../../services/whatsappService';
 
-type TabType = 'overview' | 'providers' | 'templates' | 'messages' | 'inbox' | 'settings';
+type TabType = 'overview' | 'providers' | 'templates' | 'events' | 'messages' | 'inbox';
 
 export const WhatsAppDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabType>('overview');
@@ -35,6 +37,7 @@ export const WhatsAppDashboard: React.FC = () => {
     { id: 'overview' as TabType, label: 'نظرة عامة', icon: BarChart3 },
     { id: 'providers' as TabType, label: 'ربط الشركات', icon: Settings },
     { id: 'templates' as TabType, label: 'القوالب', icon: FileText },
+    { id: 'events' as TabType, label: 'ربط الأحداث', icon: Link2 },
     { id: 'messages' as TabType, label: 'الرسائل', icon: Send },
     { id: 'inbox' as TabType, label: 'صندوق الوارد', icon: Inbox }
   ];
@@ -133,13 +136,10 @@ export const WhatsAppDashboard: React.FC = () => {
         );
 
       case 'templates':
-        return (
-          <div className="text-center py-12" dir="rtl">
-            <FileText className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-            <h2 className="text-xl font-bold text-white mb-2">إدارة القوالب</h2>
-            <p className="text-gray-400">قريباً - المرحلة الثانية</p>
-          </div>
-        );
+        return <TemplateStudio />;
+
+      case 'events':
+        return <EventConnector />;
 
       case 'messages':
         return (
