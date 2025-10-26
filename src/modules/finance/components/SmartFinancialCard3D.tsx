@@ -12,15 +12,23 @@ import {
   Activity,
   CheckCircle,
   Clock,
+  Archive,
 } from 'lucide-react';
 import { CorrectedFarmFinance, CorrectedFinancialService } from '../services/correctedFinancialService';
 
 interface SmartFinancialCard3DProps {
   finance: CorrectedFarmFinance;
   onExecuteSettlement?: (farmId: string) => void;
+  onArchive?: (farmId: string) => void;
+  hasArchivePermission?: boolean;
 }
 
-export function SmartFinancialCard3D({ finance, onExecuteSettlement }: SmartFinancialCard3DProps) {
+export function SmartFinancialCard3D({
+  finance,
+  onExecuteSettlement,
+  onArchive,
+  hasArchivePermission = false
+}: SmartFinancialCard3DProps) {
   const [isHovered, setIsHovered] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
@@ -277,6 +285,30 @@ export function SmartFinancialCard3D({ finance, onExecuteSettlement }: SmartFina
                     <Zap className="w-8 h-8 animate-pulse" />
                     <span>⚡ تنفيذ التسوية المالية الآن</span>
                   </button>
+                </div>
+              )}
+
+              {/* زر الأرشفة المالية - يظهر فقط بعد التسوية ولمن لديه الصلاحية */}
+              {finance.settlement_executed && !finance.is_archived && hasArchivePermission && onArchive && (
+                <div className="mb-8">
+                  <button
+                    onClick={() => {
+                      if (confirm('هل أنت متأكد من أرشفة هذه المزرعة مالياً؟\n\nسيتم نقلها إلى قسم الأرشفة المالية وإخفاؤها من القائمة الرئيسية.')) {
+                        onArchive(finance.farm_id);
+                        setShowModal(false);
+                      }
+                    }}
+                    className="w-full py-5 bg-gradient-to-r from-slate-600 via-slate-700 to-slate-800
+                      text-white text-xl font-bold rounded-2xl shadow-2xl hover:shadow-slate-500
+                      transform hover:scale-105 transition-all duration-300
+                      flex items-center justify-center gap-3 border-2 border-slate-400"
+                  >
+                    <Archive className="w-7 h-7" />
+                    <span>🗃️ أرشفة مالية</span>
+                  </button>
+                  <p className="text-center text-sm text-gray-600 mt-3">
+                    ⚠️ يتطلب صلاحية خاصة - سيتم نقل المزرعة للأرشيف
+                  </p>
                 </div>
               )}
 

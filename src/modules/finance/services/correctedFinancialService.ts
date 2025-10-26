@@ -31,6 +31,12 @@ export interface CorrectedFarmFinance {
   settlement_ready: boolean;
   settlement_executed: boolean;
 
+  // الأرشفة
+  is_archived: boolean;
+  archived_at?: string;
+  archived_by?: string;
+  archive_notes?: string;
+
   // التوقيتات
   settlement_ready_at?: string;
   settlement_executed_at?: string;
@@ -51,13 +57,14 @@ export interface FinancialStats {
 
 export class CorrectedFinancialService {
   /**
-   * جلب جميع البيانات المالية للمزارع
+   * جلب جميع البيانات المالية للمزارع (غير المؤرشفة فقط)
    */
   static async getAllFarmFinances(): Promise<CorrectedFarmFinance[]> {
     const { data, error } = await supabase
       .from('farm_finance')
       .select('*')
       .is('deleted_at', null)
+      .eq('is_archived', false)
       .order('updated_at', { ascending: false });
 
     if (error) {
@@ -78,6 +85,10 @@ export class CorrectedFinancialService {
       stage: item.stage || 'collecting',
       settlement_ready: item.settlement_ready || false,
       settlement_executed: item.settlement_executed || false,
+      is_archived: item.is_archived || false,
+      archived_at: item.archived_at,
+      archived_by: item.archived_by,
+      archive_notes: item.archive_notes,
       settlement_ready_at: item.settlement_ready_at,
       settlement_executed_at: item.settlement_executed_at,
       created_at: item.created_at,
@@ -243,6 +254,100 @@ export class CorrectedFinancialService {
    */
   static formatPercentage(value: number): string {
     return `${value.toFixed(1)}%`;
+  }
+
+  /**
+   * أرشفة مزرعة مالياً
+   */
+  static async archiveFarm(farmId: string, adminPhone: string, notes?: string): Promise<any> {
+    try {
+      console.log('🗃️ archiveFarm called with:', { farmId, adminPhone, notes });
+
+      const { data, error } = await supabase.rpc('archive_farm_finance', {
+        p_farm_id: farmId,
+        p_admin_phone: adminPhone,
+        p_notes: notes || null,
+      });
+
+      console.log('📊 Archive RPC Response:', { data, error });
+
+      if (error) {
+        console.error('❌ Archive RPC Error:', error);
+        throw error;
+      }
+
+      return data;
+    } catch (error: any) {
+      console.error('❌ خطأ في أرشفة المزرعة:', error);
+      console.error('❌ Error details:', {
+        message: error?.message,
+        code: error?.code,
+        details: error?.details,
+        hint: error?.hint
+      });
+      throw error;
+    }
+  }
+
+  /**
+   * جلب المزارع المؤرشفة
+   */
+  static async getArchivedFarms(): Promise<CorrectedFarmFinance[]> {
+    try {
+      const { data, error } = await supabase.rpc('get_archived_farms');
+
+      if (error) {
+        console.error('❌ خطأ في جلب المزارع المؤرشفة:', error);
+        throw error;
+      }
+
+      return (data || []).map((item: any) => ({
+        id: item.id,
+        farm_id: item.farm_id,
+        farm_code: item.farm_code,
+        farm_name: item.farm_name,
+        collected_from_investors: Number(item.collected_from_investors) || 0,
+        owner_amount_target: Number(item.owner_amount_target) || 0,
+        owner_amount_transferred: Number(item.owner_amount_transferred) || 0,
+        platform_amount_received: Number(item.platform_amount_received) || 0,
+        charity_amount_deducted: Number(item.charity_amount_deducted) || 0,
+        stage: 'completed',
+        settlement_ready: true,
+        settlement_executed: true,
+        is_archived: true,
+        archived_at: item.archived_at,
+        archived_by: item.archived_by,
+        archive_notes: item.archive_notes,
+        settlement_ready_at: null,
+        settlement_executed_at: item.settlement_executed_at,
+        created_at: item.created_at,
+        updated_at: item.archived_at,
+      }));
+    } catch (error) {
+      console.error('❌ خطأ في جلب المزارع المؤرشفة:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * التحقق من صلاحية الأرشفة
+   */
+  static async checkArchivingPermission(adminPhone: string): Promise<boolean> {
+    try {
+      const { data, error } = await supabase.rpc('check_archiving_permission', {
+        p_admin_phone: adminPhone,
+      });
+
+      if (error) {
+        console.error('❌ خطأ في التحقق من صلاحية الأرشفة:', error);
+        return false;
+      }
+
+      return data === true;
+    } catch (error) {
+      console.error('❌ خطأ في التحقق من صلاحية الأرشفة:', error);
+      return false;
+    }
   }
 
   /**
