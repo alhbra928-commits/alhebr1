@@ -12,7 +12,7 @@ export class DashboardService {
         supabase.from('reservations').select('*', { count: 'exact', head: true }).is('deleted_at', null),
         supabase.from('investors').select('*', { count: 'exact', head: true }).is('deleted_at', null),
         supabase.from('farm_owners').select('*', { count: 'exact', head: true }).is('deleted_at', null),
-        supabase.from('documentation').select('*', { count: 'exact', head: true }).is('deleted_at', null),
+        supabase.from('documentation').select('*', { count: 'exact', head: true }), // documentation doesn't have deleted_at
         supabase.from('reservations').select('booking_status').is('deleted_at', null),
         supabase.from('reservations').select('total_amount').eq('payment_status', 'completed').is('deleted_at', null),
         supabase.from('admin_users').select('*', { count: 'exact', head: true }).is('deleted_at', null),

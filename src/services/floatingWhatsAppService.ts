@@ -129,28 +129,20 @@ class FloatingWhatsAppService {
 
   async createOrUpdateSession(session: UserSession): Promise<boolean> {
     try {
-      const { data: existing } = await supabase
+      // Use upsert to handle both insert and update in one operation
+      const { error } = await supabase
         .from('whatsapp_user_sessions')
-        .select('id')
-        .eq('session_id', session.session_id)
-        .maybeSingle();
+        .upsert({
+          ...session,
+          last_activity_at: new Date().toISOString()
+        }, {
+          onConflict: 'session_id',
+          ignoreDuplicates: false
+        });
 
-      if (existing) {
-        const { error } = await supabase
-          .from('whatsapp_user_sessions')
-          .update({
-            ...session,
-            last_activity_at: new Date().toISOString()
-          })
-          .eq('session_id', session.session_id);
-
-        if (error) return [];
-      } else {
-        const { error } = await supabase
-          .from('whatsapp_user_sessions')
-          .insert([session]);
-
-        if (error) return [];
+      if (error) {
+        console.error('Error upserting session:', error);
+        return false;
       }
 
       this.startActivityTracking();

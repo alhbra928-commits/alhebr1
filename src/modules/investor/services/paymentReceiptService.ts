@@ -159,11 +159,13 @@ export class PaymentReceiptService {
   ): Promise<PaymentReceipt> {
     console.log('✅ Starting verifyReceipt:', { receiptId, verifiedBy });
 
+    // verified_by field is UUID, but we pass string 'admin' from UI
+    // So we set it to null for now (admin users table should be used properly)
     const { data, error } = await supabase
       .from('payment_receipts')
       .update({
         status: 'verified',
-        verified_by: verifiedBy,
+        verified_by: null, // TODO: Use actual admin user UUID from session
         verified_at: new Date().toISOString(),
         verification_notes: verificationNotes || null,
         updated_at: new Date().toISOString()
@@ -210,7 +212,7 @@ export class PaymentReceiptService {
       .from('payment_receipts')
       .update({
         status: 'rejected',
-        verified_by: verifiedBy,
+        verified_by: null, // TODO: Use actual admin user UUID from session
         verified_at: new Date().toISOString(),
         verification_notes: verificationNotes,
         updated_at: new Date().toISOString()
