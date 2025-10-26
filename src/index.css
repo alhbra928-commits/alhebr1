@@ -12,6 +12,34 @@
   display: none;
 }
 
+/* Golden shine animation for ready settlements */
+@keyframes shine {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-shine {
+  animation: shine 2s infinite;
+}
+
+/* Slow pulse for settlement ready cards */
+@keyframes pulse-slow {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
 @keyframes pulse-glow {
   0%, 100% {
     box-shadow: 0 8px 25px rgba(139, 165, 116, 0.4);

@@ -15,7 +15,7 @@ const FarmsView = lazy(() => import('./modules/farms/components/FarmsView').then
 const ModernBookingsInterface = lazy(() => import('./modules/reservations/components/ModernBookingsInterface').then(m => ({ default: m.ModernBookingsInterface })));
 const AdvancedInvestorsView = lazy(() => import('./modules/investors/components/AdvancedInvestorsView').then(m => ({ default: m.AdvancedInvestorsView })));
 const WalletsView = lazy(() => import('./modules/wallets/components/WalletsView').then(m => ({ default: m.WalletsView })));
-const FinancialCoreV3Dashboard = lazy(() => import('./modules/finance/components/FinancialCoreV3Dashboard').then(m => ({ default: m.FinancialCoreV3Dashboard })));
+const CorrectedFinancialDashboard = lazy(() => import('./modules/finance/components/CorrectedFinancialDashboard').then(m => ({ default: m.CorrectedFinancialDashboard })));
 const AgricultureView = lazy(() => import('./modules/agriculture/components/AgricultureView').then(m => ({ default: m.AgricultureView })));
 const AdvancedDocumentationView = lazy(() => import('./modules/documentation/components/AdvancedDocumentationView').then(m => ({ default: m.AdvancedDocumentationView })));
 const MarketingView = lazy(() => import('./modules/marketing/components/MarketingView').then(m => ({ default: m.MarketingView })));
@@ -188,7 +188,7 @@ function App() {
         return <WalletsView onBack={() => setActiveModule('dashboard')} />;
       case 'finance':
       case 'finance-old':
-        return <FinancialCoreV3Dashboard onBack={() => setActiveModule('dashboard')} />;
+        return <CorrectedFinancialDashboard onBack={() => setActiveModule('dashboard')} />;
       case 'agriculture':
         return <AgricultureView onBack={() => setActiveModule('dashboard')} />;
       case 'documentation':
