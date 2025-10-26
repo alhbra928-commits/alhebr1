@@ -514,11 +514,7 @@ export function BookingDetailsPanel({
                     {receipt.status === 'pending' && isAdmin && (
                       <div className="flex gap-2 mt-4 pt-4 border-t">
                         <button
-                          onClick={() => {
-                            if (confirm('هل تريد اعتماد هذا الإيصال؟')) {
-                              handleVerifyReceipt(receipt.id);
-                            }
-                          }}
+                          onClick={() => handleVerifyReceipt(receipt.id)}
                           disabled={loadingReceipts}
                           className="flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-xl font-bold text-white transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
                           style={{ background: '#10B981' }}
@@ -590,10 +586,7 @@ export function BookingDetailsPanel({
                 {onApprove && (
                   <button
                     onClick={() => {
-                      if (confirm(`هل تريد اعتماد الحجز ${booking.booking_code}؟`)) {
-                        onApprove(booking.id);
-                        onClose();
-                      }
+                      onApprove(booking.id);
                     }}
                     className="w-full flex items-center justify-center gap-3 px-6 py-4 rounded-2xl font-black text-lg text-white transition-all hover:scale-105"
                     style={{ background: '#10B981' }}
@@ -605,10 +598,7 @@ export function BookingDetailsPanel({
                 {onReject && (
                   <button
                     onClick={() => {
-                      if (confirm(`هل تريد رفض الحجز ${booking.booking_code}؟`)) {
-                        onReject(booking.id);
-                        onClose();
-                      }
+                      onReject(booking.id);
                     }}
                     className="w-full flex items-center justify-center gap-3 px-6 py-4 rounded-2xl font-bold text-white transition-all hover:scale-105"
                     style={{ background: '#EF4444' }}
@@ -623,10 +613,7 @@ export function BookingDetailsPanel({
             {booking.booking_status === 'approved' && onIssueCertificate && (
               <button
                 onClick={() => {
-                  if (confirm(`🪪 إصدار شهادة تملك للحجز ${booking.booking_code}\n\nسيتم:\n• نقل الحجز إلى إدارة التوثيق\n• إنشاء شهادة تملك رقمية\n• إرسال إشعار للمستثمر\n\nهل تريد المتابعة؟`)) {
-                    onIssueCertificate(booking.id);
-                    onClose();
-                  }
+                  onIssueCertificate(booking.id);
                 }}
                 className="w-full flex items-center justify-center gap-3 px-6 py-5 rounded-2xl font-black text-xl text-white transition-all hover:scale-110 shadow-xl"
                 style={{ background: 'linear-gradient(135deg, #C89B3C, #D4AF37)' }}
@@ -639,10 +626,7 @@ export function BookingDetailsPanel({
             {(booking.booking_status === 'pending' || booking.booking_status === 'rejected') && onDelete && (
               <button
                 onClick={() => {
-                  if (confirm(`هل تريد حذف الحجز ${booking.booking_code} نهائياً؟\n\nهذا الإجراء لا يمكن التراجع عنه.`)) {
-                    onDelete(booking.id);
-                    onClose();
-                  }
+                  onDelete(booking.id);
                 }}
                 className="w-full flex items-center justify-center gap-3 px-6 py-3 rounded-2xl font-bold text-white transition-all hover:scale-105"
                 style={{ background: '#6B7280' }}
@@ -766,10 +750,8 @@ export function BookingDetailsPanel({
                 <div className="flex gap-3 mt-6">
                   <button
                     onClick={() => {
-                      if (confirm('هل تريد اعتماد هذا الإيصال؟')) {
-                        handleVerifyReceipt(selectedReceipt.id);
-                        setShowReceiptPreview(false);
-                      }
+                      handleVerifyReceipt(selectedReceipt.id);
+                      setShowReceiptPreview(false);
                     }}
                     className="flex-1 flex items-center justify-center gap-2 px-6 py-4 rounded-2xl font-black text-lg text-white transition-all hover:scale-105"
                     style={{ background: '#10B981' }}
