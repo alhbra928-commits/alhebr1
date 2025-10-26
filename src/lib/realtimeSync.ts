@@ -10,7 +10,7 @@ type TableChangeCallback = {
 
 class RealtimeSyncService {
   private channels: Map<string, RealtimeChannel> = new Map();
-  private enabled = false; // Disabled by default to reduce load
+  private enabled = true;
 
   subscribeToTable(
     tableName: string,

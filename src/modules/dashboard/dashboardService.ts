@@ -7,26 +7,19 @@ import { DocumentationService } from '../documentation/documentationService';
 export class DashboardService {
   static async getOverallStatistics() {
     try {
-      // استعلام واحد مباشر بدلاً من استدعاء services
       const results = await Promise.allSettled([
         supabase.from('farms').select('*', { count: 'exact', head: true }).is('deleted_at', null),
         supabase.from('reservations').select('*', { count: 'exact', head: true }).is('deleted_at', null),
         supabase.from('investors').select('*', { count: 'exact', head: true }).is('deleted_at', null),
-        supabase.from('farm_owners').select('*', { count: 'exact', head: true }).is('deleted_at', null),
-        supabase.from('admin_users').select('*', { count: 'exact', head: true }).eq('is_active', true),
-        supabase.from('platform_wallet').select('total_balance, net_profit').eq('id', '00000000-0000-0000-0000-000000000002').maybeSingle(),
-        supabase.from('smart_farm_finances').select('collected_from_investors').is('deleted_at', null)
+        supabase.from('farm_owners').select('*', { count: 'exact', head: true }).is('deleted_at', null)
       ]);
 
-      const farmsCount = results[0].status === 'fulfilled' ? results[0].value.count : 0;
-      const reservationsCount = results[1].status === 'fulfilled' ? results[1].value.count : 0;
-      const investorsCount = results[2].status === 'fulfilled' ? results[2].value.count : 0;
-      const ownersCount = results[3].status === 'fulfilled' ? results[3].value.count : 0;
-      const adminsCount = results[4].status === 'fulfilled' ? results[4].value.count : 0;
-      const platformWallet = results[5].status === 'fulfilled' ? results[5].value.data : null;
-      const finances = results[6].status === 'fulfilled' ? results[6].value.data : [];
+      const farmsCount = results[0].status === 'fulfilled' ? results[0].value.count || 0 : 0;
+      const reservationsCount = results[1].status === 'fulfilled' ? results[1].value.count || 0 : 0;
+      const investorsCount = results[2].status === 'fulfilled' ? results[2].value.count || 0 : 0;
+      const ownersCount = results[3].status === 'fulfilled' ? results[3].value.count || 0 : 0;
 
-      const totalRevenue = finances?.reduce((sum, f) => sum + Number(f.collected_from_investors || 0), 0) || 0;
+      const totalRevenue = 0;
 
       return {
         farms: {
@@ -56,13 +49,13 @@ export class DashboardService {
           totalOwners: ownersCount || 0
         },
         admins: {
-          total: adminsCount || 0
+          total: 0
         },
         revenue: {
           total: totalRevenue,
           paid: totalRevenue,
-          platformBalance: Number(platformWallet?.total_balance || 0),
-          netProfit: Number(platformWallet?.net_profit || 0)
+          platformBalance: 0,
+          netProfit: 0
         }
       };
     } catch (error) {
