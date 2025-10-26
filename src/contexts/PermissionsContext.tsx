@@ -103,13 +103,11 @@ export function PermissionsProvider({ children }: { children: ReactNode }) {
     };
   }, [loadPermissions]);
 
-  const hasPermission = (moduleId: string, action: 'view' | 'create' | 'edit' | 'delete'): boolean => {
-    // Super Admin لديه صلاحيات كاملة
+  const hasPermission = useCallback((moduleId: string, action: 'view' | 'create' | 'edit' | 'delete'): boolean => {
     if (isAdmin) {
       return true;
     }
 
-    // المستخدمون العاديون بدون صلاحيات
     if (!permissions || permissions.length === 0) {
       return false;
     }
@@ -120,28 +118,21 @@ export function PermissionsProvider({ children }: { children: ReactNode }) {
       return false;
     }
 
-    let result = false;
     switch (action) {
       case 'view':
-        result = permission.can_view;
-        break;
+        return permission.can_view;
       case 'create':
-        result = permission.can_create;
-        break;
+        return permission.can_create;
       case 'edit':
-        result = permission.can_edit;
-        break;
+        return permission.can_edit;
       case 'delete':
-        result = permission.can_delete;
-        break;
+        return permission.can_delete;
       default:
-        result = false;
+        return false;
     }
+  }, [isAdmin, permissions]);
 
-    return result;
-  };
-
-  const canAccessModule = (moduleId: string): boolean => {
+  const canAccessModule = useCallback((moduleId: string): boolean => {
     if (moduleId === 'dashboard') {
       return true;
     }
@@ -161,9 +152,9 @@ export function PermissionsProvider({ children }: { children: ReactNode }) {
     }
 
     return permission.can_view;
-  };
+  }, [isAdmin, permissions]);
 
-  const getModulePermissions = (moduleId: string): PermissionCheck | null => {
+  const getModulePermissions = useCallback((moduleId: string): PermissionCheck | null => {
     if (isAdmin) {
       return {
         module_id: moduleId,
@@ -184,7 +175,7 @@ export function PermissionsProvider({ children }: { children: ReactNode }) {
       can_edit: permission.can_edit,
       can_delete: permission.can_delete,
     };
-  };
+  }, [isAdmin, permissions]);
 
   const refreshPermissions = useCallback(async () => {
     console.log('🔄 [PermissionsContext] Manual refresh requested');
@@ -192,10 +183,10 @@ export function PermissionsProvider({ children }: { children: ReactNode }) {
   }, [loadPermissions]);
 
   // دوال مركزية للتحكم في الإجراءات - memoized
-  const checkCanCreate = useCallback((moduleId: string) => isAdmin || hasPermission(moduleId, 'create'), [isAdmin, permissions]);
-  const checkCanEdit = useCallback((moduleId: string) => isAdmin || hasPermission(moduleId, 'edit'), [isAdmin, permissions]);
-  const checkCanDelete = useCallback((moduleId: string) => isAdmin || hasPermission(moduleId, 'delete'), [isAdmin, permissions]);
-  const checkCanView = useCallback((moduleId: string) => isAdmin || hasPermission(moduleId, 'view'), [isAdmin, permissions]);
+  const checkCanCreate = useCallback((moduleId: string) => hasPermission(moduleId, 'create'), [hasPermission]);
+  const checkCanEdit = useCallback((moduleId: string) => hasPermission(moduleId, 'edit'), [hasPermission]);
+  const checkCanDelete = useCallback((moduleId: string) => hasPermission(moduleId, 'delete'), [hasPermission]);
+  const checkCanView = useCallback((moduleId: string) => hasPermission(moduleId, 'view'), [hasPermission]);
 
   const contextValue = useMemo(() => ({
     permissions,
@@ -214,14 +205,17 @@ export function PermissionsProvider({ children }: { children: ReactNode }) {
   }), [
     permissions,
     loading,
+    hasPermission,
+    canAccessModule,
+    getModulePermissions,
+    refreshPermissions,
     isAdmin,
     checkCanCreate,
     checkCanEdit,
     checkCanDelete,
     checkCanView,
     currentAdminPhone,
-    currentAdminRole,
-    refreshPermissions
+    currentAdminRole
   ]);
 
   return (
