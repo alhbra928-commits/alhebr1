@@ -35,6 +35,22 @@ export class AdminUsersStorage {
     const existing = localStorage.getItem(LOCAL_USERS_KEY);
     if (!existing) {
       localStorage.setItem(LOCAL_USERS_KEY, JSON.stringify(DEFAULT_USERS));
+    } else {
+      // التأكد من أن DEFAULT_USERS موجودين
+      const users = JSON.parse(existing);
+      let updated = false;
+
+      DEFAULT_USERS.forEach(defaultUser => {
+        const exists = users.find((u: AdminUser) => u.phone === defaultUser.phone);
+        if (!exists) {
+          users.push(defaultUser);
+          updated = true;
+        }
+      });
+
+      if (updated) {
+        localStorage.setItem(LOCAL_USERS_KEY, JSON.stringify(users));
+      }
     }
   }
 
@@ -103,7 +119,13 @@ export class AdminUsersStorage {
       // Timeout سريع (2 ثواني فقط)
       const dbPromise = supabase
         .from('admin_users')
-        .select('*')
+        .select(`
+          *,
+          admin_roles!admin_users_role_id_fkey (
+            role_code,
+            role_name
+          )
+        `)
         .eq('phone', phone)
         .is('deleted_at', null)
         .maybeSingle();
@@ -124,11 +146,15 @@ export class AdminUsersStorage {
         return null;
       }
 
+      // استخراج role_code من العلاقة
+      const roleCode = data.admin_roles?.role_code || 'employee';
+      const roleName = data.admin_roles?.role_name || data.job_title;
+
       return {
         phone: data.phone,
         name: data.full_name,
-        role: data.role_id || 'employee',
-        roleAr: data.job_title || this.getRoleArabic(data.role_id),
+        role: roleCode, // ✅ role_code وليس UUID
+        roleAr: roleName || this.getRoleArabic(roleCode),
         status: data.is_active ? 'active' : 'frozen',
         secretCode: data.secret_code || '1234',
         jobTitle: data.job_title,

@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>🔐 اختبار صلاحيات Super Admin</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #2E2A26 0%, #3D5B4B 100%);
+      color: white;
+      padding: 20px;
+      margin: 0;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 30px;
+      border: 2px solid rgba(212, 175, 55, 0.3);
+    }
+    h1 {
+      background: linear-gradient(135deg, #C89B3C 0%, #E8C170 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-align: center;
+      font-size: 2.5em;
+      margin-bottom: 30px;
+    }
+    .test-section {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .test-title {
+      color: #C89B3C;
+      font-size: 1.3em;
+      font-weight: bold;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    button {
+      background: linear-gradient(135deg, #C89B3C 0%, #E8C170 100%);
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 10px;
+      font-size: 1.1em;
+      font-weight: bold;
+      cursor: pointer;
+      margin: 5px;
+      transition: all 0.3s;
+    }
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 5px 20px rgba(212, 175, 55, 0.5);
+    }
+    .result {
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 10px;
+      padding: 15px;
+      margin-top: 15px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9em;
+      white-space: pre-wrap;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    .success {
+      color: #10B981;
+      font-weight: bold;
+    }
+    .error {
+      color: #EF4444;
+      font-weight: bold;
+    }
+    .info {
+      color: #60A5FA;
+    }
+    .warning {
+      color: #F59E0B;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔐 اختبار صلاحيات Super Admin</h1>
+
+    <!-- القسم 1: فحص localStorage -->
+    <div class="test-section">
+      <div class="test-title">📦 القسم 1: فحص localStorage</div>
+      <button onclick="checkLocalStorage()">فحص المستخدمين في localStorage</button>
+      <button onclick="clearLocalStorage()">مسح localStorage</button>
+      <button onclick="initializeStorage()">إعادة التهيئة</button>
+      <div id="result1" class="result"></div>
+    </div>
+
+    <!-- القسم 2: فحص الجلسة الحالية -->
+    <div class="test-section">
+      <div class="test-title">👤 القسم 2: فحص الجلسة الحالية</div>
+      <button onclick="checkCurrentSession()">فحص الجلسة الحالية</button>
+      <button onclick="simulateLogin()">محاكاة تسجيل دخول (0569335257)</button>
+      <div id="result2" class="result"></div>
+    </div>
+
+    <!-- القسم 3: فحص PermissionsContext -->
+    <div class="test-section">
+      <div class="test-title">🔐 القسم 3: فحص نظام الصلاحيات</div>
+      <button onclick="checkPermissions()">فحص الصلاحيات</button>
+      <button onclick="checkSuperAdmin()">هل أنت Super Admin؟</button>
+      <div id="result3" class="result"></div>
+    </div>
+
+    <!-- القسم 4: فحص Database -->
+    <div class="test-section">
+      <div class="test-title">💾 القسم 4: فحص Database</div>
+      <button onclick="checkDatabase()">فحص المستخدم في Database</button>
+      <button onclick="checkDatabasePermissions()">فحص صلاحيات Database</button>
+      <div id="result4" class="result"></div>
+    </div>
+
+    <!-- القسم 5: الاختبار الشامل -->
+    <div class="test-section">
+      <div class="test-title">🚀 القسم 5: الاختبار الشامل</div>
+      <button onclick="runFullTest()">تشغيل الاختبار الكامل</button>
+      <div id="result5" class="result"></div>
+    </div>
+  </div>
+
+  <script>
+    const PHONE = '0569335257';
+    const OTP = '5896';
+
+    function log(elementId, message, type = 'info') {
+      const element = document.getElementById(elementId);
+      const className = type === 'success' ? 'success' : type === 'error' ? 'error' : type === 'warning' ? 'warning' : 'info';
+      element.innerHTML += `<span class="${className}">${message}</span>\n`;
+    }
+
+    function clear(elementId) {
+      document.getElementById(elementId).innerHTML = '';
+    }
+
+    // القسم 1: localStorage
+    function checkLocalStorage() {
+      clear('result1');
+      const users = JSON.parse(localStorage.getItem('palm_olive_local_users') || '[]');
+      log('result1', `📊 عدد المستخدمين: ${users.length}`, 'info');
+      
+      const target = users.find(u => u.phone === PHONE);
+      if (target) {
+        log('result1', `✅ المستخدم ${PHONE} موجود!`, 'success');
+        log('result1', JSON.stringify(target, null, 2), 'info');
+      } else {
+        log('result1', `❌ المستخدم ${PHONE} غير موجود!`, 'error');
+      }
+
+      log('result1', '\n📋 جميع المستخدمين:', 'info');
+      users.forEach(u => {
+        log('result1', `  - ${u.phone}: ${u.name} (${u.role})`, 'info');
+      });
+    }
+
+    function clearLocalStorage() {
+      clear('result1');
+      localStorage.clear();
+      log('result1', '✅ تم مسح localStorage', 'success');
+      log('result1', '⚠️ يرجى إعادة تحميل الصفحة', 'warning');
+    }
+
+    function initializeStorage() {
+      clear('result1');
+      const defaultUsers = [
+        {
+          phone: '0500000001',
+          name: 'إبراهيم بن علي الحبر التميمي',
+          role: 'super_admin',
+          roleAr: 'المدير العام',
+          status: 'active',
+          secretCode: '2802',
+        },
+        {
+          phone: PHONE,
+          name: 'عبدالله المالك',
+          role: 'super_admin',
+          roleAr: 'المالك',
+          status: 'active',
+          secretCode: OTP,
+        },
+      ];
+      
+      localStorage.setItem('palm_olive_local_users', JSON.stringify(defaultUsers));
+      log('result1', '✅ تمت إعادة التهيئة بنجاح', 'success');
+      log('result1', `📦 تم إضافة ${defaultUsers.length} مستخدمين`, 'info');
+    }
+
+    // القسم 2: الجلسة
+    function checkCurrentSession() {
+      clear('result2');
+      const token = localStorage.getItem('admin_session_token');
+      const adminData = localStorage.getItem('admin_data');
+
+      if (!token || !adminData) {
+        log('result2', '❌ لا توجد جلسة نشطة', 'error');
+        return;
+      }
+
+      log('result2', '✅ جلسة نشطة موجودة', 'success');
+      log('result2', `🔑 Token: ${token.substring(0, 20)}...`, 'info');
+      
+      const admin = JSON.parse(adminData);
+      log('result2', '\n👤 بيانات المدير:', 'info');
+      log('result2', JSON.stringify(admin, null, 2), 'info');
+    }
+
+    function simulateLogin() {
+      clear('result2');
+      log('result2', '🔄 جاري محاكاة تسجيل الدخول...', 'info');
+
+      const users = JSON.parse(localStorage.getItem('palm_olive_local_users') || '[]');
+      const user = users.find(u => u.phone === PHONE);
+
+      if (!user) {
+        log('result2', `❌ المستخدم ${PHONE} غير موجود في localStorage`, 'error');
+        return;
+      }
+
+      if (user.secretCode !== OTP) {
+        log('result2', `❌ OTP خاطئ: متوقع ${user.secretCode}، تم إدخال ${OTP}`, 'error');
+        return;
+      }
+
+      // إنشاء جلسة
+      const token = crypto.randomUUID();
+      const sessionData = {
+        phone: user.phone,
+        name: user.name,
+        role: user.role,
+        jobTitle: user.jobTitle || 'المالك',
+      };
+
+      localStorage.setItem('admin_session_token', token);
+      localStorage.setItem('admin_data', JSON.stringify(sessionData));
+
+      log('result2', '✅ تم تسجيل الدخول بنجاح!', 'success');
+      log('result2', `📱 الجوال: ${user.phone}`, 'info');
+      log('result2', `👤 الاسم: ${user.name}`, 'info');
+      log('result2', `👑 الدور: ${user.role}`, user.role === 'super_admin' ? 'success' : 'warning');
+      log('result2', '\n⚠️ يرجى إعادة تحميل الصفحة لتفعيل الجلسة', 'warning');
+    }
+
+    // القسم 3: الصلاحيات
+    function checkPermissions() {
+      clear('result3');
+      const adminData = localStorage.getItem('admin_data');
+
+      if (!adminData) {
+        log('result3', '❌ لا توجد جلسة نشطة', 'error');
+        return;
+      }
+
+      const admin = JSON.parse(adminData);
+      log('result3', '📊 بيانات المدير:', 'info');
+      log('result3', `  الجوال: ${admin.phone}`, 'info');
+      log('result3', `  الاسم: ${admin.name}`, 'info');
+      log('result3', `  الدور: ${admin.role}`, admin.role === 'super_admin' ? 'success' : 'warning');
+
+      const SUPER_ADMIN_PHONES = ['0500000000', '0500000001', '0569335257'];
+      const isSuperAdmin = SUPER_ADMIN_PHONES.includes(admin.phone) || admin.role === 'super_admin';
+
+      log('result3', '\n🔐 فحص Super Admin:', 'info');
+      log('result3', `  في القائمة: ${SUPER_ADMIN_PHONES.includes(admin.phone) ? '✅' : '❌'}`, SUPER_ADMIN_PHONES.includes(admin.phone) ? 'success' : 'error');
+      log('result3', `  الدور صحيح: ${admin.role === 'super_admin' ? '✅' : '❌'}`, admin.role === 'super_admin' ? 'success' : 'error');
+      log('result3', `  النتيجة النهائية: ${isSuperAdmin ? '✅ Super Admin' : '❌ ليس Super Admin'}`, isSuperAdmin ? 'success' : 'error');
+    }
+
+    function checkSuperAdmin() {
+      clear('result3');
+      const adminData = localStorage.getItem('admin_data');
+
+      if (!adminData) {
+        log('result3', '❌ لا توجد جلسة نشطة', 'error');
+        return;
+      }
+
+      const admin = JSON.parse(adminData);
+      const SUPER_ADMIN_PHONES = ['0500000000', '0500000001', '0569335257'];
+      const isSuperAdmin = SUPER_ADMIN_PHONES.includes(admin.phone) || admin.role === 'super_admin';
+
+      if (isSuperAdmin) {
+        log('result3', '✅✅✅ نعم، أنت Super Admin!', 'success');
+        log('result3', '👑 لديك صلاحيات كاملة', 'success');
+        log('result3', '🌟 يجب أن تظهر جميع الأقسام', 'success');
+      } else {
+        log('result3', '❌ لا، لست Super Admin', 'error');
+        log('result3', `📱 الجوال: ${admin.phone}`, 'info');
+        log('result3', `👑 الدور: ${admin.role}`, 'warning');
+      }
+    }
+
+    // القسم 5: الاختبار الشامل
+    async function runFullTest() {
+      clear('result5');
+      log('result5', '🚀 بدء الاختبار الشامل...', 'info');
+      log('result5', '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'info');
+
+      // 1. فحص localStorage
+      log('result5', '\n📦 1. فحص localStorage:', 'info');
+      const users = JSON.parse(localStorage.getItem('palm_olive_local_users') || '[]');
+      const targetUser = users.find(u => u.phone === PHONE);
+      
+      if (targetUser) {
+        log('result5', `  ✅ المستخدم ${PHONE} موجود`, 'success');
+        log('result5', `  👤 الاسم: ${targetUser.name}`, 'info');
+        log('result5', `  👑 الدور: ${targetUser.role}`, targetUser.role === 'super_admin' ? 'success' : 'warning');
+        log('result5', `  🔑 OTP: ${targetUser.secretCode}`, 'info');
+      } else {
+        log('result5', `  ❌ المستخدم ${PHONE} غير موجود`, 'error');
+        return;
+      }
+
+      // 2. فحص الجلسة
+      log('result5', '\n👤 2. فحص الجلسة:', 'info');
+      const adminData = localStorage.getItem('admin_data');
+      
+      if (adminData) {
+        const admin = JSON.parse(adminData);
+        log('result5', `  ✅ جلسة نشطة موجودة`, 'success');
+        log('result5', `  📱 الجوال: ${admin.phone}`, 'info');
+        log('result5', `  👑 الدور: ${admin.role}`, admin.role === 'super_admin' ? 'success' : 'warning');
+      } else {
+        log('result5', `  ⚠️ لا توجد جلسة نشطة`, 'warning');
+      }
+
+      // 3. فحص Super Admin
+      log('result5', '\n🔐 3. فحص Super Admin:', 'info');
+      if (adminData) {
+        const admin = JSON.parse(adminData);
+        const SUPER_ADMIN_PHONES = ['0500000000', '0500000001', '0569335257'];
+        const isSuperAdmin = SUPER_ADMIN_PHONES.includes(admin.phone) || admin.role === 'super_admin';
+        
+        if (isSuperAdmin) {
+          log('result5', `  ✅ أنت Super Admin`, 'success');
+          log('result5', `  ✅ يجب أن تظهر جميع الأقسام`, 'success');
+        } else {
+          log('result5', `  ❌ لست Super Admin`, 'error');
+        }
+      }
+
+      log('result5', '\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'info');
+      log('result5', '✅ انتهى الاختبار الشامل', 'success');
+      
+      if (targetUser && targetUser.role === 'super_admin') {
+        log('result5', '\n🎯 النتيجة النهائية:', 'success');
+        log('result5', '  ✅ المستخدم موجود في localStorage', 'success');
+        log('result5', '  ✅ الدور: super_admin', 'success');
+        log('result5', '  ✅ OTP صحيح', 'success');
+        log('result5', '\n📝 الخطوات التالية:', 'info');
+        log('result5', '  1. امسح Cache المتصفح', 'warning');
+        log('result5', '  2. أعد تحميل الصفحة', 'warning');
+        log('result5', '  3. سجل دخول برقم: 0569335257', 'warning');
+        log('result5', '  4. أدخل OTP: 5896', 'warning');
+        log('result5', '  5. يجب أن تظهر جميع الأقسام!', 'success');
+      } else {
+        log('result5', '\n❌ المشكلة: المستخدم غير مُعد بشكل صحيح', 'error');
+        log('result5', '💡 الحل: اضغط "إعادة التهيئة" في القسم 1', 'warning');
+      }
+    }
+  </script>
+</body>
+</html>
