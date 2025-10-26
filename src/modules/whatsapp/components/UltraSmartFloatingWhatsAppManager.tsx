@@ -41,8 +41,7 @@ export function UltraSmartFloatingWhatsAppManager() {
 
   useEffect(() => {
     loadData();
-    const interval = setInterval(loadData, 30000);
-    return () => clearInterval(interval);
+    // تحديث فقط عند الدخول وعند تغيير النطاق الزمني
   }, [timeRange]);
 
   const loadData = async () => {
