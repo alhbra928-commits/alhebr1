@@ -85,8 +85,8 @@ export function UltraSmartFloatingWhatsAppManager() {
     if (!editingContact) return;
 
     // التحقق من الحقول المطلوبة
-    if (!editingContact.department_name_ar || !editingContact.department || !editingContact.phone_number) {
-      alert('يرجى ملء جميع الحقول المطلوبة (الاسم، المعرف، رقم الهاتف)');
+    if (!editingContact.department_name_ar || !editingContact.department_name_en || !editingContact.department || !editingContact.phone_number) {
+      alert('يرجى ملء جميع الحقول المطلوبة (الاسم عربي، الاسم إنجليزي، المعرف، رقم الهاتف)');
       return;
     }
 
@@ -587,35 +587,50 @@ export function UltraSmartFloatingWhatsAppManager() {
 
             <div className="space-y-4">
               <div>
-                <label className="font-bold text-gray-700 mb-2 block">اسم القسم (عربي)</label>
+                <label className="font-bold text-gray-700 mb-2 block">اسم القسم (عربي) *</label>
                 <input
                   type="text"
                   value={editingContact.department_name_ar}
                   onChange={(e) => setEditingContact({...editingContact, department_name_ar: e.target.value})}
                   className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-green-500 outline-none"
                   placeholder="مثال: الدعم الفني"
+                  required
                 />
               </div>
 
               <div>
-                <label className="font-bold text-gray-700 mb-2 block">المعرف (English)</label>
+                <label className="font-bold text-gray-700 mb-2 block">اسم القسم (English) *</label>
+                <input
+                  type="text"
+                  value={editingContact.department_name_en || ''}
+                  onChange={(e) => setEditingContact({...editingContact, department_name_en: e.target.value})}
+                  className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-green-500 outline-none"
+                  placeholder="Example: Technical Support"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="font-bold text-gray-700 mb-2 block">المعرف (Identifier) *</label>
                 <input
                   type="text"
                   value={editingContact.department}
                   onChange={(e) => setEditingContact({...editingContact, department: e.target.value})}
                   className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-green-500 outline-none"
                   placeholder="technical_support"
+                  required
                 />
               </div>
 
               <div>
-                <label className="font-bold text-gray-700 mb-2 block">رقم الواتساب</label>
+                <label className="font-bold text-gray-700 mb-2 block">رقم الواتساب *</label>
                 <input
                   type="text"
                   value={editingContact.phone_number}
                   onChange={(e) => setEditingContact({...editingContact, phone_number: e.target.value})}
                   className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-green-500 outline-none"
                   placeholder="966500000000"
+                  required
                 />
               </div>
 
