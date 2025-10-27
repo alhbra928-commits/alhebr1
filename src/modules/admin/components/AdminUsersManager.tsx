@@ -262,19 +262,23 @@ export function AdminUsersManager() {
           'success'
         );
 
-        setUsers(users.map(u =>
-          u.phone === selectedUser.phone
-            ? {
-                ...u,
-                name: formData.name,
-                phone: formData.phone,
-                role: formData.role,
-                roleAr: getRoleText(formData.role),
-              }
-            : u
-        ));
+        // إنشاء المستخدم المحدّث
+        const updatedUser = {
+          ...selectedUser,
+          name: formData.name,
+          role: formData.role,
+          roleAr: getRoleText(formData.role),
+          secretCode: formData.secretCode || selectedUser.secretCode,
+        };
 
-        alert('تم تعديل المستخدم بنجاح');
+        // حفظ في localStorage
+        AdminUsersStorage.delete(selectedUser.phone);
+        AdminUsersStorage.add(updatedUser);
+
+        // إعادة تحميل من localStorage
+        loadUsers();
+
+        alert(`تم تعديل المستخدم بنجاح ✅\n\n📱 الجوال: ${updatedUser.phone}\n🔑 الرمز: ${updatedUser.secretCode}`);
       } else {
         await AdminSessionService.addAccessLog(
           currentSession.admin?.phone || '',
@@ -616,6 +620,32 @@ export function AdminUsersManager() {
                 </select>
               </div>
 
+              {isEditing && (
+                <div>
+                  <label className="mb-2 block text-sm font-bold text-white/70">
+                    🔑 الرمز السري (4 أرقام سهلة الحفظ)
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.secretCode || ''}
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/\D/g, '').slice(0, 4);
+                      setFormData({ ...formData, secretCode: value });
+                    }}
+                    placeholder="1111"
+                    maxLength={4}
+                    className="w-full rounded-xl px-4 py-3 text-center text-2xl font-black tracking-widest text-white placeholder-white/30 transition-all focus:outline-none focus:ring-2 focus:ring-offset-2"
+                    style={{
+                      background: 'rgba(212, 175, 55, 0.2)',
+                      border: '2px solid rgba(212, 175, 55, 0.4)',
+                    }}
+                  />
+                  <p className="mt-2 text-xs text-white/60 text-center">
+                    💡 أمثلة: 1111، 2222، 1234، 4321
+                  </p>
+                </div>
+              )}
+
               <div
                 className="rounded-xl p-4"
                 style={{
@@ -624,7 +654,9 @@ export function AdminUsersManager() {
                 }}
               >
                 <p className="text-sm font-bold text-white/90">
-                  📝 ملاحظة: سيتمكن المستخدم من تسجيل الدخول باستخدام رقم الجوال
+                  📝 ملاحظة: {isEditing
+                    ? '✏️ يمكنك تعديل الاسم، الصلاحيات، والرمز السري. رقم الجوال محمي من التعديل.'
+                    : 'سيتمكن المستخدم من تسجيل الدخول باستخدام رقم الجوال'}
                 </p>
               </div>
             </div>
