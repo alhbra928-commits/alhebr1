@@ -1,9 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Shield, Lock, Unlock, Clock, Activity, CheckCircle2, X, Edit2,
-  UserCheck, AlertTriangle, TrendingUp, Users, Eye, Settings as SettingsIcon,
-  MessageSquare, Brain, BarChart3, Trash2, Plus, Calendar
-} from 'lucide-react';
+import { Shield, Lock, Unlock, Clock, Activity, CheckCircle2, X, CreditCard as Edit2, UserCheck, AlertTriangle, TrendingUp, Users, Eye, Settings as SettingsIcon, MessageSquare, Brain, BarChart3, Trash2, Plus, Calendar } from 'lucide-react';
 import { supabase } from '../../../lib/supabase';
 import { smartButtonPermissionsService } from '../../permissions/services/smartButtonPermissionsService';
 
