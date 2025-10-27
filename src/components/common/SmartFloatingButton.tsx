@@ -317,7 +317,18 @@ export const SmartFloatingButton: React.FC = () => {
             link: autoMessage.whatsappLink?.substring(0, 50)
           });
 
-          setMessages(prev => [...prev, autoMessage]);
+          console.log('💾 Saving message to state:', {
+            id: autoMessage.id,
+            whatsappLink: autoMessage.whatsappLink,
+            isHybridLink: autoMessage.isHybridLink
+          });
+
+          setMessages(prev => {
+            const newMessages = [...prev, autoMessage];
+            console.log('📊 Total messages in state:', newMessages.length);
+            console.log('📊 Last message has link:', !!newMessages[newMessages.length - 1].whatsappLink);
+            return newMessages;
+          });
         }, 500);
       } else if (data?.message) {
         // Show fallback message
