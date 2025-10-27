@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { MainPlatformInterface } from './MainPlatformInterface';
 import { PreviewInspectionPage } from './PreviewInspectionPage';
+import { marketingAnalyticsService } from '../../../services/marketingAnalyticsService';
 
 type View = 'main' | 'preview' | 'farm-owner';
 
@@ -13,6 +14,11 @@ interface PublicPlatformRouterProps {
 export function PublicPlatformRouter({ onAdminLogin, onBackToAdmin, onFarmOwnerLogin }: PublicPlatformRouterProps) {
   const [currentView, setCurrentView] = useState<View>('main');
   const [selectedBarcode, setSelectedBarcode] = useState<string>('');
+
+  // التتبع التلقائي للزوار
+  useEffect(() => {
+    marketingAnalyticsService.trackCurrentPage();
+  }, [currentView]);
 
   const handlePreviewSelect = (barcode: string) => {
     setSelectedBarcode(barcode);
