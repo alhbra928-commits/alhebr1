@@ -10,9 +10,9 @@ import { smartButtonPermissionsService } from '../../permissions/services/smartB
 interface Employee {
   id: string;
   full_name: string;
-  phone_number: string;
+  phone: string;
   job_title: string;
-  username: string;
+  email: string;
 }
 
 interface ButtonAccess {
@@ -64,8 +64,9 @@ export const SmartButtonAccessControl: React.FC = () => {
       // Load employees
       const { data: employeesData, error: empError } = await supabase
         .from('admin_users')
-        .select('id, full_name, phone_number, job_title, username')
+        .select('id, full_name, phone, job_title, email')
         .eq('is_active', true)
+        .is('deleted_at', null)
         .order('full_name');
 
       if (empError) throw empError;
