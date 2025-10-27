@@ -10,6 +10,17 @@ interface Message {
   isAutoResponse?: boolean;
   isAdminResponse?: boolean;
   adminName?: string;
+  intent?: string;
+  sentiment?: string;
+  confidence?: number;
+  suggestions?: SmartSuggestion[];
+}
+
+interface SmartSuggestion {
+  id: string;
+  text: string;
+  type: 'quick_reply' | 'action' | 'link';
+  action_data: any;
 }
 
 export const SmartFloatingButton: React.FC = () => {
@@ -24,6 +35,11 @@ export const SmartFloatingButton: React.FC = () => {
   const [hasNewMessage, setHasNewMessage] = useState(false);
   const [notification, setNotification] = useState<string | null>(null);
   const [soundEnabled, setSoundEnabled] = useState(true);
+  const [suggestions, setSuggestions] = useState<SmartSuggestion[]>([]);
+  const [showAiInfo, setShowAiInfo] = useState(false);
+  const [messageCount, setMessageCount] = useState(0);
+  const [currentIntent, setCurrentIntent] = useState<string | null>(null);
+  const [currentSentiment, setCurrentSentiment] = useState<string | null>(null);
   const conversationEndRef = useRef<HTMLDivElement>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -251,6 +267,12 @@ export const SmartFloatingButton: React.FC = () => {
       };
       setMessages(prev => [...prev, userMessage]);
 
+      // Update AI info
+      if (data?.intent) setCurrentIntent(data.intent);
+      if (data?.sentiment) setCurrentSentiment(data.sentiment);
+      if (data?.message_count) setMessageCount(parseInt(data.message_count));
+      if (data?.suggestions) setSuggestions(data.suggestions);
+
       // If there's an auto response (including smart replies), add it
       if (data?.auto_response && data?.response) {
         setTimeout(() => {
@@ -259,7 +281,11 @@ export const SmartFloatingButton: React.FC = () => {
             content: data.response,
             direction: 'outbound',
             timestamp: new Date().toISOString(),
-            isAutoResponse: true
+            isAutoResponse: true,
+            intent: data.intent,
+            sentiment: data.sentiment,
+            confidence: data.confidence ? parseFloat(data.confidence) : undefined,
+            suggestions: data.suggestions || []
           };
           setMessages(prev => [...prev, autoMessage]);
         }, 500);
@@ -271,9 +297,13 @@ export const SmartFloatingButton: React.FC = () => {
             content: data.message,
             direction: 'outbound',
             timestamp: new Date().toISOString(),
-            isAutoResponse: true
+            isAutoResponse: true,
+            intent: data.intent,
+            sentiment: data.sentiment,
+            suggestions: data.suggestions || []
           };
           setMessages(prev => [...prev, fallbackMessage]);
+          if (data.suggestions) setSuggestions(data.suggestions);
         }, 500);
       }
 
@@ -300,8 +330,47 @@ export const SmartFloatingButton: React.FC = () => {
   const getMessageSenderLabel = (message: Message) => {
     if (message.direction === 'inbound') return 'أنت';
     if (message.isAdminResponse && message.adminName) return message.adminName;
-    if (message.isAutoResponse) return 'مساعد آلي 🤖';
+    if (message.isAutoResponse) return 'مساعد ذكي 🤖';
     return 'الدعم';
+  };
+
+  const handleSuggestionClick = (suggestion: SmartSuggestion) => {
+    if (suggestion.type === 'quick_reply' && suggestion.action_data?.message) {
+      setInputMessage(suggestion.action_data.message);
+    } else if (suggestion.type === 'action') {
+      // Handle actions
+      console.log('Action:', suggestion.action_data);
+    } else if (suggestion.type === 'link' && suggestion.action_data?.url) {
+      window.open(suggestion.action_data.url, '_blank');
+    }
+  };
+
+  const getSentimentEmoji = () => {
+    switch (currentSentiment) {
+      case 'positive': return '😊';
+      case 'negative': return '😔';
+      default: return '😐';
+    }
+  };
+
+  const getIntentLabel = () => {
+    const intents: Record<string, string> = {
+      greeting: 'تحية',
+      booking: 'حجز',
+      pricing: 'أسعار',
+      certificate: 'شهادة',
+      payment: 'دفع',
+      profits: 'أرباح',
+      refund: 'استرداد',
+      technical_issue: 'مشكلة تقنية',
+      how_to: 'استفسار',
+      timing: 'موعد',
+      thanks: 'شكر',
+      goodbye: 'وداع',
+      question: 'سؤال',
+      unknown: 'غير معروف'
+    };
+    return intents[currentIntent || ''] || currentIntent;
   };
 
   return (
@@ -385,14 +454,36 @@ export const SmartFloatingButton: React.FC = () => {
           </div>
 
           {/* User Type Badge */}
-          <div className="px-4 py-2 bg-gray-800 border-b border-gray-700 flex items-center justify-between">
-            <span className="text-xs text-gray-400">
-              متصل كـ: <span className="text-[#A0916A] font-semibold">{getUserTypeLabel()}</span>
-            </span>
-            {messages.length > 0 && (
-              <span className="text-xs text-gray-500">
-                {messages.length} رسالة
+          <div className="px-4 py-2 bg-gray-800 border-b border-gray-700">
+            <div className="flex items-center justify-between">
+              <span className="text-xs text-gray-400">
+                متصل كـ: <span className="text-[#A0916A] font-semibold">{getUserTypeLabel()}</span>
               </span>
+              <div className="flex items-center gap-2">
+                {messages.length > 0 && (
+                  <span className="text-xs text-gray-500">
+                    {messages.length} رسالة
+                  </span>
+                )}
+                {messageCount > 0 && (
+                  <button
+                    onClick={() => setShowAiInfo(!showAiInfo)}
+                    className="text-xs px-2 py-1 bg-blue-500/20 text-blue-300 rounded-lg hover:bg-blue-500/30 transition-colors"
+                    title="معلومات الذكاء الاصطناعي"
+                  >
+                    🤖 AI
+                  </button>
+                )}
+              </div>
+            </div>
+            {showAiInfo && currentIntent && (
+              <div className="mt-2 p-2 bg-gray-700/50 rounded-lg">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-gray-400">النية: <span className="text-blue-300">{getIntentLabel()}</span></span>
+                  <span className="text-gray-400">المشاعر: <span className="text-yellow-300">{getSentimentEmoji()} {currentSentiment}</span></span>
+                </div>
+                <div className="text-xs text-gray-500 mt-1">رسائل الجلسة: {messageCount}</div>
+              </div>
             )}
           </div>
 
@@ -439,6 +530,24 @@ export const SmartFloatingButton: React.FC = () => {
             )}
             <div ref={conversationEndRef} />
           </div>
+
+          {/* Smart Suggestions */}
+          {suggestions.length > 0 && (
+            <div className="px-4 py-3 bg-gray-800 border-t border-gray-700">
+              <p className="text-xs text-gray-400 mb-2">اقتراحات ذكية:</p>
+              <div className="flex flex-wrap gap-2">
+                {suggestions.map((suggestion) => (
+                  <button
+                    key={suggestion.id}
+                    onClick={() => handleSuggestionClick(suggestion)}
+                    className="px-3 py-1.5 bg-blue-500/20 text-blue-200 text-xs rounded-lg hover:bg-blue-500/30 transition-colors border border-blue-500/30"
+                  >
+                    {suggestion.text}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Input Area */}
           <div className="p-4 bg-gray-900 border-t border-gray-700">
