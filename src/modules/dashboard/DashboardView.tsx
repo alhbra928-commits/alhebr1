@@ -13,6 +13,7 @@ import { DashboardService } from './dashboardService';
 import { StatCard } from '../../components/common/StatCard';
 import { LiveFinancialSystem } from '../../services/liveFinancialSystem';
 import { CompactLiveStatusIndicator } from '../../components/common/LiveStatusIndicator';
+import { VisitorsSummaryCard } from './components/VisitorsSummaryCard';
 
 export function DashboardView() {
   const [stats, setStats] = useState<any>(null);
@@ -200,8 +201,13 @@ export function DashboardView() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="bg-white rounded-xl shadow-sm p-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Visitors Summary Card */}
+          <div className="lg:col-span-1">
+            <VisitorsSummaryCard />
+          </div>
+
+          <div className="lg:col-span-2 bg-white rounded-xl shadow-sm p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
               <Wallet className="h-5 w-5 text-emerald-600" />
               المحافظ المالية
