@@ -737,8 +737,7 @@ ${this.generateSecurityCheck(error)}
       .from('reservations')
       .update({
         status: 'approved',
-        booking_status: 'approved',
-        approved_at: new Date().toISOString()
+        booking_status: 'approved'
       })
       .eq('id', id)
       .select();
