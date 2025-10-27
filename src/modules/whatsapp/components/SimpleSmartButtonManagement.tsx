@@ -7,6 +7,7 @@ import { SmartAutoResponsesManager } from './SmartAutoResponsesManager';
 import { AdvancedSmartButtonSettings } from './AdvancedSmartButtonSettings';
 import { SmartButtonAnalyticsDashboard } from './SmartButtonAnalyticsDashboard';
 import { SmartButtonAccessControl } from './SmartButtonAccessControl';
+import { AdvancedAIEngine } from './AdvancedAIEngine';
 
 interface SmartButtonSettings {
   is_enabled: boolean;
@@ -143,34 +144,7 @@ export const SimpleSmartButtonManagement: React.FC = () => {
 
       {/* AI Tab */}
       {activeSubTab === 'ai' && (
-        <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-700/50">
-          <h3 className="text-xl font-bold text-white mb-4">🧠 الذكاء المتقدم</h3>
-          <div className="space-y-4">
-            <div className="bg-gradient-to-r from-purple-500/20 to-pink-600/20 rounded-lg border border-purple-500/30 p-6">
-              <div className="flex items-center gap-3 mb-4">
-                <Brain className="w-8 h-8 text-purple-400" />
-                <div>
-                  <h4 className="text-white font-semibold">محرك الذكاء الاصطناعي v2</h4>
-                  <p className="text-gray-300 text-sm">يشمل: تحليل المشاعر، التعلم الذاتي، والتحويل الذكي</p>
-                </div>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="bg-gray-700/30 rounded-lg p-4 text-center">
-                  <CheckCircle2 className="w-6 h-6 text-green-400 mx-auto mb-2" />
-                  <p className="text-white font-bold">تحليل المحادثة</p>
-                </div>
-                <div className="bg-gray-700/30 rounded-lg p-4 text-center">
-                  <CheckCircle2 className="w-6 h-6 text-green-400 mx-auto mb-2" />
-                  <p className="text-white font-bold">اكتشاف المشاعر</p>
-                </div>
-                <div className="bg-gray-700/30 rounded-lg p-4 text-center">
-                  <CheckCircle2 className="w-6 h-6 text-green-400 mx-auto mb-2" />
-                  <p className="text-white font-bold">دعم ثنائي اللغة</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <AdvancedAIEngine />
       )}
 
       {/* Stats Tab */}
