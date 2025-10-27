@@ -195,7 +195,7 @@ function App() {
       case 'documentation':
         return <AdvancedDocumentationView onBack={() => setActiveModule('dashboard')} />;
       case 'whatsapp':
-        return <WhatsAppDashboard />;
+        return <WhatsAppDashboard onBack={() => setActiveModule('dashboard')} />;
       case 'marketing':
         return <MarketingView onBack={() => setActiveModule('dashboard')} />;
       case 'settings':

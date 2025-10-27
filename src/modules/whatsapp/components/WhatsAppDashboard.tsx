@@ -8,11 +8,16 @@ import { SimpleSmartButtonManagement } from './SimpleSmartButtonManagement';
 import { AnalyticsReports } from './AnalyticsReports';
 import { ExternalIntegration } from './ExternalIntegration';
 import { SystemTesting } from './SystemTesting';
+import { BackButton } from '../../../components/common/BackButton';
 import { whatsappService } from '../../../services/whatsappService';
 
 type TabType = 'overview' | 'integration' | 'templates' | 'events' | 'inbox' | 'smart-button' | 'analytics' | 'testing';
 
-export const WhatsAppDashboard: React.FC = () => {
+interface WhatsAppDashboardProps {
+  onBack?: () => void;
+}
+
+export const WhatsAppDashboard: React.FC<WhatsAppDashboardProps> = ({ onBack }) => {
   const [activeTab, setActiveTab] = useState<TabType>('overview');
   const [stats, setStats] = useState({
     total_providers: 0,
@@ -168,6 +173,11 @@ export const WhatsAppDashboard: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
       <div className="max-w-7xl mx-auto p-6">
+        {onBack && (
+          <div className="mb-6">
+            <BackButton onClick={onBack} label="العودة للإدارة" />
+          </div>
+        )}
         <div className="mb-6 flex gap-2 overflow-x-auto pb-2" dir="rtl">
           {tabs.map((tab) => {
             const Icon = tab.icon;
