@@ -49,7 +49,8 @@ function App() {
           session: { session_token: savedToken },
           permissions: adminData.permissions || []
         });
-        setActiveModule('dashboard');
+        // لا نغير activeModule - نبقى في الصفحة العامة
+        // setActiveModule('dashboard'); // تم الإلغاء
 
         // إبلاغ PermissionsContext بالتغيير
         setTimeout(() => {
