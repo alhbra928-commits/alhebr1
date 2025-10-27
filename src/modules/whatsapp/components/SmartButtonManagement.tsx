@@ -60,35 +60,30 @@ export const SmartButtonManagement: React.FC = () => {
     try {
       setLoading(true);
 
-      // Load settings (من localStorage أو database)
-      const savedSettings = localStorage.getItem('smart_button_settings');
-      if (savedSettings) {
-        setSettings(JSON.parse(savedSettings));
+      // Load settings from database
+      const { data: settingsData, error: settingsError } = await supabase
+        .from('smart_button_global_settings')
+        .select('*')
+        .limit(1)
+        .single();
+
+      if (!settingsError && settingsData) {
+        setSettings({
+          is_enabled: settingsData.is_enabled,
+          position: settingsData.position,
+          primary_color: settingsData.primary_color,
+          pulse_enabled: settingsData.pulse_enabled,
+          sound_enabled: settingsData.sound_enabled
+        });
+        setAiEnabled(settingsData.ai_enabled);
       }
 
-      // Load auto responses
-      const { data: responsesData, error: responsesError } = await supabase
-        .from('whatsapp_knowledge_base')
-        .select('*')
-        .order('priority', { ascending: false });
-
-      if (responsesError) throw responsesError;
-
-      setResponses(responsesData?.map(r => ({
-        id: r.id,
-        trigger_text: r.trigger_keywords?.join(', ') || '',
-        response_text_ar: r.response_ar,
-        response_text_en: r.response_en,
-        intent: r.intent,
-        is_active: r.is_active,
-        priority: r.priority || 0
-      })) || []);
-
-      // Load AI settings
+      // Load auto responses count
       const { count } = await supabase
-        .from('whatsapp_knowledge_base')
+        .from('whatsapp_auto_responses')
         .select('*', { count: 'exact', head: true })
-        .eq('is_active', true);
+        .eq('status', 'active')
+        .is('deleted_at', null);
 
       setKnowledgeBaseCount(count || 0);
 
@@ -108,12 +103,22 @@ export const SmartButtonManagement: React.FC = () => {
     try {
       setSaving(true);
 
-      // حفظ في localStorage
-      localStorage.setItem('smart_button_settings', JSON.stringify(settings));
+      // Save to database
+      const { data, error } = await supabase.rpc('update_smart_button_settings', {
+        p_settings: {
+          is_enabled: settings.is_enabled,
+          position: settings.position,
+          primary_color: settings.primary_color,
+          pulse_enabled: settings.pulse_enabled,
+          sound_enabled: settings.sound_enabled,
+          ai_enabled: aiEnabled
+        },
+        p_updated_by: 'admin'
+      });
 
-      // يمكن حفظ في database أيضاً إذا كان هناك جدول system_settings
+      if (error) throw error;
 
-      setSuccessMessage('تم حفظ الإعدادات بنجاح');
+      setSuccessMessage('تم حفظ الإعدادات بنجاح ✅');
       setTimeout(() => setSuccessMessage(null), 3000);
 
       // Log the action
@@ -217,6 +222,51 @@ export const SmartButtonManagement: React.FC = () => {
             <RefreshCw className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} />
             تحديث
           </button>
+        </div>
+      </div>
+
+      {/* System Status Overview */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="bg-gradient-to-br from-green-500/20 to-emerald-600/20 border border-green-500/30 rounded-xl p-4">
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="text-sm font-semibold text-green-400">حالة الزر</h3>
+            {settings.is_enabled ? (
+              <ToggleRight className="w-6 h-6 text-green-400" />
+            ) : (
+              <ToggleLeft className="w-6 h-6 text-gray-500" />
+            )}
+          </div>
+          <p className="text-2xl font-bold text-white">
+            {settings.is_enabled ? 'مفعّل' : 'معطّل'}
+          </p>
+        </div>
+
+        <div className="bg-gradient-to-br from-blue-500/20 to-cyan-600/20 border border-blue-500/30 rounded-xl p-4">
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="text-sm font-semibold text-blue-400">الردود التلقائية</h3>
+            <MessageSquare className="w-6 h-6 text-blue-400" />
+          </div>
+          <p className="text-2xl font-bold text-white">{knowledgeBaseCount} رد</p>
+        </div>
+
+        <div className="bg-gradient-to-br from-purple-500/20 to-pink-600/20 border border-purple-500/30 rounded-xl p-4">
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="text-sm font-semibold text-purple-400">الذكاء الاصطناعي</h3>
+            <Brain className="w-6 h-6 text-purple-400" />
+          </div>
+          <p className="text-2xl font-bold text-white">
+            {aiEnabled ? 'مفعّل' : 'معطّل'}
+          </p>
+        </div>
+
+        <div className="bg-gradient-to-br from-amber-500/20 to-orange-600/20 border border-amber-500/30 rounded-xl p-4">
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="text-sm font-semibold text-amber-400">المظهر</h3>
+            <Zap className="w-6 h-6 text-amber-400" />
+          </div>
+          <p className="text-2xl font-bold text-white">
+            {settings.pulse_enabled ? 'نبض مفعّل' : 'ثابت'}
+          </p>
         </div>
       </div>
 
