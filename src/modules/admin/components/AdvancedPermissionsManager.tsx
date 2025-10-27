@@ -3,6 +3,7 @@ import { Shield, User, Edit, Lock, Trash2, Plus, Check, X, MessageCircle } from 
 import { brandColors, brandGradients } from '../../finance/styles/brandColors';
 import { AdminSessionService, AdminPermission } from '../services/adminSessionService';
 import { SmartButtonPermissionsView } from '../../permissions/components/SmartButtonPermissionsView';
+import { AdvancedSmartButtonPermissionsView } from '../../permissions/components/AdvancedSmartButtonPermissionsView';
 
 interface AdminUser {
   phone: string;
@@ -35,9 +36,14 @@ export function AdvancedPermissionsManager() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [userToDelete, setUserToDelete] = useState<AdminUser | null>(null);
   const [deleteReason, setDeleteReason] = useState('');
+  const [currentAdmin, setCurrentAdmin] = useState<any>(null);
 
   useEffect(() => {
     loadUsers();
+    const session = AdminSessionService.getCurrentSession();
+    if (session?.admin) {
+      setCurrentAdmin(session.admin);
+    }
   }, []);
 
   useEffect(() => {
@@ -358,7 +364,17 @@ export function AdvancedPermissionsManager() {
 
         {/* Content based on active tab */}
         {activeSubTab === 'smart-button' ? (
-          <SmartButtonPermissionsView />
+          currentAdmin ? (
+            <AdvancedSmartButtonPermissionsView
+              currentUserId={currentAdmin.id}
+              isSystemAdmin={currentAdmin.jobTitle === 'مدير النظام'}
+            />
+          ) : (
+            <div className="text-center py-12 text-gray-400">
+              <Shield className="w-16 h-16 mx-auto mb-4 opacity-50" />
+              <p>جاري تحميل معلومات المستخدم...</p>
+            </div>
+          )
         ) : (
           <>
 
