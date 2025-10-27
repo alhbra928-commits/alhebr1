@@ -266,6 +266,73 @@ export const AnalyticsReports: React.FC = () => {
         </div>
       </div>
 
+      {/* إحصائيات الزر الذكي والذكاء الاصطناعي */}
+      {analytics.smart_button && (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* الزر الذكي */}
+          <div className="bg-gradient-to-br from-cyan-500/20 to-blue-600/20 backdrop-blur-sm rounded-xl p-6 border border-cyan-500/30">
+            <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+              <MessageCircle className="w-5 h-5 text-cyan-400" />
+              الزر الذكي - تقرير الذكاء الاصطناعي
+            </h3>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-gray-300">إجمالي المحادثات</span>
+                <span className="text-white font-bold text-lg">{analytics.smart_button.total_conversations}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-gray-300">رد تلقائي بالذكاء</span>
+                <span className="text-cyan-400 font-bold text-lg">{analytics.smart_button.ai_handled}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-gray-300">تحويل للموظف</span>
+                <span className="text-orange-400 font-bold text-lg">{analytics.smart_button.human_escalated}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-gray-300">نسبة نجاح الذكاء</span>
+                <span className={`font-bold text-lg ${
+                  analytics.smart_button.ai_success_rate >= 80 ? 'text-green-400' :
+                  analytics.smart_button.ai_success_rate >= 60 ? 'text-yellow-400' :
+                  'text-red-400'
+                }`}>
+                  {analytics.smart_button.ai_success_rate}%
+                </span>
+              </div>
+              {analytics.smart_button.top_intent && (
+                <div className="flex items-center justify-between pt-2 border-t border-gray-700">
+                  <span className="text-gray-300">أكثر نية مُكتشفة</span>
+                  <span className="text-white font-semibold">{analytics.smart_button.top_intent}</span>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* التعلم الذاتي */}
+          {analytics.ai_learning && (
+            <div className="bg-gradient-to-br from-purple-500/20 to-pink-600/20 backdrop-blur-sm rounded-xl p-6 border border-purple-500/30">
+              <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                <TrendingUp className="w-5 h-5 text-purple-400" />
+                التعلم الذاتي للذكاء
+              </h3>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-gray-300">إجمالي المُتعلّم</span>
+                  <span className="text-white font-bold text-lg">{analytics.ai_learning.total_learned}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-gray-300">بانتظار الموافقة</span>
+                  <span className="text-yellow-400 font-bold text-lg">{analytics.ai_learning.pending_approval}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-gray-300">أنماط مُعتمدة</span>
+                  <span className="text-green-400 font-bold text-lg">{analytics.ai_learning.approved_patterns}</span>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
       {/* تحليل الأحداث */}
       <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-700/50">
         <h3 className="text-xl font-bold text-white mb-4">تحليل الأحداث</h3>

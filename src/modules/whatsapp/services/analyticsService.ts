@@ -31,6 +31,19 @@ export interface AnalyticsData {
     visitor: number;
     unknown: number;
   };
+  smart_button?: {
+    total_conversations: number;
+    ai_handled: number;
+    human_escalated: number;
+    ai_success_rate: number;
+    top_intent: string | null;
+    satisfaction_score: number;
+  };
+  ai_learning?: {
+    total_learned: number;
+    pending_approval: number;
+    approved_patterns: number;
+  };
 }
 
 export interface TimeSeriesData {
@@ -167,6 +180,40 @@ class AnalyticsService {
       }
     });
 
+    const { data: aiAnalytics } = await supabase
+      .from('ai_analytics')
+      .select('*')
+      .eq('date', today.toISOString().split('T')[0])
+      .maybeSingle();
+
+    const { data: smartButtonStats } = await supabase
+      .from('smart_button_stats')
+      .select('*')
+      .eq('date', today.toISOString().split('T')[0])
+      .maybeSingle();
+
+    const { count: totalLearned } = await supabase
+      .from('auto_learning_logs')
+      .select('*', { count: 'exact', head: true })
+      .eq('learned_at', null, { negate: true });
+
+    const { count: pendingApproval } = await supabase
+      .from('auto_learning_logs')
+      .select('*', { count: 'exact', head: true })
+      .eq('should_add_to_kb', true)
+      .eq('is_approved', false);
+
+    const { count: approvedPatterns } = await supabase
+      .from('auto_learning_logs')
+      .select('*', { count: 'exact', head: true })
+      .eq('is_approved', true);
+
+    const totalConversations = (smartButtonStats?.total_messages || 0);
+    const aiHandled = (smartButtonStats?.auto_responses_sent || 0);
+    const aiSuccessRate = totalConversations > 0
+      ? Math.round((aiHandled / totalConversations) * 1000) / 10
+      : 0;
+
     return {
       messages_sent_today: todayCount || 0,
       messages_sent_week: weekCount || 0,
@@ -184,7 +231,20 @@ class AnalyticsService {
         inbound: inboundCount || 0
       },
       messages_by_status: statusCounts,
-      messages_by_user_type: userTypeCounts
+      messages_by_user_type: userTypeCounts,
+      smart_button: {
+        total_conversations: totalConversations,
+        ai_handled: aiHandled,
+        human_escalated: (aiAnalytics?.human_escalated || 0),
+        ai_success_rate: aiSuccessRate,
+        top_intent: (aiAnalytics?.top_intent || null),
+        satisfaction_score: (aiAnalytics?.satisfaction_score || 0)
+      },
+      ai_learning: {
+        total_learned: totalLearned || 0,
+        pending_approval: pendingApproval || 0,
+        approved_patterns: approvedPatterns || 0
+      }
     };
   }
 
