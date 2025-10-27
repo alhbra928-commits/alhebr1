@@ -1,10 +1,61 @@
+import { useState, useEffect } from 'react';
 import { Mail, MessageCircle, Twitter, MapPin, Phone } from 'lucide-react';
 import { brandColors, brandGradients } from '../../finance/styles/brandColors';
+import { getPlatformTextsBySection, subscribeToPlatformTextsChanges } from '../../../services/platformTextsService';
 
 export function PremiumFooter() {
+  const [footerTexts, setFooterTexts] = useState({
+    company_name: 'منصة النخيل والزيتون',
+    company_description: 'منصة رائدة في مجال الاستثمار الزراعي والملكية المشتركة للأشجار المثمرة',
+    section_about: 'عن المنصة',
+    section_contact: 'التواصل معنا',
+    phone: '+966 56 933 5257',
+    email: 'info@palmolive.sa',
+    address: 'الرياض، المملكة العربية السعودية',
+    copyright: '© 2025 جميع الحقوق محفوظة'
+  });
+
+  useEffect(() => {
+    const loadTexts = async () => {
+      const texts = await getPlatformTextsBySection('footer');
+      if (texts && Object.keys(texts).length > 0) {
+        setFooterTexts({
+          company_name: texts.company_name?.ar || 'منصة النخيل والزيتون',
+          company_description: texts.company_description?.ar || 'منصة رائدة في مجال الاستثمار الزراعي والملكية المشتركة للأشجار المثمرة',
+          section_about: texts.section_about?.ar || 'عن المنصة',
+          section_contact: texts.section_contact?.ar || 'التواصل معنا',
+          phone: texts.phone?.ar || '+966 56 933 5257',
+          email: texts.email?.ar || 'info@palmolive.sa',
+          address: texts.address?.ar || 'الرياض، المملكة العربية السعودية',
+          copyright: texts.copyright?.ar || '© 2025 جميع الحقوق محفوظة'
+        });
+      }
+    };
+
+    loadTexts();
+
+    const unsubscribe = subscribeToPlatformTextsChanges('footer', (texts) => {
+      if (texts && Object.keys(texts).length > 0) {
+        setFooterTexts({
+          company_name: texts.company_name?.ar || 'منصة النخيل والزيتون',
+          company_description: texts.company_description?.ar || 'منصة رائدة في مجال الاستثمار الزراعي والملكية المشتركة للأشجار المثمرة',
+          section_about: texts.section_about?.ar || 'عن المنصة',
+          section_contact: texts.section_contact?.ar || 'التواصل معنا',
+          phone: texts.phone?.ar || '+966 56 933 5257',
+          email: texts.email?.ar || 'info@palmolive.sa',
+          address: texts.address?.ar || 'الرياض، المملكة العربية السعودية',
+          copyright: texts.copyright?.ar || '© 2025 جميع الحقوق محفوظة'
+        });
+        console.log('✅ Footer texts updated:', texts);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
   const contactLinks = [
-    { icon: MessageCircle, label: 'واتساب', href: 'https://wa.me/966500000000', color: '#25D366' },
-    { icon: Mail, label: 'البريد الإلكتروني', href: 'mailto:info@palmolive.sa', color: '#D4AF37' },
+    { icon: MessageCircle, label: 'واتساب', href: `https://wa.me/${footerTexts.phone.replace(/[^0-9]/g, '')}`, color: '#25D366' },
+    { icon: Mail, label: 'البريد الإلكتروني', href: `mailto:${footerTexts.email}`, color: '#D4AF37' },
     { icon: Twitter, label: 'تويتر', href: 'https://twitter.com/palmolive', color: '#1DA1F2' },
   ];
 
@@ -36,18 +87,17 @@ export function PremiumFooter() {
                 backgroundClip: 'text',
               }}
             >
-              عن المنصة
+              {footerTexts.section_about}
             </h3>
             <p className="text-gray-400 leading-relaxed font-medium">
-              منصة النخلة والزيتون هي أول منصة سعودية متخصصة في تمليك الأشجار الزراعية،
-              تجمع بين الاستثمار الذكي والزراعة المستدامة لتوفير فرص استثمارية آمنة ومربحة.
+              {footerTexts.company_description}
             </p>
 
             <div className="mt-6 flex items-start gap-3">
               <MapPin className="h-5 w-5 mt-1" style={{ color: brandColors.primary.gold }} />
               <div className="text-gray-400 font-medium">
                 <div className="font-bold text-white mb-1">المقر الرئيسي</div>
-                الرياض، المملكة العربية السعودية
+                {footerTexts.address}
               </div>
             </div>
           </div>
@@ -62,7 +112,7 @@ export function PremiumFooter() {
                 backgroundClip: 'text',
               }}
             >
-              التواصل معنا
+              {footerTexts.section_contact}
             </h3>
             <div className="space-y-4">
               {contactLinks.map((link, index) => (
@@ -97,7 +147,7 @@ export function PremiumFooter() {
                 </div>
                 <div className="text-gray-300 font-bold">
                   <div className="text-sm opacity-75">الدعم الفني</div>
-                  <div className="text-white">920000000</div>
+                  <div className="text-white">{footerTexts.phone}</div>
                 </div>
               </div>
             </div>
@@ -152,11 +202,11 @@ export function PremiumFooter() {
                 backgroundClip: 'text',
               }}
             >
-              🌴 منصة النخلة والزيتون 🫒
+              {footerTexts.company_name}
             </div>
           </div>
           <p className="text-gray-500 font-medium">
-            © 2025 منصة تملك النخيل والزيتون – جميع الحقوق محفوظة
+            {footerTexts.copyright}
           </p>
           <p className="text-gray-600 text-sm mt-2">
             استثمار راقٍ يثمر خيرًا

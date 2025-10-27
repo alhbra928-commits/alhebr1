@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Menu, X, User, Shield, ArrowRight } from 'lucide-react';
 import { brandColors, brandGradients } from '../../finance/styles/brandColors';
 import { AdminSessionService } from '../../admin/services/adminSessionService';
+import { getPlatformTextsBySection, subscribeToPlatformTextsChanges } from '../../../services/platformTextsService';
 
 interface PremiumHeaderProps {
   onAdminLogin?: () => void;
@@ -15,6 +16,13 @@ export function PremiumHeader({ onAdminLogin, onInvestorLogin, onVerifyCertifica
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [hasActiveSession, setHasActiveSession] = useState(false);
+  const [headerTexts, setHeaderTexts] = useState({
+    platform_name: '🌴 النخلة والزيتون',
+    nav_home: 'الرئيسية',
+    nav_about: 'عن المنصة',
+    nav_contact: 'تواصل معنا',
+    btn_login: 'تسجيل الدخول'
+  });
 
   useEffect(() => {
     const handleScroll = () => {
@@ -36,10 +44,44 @@ export function PremiumHeader({ onAdminLogin, onInvestorLogin, onVerifyCertifica
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    // Load header texts
+    const loadTexts = async () => {
+      const texts = await getPlatformTextsBySection('header');
+      if (texts && Object.keys(texts).length > 0) {
+        setHeaderTexts({
+          platform_name: texts.platform_name?.ar || '🌴 النخلة والزيتون',
+          nav_home: texts.nav_home?.ar || 'الرئيسية',
+          nav_about: texts.nav_about?.ar || 'عن المنصة',
+          nav_contact: texts.nav_contact?.ar || 'تواصل معنا',
+          btn_login: texts.btn_login?.ar || 'تسجيل الدخول'
+        });
+      }
+    };
+
+    loadTexts();
+
+    // Subscribe to real-time changes
+    const unsubscribe = subscribeToPlatformTextsChanges('header', (texts) => {
+      if (texts && Object.keys(texts).length > 0) {
+        setHeaderTexts({
+          platform_name: texts.platform_name?.ar || '🌴 النخلة والزيتون',
+          nav_home: texts.nav_home?.ar || 'الرئيسية',
+          nav_about: texts.nav_about?.ar || 'عن المنصة',
+          nav_contact: texts.nav_contact?.ar || 'تواصل معنا',
+          btn_login: texts.btn_login?.ar || 'تسجيل الدخول'
+        });
+        console.log('✅ Header texts updated:', texts);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
   const menuItems = [
-    { label: 'الرئيسية', href: '#home' },
-    { label: 'عن المنصة', href: '#about' },
-    { label: 'تواصل معنا', href: '#contact' },
+    { label: headerTexts.nav_home, href: '#home' },
+    { label: headerTexts.nav_about, href: '#about' },
+    { label: headerTexts.nav_contact, href: '#contact' },
   ];
 
   return (
@@ -69,7 +111,7 @@ export function PremiumHeader({ onAdminLogin, onInvestorLogin, onVerifyCertifica
                 filter: 'drop-shadow(0 2px 4px rgba(212, 175, 55, 0.2))',
               }}
             >
-              🌴 النخلة والزيتون
+              {headerTexts.platform_name}
             </div>
           </div>
 
