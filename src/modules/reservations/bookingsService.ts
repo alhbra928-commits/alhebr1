@@ -154,8 +154,6 @@ export class BookingsService {
       .maybeSingle();
 
     if (error) {
-      console.error(error);
-      return [];
       console.error('Error fetching booking:', error);
       throw error;
     }
@@ -176,8 +174,6 @@ export class BookingsService {
       .order('created_at', { ascending: false});
 
     if (error) {
-      console.error(error);
-      return [];
       console.error('Error fetching bookings by status:', error);
       throw error;
     }
@@ -214,7 +210,11 @@ export class BookingsService {
       .select()
       .single();
 
-    if (error) return [];
+    if (error) {
+      console.error('Error creating booking:', error);
+      throw error;
+    }
+
     return data as Booking;
   }
 
@@ -317,8 +317,6 @@ export class BookingsService {
       .single();
 
     if (error) {
-      console.error(error);
-      return [];
       console.error('❌ Error updating booking:', error);
       throw error;
     }
@@ -395,8 +393,6 @@ export class BookingsService {
       .single();
 
     if (error) {
-      console.error(error);
-      return [];
       console.error('❌ Error updating payment:', error);
       throw error;
     }
@@ -432,8 +428,6 @@ export class BookingsService {
       .eq('id', id);
 
     if (error) {
-      console.error(error);
-      return [];
       console.error('❌ Error deleting booking:', error);
       throw error;
     }
@@ -471,8 +465,6 @@ export class BookingsService {
       });
 
       if (error) {
-      console.error(error);
-      return [];
         // إنشاء تقرير تشخيصي مفصل
         const diagnosticReport = this.generateDiagnosticReport(bookingData, error);
         console.error('❌ Error migrating to documentation:', diagnosticReport);
@@ -739,48 +731,79 @@ ${this.generateSecurityCheck(error)}
   }
 
   static async approve(id: string): Promise<void> {
-    const { error } = await supabase
+    console.log('✅ [approve] Approving booking:', id);
+
+    const { data, error } = await supabase
       .from('reservations')
       .update({
         status: 'approved',
         booking_status: 'approved',
         approved_at: new Date().toISOString()
       })
-      .eq('id', id);
+      .eq('id', id)
+      .select();
 
-    if (error) return [];
+    if (error) {
+      console.error('❌ [approve] Error:', error);
+      throw error;
+    }
+
+    console.log('✅ [approve] Success, updated rows:', data?.length);
   }
 
   static async reject(id: string): Promise<void> {
-    const { error } = await supabase
+    console.log('❌ [reject] Rejecting booking:', id);
+
+    const { data, error } = await supabase
       .from('reservations')
       .update({
         status: 'rejected',
         booking_status: 'rejected'
       })
-      .eq('id', id);
+      .eq('id', id)
+      .select();
 
-    if (error) return [];
+    if (error) {
+      console.error('❌ [reject] Error:', error);
+      throw error;
+    }
+
+    console.log('✅ [reject] Success, updated rows:', data?.length);
   }
 
   static async issueCertificate(id: string): Promise<void> {
-    const { error } = await supabase
+    console.log('📜 [issueCertificate] Issuing certificate for:', id);
+
+    const { data, error } = await supabase
       .from('reservations')
       .update({
         status: 'documented',
         booking_status: 'documented'
       })
-      .eq('id', id);
+      .eq('id', id)
+      .select();
 
-    if (error) return [];
+    if (error) {
+      console.error('❌ [issueCertificate] Error:', error);
+      throw error;
+    }
+
+    console.log('✅ [issueCertificate] Success, updated rows:', data?.length);
   }
 
   static async deletePermanently(id: string): Promise<void> {
+    console.log('🗑️ [deletePermanently] Deleting booking:', id);
+
     const { error } = await supabase
       .from('reservations')
       .delete()
       .eq('id', id);
 
-    if (error) return [];
+    if (error) {
+      console.error('❌ [deletePermanently] Error:', error);
+      throw error;
+    }
+
+    console.log('✅ [deletePermanently] Success');
   }
 }
