@@ -5,6 +5,7 @@ import {
 } from 'lucide-react';
 import { SmartAutoResponsesManager } from './SmartAutoResponsesManager';
 import { AdvancedSmartButtonSettings } from './AdvancedSmartButtonSettings';
+import { SmartButtonAnalyticsDashboard } from './SmartButtonAnalyticsDashboard';
 
 interface SmartButtonSettings {
   is_enabled: boolean;
@@ -161,14 +162,7 @@ export const SimpleSmartButtonManagement: React.FC = () => {
 
       {/* Stats Tab */}
       {activeSubTab === 'stats' && (
-        <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-700/50">
-          <h3 className="text-xl font-bold text-white mb-4">📊 الإحصاءات والتحليلات</h3>
-          <div className="text-center py-12 text-gray-400">
-            <BarChart3 className="w-16 h-16 mx-auto mb-4 opacity-50" />
-            <p className="text-lg">قريباً: الإحصاءات التفصيلية</p>
-            <p className="text-sm mt-2">سيتم إضافة لوحة الإحصاءات الكاملة في التحديث القادم</p>
-          </div>
-        </div>
+        <SmartButtonAnalyticsDashboard />
       )}
     </div>
   );
