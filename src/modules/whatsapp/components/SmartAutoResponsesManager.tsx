@@ -3,10 +3,11 @@ import {
   MessageSquare, Plus, Search, Brain, Edit2, Trash2, Eye, EyeOff,
   TrendingUp, BarChart3, Zap, CheckCircle2, XCircle, Clock, Users,
   Star, Filter, Download, RefreshCw, Sparkles, Target, Award, Upload,
-  Copy, MoreVertical, Power, PowerOff, Trash
+  Copy, MoreVertical, Power, PowerOff, Trash, Briefcase
 } from 'lucide-react';
 import { supabase } from '../../../lib/supabase';
 import { SmartErrorModal } from '../../../components/common/SmartErrorModal';
+import { BusinessWhatsAppSettings } from './BusinessWhatsAppSettings';
 
 interface AutoResponse {
   id: string;
@@ -24,6 +25,7 @@ interface AutoResponse {
   created_at: string;
   is_default_fallback?: boolean;
   fallback_enabled?: boolean;
+  whatsapp_business_link?: string | null;
 }
 
 interface ResponseStats {
@@ -56,7 +58,8 @@ export const SmartAutoResponsesManager: React.FC = () => {
     response_ar: '',
     response_en: '',
     intent: 'question',
-    priority: 3
+    priority: 3,
+    whatsapp_business_link: ''
   });
 
   // محرك الذكاء - لتوليد الردود
@@ -370,7 +373,8 @@ export const SmartAutoResponsesManager: React.FC = () => {
       response_ar: '',
       response_en: '',
       intent: 'question',
-      priority: 3
+      priority: 3,
+      whatsapp_business_link: ''
     });
   };
 
@@ -598,6 +602,9 @@ export const SmartAutoResponsesManager: React.FC = () => {
     <div className="space-y-6" dir="rtl">
       {error && <SmartErrorModal error={error} onClose={() => setError(null)} />}
 
+      {/* Business WhatsApp Settings Section */}
+      <BusinessWhatsAppSettings />
+
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
@@ -817,6 +824,15 @@ export const SmartAutoResponsesManager: React.FC = () => {
                       رد افتراضي
                     </span>
                   )}
+                  {response.whatsapp_business_link && (
+                    <span
+                      className="px-2 py-1 bg-green-600/30 text-green-400 text-xs rounded flex items-center gap-1 cursor-help"
+                      title={`يتضمن رابط واتساب أعمال مباشر: ${response.whatsapp_business_link}`}
+                    >
+                      <Briefcase className="w-3 h-3" />
+                      رابط WA
+                    </span>
+                  )}
                 </div>
                 <div className={`inline-block px-3 py-1 bg-gradient-to-r ${getIntentColor(response.intent)} rounded-lg text-white text-xs font-semibold`}>
                   {getIntentLabel(response.intent)}
@@ -921,7 +937,8 @@ export const SmartAutoResponsesManager: React.FC = () => {
                     response_ar: response.response_ar,
                     response_en: response.response_en || '',
                     intent: response.intent,
-                    priority: response.priority
+                    priority: response.priority,
+                    whatsapp_business_link: response.whatsapp_business_link || ''
                   });
                   setShowAddModal(true);
                 }}
@@ -1027,6 +1044,25 @@ export const SmartAutoResponsesManager: React.FC = () => {
                     <option value="5">5 - حرج</option>
                   </select>
                 </div>
+              </div>
+
+              {/* WhatsApp Business Link - Optional */}
+              <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <Briefcase className="w-5 h-5 text-blue-400" />
+                  <label className="text-gray-300 font-medium">🔗 رابط واتساب أعمال (اختياري)</label>
+                </div>
+                <input
+                  type="text"
+                  value={formData.whatsapp_business_link || ''}
+                  onChange={(e) => setFormData({ ...formData, whatsapp_business_link: e.target.value })}
+                  className="w-full px-4 py-3 bg-gray-700 border border-blue-500/30 rounded-lg text-white focus:outline-none focus:border-blue-500"
+                  placeholder="https://wa.me/message/XXXXXXXXXXXX"
+                  dir="ltr"
+                />
+                <p className="text-gray-400 text-xs mt-2">
+                  💡 إذا كان الرد يحتاج تحويل المستخدم للتواصل عبر واتساب الأعمال، ضع هنا الرابط التجاري أو اتركه فارغاً لاستخدام الرابط الرسمي للمنصة
+                </p>
               </div>
             </div>
 
