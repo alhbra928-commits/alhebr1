@@ -215,32 +215,44 @@ export const SmartAutoResponsesManager: React.FC = () => {
   };
 
   const handleDeleteResponse = async (id: string) => {
-    if (!confirm('هل أنت متأكد من حذف هذا الرد؟')) return;
+    console.log('🗑️ Delete button clicked for ID:', id);
+
+    if (!confirm('هل أنت متأكد من حذف هذا الرد؟')) {
+      console.log('❌ Delete cancelled by user');
+      return;
+    }
 
     try {
       const adminSession = JSON.parse(localStorage.getItem('admin_session') || '{}');
       const currentUser = adminSession.admin?.phone || 'system';
 
-      console.log('Deleting response:', id, 'by:', currentUser);
+      console.log('🔄 Starting delete process...');
+      console.log('User:', currentUser);
+      console.log('Response ID:', id);
 
-      const { error: deleteError } = await supabase
+      const { data, error: deleteError } = await supabase
         .from('whatsapp_auto_responses')
         .update({
           deleted_at: new Date().toISOString(),
           deleted_by: currentUser
         })
-        .eq('id', id);
+        .eq('id', id)
+        .select();
+
+      console.log('📊 Delete result:', { data, error: deleteError });
 
       if (deleteError) {
-        console.error('Delete error:', deleteError);
+        console.error('❌ Delete error:', deleteError);
         throw deleteError;
       }
 
+      console.log('✅ Delete successful, reloading...');
       await loadResponses();
       await loadStats();
+
       alert('✅ تم حذف الرد بنجاح!');
     } catch (err: any) {
-      console.error('Delete response error:', err);
+      console.error('❌ Delete response error:', err);
       setError(err.message);
       alert(`❌ خطأ: ${err.message}`);
     }
