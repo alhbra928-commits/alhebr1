@@ -224,7 +224,7 @@ export const SmartFloatingButton: React.FC = () => {
     setSending(true);
 
     try {
-      const { data, error } = await supabase.rpc('handle_smart_button_message_v3', {
+      const { data, error } = await supabase.rpc('handle_smart_button_ai_v2', {
         p_session_token: sessionToken,
         p_message: inputMessage.trim(),
         p_user_type: userType,
