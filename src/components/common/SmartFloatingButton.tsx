@@ -388,7 +388,7 @@ export const SmartFloatingButton: React.FC = () => {
       {/* Floating Button */}
       <button
         onClick={handleOpen}
-        className={`fixed bottom-20 right-4 sm:bottom-24 sm:right-6 z-50 w-16 h-16 rounded-full shadow-2xl flex items-center justify-center transition-all duration-300 hover:scale-110 ${
+        className={`fixed bottom-20 right-4 sm:bottom-24 sm:right-6 z-50 w-14 h-14 sm:w-16 sm:h-16 rounded-full shadow-2xl flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 ${
           isPulsing && !isOpen ? 'animate-pulse' : ''
         }`}
         style={{
@@ -399,12 +399,12 @@ export const SmartFloatingButton: React.FC = () => {
         }}
         title="مركز التواصل الذكي"
       >
-        <MessageCircle className="w-8 h-8 text-white" />
+        <MessageCircle className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
 
         {/* Notification badge */}
         {hasNewMessage && (
-          <div className="absolute -top-1 -right-1 w-6 h-6 bg-red-500 rounded-full flex items-center justify-center animate-ping">
-            <div className="absolute w-6 h-6 bg-red-500 rounded-full"></div>
+          <div className="absolute -top-1 -right-1 w-5 h-5 sm:w-6 sm:h-6 bg-red-500 rounded-full flex items-center justify-center animate-ping">
+            <div className="absolute w-5 h-5 sm:w-6 sm:h-6 bg-red-500 rounded-full"></div>
           </div>
         )}
       </button>
@@ -412,43 +412,43 @@ export const SmartFloatingButton: React.FC = () => {
       {/* Chat Popup */}
       {isOpen && (
         <div
-          className="fixed bottom-32 right-6 z-50 w-96 h-[550px] bg-gray-900 rounded-2xl shadow-2xl flex flex-col overflow-hidden"
+          className="fixed inset-x-4 bottom-28 sm:bottom-32 sm:right-6 sm:left-auto sm:w-96 z-50 h-[500px] sm:h-[550px] bg-gray-900 rounded-2xl shadow-2xl flex flex-col overflow-hidden"
           style={{ maxHeight: 'calc(100vh - 140px)' }}
           dir="rtl"
         >
           {/* Header */}
           <div
-            className="px-6 py-4 flex items-center justify-between"
+            className="px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between"
             style={{
               background: 'linear-gradient(135deg, #8B7355 0%, #A0916A 100%)'
             }}
           >
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
-                <MessageCircle className="w-6 h-6 text-white" />
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/20 flex items-center justify-center">
+                <MessageCircle className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
               </div>
               <div>
-                <h3 className="text-white font-bold text-lg">مركز التواصل الذكي 🌿</h3>
-                <p className="text-white/80 text-xs">نحن هنا لمساعدتك</p>
+                <h3 className="text-white font-bold text-base sm:text-lg">مركز التواصل الذكي 🌿</h3>
+                <p className="text-white/80 text-[10px] sm:text-xs">نحن هنا لمساعدتك</p>
               </div>
             </div>
             <div className="flex items-center gap-2">
               <button
                 onClick={toggleSound}
-                className="w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors"
+                className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white/20 hover:bg-white/30 active:scale-95 flex items-center justify-center transition-all"
                 title={soundEnabled ? 'إيقاف الصوت' : 'تشغيل الصوت'}
               >
                 {soundEnabled ? (
-                  <Bell className="w-4 h-4 text-white" />
+                  <Bell className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" />
                 ) : (
-                  <BellOff className="w-4 h-4 text-white" />
+                  <BellOff className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" />
                 )}
               </button>
               <button
                 onClick={() => setIsOpen(false)}
-                className="w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors"
+                className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white/20 hover:bg-white/30 active:scale-95 flex items-center justify-center transition-all"
               >
-                <X className="w-5 h-5 text-white" />
+                <X className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
               </button>
             </div>
           </div>
