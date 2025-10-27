@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   MessageSquare, Plus, Search, Brain, Edit2, Trash2, Eye, EyeOff,
   TrendingUp, BarChart3, Zap, CheckCircle2, XCircle, Clock, Users,
-  Star, Filter, Download, RefreshCw, Sparkles, Target, Award
+  Star, Filter, Download, RefreshCw, Sparkles, Target, Award, Upload,
+  Copy, MoreVertical, Power, PowerOff, Trash
 } from 'lucide-react';
 import { supabase } from '../../../lib/supabase';
 import { SmartErrorModal } from '../../../components/common/SmartErrorModal';
@@ -44,6 +45,8 @@ export const SmartAutoResponsesManager: React.FC = () => {
   const [showAIModal, setShowAIModal] = useState(false);
   const [showStatsView, setShowStatsView] = useState(false);
   const [selectedResponse, setSelectedResponse] = useState<AutoResponse | null>(null);
+  const [showBulkMenu, setShowBulkMenu] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // بيانات النموذج
   const [formData, setFormData] = useState({
@@ -281,6 +284,163 @@ export const SmartAutoResponsesManager: React.FC = () => {
     });
   };
 
+  // 🔄 تكرار رد موجود
+  const handleDuplicateResponse = async (response: AutoResponse) => {
+    try {
+      const adminSession = JSON.parse(localStorage.getItem('admin_data') || '{}');
+
+      const { error: insertError } = await supabase
+        .from('whatsapp_auto_responses')
+        .insert([{
+          keyword: `${response.keyword} (نسخة)`,
+          response_ar: response.response_ar,
+          response_en: response.response_en,
+          intent: response.intent,
+          priority: response.priority,
+          created_by: adminSession.phone || 'system',
+          status: 'inactive' // نسخة جديدة غير نشطة
+        }]);
+
+      if (insertError) throw insertError;
+
+      await loadResponses();
+      await loadStats();
+      alert('✅ تم تكرار الرد بنجاح!');
+    } catch (err: any) {
+      setError(err.message);
+    }
+  };
+
+  // 📥 تصدير الردود إلى JSON
+  const handleExportResponses = () => {
+    try {
+      const exportData = responses.map(r => ({
+        keyword: r.keyword,
+        response_ar: r.response_ar,
+        response_en: r.response_en,
+        intent: r.intent,
+        priority: r.priority,
+        status: r.status
+      }));
+
+      const dataStr = JSON.stringify(exportData, null, 2);
+      const blob = new Blob([dataStr], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `whatsapp-responses-${new Date().toISOString().split('T')[0]}.json`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+      alert('✅ تم تصدير الردود بنجاح!');
+    } catch (err: any) {
+      setError('فشل تصدير الردود');
+    }
+  };
+
+  // 📤 استيراد الردود من JSON
+  const handleImportResponses = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    try {
+      const text = await file.text();
+      const importedData = JSON.parse(text);
+
+      if (!Array.isArray(importedData)) {
+        throw new Error('صيغة الملف غير صحيحة');
+      }
+
+      const adminSession = JSON.parse(localStorage.getItem('admin_data') || '{}');
+
+      const dataToInsert = importedData.map((item: any) => ({
+        ...item,
+        created_by: adminSession.phone || 'system',
+        status: item.status || 'inactive'
+      }));
+
+      const { error: insertError } = await supabase
+        .from('whatsapp_auto_responses')
+        .insert(dataToInsert);
+
+      if (insertError) throw insertError;
+
+      await loadResponses();
+      await loadStats();
+      alert(`✅ تم استيراد ${importedData.length} رد بنجاح!`);
+    } catch (err: any) {
+      setError(`فشل الاستيراد: ${err.message}`);
+    }
+
+    // Reset input
+    event.target.value = '';
+  };
+
+  // 🗑️ حذف جماعي للردود غير النشطة
+  const handleBulkDeleteInactive = async () => {
+    const inactiveCount = responses.filter(r => r.status === 'inactive').length;
+
+    if (inactiveCount === 0) {
+      alert('لا توجد ردود غير نشطة للحذف');
+      return;
+    }
+
+    if (!confirm(`هل تريد حذف جميع الردود غير النشطة (${inactiveCount} رد)؟`)) return;
+
+    try {
+      const adminSession = JSON.parse(localStorage.getItem('admin_data') || '{}');
+      const inactiveIds = responses.filter(r => r.status === 'inactive').map(r => r.id);
+
+      const { error: deleteError } = await supabase
+        .from('whatsapp_auto_responses')
+        .update({
+          deleted_at: new Date().toISOString(),
+          deleted_by: adminSession.phone || 'system'
+        })
+        .in('id', inactiveIds);
+
+      if (deleteError) throw deleteError;
+
+      await loadResponses();
+      await loadStats();
+      alert(`✅ تم حذف ${inactiveCount} رد بنجاح!`);
+    } catch (err: any) {
+      setError(err.message);
+    }
+  };
+
+  // ✅ تفعيل/تعطيل جماعي حسب النية
+  const handleBulkToggleByIntent = async (intent: string, newStatus: 'active' | 'inactive') => {
+    const count = responses.filter(r => r.intent === intent).length;
+
+    if (count === 0) {
+      alert(`لا توجد ردود من نوع "${getIntentLabel(intent)}"`);
+      return;
+    }
+
+    if (!confirm(`هل تريد ${newStatus === 'active' ? 'تفعيل' : 'تعطيل'} جميع ردود "${getIntentLabel(intent)}" (${count} رد)؟`)) return;
+
+    try {
+      const intentIds = responses.filter(r => r.intent === intent).map(r => r.id);
+
+      const { error: updateError } = await supabase
+        .from('whatsapp_auto_responses')
+        .update({ status: newStatus, updated_at: new Date().toISOString() })
+        .in('id', intentIds);
+
+      if (updateError) throw updateError;
+
+      await loadResponses();
+      await loadStats();
+      alert(`✅ تم ${newStatus === 'active' ? 'تفعيل' : 'تعطيل'} ${count} رد بنجاح!`);
+    } catch (err: any) {
+      setError(err.message);
+    }
+  };
+
   const getIntentLabel = (intent: string) => {
     const labels: any = {
       greeting: 'تحية',
@@ -335,6 +495,95 @@ export const SmartAutoResponsesManager: React.FC = () => {
         </div>
 
         <div className="flex gap-2">
+          {/* Export Button */}
+          <button
+            onClick={handleExportResponses}
+            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg flex items-center gap-2 transition-all"
+            title="تصدير الردود"
+          >
+            <Download className="w-5 h-5" />
+          </button>
+
+          {/* Import Button */}
+          <button
+            onClick={() => fileInputRef.current?.click()}
+            className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg flex items-center gap-2 transition-all"
+            title="استيراد ردود"
+          >
+            <Upload className="w-5 h-5" />
+          </button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".json"
+            onChange={handleImportResponses}
+            className="hidden"
+          />
+
+          {/* Bulk Actions Menu */}
+          <div className="relative">
+            <button
+              onClick={() => setShowBulkMenu(!showBulkMenu)}
+              className="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg flex items-center gap-2 transition-all"
+              title="إجراءات جماعية"
+            >
+              <MoreVertical className="w-5 h-5" />
+            </button>
+
+            {showBulkMenu && (
+              <div className="absolute left-0 mt-2 w-64 bg-gray-800 border border-gray-700 rounded-lg shadow-2xl z-50">
+                <div className="p-2 space-y-1">
+                  <button
+                    onClick={() => {
+                      handleBulkDeleteInactive();
+                      setShowBulkMenu(false);
+                    }}
+                    className="w-full px-3 py-2 text-right text-red-400 hover:bg-red-500/20 rounded-lg flex items-center gap-2 transition-all"
+                  >
+                    <Trash className="w-4 h-4" />
+                    حذف الردود غير النشطة
+                  </button>
+
+                  <div className="border-t border-gray-700 my-1"></div>
+
+                  <div className="px-3 py-1 text-xs text-gray-500">تفعيل حسب النوع</div>
+
+                  {['greeting', 'question', 'financial', 'technical'].map(intent => (
+                    <button
+                      key={intent}
+                      onClick={() => {
+                        handleBulkToggleByIntent(intent, 'active');
+                        setShowBulkMenu(false);
+                      }}
+                      className="w-full px-3 py-2 text-right text-green-400 hover:bg-green-500/20 rounded-lg flex items-center gap-2 transition-all text-sm"
+                    >
+                      <Power className="w-4 h-4" />
+                      تفعيل: {getIntentLabel(intent)}
+                    </button>
+                  ))}
+
+                  <div className="border-t border-gray-700 my-1"></div>
+
+                  <div className="px-3 py-1 text-xs text-gray-500">تعطيل حسب النوع</div>
+
+                  {['greeting', 'question', 'financial', 'technical'].map(intent => (
+                    <button
+                      key={intent}
+                      onClick={() => {
+                        handleBulkToggleByIntent(intent, 'inactive');
+                        setShowBulkMenu(false);
+                      }}
+                      className="w-full px-3 py-2 text-right text-gray-400 hover:bg-gray-700 rounded-lg flex items-center gap-2 transition-all text-sm"
+                    >
+                      <PowerOff className="w-4 h-4" />
+                      تعطيل: {getIntentLabel(intent)}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
           <button
             onClick={() => setShowStatsView(!showStatsView)}
             className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg flex items-center gap-2 transition-all"
@@ -520,6 +769,14 @@ export const SmartAutoResponsesManager: React.FC = () => {
               >
                 <Edit2 className="w-4 h-4" />
                 تعديل
+              </button>
+
+              <button
+                onClick={() => handleDuplicateResponse(response)}
+                className="px-3 py-2 bg-cyan-600/20 text-cyan-400 rounded-lg hover:bg-cyan-600/30 transition-all"
+                title="تكرار الرد"
+              >
+                <Copy className="w-4 h-4" />
               </button>
 
               <button
