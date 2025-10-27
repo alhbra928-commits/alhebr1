@@ -94,7 +94,7 @@ export const SmartButtonManagement: React.FC = () => {
     }
   };
 
-  const handleSaveSettings = async () => {
+  const handleSaveSettings = async (settingsToSave?: SmartButtonSettings, aiEnabledValue?: boolean) => {
     if (!canEdit) {
       setError('ليس لديك صلاحية لتعديل الإعدادات');
       return;
@@ -103,15 +103,18 @@ export const SmartButtonManagement: React.FC = () => {
     try {
       setSaving(true);
 
+      const finalSettings = settingsToSave || settings;
+      const finalAiEnabled = aiEnabledValue !== undefined ? aiEnabledValue : aiEnabled;
+
       // Save to database
       const { data, error } = await supabase.rpc('update_smart_button_settings', {
         p_settings: {
-          is_enabled: settings.is_enabled,
-          position: settings.position,
-          primary_color: settings.primary_color,
-          pulse_enabled: settings.pulse_enabled,
-          sound_enabled: settings.sound_enabled,
-          ai_enabled: aiEnabled
+          is_enabled: finalSettings.is_enabled,
+          position: finalSettings.position,
+          primary_color: finalSettings.primary_color,
+          pulse_enabled: finalSettings.pulse_enabled,
+          sound_enabled: finalSettings.sound_enabled,
+          ai_enabled: finalAiEnabled
         },
         p_updated_by: 'admin'
       });
@@ -121,18 +124,24 @@ export const SmartButtonManagement: React.FC = () => {
       setSuccessMessage('تم حفظ الإعدادات بنجاح ✅');
       setTimeout(() => setSuccessMessage(null), 3000);
 
-      // Log the action
-      await supabase.rpc('log_whatsapp_event', {
-        p_event_type: 'button_settings_updated',
-        p_status: 'success',
-        p_metadata: settings
-      });
-
     } catch (err: any) {
       setError(err.message);
     } finally {
       setSaving(false);
     }
+  };
+
+  // Auto-save when settings change
+  const handleToggleSetting = async (key: keyof SmartButtonSettings, value: any) => {
+    const newSettings = { ...settings, [key]: value };
+    setSettings(newSettings);
+    await handleSaveSettings(newSettings);
+  };
+
+  const handleToggleAI = async () => {
+    const newValue = !aiEnabled;
+    setAiEnabled(newValue);
+    await handleSaveSettings(settings, newValue);
   };
 
   const handleToggleResponse = async (responseId: string, isActive: boolean) => {
@@ -322,13 +331,13 @@ export const SmartButtonManagement: React.FC = () => {
                 <p className="text-gray-400 text-sm">إظهار الزر على جميع صفحات المنصة</p>
               </div>
               <button
-                onClick={() => canEdit && setSettings({ ...settings, is_enabled: !settings.is_enabled })}
-                disabled={!canEdit}
+                onClick={() => canEdit && handleToggleSetting('is_enabled', !settings.is_enabled)}
+                disabled={!canEdit || saving}
                 className={`p-2 rounded-lg transition-all ${
                   settings.is_enabled
                     ? 'bg-green-500 hover:bg-green-600'
                     : 'bg-gray-600 hover:bg-gray-500'
-                } ${!canEdit ? 'opacity-50 cursor-not-allowed' : ''}`}
+                } ${!canEdit || saving ? 'opacity-50 cursor-not-allowed' : ''}`}
               >
                 {settings.is_enabled ? (
                   <ToggleRight className="w-8 h-8 text-white" />
@@ -343,24 +352,24 @@ export const SmartButtonManagement: React.FC = () => {
               <h4 className="text-white font-semibold mb-3">موقع الزر</h4>
               <div className="flex gap-4">
                 <button
-                  onClick={() => canEdit && setSettings({ ...settings, position: 'bottom-right' })}
-                  disabled={!canEdit}
+                  onClick={() => canEdit && handleToggleSetting('position', 'bottom-right')}
+                  disabled={!canEdit || saving}
                   className={`flex-1 p-3 rounded-lg transition-all ${
                     settings.position === 'bottom-right'
                       ? 'bg-cyan-500 text-white'
                       : 'bg-gray-700 text-gray-400 hover:bg-gray-600'
-                  } ${!canEdit ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  } ${!canEdit || saving ? 'opacity-50 cursor-not-allowed' : ''}`}
                 >
                   أسفل اليسار
                 </button>
                 <button
-                  onClick={() => canEdit && setSettings({ ...settings, position: 'bottom-left' })}
-                  disabled={!canEdit}
+                  onClick={() => canEdit && handleToggleSetting('position', 'bottom-left')}
+                  disabled={!canEdit || saving}
                   className={`flex-1 p-3 rounded-lg transition-all ${
                     settings.position === 'bottom-left'
                       ? 'bg-cyan-500 text-white'
                       : 'bg-gray-700 text-gray-400 hover:bg-gray-600'
-                  } ${!canEdit ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  } ${!canEdit || saving ? 'opacity-50 cursor-not-allowed' : ''}`}
                 >
                   أسفل اليمين
                 </button>
@@ -373,8 +382,8 @@ export const SmartButtonManagement: React.FC = () => {
               <input
                 type="color"
                 value={settings.primary_color}
-                onChange={(e) => canEdit && setSettings({ ...settings, primary_color: e.target.value })}
-                disabled={!canEdit}
+                onChange={(e) => canEdit && handleToggleSetting('primary_color', e.target.value)}
+                disabled={!canEdit || saving}
                 className="w-full h-12 rounded-lg cursor-pointer disabled:opacity-50"
               />
             </div>
@@ -386,13 +395,13 @@ export const SmartButtonManagement: React.FC = () => {
                 <p className="text-gray-400 text-sm">تأثير نبض جذاب كل 5 ثوانٍ</p>
               </div>
               <button
-                onClick={() => canEdit && setSettings({ ...settings, pulse_enabled: !settings.pulse_enabled })}
-                disabled={!canEdit}
+                onClick={() => canEdit && handleToggleSetting('pulse_enabled', !settings.pulse_enabled)}
+                disabled={!canEdit || saving}
                 className={`p-2 rounded-lg transition-all ${
                   settings.pulse_enabled
                     ? 'bg-green-500 hover:bg-green-600'
                     : 'bg-gray-600 hover:bg-gray-500'
-                } ${!canEdit ? 'opacity-50 cursor-not-allowed' : ''}`}
+                } ${!canEdit || saving ? 'opacity-50 cursor-not-allowed' : ''}`}
               >
                 {settings.pulse_enabled ? (
                   <ToggleRight className="w-8 h-8 text-white" />
@@ -409,13 +418,13 @@ export const SmartButtonManagement: React.FC = () => {
                 <p className="text-gray-400 text-sm">تنبيه صوتي عند وصول رد جديد</p>
               </div>
               <button
-                onClick={() => canEdit && setSettings({ ...settings, sound_enabled: !settings.sound_enabled })}
-                disabled={!canEdit}
+                onClick={() => canEdit && handleToggleSetting('sound_enabled', !settings.sound_enabled)}
+                disabled={!canEdit || saving}
                 className={`p-2 rounded-lg transition-all ${
                   settings.sound_enabled
                     ? 'bg-green-500 hover:bg-green-600'
                     : 'bg-gray-600 hover:bg-gray-500'
-                } ${!canEdit ? 'opacity-50 cursor-not-allowed' : ''}`}
+                } ${!canEdit || saving ? 'opacity-50 cursor-not-allowed' : ''}`}
               >
                 {settings.sound_enabled ? (
                   <ToggleRight className="w-8 h-8 text-white" />
@@ -425,12 +434,27 @@ export const SmartButtonManagement: React.FC = () => {
               </button>
             </div>
 
-            {/* زر الحفظ */}
+            {/* مؤشر الحفظ التلقائي */}
+            <div className="flex items-center justify-center gap-2 p-4 bg-gray-700/30 rounded-lg">
+              {saving ? (
+                <>
+                  <RefreshCw className="w-5 h-5 text-cyan-400 animate-spin" />
+                  <span className="text-cyan-400 font-semibold">جاري الحفظ...</span>
+                </>
+              ) : (
+                <>
+                  <Save className="w-5 h-5 text-green-400" />
+                  <span className="text-green-400 font-semibold">الحفظ تلقائي عند التغيير</span>
+                </>
+              )}
+            </div>
+
+            {/* زر الحفظ اليدوي (احتياطي) */}
             {canEdit && (
               <button
-                onClick={handleSaveSettings}
+                onClick={() => handleSaveSettings()}
                 disabled={saving}
-                className="w-full px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg hover:from-green-600 hover:to-emerald-700 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                className="w-full px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
               >
                 <Save className="w-5 h-5" />
                 {saving ? 'جاري الحفظ...' : 'حفظ الإعدادات'}
