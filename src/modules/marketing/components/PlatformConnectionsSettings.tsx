@@ -87,20 +87,36 @@ export const PlatformConnectionsSettings: React.FC = () => {
 
   const handleSave = async (platformId: string) => {
     try {
+      setError(null);
+
+      console.log('💾 Saving connection for:', platformId);
+      console.log('📝 Data:', formData);
+
       await marketingAnalyticsService.updatePlatformConnection(platformId, {
         ...formData as any,
-        is_active: true
+        is_active: true,
+        connection_status: 'connected'
       });
+
+      console.log('✅ Saved successfully');
 
       setEditingPlatform(null);
       await loadConnections();
 
       // إعادة تحميل السكربتات التحليلية فوراً
-      await marketingAnalyticsService.reloadPixels();
-      alert('✅ تم حفظ الإعدادات وإعادة تحميل السكربتات التحليلية بنجاح!');
-    } catch (err) {
-      console.error('Error saving connection:', err);
-      setError('فشل حفظ الإعدادات');
+      try {
+        await marketingAnalyticsService.reloadPixels();
+        console.log('✅ Pixels reloaded');
+      } catch (pixelErr) {
+        console.warn('⚠️ Could not reload pixels:', pixelErr);
+      }
+
+      alert('✅ تم حفظ الإعدادات بنجاح!\n\nيمكنك الآن اختبار الاتصال.');
+    } catch (err: any) {
+      console.error('❌ Error saving connection:', err);
+      const errorMessage = err?.message || 'خطأ غير معروف';
+      setError(`فشل حفظ الإعدادات: ${errorMessage}`);
+      alert(`❌ فشل الحفظ\n\nالخطأ: ${errorMessage}\n\nيرجى المحاولة مرة أخرى.`);
     }
   };
 
