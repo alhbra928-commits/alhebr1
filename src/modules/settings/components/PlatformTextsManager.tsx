@@ -137,26 +137,43 @@ export const PlatformTextsManager: React.FC = () => {
     try {
       setSaving(text.id);
 
-      const { error } = await supabase
+      console.log('💾 Saving text:', {
+        id: text.id,
+        text_ar: editedText.text_ar,
+        text_en: editedText.text_en
+      });
+
+      const { data, error } = await supabase
         .from('platform_texts')
         .update({
           text_ar: editedText.text_ar,
           text_en: editedText.text_en,
           updated_at: new Date().toISOString()
         })
-        .eq('id', text.id);
+        .eq('id', text.id)
+        .select();
 
-      if (error) throw error;
+      if (error) {
+        console.error('❌ Save error:', error);
+        throw error;
+      }
 
-      // Update local state
+      console.log('✅ Saved successfully:', data);
+
+      // Update local state immediately
       setTexts(prev => prev.map(t =>
         t.id === text.id
-          ? { ...t, text_ar: editedText.text_ar, text_en: editedText.text_en }
+          ? { ...t, text_ar: editedText.text_ar, text_en: editedText.text_en, updated_at: new Date().toISOString() }
           : t
       ));
 
+      // Clear editing state
       handleCancel(text.id);
-      showSuccess('تم الحفظ بنجاح!');
+
+      // Reload to ensure data consistency
+      await loadTexts();
+
+      showSuccess('تم الحفظ بنجاح! ✅');
     } catch (err) {
       console.error('Error saving text:', err);
       showError('فشل حفظ التغييرات');
@@ -205,13 +222,26 @@ export const PlatformTextsManager: React.FC = () => {
     <div className="space-y-6" dir="rtl">
       {/* Header */}
       <div className="bg-gradient-to-r from-[#8B7355] to-[#A0916A] rounded-xl p-6 text-white">
-        <div className="flex items-center gap-3 mb-2">
-          <Sparkles className="w-8 h-8" />
-          <h2 className="text-2xl font-bold">إدارة نصوص المنصة</h2>
+        <div className="flex items-center justify-between">
+          <div>
+            <div className="flex items-center gap-3 mb-2">
+              <Sparkles className="w-8 h-8" />
+              <h2 className="text-2xl font-bold">إدارة نصوص المنصة</h2>
+            </div>
+            <p className="text-white/90 text-sm">
+              تحكم في جميع النصوص الظاهرة في المنصة بطريقة احترافية ومباشرة
+            </p>
+          </div>
+          <button
+            onClick={loadTexts}
+            disabled={loading}
+            className="flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg transition-all disabled:opacity-50"
+            title="إعادة تحميل"
+          >
+            <RefreshCw className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} />
+            <span className="text-sm font-medium">تحديث</span>
+          </button>
         </div>
-        <p className="text-white/90 text-sm">
-          تحكم في جميع النصوص الظاهرة في المنصة بطريقة احترافية ومباشرة
-        </p>
       </div>
 
       {/* Success/Error Messages */}
