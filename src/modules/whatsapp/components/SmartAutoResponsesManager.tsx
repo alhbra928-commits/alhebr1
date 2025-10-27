@@ -152,39 +152,65 @@ export const SmartAutoResponsesManager: React.FC = () => {
 
   const handleAddResponse = async () => {
     try {
-      const adminSession = JSON.parse(localStorage.getItem('admin_data') || '{}');
+      const adminSession = JSON.parse(localStorage.getItem('admin_session') || '{}');
+      const currentUser = adminSession.admin?.phone || 'system';
+
+      console.log('Adding response, user:', currentUser);
 
       const { error: insertError } = await supabase
         .from('whatsapp_auto_responses')
         .insert([{
           ...formData,
-          created_by: adminSession.phone || 'system',
+          created_by: currentUser,
           status: 'active'
         }]);
 
-      if (insertError) throw insertError;
+      if (insertError) {
+        console.error('Insert error:', insertError);
+        throw insertError;
+      }
 
       await loadResponses();
       await loadStats();
       setShowAddModal(false);
       resetForm();
+      alert('✅ تم إضافة الرد بنجاح!');
     } catch (err: any) {
+      console.error('Add response error:', err);
       setError(err.message);
+      alert(`❌ خطأ: ${err.message}`);
     }
   };
 
   const handleUpdateResponse = async (id: string, updates: any) => {
     try {
+      console.log('Updating response:', id, updates);
+
       const { error: updateError } = await supabase
         .from('whatsapp_auto_responses')
         .update({ ...updates, updated_at: new Date().toISOString() })
         .eq('id', id);
 
-      if (updateError) throw updateError;
+      if (updateError) {
+        console.error('Update error:', updateError);
+        throw updateError;
+      }
+
       await loadResponses();
       await loadStats();
+
+      // Close modal if edit mode
+      if (selectedResponse) {
+        setShowAddModal(false);
+        setSelectedResponse(null);
+        resetForm();
+      }
+
+      alert('✅ تم تحديث الرد بنجاح!');
     } catch (err: any) {
+      console.error('Update response error:', err);
       setError(err.message);
+      alert(`❌ خطأ: ${err.message}`);
     }
   };
 
@@ -192,21 +218,31 @@ export const SmartAutoResponsesManager: React.FC = () => {
     if (!confirm('هل أنت متأكد من حذف هذا الرد؟')) return;
 
     try {
-      const adminSession = JSON.parse(localStorage.getItem('admin_data') || '{}');
+      const adminSession = JSON.parse(localStorage.getItem('admin_session') || '{}');
+      const currentUser = adminSession.admin?.phone || 'system';
+
+      console.log('Deleting response:', id, 'by:', currentUser);
 
       const { error: deleteError } = await supabase
         .from('whatsapp_auto_responses')
         .update({
           deleted_at: new Date().toISOString(),
-          deleted_by: adminSession.phone || 'system'
+          deleted_by: currentUser
         })
         .eq('id', id);
 
-      if (deleteError) throw deleteError;
+      if (deleteError) {
+        console.error('Delete error:', deleteError);
+        throw deleteError;
+      }
+
       await loadResponses();
       await loadStats();
+      alert('✅ تم حذف الرد بنجاح!');
     } catch (err: any) {
+      console.error('Delete response error:', err);
       setError(err.message);
+      alert(`❌ خطأ: ${err.message}`);
     }
   };
 
@@ -287,7 +323,10 @@ export const SmartAutoResponsesManager: React.FC = () => {
   // 🔄 تكرار رد موجود
   const handleDuplicateResponse = async (response: AutoResponse) => {
     try {
-      const adminSession = JSON.parse(localStorage.getItem('admin_data') || '{}');
+      const adminSession = JSON.parse(localStorage.getItem('admin_session') || '{}');
+      const currentUser = adminSession.admin?.phone || 'system';
+
+      console.log('Duplicating response:', response.keyword);
 
       const { error: insertError } = await supabase
         .from('whatsapp_auto_responses')
@@ -297,17 +336,22 @@ export const SmartAutoResponsesManager: React.FC = () => {
           response_en: response.response_en,
           intent: response.intent,
           priority: response.priority,
-          created_by: adminSession.phone || 'system',
+          created_by: currentUser,
           status: 'inactive' // نسخة جديدة غير نشطة
         }]);
 
-      if (insertError) throw insertError;
+      if (insertError) {
+        console.error('Duplicate error:', insertError);
+        throw insertError;
+      }
 
       await loadResponses();
       await loadStats();
       alert('✅ تم تكرار الرد بنجاح!');
     } catch (err: any) {
+      console.error('Duplicate response error:', err);
       setError(err.message);
+      alert(`❌ خطأ: ${err.message}`);
     }
   };
 
@@ -347,6 +391,8 @@ export const SmartAutoResponsesManager: React.FC = () => {
     if (!file) return;
 
     try {
+      console.log('Importing responses from file:', file.name);
+
       const text = await file.text();
       const importedData = JSON.parse(text);
 
@@ -354,25 +400,33 @@ export const SmartAutoResponsesManager: React.FC = () => {
         throw new Error('صيغة الملف غير صحيحة');
       }
 
-      const adminSession = JSON.parse(localStorage.getItem('admin_data') || '{}');
+      const adminSession = JSON.parse(localStorage.getItem('admin_session') || '{}');
+      const currentUser = adminSession.admin?.phone || 'system';
 
       const dataToInsert = importedData.map((item: any) => ({
         ...item,
-        created_by: adminSession.phone || 'system',
+        created_by: currentUser,
         status: item.status || 'inactive'
       }));
+
+      console.log('Inserting responses:', dataToInsert.length);
 
       const { error: insertError } = await supabase
         .from('whatsapp_auto_responses')
         .insert(dataToInsert);
 
-      if (insertError) throw insertError;
+      if (insertError) {
+        console.error('Import error:', insertError);
+        throw insertError;
+      }
 
       await loadResponses();
       await loadStats();
       alert(`✅ تم استيراد ${importedData.length} رد بنجاح!`);
     } catch (err: any) {
+      console.error('Import responses error:', err);
       setError(`فشل الاستيراد: ${err.message}`);
+      alert(`❌ خطأ في الاستيراد: ${err.message}`);
     }
 
     // Reset input
@@ -391,24 +445,32 @@ export const SmartAutoResponsesManager: React.FC = () => {
     if (!confirm(`هل تريد حذف جميع الردود غير النشطة (${inactiveCount} رد)؟`)) return;
 
     try {
-      const adminSession = JSON.parse(localStorage.getItem('admin_data') || '{}');
+      const adminSession = JSON.parse(localStorage.getItem('admin_session') || '{}');
+      const currentUser = adminSession.admin?.phone || 'system';
       const inactiveIds = responses.filter(r => r.status === 'inactive').map(r => r.id);
+
+      console.log('Bulk deleting inactive responses:', inactiveCount);
 
       const { error: deleteError } = await supabase
         .from('whatsapp_auto_responses')
         .update({
           deleted_at: new Date().toISOString(),
-          deleted_by: adminSession.phone || 'system'
+          deleted_by: currentUser
         })
         .in('id', inactiveIds);
 
-      if (deleteError) throw deleteError;
+      if (deleteError) {
+        console.error('Bulk delete error:', deleteError);
+        throw deleteError;
+      }
 
       await loadResponses();
       await loadStats();
       alert(`✅ تم حذف ${inactiveCount} رد بنجاح!`);
     } catch (err: any) {
+      console.error('Bulk delete error:', err);
       setError(err.message);
+      alert(`❌ خطأ: ${err.message}`);
     }
   };
 
