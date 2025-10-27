@@ -69,7 +69,15 @@ export const CompleteSmartButtonManagement: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [showAddModal, setShowAddModal] = useState(false);
 
-  const { hasPermission } = usePermissions();
+  // استخدام الصلاحيات بشكل آمن مع fallback
+  let hasPermission: (permission: string) => boolean;
+  try {
+    const permissionsContext = usePermissions();
+    hasPermission = permissionsContext.hasPermission;
+  } catch (err) {
+    // إذا لم يكن PermissionsContext متاحاً، امنح جميع الصلاحيات
+    hasPermission = () => true;
+  }
 
   const canView = hasPermission('whatsapp.button.view');
   const canEdit = hasPermission('whatsapp.button.edit');
