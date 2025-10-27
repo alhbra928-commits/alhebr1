@@ -659,13 +659,13 @@ ${this.generateSecurityCheck(error)}
     const { count: approved } = await supabase
       .from('reservations')
       .select('*', { count: 'exact', head: true })
-      .eq('status', 'approved')
+      .eq('status', 'confirmed')
       .is('deleted_at', null);
 
     const { count: rejected } = await supabase
       .from('reservations')
       .select('*', { count: 'exact', head: true })
-      .eq('status', 'rejected')
+      .eq('status', 'cancelled')
       .is('deleted_at', null);
 
     const { count: documented } = await supabase
@@ -736,7 +736,7 @@ ${this.generateSecurityCheck(error)}
     const { data, error } = await supabase
       .from('reservations')
       .update({
-        status: 'approved',
+        status: 'confirmed',
         booking_status: 'approved'
       })
       .eq('id', id)
@@ -756,7 +756,7 @@ ${this.generateSecurityCheck(error)}
     const { data, error } = await supabase
       .from('reservations')
       .update({
-        status: 'rejected',
+        status: 'cancelled',
         booking_status: 'rejected'
       })
       .eq('id', id)
@@ -776,7 +776,7 @@ ${this.generateSecurityCheck(error)}
     const { data, error } = await supabase
       .from('reservations')
       .update({
-        status: 'documented',
+        status: 'completed',
         booking_status: 'documented'
       })
       .eq('id', id)
