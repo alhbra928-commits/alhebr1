@@ -94,6 +94,10 @@ export const PlatformConnectionsSettings: React.FC = () => {
 
       setEditingPlatform(null);
       await loadConnections();
+
+      // إعادة تحميل السكربتات التحليلية فوراً
+      await marketingAnalyticsService.reloadPixels();
+      alert('✅ تم حفظ الإعدادات وإعادة تحميل السكربتات التحليلية بنجاح!');
     } catch (err) {
       console.error('Error saving connection:', err);
       setError('فشل حفظ الإعدادات');

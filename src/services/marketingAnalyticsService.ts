@@ -1,4 +1,5 @@
 import { supabase } from '../lib/supabase';
+import { analyticsPixelLoader } from './analyticsPixelLoader';
 
 export interface PlatformConnection {
   id: string;
@@ -306,6 +307,7 @@ class MarketingAnalyticsService {
       const utmParams = this.getUTMParams();
       const sessionId = this.getOrCreateSessionId();
 
+      // تتبع في قاعدة البيانات
       await this.trackVisitor({
         session_id: sessionId,
         page_url: window.location.href,
@@ -314,9 +316,34 @@ class MarketingAnalyticsService {
         ...utmParams,
         ...deviceInfo
       });
+
+      // تتبع على جميع المنصات المُحمّلة (Google, TikTok, Meta, Twitter)
+      analyticsPixelLoader.trackPageView(window.location.href);
+
+      console.log('✅ Page tracked:', window.location.href);
     } catch (error) {
       console.error('Failed to track page view:', error);
     }
+  }
+
+  // تتبع حدث مخصص
+  trackCustomEvent(eventName: string, eventData?: Record<string, any>): void {
+    analyticsPixelLoader.trackEvent(eventName, eventData);
+  }
+
+  // تهيئة السكربتات التحليلية
+  async initializePixels(): Promise<void> {
+    await analyticsPixelLoader.initialize();
+  }
+
+  // إعادة تحميل السكربتات (بعد تحديث الإعدادات)
+  async reloadPixels(): Promise<void> {
+    await analyticsPixelLoader.reload();
+  }
+
+  // التحقق من المنصات المحملة
+  getLoadedPlatforms(): string[] {
+    return analyticsPixelLoader.getLoadedPlatforms();
   }
 }
 

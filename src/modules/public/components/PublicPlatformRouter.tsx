@@ -15,7 +15,16 @@ export function PublicPlatformRouter({ onAdminLogin, onBackToAdmin, onFarmOwnerL
   const [currentView, setCurrentView] = useState<View>('main');
   const [selectedBarcode, setSelectedBarcode] = useState<string>('');
 
-  // التتبع التلقائي للزوار
+  // تهيئة السكربتات التحليلية عند التحميل الأول
+  useEffect(() => {
+    const initAnalytics = async () => {
+      await marketingAnalyticsService.initializePixels();
+      console.log('📊 Analytics pixels initialized');
+    };
+    initAnalytics();
+  }, []);
+
+  // التتبع التلقائي للزوار عند تغيير الصفحة
   useEffect(() => {
     marketingAnalyticsService.trackCurrentPage();
   }, [currentView]);

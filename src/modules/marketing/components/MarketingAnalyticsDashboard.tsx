@@ -10,10 +10,28 @@ export const MarketingAnalyticsDashboard: React.FC = () => {
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [dateRange, setDateRange] = useState<'today' | 'week' | 'month'>('month');
+  const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
+  const [autoRefresh, setAutoRefresh] = useState(true);
 
   useEffect(() => {
     loadStats();
   }, [dateRange]);
+
+  // تحديث تلقائي كل دقيقة
+  useEffect(() => {
+    if (!autoRefresh) return;
+
+    const interval = setInterval(async () => {
+      // تجميع البيانات اليومية
+      await marketingAnalyticsService.aggregateDailyData();
+      // إعادة تحميل الإحصائيات
+      await loadStats();
+      setLastUpdate(new Date());
+      console.log('🔄 Auto-refreshed at:', new Date().toLocaleTimeString('ar-SA'));
+    }, 60000); // كل دقيقة
+
+    return () => clearInterval(interval);
+  }, [autoRefresh, dateRange]);
 
   const loadStats = async () => {
     try {
@@ -94,8 +112,26 @@ export const MarketingAnalyticsDashboard: React.FC = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">التحليل والربط التسويقي</h1>
-          <p className="text-gray-600 mt-1">تتبع الزوار ومصادر الزيارات</p>
+          <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
+            التحليل والربط التسويقي
+            {autoRefresh && (
+              <span className="flex items-center gap-2 text-sm font-normal text-green-600 bg-green-50 px-3 py-1 rounded-full">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                </span>
+                مباشر
+              </span>
+            )}
+          </h1>
+          <p className="text-gray-600 mt-1">
+            تتبع الزوار ومصادر الزيارات
+            {lastUpdate && (
+              <span className="text-xs text-gray-500 mr-2">
+                • آخر تحديث: {lastUpdate.toLocaleTimeString('ar-SA')}
+              </span>
+            )}
+          </p>
         </div>
 
         {activeTab === 'overview' && (
