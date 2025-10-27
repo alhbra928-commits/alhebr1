@@ -4,6 +4,7 @@ import { brandColors, brandGradients } from '../../finance/styles/brandColors';
 import { AdminSessionService, AdminPermission } from '../services/adminSessionService';
 import { SmartButtonPermissionsView } from '../../permissions/components/SmartButtonPermissionsView';
 import { AdvancedSmartButtonPermissionsView } from '../../permissions/components/AdvancedSmartButtonPermissionsView';
+import { InnovativeSmartButtonPermissions } from '../../permissions/components/InnovativeSmartButtonPermissions';
 
 interface AdminUser {
   phone: string;
@@ -365,7 +366,7 @@ export function AdvancedPermissionsManager() {
         {/* Content based on active tab */}
         {activeSubTab === 'smart-button' ? (
           currentAdmin ? (
-            <AdvancedSmartButtonPermissionsView
+            <InnovativeSmartButtonPermissions
               currentUserId={currentAdmin.id}
               isSystemAdmin={currentAdmin.jobTitle === 'مدير النظام'}
             />
