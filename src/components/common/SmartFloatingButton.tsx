@@ -277,6 +277,14 @@ export const SmartFloatingButton: React.FC = () => {
 
       // If there's an auto response (including smart replies), add it
       if (data?.auto_response && data?.response) {
+        // Debug log
+        console.log('🔍 Smart Button Response Data:', {
+          response: data.response,
+          whatsapp_link: data.whatsapp_link,
+          hybrid_link: data.hybrid_link,
+          is_hybrid: data.is_hybrid
+        });
+
         setTimeout(() => {
           const autoMessage: Message = {
             id: `auto_${Date.now()}`,
@@ -289,8 +297,15 @@ export const SmartFloatingButton: React.FC = () => {
             confidence: data.confidence ? parseFloat(data.confidence) : undefined,
             suggestions: data.suggestions || [],
             whatsappLink: data.whatsapp_link || data.hybrid_link,
-            isHybridLink: !!data.hybrid_link
+            isHybridLink: !!data.hybrid_link || !!data.is_hybrid
           };
+
+          console.log('✅ Auto Message with Link:', {
+            hasLink: !!autoMessage.whatsappLink,
+            isHybrid: autoMessage.isHybridLink,
+            link: autoMessage.whatsappLink?.substring(0, 50)
+          });
+
           setMessages(prev => [...prev, autoMessage]);
         }, 500);
       } else if (data?.message) {
