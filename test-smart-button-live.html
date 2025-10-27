@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>اختبار الزر الذكي المباشر</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      color: white;
+      padding: 20px;
+      margin: 0;
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+      padding: 30px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .test-section {
+      background: rgba(255,255,255,0.05);
+      padding: 25px;
+      border-radius: 15px;
+      margin-bottom: 20px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .test-button {
+      background: linear-gradient(135deg, #8B7355 0%, #A0916A 100%);
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      margin: 5px;
+      transition: transform 0.2s;
+    }
+    .test-button:hover {
+      transform: scale(1.05);
+    }
+    .result {
+      background: rgba(0,0,0,0.3);
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 15px;
+      border-left: 4px solid #10B981;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    .success {
+      color: #10B981;
+      font-weight: bold;
+    }
+    .error {
+      color: #EF4444;
+      font-weight: bold;
+    }
+    .info {
+      color: #3B82F6;
+      font-weight: bold;
+    }
+    .stat-card {
+      background: rgba(139, 115, 85, 0.2);
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      border: 1px solid rgba(139, 115, 85, 0.3);
+    }
+    .stat-value {
+      font-size: 32px;
+      font-weight: bold;
+      color: #A0916A;
+    }
+    .stat-label {
+      color: #9CA3AF;
+      margin-top: 5px;
+      font-size: 14px;
+    }
+    pre {
+      background: rgba(0,0,0,0.5);
+      padding: 10px;
+      border-radius: 5px;
+      overflow-x: auto;
+      font-size: 12px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🤖 اختبار الزر الذكي المباشر</h1>
+      <p style="color: #9CA3AF;">اختبار شامل لمحرك الذكاء الاصطناعي v2</p>
+    </div>
+
+    <!-- Test 1: Greeting -->
+    <div class="test-section">
+      <h2>🌟 الاختبار 1: التحية</h2>
+      <button class="test-button" onclick="testGreeting()">اختبر "مرحبا"</button>
+      <div id="result1" class="result" style="display:none;"></div>
+    </div>
+
+    <!-- Test 2: Pricing -->
+    <div class="test-section">
+      <h2>💰 الاختبار 2: الأسعار</h2>
+      <button class="test-button" onclick="testPricing()">اختبر "كم سعر الشجرة؟"</button>
+      <div id="result2" class="result" style="display:none;"></div>
+    </div>
+
+    <!-- Test 3: Booking -->
+    <div class="test-section">
+      <h2>📋 الاختبار 3: الحجز</h2>
+      <button class="test-button" onclick="testBooking()">اختبر "كيف أحجز؟"</button>
+      <div id="result3" class="result" style="display:none;"></div>
+    </div>
+
+    <!-- Test 4: Certificate -->
+    <div class="test-section">
+      <h2>📜 الاختبار 4: الشهادة</h2>
+      <button class="test-button" onclick="testCertificate()">اختبر "أين الشهادة؟"</button>
+      <div id="result4" class="result" style="display:none;"></div>
+    </div>
+
+    <!-- Statistics -->
+    <div class="test-section">
+      <h2>📊 إحصائيات الذكاء الاصطناعي</h2>
+      <button class="test-button" onclick="loadStats()">تحميل الإحصائيات</button>
+      <div id="stats" class="grid" style="display:none;"></div>
+    </div>
+
+    <!-- Run All Tests -->
+    <div class="test-section" style="text-align: center;">
+      <button class="test-button" style="font-size: 20px; padding: 20px 40px;" onclick="runAllTests()">
+        🚀 تشغيل جميع الاختبارات
+      </button>
+    </div>
+  </div>
+
+  <script>
+    const SUPABASE_URL = 'https://fqhdnoqytbhtasiqilpi.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZxaGRub3F5dGJodGFzaXFpbHBpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjk0MDg3MjYsImV4cCI6MjA0NDk4NDcyNn0.cPdmuSYQwz94C7wQzunbhHlRFZdvKPmvvxGjsxh1Xoc';
+
+    const { createClient } = supabase;
+    const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    async function testMessage(message, resultId) {
+      const resultDiv = document.getElementById(resultId);
+      resultDiv.style.display = 'block';
+      resultDiv.innerHTML = '<p class="info">⏳ جاري الاختبار...</p>';
+
+      try {
+        const sessionToken = 'test_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+
+        const { data, error } = await supabaseClient.rpc('handle_smart_button_ai_v2', {
+          p_session_token: sessionToken,
+          p_message: message,
+          p_user_type: 'visitor',
+          p_user_id: null,
+          p_phone_number: null,
+          p_page_url: window.location.href,
+          p_ip_address: '127.0.0.1'
+        });
+
+        if (error) {
+          resultDiv.innerHTML = `<p class="error">❌ خطأ: ${error.message}</p>`;
+          return;
+        }
+
+        let html = '<p class="success">✅ نجح الاختبار!</p>';
+        html += '<hr style="margin: 15px 0; border-color: rgba(255,255,255,0.1);">';
+
+        html += `<p><strong>الرسالة:</strong> "${message}"</p>`;
+        html += `<p><strong>النية المكتشفة:</strong> <span style="color: #3B82F6">${data.intent || 'غير معروف'}</span></p>`;
+        html += `<p><strong>المشاعر:</strong> <span style="color: #FBBF24">${data.sentiment || 'غير معروف'}</span></p>`;
+        html += `<p><strong>نسبة الثقة:</strong> <span style="color: #10B981">${data.confidence ? (parseFloat(data.confidence) * 100).toFixed(0) + '%' : 'N/A'}</span></p>`;
+        html += `<p><strong>مستوى الإلحاح:</strong> <span style="color: #F59E0B">${data.urgency || 'عادي'}</span></p>`;
+        html += `<p><strong>رد تلقائي:</strong> ${data.auto_response ? '<span style="color: #10B981">✓ نعم</span>' : '<span style="color: #EF4444">✗ لا</span>'}</p>`;
+        html += `<p><strong>AI v2:</strong> ${data.ai_v2 ? '<span style="color: #10B981">✓ نشط</span>' : '<span style="color: #EF4444">✗ غير نشط</span>'}</p>`;
+
+        if (data.response) {
+          html += '<hr style="margin: 15px 0; border-color: rgba(255,255,255,0.1);">';
+          html += `<p><strong>الرد:</strong></p><p style="background: rgba(59,130,246,0.1); padding: 10px; border-radius: 5px; border-right: 3px solid #3B82F6;">${data.response}</p>`;
+        }
+
+        if (data.suggestions && data.suggestions.length > 0) {
+          html += '<hr style="margin: 15px 0; border-color: rgba(255,255,255,0.1);">';
+          html += `<p><strong>الاقتراحات الذكية (${data.suggestions.length}):</strong></p>`;
+          html += '<div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px;">';
+          data.suggestions.forEach(s => {
+            html += `<span style="background: rgba(139, 115, 85, 0.3); padding: 8px 15px; border-radius: 20px; font-size: 14px; border: 1px solid rgba(139, 115, 85, 0.5);">${s.text}</span>`;
+          });
+          html += '</div>';
+        }
+
+        html += '<hr style="margin: 15px 0; border-color: rgba(255,255,255,0.1);">';
+        html += '<details><summary style="cursor: pointer; color: #9CA3AF;">عرض البيانات الكاملة</summary>';
+        html += `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+        html += '</details>';
+
+        resultDiv.innerHTML = html;
+      } catch (err) {
+        resultDiv.innerHTML = `<p class="error">❌ خطأ: ${err.message}</p>`;
+      }
+    }
+
+    async function loadStats() {
+      const statsDiv = document.getElementById('stats');
+      statsDiv.style.display = 'grid';
+      statsDiv.innerHTML = '<p style="grid-column: 1/-1; text-align: center;" class="info">⏳ جاري تحميل الإحصائيات...</p>';
+
+      try {
+        const { data: contextData } = await supabaseClient.from('smart_button_context').select('*');
+        const { data: learningData } = await supabaseClient.from('conversation_learning').select('*');
+        const { data: sessionsData } = await supabaseClient.from('smart_button_sessions').select('*');
+        const { data: suggestionsData } = await supabaseClient.from('smart_suggestions').select('*');
+
+        const contextCount = contextData?.length || 0;
+        const learningCount = learningData?.length || 0;
+        const sessionsCount = sessionsData?.length || 0;
+        const suggestionsCount = suggestionsData?.length || 0;
+
+        const successCount = learningData?.filter(l => l.resolution_successful).length || 0;
+        const successRate = learningCount > 0 ? ((successCount / learningCount) * 100).toFixed(1) : 0;
+
+        let html = `
+          <div class="stat-card">
+            <div class="stat-value">${sessionsCount}</div>
+            <div class="stat-label">جلسات نشطة</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">${contextCount}</div>
+            <div class="stat-label">سياقات محفوظة</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">${learningCount}</div>
+            <div class="stat-label">بيانات تعلم</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">${successRate}%</div>
+            <div class="stat-label">معدل النجاح</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">${successCount}</div>
+            <div class="stat-label">حلول ناجحة</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">${suggestionsCount}+</div>
+            <div class="stat-label">اقتراحات ذكية</div>
+          </div>
+        `;
+
+        statsDiv.innerHTML = html;
+      } catch (err) {
+        statsDiv.innerHTML = `<p class="error" style="grid-column: 1/-1;">❌ خطأ: ${err.message}</p>`;
+      }
+    }
+
+    function testGreeting() {
+      testMessage('مرحبا', 'result1');
+    }
+
+    function testPricing() {
+      testMessage('كم سعر الشجرة؟', 'result2');
+    }
+
+    function testBooking() {
+      testMessage('كيف أحجز؟', 'result3');
+    }
+
+    function testCertificate() {
+      testMessage('أين الشهادة؟', 'result4');
+    }
+
+    async function runAllTests() {
+      await testGreeting();
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      await testPricing();
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      await testBooking();
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      await testCertificate();
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      await loadStats();
+    }
+
+    // Auto-load stats on page load
+    setTimeout(() => {
+      loadStats();
+    }, 500);
+  </script>
+</body>
+</html>
