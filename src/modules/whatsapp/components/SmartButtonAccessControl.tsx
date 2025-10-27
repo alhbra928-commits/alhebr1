@@ -204,20 +204,35 @@ export const SmartButtonAccessControl: React.FC = () => {
         employeeId = existingEmployee.id;
       } else {
         // إنشاء موظف جديد
+        // التأكد من وجود بريد إلكتروني (إلزامي في الجدول)
+        const emailToUse = newEmployeeForm.email && newEmployeeForm.email.trim() !== ''
+          ? newEmployeeForm.email
+          : `${newEmployeeForm.phone.replace(/\D/g, '')}@whatsapp.local`;
+
         const { data: newEmployee, error: createError } = await supabase
           .from('admin_users')
           .insert({
-            full_name: newEmployeeForm.full_name,
-            phone: newEmployeeForm.phone,
-            email: newEmployeeForm.email || `${newEmployeeForm.phone}@temp.com`,
-            job_title: newEmployeeForm.job_title || 'موظف',
+            full_name: newEmployeeForm.full_name.trim(),
+            phone: newEmployeeForm.phone.trim(),
+            email: emailToUse,
+            job_title: newEmployeeForm.job_title && newEmployeeForm.job_title.trim() !== ''
+              ? newEmployeeForm.job_title
+              : 'موظف واتساب',
             is_active: true,
             secret_code: Math.random().toString(36).substring(2, 10).toUpperCase()
           })
           .select('id')
           .single();
 
-        if (createError) throw createError;
+        if (createError) {
+          console.error('Database error:', createError);
+          throw new Error(`فشل إنشاء الموظف: ${createError.message}`);
+        }
+
+        if (!newEmployee) {
+          throw new Error('فشل إنشاء الموظف: لم يتم إرجاع بيانات');
+        }
+
         employeeId = newEmployee.id;
       }
 
@@ -259,9 +274,22 @@ export const SmartButtonAccessControl: React.FC = () => {
         expires_in_days: 7
       });
       await loadData();
-    } catch (error) {
+
+      // رسالة نجاح
+      alert('✅ تم تسجيل الموظف ومنح الصلاحيات بنجاح!');
+    } catch (error: any) {
       console.error('Error adding access:', error);
-      alert('حدث خطأ أثناء إضافة الموظف');
+
+      // رسالة خطأ مفصلة
+      const errorMessage = error?.message || 'حدث خطأ غير معروف';
+
+      if (errorMessage.includes('duplicate key value')) {
+        alert('❌ خطأ: رقم الهاتف أو البريد الإلكتروني مسجل مسبقاً');
+      } else if (errorMessage.includes('violates')) {
+        alert('❌ خطأ: البيانات المدخلة غير صحيحة أو غير مكتملة');
+      } else {
+        alert(`❌ حدث خطأ أثناء إضافة الموظف:\n${errorMessage}`);
+      }
     }
   };
 
