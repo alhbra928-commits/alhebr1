@@ -3,6 +3,7 @@ import {
   MessageCircle, Settings, Zap, BarChart3, MessageSquare, ToggleLeft, ToggleRight,
   Save, Brain, Eye, CheckCircle2
 } from 'lucide-react';
+import { SmartAutoResponsesManager } from './SmartAutoResponsesManager';
 
 interface SmartButtonSettings {
   is_enabled: boolean;
@@ -288,14 +289,7 @@ export const SimpleSmartButtonManagement: React.FC = () => {
 
       {/* Responses Tab */}
       {activeSubTab === 'responses' && (
-        <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-700/50">
-          <h3 className="text-xl font-bold text-white mb-4">🤖 الردود التلقائية</h3>
-          <div className="text-center py-12 text-gray-400">
-            <MessageSquare className="w-16 h-16 mx-auto mb-4 opacity-50" />
-            <p className="text-lg">قريباً: إدارة الردود التلقائية</p>
-            <p className="text-sm mt-2">سيتم إضافة هذه الميزة في التحديث القادم</p>
-          </div>
-        </div>
+        <SmartAutoResponsesManager />
       )}
 
       {/* AI Tab */}
