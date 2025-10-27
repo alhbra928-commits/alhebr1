@@ -242,6 +242,12 @@ export const SmartFloatingButton: React.FC = () => {
     setSending(true);
 
     try {
+      console.log('📤 Sending message to smart button...', {
+        message: inputMessage.trim(),
+        userType,
+        sessionToken
+      });
+
       const { data, error } = await supabase.rpc('handle_smart_button_ai_v2', {
         p_session_token: sessionToken,
         p_message: inputMessage.trim(),
@@ -252,7 +258,12 @@ export const SmartFloatingButton: React.FC = () => {
         p_ip_address: null
       });
 
-      if (error) throw error;
+      console.log('📥 Response received:', { data, error });
+
+      if (error) {
+        console.error('❌ RPC Error:', error);
+        throw error;
+      }
 
       if (data?.rate_limited) {
         alert(data.error || 'تم تجاوز الحد المسموح. يرجى الانتظار قليلاً.');
