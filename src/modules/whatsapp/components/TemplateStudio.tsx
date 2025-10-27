@@ -113,15 +113,19 @@ export const TemplateStudio: React.FC = () => {
     e.preventDefault();
 
     try {
-      const { data: session } = await supabase.auth.getSession();
       const variables = extractVariables(formData.content_ar);
 
       if (editingTemplate) {
         const { error } = await supabase
           .from('whatsapp_templates')
           .update({
-            ...formData,
-            variables
+            name: formData.name,
+            category: formData.category,
+            content_ar: formData.content_ar,
+            content_en: formData.content_en,
+            is_active: formData.is_active,
+            variables: variables,
+            updated_at: new Date().toISOString()
           })
           .eq('id', editingTemplate.id);
 
@@ -130,9 +134,13 @@ export const TemplateStudio: React.FC = () => {
         const { error } = await supabase
           .from('whatsapp_templates')
           .insert({
-            ...formData,
-            variables,
-            created_by: session?.session?.user?.id
+            name: formData.name,
+            category: formData.category,
+            content_ar: formData.content_ar,
+            content_en: formData.content_en,
+            is_active: formData.is_active,
+            variables: variables,
+            usage_count: 0
           });
 
         if (error) throw error;
@@ -140,8 +148,10 @@ export const TemplateStudio: React.FC = () => {
 
       await loadTemplates();
       resetForm();
+      setShowForm(false);
     } catch (err: any) {
-      setError(err.message);
+      console.error('Error saving template:', err);
+      setError(err.message || 'حدث خطأ أثناء حفظ القالب');
     }
   };
 
