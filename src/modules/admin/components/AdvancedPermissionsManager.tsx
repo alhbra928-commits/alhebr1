@@ -17,7 +17,7 @@ interface AdminUser {
 }
 
 export function AdvancedPermissionsManager() {
-  const [activeSubTab, setActiveSubTab] = useState<'general' | 'smart-button'>('general');
+  const [activeSubTab, setActiveSubTab] = useState<'general'>('general');
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [selectedUser, setSelectedUser] = useState<AdminUser | null>(null);
   const [permissions, setPermissions] = useState<AdminPermission[]>([]);
@@ -349,35 +349,10 @@ export function AdvancedPermissionsManager() {
             <Shield className="w-5 h-5" />
             الصلاحيات العامة
           </button>
-          <button
-            onClick={() => setActiveSubTab('smart-button')}
-            className={`flex items-center gap-2 px-6 py-3 rounded-xl transition-all font-semibold ${
-              activeSubTab === 'smart-button'
-                ? 'text-white'
-                : 'bg-white hover:bg-gray-50'
-            }`}
-            style={activeSubTab === 'smart-button' ? { background: 'linear-gradient(135deg, #0EA5E9 0%, #06B6D4 100%)' } : { color: brandColors.text.primary }}
-          >
-            <MessageCircle className="w-5 h-5" />
-            الزر الذكي (Smart Button)
-          </button>
         </div>
 
-        {/* Content based on active tab */}
-        {activeSubTab === 'smart-button' ? (
-          currentAdmin ? (
-            <InnovativeSmartButtonPermissions
-              currentUserId={currentAdmin.id}
-              isSystemAdmin={currentAdmin.jobTitle === 'مدير النظام'}
-            />
-          ) : (
-            <div className="text-center py-12 text-gray-400">
-              <Shield className="w-16 h-16 mx-auto mb-4 opacity-50" />
-              <p>جاري تحميل معلومات المستخدم...</p>
-            </div>
-          )
-        ) : (
-          <>
+        {/* Content */}
+        <>
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
           <div className="lg:col-span-1">
@@ -986,7 +961,6 @@ export function AdvancedPermissionsManager() {
         </div>
       )}
         </>
-        )}
     </div>
   </div>
   );

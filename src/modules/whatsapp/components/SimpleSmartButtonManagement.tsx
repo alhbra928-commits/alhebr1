@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import {
   MessageCircle, Settings, Zap, BarChart3, MessageSquare, ToggleLeft, ToggleRight,
-  Save, Brain, Eye, CheckCircle2
+  Save, Brain, Eye, CheckCircle2, Shield
 } from 'lucide-react';
 import { SmartAutoResponsesManager } from './SmartAutoResponsesManager';
 import { AdvancedSmartButtonSettings } from './AdvancedSmartButtonSettings';
 import { SmartButtonAnalyticsDashboard } from './SmartButtonAnalyticsDashboard';
+import { SmartButtonAccessControl } from './SmartButtonAccessControl';
 
 interface SmartButtonSettings {
   is_enabled: boolean;
@@ -19,7 +20,7 @@ interface SmartButtonSettings {
 }
 
 export const SimpleSmartButtonManagement: React.FC = () => {
-  const [activeSubTab, setActiveSubTab] = useState<'settings' | 'responses' | 'ai' | 'stats'>('settings');
+  const [activeSubTab, setActiveSubTab] = useState<'settings' | 'responses' | 'ai' | 'stats' | 'access'>('settings');
   const [settings, setSettings] = useState<SmartButtonSettings>({
     is_enabled: true,
     position: 'bottom-right',
@@ -116,6 +117,18 @@ export const SimpleSmartButtonManagement: React.FC = () => {
           <BarChart3 className="w-5 h-5" />
           الإحصاءات
         </button>
+
+        <button
+          onClick={() => setActiveSubTab('access')}
+          className={`flex items-center gap-2 px-4 py-2 rounded-lg whitespace-nowrap transition-all ${
+            activeSubTab === 'access'
+              ? 'bg-gradient-to-r from-blue-500 to-cyan-600 text-white'
+              : 'bg-gray-800/50 text-gray-400 hover:bg-gray-700/50'
+          }`}
+        >
+          <Shield className="w-5 h-5" />
+          صلاحيات الزر الذكي
+        </button>
       </div>
 
       {/* Settings Tab */}
@@ -163,6 +176,11 @@ export const SimpleSmartButtonManagement: React.FC = () => {
       {/* Stats Tab */}
       {activeSubTab === 'stats' && (
         <SmartButtonAnalyticsDashboard />
+      )}
+
+      {/* Access Control Tab */}
+      {activeSubTab === 'access' && (
+        <SmartButtonAccessControl />
       )}
     </div>
   );
