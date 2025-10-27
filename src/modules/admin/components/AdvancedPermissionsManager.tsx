@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Shield, User, Edit, Lock, Trash2, Plus, Check, X } from 'lucide-react';
+import { Shield, User, Edit, Lock, Trash2, Plus, Check, X, MessageCircle } from 'lucide-react';
 import { brandColors, brandGradients } from '../../finance/styles/brandColors';
 import { AdminSessionService, AdminPermission } from '../services/adminSessionService';
+import { SmartButtonPermissionsView } from '../../permissions/components/SmartButtonPermissionsView';
 
 interface AdminUser {
   phone: string;
@@ -14,6 +15,7 @@ interface AdminUser {
 }
 
 export function AdvancedPermissionsManager() {
+  const [activeSubTab, setActiveSubTab] = useState<'general' | 'smart-button'>('general');
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [selectedUser, setSelectedUser] = useState<AdminUser | null>(null);
   const [permissions, setPermissions] = useState<AdminPermission[]>([]);
@@ -326,6 +328,40 @@ export function AdvancedPermissionsManager() {
           </div>
         </div>
 
+        {/* Sub Tabs */}
+        <div className="mb-6 flex gap-2">
+          <button
+            onClick={() => setActiveSubTab('general')}
+            className={`flex items-center gap-2 px-6 py-3 rounded-xl transition-all font-semibold ${
+              activeSubTab === 'general'
+                ? 'text-white'
+                : 'bg-white hover:bg-gray-50'
+            }`}
+            style={activeSubTab === 'general' ? { background: brandGradients.gold } : { color: brandColors.text.primary }}
+          >
+            <Shield className="w-5 h-5" />
+            الصلاحيات العامة
+          </button>
+          <button
+            onClick={() => setActiveSubTab('smart-button')}
+            className={`flex items-center gap-2 px-6 py-3 rounded-xl transition-all font-semibold ${
+              activeSubTab === 'smart-button'
+                ? 'text-white'
+                : 'bg-white hover:bg-gray-50'
+            }`}
+            style={activeSubTab === 'smart-button' ? { background: 'linear-gradient(135deg, #0EA5E9 0%, #06B6D4 100%)' } : { color: brandColors.text.primary }}
+          >
+            <MessageCircle className="w-5 h-5" />
+            الزر الذكي (Smart Button)
+          </button>
+        </div>
+
+        {/* Content based on active tab */}
+        {activeSubTab === 'smart-button' ? (
+          <SmartButtonPermissionsView />
+        ) : (
+          <>
+
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
           <div className="lg:col-span-1">
             <div
@@ -611,9 +647,8 @@ export function AdvancedPermissionsManager() {
             )}
           </div>
         </div>
-      </div>
 
-      {/* نموذج تعديل بيانات المستخدم */}
+        {/* نموذج تعديل بيانات المستخدم */}
       {showEditUserModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
           <div
@@ -933,6 +968,9 @@ export function AdvancedPermissionsManager() {
           </div>
         </div>
       )}
+        </>
+        )}
     </div>
+  </div>
   );
 }
