@@ -1,10 +1,12 @@
 import { systemSettingsService } from './systemSettingsService';
+import { whatsappLinkGenerator } from './whatsappLinkGenerator';
 
 export interface FallbackResponse {
   message: string;
   confidence: number;
   type: 'ai' | 'fallback' | 'business_link';
   whatsapp_link?: string;
+  hybrid_link?: string;
 }
 
 /**
@@ -36,25 +38,39 @@ export const smartFallbackService = {
       };
     }
 
-    // تحديد الرابط المستخدم (من الرد الجاهز أو الرابط الرسمي)
-    let whatsappLink: string;
+    // توليد رابط واتساب هجين مع الرسالة المرافقة
+    let hybridLink: string;
+    let simpleLink: string;
 
     if (autoResponseLink && autoResponseLink.trim() !== '') {
-      // استخدام الرابط المخصص من الرد الجاهز
-      whatsappLink = autoResponseLink;
+      // استخدام الرابط المخصص من الرد الجاهز (بدون رسالة هجينة)
+      hybridLink = autoResponseLink;
+      simpleLink = autoResponseLink;
     } else {
-      // استخدام الرابط الرسمي من الإعدادات
-      whatsappLink = await systemSettingsService.getBusinessWhatsAppLink();
+      // استخدام الرابط الرسمي مع الرسالة الهجينة
+      const linkData = await whatsappLinkGenerator.generateBusinessLink({
+        userType: whatsappLinkGenerator.getCurrentUserType(),
+        context: 'الرد الاحتياطي الذكي - فشل الذكاء الصناعي',
+        timestamp: new Date(),
+        additionalInfo: {
+          'مستوى الثقة': `${Math.round(aiConfidence * 100)}%`,
+          'الاستفسار': userMessage.substring(0, 50) + (userMessage.length > 50 ? '...' : '')
+        }
+      });
+
+      hybridLink = linkData.fullLink;
+      simpleLink = await systemSettingsService.getBusinessWhatsAppLink();
     }
 
     // توليد رسالة الرد الاحتياطي
-    const fallbackMessage = this.generateMessage(userMessage, whatsappLink);
+    const fallbackMessage = this.generateMessage(userMessage, hybridLink);
 
     return {
       message: fallbackMessage,
       confidence: aiConfidence,
       type: 'business_link',
-      whatsapp_link: whatsappLink
+      whatsapp_link: simpleLink,
+      hybrid_link: hybridLink
     };
   },
 

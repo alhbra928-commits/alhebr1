@@ -145,6 +145,27 @@ export const systemSettingsService = {
   },
 
   /**
+   * جلب الرسالة الأساسية المرافقة لواتساب الأعمال
+   */
+  async getBusinessWhatsAppMessage(): Promise<string> {
+    const message = await this.getSetting('business_whatsapp_message');
+    return message || `مرحبًا 👋
+تم تحويلك من منصة تملك النخيل والزيتون 🌴
+سعداء بخدمتك، يرجى توضيح استفسارك أدناه 👇`;
+  },
+
+  /**
+   * تحديث الرسالة الأساسية المرافقة
+   */
+  async updateBusinessWhatsAppMessage(message: string): Promise<boolean> {
+    if (!message || message.trim() === '') {
+      throw new Error('الرجاء إدخال نص الرسالة');
+    }
+
+    return await this.updateSetting('business_whatsapp_message', message.trim());
+  },
+
+  /**
    * التحقق من صحة رابط واتساب
    */
   isValidWhatsAppLink(link: string): boolean {

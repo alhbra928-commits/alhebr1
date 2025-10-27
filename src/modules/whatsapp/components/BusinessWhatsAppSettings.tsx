@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { ExternalLink, Save, TestTube, Check, AlertCircle, Briefcase, Link as LinkIcon } from 'lucide-react';
+import { ExternalLink, Save, TestTube, Check, AlertCircle, Briefcase, Link as LinkIcon, MessageSquare } from 'lucide-react';
 import { systemSettingsService } from '../services/systemSettingsService';
 
 export const BusinessWhatsAppSettings: React.FC = () => {
   const [businessLink, setBusinessLink] = useState('');
   const [originalLink, setOriginalLink] = useState('');
+  const [businessMessage, setBusinessMessage] = useState('');
+  const [originalMessage, setOriginalMessage] = useState('');
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
@@ -15,18 +17,23 @@ export const BusinessWhatsAppSettings: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    setHasChanges(businessLink !== originalLink && businessLink.trim() !== '');
-  }, [businessLink, originalLink]);
+    const linkChanged = businessLink !== originalLink && businessLink.trim() !== '';
+    const messageChanged = businessMessage !== originalMessage;
+    setHasChanges(linkChanged || messageChanged);
+  }, [businessLink, originalLink, businessMessage, originalMessage]);
 
   const loadBusinessLink = async () => {
     try {
       setLoading(true);
       const link = await systemSettingsService.getBusinessWhatsAppLink();
+      const msg = await systemSettingsService.getBusinessWhatsAppMessage();
       setBusinessLink(link);
       setOriginalLink(link);
+      setBusinessMessage(msg);
+      setOriginalMessage(msg);
     } catch (error) {
-      console.error('Error loading business link:', error);
-      showMessage('error', 'فشل تحميل رابط واتساب الأعمال');
+      console.error('Error loading business settings:', error);
+      showMessage('error', 'فشل تحميل إعدادات واتساب الأعمال');
     } finally {
       setLoading(false);
     }
@@ -43,15 +50,22 @@ export const BusinessWhatsAppSettings: React.FC = () => {
       return;
     }
 
+    if (!businessMessage.trim()) {
+      showMessage('error', 'الرجاء إدخال الرسالة الأساسية المرافقة');
+      return;
+    }
+
     try {
       setSaving(true);
-      const success = await systemSettingsService.updateBusinessWhatsAppLink(businessLink);
+      const linkSuccess = await systemSettingsService.updateBusinessWhatsAppLink(businessLink);
+      const msgSuccess = await systemSettingsService.updateBusinessWhatsAppMessage(businessMessage);
 
-      if (success) {
+      if (linkSuccess && msgSuccess) {
         setOriginalLink(businessLink);
-        showMessage('success', '✅ تم حفظ رابط واتساب الأعمال بنجاح!');
+        setOriginalMessage(businessMessage);
+        showMessage('success', '✅ تم حفظ إعدادات واتساب الأعمال بنجاح!');
       } else {
-        showMessage('error', 'فشل حفظ الرابط');
+        showMessage('error', 'فشل حفظ بعض الإعدادات');
       }
     } catch (error: any) {
       showMessage('error', error.message || 'حدث خطأ أثناء الحفظ');
@@ -139,6 +153,26 @@ export const BusinessWhatsAppSettings: React.FC = () => {
           </div>
           <p className="text-gray-400 text-xs mt-2">
             💡 يجب أن يبدأ الرابط بـ <code className="bg-gray-700/50 px-2 py-1 rounded">https://wa.me/message/</code>
+          </p>
+        </div>
+
+        {/* الرسالة الأساسية المرافقة */}
+        <div>
+          <label className="block text-gray-300 mb-2 flex items-center gap-2">
+            <MessageSquare className="w-4 h-4" />
+            ✉️ الرسالة الأساسية المرافقة (Manual Base Message):
+          </label>
+          <textarea
+            value={businessMessage}
+            onChange={(e) => setBusinessMessage(e.target.value)}
+            placeholder="مرحبًا 👋&#10;تم تحويلك من منصة تملك النخيل والزيتون 🌴&#10;سعداء بخدمتك، يرجى توضيح استفسارك أدناه 👇"
+            className="w-full px-4 py-3 bg-gray-700/50 border border-blue-500/30 rounded-lg text-white focus:outline-none focus:border-blue-500 min-h-[120px] resize-y"
+            dir="rtl"
+          />
+          <p className="text-gray-400 text-xs mt-2">
+            💬 هذه الرسالة تُرسل تلقائياً مع كل رابط واتساب الأعمال، ويمكنك تخصيصها بنص ترحيبي رسمي.
+            <br />
+            <span className="text-cyan-400">النظام سيضيف تلقائياً: نوع العميل - المصدر - التاريخ والوقت</span>
           </p>
         </div>
 
