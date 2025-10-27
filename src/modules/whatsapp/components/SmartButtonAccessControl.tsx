@@ -38,8 +38,11 @@ export const SmartButtonAccessControl: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [showAddModal, setShowAddModal] = useState(false);
-  const [selectedEmployee, setSelectedEmployee] = useState<string>('');
-  const [newAccessForm, setNewAccessForm] = useState({
+  const [newEmployeeForm, setNewEmployeeForm] = useState({
+    full_name: '',
+    phone: '',
+    email: '',
+    job_title: '',
     edit_settings: false,
     manage_responses: false,
     manage_ai: false,
@@ -183,29 +186,63 @@ export const SmartButtonAccessControl: React.FC = () => {
   };
 
   const handleAddAccess = async () => {
-    if (!selectedEmployee) return;
+    if (!newEmployeeForm.full_name || !newEmployeeForm.phone) {
+      alert('الرجاء إدخال الاسم ورقم الهاتف');
+      return;
+    }
 
     try {
       const session = JSON.parse(localStorage.getItem('admin_session') || '{}');
       const currentUserId = session.admin?.id || 'system';
 
-      const expiryDate = newAccessForm.is_temporary
-        ? new Date(Date.now() + newAccessForm.expires_in_days * 24 * 60 * 60 * 1000).toISOString()
+      // 1. تسجيل الموظف الجديد أو التحقق من وجوده
+      let employeeId: string;
+
+      const { data: existingEmployee } = await supabase
+        .from('admin_users')
+        .select('id')
+        .eq('phone', newEmployeeForm.phone)
+        .maybeSingle();
+
+      if (existingEmployee) {
+        employeeId = existingEmployee.id;
+      } else {
+        // إنشاء موظف جديد
+        const { data: newEmployee, error: createError } = await supabase
+          .from('admin_users')
+          .insert({
+            full_name: newEmployeeForm.full_name,
+            phone: newEmployeeForm.phone,
+            email: newEmployeeForm.email || `${newEmployeeForm.phone}@temp.com`,
+            job_title: newEmployeeForm.job_title || 'موظف',
+            is_active: true,
+            secret_code: Math.random().toString(36).substring(2, 10).toUpperCase()
+          })
+          .select('id')
+          .single();
+
+        if (createError) throw createError;
+        employeeId = newEmployee.id;
+      }
+
+      // 2. منح صلاحيات الزر الذكي
+      const expiryDate = newEmployeeForm.is_temporary
+        ? new Date(Date.now() + newEmployeeForm.expires_in_days * 24 * 60 * 60 * 1000).toISOString()
         : null;
 
       const permissionsToGrant = [
-        { code: 'whatsapp.button.edit', enabled: newAccessForm.edit_settings },
-        { code: 'whatsapp.button.responses', enabled: newAccessForm.manage_responses },
-        { code: 'whatsapp.button.ai', enabled: newAccessForm.manage_ai },
-        { code: 'whatsapp.button.stats', enabled: newAccessForm.view_stats }
+        { code: 'whatsapp.button.edit', enabled: newEmployeeForm.edit_settings },
+        { code: 'whatsapp.button.responses', enabled: newEmployeeForm.manage_responses },
+        { code: 'whatsapp.button.ai', enabled: newEmployeeForm.manage_ai },
+        { code: 'whatsapp.button.stats', enabled: newEmployeeForm.view_stats }
       ];
 
       for (const perm of permissionsToGrant) {
         if (perm.enabled) {
           await smartButtonPermissionsService.grantPermission(
-            selectedEmployee,
+            employeeId,
             perm.code,
-            newAccessForm.is_temporary,
+            newEmployeeForm.is_temporary,
             expiryDate,
             currentUserId
           );
@@ -213,8 +250,11 @@ export const SmartButtonAccessControl: React.FC = () => {
       }
 
       setShowAddModal(false);
-      setSelectedEmployee('');
-      setNewAccessForm({
+      setNewEmployeeForm({
+        full_name: '',
+        phone: '',
+        email: '',
+        job_title: '',
         edit_settings: false,
         manage_responses: false,
         manage_ai: false,
@@ -225,6 +265,7 @@ export const SmartButtonAccessControl: React.FC = () => {
       await loadData();
     } catch (error) {
       console.error('Error adding access:', error);
+      alert('حدث خطأ أثناء إضافة الموظف');
     }
   };
 
@@ -427,25 +468,58 @@ export const SmartButtonAccessControl: React.FC = () => {
           <div className="bg-gray-800 rounded-xl p-6 max-w-2xl w-full border border-gray-700 shadow-2xl">
             <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
               <Plus className="w-6 h-6" />
-              منح صلاحية جديدة للزر الذكي
+              تسجيل موظف ومنح صلاحيات الزر الذكي
             </h3>
 
             <div className="space-y-4">
-              {/* Employee Selector */}
-              <div>
-                <label className="block text-gray-300 text-sm mb-2">اختر الموظف</label>
-                <select
-                  value={selectedEmployee}
-                  onChange={(e) => setSelectedEmployee(e.target.value)}
-                  className="w-full px-4 py-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none"
-                >
-                  <option value="">-- اختر موظف --</option>
-                  {employees.map((emp) => (
-                    <option key={emp.id} value={emp.id}>
-                      {emp.full_name} ({emp.job_title})
-                    </option>
-                  ))}
-                </select>
+              {/* Employee Registration Form */}
+              <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-4">
+                <h4 className="text-white font-semibold mb-3 flex items-center gap-2">
+                  <UserCheck className="w-5 h-5" />
+                  معلومات الموظف
+                </h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-gray-300 text-sm mb-2">الاسم الكامل *</label>
+                    <input
+                      type="text"
+                      value={newEmployeeForm.full_name}
+                      onChange={(e) => setNewEmployeeForm({ ...newEmployeeForm, full_name: e.target.value })}
+                      placeholder="مثال: أحمد محمد"
+                      className="w-full px-4 py-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-gray-300 text-sm mb-2">رقم الهاتف *</label>
+                    <input
+                      type="text"
+                      value={newEmployeeForm.phone}
+                      onChange={(e) => setNewEmployeeForm({ ...newEmployeeForm, phone: e.target.value })}
+                      placeholder="05xxxxxxxx"
+                      className="w-full px-4 py-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-gray-300 text-sm mb-2">البريد الإلكتروني</label>
+                    <input
+                      type="email"
+                      value={newEmployeeForm.email}
+                      onChange={(e) => setNewEmployeeForm({ ...newEmployeeForm, email: e.target.value })}
+                      placeholder="example@domain.com"
+                      className="w-full px-4 py-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-gray-300 text-sm mb-2">المسمى الوظيفي</label>
+                    <input
+                      type="text"
+                      value={newEmployeeForm.job_title}
+                      onChange={(e) => setNewEmployeeForm({ ...newEmployeeForm, job_title: e.target.value })}
+                      placeholder="مثال: مسؤول الواتساب"
+                      className="w-full px-4 py-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none"
+                    />
+                  </div>
+                </div>
               </div>
 
               {/* Permissions */}
@@ -453,8 +527,8 @@ export const SmartButtonAccessControl: React.FC = () => {
                 <label className="flex items-center gap-3 p-3 bg-gray-700/50 rounded-lg cursor-pointer hover:bg-gray-700/70 transition-all">
                   <input
                     type="checkbox"
-                    checked={newAccessForm.edit_settings}
-                    onChange={(e) => setNewAccessForm({ ...newAccessForm, edit_settings: e.target.checked })}
+                    checked={newEmployeeForm.edit_settings}
+                    onChange={(e) => setNewEmployeeForm({ ...newEmployeeForm, edit_settings: e.target.checked })}
                     className="w-5 h-5"
                   />
                   <div className="flex items-center gap-2">
@@ -466,8 +540,8 @@ export const SmartButtonAccessControl: React.FC = () => {
                 <label className="flex items-center gap-3 p-3 bg-gray-700/50 rounded-lg cursor-pointer hover:bg-gray-700/70 transition-all">
                   <input
                     type="checkbox"
-                    checked={newAccessForm.manage_responses}
-                    onChange={(e) => setNewAccessForm({ ...newAccessForm, manage_responses: e.target.checked })}
+                    checked={newEmployeeForm.manage_responses}
+                    onChange={(e) => setNewEmployeeForm({ ...newEmployeeForm, manage_responses: e.target.checked })}
                     className="w-5 h-5"
                   />
                   <div className="flex items-center gap-2">
@@ -479,8 +553,8 @@ export const SmartButtonAccessControl: React.FC = () => {
                 <label className="flex items-center gap-3 p-3 bg-gray-700/50 rounded-lg cursor-pointer hover:bg-gray-700/70 transition-all">
                   <input
                     type="checkbox"
-                    checked={newAccessForm.manage_ai}
-                    onChange={(e) => setNewAccessForm({ ...newAccessForm, manage_ai: e.target.checked })}
+                    checked={newEmployeeForm.manage_ai}
+                    onChange={(e) => setNewEmployeeForm({ ...newEmployeeForm, manage_ai: e.target.checked })}
                     className="w-5 h-5"
                   />
                   <div className="flex items-center gap-2">
@@ -492,8 +566,8 @@ export const SmartButtonAccessControl: React.FC = () => {
                 <label className="flex items-center gap-3 p-3 bg-gray-700/50 rounded-lg cursor-pointer hover:bg-gray-700/70 transition-all">
                   <input
                     type="checkbox"
-                    checked={newAccessForm.view_stats}
-                    onChange={(e) => setNewAccessForm({ ...newAccessForm, view_stats: e.target.checked })}
+                    checked={newEmployeeForm.view_stats}
+                    onChange={(e) => setNewEmployeeForm({ ...newEmployeeForm, view_stats: e.target.checked })}
                     className="w-5 h-5"
                   />
                   <div className="flex items-center gap-2">
@@ -508,8 +582,8 @@ export const SmartButtonAccessControl: React.FC = () => {
                 <label className="flex items-center gap-3 cursor-pointer">
                   <input
                     type="checkbox"
-                    checked={newAccessForm.is_temporary}
-                    onChange={(e) => setNewAccessForm({ ...newAccessForm, is_temporary: e.target.checked })}
+                    checked={newEmployeeForm.is_temporary}
+                    onChange={(e) => setNewEmployeeForm({ ...newEmployeeForm, is_temporary: e.target.checked })}
                     className="w-5 h-5"
                   />
                   <div className="flex items-center gap-2">
@@ -518,14 +592,14 @@ export const SmartButtonAccessControl: React.FC = () => {
                   </div>
                 </label>
 
-                {newAccessForm.is_temporary && (
+                {newEmployeeForm.is_temporary && (
                   <div className="mt-3">
                     <label className="block text-gray-300 text-sm mb-2">مدة الصلاحية (بالأيام)</label>
                     <input
                       type="number"
                       min="1"
-                      value={newAccessForm.expires_in_days}
-                      onChange={(e) => setNewAccessForm({ ...newAccessForm, expires_in_days: parseInt(e.target.value) || 7 })}
+                      value={newEmployeeForm.expires_in_days}
+                      onChange={(e) => setNewEmployeeForm({ ...newEmployeeForm, expires_in_days: parseInt(e.target.value) || 7 })}
                       className="w-full px-4 py-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-yellow-500 focus:outline-none"
                     />
                   </div>
@@ -536,10 +610,10 @@ export const SmartButtonAccessControl: React.FC = () => {
             <div className="flex gap-3 mt-6">
               <button
                 onClick={handleAddAccess}
-                disabled={!selectedEmployee}
+                disabled={!newEmployeeForm.full_name || !newEmployeeForm.phone}
                 className="flex-1 px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                منح الصلاحيات
+                تسجيل ومنح الصلاحيات
               </button>
               <button
                 onClick={() => setShowAddModal(false)}
