@@ -183,7 +183,7 @@ export const SmartButtonAccessControl: React.FC = () => {
 
   const handleAddAccess = async () => {
     if (!newEmployeeForm.full_name || !newEmployeeForm.phone) {
-      alert('الرجاء إدخال الاسم ورقم الهاتف');
+      alert('⚠️ الرجاء إدخال الاسم ورقم الهاتف');
       return;
     }
 
@@ -191,46 +191,110 @@ export const SmartButtonAccessControl: React.FC = () => {
       const session = JSON.parse(localStorage.getItem('admin_session') || '{}');
       const currentUserId = session.admin?.id || 'system';
 
+      // تنظيف البيانات أولاً
+      const cleanPhone = newEmployeeForm.phone.trim();
+      const cleanName = newEmployeeForm.full_name.trim();
+      const cleanEmail = newEmployeeForm.email?.trim() || '';
+
+      // التحقق من صحة رقم الهاتف
+      if (!/^[0-9\s\-\+\(\)]+$/.test(cleanPhone)) {
+        alert('⚠️ رقم الهاتف غير صحيح');
+        return;
+      }
+
       // 1. تسجيل الموظف الجديد أو التحقق من وجوده
       let employeeId: string;
 
+      // البحث عن موظف موجود بنفس الهاتف
       const { data: existingEmployee } = await supabase
         .from('admin_users')
-        .select('id')
-        .eq('phone', newEmployeeForm.phone)
+        .select('id, email, is_active, deleted_at')
+        .eq('phone', cleanPhone)
         .maybeSingle();
 
       if (existingEmployee) {
+        // التحقق من حالة الموظف
+        if (existingEmployee.deleted_at) {
+          alert('⚠️ هذا الموظف محذوف. يرجى استعادته أولاً من قسم الموظفين');
+          return;
+        }
+
+        if (!existingEmployee.is_active) {
+          // تفعيل الموظف
+          await supabase
+            .from('admin_users')
+            .update({ is_active: true })
+            .eq('id', existingEmployee.id);
+        }
+
         employeeId = existingEmployee.id;
       } else {
         // إنشاء موظف جديد
-        // التأكد من وجود بريد إلكتروني (إلزامي في الجدول)
-        const emailToUse = newEmployeeForm.email && newEmployeeForm.email.trim() !== ''
-          ? newEmployeeForm.email
-          : `${newEmployeeForm.phone.replace(/\D/g, '')}@whatsapp.local`;
+        // توليد بريد إلكتروني فريد
+        let emailToUse: string;
+
+        if (cleanEmail && cleanEmail !== '') {
+          // استخدام البريد المدخل
+          // التحقق من أنه غير مستخدم
+          const { data: emailExists } = await supabase
+            .from('admin_users')
+            .select('id')
+            .eq('email', cleanEmail)
+            .maybeSingle();
+
+          if (emailExists) {
+            alert('⚠️ البريد الإلكتروني مستخدم بالفعل');
+            return;
+          }
+
+          emailToUse = cleanEmail;
+        } else {
+          // توليد بريد إلكتروني فريد
+          const phoneDigits = cleanPhone.replace(/\D/g, '');
+          const timestamp = Date.now();
+          const randomStr = Math.random().toString(36).substring(2, 6);
+          emailToUse = `${phoneDigits}.${randomStr}.${timestamp}@whatsapp.local`;
+        }
 
         const { data: newEmployee, error: createError } = await supabase
           .from('admin_users')
           .insert({
-            full_name: newEmployeeForm.full_name.trim(),
-            phone: newEmployeeForm.phone.trim(),
+            full_name: cleanName,
+            phone: cleanPhone,
             email: emailToUse,
-            job_title: newEmployeeForm.job_title && newEmployeeForm.job_title.trim() !== ''
-              ? newEmployeeForm.job_title
-              : 'موظف واتساب',
+            job_title: newEmployeeForm.job_title?.trim() || 'موظف واتساب',
             is_active: true,
+            role_id: null,
             secret_code: Math.random().toString(36).substring(2, 10).toUpperCase()
           })
           .select('id')
           .single();
 
         if (createError) {
-          console.error('Database error:', createError);
-          throw new Error(`فشل إنشاء الموظف: ${createError.message}`);
+          console.error('Database error details:', createError);
+
+          // معالجة أخطاء محددة
+          if (createError.code === '23505') {
+            if (createError.message.includes('email')) {
+              alert('⚠️ البريد الإلكتروني مستخدم بالفعل');
+            } else if (createError.message.includes('phone')) {
+              alert('⚠️ رقم الهاتف مستخدم بالفعل');
+            } else {
+              alert('⚠️ البيانات مكررة. الموظف قد يكون موجوداً مسبقاً');
+            }
+          } else if (createError.code === '23503') {
+            alert('⚠️ خطأ في العلاقات: تأكد من صحة البيانات');
+          } else if (createError.code === '23502') {
+            alert('⚠️ بيانات مطلوبة مفقودة: تأكد من إدخال جميع الحقول الإلزامية');
+          } else {
+            alert(`❌ خطأ في قاعدة البيانات:\n${createError.message}\n\nالكود: ${createError.code || 'غير محدد'}`);
+          }
+          return;
         }
 
-        if (!newEmployee) {
-          throw new Error('فشل إنشاء الموظف: لم يتم إرجاع بيانات');
+        if (!newEmployee || !newEmployee.id) {
+          alert('❌ فشل إنشاء الموظف: لم يتم إرجاع معرف الموظف');
+          return;
         }
 
         employeeId = newEmployee.id;
@@ -242,24 +306,42 @@ export const SmartButtonAccessControl: React.FC = () => {
         : null;
 
       const permissionsToGrant = [
-        { code: 'whatsapp.button.edit', enabled: newEmployeeForm.edit_settings },
-        { code: 'whatsapp.button.responses', enabled: newEmployeeForm.manage_responses },
-        { code: 'whatsapp.button.ai', enabled: newEmployeeForm.manage_ai },
-        { code: 'whatsapp.button.stats', enabled: newEmployeeForm.view_stats }
+        { code: 'whatsapp.button.edit', enabled: newEmployeeForm.edit_settings, name: 'تعديل الإعدادات' },
+        { code: 'whatsapp.button.responses', enabled: newEmployeeForm.manage_responses, name: 'إدارة الردود' },
+        { code: 'whatsapp.button.ai', enabled: newEmployeeForm.manage_ai, name: 'الذكاء المتقدم' },
+        { code: 'whatsapp.button.stats', enabled: newEmployeeForm.view_stats, name: 'عرض الإحصاءات' }
       ];
+
+      // التحقق من وجود صلاحية واحدة على الأقل
+      const hasAnyPermission = permissionsToGrant.some(p => p.enabled);
+      if (!hasAnyPermission) {
+        alert('⚠️ يجب اختيار صلاحية واحدة على الأقل');
+        return;
+      }
+
+      // منح الصلاحيات
+      let grantedCount = 0;
+      const errors: string[] = [];
 
       for (const perm of permissionsToGrant) {
         if (perm.enabled) {
-          await smartButtonPermissionsService.grantPermission(
-            employeeId,
-            perm.code,
-            newEmployeeForm.is_temporary,
-            expiryDate,
-            currentUserId
-          );
+          try {
+            await smartButtonPermissionsService.grantPermission(
+              employeeId,
+              perm.code,
+              newEmployeeForm.is_temporary,
+              expiryDate,
+              currentUserId
+            );
+            grantedCount++;
+          } catch (permError: any) {
+            console.error(`Error granting ${perm.code}:`, permError);
+            errors.push(`${perm.name}: ${permError.message || 'خطأ غير معروف'}`);
+          }
         }
       }
 
+      // إغلاق النافذة وإعادة التحميل
       setShowAddModal(false);
       setNewEmployeeForm({
         full_name: '',
@@ -273,23 +355,26 @@ export const SmartButtonAccessControl: React.FC = () => {
         is_temporary: false,
         expires_in_days: 7
       });
+
       await loadData();
 
-      // رسالة نجاح
-      alert('✅ تم تسجيل الموظف ومنح الصلاحيات بنجاح!');
+      // رسائل النتيجة
+      if (grantedCount > 0 && errors.length === 0) {
+        alert(`✅ تم تسجيل الموظف ومنح ${grantedCount} صلاحية بنجاح!`);
+      } else if (grantedCount > 0 && errors.length > 0) {
+        alert(`⚠️ تم تسجيل الموظف ومنح ${grantedCount} صلاحية\n\nلكن حدثت أخطاء:\n${errors.join('\n')}`);
+      } else {
+        alert(`❌ تم تسجيل الموظف لكن فشل منح الصلاحيات:\n${errors.join('\n')}`);
+      }
+
     } catch (error: any) {
       console.error('Error adding access:', error);
 
-      // رسالة خطأ مفصلة
+      // رسالة خطأ مفصلة جداً
       const errorMessage = error?.message || 'حدث خطأ غير معروف';
+      const errorCode = error?.code || 'غير محدد';
 
-      if (errorMessage.includes('duplicate key value')) {
-        alert('❌ خطأ: رقم الهاتف أو البريد الإلكتروني مسجل مسبقاً');
-      } else if (errorMessage.includes('violates')) {
-        alert('❌ خطأ: البيانات المدخلة غير صحيحة أو غير مكتملة');
-      } else {
-        alert(`❌ حدث خطأ أثناء إضافة الموظف:\n${errorMessage}`);
-      }
+      alert(`❌ حدث خطأ أثناء إضافة الموظف:\n\n${errorMessage}\n\nالكود: ${errorCode}\n\n💡 تأكد من:\n• إدخال رقم هاتف صحيح\n• البريد الإلكتروني غير مستخدم\n• جميع الحقول صحيحة`);
     }
   };
 
