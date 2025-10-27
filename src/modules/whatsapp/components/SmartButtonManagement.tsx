@@ -192,7 +192,10 @@ export const SmartButtonManagement: React.FC = () => {
       <SmartErrorModal
         isOpen={!!error}
         onClose={() => setError(null)}
-        error={error || ''}
+        title="خطأ في إدارة الزر الذكي"
+        message={error || 'حدث خطأ غير متوقع'}
+        error={error}
+        errorType="general"
       />
 
       {successMessage && (

@@ -15,8 +15,8 @@ interface ErrorDetail {
 interface SmartErrorModalProps {
   isOpen: boolean;
   onClose: () => void;
-  title: string;
-  message: string;
+  title?: string;
+  message?: string;
   error?: Error | any;
   errorDetails?: ErrorDetail;
   errorType?: 'validation' | 'database' | 'network' | 'constraint' | 'rls' | 'general';
@@ -27,8 +27,8 @@ interface SmartErrorModalProps {
 export const SmartErrorModal: React.FC<SmartErrorModalProps> = ({
   isOpen,
   onClose,
-  title,
-  message,
+  title = 'حدث خطأ',
+  message = 'حدث خطأ غير متوقع، يرجى المحاولة مرة أخرى',
   error,
   errorDetails,
   errorType = 'general',
@@ -40,6 +40,10 @@ export const SmartErrorModal: React.FC<SmartErrorModalProps> = ({
   const [showRawData, setShowRawData] = useState(false);
 
   if (!isOpen) return null;
+
+  // Auto-detect title and message from error if not provided
+  const finalTitle = title || (error?.message ? 'خطأ في النظام' : 'حدث خطأ');
+  const finalMessage = message || error?.message || 'حدث خطأ غير متوقع، يرجى المحاولة مرة أخرى';
 
   const parseSupabaseError = (err: any) => {
     const details: any = {};
@@ -153,7 +157,7 @@ export const SmartErrorModal: React.FC<SmartErrorModalProps> = ({
 📌 معلومات أساسية
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-🏷️  العنوان: ${title}
+🏷️  العنوان: ${finalTitle}
 ⏰ التاريخ والوقت: ${timestamp.toLocaleString('ar-SA', {
       weekday: 'long',
       year: 'numeric',
@@ -170,7 +174,7 @@ ${errorDetails?.userAction ? `👤 الإجراء الذي قام به المس�
 📝 وصف المشكلة
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-${message}
+${finalMessage}
 
 `;
 
@@ -304,7 +308,7 @@ ${JSON.stringify(errorDetails.responseData, null, 2)}
               {styles.icon}
             </div>
             <div className="flex-1">
-              <h2 className="text-2xl font-bold mb-2">{title}</h2>
+              <h2 className="text-2xl font-bold mb-2">{finalTitle}</h2>
               <p className="text-white/90 text-sm">
                 نظام الإبلاغ الذكي عن الأخطاء - جميع التفاصيل متوفرة للنسخ
               </p>
@@ -321,7 +325,7 @@ ${JSON.stringify(errorDetails.responseData, null, 2)}
         <div className="p-6 max-h-[60vh] overflow-y-auto" dir="rtl">
           <div className={`${styles.contentBg} border-2 rounded-xl p-4 mb-6`}>
             <p className="text-gray-800 text-lg leading-relaxed whitespace-pre-line">
-              {message}
+              {finalMessage}
             </p>
           </div>
 
