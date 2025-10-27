@@ -278,23 +278,24 @@ export function AdvancedPermissionsManager() {
       return;
     }
 
-    const moduleMapping: Record<string, string> = {
-      finance: 'المالية',
-      farms: 'المزارع',
-      documentation: 'التوثيق',
-      investors: 'المستثمرون',
-      reservations: 'الحجوزات',
-      operations: 'التشغيل',
-      control: 'الرقابة',
-      support: 'الدعم',
+    const moduleMapping: Record<string, { ar: string; en: string }> = {
+      finance: { ar: 'المالية', en: 'Finance' },
+      farms: { ar: 'المزارع', en: 'Farms' },
+      documentation: { ar: 'التوثيق', en: 'Documentation' },
+      investors: { ar: 'المستثمرون', en: 'Investors' },
+      reservations: { ar: 'الحجوزات', en: 'Reservations' },
+      whatsapp: { ar: 'إدارة الواتساب', en: 'WhatsApp Management' },
+      operations: { ar: 'التشغيل', en: 'Operations' },
+      control: { ar: 'الرقابة', en: 'Control' },
+      support: { ar: 'الدعم', en: 'Support' },
     };
 
     try {
       await AdminSessionService.addPermissionToDB({
         admin_phone: selectedUser.phone,
         module_id: newPermissionForm.moduleId,
-        module_name_ar: moduleMapping[newPermissionForm.moduleId] || newPermissionForm.moduleId,
-        module_name_en: newPermissionForm.moduleId,
+        module_name_ar: moduleMapping[newPermissionForm.moduleId]?.ar || newPermissionForm.moduleId,
+        module_name_en: moduleMapping[newPermissionForm.moduleId]?.en || newPermissionForm.moduleId,
         can_view: newPermissionForm.canView,
         can_create: newPermissionForm.canCreate,
         can_edit: newPermissionForm.canEdit,
@@ -737,6 +738,7 @@ export function AdvancedPermissionsManager() {
                   <option value="documentation">التوثيق</option>
                   <option value="investors">المستثمرون</option>
                   <option value="reservations">الحجوزات</option>
+                  <option value="whatsapp">إدارة الواتساب</option>
                   <option value="operations">التشغيل</option>
                   <option value="control">الرقابة</option>
                   <option value="support">الدعم</option>

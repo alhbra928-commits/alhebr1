@@ -35,9 +35,10 @@ const MODULES = [
   { id: 'documentation', name: 'التوثيق', icon: '📜' },
   { id: 'investors', name: 'المستثمرون', icon: '👥' },
   { id: 'reservations', name: 'الحجوزات', icon: '📋' },
+  { id: 'whatsapp', name: 'إدارة الواتساب', icon: '💬' },
   { id: 'operations', name: 'التشغيل', icon: '⚙️' },
   { id: 'control', name: 'الرقابة', icon: '🛡️' },
-  { id: 'support', name: 'الدعم', icon: '💬' },
+  { id: 'support', name: 'الدعم', icon: '📬' },
 ];
 
 const PERMISSION_TYPES = [
@@ -208,15 +209,16 @@ export function SmartUserBuilder({ onClose, onSuccess, existingUsers }: SmartUse
 
       // 2️⃣ حفظ الصلاحيات في admin_module_permissions
       console.log('2️⃣ Saving permissions to admin_module_permissions...');
-      const moduleMapping: Record<string, string> = {
-        finance: 'المالية',
-        farms: 'المزارع',
-        documentation: 'التوثيق',
-        investors: 'المستثمرون',
-        reservations: 'الحجوزات',
-        operations: 'التشغيل',
-        control: 'الرقابة',
-        support: 'الدعم',
+      const moduleMapping: Record<string, { ar: string; en: string }> = {
+        finance: { ar: 'المالية', en: 'Finance' },
+        farms: { ar: 'المزارع', en: 'Farms' },
+        documentation: { ar: 'التوثيق', en: 'Documentation' },
+        investors: { ar: 'المستثمرون', en: 'Investors' },
+        reservations: { ar: 'الحجوزات', en: 'Reservations' },
+        whatsapp: { ar: 'إدارة الواتساب', en: 'WhatsApp Management' },
+        operations: { ar: 'التشغيل', en: 'Operations' },
+        control: { ar: 'الرقابة', en: 'Control' },
+        support: { ar: 'الدعم', en: 'Support' },
       };
 
       for (const [moduleId, perms] of Object.entries(permissions)) {
@@ -226,8 +228,8 @@ export function SmartUserBuilder({ onClose, onSuccess, existingUsers }: SmartUse
           await AdminSessionService.addPermissionToDB({
             admin_phone: formData.phone,
             module_id: moduleId,
-            module_name_ar: moduleMapping[moduleId] || moduleId,
-            module_name_en: moduleId,
+            module_name_ar: moduleMapping[moduleId]?.ar || moduleId,
+            module_name_en: moduleMapping[moduleId]?.en || moduleId,
             can_view: perms.view,
             can_create: perms.create,
             can_edit: perms.edit,
