@@ -98,23 +98,42 @@ export const smartButtonPermissionsService = {
     notes: string = ''
   ): Promise<void> {
     try {
+      // التحقق من صحة UUID
+      const isValidUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(grantedBy);
+
+      const permissionData: any = {
+        admin_user_id: adminUserId,
+        permission_code: permissionCode,
+        status: 'active',
+        is_temporary: isTemporary,
+        valid_until: validUntil,
+        granted_at: new Date().toISOString(),
+        notes
+      };
+
+      // إضافة granted_by فقط إذا كان UUID صحيح
+      if (isValidUUID) {
+        permissionData.granted_by = grantedBy;
+      }
+
       const { error } = await supabase
         .from('whatsapp_button_role_permissions')
-        .upsert({
-          admin_user_id: adminUserId,
-          permission_code: permissionCode,
-          status: 'active',
-          is_temporary: isTemporary,
-          valid_until: validUntil,
-          granted_by: grantedBy,
-          granted_at: new Date().toISOString(),
-          notes
+        .upsert(permissionData, {
+          onConflict: 'admin_user_id,permission_code'
         });
 
-      if (error) throw error;
-    } catch (error) {
+      if (error) {
+        console.error('Database error details:', error);
+        throw error;
+      }
+    } catch (error: any) {
       console.error('Error granting permission:', error);
-      throw error;
+
+      // رسالة خطأ مفصلة
+      const errorMsg = error?.message || 'Unknown error';
+      const errorCode = error?.code || 'N/A';
+
+      throw new Error(`فشل منح الصلاحية: ${errorMsg} (Code: ${errorCode})`);
     }
   },
 
