@@ -22,6 +22,8 @@ interface AutoResponse {
   last_used_at: string | null;
   effectiveness_score: number;
   created_at: string;
+  is_default_fallback?: boolean;
+  fallback_enabled?: boolean;
 }
 
 interface ResponseStats {
@@ -261,6 +263,46 @@ export const SmartAutoResponsesManager: React.FC = () => {
   const handleToggleStatus = async (response: AutoResponse) => {
     const newStatus = response.status === 'active' ? 'inactive' : 'active';
     await handleUpdateResponse(response.id, { status: newStatus });
+  };
+
+  // تعيين رد كافتراضي
+  const handleSetAsDefaultFallback = async (responseId: string) => {
+    try {
+      const { data, error } = await supabase.rpc('set_as_default_fallback', {
+        p_response_id: responseId,
+        p_enabled: true
+      });
+
+      if (error) throw error;
+
+      setError(null);
+      await loadResponses();
+      alert('تم تعيين الرد كرد افتراضي بنجاح!');
+    } catch (err: any) {
+      console.error('Error setting default fallback:', err);
+      setError(err.message || 'فشل تعيين الرد الافتراضي');
+    }
+  };
+
+  // تفعيل/تعطيل الرد الافتراضي
+  const handleToggleFallback = async (responseId: string) => {
+    try {
+      const { data, error } = await supabase.rpc('toggle_fallback_status', {
+        p_response_id: responseId
+      });
+
+      if (error) throw error;
+
+      setError(null);
+      await loadResponses();
+
+      if (data && data.enabled !== undefined) {
+        alert(data.enabled ? 'تم تفعيل الرد الافتراضي' : 'تم تعطيل الرد الافتراضي');
+      }
+    } catch (err: any) {
+      console.error('Error toggling fallback:', err);
+      setError(err.message || 'فشل تغيير حالة الرد الافتراضي');
+    }
   };
 
   // محرك الذكاء الاصطناعي
@@ -769,26 +811,35 @@ export const SmartAutoResponsesManager: React.FC = () => {
                       AI
                     </span>
                   )}
+                  {response.is_default_fallback && (
+                    <span className="px-2 py-1 bg-amber-600/30 text-amber-400 text-xs rounded font-bold flex items-center gap-1">
+                      <Zap className="w-3 h-3" />
+                      رد افتراضي
+                    </span>
+                  )}
                 </div>
                 <div className={`inline-block px-3 py-1 bg-gradient-to-r ${getIntentColor(response.intent)} rounded-lg text-white text-xs font-semibold`}>
                   {getIntentLabel(response.intent)}
                 </div>
               </div>
 
-              <button
-                onClick={() => handleToggleStatus(response)}
-                className={`p-2 rounded-lg transition-all ${
-                  response.status === 'active'
-                    ? 'bg-green-500/20 text-green-400 hover:bg-green-500/30'
-                    : 'bg-gray-700/30 text-gray-500 hover:bg-gray-600/30'
-                }`}
-              >
-                {response.status === 'active' ? (
-                  <Eye className="w-5 h-5" />
-                ) : (
-                  <EyeOff className="w-5 h-5" />
-                )}
-              </button>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => handleToggleStatus(response)}
+                  className={`p-2 rounded-lg transition-all ${
+                    response.status === 'active'
+                      ? 'bg-green-500/20 text-green-400 hover:bg-green-500/30'
+                      : 'bg-gray-700/30 text-gray-500 hover:bg-gray-600/30'
+                  }`}
+                  title={response.status === 'active' ? 'نشط' : 'معطل'}
+                >
+                  {response.status === 'active' ? (
+                    <Eye className="w-5 h-5" />
+                  ) : (
+                    <EyeOff className="w-5 h-5" />
+                  )}
+                </button>
+              </div>
             </div>
 
             {/* Response Text */}
@@ -827,6 +878,41 @@ export const SmartAutoResponsesManager: React.FC = () => {
 
             {/* Actions */}
             <div className="flex gap-2">
+              {response.is_default_fallback && (
+                <button
+                  onClick={() => handleToggleFallback(response.id)}
+                  className={`flex-1 px-3 py-2 rounded-lg transition-all flex items-center justify-center gap-2 font-bold ${
+                    response.fallback_enabled
+                      ? 'bg-amber-600/20 text-amber-400 hover:bg-amber-600/30'
+                      : 'bg-gray-700/30 text-gray-500 hover:bg-gray-600/30'
+                  }`}
+                  title={response.fallback_enabled ? 'تعطيل الرد الافتراضي' : 'تفعيل الرد الافتراضي'}
+                >
+                  {response.fallback_enabled ? (
+                    <>
+                      <Power className="w-4 h-4" />
+                      مفعّل
+                    </>
+                  ) : (
+                    <>
+                      <PowerOff className="w-4 h-4" />
+                      معطّل
+                    </>
+                  )}
+                </button>
+              )}
+
+              {!response.is_default_fallback && (
+                <button
+                  onClick={() => handleSetAsDefaultFallback(response.id)}
+                  className="px-3 py-2 bg-amber-600/20 text-amber-400 rounded-lg hover:bg-amber-600/30 transition-all flex items-center gap-2"
+                  title="تعيين كرد افتراضي"
+                >
+                  <Zap className="w-4 h-4" />
+                  <span className="text-xs">افتراضي</span>
+                </button>
+              )}
+
               <button
                 onClick={() => {
                   setSelectedResponse(response);
