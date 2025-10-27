@@ -95,20 +95,93 @@ export const VisitorAnalyticsDashboard: React.FC = () => {
   };
 
   const loadTodayStats = async () => {
-    const { data, error } = await supabase
-      .from('daily_traffic_summary')
-      .select('*')
-      .eq('date', new Date().toISOString().split('T')[0])
-      .maybeSingle();
+    try {
+      const { data, error } = await supabase
+        .from('daily_traffic_summary')
+        .select('*')
+        .eq('date', new Date().toISOString().split('T')[0])
+        .maybeSingle();
 
-    if (error) throw error;
+      if (error) throw error;
 
-    if (data) {
-      setTodayStats(data);
-    } else {
-      // تجميع بيانات اليوم إذا لم تكن موجودة
-      await supabase.rpc('aggregate_daily_traffic_data');
-      await loadTodayStats(); // إعادة المحاولة
+      if (data) {
+        setTodayStats(data);
+      } else {
+        // تجميع بيانات اليوم إذا لم تكن موجودة
+        await supabase.rpc('aggregate_daily_traffic_data');
+
+        // محاولة تحميل البيانات مرة أخرى
+        const { data: retryData } = await supabase
+          .from('daily_traffic_summary')
+          .select('*')
+          .eq('date', new Date().toISOString().split('T')[0])
+          .maybeSingle();
+
+        if (retryData) {
+          setTodayStats(retryData);
+        } else {
+          // إنشاء بيانات افتراضية إذا فشل كل شيء
+          setTodayStats({
+            date: new Date().toISOString().split('T')[0],
+            total_visits: 0,
+            unique_visitors: 0,
+            new_visitors: 0,
+            returning_visitors: 0,
+            visits_from_tiktok: 0,
+            visits_from_instagram: 0,
+            visits_from_twitter: 0,
+            visits_from_facebook: 0,
+            visits_from_youtube: 0,
+            visits_from_google: 0,
+            visits_from_direct: 0,
+            visits_from_other: 0,
+            tiktok_percentage: 0,
+            instagram_percentage: 0,
+            twitter_percentage: 0,
+            facebook_percentage: 0,
+            youtube_percentage: 0,
+            google_percentage: 0,
+            direct_percentage: 0,
+            other_percentage: 0,
+            mobile_visits: 0,
+            tablet_visits: 0,
+            desktop_visits: 0,
+            avg_session_duration_seconds: 0,
+            avg_pages_per_session: 0
+          });
+        }
+      }
+    } catch (err) {
+      console.error('Error loading today stats:', err);
+      // بيانات افتراضية في حالة الخطأ
+      setTodayStats({
+        date: new Date().toISOString().split('T')[0],
+        total_visits: 0,
+        unique_visitors: 0,
+        new_visitors: 0,
+        returning_visitors: 0,
+        visits_from_tiktok: 0,
+        visits_from_instagram: 0,
+        visits_from_twitter: 0,
+        visits_from_facebook: 0,
+        visits_from_youtube: 0,
+        visits_from_google: 0,
+        visits_from_direct: 0,
+        visits_from_other: 0,
+        tiktok_percentage: 0,
+        instagram_percentage: 0,
+        twitter_percentage: 0,
+        facebook_percentage: 0,
+        youtube_percentage: 0,
+        google_percentage: 0,
+        direct_percentage: 0,
+        other_percentage: 0,
+        mobile_visits: 0,
+        tablet_visits: 0,
+        desktop_visits: 0,
+        avg_session_duration_seconds: 0,
+        avg_pages_per_session: 0
+      });
     }
   };
 
@@ -316,7 +389,7 @@ export const VisitorAnalyticsDashboard: React.FC = () => {
             </div>
             <p className="text-sm text-gray-600 mb-1">متوسط الصفحات/زيارة</p>
             <p className="text-3xl font-bold text-gray-900">
-              {todayStats.avg_pages_per_session.toFixed(1)}
+              {(todayStats.avg_pages_per_session || 0).toFixed(1)}
             </p>
           </div>
         </div>
@@ -350,7 +423,7 @@ export const VisitorAnalyticsDashboard: React.FC = () => {
                       </div>
                       <div className="text-right">
                         <span className="font-bold text-gray-900">{source.count.toLocaleString()}</span>
-                        <span className="text-sm text-gray-600 mr-2">({source.percentage.toFixed(1)}%)</span>
+                        <span className="text-sm text-gray-600 mr-2">({(source.percentage || 0).toFixed(1)}%)</span>
                       </div>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
@@ -391,7 +464,7 @@ export const VisitorAnalyticsDashboard: React.FC = () => {
                       </div>
                       <div className="text-right">
                         <span className="font-bold text-gray-900">{device.count.toLocaleString()}</span>
-                        <span className="text-sm text-gray-600 mr-2">({percentage.toFixed(1)}%)</span>
+                        <span className="text-sm text-gray-600 mr-2">({(percentage || 0).toFixed(1)}%)</span>
                       </div>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
