@@ -224,7 +224,7 @@ export const SmartFloatingButton: React.FC = () => {
     setSending(true);
 
     try {
-      const { data, error } = await supabase.rpc('handle_smart_button_message_v2', {
+      const { data, error } = await supabase.rpc('handle_smart_button_message_v3', {
         p_session_token: sessionToken,
         p_message: inputMessage.trim(),
         p_user_type: userType,
@@ -251,7 +251,7 @@ export const SmartFloatingButton: React.FC = () => {
       };
       setMessages(prev => [...prev, userMessage]);
 
-      // If there's an auto response, add it
+      // If there's an auto response (including smart replies), add it
       if (data?.auto_response && data?.response) {
         setTimeout(() => {
           const autoMessage: Message = {
@@ -262,6 +262,18 @@ export const SmartFloatingButton: React.FC = () => {
             isAutoResponse: true
           };
           setMessages(prev => [...prev, autoMessage]);
+        }, 500);
+      } else if (data?.message) {
+        // Show fallback message
+        setTimeout(() => {
+          const fallbackMessage: Message = {
+            id: `fallback_${Date.now()}`,
+            content: data.message,
+            direction: 'outbound',
+            timestamp: new Date().toISOString(),
+            isAutoResponse: true
+          };
+          setMessages(prev => [...prev, fallbackMessage]);
         }, 500);
       }
 
