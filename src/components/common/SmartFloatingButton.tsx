@@ -378,7 +378,7 @@ export const SmartFloatingButton: React.FC = () => {
       {/* Floating Notification */}
       {notification && !isOpen && (
         <div
-          className="fixed bottom-24 right-6 z-50 bg-gradient-to-r from-[#8B7355] to-[#A0916A] text-white px-6 py-3 rounded-xl shadow-2xl animate-bounce"
+          className="fixed bottom-32 right-6 z-50 bg-gradient-to-r from-[#8B7355] to-[#A0916A] text-white px-6 py-3 rounded-xl shadow-2xl animate-bounce"
           style={{ minWidth: '200px' }}
         >
           <p className="text-sm font-semibold text-center">{notification}</p>
@@ -388,7 +388,7 @@ export const SmartFloatingButton: React.FC = () => {
       {/* Floating Button */}
       <button
         onClick={handleOpen}
-        className={`fixed bottom-6 right-6 z-50 w-16 h-16 rounded-full shadow-2xl flex items-center justify-center transition-all duration-300 hover:scale-110 ${
+        className={`fixed bottom-20 right-4 sm:bottom-24 sm:right-6 z-50 w-16 h-16 rounded-full shadow-2xl flex items-center justify-center transition-all duration-300 hover:scale-110 ${
           isPulsing && !isOpen ? 'animate-pulse' : ''
         }`}
         style={{
@@ -412,7 +412,7 @@ export const SmartFloatingButton: React.FC = () => {
       {/* Chat Popup */}
       {isOpen && (
         <div
-          className="fixed bottom-24 right-6 z-50 w-96 h-[550px] bg-gray-900 rounded-2xl shadow-2xl flex flex-col overflow-hidden"
+          className="fixed bottom-32 right-6 z-50 w-96 h-[550px] bg-gray-900 rounded-2xl shadow-2xl flex flex-col overflow-hidden"
           style={{ maxHeight: 'calc(100vh - 140px)' }}
           dir="rtl"
         >

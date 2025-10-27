@@ -24,7 +24,7 @@ export function AdminCrownButton({ onAdminLogin, onFarmOwnerLogin }: AdminCrownB
     <>
       <button
         onClick={() => setShowMenu(!showMenu)}
-        className="fixed bottom-20 right-4 sm:bottom-24 sm:right-6 z-50 group touch-manipulation active:scale-90 transition-all duration-300"
+        className="fixed bottom-20 left-4 sm:bottom-24 sm:left-6 z-50 group touch-manipulation active:scale-90 transition-all duration-300"
       style={{
         width: '60px',
         height: '60px',
@@ -96,7 +96,7 @@ export function AdminCrownButton({ onAdminLogin, onFarmOwnerLogin }: AdminCrownB
       {/* Popup Menu */}
       {showMenu && (
         <div
-          className="absolute bottom-full right-0 mb-4 w-64 rounded-2xl overflow-hidden transition-all duration-300 transform origin-bottom-right"
+          className="absolute bottom-full left-0 mb-4 w-64 rounded-2xl overflow-hidden transition-all duration-300 transform origin-bottom-left"
           style={{
             background: 'rgba(255, 255, 255, 0.98)',
             backdropFilter: 'blur(20px)',
