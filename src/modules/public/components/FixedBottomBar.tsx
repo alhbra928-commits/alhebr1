@@ -2,7 +2,11 @@ import { useState, useEffect } from 'react';
 import { Phone, Mail, MapPin, Clock } from 'lucide-react';
 import { getPlatformTextsBySection, subscribeToPlatformTextsChanges } from '../../../services/platformTextsService';
 
-export function FixedBottomBar() {
+interface FixedBottomBarProps {
+  onIntroClick?: () => void;
+}
+
+export function FixedBottomBar({ onIntroClick }: FixedBottomBarProps) {
   const [contactTexts, setContactTexts] = useState({
     call_us_label: 'اتصل بنا',
     phone_number: '920000000',
@@ -17,9 +21,12 @@ export function FixedBottomBar() {
 
   useEffect(() => {
     const loadTexts = async () => {
+      console.log('🔄 Loading contact bar texts...');
       const texts = await getPlatformTextsBySection('contact_bar');
+      console.log('📦 Loaded contact bar texts:', texts);
+
       if (texts && Object.keys(texts).length > 0) {
-        setContactTexts({
+        const newTexts = {
           call_us_label: texts.call_us_label?.ar || 'اتصل بنا',
           phone_number: texts.phone_number?.ar || '920000000',
           email_label: texts.email_label?.ar || 'راسلنا',
@@ -29,7 +36,11 @@ export function FixedBottomBar() {
           hours_label: texts.hours_label?.ar || 'ساعات العمل',
           hours_text: texts.hours_text?.ar || '8 صباحاً - 8 مساءً',
           cta_message: texts.cta_message?.ar || '🌴 استثمر في مستقبل مستدام 🫒'
-        });
+        };
+        console.log('✅ Contact bar texts set:', newTexts);
+        setContactTexts(newTexts);
+      } else {
+        console.warn('⚠️ No contact bar texts found, using defaults');
       }
     };
 
