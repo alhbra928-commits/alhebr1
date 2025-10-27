@@ -528,7 +528,18 @@ export const SmartFloatingButton: React.FC = () => {
                 <p className="text-gray-500 text-xs mt-2">نحن هنا للإجابة على استفساراتك</p>
               </div>
             ) : (
-              messages.slice(-15).map((message) => (
+              messages.slice(-15).map((message) => {
+                // Debug log for each message
+                if (message.direction === 'outbound') {
+                  console.log('🎨 Rendering message:', {
+                    id: message.id,
+                    hasLink: !!message.whatsappLink,
+                    isHybrid: message.isHybridLink,
+                    link: message.whatsappLink?.substring(0, 50)
+                  });
+                }
+
+                return (
                 <div
                   key={message.id}
                   className={`flex ${message.direction === 'inbound' ? 'justify-end' : 'justify-start'}`}
@@ -607,7 +618,8 @@ export const SmartFloatingButton: React.FC = () => {
                     </p>
                   </div>
                 </div>
-              ))
+              );
+              })
             )}
             <div ref={conversationEndRef} />
           </div>
