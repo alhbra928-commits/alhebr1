@@ -4,12 +4,13 @@ import { WhatsAppProvidersHub } from './WhatsAppProvidersHub';
 import { TemplateStudio } from './TemplateStudio';
 import { EventConnector } from './EventConnector';
 import { SmartInboxPage } from './SmartInboxPage';
+import { SmartButtonManagement } from './SmartButtonManagement';
 import { AnalyticsReports } from './AnalyticsReports';
 import { ExternalIntegration } from './ExternalIntegration';
 import { SystemTesting } from './SystemTesting';
 import { whatsappService } from '../../../services/whatsappService';
 
-type TabType = 'overview' | 'integration' | 'templates' | 'events' | 'analytics' | 'inbox' | 'testing';
+type TabType = 'overview' | 'integration' | 'templates' | 'events' | 'inbox' | 'smart-button' | 'analytics' | 'testing';
 
 export const WhatsAppDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabType>('overview');
@@ -42,8 +43,9 @@ export const WhatsAppDashboard: React.FC = () => {
     { id: 'integration' as TabType, label: 'الربط الخارجي', icon: LinkIcon },
     { id: 'templates' as TabType, label: 'القوالب', icon: FileText },
     { id: 'events' as TabType, label: 'ربط الأحداث', icon: Link2 },
-    { id: 'analytics' as TabType, label: 'التقارير', icon: BarChart3 },
     { id: 'inbox' as TabType, label: 'صندوق الوارد', icon: Inbox },
+    { id: 'smart-button' as TabType, label: 'الزر الذكي', icon: MessageCircle },
+    { id: 'analytics' as TabType, label: 'التقارير', icon: BarChart3 },
     { id: 'testing' as TabType, label: 'الاختبارات', icon: Zap }
   ];
 
@@ -151,6 +153,9 @@ export const WhatsAppDashboard: React.FC = () => {
 
       case 'inbox':
         return <SmartInboxPage />;
+
+      case 'smart-button':
+        return <SmartButtonManagement />;
 
       case 'testing':
         return <SystemTesting />;
