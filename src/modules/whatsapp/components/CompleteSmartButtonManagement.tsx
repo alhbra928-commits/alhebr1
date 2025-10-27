@@ -6,7 +6,6 @@ import {
 } from 'lucide-react';
 import { supabase } from '../../../lib/supabase';
 import { SmartErrorModal } from '../../../components/common/SmartErrorModal';
-import { usePermissions } from '../../../contexts/PermissionsContext';
 
 interface SmartButtonSettings {
   is_enabled: boolean;
@@ -69,21 +68,13 @@ export const CompleteSmartButtonManagement: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [showAddModal, setShowAddModal] = useState(false);
 
-  // استخدام الصلاحيات بشكل آمن مع fallback
-  let hasPermission: (permission: string) => boolean;
-  try {
-    const permissionsContext = usePermissions();
-    hasPermission = permissionsContext.hasPermission;
-  } catch (err) {
-    // إذا لم يكن PermissionsContext متاحاً، امنح جميع الصلاحيات
-    hasPermission = () => true;
-  }
-
-  const canView = hasPermission('whatsapp.button.view');
-  const canEdit = hasPermission('whatsapp.button.edit');
-  const canManageResponses = hasPermission('whatsapp.button.responses');
-  const canManageAI = hasPermission('whatsapp.button.ai');
-  const canTest = hasPermission('whatsapp.button.test');
+  // للإدارة: جميع الصلاحيات ممنوحة افتراضياً
+  // يمكن ربطها لاحقاً بنظام الصلاحيات إذا لزم الأمر
+  const canView = true;
+  const canEdit = true;
+  const canManageResponses = true;
+  const canManageAI = true;
+  const canTest = true;
 
   useEffect(() => {
     if (canView) {
