@@ -4,7 +4,7 @@ import { WhatsAppProvidersHub } from './WhatsAppProvidersHub';
 import { TemplateStudio } from './TemplateStudio';
 import { EventConnector } from './EventConnector';
 import { SmartInboxPage } from './SmartInboxPage';
-import { CompleteSmartButtonManagement } from './CompleteSmartButtonManagement';
+import { SimpleSmartButtonManagement } from './SimpleSmartButtonManagement';
 import { AnalyticsReports } from './AnalyticsReports';
 import { ExternalIntegration } from './ExternalIntegration';
 import { SystemTesting } from './SystemTesting';
@@ -155,7 +155,7 @@ export const WhatsAppDashboard: React.FC = () => {
         return <SmartInboxPage />;
 
       case 'smart-button':
-        return <CompleteSmartButtonManagement />;
+        return <SimpleSmartButtonManagement />;
 
       case 'testing':
         return <SystemTesting />;
