@@ -92,6 +92,16 @@ export const PlatformConnectionsSettings: React.FC = () => {
       console.log('💾 Saving connection for:', platformId);
       console.log('📝 Data:', formData);
 
+      // Validation: تحقق من أن القيم ليست روابط
+      const platform = PLATFORMS.find(p => p.id === platformId);
+      for (const field of platform?.fields || []) {
+        const value = formData[field.key];
+        if (value && (value.startsWith('http://') || value.startsWith('https://'))) {
+          alert(`❌ خطأ في ${field.label}\n\nيرجى إدخال ${field.label} فقط، وليس رابط كامل.\n\nمثال صحيح: ${field.placeholder}`);
+          return;
+        }
+      }
+
       await marketingAnalyticsService.updatePlatformConnection(platformId, {
         ...formData as any,
         is_active: true,
@@ -111,7 +121,7 @@ export const PlatformConnectionsSettings: React.FC = () => {
         console.warn('⚠️ Could not reload pixels:', pixelErr);
       }
 
-      alert('✅ تم حفظ الإعدادات بنجاح!\n\nيمكنك الآن اختبار الاتصال.');
+      alert('✅ تم حفظ الإعدادات بنجاح!\n\nيمكنك الآن اختبار الاتصال بالضغط على زر 🔄.');
     } catch (err: any) {
       console.error('❌ Error saving connection:', err);
       const errorMessage = err?.message || 'خطأ غير معروف';
@@ -229,6 +239,19 @@ export const PlatformConnectionsSettings: React.FC = () => {
 
               {isEditing && (
                 <div className="space-y-4 mt-4 pt-4 border-t border-gray-200">
+                  {/* Instructions Box */}
+                  <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
+                    <p className="text-sm text-amber-800">
+                      <strong>⚠️ تنبيه:</strong> أدخل الـ {platform.fields[0].label} فقط، وليس رابط URL كامل.
+                    </p>
+                    {platform.id === 'tiktok_pixel' && (
+                      <p className="text-xs text-amber-700 mt-1">
+                        مثال صحيح: <code className="bg-white px-2 py-0.5 rounded">CXXXXXXXXXXXXXXX</code><br/>
+                        خطأ: <code className="bg-white px-2 py-0.5 rounded line-through">https://www.tiktok.com/@username</code>
+                      </p>
+                    )}
+                  </div>
+
                   {platform.fields.map((field) => (
                     <div key={field.key}>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -241,6 +264,7 @@ export const PlatformConnectionsSettings: React.FC = () => {
                         placeholder={field.placeholder}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#8B7355] focus:border-transparent"
                       />
+                      <p className="text-xs text-gray-500 mt-1">مثال: {field.placeholder}</p>
                     </div>
                   ))}
 
