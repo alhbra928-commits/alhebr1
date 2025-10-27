@@ -36,6 +36,7 @@ interface EditingText {
 const SECTION_LABELS: Record<string, { ar: string; en: string; icon: string; color: string }> = {
   header: { ar: 'الهيدر (الرأس)', en: 'Header', icon: '🎯', color: 'from-blue-500 to-blue-600' },
   footer: { ar: 'الفوتر (التذييل)', en: 'Footer', icon: '📋', color: 'from-green-500 to-green-600' },
+  contact_bar: { ar: 'الشريط السفلي (شريط التواصل)', en: 'Contact Bar', icon: '📱', color: 'from-emerald-500 to-emerald-600' },
   hero: { ar: 'القسم البطولي', en: 'Hero Section', icon: '🌟', color: 'from-purple-500 to-purple-600' },
   stats: { ar: 'الإحصائيات', en: 'Statistics', icon: '📊', color: 'from-orange-500 to-orange-600' },
   features: { ar: 'المميزات', en: 'Features', icon: '✨', color: 'from-pink-500 to-pink-600' },

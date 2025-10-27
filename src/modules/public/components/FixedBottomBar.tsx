@@ -1,6 +1,60 @@
+import { useState, useEffect } from 'react';
 import { Phone, Mail, MapPin, Clock } from 'lucide-react';
+import { getPlatformTextsBySection, subscribeToPlatformTextsChanges } from '../../../services/platformTextsService';
 
 export function FixedBottomBar() {
+  const [contactTexts, setContactTexts] = useState({
+    call_us_label: 'اتصل بنا',
+    phone_number: '920000000',
+    email_label: 'راسلنا',
+    email_address: 'info@palmolive.sa',
+    location_label: 'الموقع',
+    location_text: 'الرياض، السعودية',
+    hours_label: 'ساعات العمل',
+    hours_text: '8 صباحاً - 8 مساءً',
+    cta_message: '🌴 استثمر في مستقبل مستدام 🫒'
+  });
+
+  useEffect(() => {
+    const loadTexts = async () => {
+      const texts = await getPlatformTextsBySection('contact_bar');
+      if (texts && Object.keys(texts).length > 0) {
+        setContactTexts({
+          call_us_label: texts.call_us_label?.ar || 'اتصل بنا',
+          phone_number: texts.phone_number?.ar || '920000000',
+          email_label: texts.email_label?.ar || 'راسلنا',
+          email_address: texts.email_address?.ar || 'info@palmolive.sa',
+          location_label: texts.location_label?.ar || 'الموقع',
+          location_text: texts.location_text?.ar || 'الرياض، السعودية',
+          hours_label: texts.hours_label?.ar || 'ساعات العمل',
+          hours_text: texts.hours_text?.ar || '8 صباحاً - 8 مساءً',
+          cta_message: texts.cta_message?.ar || '🌴 استثمر في مستقبل مستدام 🫒'
+        });
+      }
+    };
+
+    loadTexts();
+
+    const unsubscribe = subscribeToPlatformTextsChanges('contact_bar', (texts) => {
+      if (texts && Object.keys(texts).length > 0) {
+        setContactTexts({
+          call_us_label: texts.call_us_label?.ar || 'اتصل بنا',
+          phone_number: texts.phone_number?.ar || '920000000',
+          email_label: texts.email_label?.ar || 'راسلنا',
+          email_address: texts.email_address?.ar || 'info@palmolive.sa',
+          location_label: texts.location_label?.ar || 'الموقع',
+          location_text: texts.location_text?.ar || 'الرياض، السعودية',
+          hours_label: texts.hours_label?.ar || 'ساعات العمل',
+          hours_text: texts.hours_text?.ar || '8 صباحاً - 8 مساءً',
+          cta_message: texts.cta_message?.ar || '🌴 استثمر في مستقبل مستدام 🫒'
+        });
+        console.log('✅ Contact bar texts updated:', texts);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 bg-gradient-to-r from-[#4a5d3e] via-[#5a6d4e] to-[#4a5d3e] border-t-2 border-[#8BA574] shadow-2xl">
       <div className="max-w-7xl mx-auto px-2 sm:px-4 py-2 sm:py-3">
@@ -12,8 +66,8 @@ export function FixedBottomBar() {
                 <Phone className="h-4 w-4 text-[#D4AF37]" />
               </div>
               <div className="flex flex-col">
-                <span className="text-[10px] opacity-75">اتصل بنا</span>
-                <span className="text-sm font-bold">920000000</span>
+                <span className="text-[10px] opacity-75">{contactTexts.call_us_label}</span>
+                <span className="text-sm font-bold">{contactTexts.phone_number}</span>
               </div>
             </div>
 
@@ -24,8 +78,8 @@ export function FixedBottomBar() {
                 <Mail className="h-4 w-4 text-[#D4AF37]" />
               </div>
               <div className="flex flex-col">
-                <span className="text-[10px] opacity-75">راسلنا</span>
-                <span className="text-sm font-bold">info@palmolive.sa</span>
+                <span className="text-[10px] opacity-75">{contactTexts.email_label}</span>
+                <span className="text-sm font-bold">{contactTexts.email_address}</span>
               </div>
             </div>
 
@@ -36,8 +90,8 @@ export function FixedBottomBar() {
                 <MapPin className="h-4 w-4 text-[#D4AF37]" />
               </div>
               <div className="flex flex-col">
-                <span className="text-[10px] opacity-75">الموقع</span>
-                <span className="text-sm font-bold">الرياض، السعودية</span>
+                <span className="text-[10px] opacity-75">{contactTexts.location_label}</span>
+                <span className="text-sm font-bold">{contactTexts.location_text}</span>
               </div>
             </div>
           </div>
@@ -45,39 +99,39 @@ export function FixedBottomBar() {
           <div className="flex items-center gap-2 text-white bg-[#8BA574]/20 px-4 py-2 rounded-lg border border-[#8BA574]/40">
             <Clock className="h-4 w-4 text-[#D4AF37] animate-pulse" />
             <div className="flex flex-col">
-              <span className="text-[10px] opacity-75">ساعات العمل</span>
-              <span className="text-sm font-bold">8 صباحاً - 8 مساءً</span>
+              <span className="text-[10px] opacity-75">{contactTexts.hours_label}</span>
+              <span className="text-sm font-bold">{contactTexts.hours_text}</span>
             </div>
           </div>
 
           <div className="hidden lg:flex items-center gap-2 text-white bg-gradient-to-r from-[#D4AF37] to-[#F4E4A6] px-5 py-2 rounded-lg shadow-lg">
-            <span className="text-sm font-black text-[#2E2A26]">🌴 استثمر في مستقبل مستدام 🫒</span>
+            <span className="text-sm font-black text-[#2E2A26]">{contactTexts.cta_message}</span>
           </div>
         </div>
 
         {/* Mobile Layout */}
         <div className="md:hidden flex items-center justify-between gap-2">
-          <a href="tel:920000000" className="flex items-center gap-1.5 text-white bg-[#8BA574]/20 px-2 py-1.5 rounded-lg border border-[#8BA574]/40 flex-1">
+          <a href={`tel:${contactTexts.phone_number}`} className="flex items-center gap-1.5 text-white bg-[#8BA574]/20 px-2 py-1.5 rounded-lg border border-[#8BA574]/40 flex-1">
             <Phone className="h-3.5 w-3.5 text-[#D4AF37]" />
             <div className="flex flex-col">
-              <span className="text-[9px] opacity-75">اتصل</span>
-              <span className="text-[11px] font-bold">920000000</span>
+              <span className="text-[9px] opacity-75">{contactTexts.call_us_label}</span>
+              <span className="text-[11px] font-bold">{contactTexts.phone_number}</span>
             </div>
           </a>
 
-          <a href="mailto:info@palmolive.sa" className="flex items-center gap-1.5 text-white bg-[#8BA574]/20 px-2 py-1.5 rounded-lg border border-[#8BA574]/40 flex-1">
+          <a href={`mailto:${contactTexts.email_address}`} className="flex items-center gap-1.5 text-white bg-[#8BA574]/20 px-2 py-1.5 rounded-lg border border-[#8BA574]/40 flex-1">
             <Mail className="h-3.5 w-3.5 text-[#D4AF37]" />
             <div className="flex flex-col">
-              <span className="text-[9px] opacity-75">راسلنا</span>
-              <span className="text-[11px] font-bold truncate">palmolive.sa</span>
+              <span className="text-[9px] opacity-75">{contactTexts.email_label}</span>
+              <span className="text-[11px] font-bold truncate">{contactTexts.email_address.split('@')[0]}</span>
             </div>
           </a>
 
           <div className="flex items-center gap-1.5 text-white bg-[#8BA574]/20 px-2 py-1.5 rounded-lg border border-[#8BA574]/40">
             <Clock className="h-3.5 w-3.5 text-[#D4AF37] animate-pulse" />
             <div className="flex flex-col">
-              <span className="text-[9px] opacity-75">العمل</span>
-              <span className="text-[11px] font-bold">8ص-8م</span>
+              <span className="text-[9px] opacity-75">{contactTexts.hours_label}</span>
+              <span className="text-[11px] font-bold">{contactTexts.hours_text.split(' - ')[0]}</span>
             </div>
           </div>
         </div>
