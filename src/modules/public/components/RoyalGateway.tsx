@@ -1,219 +1,399 @@
 import React, { useState, useEffect } from 'react';
-import { Sparkles, ChevronLeft } from 'lucide-react';
+import { Sparkles, Crown, Leaf } from 'lucide-react';
 
 interface RoyalGatewayProps {
   onEnter: () => void;
 }
 
 export function RoyalGateway({ onEnter }: RoyalGatewayProps) {
-  const [showLogo, setShowLogo] = useState(false);
-  const [showWelcome, setShowWelcome] = useState(false);
-  const [showButton, setShowButton] = useState(false);
-  const [isExiting, setIsExiting] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [phase, setPhase] = useState<'init' | 'reveal' | 'ready' | 'exit'>('init');
 
   useEffect(() => {
-    const timeline = [
-      { delay: 500, action: () => setShowLogo(true) },
-      { delay: 1200, action: () => setShowWelcome(true) },
-      { delay: 2000, action: () => setShowButton(true) },
-      { delay: 3000, action: () => handleEnter() }, // فتح تلقائي بعد 3 ثوانٍ
-    ];
+    const timeline = setTimeout(() => setPhase('reveal'), 300);
+    const readyTimer = setTimeout(() => setPhase('ready'), 1500);
+    const exitTimer = setTimeout(() => {
+      setPhase('exit');
+      setTimeout(() => onEnter(), 800);
+    }, 3000);
 
-    const timeouts = timeline.map(({ delay, action }) =>
-      setTimeout(action, delay)
-    );
+    const progressInterval = setInterval(() => {
+      setProgress((prev) => {
+        if (prev >= 100) {
+          clearInterval(progressInterval);
+          return 100;
+        }
+        return prev + 1;
+      });
+    }, 30);
 
     return () => {
-      timeouts.forEach(clearTimeout);
+      clearTimeout(timeline);
+      clearTimeout(readyTimer);
+      clearTimeout(exitTimer);
+      clearInterval(progressInterval);
     };
-  }, []);
-
-  const handleEnter = () => {
-    setIsExiting(true);
-    setTimeout(() => {
-      onEnter();
-    }, 800);
-  };
+  }, [onEnter]);
 
   return (
     <div
-      className={`fixed inset-0 z-[9999] transition-all duration-800 ${
-        isExiting ? 'opacity-0 scale-95' : 'opacity-100 scale-100'
+      className={`fixed inset-0 z-[9999] overflow-hidden transition-all duration-800 ${
+        phase === 'exit' ? 'opacity-0' : 'opacity-100'
       }`}
     >
-      {/* Animated Background */}
-      <div className="absolute inset-0 overflow-hidden">
-        {/* Base Gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-amber-900 via-yellow-800 to-amber-950" />
+      {/* Advanced Animated Background */}
+      <div className="absolute inset-0">
+        {/* Base Gradient with Animation */}
+        <div
+          className="absolute inset-0 transition-all duration-1000"
+          style={{
+            background: `
+              radial-gradient(circle at 20% 50%, rgba(217, 119, 6, 0.3) 0%, transparent 50%),
+              radial-gradient(circle at 80% 50%, rgba(245, 158, 11, 0.2) 0%, transparent 50%),
+              linear-gradient(135deg, #1a0f0a 0%, #2d1810 25%, #1f1108 50%, #2d1810 75%, #1a0f0a 100%)
+            `,
+            backgroundSize: '200% 200%',
+            animation: 'gradientFlow 8s ease infinite',
+          }}
+        />
 
-        {/* Animated Light Rays */}
-        <div className="absolute inset-0">
-          <div className="absolute top-0 left-1/4 w-1 h-full bg-gradient-to-b from-transparent via-yellow-500/30 to-transparent animate-pulse" />
-          <div className="absolute top-0 left-1/2 w-1 h-full bg-gradient-to-b from-transparent via-amber-400/20 to-transparent animate-pulse delay-300" />
-          <div className="absolute top-0 left-3/4 w-1 h-full bg-gradient-to-b from-transparent via-yellow-500/30 to-transparent animate-pulse delay-700" />
+        {/* Glowing Orbs */}
+        <div className="absolute inset-0 overflow-hidden">
+          {[...Array(5)].map((_, i) => (
+            <div
+              key={i}
+              className="absolute rounded-full blur-3xl animate-float-slow"
+              style={{
+                width: `${200 + i * 50}px`,
+                height: `${200 + i * 50}px`,
+                background: `radial-gradient(circle, ${
+                  i % 2 === 0 ? 'rgba(251, 191, 36, 0.15)' : 'rgba(245, 158, 11, 0.1)'
+                } 0%, transparent 70%)`,
+                left: `${20 + i * 15}%`,
+                top: `${10 + i * 20}%`,
+                animationDelay: `${i * 1.5}s`,
+                animationDuration: `${8 + i * 2}s`,
+              }}
+            />
+          ))}
         </div>
 
-        {/* Floating Particles */}
-        {[...Array(20)].map((_, i) => (
+        {/* Geometric Pattern Overlay */}
+        <div
+          className="absolute inset-0 opacity-5"
+          style={{
+            backgroundImage: `
+              linear-gradient(30deg, #fbbf24 12%, transparent 12.5%, transparent 87%, #fbbf24 87.5%, #fbbf24),
+              linear-gradient(150deg, #fbbf24 12%, transparent 12.5%, transparent 87%, #fbbf24 87.5%, #fbbf24),
+              linear-gradient(30deg, #fbbf24 12%, transparent 12.5%, transparent 87%, #fbbf24 87.5%, #fbbf24),
+              linear-gradient(150deg, #fbbf24 12%, transparent 12.5%, transparent 87%, #fbbf24 87.5%, #fbbf24)
+            `,
+            backgroundSize: '80px 140px',
+            backgroundPosition: '0 0, 0 0, 40px 70px, 40px 70px',
+          }}
+        />
+
+        {/* Shimmer Effect */}
+        <div
+          className="absolute inset-0 opacity-20"
+          style={{
+            background: 'linear-gradient(90deg, transparent 0%, rgba(251, 191, 36, 0.3) 50%, transparent 100%)',
+            transform: 'translateX(-100%)',
+            animation: 'shimmer 3s infinite',
+          }}
+        />
+
+        {/* Particle System */}
+        {[...Array(30)].map((_, i) => (
           <div
-            key={i}
-            className="absolute w-1 h-1 bg-yellow-400/40 rounded-full animate-float"
+            key={`particle-${i}`}
+            className="absolute w-1 h-1 bg-amber-400 rounded-full animate-particle"
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 3}s`,
-              animationDuration: `${3 + Math.random() * 4}s`,
+              opacity: Math.random() * 0.5 + 0.3,
+              animationDelay: `${Math.random() * 5}s`,
+              animationDuration: `${5 + Math.random() * 10}s`,
             }}
           />
         ))}
-
-        {/* Palm Tree Silhouettes */}
-        <div className="absolute bottom-0 left-0 right-0 h-64 opacity-20">
-          <div className="absolute bottom-0 left-1/4 text-9xl opacity-30">🌴</div>
-          <div className="absolute bottom-0 right-1/4 text-9xl opacity-30">🫒</div>
-        </div>
-
-        {/* Glass Blur Overlay */}
-        <div className="absolute inset-0 backdrop-blur-[1px] bg-black/10" />
       </div>
 
-      {/* Content Container */}
+      {/* Main Content */}
       <div className="relative z-10 h-full flex flex-col items-center justify-center px-6">
-        {/* Royal Logo */}
+        {/* Royal Emblem */}
         <div
-          className={`transition-all duration-1200 ${
-            showLogo
-              ? 'opacity-100 scale-100 rotate-0'
-              : 'opacity-0 scale-50 rotate-12'
+          className={`transition-all duration-1000 ${
+            phase === 'init'
+              ? 'opacity-0 scale-50 -translate-y-20'
+              : 'opacity-100 scale-100 translate-y-0'
           }`}
         >
           <div className="relative">
-            {/* Glow Effect */}
-            <div className="absolute inset-0 animate-pulse">
-              <div className="w-32 h-32 mx-auto bg-yellow-400/30 rounded-full blur-3xl" />
+            {/* Rotating Rings */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div
+                className="absolute w-48 h-48 rounded-full border-2 border-amber-500/20"
+                style={{
+                  animation: 'rotate 20s linear infinite',
+                }}
+              />
+              <div
+                className="absolute w-40 h-40 rounded-full border-2 border-yellow-400/30"
+                style={{
+                  animation: 'rotate-reverse 15s linear infinite',
+                }}
+              />
+              <div
+                className="absolute w-32 h-32 rounded-full border border-amber-300/40"
+                style={{
+                  animation: 'rotate 10s linear infinite',
+                }}
+              />
             </div>
 
-            {/* Logo */}
-            <div className="relative bg-gradient-to-br from-yellow-400 via-amber-500 to-yellow-600 p-1 rounded-3xl shadow-2xl">
-              <div className="bg-gradient-to-br from-amber-900 to-yellow-950 p-8 rounded-3xl">
-                <div className="flex items-center justify-center gap-3">
-                  <span className="text-6xl">🌴</span>
-                  <Sparkles className="w-12 h-12 text-yellow-400 animate-pulse" />
-                  <span className="text-6xl">🫒</span>
+            {/* Glowing Center */}
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-32 h-32 bg-gradient-to-br from-amber-400/30 via-yellow-500/40 to-amber-600/30 rounded-full blur-2xl animate-pulse" />
+              </div>
+
+              {/* Emblem Container */}
+              <div className="relative bg-gradient-to-br from-amber-900/40 via-yellow-900/30 to-amber-950/40 backdrop-blur-sm p-10 rounded-full border border-amber-500/30 shadow-2xl">
+                <div className="flex flex-col items-center gap-3">
+                  {/* Crown */}
+                  <div className="transform -translate-y-2">
+                    <Crown className="w-12 h-12 text-amber-400 animate-pulse" strokeWidth={1.5} />
+                  </div>
+
+                  {/* Icons */}
+                  <div className="flex items-center gap-6">
+                    <div className="relative">
+                      <div className="absolute inset-0 bg-amber-400/20 rounded-full blur-xl animate-pulse" />
+                      <span className="relative text-5xl drop-shadow-2xl">🌴</span>
+                    </div>
+
+                    <div className="w-1 h-8 bg-gradient-to-b from-transparent via-amber-400/50 to-transparent" />
+
+                    <div className="relative">
+                      <div className="absolute inset-0 bg-yellow-400/20 rounded-full blur-xl animate-pulse delay-500" />
+                      <span className="relative text-5xl drop-shadow-2xl">🫒</span>
+                    </div>
+                  </div>
+
+                  {/* Decorative Leaf */}
+                  <div className="transform translate-y-1">
+                    <Leaf className="w-8 h-8 text-amber-500/60" strokeWidth={1.5} />
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Royal Crown */}
-            <div className="absolute -top-8 left-1/2 -translate-x-1/2 text-4xl animate-bounce">
-              👑
+            {/* Sparkles */}
+            <div className="absolute -top-8 -right-8 animate-bounce-slow">
+              <Sparkles className="w-8 h-8 text-yellow-300" />
+            </div>
+            <div className="absolute -bottom-8 -left-8 animate-bounce-slow delay-700">
+              <Sparkles className="w-8 h-8 text-amber-400" />
             </div>
           </div>
         </div>
 
         {/* Welcome Text */}
         <div
-          className={`mt-12 text-center transition-all duration-700 ${
-            showWelcome
-              ? 'opacity-100 translate-y-0'
-              : 'opacity-0 translate-y-8'
+          className={`mt-16 text-center transition-all duration-1000 delay-300 ${
+            phase === 'init'
+              ? 'opacity-0 translate-y-10'
+              : 'opacity-100 translate-y-0'
           }`}
         >
-          <h1 className="text-3xl md:text-5xl font-black mb-4 text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 via-amber-300 to-yellow-200 animate-gradient">
-            مرحبًا بكم في الصالة الملكية
-          </h1>
-          <p className="text-xl md:text-2xl text-yellow-100/90 font-bold mb-2">
-            لتملك أشجار النخيل والزيتون
-          </p>
-          <p className="text-lg text-yellow-200/70 font-medium flex items-center justify-center gap-2">
-            <span>استثمارك في الأرض يبدأ من هنا</span>
-            <span className="text-2xl animate-pulse">🌴</span>
-          </p>
+          <div className="relative">
+            {/* Text Glow */}
+            <div className="absolute inset-0 blur-xl opacity-50">
+              <h1 className="text-4xl md:text-6xl font-black text-amber-400">
+                مرحباً بك في عالم الاستثمار الزراعي
+              </h1>
+            </div>
+
+            {/* Main Text */}
+            <h1 className="relative text-4xl md:text-6xl font-black mb-6 bg-gradient-to-r from-amber-200 via-yellow-300 to-amber-200 bg-clip-text text-transparent animate-shimmer-text">
+              مرحباً بك في عالم الاستثمار الزراعي
+            </h1>
+          </div>
+
+          <div className="space-y-3 mt-6">
+            <p className="text-xl md:text-2xl text-amber-100/90 font-bold flex items-center justify-center gap-3">
+              <span className="w-8 h-0.5 bg-gradient-to-r from-transparent to-amber-400/50" />
+              <span>تملك أشجار النخيل والزيتون</span>
+              <span className="w-8 h-0.5 bg-gradient-to-l from-transparent to-amber-400/50" />
+            </p>
+            <p className="text-lg text-yellow-200/70 font-medium">
+              استثمارك الآمن يبدأ الآن
+            </p>
+          </div>
         </div>
 
-        {/* Enter Button */}
+        {/* Progress Bar */}
         <div
-          className={`mt-16 transition-all duration-500 ${
-            showButton
+          className={`mt-16 transition-all duration-700 delay-500 ${
+            phase === 'init'
+              ? 'opacity-0 scale-95'
+              : 'opacity-100 scale-100'
+          }`}
+        >
+          <div className="w-64 md:w-96">
+            {/* Progress Label */}
+            <div className="flex items-center justify-between mb-3 text-sm text-amber-200/70 font-medium">
+              <span>جاري التحميل</span>
+              <span>{Math.round(progress)}%</span>
+            </div>
+
+            {/* Progress Track */}
+            <div className="relative h-1.5 bg-amber-950/50 rounded-full overflow-hidden backdrop-blur-sm border border-amber-500/20">
+              {/* Progress Fill */}
+              <div
+                className="absolute inset-y-0 left-0 bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-400 rounded-full transition-all duration-300 shadow-lg shadow-amber-500/50"
+                style={{
+                  width: `${progress}%`,
+                  backgroundSize: '200% 100%',
+                  animation: 'shimmer-progress 2s infinite',
+                }}
+              />
+
+              {/* Progress Glow */}
+              <div
+                className="absolute inset-y-0 left-0 bg-gradient-to-r from-amber-300 to-yellow-300 rounded-full blur-md opacity-60"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
+
+            {/* Loading Dots */}
+            <div className="flex items-center justify-center gap-2 mt-4">
+              {[0, 1, 2].map((i) => (
+                <div
+                  key={i}
+                  className="w-2 h-2 bg-amber-400/60 rounded-full animate-bounce"
+                  style={{
+                    animationDelay: `${i * 0.15}s`,
+                    animationDuration: '1s',
+                  }}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Status Text */}
+        <div
+          className={`mt-8 transition-all duration-500 ${
+            phase === 'ready'
               ? 'opacity-100 translate-y-0'
               : 'opacity-0 translate-y-4'
           }`}
         >
-          <button
-            onClick={handleEnter}
-            className="group relative px-12 py-5 rounded-2xl font-black text-xl transition-all duration-300 hover:scale-105 active:scale-95"
-          >
-            {/* Button Glow */}
-            <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-400 rounded-2xl blur-xl opacity-60 group-hover:opacity-100 animate-pulse" />
-
-            {/* Button Content */}
-            <div className="relative bg-gradient-to-r from-yellow-500 via-amber-600 to-yellow-500 rounded-2xl px-12 py-5 shadow-2xl">
-              <div className="flex items-center gap-3 text-amber-950">
-                <span>ادخل إلى المنصة</span>
-                <ChevronLeft className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
-              </div>
-            </div>
-
-            {/* Sparkles */}
-            <div className="absolute -top-2 -right-2 text-2xl animate-bounce">✨</div>
-            <div className="absolute -bottom-2 -left-2 text-2xl animate-bounce delay-300">✨</div>
-          </button>
-        </div>
-
-        {/* Royal Seal */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 opacity-20">
-          <div className="text-8xl animate-spin-slow">⚜️</div>
+          <div className="flex items-center gap-2 text-amber-300 font-medium">
+            <div className="w-2 h-2 bg-amber-400 rounded-full animate-pulse" />
+            <span>جاهز للدخول</span>
+            <div className="w-2 h-2 bg-amber-400 rounded-full animate-pulse" />
+          </div>
         </div>
       </div>
 
+      {/* Bottom Decoration */}
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
+
       {/* CSS Animations */}
       <style>{`
-        @keyframes float {
+        @keyframes gradientFlow {
+          0%, 100% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+        }
+
+        @keyframes float-slow {
           0%, 100% {
-            transform: translateY(0) translateX(0);
-            opacity: 0;
+            transform: translate(0, 0);
+            opacity: 0.3;
           }
           50% {
+            transform: translate(30px, -30px);
+            opacity: 0.6;
+          }
+        }
+
+        @keyframes shimmer {
+          0% { transform: translateX(-100%); }
+          100% { transform: translateX(100%); }
+        }
+
+        @keyframes shimmer-text {
+          0%, 100% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+        }
+
+        @keyframes shimmer-progress {
+          0%, 100% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+        }
+
+        @keyframes particle {
+          0% {
+            transform: translateY(0) scale(0);
+            opacity: 0;
+          }
+          10% {
+            opacity: 1;
+          }
+          90% {
             opacity: 1;
           }
           100% {
-            transform: translateY(-100vh) translateX(20px);
+            transform: translateY(-100vh) scale(1);
+            opacity: 0;
           }
         }
 
-        @keyframes gradient {
+        @keyframes rotate {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+
+        @keyframes rotate-reverse {
+          from { transform: rotate(360deg); }
+          to { transform: rotate(0deg); }
+        }
+
+        @keyframes bounce-slow {
           0%, 100% {
-            background-position: 0% 50%;
+            transform: translateY(0);
           }
           50% {
-            background-position: 100% 50%;
+            transform: translateY(-10px);
           }
         }
 
-        @keyframes spin-slow {
-          from {
-            transform: rotate(0deg);
-          }
-          to {
-            transform: rotate(360deg);
-          }
+        .animate-float-slow {
+          animation: float-slow ease-in-out infinite;
         }
 
-        .animate-float {
-          animation: float linear infinite;
+        .animate-shimmer-text {
+          background-size: 200% 100%;
+          animation: shimmer-text 3s linear infinite;
         }
 
-        .animate-gradient {
-          background-size: 200% auto;
-          animation: gradient 3s ease infinite;
+        .animate-particle {
+          animation: particle linear infinite;
         }
 
-        .animate-spin-slow {
-          animation: spin-slow 20s linear infinite;
+        .animate-bounce-slow {
+          animation: bounce-slow 3s ease-in-out infinite;
         }
 
         .delay-300 {
           animation-delay: 300ms;
+        }
+
+        .delay-500 {
+          animation-delay: 500ms;
         }
 
         .delay-700 {
