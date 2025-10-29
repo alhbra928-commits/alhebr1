@@ -7,6 +7,8 @@ import { AdminSessionService } from './modules/admin/services/adminSessionServic
 import { PermissionsProvider } from './contexts/PermissionsContext';
 import { UpdateNotificationBanner } from './components/common/UpdateNotificationBanner';
 import { SmartFloatingButton } from './components/common/SmartFloatingButton';
+import { MobileHeader } from './components/layout/MobileHeader';
+import { MobileSidebar } from './components/layout/MobileSidebar';
 
 const PublicPlatformRouter = lazy(() => import('./modules/public/components/PublicPlatformRouter').then(m => ({ default: m.PublicPlatformRouter })));
 const FarmOwnerRouter = lazy(() => import('./modules/farm-owner/components/FarmOwnerRouter').then(m => ({ default: m.FarmOwnerRouter })));
@@ -35,6 +37,7 @@ function App() {
   const [showIdleWarning, setShowIdleWarning] = useState(false);
   const [showLoginNotification, setShowLoginNotification] = useState(false);
   const [lastActivity, setLastActivity] = useState(Date.now());
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
   useEffect(() => {
     // التحقق من الجلسة المحفوظة عند بداية التطبيق
@@ -153,6 +156,27 @@ function App() {
         window.location.reload();
       }, 100);
     }
+  };
+
+  const getModuleTitle = (module: string): string => {
+    const titles: Record<string, string> = {
+      'dashboard': 'لوحة التحكم',
+      'owners': 'أصحاب المزارع',
+      'farms': 'المزارع',
+      'reservations': 'الحجوزات',
+      'investors': 'المستثمرون',
+      'finance': 'النظام المالي',
+      'agriculture': 'الخدمات الزراعية',
+      'documentation': 'التوثيق',
+      'whatsapp': 'إدارة الواتساب',
+      'marketing': 'التسويق',
+      'wallets': 'المحافظ',
+      'permissions': 'الصلاحيات',
+      'settings': 'الإعدادات',
+      'public': 'المنصة العامة',
+      'farm-owner': 'بوابة صاحب المزرعة'
+    };
+    return titles[module] || 'منصة النخيل والزيتون';
   };
 
   const renderModule = () => {
@@ -288,7 +312,25 @@ function App() {
         />
       )}
 
+      {/* Mobile Header - Shows on mobile for admin pages */}
+      {adminSession && activeModule !== 'public' && activeModule !== 'farm-owner' && (
+        <MobileHeader
+          onMenuClick={() => setIsMobileSidebarOpen(true)}
+          title={getModuleTitle(activeModule)}
+        />
+      )}
+
       <PermissionsProvider>
+        {/* Mobile Sidebar - Shows on mobile for admin pages */}
+        {adminSession && activeModule !== 'public' && activeModule !== 'farm-owner' && (
+          <MobileSidebar
+            activeModule={activeModule}
+            onModuleChange={setActiveModule}
+            isOpen={isMobileSidebarOpen}
+            onClose={() => setIsMobileSidebarOpen(false)}
+          />
+        )}
+
         <Suspense fallback={
           <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#F9F8F6] to-[#E8E6E1]">
             <div className="text-center">
@@ -299,7 +341,10 @@ function App() {
             </div>
           </div>
         }>
-          {renderModule()}
+          {/* Add padding-top for mobile header */}
+          <div className={adminSession && activeModule !== 'public' && activeModule !== 'farm-owner' ? 'pt-14 lg:pt-0' : ''}>
+            {renderModule()}
+          </div>
         </Suspense>
       </PermissionsProvider>
 
