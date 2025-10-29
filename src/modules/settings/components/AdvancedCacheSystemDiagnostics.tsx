@@ -516,22 +516,22 @@ export const AdvancedCacheSystemDiagnostics: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl shadow-lg p-6 text-white">
-        <div className="flex items-center justify-between">
+      <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl shadow-lg p-4 md:p-6 text-white">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="bg-white/20 backdrop-blur-sm p-3 rounded-xl">
-              <Shield className="text-white" size={32} />
+            <div className="bg-white/20 backdrop-blur-sm p-3 rounded-xl flex-shrink-0">
+              <Shield className="text-white" size={28} />
             </div>
             <div>
-              <h2 className="text-3xl font-bold">تشخيص نظام الكاش الذكي المتقدم</h2>
-              <p className="text-white/90">فحص شامل مع إجراءات فعلية لمعالجة المشاكل</p>
+              <h2 className="text-xl md:text-3xl font-bold leading-tight">تشخيص نظام الكاش الذكي</h2>
+              <p className="text-sm md:text-base text-white/90 mt-1">فحص شامل مع إجراءات فعلية</p>
             </div>
           </div>
 
           <button
             onClick={runAllTests}
             disabled={running}
-            className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all ${
+            className={`flex items-center justify-center gap-2 px-6 py-4 md:py-3 rounded-xl font-bold text-base transition-all touch-manipulation active:scale-95 w-full md:w-auto ${
               running
                 ? 'bg-white/20 cursor-not-allowed'
                 : 'bg-white text-blue-600 hover:bg-white/90 hover:shadow-lg'
@@ -543,47 +543,70 @@ export const AdvancedCacheSystemDiagnostics: React.FC = () => {
         </div>
       </div>
 
-      {/* Quick Actions */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <button
-          onClick={clearAllCaches}
-          disabled={fixing !== null}
-          className="bg-white border-2 border-blue-200 rounded-xl p-4 hover:border-blue-400 hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          <Trash2 className="text-blue-600 mx-auto mb-2" size={24} />
-          <div className="font-bold text-gray-900">مسح Caches</div>
-          <div className="text-sm text-gray-600">حذف جميع Caches</div>
-        </button>
+      {/* Quick Actions - محسّن للموبايل */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 md:p-6">
+        <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+          <Zap className="text-blue-600" size={20} />
+          إجراءات سريعة
+        </h3>
 
-        <button
-          onClick={unregisterAllServiceWorkers}
-          disabled={fixing !== null}
-          className="bg-white border-2 border-purple-200 rounded-xl p-4 hover:border-purple-400 hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          <RotateCcw className="text-purple-600 mx-auto mb-2" size={24} />
-          <div className="font-bold text-gray-900">إلغاء SW</div>
-          <div className="text-sm text-gray-600">إلغاء Service Workers</div>
-        </button>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <button
+            onClick={clearAllCaches}
+            disabled={fixing !== null}
+            className="flex items-center gap-3 bg-white border-2 border-blue-200 rounded-xl p-4 hover:border-blue-400 hover:shadow-lg transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
+          >
+            <div className="bg-blue-100 p-3 rounded-lg flex-shrink-0">
+              <Trash2 className="text-blue-600" size={24} />
+            </div>
+            <div className="text-right flex-1">
+              <div className="font-bold text-gray-900 text-base">مسح Caches</div>
+              <div className="text-sm text-gray-600">حذف جميع Caches</div>
+            </div>
+          </button>
 
-        <button
-          onClick={cleanLocalStorage}
-          disabled={fixing !== null}
-          className="bg-white border-2 border-amber-200 rounded-xl p-4 hover:border-amber-400 hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          <Database className="text-amber-600 mx-auto mb-2" size={24} />
-          <div className="font-bold text-gray-900">تنظيف localStorage</div>
-          <div className="text-sm text-gray-600">حذف البيانات غير الضرورية</div>
-        </button>
+          <button
+            onClick={unregisterAllServiceWorkers}
+            disabled={fixing !== null}
+            className="flex items-center gap-3 bg-white border-2 border-purple-200 rounded-xl p-4 hover:border-purple-400 hover:shadow-lg transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
+          >
+            <div className="bg-purple-100 p-3 rounded-lg flex-shrink-0">
+              <RotateCcw className="text-purple-600" size={24} />
+            </div>
+            <div className="text-right flex-1">
+              <div className="font-bold text-gray-900 text-base">إلغاء SW</div>
+              <div className="text-sm text-gray-600">إلغاء Service Workers</div>
+            </div>
+          </button>
 
-        <button
-          onClick={performDeepClean}
-          disabled={fixing !== null}
-          className="bg-gradient-to-r from-red-500 to-red-600 text-white rounded-xl p-4 hover:from-red-600 hover:to-red-700 hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          <Zap className="mx-auto mb-2" size={24} />
-          <div className="font-bold">تنظيف شامل</div>
-          <div className="text-sm opacity-90">مسح كل شيء + إعادة تحميل</div>
-        </button>
+          <button
+            onClick={cleanLocalStorage}
+            disabled={fixing !== null}
+            className="flex items-center gap-3 bg-white border-2 border-amber-200 rounded-xl p-4 hover:border-amber-400 hover:shadow-lg transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
+          >
+            <div className="bg-amber-100 p-3 rounded-lg flex-shrink-0">
+              <Database className="text-amber-600" size={24} />
+            </div>
+            <div className="text-right flex-1">
+              <div className="font-bold text-gray-900 text-base">تنظيف localStorage</div>
+              <div className="text-sm text-gray-600">حذف البيانات غير الضرورية</div>
+            </div>
+          </button>
+
+          <button
+            onClick={performDeepClean}
+            disabled={fixing !== null}
+            className="flex items-center gap-3 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-xl p-4 hover:from-red-600 hover:to-red-700 hover:shadow-lg transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation md:col-span-2"
+          >
+            <div className="bg-white/20 p-3 rounded-lg flex-shrink-0">
+              <Zap size={24} />
+            </div>
+            <div className="text-right flex-1">
+              <div className="font-bold text-base">تنظيف شامل</div>
+              <div className="text-sm opacity-90">مسح كل شيء + إعادة تحميل</div>
+            </div>
+          </button>
+        </div>
       </div>
 
       {/* Cache Stats */}
