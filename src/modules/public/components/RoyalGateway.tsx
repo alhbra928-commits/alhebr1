@@ -86,8 +86,8 @@ export function RoyalGateway({ onEnter }: RoyalGatewayProps) {
 
   if (loading) {
     return (
-      <div className="fixed inset-0 z-[9999] bg-gradient-to-br from-amber-900 via-yellow-900 to-amber-950 flex items-center justify-center">
-        <div className="text-amber-200 text-xl">جاري التحميل...</div>
+      <div className="fixed inset-0 z-[9999] bg-gradient-to-br from-[#1a1510] via-[#2a211a] to-[#1a1510] flex items-center justify-center">
+        <div className="text-[#C89B3C] text-xl font-bold">جاري التحميل...</div>
       </div>
     );
   }
@@ -104,16 +104,16 @@ export function RoyalGateway({ onEnter }: RoyalGatewayProps) {
         phase === 'exit' ? 'opacity-0' : 'opacity-100'
       }`}
     >
-      {/* Advanced Animated Background */}
+      {/* Luxury Background */}
       <div className="absolute inset-0">
-        {/* Base Gradient with Animation */}
+        {/* Base Gradient */}
         <div
           className="absolute inset-0 transition-all duration-1000"
           style={{
             background: `
-              radial-gradient(circle at 20% 50%, rgba(217, 119, 6, 0.3) 0%, transparent 50%),
-              radial-gradient(circle at 80% 50%, rgba(245, 158, 11, 0.2) 0%, transparent 50%),
-              linear-gradient(135deg, #1a0f0a 0%, #2d1810 25%, #1f1108 50%, #2d1810 75%, #1a0f0a 100%)
+              radial-gradient(circle at 20% 50%, rgba(200, 155, 60, 0.15) 0%, transparent 50%),
+              radial-gradient(circle at 80% 50%, rgba(212, 175, 55, 0.1) 0%, transparent 50%),
+              linear-gradient(135deg, #0a0806 0%, #1a1510 25%, #0f0c08 50%, #1a1510 75%, #0a0806 100%)
             `,
             backgroundSize: '200% 200%',
             animation: 'gradientFlow 8s ease infinite',
@@ -130,7 +130,7 @@ export function RoyalGateway({ onEnter }: RoyalGatewayProps) {
                 width: `${200 + i * 50}px`,
                 height: `${200 + i * 50}px`,
                 background: `radial-gradient(circle, ${
-                  i % 2 === 0 ? 'rgba(251, 191, 36, 0.15)' : 'rgba(245, 158, 11, 0.1)'
+                  i % 2 === 0 ? 'rgba(200, 155, 60, 0.12)' : 'rgba(212, 175, 55, 0.08)'
                 } 0%, transparent 70%)`,
                 left: `${20 + i * 15}%`,
                 top: `${10 + i * 20}%`,
@@ -141,36 +141,40 @@ export function RoyalGateway({ onEnter }: RoyalGatewayProps) {
           ))}
         </div>
 
-        {/* Geometric Pattern Overlay */}
-        <div
-          className="absolute inset-0 opacity-5"
-          style={{
-            backgroundImage: `
-              linear-gradient(30deg, #fbbf24 12%, transparent 12.5%, transparent 87%, #fbbf24 87.5%, #fbbf24),
-              linear-gradient(150deg, #fbbf24 12%, transparent 12.5%, transparent 87%, #fbbf24 87.5%, #fbbf24),
-              linear-gradient(30deg, #fbbf24 12%, transparent 12.5%, transparent 87%, #fbbf24 87.5%, #fbbf24),
-              linear-gradient(150deg, #fbbf24 12%, transparent 12.5%, transparent 87%, #fbbf24 87.5%, #fbbf24)
-            `,
-            backgroundSize: '80px 140px',
-            backgroundPosition: '0 0, 0 0, 40px 70px, 40px 70px',
-          }}
-        />
+        {/* Geometric Pattern */}
+        {settings.show_geometric_pattern && (
+          <div
+            className="absolute inset-0 opacity-5"
+            style={{
+              backgroundImage: `
+                linear-gradient(30deg, #C89B3C 12%, transparent 12.5%, transparent 87%, #C89B3C 87.5%, #C89B3C),
+                linear-gradient(150deg, #C89B3C 12%, transparent 12.5%, transparent 87%, #C89B3C 87.5%, #C89B3C),
+                linear-gradient(30deg, #C89B3C 12%, transparent 12.5%, transparent 87%, #C89B3C 87.5%, #C89B3C),
+                linear-gradient(150deg, #C89B3C 12%, transparent 12.5%, transparent 87%, #C89B3C 87.5%, #C89B3C)
+              `,
+              backgroundSize: '80px 140px',
+              backgroundPosition: '0 0, 0 0, 40px 70px, 40px 70px',
+            }}
+          />
+        )}
 
         {/* Shimmer Effect */}
-        <div
-          className="absolute inset-0 opacity-20"
-          style={{
-            background: 'linear-gradient(90deg, transparent 0%, rgba(251, 191, 36, 0.3) 50%, transparent 100%)',
-            transform: 'translateX(-100%)',
-            animation: 'shimmer 3s infinite',
-          }}
-        />
+        {settings.show_shimmer_effect && (
+          <div
+            className="absolute inset-0 opacity-20"
+            style={{
+              background: 'linear-gradient(90deg, transparent 0%, rgba(200, 155, 60, 0.3) 50%, transparent 100%)',
+              transform: 'translateX(-100%)',
+              animation: 'shimmer 3s infinite',
+            }}
+          />
+        )}
 
         {/* Particle System */}
         {settings.show_particles && [...Array(particleCount)].map((_, i) => (
           <div
             key={`particle-${i}`}
-            className="absolute w-1 h-1 bg-amber-400 rounded-full animate-particle"
+            className="absolute w-1 h-1 bg-[#C89B3C] rounded-full animate-particle"
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
@@ -197,19 +201,19 @@ export function RoyalGateway({ onEnter }: RoyalGatewayProps) {
             {settings.show_rings && (
               <div className="absolute inset-0 flex items-center justify-center">
                 <div
-                  className="absolute w-48 h-48 rounded-full border-2 border-amber-500/20"
+                  className="absolute w-48 h-48 rounded-full border-2 border-[#C89B3C]/20"
                   style={{
                     animation: 'rotate 20s linear infinite',
                   }}
                 />
                 <div
-                  className="absolute w-40 h-40 rounded-full border-2 border-yellow-400/30"
+                  className="absolute w-40 h-40 rounded-full border-2 border-[#D4AF37]/30"
                   style={{
                     animation: 'rotate-reverse 15s linear infinite',
                   }}
                 />
                 <div
-                  className="absolute w-32 h-32 rounded-full border border-amber-300/40"
+                  className="absolute w-32 h-32 rounded-full border border-[#C89B3C]/40"
                   style={{
                     animation: 'rotate 10s linear infinite',
                   }}
@@ -220,37 +224,37 @@ export function RoyalGateway({ onEnter }: RoyalGatewayProps) {
             {/* Glowing Center */}
             <div className="relative">
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-32 h-32 bg-gradient-to-br from-amber-400/30 via-yellow-500/40 to-amber-600/30 rounded-full blur-2xl animate-pulse" />
+                <div className="w-32 h-32 bg-gradient-to-br from-[#C89B3C]/30 via-[#D4AF37]/40 to-[#C89B3C]/30 rounded-full blur-2xl animate-pulse" />
               </div>
 
               {/* Emblem Container */}
-              <div className="relative bg-gradient-to-br from-amber-900/40 via-yellow-900/30 to-amber-950/40 backdrop-blur-sm p-10 rounded-full border border-amber-500/30 shadow-2xl">
+              <div className="relative bg-gradient-to-br from-[#2C2C2C]/60 via-[#3D5B4B]/40 to-[#2C2C2C]/60 backdrop-blur-sm p-10 rounded-full border border-[#C89B3C]/30 shadow-2xl">
                 <div className="flex flex-col items-center gap-3">
                   {/* Crown */}
                   {settings.show_crown && (
                     <div className="transform -translate-y-2">
-                      <Crown className="w-12 h-12 text-amber-400 animate-pulse" strokeWidth={1.5} />
+                      <Crown className="w-12 h-12 text-[#C89B3C] animate-pulse" strokeWidth={1.5} />
                     </div>
                   )}
 
                   {/* Icons */}
                   <div className="flex items-center gap-6">
                     <div className="relative">
-                      <div className="absolute inset-0 bg-amber-400/20 rounded-full blur-xl animate-pulse" />
+                      <div className="absolute inset-0 bg-[#C89B3C]/20 rounded-full blur-xl animate-pulse" />
                       <span className="relative text-5xl drop-shadow-2xl">🌴</span>
                     </div>
 
-                    <div className="w-1 h-8 bg-gradient-to-b from-transparent via-amber-400/50 to-transparent" />
+                    <div className="w-1 h-8 bg-gradient-to-b from-transparent via-[#C89B3C]/50 to-transparent" />
 
                     <div className="relative">
-                      <div className="absolute inset-0 bg-yellow-400/20 rounded-full blur-xl animate-pulse delay-500" />
+                      <div className="absolute inset-0 bg-[#D4AF37]/20 rounded-full blur-xl animate-pulse delay-500" />
                       <span className="relative text-5xl drop-shadow-2xl">🫒</span>
                     </div>
                   </div>
 
                   {/* Decorative Leaf */}
                   <div className="transform translate-y-1">
-                    <Leaf className="w-8 h-8 text-amber-500/60" strokeWidth={1.5} />
+                    <Leaf className="w-8 h-8 text-[#3D5B4B]/80" strokeWidth={1.5} />
                   </div>
                 </div>
               </div>
@@ -260,10 +264,10 @@ export function RoyalGateway({ onEnter }: RoyalGatewayProps) {
             {settings.show_sparkles && (
               <>
                 <div className="absolute -top-8 -right-8 animate-bounce-slow">
-                  <Sparkles className="w-8 h-8 text-yellow-300" />
+                  <Sparkles className="w-8 h-8 text-[#D4AF37]" />
                 </div>
                 <div className="absolute -bottom-8 -left-8 animate-bounce-slow delay-700">
-                  <Sparkles className="w-8 h-8 text-amber-400" />
+                  <Sparkles className="w-8 h-8 text-[#C89B3C]" />
                 </div>
               </>
             )}
@@ -281,24 +285,24 @@ export function RoyalGateway({ onEnter }: RoyalGatewayProps) {
           <div className="relative">
             {/* Text Glow */}
             <div className="absolute inset-0 blur-xl opacity-50">
-              <h1 className="text-4xl md:text-6xl font-black text-amber-400">
+              <h1 className="text-4xl md:text-6xl font-black text-[#C89B3C]">
                 {settings.welcome_text_ar}
               </h1>
             </div>
 
             {/* Main Text */}
-            <h1 className="relative text-4xl md:text-6xl font-black mb-6 bg-gradient-to-r from-amber-200 via-yellow-300 to-amber-200 bg-clip-text text-transparent animate-shimmer-text">
+            <h1 className="relative text-4xl md:text-6xl font-black mb-6 bg-gradient-to-r from-[#E8E1D3] via-[#D4AF37] to-[#E8E1D3] bg-clip-text text-transparent animate-shimmer-text">
               {settings.welcome_text_ar}
             </h1>
           </div>
 
           <div className="space-y-3 mt-6">
-            <p className="text-xl md:text-2xl text-amber-100/90 font-bold flex items-center justify-center gap-3">
-              <span className="w-8 h-0.5 bg-gradient-to-r from-transparent to-amber-400/50" />
+            <p className="text-xl md:text-2xl text-[#F4EBDD]/90 font-bold flex items-center justify-center gap-3">
+              <span className="w-8 h-0.5 bg-gradient-to-r from-transparent to-[#C89B3C]/50" />
               <span>{settings.subtitle_text_ar}</span>
-              <span className="w-8 h-0.5 bg-gradient-to-l from-transparent to-amber-400/50" />
+              <span className="w-8 h-0.5 bg-gradient-to-l from-transparent to-[#C89B3C]/50" />
             </p>
-            <p className="text-lg text-yellow-200/70 font-medium">
+            <p className="text-lg text-[#E8E1D3]/70 font-medium">
               {settings.description_text_ar}
             </p>
           </div>
@@ -314,46 +318,46 @@ export function RoyalGateway({ onEnter }: RoyalGatewayProps) {
             }`}
           >
             <div className="w-64 md:w-96">
-            {/* Progress Label */}
-            <div className="flex items-center justify-between mb-3 text-sm text-amber-200/70 font-medium">
-              <span>جاري التحميل</span>
-              <span>{Math.round(progress)}%</span>
-            </div>
+              {/* Progress Label */}
+              <div className="flex items-center justify-between mb-3 text-sm text-[#C89B3C]/70 font-bold">
+                <span>جاري التحميل</span>
+                <span>{Math.round(progress)}%</span>
+              </div>
 
-            {/* Progress Track */}
-            <div className="relative h-1.5 bg-amber-950/50 rounded-full overflow-hidden backdrop-blur-sm border border-amber-500/20">
-              {/* Progress Fill */}
-              <div
-                className="absolute inset-y-0 left-0 bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-400 rounded-full transition-all duration-300 shadow-lg shadow-amber-500/50"
-                style={{
-                  width: `${progress}%`,
-                  backgroundSize: '200% 100%',
-                  animation: 'shimmer-progress 2s infinite',
-                }}
-              />
-
-              {/* Progress Glow */}
-              <div
-                className="absolute inset-y-0 left-0 bg-gradient-to-r from-amber-300 to-yellow-300 rounded-full blur-md opacity-60"
-                style={{ width: `${progress}%` }}
-              />
-            </div>
-
-            {/* Loading Dots */}
-            <div className="flex items-center justify-center gap-2 mt-4">
-              {[0, 1, 2].map((i) => (
+              {/* Progress Track */}
+              <div className="relative h-1.5 bg-[#2C2C2C]/50 rounded-full overflow-hidden backdrop-blur-sm border border-[#C89B3C]/20">
+                {/* Progress Fill */}
                 <div
-                  key={i}
-                  className="w-2 h-2 bg-amber-400/60 rounded-full animate-bounce"
+                  className="absolute inset-y-0 left-0 bg-gradient-to-r from-[#C89B3C] via-[#D4AF37] to-[#C89B3C] rounded-full transition-all duration-300 shadow-lg shadow-[#C89B3C]/50"
                   style={{
-                    animationDelay: `${i * 0.15}s`,
-                    animationDuration: '1s',
+                    width: `${progress}%`,
+                    backgroundSize: '200% 100%',
+                    animation: 'shimmer-progress 2s infinite',
                   }}
                 />
-              ))}
+
+                {/* Progress Glow */}
+                <div
+                  className="absolute inset-y-0 left-0 bg-gradient-to-r from-[#C89B3C] to-[#D4AF37] rounded-full blur-md opacity-60"
+                  style={{ width: `${progress}%` }}
+                />
+              </div>
+
+              {/* Loading Dots */}
+              <div className="flex items-center justify-center gap-2 mt-4">
+                {[0, 1, 2].map((i) => (
+                  <div
+                    key={i}
+                    className="w-2 h-2 bg-[#C89B3C]/60 rounded-full animate-bounce"
+                    style={{
+                      animationDelay: `${i * 0.15}s`,
+                      animationDuration: '1s',
+                    }}
+                  />
+                ))}
+              </div>
             </div>
           </div>
-        </div>
         )}
 
         {/* Status Text */}
@@ -364,10 +368,10 @@ export function RoyalGateway({ onEnter }: RoyalGatewayProps) {
               : 'opacity-0 translate-y-4'
           }`}
         >
-          <div className="flex items-center gap-2 text-amber-300 font-medium">
-            <div className="w-2 h-2 bg-amber-400 rounded-full animate-pulse" />
+          <div className="flex items-center gap-2 text-[#3D5B4B] font-bold">
+            <div className="w-2 h-2 bg-[#3D5B4B] rounded-full animate-pulse" />
             <span>جاهز للدخول</span>
-            <div className="w-2 h-2 bg-amber-400 rounded-full animate-pulse" />
+            <div className="w-2 h-2 bg-[#3D5B4B] rounded-full animate-pulse" />
           </div>
         </div>
       </div>
