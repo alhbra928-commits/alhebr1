@@ -229,7 +229,7 @@ export function MainPlatformInterface({
         </div>
       )}
 
-      {/* Smart Header الجديد */}
+      {/* Smart Header الجديد - يحتوي على Ticker داخله */}
       <SmartHeader
         currentView={currentView}
         notificationCount={0}
@@ -242,10 +242,8 @@ export function MainPlatformInterface({
         }}
       />
 
-      <SmartStockTicker />
-
       {/* الزر الذهبي */}
-      <div className="pt-32 md:pt-40">
+      <div className="pt-20 md:pt-24">
         <GlowingConceptButton onClick={() => setShowIdeaOverview(true)} />
       </div>
 
