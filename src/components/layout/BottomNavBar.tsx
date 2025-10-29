@@ -147,7 +147,7 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = ({
     <>
       {/* Bottom Navigation Bar */}
       <div
-        className="fixed bottom-0 left-0 right-0 z-50 lg:hidden"
+        className="fixed bottom-0 left-0 right-0 z-50"
         style={{
           paddingBottom: 'env(safe-area-inset-bottom, 0px)'
         }}
@@ -421,7 +421,7 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = ({
       {/* AI Helper Icon (bottom right) */}
       <button
         onClick={() => setShowAiHelper(!showAiHelper)}
-        className="fixed bottom-24 right-4 w-12 h-12 rounded-full shadow-xl flex items-center justify-center z-50 lg:hidden active:scale-95 transition-all duration-300"
+        className="fixed bottom-24 right-4 w-12 h-12 rounded-full shadow-xl flex items-center justify-center z-50 active:scale-95 transition-all duration-300"
         style={{
           background: 'linear-gradient(135deg, #A0916A 0%, #C9A962 100%)',
           boxShadow: '0 4px 15px rgba(160, 145, 106, 0.4)'
@@ -440,7 +440,7 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = ({
       </button>
 
       {/* Spacer to prevent content from being hidden behind the nav bar */}
-      <div className="h-20 lg:hidden"></div>
+      <div className="h-20"></div>
     </>
   );
 };
