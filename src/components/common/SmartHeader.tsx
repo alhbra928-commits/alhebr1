@@ -44,6 +44,14 @@ export function SmartHeader({
     { id: '5', message: 'تم إضافة مزرعة زيتون جديدة في الجوف', icon: '🫒', timestamp: new Date() }
   ]);
 
+  // Debug: التأكد من ظهور الـ Ticker
+  useEffect(() => {
+    console.log('🎫🎫🎫 [TICKER DEBUG] Activities Count:', activities.length);
+    console.log('🎫 [TICKER] First Activity:', activities[0]?.message);
+    console.log('🎫 [TICKER] isPaused:', isPaused);
+    console.log('🎫 [TICKER] isVisible:', isVisible);
+  }, [activities, isPaused, isVisible]);
+
   // Handle scroll behavior
   useEffect(() => {
     const handleScroll = () => {
@@ -323,31 +331,47 @@ export function SmartHeader({
           </div>
         </div>
 
-        {/* Live Activity Ticker - شريط متحرك دعائي */}
+        {/* Live Activity Ticker - شريط متحرك دعائي واضح */}
         <div
           className="border-t overflow-hidden relative cursor-pointer"
           style={{
-            background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.25) 0%, rgba(255, 248, 230, 0.25) 100%)',
-            borderColor: 'rgba(212, 175, 55, 0.4)',
-            borderTopWidth: '2px',
-            height: '40px'
+            background: 'linear-gradient(135deg, #FFF9E5 0%, #FFFAF0 100%)',
+            borderTop: '2px solid #D4AF37',
+            borderBottom: '1px solid rgba(212, 175, 55, 0.3)',
+            height: '42px',
+            boxShadow: 'inset 0 2px 4px rgba(212, 175, 55, 0.1)'
           }}
-          onClick={() => setIsPaused(!isPaused)}
+          onClick={() => {
+            console.log('🎫 [TICKER] Clicked! Paused:', !isPaused);
+            setIsPaused(!isPaused);
+          }}
         >
           <div
             className={`flex items-center gap-8 ${isPaused ? '' : 'animate-scroll-ticker'} whitespace-nowrap`}
-            style={{ paddingRight: '100%' }}
+            style={{
+              paddingRight: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              height: '100%'
+            }}
           >
-            {[...activities, ...activities, ...activities].map((activity, index) => (
-              <div
-                key={`${activity.id}-${index}`}
-                className="flex items-center gap-2 text-sm font-bold"
-                style={{ color: brandColors.text.primary }}
-              >
-                <span className="text-lg">{activity.icon}</span>
-                <span>{activity.message}</span>
-              </div>
-            ))}
+            {(() => {
+              console.log('🎫 [TICKER RENDER] Rendering activities:', activities.length);
+              return [...activities, ...activities, ...activities].map((activity, index) => (
+                <div
+                  key={`${activity.id}-${index}`}
+                  className="flex items-center gap-2 text-sm font-bold"
+                  style={{
+                    color: '#8B5A2B',
+                    fontSize: '14px',
+                    fontWeight: '600'
+                  }}
+                >
+                  <span className="text-lg">{activity.icon}</span>
+                  <span>{activity.message}</span>
+                </div>
+              ));
+            })()}
           </div>
 
           {/* Pause/Play Button */}
