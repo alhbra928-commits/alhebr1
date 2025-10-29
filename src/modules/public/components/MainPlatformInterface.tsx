@@ -17,6 +17,7 @@ import { AdminCrownButton } from './AdminCrownButton';
 import { GlowingConceptButton } from './GlowingConceptButton';
 import { ConceptIntroductionPage } from './ConceptIntroductionPage';
 import { IdeaOverviewSection } from './IdeaOverviewSection';
+import { PublicBottomNavBar } from '../../../components/layout/PublicBottomNavBar';
 
 type ViewMode = 'home' | 'farmDetail' | 'booking' | 'investor' | 'verification' | 'concept';
 
@@ -222,6 +223,28 @@ export function MainPlatformInterface({
             />
           </div>
         </div>
+      )}
+
+      {/* Bottom Navigation Bar for Public */}
+      {currentView === 'home' && (
+        <PublicBottomNavBar
+          activeTab="home"
+          onTabChange={(tabId) => {
+            if (tabId === 'concept') {
+              setShowConceptModal(true);
+            } else if (tabId === 'login') {
+              setCurrentView('investor');
+            } else if (tabId === 'home') {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+          }}
+          onBookNow={() => {
+            // Scroll to first farm or open booking
+            if (farms.length > 0) {
+              handleFarmClick(farms[0]);
+            }
+          }}
+        />
       )}
     </div>
   );
