@@ -35,7 +35,7 @@ export function SmartHeader({
   const [sortBy, setSortBy] = useState('latest');
   const [showFilters, setShowFilters] = useState(false);
 
-  // Live activities ticker
+  // Live activities للشريط المتحرك الدعائي
   const [activities] = useState<LiveActivity[]>([
     { id: '1', message: 'تم اعتماد حجز جديد في مزرعة رقم 104', icon: '🌴', timestamp: new Date() },
     { id: '2', message: 'تمت تسوية مالية لصاحب المزرعة فهد العتيبي', icon: '💰', timestamp: new Date() },
@@ -323,13 +323,14 @@ export function SmartHeader({
           </div>
         </div>
 
-        {/* Live Activity Ticker */}
+        {/* Live Activity Ticker - شريط متحرك دعائي */}
         <div
           className="border-t overflow-hidden relative cursor-pointer"
           style={{
-            background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.15) 0%, rgba(255, 248, 230, 0.15) 100%)',
-            borderColor: 'rgba(212, 175, 55, 0.2)',
-            height: '36px'
+            background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.25) 0%, rgba(255, 248, 230, 0.25) 100%)',
+            borderColor: 'rgba(212, 175, 55, 0.4)',
+            borderTopWidth: '2px',
+            height: '40px'
           }}
           onClick={() => setIsPaused(!isPaused)}
         >
@@ -370,8 +371,8 @@ export function SmartHeader({
         </div>
       </header>
 
-      {/* Spacer to prevent content jump */}
-      <div style={{ height: isScrolled ? '136px' : '152px' }} />
+      {/* Spacer to prevent content jump - يحجز مساحة للهيدر + Ticker */}
+      <div style={{ height: isScrolled ? '140px' : '156px' }} />
 
       <style>{`
         @keyframes scroll-ticker {
