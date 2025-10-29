@@ -96,15 +96,55 @@ export function MainPlatformInterface({
 
   if (currentView === 'concept') {
     return (
-      <ConceptIntroductionPage
-        onClose={handleGoHome}
-        onStartJourney={handleGoHome}
-      />
+      <>
+        <ConceptIntroductionPage
+          onClose={handleGoHome}
+          onStartJourney={handleGoHome}
+        />
+        <PublicBottomNavBar
+          activeTab="concept"
+          onTabChange={(tabId) => {
+            if (tabId === 'home') {
+              handleGoHome();
+            } else if (tabId === 'login') {
+              setCurrentView('investor');
+            } else if (tabId === 'concept') {
+              // Already here
+            }
+          }}
+          onBookNow={() => {
+            if (farms.length > 0) {
+              handleGoHome();
+              setTimeout(() => handleFarmClick(farms[0]), 100);
+            }
+          }}
+        />
+      </>
     );
   }
 
   if (currentView === 'verification') {
-    return <CertificateVerificationPage onBack={handleGoHome} />;
+    return (
+      <>
+        <CertificateVerificationPage onBack={handleGoHome} />
+        <PublicBottomNavBar
+          activeTab="home"
+          onTabChange={(tabId) => {
+            if (tabId === 'home') {
+              handleGoHome();
+            } else if (tabId === 'login') {
+              setCurrentView('investor');
+            }
+          }}
+          onBookNow={() => {
+            if (farms.length > 0) {
+              handleGoHome();
+              setTimeout(() => handleFarmClick(farms[0]), 100);
+            }
+          }}
+        />
+      </>
+    );
   }
 
   if (currentView === 'investor') {
@@ -118,25 +158,57 @@ export function MainPlatformInterface({
       tree_type: selectedFarm.tree_type
     });
     return (
-      <FarmDetailPage
-        farmId={selectedFarm.id}
-        onBack={handleGoHome}
-        onStartBooking={handleStartBooking}
-      />
+      <>
+        <FarmDetailPage
+          farmId={selectedFarm.id}
+          onBack={handleGoHome}
+          onStartBooking={handleStartBooking}
+        />
+        <PublicBottomNavBar
+          activeTab="farms"
+          onTabChange={(tabId) => {
+            if (tabId === 'home') {
+              handleGoHome();
+            } else if (tabId === 'login') {
+              setCurrentView('investor');
+            } else if (tabId === 'concept') {
+              setShowConceptModal(true);
+            }
+          }}
+          onBookNow={() => handleStartBooking()}
+        />
+      </>
     );
   }
 
   if (currentView === 'booking' && selectedFarm) {
     return (
-      <TemporaryBookingPage
-        farmId={selectedFarm.id}
-        farmName={selectedFarm.farm_name || selectedFarm.barcode}
-        farmType={selectedFarm.tree_type}
-        onBack={() => setCurrentView('farmDetail')}
-        onSuccess={handleBookingSuccess}
-        onGoHome={handleGoHome}
-        onGoToInvestor={handleGoToInvestorPanel}
-      />
+      <>
+        <TemporaryBookingPage
+          farmId={selectedFarm.id}
+          farmName={selectedFarm.farm_name || selectedFarm.barcode}
+          farmType={selectedFarm.tree_type}
+          onBack={() => setCurrentView('farmDetail')}
+          onSuccess={handleBookingSuccess}
+          onGoHome={handleGoHome}
+          onGoToInvestor={handleGoToInvestorPanel}
+        />
+        <PublicBottomNavBar
+          activeTab="farms"
+          onTabChange={(tabId) => {
+            if (tabId === 'home') {
+              handleGoHome();
+            } else if (tabId === 'login') {
+              setCurrentView('investor');
+            } else if (tabId === 'concept') {
+              setShowConceptModal(true);
+            }
+          }}
+          onBookNow={() => {
+            // Already in booking
+          }}
+        />
+      </>
     );
   }
 
@@ -225,27 +297,35 @@ export function MainPlatformInterface({
         </div>
       )}
 
-      {/* Bottom Navigation Bar for Public */}
-      {currentView === 'home' && (
-        <PublicBottomNavBar
-          activeTab="home"
-          onTabChange={(tabId) => {
-            if (tabId === 'concept') {
-              setShowConceptModal(true);
-            } else if (tabId === 'login') {
-              setCurrentView('investor');
-            } else if (tabId === 'home') {
+      {/* Bottom Navigation Bar for Public - Always Show */}
+      <PublicBottomNavBar
+        activeTab={currentView === 'home' ? 'home' : currentView === 'investor' ? 'login' : 'home'}
+        onTabChange={(tabId) => {
+          if (tabId === 'concept') {
+            setShowConceptModal(true);
+          } else if (tabId === 'login') {
+            setCurrentView('investor');
+          } else if (tabId === 'home') {
+            setCurrentView('home');
+            setTimeout(() => {
               window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
-          }}
-          onBookNow={() => {
-            // Scroll to first farm or open booking
-            if (farms.length > 0) {
-              handleFarmClick(farms[0]);
-            }
-          }}
-        />
-      )}
+            }, 100);
+          } else if (tabId === 'farms') {
+            setCurrentView('home');
+            setTimeout(() => {
+              const farmsSection = document.getElementById('farms-section');
+              if (farmsSection) {
+                farmsSection.scrollIntoView({ behavior: 'smooth' });
+              }
+            }, 100);
+          }
+        }}
+        onBookNow={() => {
+          if (farms.length > 0) {
+            handleFarmClick(farms[0]);
+          }
+        }}
+      />
     </div>
   );
 }
