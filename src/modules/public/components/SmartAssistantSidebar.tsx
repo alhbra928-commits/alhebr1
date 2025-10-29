@@ -19,6 +19,33 @@ export function SmartAssistantSidebar({
   onSuggestionClick,
 }: SmartAssistantSidebarProps) {
   const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+
+  // Scroll behavior للإخفاء في الجوال
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      // في الجوال فقط (< 1024px)
+      if (window.innerWidth < 1024) {
+        // إخفاء عند Scroll للأعلى
+        if (currentScrollY > lastScrollY && currentScrollY > 100) {
+          setIsVisible(false);
+        } else if (currentScrollY < lastScrollY) {
+          setIsVisible(true);
+        }
+      } else {
+        // في Desktop دائماً ظاهر
+        setIsVisible(true);
+      }
+
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [lastScrollY]);
 
   useEffect(() => {
     const initialNotifications: Notification[] = [
@@ -51,7 +78,11 @@ export function SmartAssistantSidebar({
   }, []);
 
   return (
-    <div className="space-y-6 sticky top-8">
+    <div
+      className={`space-y-6 sticky top-8 transition-all duration-300 ${
+        isVisible ? 'translate-x-0 opacity-100' : 'lg:translate-x-0 lg:opacity-100 translate-x-full opacity-0 pointer-events-none lg:pointer-events-auto'
+      }`}
+    >
       <div
         className="rounded-3xl p-6 backdrop-blur-lg animate-fadeIn"
         style={{
