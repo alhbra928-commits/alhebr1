@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>اختبار إصلاح الزر الذكي - الموبايل</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 20px;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 10px;
+      color: #fff;
+      text-align: center;
+    }
+
+    .version {
+      text-align: center;
+      color: #a8dadc;
+      margin-bottom: 30px;
+      font-size: 0.9rem;
+    }
+
+    .alert {
+      background: rgba(46, 213, 115, 0.2);
+      border: 2px solid #2ed573;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 20px 0;
+    }
+
+    .alert.warning {
+      background: rgba(255, 193, 7, 0.2);
+      border-color: #ffc107;
+    }
+
+    .alert.error {
+      background: rgba(255, 71, 87, 0.2);
+      border-color: #ff4757;
+    }
+
+    .steps {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 20px;
+      margin: 20px 0;
+    }
+
+    .step {
+      margin: 15px 0;
+      padding: 15px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      border-right: 4px solid #2ed573;
+    }
+
+    .step-number {
+      display: inline-block;
+      background: #2ed573;
+      color: #1e272e;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 30px;
+      font-weight: bold;
+      margin-left: 10px;
+    }
+
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 15px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-decoration: none;
+      text-align: center;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #2ed573 0%, #26d0ce 100%);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(46, 213, 115, 0.4);
+    }
+
+    .btn-secondary {
+      background: linear-gradient(135deg, #ffa502 0%, #ff6348 100%);
+      color: white;
+    }
+
+    .code {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 15px;
+      border-radius: 8px;
+      font-family: 'Courier New', monospace;
+      margin: 10px 0;
+      overflow-x: auto;
+    }
+
+    .checklist {
+      list-style: none;
+    }
+
+    .checklist li {
+      padding: 10px;
+      margin: 8px 0;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      border-right: 3px solid #26d0ce;
+    }
+
+    .checklist li::before {
+      content: "✓ ";
+      color: #2ed573;
+      font-weight: bold;
+      margin-left: 10px;
+    }
+
+    .emoji {
+      font-size: 1.5rem;
+      margin-left: 10px;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    .pulse {
+      animation: pulse 2s infinite;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔧 اختبار إصلاح الزر الذكي</h1>
+    <div class="version">Version: v20251029_1761760916520</div>
+
+    <div class="alert">
+      <h2>✅ التحديثات المطبقة:</h2>
+      <ul class="checklist">
+        <li>Auto-scroll للأعلى عند فتح شاشة الزر الذكي</li>
+        <li>Auto-scroll عند تغيير التبويبات</li>
+        <li>تحسينات الموبايل (Responsive Design)</li>
+        <li>Padding سفلي لمنع تغطية الكيبورد</li>
+        <li>إخفاء scrollbars بالكامل</li>
+      </ul>
+    </div>
+
+    <div class="alert warning">
+      <h2>⚠️ مهم جداً - امسح الكاش أولاً!</h2>
+      <p>يجب عليك مسح الكاش من المتصفح قبل الاختبار:</p>
+    </div>
+
+    <div class="steps">
+      <h2>📱 خطوات الاختبار على الموبايل:</h2>
+
+      <div class="step">
+        <span class="step-number">1</span>
+        <strong>امسح الكاش:</strong>
+        <div class="code">
+          • Safari iOS: الإعدادات → Safari → مسح السجل والبيانات<br>
+          • Chrome Android: الإعدادات → الخصوصية → محو بيانات التصفح
+        </div>
+      </div>
+
+      <div class="step">
+        <span class="step-number">2</span>
+        <strong>أو استخدم Hard Refresh:</strong>
+        <div class="code">
+          • على الموبايل: أغلق التطبيق بالكامل ثم افتحه من جديد<br>
+          • أو افتح الرابط في وضع التصفح الخاص (Incognito)
+        </div>
+      </div>
+
+      <div class="step">
+        <span class="step-number">3</span>
+        <strong>افتح لوحة الإدارة</strong>
+      </div>
+
+      <div class="step">
+        <span class="step-number">4</span>
+        <strong>اذهب إلى: الواتساب → الزر الذكي</strong>
+      </div>
+
+      <div class="step">
+        <span class="step-number">5</span>
+        <strong>النتيجة المتوقعة:</strong>
+        <ul class="checklist">
+          <li>الشاشة تفتح من الأعلى مباشرة ✓</li>
+          <li>العنوان "الزر الذكي" ظاهر ✓</li>
+          <li>التبويبات متجاوبة مع حجم الشاشة ✓</li>
+          <li>عند تغيير التبويب → التمرير للأعلى تلقائياً ✓</li>
+          <li>لا يوجد scrollbar ظاهر ✓</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="alert error" id="status" style="display: none;">
+      <h2>❌ لم يتم مسح الكاش!</h2>
+      <p>إذا لم تظهر التحسينات، تأكد من مسح الكاش كما في الخطوة 1</p>
+    </div>
+
+    <button class="btn btn-primary pulse" onclick="testVersion()">
+      <span class="emoji">🔍</span>
+      فحص إصدار المتصفح
+    </button>
+
+    <button class="btn btn-secondary" onclick="window.location.reload(true)">
+      <span class="emoji">🔄</span>
+      إعادة تحميل الصفحة (Hard Refresh)
+    </button>
+
+    <div class="alert" style="margin-top: 30px;">
+      <h2>💡 نصائح إضافية:</h2>
+      <ul class="checklist">
+        <li>تأكد من أنك على آخر إصدار: v20251029_1761760916520</li>
+        <li>جرب في وضع التصفح الخاص أولاً</li>
+        <li>إذا استمرت المشكلة: أعد تشغيل المتصفح/الجهاز</li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    function testVersion() {
+      const currentVersion = 'v20251029_1761760916520';
+      const storedVersion = localStorage.getItem('app-version');
+
+      const statusDiv = document.getElementById('status');
+
+      if (storedVersion === currentVersion) {
+        statusDiv.style.display = 'block';
+        statusDiv.className = 'alert';
+        statusDiv.innerHTML = `
+          <h2>✅ الإصدار صحيح!</h2>
+          <p><strong>الإصدار الحالي:</strong> ${currentVersion}</p>
+          <p>يمكنك الآن اختبار شاشة الزر الذكي</p>
+        `;
+      } else {
+        statusDiv.style.display = 'block';
+        statusDiv.className = 'alert error';
+        statusDiv.innerHTML = `
+          <h2>❌ يجب مسح الكاش!</h2>
+          <p><strong>الإصدار المتوقع:</strong> ${currentVersion}</p>
+          <p><strong>الإصدار المخزن:</strong> ${storedVersion || 'غير موجود'}</p>
+          <p>امسح الكاش وحدث الصفحة</p>
+        `;
+      }
+    }
+
+    // Auto-check on load
+    window.addEventListener('load', function() {
+      console.log('%c🔧 Smart Button Mobile Fix Test', 'color: #2ed573; font-size: 20px; font-weight: bold;');
+      console.log('Expected Version:', 'v20251029_1761760916520');
+      console.log('Stored Version:', localStorage.getItem('app-version'));
+    });
+  </script>
+</body>
+</html>

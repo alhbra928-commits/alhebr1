@@ -31,6 +31,21 @@ export const WhatsAppDashboard: React.FC<WhatsAppDashboardProps> = ({ onBack }) 
     loadStats();
   }, []);
 
+  // Force scroll to top when tab changes
+  useEffect(() => {
+    // Immediate scroll
+    window.scrollTo(0, 0);
+
+    // Also try with smooth after a tiny delay
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 50);
+
+    // Force scroll for mobile browsers
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+  }, [activeTab]);
+
   const loadStats = async () => {
     try {
       setLoading(true);
@@ -171,8 +186,8 @@ export const WhatsAppDashboard: React.FC<WhatsAppDashboardProps> = ({ onBack }) 
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
-      <div className="max-w-7xl mx-auto p-6">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900" style={{ scrollBehavior: 'smooth' }}>
+      <div className="max-w-7xl mx-auto p-4 md:p-6 pb-24" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 6rem)' }}>
         {onBack && (
           <div className="mb-6">
             <BackButton onClick={onBack} label="العودة للإدارة" />
@@ -184,7 +199,15 @@ export const WhatsAppDashboard: React.FC<WhatsAppDashboardProps> = ({ onBack }) 
             return (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
+                onClick={() => {
+                  // Scroll to top immediately when tab clicked
+                  window.scrollTo(0, 0);
+                  document.documentElement.scrollTop = 0;
+                  document.body.scrollTop = 0;
+
+                  // Then change tab
+                  setActiveTab(tab.id);
+                }}
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg whitespace-nowrap transition-all ${
                   activeTab === tab.id
                     ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white'
