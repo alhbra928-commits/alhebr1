@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧪 اختبار زر العودة LIVE</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: white;
+            border-radius: 30px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #667eea;
+            margin-bottom: 30px;
+            font-size: 36px;
+            text-align: center;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        .step {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 20px;
+            padding: 25px;
+            margin: 20px 0;
+            border: 3px solid #667eea;
+        }
+        .step h2 {
+            color: #764ba2;
+            margin-bottom: 15px;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .step-num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 50%;
+            font-weight: bold;
+        }
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 18px 36px;
+            border-radius: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            margin: 10px 0;
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(102, 126, 234, 0.6);
+        }
+        button:active {
+            transform: translateY(-1px);
+        }
+        .status {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 16px;
+            margin: 10px 0;
+        }
+        .status.success {
+            background: #10b981;
+            color: white;
+        }
+        .status.error {
+            background: #ef4444;
+            color: white;
+        }
+        .code {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+            margin: 15px 0;
+            border: 2px solid #667eea;
+        }
+        .highlight {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            padding: 3px 8px;
+            border-radius: 5px;
+            color: #1e293b;
+            font-weight: bold;
+        }
+        .info {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            border: 2px solid #3b82f6;
+            color: #1e40af;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 15px 0;
+            font-weight: 500;
+        }
+        .warning {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border: 2px solid #f59e0b;
+            color: #92400e;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 15px 0;
+            font-weight: 500;
+        }
+        .success-box {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            border: 2px solid #10b981;
+            color: #065f46;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 15px 0;
+            font-weight: 500;
+        }
+        ul {
+            margin: 15px 0 15px 30px;
+            line-height: 2;
+        }
+        #result {
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 اختبار زر العودة للإدارة - LIVE</h1>
+
+        <div class="step">
+            <h2><span class="step-num">1</span> حالة الجلسة الحالية</h2>
+            <div id="result"></div>
+        </div>
+
+        <div class="step">
+            <h2><span class="step-num">2</span> إنشاء جلسة إدارة</h2>
+            <p>اضغط الزر التالي لإنشاء جلسة إدارة نشطة:</p>
+            <button onclick="createSession()">✅ إنشاء جلسة إدارة</button>
+        </div>
+
+        <div class="step">
+            <h2><span class="step-num">3</span> افتح المنصة العامة</h2>
+            <div class="warning">
+                <strong>⚠️ مهم جداً:</strong>
+                <ul>
+                    <li>بعد إنشاء الجلسة، افتح المنصة في التبويب الحالي</li>
+                    <li>يجب أن تشاهد الزر في <span class="highlight">أعلى يمين الـ Header</span></li>
+                    <li>الزر بجانب أيقونة الإشعارات 🔔</li>
+                </ul>
+            </div>
+            <button onclick="window.location.href='/'">🌐 افتح المنصة الآن</button>
+        </div>
+
+        <div class="step">
+            <h2><span class="step-num">4</span> النتيجة المتوقعة</h2>
+            <div class="success-box">
+                <strong>✨ يجب أن ترى:</strong>
+                <ul>
+                    <li>زر <span class="highlight">🛡️ لوحة الإدارة</span> في أعلى يمين الـ Header</li>
+                    <li>الزر يتحرك مع الـ Header عند scroll</li>
+                    <li>يختفي عند scroll للأسفل</li>
+                    <li>يظهر عند scroll للأعلى</li>
+                    <li>على الموبايل: أيقونة فقط</li>
+                    <li>على الكمبيوتر: أيقونة + نص</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="step">
+            <h2><span class="step-num">5</span> حذف الجلسة</h2>
+            <p>لإخفاء الزر، احذف الجلسة:</p>
+            <button onclick="deleteSession()" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);">🗑️ حذف الجلسة</button>
+        </div>
+
+        <div class="step">
+            <h2><span class="step-num">6</span> معلومات تقنية</h2>
+            <div class="info">
+                <strong>📍 موقع الزر في الكود:</strong>
+                <div class="code">SmartHeader Component
+└── Right Actions
+    └── [🛡️ لوحة الإدارة] ← هنا
+    └── [🔔 Notifications]
+    └── [💬 WhatsApp]</div>
+            </div>
+            <div class="info">
+                <strong>🔍 الفحص:</strong>
+                <ul>
+                    <li>يتحقق من localStorage كل 2 ثانية</li>
+                    <li>يستمع لتغييرات storage</li>
+                    <li>يظهر فقط عند وجود: <span class="highlight">admin-session</span></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="step">
+            <h2><span class="step-num">7</span> استكشاف الأخطاء</h2>
+            <div class="warning">
+                <strong>إذا لم يظهر الزر:</strong>
+                <ul>
+                    <li>✓ افتح Console (F12)</li>
+                    <li>✓ تحقق من: <span class="highlight">localStorage.getItem('admin-session')</span></li>
+                    <li>✓ امسح الـ Cache: Ctrl+Shift+R</li>
+                    <li>✓ تأكد من Version: <span class="highlight">v20251029_1761758364956</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateStatus() {
+            const session = localStorage.getItem('admin-session');
+            const resultDiv = document.getElementById('result');
+
+            if (session) {
+                try {
+                    const data = JSON.parse(session);
+                    resultDiv.innerHTML = `
+                        <div class="status success">
+                            ✅ جلسة نشطة: ${data.name || data.username}
+                        </div>
+                    `;
+                } catch (e) {
+                    resultDiv.innerHTML = `
+                        <div class="status error">
+                            ❌ جلسة غير صالحة
+                        </div>
+                    `;
+                }
+            } else {
+                resultDiv.innerHTML = `
+                    <div class="status error">
+                        ❌ لا توجد جلسة نشطة
+                    </div>
+                `;
+            }
+        }
+
+        function createSession() {
+            const session = {
+                username: 'admin_test',
+                name: 'مدير الاختبار',
+                phone: '0500000000',
+                role: 'super_admin',
+                permissions: {
+                    view_dashboard: true,
+                    view_farms: true,
+                    view_bookings: true,
+                    view_investors: true,
+                    view_finance: true,
+                    view_documentation: true,
+                    view_whatsapp: true,
+                    view_marketing: true,
+                    view_settings: true,
+                    view_permissions: true
+                },
+                loginTime: new Date().toISOString()
+            };
+
+            localStorage.setItem('admin-session', JSON.stringify(session));
+            console.log('✅ تم إنشاء الجلسة:', session);
+            updateStatus();
+
+            // عرض رسالة نجاح
+            alert('✅ تم إنشاء جلسة الإدارة بنجاح!\n\n' +
+                  '👉 الآن اضغط زر "افتح المنصة الآن"\n' +
+                  '👉 يجب أن ترى الزر في أعلى يمين الـ Header!\n\n' +
+                  '🛡️ ابحث عن: لوحة الإدارة');
+        }
+
+        function deleteSession() {
+            localStorage.removeItem('admin-session');
+            console.log('🗑️ تم حذف الجلسة');
+            updateStatus();
+            alert('🗑️ تم حذف الجلسة!\n\n' +
+                  'الزر يجب أن يختفي تلقائياً خلال 2 ثانية.');
+        }
+
+        // Update status on load and every 2 seconds
+        updateStatus();
+        setInterval(updateStatus, 2000);
+
+        // Listen for storage changes
+        window.addEventListener('storage', updateStatus);
+    </script>
+</body>
+</html>
