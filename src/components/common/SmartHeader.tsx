@@ -54,8 +54,11 @@ export function SmartHeader({
   useEffect(() => {
     const checkAdminSession = () => {
       const adminSession = localStorage.getItem('admin-session');
+      console.log('[SmartHeader] Checking admin session:', adminSession);
       const sessionData = adminSession ? JSON.parse(adminSession) : null;
-      setHasAdminSession(!!(sessionData && sessionData.username));
+      const hasSession = !!(sessionData && sessionData.username);
+      console.log('[SmartHeader] Has admin session:', hasSession, 'onBackToAdmin:', !!onBackToAdmin);
+      setHasAdminSession(hasSession);
     };
 
     checkAdminSession();
@@ -66,7 +69,7 @@ export function SmartHeader({
       clearInterval(interval);
       window.removeEventListener('storage', checkAdminSession);
     };
-  }, []);
+  }, [onBackToAdmin]);
 
   // Load ticker settings from database
   useEffect(() => {
