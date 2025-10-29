@@ -4,6 +4,7 @@ import { PublicFarm } from '../types/farm.types';
 import { PublicFarmService } from '../services/publicFarmService';
 import { FarmDetailService } from '../services/farmDetailService';
 import { PremiumHeader } from './PremiumHeader';
+import { SmartHeader } from '../../../components/common/SmartHeader';
 import { SmartStockTicker } from './SmartStockTicker';
 import { FarmCard3D } from './FarmCard3D';
 import { FixedBottomBar } from './FixedBottomBar';
@@ -228,13 +229,19 @@ export function MainPlatformInterface({
         </div>
       )}
 
-      <PremiumHeader
-        onAdminLogin={onAdminLogin}
-        onInvestorLogin={handleGoToInvestorPanel}
-        onVerifyCertificate={() => setCurrentView('verification')}
-        onBackToAdmin={onBackToAdmin}
-        onFarmOwnerLogin={onFarmOwnerLogin}
+      {/* Smart Header الجديد */}
+      <SmartHeader
+        currentView={currentView}
+        notificationCount={0}
+        onNotificationClick={() => console.log('Notifications clicked')}
+        onWhatsAppClick={() => console.log('WhatsApp clicked')}
+        onLogoClick={handleGoHome}
+        onFilterChange={(filters) => {
+          console.log('Filters changed:', filters);
+          // TODO: Apply filters to farms
+        }}
       />
+
       <SmartStockTicker />
 
       {/* الزر الذهبي */}
