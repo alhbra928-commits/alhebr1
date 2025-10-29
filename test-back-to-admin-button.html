@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار زر العودة للإدارة</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #F5F1E8 0%, #E8E6E1 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #8B7355;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+        .section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+        .section h3 {
+            color: #A0916A;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+        button {
+            background: linear-gradient(135deg, #A0916A 0%, #C9A962 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 5px;
+            transition: transform 0.2s;
+        }
+        button:hover { transform: scale(1.05); }
+        button:active { transform: scale(0.95); }
+        .status {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .status.active {
+            background: #d4edda;
+            color: #155724;
+        }
+        .status.inactive {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .code {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+        .info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 اختبار زر العودة للإدارة</h1>
+
+        <div class="section">
+            <h3>📊 حالة الجلسة الحالية</h3>
+            <div>
+                <strong>الحالة:</strong>
+                <span id="sessionStatus" class="status inactive">لا توجد جلسة</span>
+            </div>
+            <div style="margin-top: 10px;">
+                <strong>البيانات:</strong>
+                <div id="sessionData" class="code">لا توجد بيانات</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>🎮 التحكم في الجلسة</h3>
+            <button onclick="createSession()">إنشاء جلسة إدارة</button>
+            <button onclick="deleteSession()">حذف الجلسة</button>
+            <button onclick="checkSession()">التحقق من الجلسة</button>
+        </div>
+
+        <div class="section">
+            <h3>📝 كيف يعمل الزر؟</h3>
+            <div class="info">
+                <p><strong>الزر يظهر عندما:</strong></p>
+                <ul style="margin: 10px 0 10px 20px;">
+                    <li>توجد جلسة في localStorage باسم "admin-session"</li>
+                    <li>الجلسة تحتوي على "username" صالح</li>
+                    <li>يتحقق تلقائياً كل 2 ثانية</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>🧪 خطوات الاختبار</h3>
+            <ol style="margin-right: 20px; line-height: 2;">
+                <li>اضغط "إنشاء جلسة إدارة"</li>
+                <li>افتح المنصة العامة</li>
+                <li>يجب أن يظهر زر "لوحة الإدارة" في أعلى يمين الشاشة</li>
+                <li>اضغط على الزر للعودة</li>
+                <li>اضغط "حذف الجلسة" - يجب أن يختفي الزر</li>
+            </ol>
+        </div>
+
+        <div class="section">
+            <h3>✅ النتيجة المتوقعة</h3>
+            <div class="info">
+                <p>الزر يظهر في <strong>جميع صفحات المنصة العامة:</strong></p>
+                <ul style="margin: 10px 0 10px 20px;">
+                    <li>الصفحة الرئيسية</li>
+                    <li>تفاصيل المزرعة</li>
+                    <li>صفحة الحجز</li>
+                    <li>صفحة التحقق</li>
+                    <li>صفحة الفكرة</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateStatus() {
+            const session = localStorage.getItem('admin-session');
+            const statusEl = document.getElementById('sessionStatus');
+            const dataEl = document.getElementById('sessionData');
+
+            if (session) {
+                try {
+                    const data = JSON.parse(session);
+                    statusEl.className = 'status active';
+                    statusEl.textContent = '✅ جلسة نشطة';
+                    dataEl.textContent = JSON.stringify(data, null, 2);
+                } catch (e) {
+                    statusEl.className = 'status inactive';
+                    statusEl.textContent = '❌ جلسة غير صالحة';
+                    dataEl.textContent = 'خطأ في قراءة البيانات';
+                }
+            } else {
+                statusEl.className = 'status inactive';
+                statusEl.textContent = '❌ لا توجد جلسة';
+                dataEl.textContent = 'لا توجد بيانات';
+            }
+        }
+
+        function createSession() {
+            const session = {
+                username: 'admin_test',
+                name: 'مدير الاختبار',
+                phone: '0500000000',
+                role: 'super_admin',
+                permissions: {
+                    view_dashboard: true,
+                    view_farms: true,
+                    view_bookings: true
+                },
+                loginTime: new Date().toISOString()
+            };
+
+            localStorage.setItem('admin-session', JSON.stringify(session));
+            console.log('✅ تم إنشاء الجلسة:', session);
+            updateStatus();
+            alert('✅ تم إنشاء جلسة الإدارة!\n\nالآن افتح المنصة العامة - يجب أن يظهر الزر في الأعلى.');
+        }
+
+        function deleteSession() {
+            localStorage.removeItem('admin-session');
+            console.log('🗑️ تم حذف الجلسة');
+            updateStatus();
+            alert('🗑️ تم حذف الجلسة!\n\nالزر يجب أن يختفي تلقائياً.');
+        }
+
+        function checkSession() {
+            updateStatus();
+            const session = localStorage.getItem('admin-session');
+            if (session) {
+                alert('✅ الجلسة موجودة!\n\nالزر يجب أن يكون ظاهراً في المنصة العامة.');
+            } else {
+                alert('❌ لا توجد جلسة!\n\nالزر لن يظهر في المنصة العامة.');
+            }
+        }
+
+        // Update status on load and every 2 seconds
+        updateStatus();
+        setInterval(updateStatus, 2000);
+
+        // Listen for storage changes
+        window.addEventListener('storage', updateStatus);
+    </script>
+</body>
+</html>
