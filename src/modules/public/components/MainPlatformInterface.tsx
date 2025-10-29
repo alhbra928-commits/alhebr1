@@ -120,6 +120,7 @@ export function MainPlatformInterface({
               setTimeout(() => handleFarmClick(farms[0]), 100);
             }
           }}
+          onBackToAdmin={onBackToAdmin}
         />
       </>
     );
@@ -145,6 +146,7 @@ export function MainPlatformInterface({
               setTimeout(() => handleFarmClick(farms[0]), 100);
             }
           }}
+          onBackToAdmin={onBackToAdmin}
         />
       </>
     );
@@ -180,6 +182,7 @@ export function MainPlatformInterface({
             }
           }}
           onBookNow={() => handleStartBooking()}
+          onBackToAdmin={onBackToAdmin}
         />
       </>
     );
@@ -212,6 +215,7 @@ export function MainPlatformInterface({
           onBookNow={() => {
             // Already in booking
           }}
+          onBackToAdmin={onBackToAdmin}
         />
       </>
     );
@@ -335,6 +339,7 @@ export function MainPlatformInterface({
             handleFarmClick(farms[0]);
           }
         }}
+        onBackToAdmin={onBackToAdmin}
       />
     </div>
   );

@@ -1,20 +1,58 @@
-import React, { useState } from 'react';
-import { Home, Search, HelpCircle, User, Phone, Plus } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Home, Search, HelpCircle, User, Phone, Plus, Shield } from 'lucide-react';
 
 interface PublicBottomNavBarProps {
   activeTab: string;
   onTabChange: (tabId: string) => void;
   onBookNow?: () => void;
+  onBackToAdmin?: () => void;
 }
 
 export const PublicBottomNavBar: React.FC<PublicBottomNavBarProps> = ({
   activeTab,
   onTabChange,
-  onBookNow
+  onBookNow,
+  onBackToAdmin
 }) => {
   const [showContactMenu, setShowContactMenu] = useState(false);
+  const [hasAdminSession, setHasAdminSession] = useState(false);
 
-  const navItems = [
+  // Check for admin session
+  useEffect(() => {
+    const checkAdminSession = () => {
+      const adminToken = localStorage.getItem('admin_session_token');
+      const adminData = localStorage.getItem('admin_data');
+      const hasSession = !!(adminToken || adminData);
+      console.log('[PublicBottomNav] Has admin session:', hasSession);
+      setHasAdminSession(hasSession);
+    };
+
+    checkAdminSession();
+    const interval = setInterval(checkAdminSession, 2000);
+    window.addEventListener('storage', checkAdminSession);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('storage', checkAdminSession);
+    };
+  }, []);
+
+  // Build nav items dynamically
+  const navItems = [];
+
+  // Add Back to Admin button if session exists
+  if (hasAdminSession && onBackToAdmin) {
+    navItems.push({
+      id: 'back-to-admin',
+      icon: <Shield className="w-6 h-6" />,
+      label: 'الإدارة',
+      onClick: onBackToAdmin,
+      isSpecial: true
+    });
+  }
+
+  // Add regular nav items
+  navItems.push(
     {
       id: 'home',
       icon: <Home className="w-6 h-6" />,
@@ -54,7 +92,7 @@ export const PublicBottomNavBar: React.FC<PublicBottomNavBarProps> = ({
       label: 'تواصل',
       onClick: () => setShowContactMenu(true)
     }
-  ];
+  );
 
   return (
     <>
@@ -85,6 +123,9 @@ export const PublicBottomNavBar: React.FC<PublicBottomNavBarProps> = ({
                 return <div key="fab-space" className="w-14"></div>;
               }
 
+              // Special styling for Back to Admin button
+              const isBackToAdmin = (item as any).isSpecial;
+
               return (
                 <button
                   key={item.id}
@@ -94,23 +135,29 @@ export const PublicBottomNavBar: React.FC<PublicBottomNavBarProps> = ({
                     min-w-[60px] px-2 py-2 rounded-xl
                     transition-all duration-300
                     ${isActive ? 'scale-110' : 'scale-100'}
+                    ${isBackToAdmin ? 'animate-pulse' : ''}
                     active:scale-95
                   `}
                   style={{
-                    background: isActive
+                    background: isBackToAdmin
+                      ? 'linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(212, 175, 55, 0.1) 100%)'
+                      : isActive
                       ? 'rgba(160, 145, 106, 0.15)'
-                      : 'transparent'
+                      : 'transparent',
+                    border: isBackToAdmin ? '2px solid #D4AF37' : 'none',
+                    boxShadow: isBackToAdmin ? '0 2px 12px rgba(212, 175, 55, 0.4)' : 'none'
                   }}
                 >
                   {/* Icon with glow effect */}
                   <div
                     className={`
                       transition-all duration-300
+                      ${isBackToAdmin ? 'drop-shadow-[0_0_16px_rgba(212,175,55,1)]' : ''}
                       ${isActive ? 'drop-shadow-[0_0_12px_rgba(212,175,55,0.8)]' : 'drop-shadow-[0_2px_4px_rgba(212,175,55,0.2)]'}
                     `}
                     style={{
-                      color: isActive ? '#D4AF37' : '#D4AF37',
-                      filter: isActive ? 'brightness(1.2)' : 'brightness(0.95)'
+                      color: isBackToAdmin ? '#D4AF37' : isActive ? '#D4AF37' : '#D4AF37',
+                      filter: isBackToAdmin ? 'brightness(1.3)' : isActive ? 'brightness(1.2)' : 'brightness(0.95)'
                     }}
                   >
                     {item.icon}
@@ -120,23 +167,23 @@ export const PublicBottomNavBar: React.FC<PublicBottomNavBarProps> = ({
                   <span
                     className={`
                       text-[11px] mt-1 font-medium transition-all duration-300
-                      ${isActive ? 'font-bold' : 'font-normal'}
+                      ${isBackToAdmin ? 'font-black' : isActive ? 'font-bold' : 'font-normal'}
                     `}
                     style={{
-                      color: isActive ? '#D4AF37' : '#B8993B',
-                      textShadow: isActive ? '0 1px 2px rgba(212, 175, 55, 0.3)' : 'none'
+                      color: isBackToAdmin ? '#D4AF37' : isActive ? '#D4AF37' : '#B8993B',
+                      textShadow: isBackToAdmin ? '0 2px 4px rgba(212, 175, 55, 0.5)' : isActive ? '0 1px 2px rgba(212, 175, 55, 0.3)' : 'none'
                     }}
                   >
                     {item.label}
                   </span>
 
-                  {/* Active Indicator */}
-                  {isActive && (
+                  {/* Active Indicator - Enhanced for Back to Admin */}
+                  {(isActive || isBackToAdmin) && (
                     <div
-                      className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 rounded-full"
+                      className={`absolute -bottom-1 left-1/2 transform -translate-x-1/2 rounded-full ${isBackToAdmin ? 'w-2 h-2 animate-pulse' : 'w-1 h-1'}`}
                       style={{
                         background: 'linear-gradient(135deg, #D4AF37 0%, #F4D03F 100%)',
-                        boxShadow: '0 0 10px rgba(212, 175, 55, 0.8)'
+                        boxShadow: isBackToAdmin ? '0 0 16px rgba(212, 175, 55, 1)' : '0 0 10px rgba(212, 175, 55, 0.8)'
                       }}
                     />
                   )}
