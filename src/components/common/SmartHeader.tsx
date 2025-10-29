@@ -53,10 +53,27 @@ export function SmartHeader({
   // Check for admin session
   useEffect(() => {
     const checkAdminSession = () => {
-      const adminSession = localStorage.getItem('admin-session');
-      console.log('[SmartHeader] Checking admin session:', adminSession);
-      const sessionData = adminSession ? JSON.parse(adminSession) : null;
-      const hasSession = !!(sessionData && sessionData.username);
+      // النظام يستخدم admin_session_token و admin_data
+      const adminToken = localStorage.getItem('admin_session_token');
+      const adminData = localStorage.getItem('admin_data');
+
+      console.log('[SmartHeader] Checking session - Token:', !!adminToken, 'Data:', !!adminData);
+
+      // Session exists if we have token or valid admin data
+      let hasSession = false;
+      if (adminToken || adminData) {
+        try {
+          if (adminData) {
+            const data = JSON.parse(adminData);
+            hasSession = !!(data && data.admin_name);
+          } else if (adminToken) {
+            hasSession = true;
+          }
+        } catch (e) {
+          console.error('[SmartHeader] Error parsing admin data:', e);
+        }
+      }
+
       console.log('[SmartHeader] Has admin session:', hasSession, 'onBackToAdmin:', !!onBackToAdmin);
       setHasAdminSession(hasSession);
     };
