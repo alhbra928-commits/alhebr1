@@ -7,6 +7,7 @@ import { PremiumHeader } from './PremiumHeader';
 import { SmartHeader } from '../../../components/common/SmartHeader';
 import { SmartStockTicker } from './SmartStockTicker';
 import { FarmCard3D } from './FarmCard3D';
+import { ModernMobileFarmCard } from './ModernMobileFarmCard';
 import { FixedBottomBar } from './FixedBottomBar';
 import { ConceptIntroModal } from './ConceptIntroModal';
 import { FarmDetailPage } from './FarmDetailPage';
@@ -267,12 +268,23 @@ export function MainPlatformInterface({
             </div>
           ) : (
             farms.map((farm) => (
-              <FarmCard3D
-                key={farm.barcode}
-                farm={farm}
-                onClick={() => handleFarmClick(farm)}
-                onOwn={() => handleFarmClick(farm)}
-              />
+              <div key={farm.barcode}>
+                {/* Mobile: Modern Card, Desktop: 3D Card */}
+                <div className="md:hidden">
+                  <ModernMobileFarmCard
+                    farm={farm}
+                    onClick={() => handleFarmClick(farm)}
+                    onOwn={() => handleFarmClick(farm)}
+                  />
+                </div>
+                <div className="hidden md:block">
+                  <FarmCard3D
+                    farm={farm}
+                    onClick={() => handleFarmClick(farm)}
+                    onOwn={() => handleFarmClick(farm)}
+                  />
+                </div>
+              </div>
             ))
           )}
         </div>
