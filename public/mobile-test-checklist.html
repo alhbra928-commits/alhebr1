@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <title>قائمة الاختبار على الجوال</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+      color: #fff;
+      padding: 20px;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    header {
+      background: linear-gradient(135deg, #8B7355 0%, #A0916A 100%);
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 24px;
+      margin-bottom: 5px;
+    }
+
+    .device-info {
+      background: rgba(255,255,255,0.1);
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+
+    .device-info p {
+      margin: 5px 0;
+    }
+
+    .section {
+      background: rgba(255,255,255,0.05);
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 15px;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 15px;
+      color: #A0916A;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .checkbox-item {
+      background: rgba(255,255,255,0.08);
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      transition: all 0.3s;
+      min-height: 48px;
+    }
+
+    .checkbox-item:active {
+      transform: scale(0.98);
+    }
+
+    .checkbox-item.checked {
+      background: rgba(139, 115, 85, 0.3);
+      border: 2px solid #8B7355;
+    }
+
+    .checkbox {
+      width: 24px;
+      height: 24px;
+      border: 2px solid #666;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.3s;
+    }
+
+    .checkbox-item.checked .checkbox {
+      background: #8B7355;
+      border-color: #8B7355;
+    }
+
+    .checkbox::after {
+      content: '✓';
+      color: white;
+      font-size: 18px;
+      font-weight: bold;
+      display: none;
+    }
+
+    .checkbox-item.checked .checkbox::after {
+      display: block;
+    }
+
+    .checkbox-text {
+      flex: 1;
+      font-size: 15px;
+      line-height: 1.4;
+    }
+
+    .progress-bar {
+      background: rgba(255,255,255,0.1);
+      height: 30px;
+      border-radius: 15px;
+      overflow: hidden;
+      margin: 20px 0;
+      position: relative;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #8B7355 0%, #A0916A 100%);
+      transition: width 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .stats {
+      display: flex;
+      justify-content: space-around;
+      margin: 20px 0;
+      padding: 15px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 12px;
+    }
+
+    .stat {
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 28px;
+      font-weight: bold;
+      color: #A0916A;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: #999;
+      margin-top: 5px;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    button {
+      flex: 1;
+      padding: 15px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s;
+      min-height: 48px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #8B7355 0%, #A0916A 100%);
+      color: white;
+    }
+
+    .btn-secondary {
+      background: rgba(255,255,255,0.1);
+      color: white;
+    }
+
+    button:active {
+      transform: scale(0.95);
+    }
+
+    .report {
+      background: rgba(255,255,255,0.05);
+      padding: 15px;
+      border-radius: 12px;
+      margin-top: 20px;
+      font-size: 14px;
+      display: none;
+    }
+
+    .report.show {
+      display: block;
+    }
+
+    .emoji {
+      font-size: 24px;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      padding: 20px;
+      color: #666;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="emoji">📱</div>
+      <h1>قائمة اختبار التجاوب</h1>
+      <p>منصة النخيل والزيتون</p>
+    </header>
+
+    <div class="device-info">
+      <p><strong>الجهاز:</strong> <span id="deviceName">جاري الكشف...</span></p>
+      <p><strong>الشاشة:</strong> <span id="screenSize">جاري الكشف...</span></p>
+      <p><strong>المتصفح:</strong> <span id="browser">جاري الكشف...</span></p>
+      <p><strong>الشبكة:</strong> <span id="connection">جاري الكشف...</span></p>
+    </div>
+
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressBar" style="width: 0%">
+        <span id="progressText">0%</span>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-number" id="totalChecks">0</div>
+        <div class="stat-label">إجمالي النقاط</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number" id="completedChecks">0</div>
+        <div class="stat-label">مكتملة</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number" id="remainingChecks">0</div>
+        <div class="stat-label">متبقية</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">
+        <span class="emoji">🏠</span>
+        الصفحة الرئيسية
+      </div>
+      <div class="checkbox-item" data-check="home-header">
+        <div class="checkbox"></div>
+        <div class="checkbox-text">الهيدر يظهر بالكامل</div>
+      </div>
+      <div class="checkbox-item" data-check="home-logo">
+        <div class="checkbox"></div>
+        <div class="checkbox-text">الشعار واضح وقابل للقراءة</div>
+      </div>
+      <div class="checkbox-item" data-check="home-cards">
+        <div class="checkbox"></div>
+        <div class="checkbox-text">بطاقات المزارع تظهر بشكل صحيح</div>
+      </div>
+      <div class="checkbox-item" data-check="home-buttons">
+        <div class="checkbox"></div>
+        <div class="checkbox-text">الأزرار بحجم مناسب للمس (≥48px)</div>
+      </div>
+      <div class="checkbox-item" data-check="home-scroll">
+        <div class="checkbox"></div>
+        <div class="checkbox-text">لا يوجد scroll أفقي</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">
+        <span class="emoji">📊</span>
+        لوحة الإدارة
+      </div>
+      <div class="checkbox-item" data-check="admin-mobile-header">
+        <div class="checkbox"></div>
+        <div class="checkbox-text">MobileHeader يظهر على الجوال</div>
+      </div>
+      <div class="checkbox-item" data-check="admin-mobile-sidebar">
+        <div class="checkbox"></div>
+        <div class="checkbox-text">MobileSidebar ينبثق من اليمين</div>
+      </div>
+      <div class="checkbox-item" data-check="admin-sidebar-hidden">
+        <div class="checkbox"></div>
+        <div class="checkbox-text">Sidebar الأصلي مخفي على الجوال</div>
+      </div>
+      <div class="checkbox-item" data-check="admin-cards">
+        <div class="checkbox"></div>
+        <div class="checkbox-text">البطاقات الإحصائية واضحة</div>
+      </div>
+      <div class="checkbox-item" data-check="admin-tables">
+        <div class="checkbox"></div>
+        <div class="checkbox-text">الجداول responsive (scroll أفقي)</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">
+        <span class="emoji">📝</span>
+        النماذج والإدخال
+      </div>
+      <div class="checkbox-item" data-check="forms-fields">
+        <div class="checkbox"></div>
+        <div class="checkbox-text">حقول الإدخال بحجم مناسب</div>
+      </div>
+      <div class="checkbox-item" data-check="forms-keyboard">
+        <div class="checkbox"></div>
+        <div class="checkbox-text">🔴 الكيبورد لا يغطي الحقول (مهم جداً!)</div>
+      </div>
+      <div class="checkbox-item" data-check="forms-navigation">
+        <div class="checkbox"></div>
+        <div class="checkbox-text">التنقل بين الحقول سلس</div>
+      </div>
+      <div class="checkbox-item" data-check="forms-submit">
+        <div class="checkbox"></div>
+        <div class="checkbox-text">زر الإرسال يعمل بشكل صحيح</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">
+        <span class="emoji">💬</span>
+        الزر الذكي (WhatsApp)
+      </div>
+      <div class="checkbox-item" data-check="smart-button-visible">
+        <div class="checkbox"></div>
+        <div class="checkbox-text">الزر يظهر في الزاوية</div>
+      </div>
+      <div class="checkbox-item" data-check="smart-button-opens">
+        <div class="checkbox"></div>
+        <div class="checkbox-text">نافذة الدردشة تفتح fullscreen</div>
+      </div>
+      <div class="checkbox-item" data-check="smart-button-keyboard">
+        <div class="checkbox"></div>
+        <div class="checkbox-text">🔴 حقل الإدخال يظهر فوق الكيبورد (مهم جداً!)</div>
+      </div>
+      <div class="checkbox-item" data-check="smart-button-scroll">
+        <div class="checkbox"></div>
+        <div class="checkbox-text">Auto-scroll يعمل عند التركيز</div>
+      </div>
+      <div class="checkbox-item" data-check="smart-button-no-zoom">
+        <div class="checkbox"></div>
+        <div class="checkbox-text">لا يحدث zoom على iOS</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">
+        <span class="emoji">📱</span>
+        PWA (التطبيق)
+      </div>
+      <div class="checkbox-item" data-check="pwa-install">
+        <div class="checkbox"></div>
+        <div class="checkbox-text">خيار "Add to Home Screen" يظهر</div>
+      </div>
+      <div class="checkbox-item" data-check="pwa-icon">
+        <div class="checkbox"></div>
+        <div class="checkbox-text">الأيقونة تظهر على الشاشة الرئيسية</div>
+      </div>
+      <div class="checkbox-item" data-check="pwa-standalone">
+        <div class="checkbox"></div>
+        <div class="checkbox-text">يفتح في وضع standalone</div>
+      </div>
+      <div class="checkbox-item" data-check="pwa-offline">
+        <div class="checkbox"></div>
+        <div class="checkbox-text">يعمل بدون اتصال (جزئياً)</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">
+        <span class="emoji">⚡</span>
+        الأداء
+      </div>
+      <div class="checkbox-item" data-check="perf-load-time">
+        <div class="checkbox"></div>
+        <div class="checkbox-text">التحميل < 3 ثواني</div>
+      </div>
+      <div class="checkbox-item" data-check="perf-smooth">
+        <div class="checkbox"></div>
+        <div class="checkbox-text">التمرير سلس بدون تقطيع</div>
+      </div>
+      <div class="checkbox-item" data-check="perf-images">
+        <div class="checkbox"></div>
+        <div class="checkbox-text">الصور تحمّل بسرعة</div>
+      </div>
+      <div class="checkbox-item" data-check="perf-animations">
+        <div class="checkbox"></div>
+        <div class="checkbox-text">الحركات والانتقالات سلسة</div>
+      </div>
+    </div>
+
+    <div class="buttons">
+      <button class="btn-secondary" onclick="resetChecklist()">إعادة تعيين</button>
+      <button class="btn-primary" onclick="generateReport()">إنشاء تقرير</button>
+    </div>
+
+    <div class="report" id="report"></div>
+
+    <footer>
+      <p>منصة النخيل والزيتون للاستثمار الزراعي</p>
+      <p>نسخة الاختبار الميداني - 2025</p>
+    </footer>
+  </div>
+
+  <script>
+    // Detect device info
+    function detectDevice() {
+      const ua = navigator.userAgent;
+      let deviceName = 'جهاز غير معروف';
+
+      if (/iPhone/.test(ua)) deviceName = 'iPhone';
+      else if (/iPad/.test(ua)) deviceName = 'iPad';
+      else if (/Android/.test(ua)) {
+        if (/Mobile/.test(ua)) deviceName = 'Android Phone';
+        else deviceName = 'Android Tablet';
+      }
+      else if (/Mac/.test(ua)) deviceName = 'Mac';
+      else if (/Windows/.test(ua)) deviceName = 'Windows PC';
+
+      return deviceName;
+    }
+
+    function getBrowser() {
+      const ua = navigator.userAgent;
+      if (/Safari/.test(ua) && !/Chrome/.test(ua)) return 'Safari';
+      if (/Chrome/.test(ua)) return 'Chrome';
+      if (/Firefox/.test(ua)) return 'Firefox';
+      if (/Edge/.test(ua)) return 'Edge';
+      return 'متصفح آخر';
+    }
+
+    function getConnection() {
+      const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+      if (conn) {
+        return conn.effectiveType || 'غير معروف';
+      }
+      return 'غير معروف';
+    }
+
+    // Initialize device info
+    document.getElementById('deviceName').textContent = detectDevice();
+    document.getElementById('screenSize').textContent = `${window.innerWidth}×${window.innerHeight}`;
+    document.getElementById('browser').textContent = getBrowser();
+    document.getElementById('connection').textContent = getConnection();
+
+    // Load saved state
+    const savedChecks = JSON.parse(localStorage.getItem('mobileTestChecks') || '{}');
+
+    // Initialize checkboxes
+    const checkboxItems = document.querySelectorAll('.checkbox-item');
+    let totalChecks = checkboxItems.length;
+
+    checkboxItems.forEach(item => {
+      const checkId = item.dataset.check;
+      if (savedChecks[checkId]) {
+        item.classList.add('checked');
+      }
+
+      item.addEventListener('click', function() {
+        this.classList.toggle('checked');
+        const checkId = this.dataset.check;
+        savedChecks[checkId] = this.classList.contains('checked');
+        localStorage.setItem('mobileTestChecks', JSON.stringify(savedChecks));
+        updateStats();
+      });
+    });
+
+    // Update stats
+    function updateStats() {
+      const completed = document.querySelectorAll('.checkbox-item.checked').length;
+      const remaining = totalChecks - completed;
+      const percentage = Math.round((completed / totalChecks) * 100);
+
+      document.getElementById('totalChecks').textContent = totalChecks;
+      document.getElementById('completedChecks').textContent = completed;
+      document.getElementById('remainingChecks').textContent = remaining;
+      document.getElementById('progressBar').style.width = percentage + '%';
+      document.getElementById('progressText').textContent = percentage + '%';
+    }
+
+    // Reset checklist
+    function resetChecklist() {
+      if (confirm('هل تريد إعادة تعيين جميع العلامات؟')) {
+        localStorage.removeItem('mobileTestChecks');
+        document.querySelectorAll('.checkbox-item').forEach(item => {
+          item.classList.remove('checked');
+        });
+        updateStats();
+      }
+    }
+
+    // Generate report
+    function generateReport() {
+      const deviceName = document.getElementById('deviceName').textContent;
+      const screenSize = document.getElementById('screenSize').textContent;
+      const browser = document.getElementById('browser').textContent;
+      const completed = document.querySelectorAll('.checkbox-item.checked').length;
+      const percentage = Math.round((completed / totalChecks) * 100);
+
+      const now = new Date();
+      const dateStr = now.toLocaleDateString('ar-SA');
+      const timeStr = now.toLocaleTimeString('ar-SA');
+
+      let status = '❌ غير مكتمل';
+      let statusColor = '#ff4444';
+      if (percentage >= 90) {
+        status = '✅ ممتاز';
+        statusColor = '#00ff00';
+      } else if (percentage >= 70) {
+        status = '⚠️ جيد';
+        statusColor = '#ffaa00';
+      }
+
+      const reportHtml = `
+        <h3 style="margin-bottom: 15px;">📋 تقرير الاختبار</h3>
+        <p><strong>التاريخ:</strong> ${dateStr} - ${timeStr}</p>
+        <p><strong>الجهاز:</strong> ${deviceName}</p>
+        <p><strong>الشاشة:</strong> ${screenSize}</p>
+        <p><strong>المتصفح:</strong> ${browser}</p>
+        <hr style="margin: 15px 0; border: none; border-top: 1px solid rgba(255,255,255,0.1);">
+        <p><strong>النتيجة:</strong> ${completed}/${totalChecks} (${percentage}%)</p>
+        <p><strong>الحالة:</strong> <span style="color: ${statusColor}">${status}</span></p>
+        <hr style="margin: 15px 0; border: none; border-top: 1px solid rgba(255,255,255,0.1);">
+        <p style="font-size: 12px; color: #999;">يمكنك أخذ سكرين شوت لهذا التقرير</p>
+      `;
+
+      const reportDiv = document.getElementById('report');
+      reportDiv.innerHTML = reportHtml;
+      reportDiv.classList.add('show');
+      reportDiv.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Initial stats update
+    updateStats();
+  </script>
+</body>
+</html>
