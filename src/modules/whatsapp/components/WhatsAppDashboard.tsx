@@ -32,25 +32,32 @@ export const WhatsAppDashboard: React.FC<WhatsAppDashboardProps> = ({ onBack }) 
     loadStats();
   }, []);
 
-  // Detect mobile device
-  const isMobile = window.innerWidth < 768;
-
-  // Handle smart button tab click
+  // Handle smart button tab click - always check window size when clicked
   const handleSmartButtonClick = () => {
+    const isMobile = window.innerWidth < 768;
+    console.log('Smart Button clicked! Screen width:', window.innerWidth, 'isMobile:', isMobile);
+
     if (isMobile) {
+      console.log('Opening Full Screen Modal...');
       setShowSmartButtonModal(true);
-      // Prevent body scroll when modal is open
       document.body.style.overflow = 'hidden';
     } else {
+      console.log('Using regular tab...');
       setActiveTab('smart-button');
     }
   };
 
   // Close modal
   const closeSmartButtonModal = () => {
+    console.log('Closing Full Screen Modal...');
     setShowSmartButtonModal(false);
     document.body.style.overflow = 'auto';
   };
+
+  // Log when modal state changes
+  useEffect(() => {
+    console.log('Modal state changed:', showSmartButtonModal);
+  }, [showSmartButtonModal]);
 
   // Force scroll to top when tab changes
   useEffect(() => {
