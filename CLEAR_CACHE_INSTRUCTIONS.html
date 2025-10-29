@@ -3,290 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🔧 كيفية مسح الـ Cache لرؤية التحديثات</title>
+    <title>🚨 حل مشكلة التحديث</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            overflow: hidden;
-        }
-
-        .header {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            padding: 40px;
-            text-align: center;
-            color: white;
-        }
-
-        .header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-        }
-
-        .header p {
-            font-size: 1.2em;
-            opacity: 0.95;
-        }
-
-        .content {
-            padding: 40px;
-        }
-
-        .problem-box {
-            background: #fff3cd;
-            border-right: 5px solid #ffc107;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 30px;
-        }
-
-        .problem-box h2 {
-            color: #856404;
-            margin-bottom: 10px;
-            font-size: 1.5em;
-        }
-
-        .problem-box p {
-            color: #856404;
-            line-height: 1.8;
-            font-size: 1.1em;
-        }
-
-        .solution-box {
-            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-            padding: 30px;
-            border-radius: 15px;
-            margin-bottom: 30px;
-            color: white;
-        }
-
-        .solution-box h2 {
-            font-size: 1.8em;
-            margin-bottom: 20px;
-        }
-
-        .method {
-            background: rgba(255,255,255,0.2);
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            backdrop-filter: blur(10px);
-        }
-
-        .method h3 {
-            font-size: 1.3em;
-            margin-bottom: 10px;
             display: flex;
             align-items: center;
-            gap: 10px;
-        }
-
-        .method .icon {
-            font-size: 1.5em;
-        }
-
-        .method .keys {
-            background: rgba(255,255,255,0.9);
-            color: #333;
-            padding: 15px 25px;
-            border-radius: 8px;
-            font-size: 1.5em;
-            font-weight: bold;
-            text-align: center;
-            margin: 15px 0;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-
-        .method .keys span {
-            display: inline-block;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 8px 15px;
-            border-radius: 5px;
-            margin: 0 5px;
-        }
-
-        .steps {
-            background: #e3f2fd;
-            padding: 25px;
-            border-radius: 10px;
-            border-right: 5px solid #2196F3;
-        }
-
-        .steps h3 {
-            color: #1976D2;
-            margin-bottom: 15px;
-            font-size: 1.4em;
-        }
-
-        .steps ol {
-            margin-right: 20px;
-        }
-
-        .steps li {
-            margin-bottom: 12px;
-            line-height: 1.8;
-            color: #1565C0;
-            font-size: 1.1em;
-        }
-
-        .success-box {
-            background: linear-gradient(135deg, #0ba360 0%, #3cba92 100%);
-            padding: 25px;
-            border-radius: 10px;
-            text-align: center;
-            color: white;
-            margin-top: 30px;
-        }
-
-        .success-box h2 {
-            font-size: 2em;
-            margin-bottom: 10px;
-        }
-
-        .success-box p {
-            font-size: 1.2em;
-            line-height: 1.6;
-        }
-
-        .note {
-            background: #f3e5f5;
-            border-right: 5px solid #9c27b0;
+            justify-content: center;
             padding: 20px;
-            border-radius: 10px;
-            margin-top: 20px;
         }
-
-        .note h4 {
-            color: #7b1fa2;
-            margin-bottom: 10px;
-            font-size: 1.2em;
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 800px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
         }
-
-        .note p {
-            color: #6a1b9a;
-            line-height: 1.6;
-        }
+        h1 { color: #e74c3c; font-size: 32px; margin-bottom: 10px; text-align: center; }
+        h2 { color: #3498db; font-size: 24px; margin: 30px 0 15px; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+        .warning { background: #fff3cd; border-right: 5px solid #ffc107; padding: 20px; margin: 20px 0; border-radius: 10px; font-size: 18px; font-weight: bold; }
+        .keyboard { display: inline-block; background: #34495e; color: white; padding: 8px 15px; border-radius: 8px; font-family: 'Courier New', monospace; font-weight: bold; margin: 0 5px; }
+        .step { background: #f8f9fa; border-right: 5px solid #667eea; padding: 20px; margin: 15px 0; border-radius: 10px; }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1>🔧 كيفية مسح الـ Cache</h1>
-            <p>لرؤية التحديثات الجديدة في الشريط السفلي</p>
+        <h1>🚨 المشكلة: التحديث لا يظهر!</h1>
+        <div class="warning">⚠️ السبب: المتصفح يعرض النسخة القديمة المحفوظة (Cache)</div>
+        
+        <h2>💻 الحل السريع - الكمبيوتر:</h2>
+        <div class="step">
+            <strong>1. Hard Refresh:</strong><br>
+            <span class="keyboard">Ctrl</span> + <span class="keyboard">Shift</span> + <span class="keyboard">R</span>
         </div>
-
-        <div class="content">
-            <div class="problem-box">
-                <h2>❓ ما هي المشكلة؟</h2>
-                <p>
-                    عند تحديث النصوص في الإعدادات، التغييرات تُحفظ في قاعدة البيانات بنجاح ✅<br>
-                    لكن المتصفح يعرض النسخة القديمة من الملفات المحفوظة في الذاكرة المؤقتة (Cache) ❌<br>
-                    <strong>الحل البسيط: مسح الـ Cache!</strong>
-                </p>
-            </div>
-
-            <div class="solution-box">
-                <h2>✅ الحل السريع - إعادة تحميل قوية</h2>
-
-                <div class="method">
-                    <h3>
-                        <span class="icon">🖥️</span>
-                        في Windows
-                    </h3>
-                    <div class="keys">
-                        <span>Ctrl</span> + <span>Shift</span> + <span>R</span>
-                    </div>
-                    <p style="text-align: center; font-size: 1.1em;">أو</p>
-                    <div class="keys">
-                        <span>Ctrl</span> + <span>F5</span>
-                    </div>
-                </div>
-
-                <div class="method">
-                    <h3>
-                        <span class="icon">🍎</span>
-                        في Mac
-                    </h3>
-                    <div class="keys">
-                        <span>Cmd</span> + <span>Shift</span> + <span>R</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="steps">
-                <h3>📱 في الموبايل (Android / iOS)</h3>
-                <ol>
-                    <li>افتح إعدادات المتصفح</li>
-                    <li>اختر "الخصوصية والأمان" أو "Privacy"</li>
-                    <li>اختر "مسح بيانات التصفح" أو "Clear Browsing Data"</li>
-                    <li>اختر "الصور والملفات المخزنة مؤقتاً" فقط</li>
-                    <li>اضغط "مسح" أو "Clear"</li>
-                    <li>أعد تحميل الصفحة</li>
-                </ol>
-            </div>
-
-            <div class="note">
-                <h4>💡 ملاحظة مهمة</h4>
-                <p>
-                    بعد مسح الـ Cache، كل التحديثات التي قمت بها في الإعدادات ستظهر فوراً!<br>
-                    النظام يعمل بشكل مثالي، المشكلة فقط في الملفات القديمة المحفوظة في متصفحك.
-                </p>
-            </div>
-
-            <div class="steps">
-                <h3>🧪 اختبار سريع - تأكد أن النظام يعمل</h3>
-                <ol>
-                    <li><strong>افتح نافذة Incognito/Private</strong> (تكون نظيفة بدون cache):
-                        <ul>
-                            <li>Windows: <code>Ctrl + Shift + N</code></li>
-                            <li>Mac: <code>Cmd + Shift + N</code></li>
-                        </ul>
-                    </li>
-                    <li>اذهب للمنصة في نافذة Incognito</li>
-                    <li>افتح Console: <code>F12</code> → Console Tab</li>
-                    <li>شاهد الـ logs:
-                        <pre style="background: #333; color: #0f0; padding: 15px; border-radius: 5px; margin-top: 10px;">
-🔄 Loading contact bar texts...
-📦 Loaded contact bar texts: {...}
-✅ Contact bar texts set: {...}</pre>
-                    </li>
-                    <li>انظر للشريط السفلي - يجب أن يعرض البيانات الجديدة! ✅</li>
-                </ol>
-            </div>
-
-            <div class="success-box">
-                <h2>🎉 تهانينا!</h2>
-                <p>
-                    بعد مسح الـ Cache، سترى جميع تحديثاتك تظهر فوراً!<br>
-                    النظام الآن يعمل بشكل ديناميكي 100%<br>
-                    كل تغيير تقوم به سيظهر مباشرة في المنصة! ✨
-                </p>
-            </div>
+        
+        <div class="step">
+            <strong>2. أو Incognito Mode:</strong><br>
+            <span class="keyboard">Ctrl</span> + <span class="keyboard">Shift</span> + <span class="keyboard">N</span>
+        </div>
+        
+        <h2>📱 الحل - الجوال:</h2>
+        <div class="step">
+            <strong>iPhone:</strong> Settings → Safari → Clear History and Website Data
+        </div>
+        <div class="step">
+            <strong>Android:</strong> Chrome → Settings → Privacy → Clear browsing data
         </div>
     </div>
-
-    <script>
-        console.log('%c🚀 مرحباً بك!', 'font-size: 24px; color: #667eea; font-weight: bold;');
-        console.log('%c✅ لرؤية البيانات الحالية في الشريط السفلي، افتح Console وانظر للـ logs أعلاه', 'font-size: 14px; color: #764ba2;');
-        console.log('%c📌 إذا لم ترى التحديثات، اضغط Ctrl+Shift+R (أو Cmd+Shift+R في Mac)', 'font-size: 14px; color: #f5576c; font-weight: bold;');
-    </script>
 </body>
 </html>
