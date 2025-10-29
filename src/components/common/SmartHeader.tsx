@@ -44,14 +44,6 @@ export function SmartHeader({
     { id: '5', message: 'تم إضافة مزرعة زيتون جديدة في الجوف', icon: '🫒', timestamp: new Date() }
   ]);
 
-  // Debug: التأكد من ظهور الـ Ticker
-  useEffect(() => {
-    console.log('🎫🎫🎫 [TICKER DEBUG] Activities Count:', activities.length);
-    console.log('🎫 [TICKER] First Activity:', activities[0]?.message);
-    console.log('🎫 [TICKER] isPaused:', isPaused);
-    console.log('🎫 [TICKER] isVisible:', isVisible);
-  }, [activities, isPaused, isVisible]);
-
   // Handle scroll behavior
   useEffect(() => {
     const handleScroll = () => {
@@ -331,85 +323,74 @@ export function SmartHeader({
           </div>
         </div>
 
-        {/* Live Activity Ticker - شريط متحرك دعائي واضح */}
+        {/* شريط الإعلانات المتحرك - Ticker */}
         <div
-          className="border-t overflow-hidden relative cursor-pointer"
+          className="overflow-hidden relative"
           style={{
-            background: 'linear-gradient(135deg, #FFF9E5 0%, #FFFAF0 100%)',
-            borderTop: '2px solid #D4AF37',
-            borderBottom: '1px solid rgba(212, 175, 55, 0.3)',
-            height: '42px',
-            boxShadow: 'inset 0 2px 4px rgba(212, 175, 55, 0.1)'
-          }}
-          onClick={() => {
-            console.log('🎫 [TICKER] Clicked! Paused:', !isPaused);
-            setIsPaused(!isPaused);
+            background: isScrolled
+              ? 'linear-gradient(90deg, rgba(212, 175, 55, 0.95) 0%, rgba(184, 134, 11, 0.95) 100%)'
+              : 'linear-gradient(90deg, rgba(212, 175, 55, 0.85) 0%, rgba(184, 134, 11, 0.85) 100%)',
+            borderTop: '1px solid rgba(255, 255, 255, 0.2)',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+            height: '36px',
+            backdropFilter: 'blur(10px)',
+            boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.1)'
           }}
         >
           <div
-            className={`flex items-center gap-8 ${isPaused ? '' : 'animate-scroll-ticker'} whitespace-nowrap`}
+            className="flex items-center h-full whitespace-nowrap"
             style={{
-              paddingRight: '100%',
-              display: 'flex',
-              alignItems: 'center',
-              height: '100%'
+              animation: isPaused ? 'none' : 'ticker-scroll 30s linear infinite',
             }}
           >
-            {(() => {
-              console.log('🎫 [TICKER RENDER] Rendering activities:', activities.length);
-              return [...activities, ...activities, ...activities].map((activity, index) => (
-                <div
-                  key={`${activity.id}-${index}`}
-                  className="flex items-center gap-2 text-sm font-bold"
-                  style={{
-                    color: '#8B5A2B',
-                    fontSize: '14px',
-                    fontWeight: '600'
-                  }}
-                >
-                  <span className="text-lg">{activity.icon}</span>
-                  <span>{activity.message}</span>
-                </div>
-              ));
-            })()}
+            {[...activities, ...activities].map((activity, index) => (
+              <div
+                key={`${activity.id}-${index}`}
+                className="flex items-center gap-2 px-6"
+                style={{
+                  color: 'rgba(255, 255, 255, 0.95)',
+                  fontSize: '13px',
+                  fontWeight: '600',
+                  textShadow: '0 1px 2px rgba(0,0,0,0.2)',
+                }}
+              >
+                <span className="text-base">{activity.icon}</span>
+                <span>{activity.message}</span>
+                <span style={{ color: 'rgba(255, 255, 255, 0.4)', fontSize: '12px', margin: '0 8px' }}>•</span>
+              </div>
+            ))}
           </div>
 
-          {/* Pause/Play Button */}
+          {/* زر التحكم */}
           <button
-            className="absolute left-4 top-1/2 -translate-y-1/2 p-1.5 rounded-full hover:scale-110 transition-transform"
+            className="absolute left-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full flex items-center justify-center hover:scale-110 transition-transform"
             style={{
-              background: 'rgba(255, 255, 255, 0.9)',
-              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)'
+              background: 'rgba(255, 255, 255, 0.25)',
+              backdropFilter: 'blur(8px)',
+              border: '1px solid rgba(255, 255, 255, 0.3)',
             }}
-            onClick={(e) => {
-              e.stopPropagation();
-              setIsPaused(!isPaused);
-            }}
+            onClick={() => setIsPaused(!isPaused)}
           >
             {isPaused ? (
-              <Play className="h-3 w-3" style={{ color: brandColors.primary.gold }} />
+              <Play className="h-3 w-3" style={{ color: 'white' }} />
             ) : (
-              <Pause className="h-3 w-3" style={{ color: brandColors.primary.gold }} />
+              <Pause className="h-3 w-3" style={{ color: 'white' }} />
             )}
           </button>
         </div>
       </header>
 
-      {/* Spacer to prevent content jump - يحجز مساحة للهيدر + Ticker */}
-      <div style={{ height: isScrolled ? '140px' : '156px' }} />
+      {/* Spacer to prevent content jump */}
+      <div style={{ height: '132px' }} />
 
       <style>{`
-        @keyframes scroll-ticker {
+        @keyframes ticker-scroll {
           0% {
             transform: translateX(0);
           }
           100% {
-            transform: translateX(-33.333%);
+            transform: translateX(-50%);
           }
-        }
-
-        .animate-scroll-ticker {
-          animation: scroll-ticker 45s linear infinite;
         }
 
         .scrollbar-hide::-webkit-scrollbar {
