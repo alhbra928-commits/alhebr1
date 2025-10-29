@@ -19,106 +19,142 @@ if (existsSync(manifestPath)) {
 const distIndexPath = join(__dirname, '..', 'dist', 'index.html');
 if (existsSync(distIndexPath)) {
   let content = readFileSync(distIndexPath, 'utf-8');
-  
-  // Add cache clearing script before </body>
+
+  // Add aggressive cache prevention in <head>
+  const headMeta = `<head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- AGGRESSIVE CACHE PREVENTION -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="cache-buster" content="${version}">
+    <meta name="app-version" content="${version}">
+
+    <title>منصة تملك الأشجار</title>`;
+
+  content = content.replace(/<head>[\s\S]*?<title>.*?<\/title>/i, headMeta);
+
+  // Add ultra-aggressive cache clearing script
   const cacheScript = `
-    <!-- Force Cache Clearing Script - Enhanced for Safari iOS -->
+    <!-- ULTRA AGGRESSIVE CACHE CLEARING - FINAL SOLUTION -->
     <script>
       (function() {
-        const currentVersion = '${version}';
-        const storedVersion = localStorage.getItem('app-version');
-        const lastUpdate = localStorage.getItem('app-last-update');
-        const now = Date.now();
+        const VERSION = '${version}';
+        const STORAGE_KEY = 'app-version-v2';
+        const stored = localStorage.getItem(STORAGE_KEY);
 
-        // Force reload if version changed
-        if (storedVersion !== currentVersion) {
-          console.log('🔄 NEW VERSION DETECTED!');
-          console.log('Old:', storedVersion);
-          console.log('New:', currentVersion);
+        console.log('%c🔍 CACHE CHECK', 'color: blue; font-size: 16px; font-weight: bold');
+        console.log('Current Version:', VERSION);
+        console.log('Stored Version:', stored);
 
-          // Clear all caches
+        if (stored !== VERSION) {
+          console.log('%c🔥 NEW VERSION - CLEARING EVERYTHING!', 'color: red; font-size: 20px; font-weight: bold');
+
+          // 1. Clear ALL caches
           if ('caches' in window) {
-            caches.keys().then(function(names) {
-              names.forEach(function(name) {
+            caches.keys().then(names => {
+              names.forEach(name => {
                 caches.delete(name);
                 console.log('🗑️ Deleted cache:', name);
               });
             });
           }
 
-          // Unregister service workers
+          // 2. Unregister ALL service workers
           if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.getRegistrations().then(function(registrations) {
-              registrations.forEach(function(registration) {
-                registration.unregister();
+            navigator.serviceWorker.getRegistrations().then(regs => {
+              regs.forEach(reg => {
+                reg.unregister();
                 console.log('🗑️ Unregistered SW');
               });
             });
           }
 
-          // Clear session storage too
+          // 3. Clear ALL storage (except auth)
+          const authKeys = ['admin-session', 'investor-session', 'farm-owner-session'];
+          const authData = {};
+          authKeys.forEach(key => {
+            if (localStorage.getItem(key)) {
+              authData[key] = localStorage.getItem(key);
+            }
+          });
+
+          localStorage.clear();
           sessionStorage.clear();
 
-          // Update version
-          localStorage.setItem('app-version', currentVersion);
-          localStorage.setItem('app-last-update', now.toString());
+          // Restore auth
+          Object.keys(authData).forEach(key => {
+            localStorage.setItem(key, authData[key]);
+          });
 
-          // Force hard reload for Safari
-          if (storedVersion) {
-            console.log('🔄 FORCING HARD RELOAD...');
+          // 4. Set new version
+          localStorage.setItem(STORAGE_KEY, VERSION);
 
-            // Safari iOS requires special handling
-            if (window.location.reload) {
-              // Add timestamp to force cache bypass
-              const url = new URL(window.location.href);
-              url.searchParams.set('_t', now);
-              window.location.href = url.toString();
-            }
+          // 5. Force hard reload with cache bypass
+          if (stored) {
+            console.log('%c🔄 FORCING HARD RELOAD...', 'color: orange; font-size: 18px; font-weight: bold');
+            setTimeout(() => {
+              window.location.href = window.location.origin + window.location.pathname + '?v=' + VERSION + '&t=' + Date.now();
+            }, 100);
           }
         } else {
-          console.log('✅ App is up to date:', currentVersion);
+          console.log('%c✅ UP TO DATE', 'color: green; font-size: 16px; font-weight: bold');
         }
 
-        // Additional check: Force reload every 24 hours for Safari
-        const hoursSinceUpdate = lastUpdate ? (now - parseInt(lastUpdate)) / (1000 * 60 * 60) : 999;
-        if (hoursSinceUpdate > 24) {
-          console.log('⏰ 24h passed, forcing cache check...');
-          localStorage.setItem('app-last-update', now.toString());
-        }
+        // Visual indicator
+        const indicator = document.createElement('div');
+        indicator.id = 'version-indicator';
+        indicator.style.cssText = 'position:fixed;bottom:10px;left:10px;background:rgba(0,0,0,0.8);color:#0f0;padding:8px 12px;border-radius:8px;font-family:monospace;font-size:11px;z-index:999999;';
+        indicator.textContent = VERSION;
+        document.addEventListener('DOMContentLoaded', () => {
+          document.body.appendChild(indicator);
+          setTimeout(() => indicator.remove(), 5000);
+        });
       })();
     </script>
   </body>`;
-  
+
   content = content.replace('</body>', cacheScript);
   writeFileSync(distIndexPath, content, 'utf-8');
-  console.log('✅ Added cache clearing script to dist/index.html');
+  console.log('✅ Added ultra-aggressive cache prevention to dist/index.html');
 }
 
+// Create stronger _headers file
 const headersPath = join(__dirname, '..', 'dist', '_headers');
-writeFileSync(headersPath, `/*.html
-  Cache-Control: no-cache, no-store, must-revalidate
+writeFileSync(headersPath, `# AGGRESSIVE CACHE PREVENTION
+
+/*.html
+  Cache-Control: no-cache, no-store, must-revalidate, max-age=0
+  Pragma: no-cache
+  Expires: 0
+  X-Content-Type-Options: nosniff
+
+/index.html
+  Cache-Control: no-cache, no-store, must-revalidate, max-age=0
   Pragma: no-cache
   Expires: 0
 
-/index.html
-  Cache-Control: no-cache, no-store, must-revalidate
-
 /service-worker.js
-  Cache-Control: no-cache, no-store, must-revalidate
+  Cache-Control: no-cache, no-store, must-revalidate, max-age=0
 
 /version-manifest.json
-  Cache-Control: no-cache, no-store, must-revalidate
+  Cache-Control: no-cache, no-store, must-revalidate, max-age=0
 
+# Assets can be cached (they have hash in filename)
 /assets/*.js
   Cache-Control: public, max-age=31536000, immutable
 
 /assets/*.css
   Cache-Control: public, max-age=31536000, immutable
 `);
-console.log('✅ Created _headers file');
+console.log('✅ Created ultra-aggressive _headers file');
 
 const redirectsPath = join(__dirname, '..', 'dist', '_redirects');
 writeFileSync(redirectsPath, '/*    /index.html   200\n');
 console.log('✅ Created _redirects file');
 
 console.log('\n✅ Post-build tasks completed!\n');
+console.log(`📦 Version: ${version}\n`);
