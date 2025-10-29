@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Bell, MessageCircle, Home, MapPin, Filter, TrendingUp, Search, Pause, Play, ChevronDown } from 'lucide-react';
+import { Bell, MessageCircle, Home, MapPin, Filter, TrendingUp, Search, Pause, Play, ChevronDown, Shield, ArrowRight } from 'lucide-react';
 import { brandColors, brandGradients } from '../../modules/finance/styles/brandColors';
 import { supabase } from '../../lib/supabase';
 
@@ -10,6 +10,7 @@ interface SmartHeaderProps {
   onWhatsAppClick?: () => void;
   onLogoClick?: () => void;
   onFilterChange?: (filters: any) => void;
+  onBackToAdmin?: () => void;
 }
 
 interface LiveActivity {
@@ -25,12 +26,14 @@ export function SmartHeader({
   onNotificationClick,
   onWhatsAppClick,
   onLogoClick,
-  onFilterChange
+  onFilterChange,
+  onBackToAdmin
 }: SmartHeaderProps) {
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
+  const [hasAdminSession, setHasAdminSession] = useState(false);
   const [selectedRegion, setSelectedRegion] = useState('all');
   const [selectedFarmType, setSelectedFarmType] = useState('all');
   const [sortBy, setSortBy] = useState('latest');
@@ -46,6 +49,24 @@ export function SmartHeader({
     { id: '4', message: 'مستثمر جديد انضم للمنصة', icon: '👤', timestamp: new Date() },
     { id: '5', message: 'تم إضافة مزرعة زيتون جديدة في الجوف', icon: '🫒', timestamp: new Date() }
   ]);
+
+  // Check for admin session
+  useEffect(() => {
+    const checkAdminSession = () => {
+      const adminSession = localStorage.getItem('admin-session');
+      const sessionData = adminSession ? JSON.parse(adminSession) : null;
+      setHasAdminSession(!!(sessionData && sessionData.username));
+    };
+
+    checkAdminSession();
+    const interval = setInterval(checkAdminSession, 2000);
+    window.addEventListener('storage', checkAdminSession);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('storage', checkAdminSession);
+    };
+  }, []);
 
   // Load ticker settings from database
   useEffect(() => {
@@ -230,6 +251,45 @@ export function SmartHeader({
 
             {/* Right - Action Icons */}
             <div className="flex items-center gap-3">
+              {/* Back to Admin Button - Shows only when admin session exists */}
+              {hasAdminSession && onBackToAdmin && (
+                <button
+                  onClick={onBackToAdmin}
+                  className="flex items-center gap-2 px-3 py-2 rounded-xl hover:scale-105 transition-all duration-300 group"
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.95)',
+                    boxShadow: '0 2px 12px rgba(212, 175, 55, 0.3)',
+                    border: `2px solid ${brandColors.primary.gold}40`
+                  }}
+                  title="العودة للوحة الإدارة"
+                >
+                  <div
+                    className="w-8 h-8 rounded-lg flex items-center justify-center transition-transform duration-300 group-hover:rotate-6"
+                    style={{
+                      background: brandGradients.gold,
+                      boxShadow: '0 2px 8px rgba(212, 175, 55, 0.4)'
+                    }}
+                  >
+                    <Shield className="h-4 w-4 text-white" strokeWidth={2.5} />
+                  </div>
+                  <div className="hidden sm:flex flex-col items-start">
+                    <div className="flex items-center gap-1">
+                      <ArrowRight
+                        className="h-3 w-3 transition-transform duration-300 group-hover:-translate-x-1"
+                        style={{ color: brandColors.primary.gold }}
+                        strokeWidth={2.5}
+                      />
+                      <span
+                        className="text-xs font-black whitespace-nowrap"
+                        style={{ color: brandColors.text.primary }}
+                      >
+                        لوحة الإدارة
+                      </span>
+                    </div>
+                  </div>
+                </button>
+              )}
+
               {/* Notifications */}
               <button
                 onClick={onNotificationClick}
