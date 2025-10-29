@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { MainPlatformInterface } from './MainPlatformInterface';
 import { PreviewInspectionPage } from './PreviewInspectionPage';
+import { LuxuryRoyalGateway } from './LuxuryRoyalGateway';
 import { marketingAnalyticsService } from '../../../services/marketingAnalyticsService';
 
-type View = 'main' | 'preview';
+type View = 'gateway' | 'main' | 'preview';
 
 interface PublicPlatformRouterProps {
   onAdminLogin?: () => void;
@@ -12,7 +13,7 @@ interface PublicPlatformRouterProps {
 }
 
 export function PublicPlatformRouter({ onAdminLogin, onBackToAdmin, onFarmOwnerLogin }: PublicPlatformRouterProps) {
-  const [currentView, setCurrentView] = useState<View>('main');
+  const [currentView, setCurrentView] = useState<View>('gateway');
   const [selectedBarcode, setSelectedBarcode] = useState<string>('');
 
   // تهيئة السكربتات التحليلية عند التحميل الأول
@@ -30,6 +31,10 @@ export function PublicPlatformRouter({ onAdminLogin, onBackToAdmin, onFarmOwnerL
   }, [currentView]);
 
 
+  const handleEnterPlatform = () => {
+    setCurrentView('main');
+  };
+
   const handlePreviewSelect = (barcode: string) => {
     setSelectedBarcode(barcode);
     setCurrentView('preview');
@@ -46,6 +51,9 @@ export function PublicPlatformRouter({ onAdminLogin, onBackToAdmin, onFarmOwnerL
 
 
   switch (currentView) {
+    case 'gateway':
+      return <LuxuryRoyalGateway onEnter={handleEnterPlatform} />;
+
     case 'preview':
       return (
         <PreviewInspectionPage
