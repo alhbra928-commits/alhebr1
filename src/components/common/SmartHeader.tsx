@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Bell, MessageCircle, Home, MapPin, Filter, TrendingUp, Search, Pause, Play, ChevronDown } from 'lucide-react';
 import { brandColors, brandGradients } from '../../modules/finance/styles/brandColors';
+import { supabase } from '../../lib/supabase';
 
 interface SmartHeaderProps {
   currentView?: string;
@@ -35,14 +36,66 @@ export function SmartHeader({
   const [sortBy, setSortBy] = useState('latest');
   const [showFilters, setShowFilters] = useState(false);
 
-  // Live activities للشريط المتحرك الدعائي
-  const [activities] = useState<LiveActivity[]>([
+  // Ticker settings from database
+  const [tickerSettings, setTickerSettings] = useState<any>(null);
+  const [tickerItems, setTickerItems] = useState<any[]>([]);
+  const [activities, setActivities] = useState<LiveActivity[]>([
     { id: '1', message: 'تم اعتماد حجز جديد في مزرعة رقم 104', icon: '🌴', timestamp: new Date() },
     { id: '2', message: 'تمت تسوية مالية لصاحب المزرعة فهد العتيبي', icon: '💰', timestamp: new Date() },
     { id: '3', message: 'تم إصدار شهادة تملك جديدة', icon: '🎖️', timestamp: new Date() },
     { id: '4', message: 'مستثمر جديد انضم للمنصة', icon: '👤', timestamp: new Date() },
     { id: '5', message: 'تم إضافة مزرعة زيتون جديدة في الجوف', icon: '🫒', timestamp: new Date() }
   ]);
+
+  // Load ticker settings from database
+  useEffect(() => {
+    const loadTickerSettings = async () => {
+      try {
+        const { data: settings } = await supabase
+          .from('ticker_settings')
+          .select('*')
+          .limit(1)
+          .maybeSingle();
+
+        if (settings) {
+          setTickerSettings(settings);
+        }
+
+        const { data: items } = await supabase
+          .from('ticker_items')
+          .select('*')
+          .eq('is_active', true)
+          .order('sort_order');
+
+        if (items && items.length > 0) {
+          setTickerItems(items);
+          // Convert ticker items to activities
+          const convertedActivities = items.map((item: any) => ({
+            id: item.id,
+            message: item.label,
+            icon: item.icon === 'TrendingUp' ? '📈' : item.icon === 'BarChart3' ? '📊' : item.icon === 'Calendar' ? '📅' : item.icon === 'Users' ? '👥' : '🌴',
+            timestamp: new Date()
+          }));
+          setActivities(convertedActivities);
+        }
+      } catch (error) {
+        console.error('Error loading ticker settings:', error);
+      }
+    };
+
+    loadTickerSettings();
+
+    // Realtime subscription
+    const channel = supabase
+      .channel('ticker-changes')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'ticker_settings' }, loadTickerSettings)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'ticker_items' }, loadTickerSettings)
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
 
   // Handle scroll behavior
   useEffect(() => {
@@ -324,60 +377,62 @@ export function SmartHeader({
         </div>
 
         {/* شريط الإعلانات المتحرك - Ticker */}
-        <div
-          className="overflow-hidden relative"
-          style={{
-            background: isScrolled
-              ? 'linear-gradient(90deg, rgba(212, 175, 55, 0.95) 0%, rgba(184, 134, 11, 0.95) 100%)'
-              : 'linear-gradient(90deg, rgba(212, 175, 55, 0.85) 0%, rgba(184, 134, 11, 0.85) 100%)',
-            borderTop: '1px solid rgba(255, 255, 255, 0.2)',
-            borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-            height: '36px',
-            backdropFilter: 'blur(10px)',
-            boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.1)'
-          }}
-        >
+        {(!tickerSettings || tickerSettings.is_enabled) && (
           <div
-            className="flex items-center h-full whitespace-nowrap"
+            className="overflow-hidden relative"
             style={{
-              animation: isPaused ? 'none' : 'ticker-scroll 30s linear infinite',
+              background: tickerSettings?.background_color || (isScrolled
+                ? 'linear-gradient(90deg, rgba(212, 175, 55, 0.95) 0%, rgba(184, 134, 11, 0.95) 100%)'
+                : 'linear-gradient(90deg, rgba(212, 175, 55, 0.85) 0%, rgba(184, 134, 11, 0.85) 100%)'),
+              borderTop: '1px solid rgba(255, 255, 255, 0.2)',
+              borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+              height: `${tickerSettings?.height || 36}px`,
+              backdropFilter: 'blur(10px)',
+              boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.1)'
             }}
           >
-            {[...activities, ...activities].map((activity, index) => (
-              <div
-                key={`${activity.id}-${index}`}
-                className="flex items-center gap-2 px-6"
-                style={{
-                  color: 'rgba(255, 255, 255, 0.95)',
-                  fontSize: '13px',
-                  fontWeight: '600',
-                  textShadow: '0 1px 2px rgba(0,0,0,0.2)',
-                }}
-              >
-                <span className="text-base">{activity.icon}</span>
-                <span>{activity.message}</span>
-                <span style={{ color: 'rgba(255, 255, 255, 0.4)', fontSize: '12px', margin: '0 8px' }}>•</span>
-              </div>
-            ))}
-          </div>
+            <div
+              className="flex items-center h-full whitespace-nowrap"
+              style={{
+                animation: isPaused ? 'none' : `ticker-scroll ${tickerSettings?.speed || 30}s linear infinite`,
+              }}
+            >
+              {[...activities, ...activities].map((activity, index) => (
+                <div
+                  key={`${activity.id}-${index}`}
+                  className="flex items-center gap-2 px-6"
+                  style={{
+                    color: tickerSettings?.text_color || 'rgba(255, 255, 255, 0.95)',
+                    fontSize: '13px',
+                    fontWeight: '600',
+                    textShadow: '0 1px 2px rgba(0,0,0,0.2)',
+                  }}
+                >
+                  <span className="text-base">{activity.icon}</span>
+                  <span>{activity.message}</span>
+                  <span style={{ color: 'rgba(255, 255, 255, 0.4)', fontSize: '12px', margin: '0 8px' }}>•</span>
+                </div>
+              ))}
+            </div>
 
-          {/* زر التحكم */}
-          <button
-            className="absolute left-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full flex items-center justify-center hover:scale-110 transition-transform"
-            style={{
-              background: 'rgba(255, 255, 255, 0.25)',
-              backdropFilter: 'blur(8px)',
-              border: '1px solid rgba(255, 255, 255, 0.3)',
-            }}
-            onClick={() => setIsPaused(!isPaused)}
-          >
-            {isPaused ? (
-              <Play className="h-3 w-3" style={{ color: 'white' }} />
-            ) : (
-              <Pause className="h-3 w-3" style={{ color: 'white' }} />
-            )}
-          </button>
-        </div>
+            {/* زر التحكم */}
+            <button
+              className="absolute left-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full flex items-center justify-center hover:scale-110 transition-transform"
+              style={{
+                background: 'rgba(255, 255, 255, 0.25)',
+                backdropFilter: 'blur(8px)',
+                border: '1px solid rgba(255, 255, 255, 0.3)',
+              }}
+              onClick={() => setIsPaused(!isPaused)}
+            >
+              {isPaused ? (
+                <Play className="h-3 w-3" style={{ color: 'white' }} />
+              ) : (
+                <Pause className="h-3 w-3" style={{ color: 'white' }} />
+              )}
+            </button>
+          </div>
+        )}
       </header>
 
       {/* Spacer to prevent content jump */}

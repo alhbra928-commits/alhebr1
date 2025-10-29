@@ -4,6 +4,7 @@ import { Card3D } from '../../../components/ui/Card3D';
 import { BackButton } from '../../../components/common/BackButton';
 import { BackupCenter } from '../../backups/components/BackupCenter';
 import { AdvancedTickerManager } from './AdvancedTickerManager';
+import { AdvancedTickerControl } from './AdvancedTickerControl';
 import { VersionHistoryPanel } from './VersionHistoryPanel';
 import { CacheSystemDiagnostics } from './CacheSystemDiagnostics';
 import { PlatformTextsManager } from './PlatformTextsManager';
@@ -112,7 +113,7 @@ export function SettingsView({ onBack }: SettingsViewProps) {
         {activeTab === 'backup' ? (
           <BackupCenter />
         ) : activeTab === 'ticker' ? (
-          <AdvancedTickerManager />
+          <AdvancedTickerControl />
         ) : activeTab === 'versions' ? (
           <VersionHistoryPanel />
         ) : activeTab === 'diagnostics' ? (
