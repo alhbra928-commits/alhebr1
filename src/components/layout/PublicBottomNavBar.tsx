@@ -67,11 +67,11 @@ export const PublicBottomNavBar: React.FC<PublicBottomNavBarProps> = ({
       >
         {/* Glassmorphism Background */}
         <div
-          className="relative backdrop-blur-xl border-t"
+          className="relative backdrop-blur-xl"
           style={{
             background: 'rgba(245, 241, 232, 0.85)',
-            borderColor: 'rgba(160, 145, 106, 0.2)',
-            boxShadow: '0 -4px 20px rgba(139, 115, 85, 0.1)'
+            borderTop: '3px solid #D4AF37',
+            boxShadow: '0 -4px 20px rgba(212, 175, 55, 0.25), 0 -1px 0 rgba(212, 175, 55, 0.5)'
           }}
         >
           {/* Navigation Items */}
@@ -102,14 +102,15 @@ export const PublicBottomNavBar: React.FC<PublicBottomNavBarProps> = ({
                       : 'transparent'
                   }}
                 >
-                  {/* Icon with glow effect when active */}
+                  {/* Icon with glow effect */}
                   <div
                     className={`
                       transition-all duration-300
-                      ${isActive ? 'drop-shadow-[0_0_8px_rgba(160,145,106,0.6)]' : ''}
+                      ${isActive ? 'drop-shadow-[0_0_12px_rgba(212,175,55,0.8)]' : 'drop-shadow-[0_2px_4px_rgba(212,175,55,0.2)]'}
                     `}
                     style={{
-                      color: isActive ? '#A0916A' : '#6B7280'
+                      color: isActive ? '#D4AF37' : '#D4AF37',
+                      filter: isActive ? 'brightness(1.2)' : 'brightness(0.95)'
                     }}
                   >
                     {item.icon}
@@ -122,7 +123,8 @@ export const PublicBottomNavBar: React.FC<PublicBottomNavBarProps> = ({
                       ${isActive ? 'font-bold' : 'font-normal'}
                     `}
                     style={{
-                      color: isActive ? '#A0916A' : '#9CA3AF'
+                      color: isActive ? '#D4AF37' : '#B8993B',
+                      textShadow: isActive ? '0 1px 2px rgba(212, 175, 55, 0.3)' : 'none'
                     }}
                   >
                     {item.label}
@@ -133,8 +135,8 @@ export const PublicBottomNavBar: React.FC<PublicBottomNavBarProps> = ({
                     <div
                       className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 rounded-full"
                       style={{
-                        background: 'linear-gradient(135deg, #A0916A 0%, #C9A962 100%)',
-                        boxShadow: '0 0 8px rgba(160, 145, 106, 0.6)'
+                        background: 'linear-gradient(135deg, #D4AF37 0%, #F4D03F 100%)',
+                        boxShadow: '0 0 10px rgba(212, 175, 55, 0.8)'
                       }}
                     />
                   )}
