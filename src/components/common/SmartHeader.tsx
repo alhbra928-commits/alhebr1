@@ -271,15 +271,16 @@ export function SmartHeader({
 
             {/* Right - Action Icons */}
             <div className="flex items-center gap-3">
+              {console.log('[SmartHeader RENDER] hasAdminSession:', hasAdminSession, 'onBackToAdmin:', !!onBackToAdmin)}
               {/* Back to Admin Button - Shows only when admin session exists */}
               {hasAdminSession && onBackToAdmin && (
                 <button
                   onClick={onBackToAdmin}
-                  className="flex items-center gap-2 px-3 py-2 rounded-xl hover:scale-105 transition-all duration-300 group"
+                  className="flex items-center gap-2 px-3 py-2 rounded-xl hover:scale-105 transition-all duration-300 group relative z-[60]"
                   style={{
-                    background: 'rgba(255, 255, 255, 0.95)',
-                    boxShadow: '0 2px 12px rgba(212, 175, 55, 0.3)',
-                    border: `2px solid ${brandColors.primary.gold}40`
+                    background: 'linear-gradient(135deg, #fff 0%, #fffef8 100%)',
+                    boxShadow: '0 4px 20px rgba(212, 175, 55, 0.5), 0 0 0 3px rgba(212, 175, 55, 0.2)',
+                    border: `3px solid ${brandColors.primary.gold}`
                   }}
                   title="العودة للوحة الإدارة"
                 >
