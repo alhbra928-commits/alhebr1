@@ -16,6 +16,7 @@ export function RoyalGateway({ onEnter }: RoyalGatewayProps) {
       { delay: 500, action: () => setShowLogo(true) },
       { delay: 1200, action: () => setShowWelcome(true) },
       { delay: 2000, action: () => setShowButton(true) },
+      { delay: 3000, action: () => handleEnter() }, // فتح تلقائي بعد 3 ثوانٍ
     ];
 
     const timeouts = timeline.map(({ delay, action }) =>
