@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { MessageCircle, Send, Inbox, FileText, Settings, BarChart3, Link2, Link as LinkIcon, Zap } from 'lucide-react';
+import { MessageCircle, Send, Inbox, FileText, Settings, BarChart3, Link2, Link as LinkIcon, Zap, X } from 'lucide-react';
 import { WhatsAppProvidersHub } from './WhatsAppProvidersHub';
 import { TemplateStudio } from './TemplateStudio';
 import { EventConnector } from './EventConnector';
@@ -26,22 +26,35 @@ export const WhatsAppDashboard: React.FC<WhatsAppDashboardProps> = ({ onBack }) 
     sent_today: 0
   });
   const [loading, setLoading] = useState(true);
+  const [showSmartButtonModal, setShowSmartButtonModal] = useState(false);
 
   useEffect(() => {
     loadStats();
   }, []);
 
+  // Detect mobile device
+  const isMobile = window.innerWidth < 768;
+
+  // Handle smart button tab click
+  const handleSmartButtonClick = () => {
+    if (isMobile) {
+      setShowSmartButtonModal(true);
+      // Prevent body scroll when modal is open
+      document.body.style.overflow = 'hidden';
+    } else {
+      setActiveTab('smart-button');
+    }
+  };
+
+  // Close modal
+  const closeSmartButtonModal = () => {
+    setShowSmartButtonModal(false);
+    document.body.style.overflow = 'auto';
+  };
+
   // Force scroll to top when tab changes
   useEffect(() => {
-    // Immediate scroll
     window.scrollTo(0, 0);
-
-    // Also try with smooth after a tiny delay
-    setTimeout(() => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }, 50);
-
-    // Force scroll for mobile browsers
     document.documentElement.scrollTop = 0;
     document.body.scrollTop = 0;
   }, [activeTab]);
@@ -200,16 +213,17 @@ export const WhatsAppDashboard: React.FC<WhatsAppDashboardProps> = ({ onBack }) 
               <button
                 key={tab.id}
                 onClick={() => {
-                  // Scroll to top immediately when tab clicked
-                  window.scrollTo(0, 0);
-                  document.documentElement.scrollTop = 0;
-                  document.body.scrollTop = 0;
-
-                  // Then change tab
-                  setActiveTab(tab.id);
+                  if (tab.id === 'smart-button') {
+                    handleSmartButtonClick();
+                  } else {
+                    window.scrollTo(0, 0);
+                    document.documentElement.scrollTop = 0;
+                    document.body.scrollTop = 0;
+                    setActiveTab(tab.id);
+                  }
                 }}
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg whitespace-nowrap transition-all ${
-                  activeTab === tab.id
+                  activeTab === tab.id || (showSmartButtonModal && tab.id === 'smart-button')
                     ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white'
                     : 'bg-gray-800/50 text-gray-400 hover:bg-gray-700/50'
                 }`}
@@ -221,7 +235,34 @@ export const WhatsAppDashboard: React.FC<WhatsAppDashboardProps> = ({ onBack }) 
           })}
         </div>
 
-        {renderContent()}
+        {/* Desktop content */}
+        {!showSmartButtonModal && renderContent()}
+
+        {/* Mobile Full Screen Modal for Smart Button */}
+        {showSmartButtonModal && (
+          <div className="fixed inset-0 z-[9999] bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 overflow-y-auto">
+            {/* Header with close button */}
+            <div className="sticky top-0 z-50 bg-gray-900/95 backdrop-blur-sm border-b border-gray-700 px-4 py-3 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="bg-gradient-to-br from-cyan-500 to-blue-600 p-2 rounded-xl">
+                  <MessageCircle className="w-5 h-5 text-white" />
+                </div>
+                <h2 className="text-lg font-bold text-white">الزر الذكي</h2>
+              </div>
+              <button
+                onClick={closeSmartButtonModal}
+                className="p-2 rounded-lg bg-red-500/20 hover:bg-red-500/30 border border-red-500/50 transition-all"
+              >
+                <X className="w-5 h-5 text-red-400" />
+              </button>
+            </div>
+
+            {/* Content */}
+            <div className="p-4">
+              <SimpleSmartButtonManagement />
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

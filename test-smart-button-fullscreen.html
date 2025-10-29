@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎉 الزر الذكي - Full Screen على الموبايل!</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 20px;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      padding: 40px;
+      text-align: center;
+      margin-bottom: 30px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 15px;
+      background: linear-gradient(135deg, #fff 0%, #a8dadc 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .emoji-large {
+      font-size: 4rem;
+      margin-bottom: 20px;
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+    }
+
+    .version {
+      background: rgba(46, 213, 115, 0.2);
+      border: 2px solid #2ed573;
+      border-radius: 10px;
+      padding: 10px;
+      display: inline-block;
+      font-size: 0.9rem;
+      margin-top: 15px;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin: 30px 0;
+    }
+
+    .feature-card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 25px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: all 0.3s;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .feature-icon {
+      font-size: 3rem;
+      margin-bottom: 15px;
+    }
+
+    .feature-title {
+      font-size: 1.3rem;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #2ed573;
+    }
+
+    .feature-desc {
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .comparison {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 15px;
+      padding: 30px;
+      margin: 30px 0;
+    }
+
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .comparison-item {
+      padding: 20px;
+      border-radius: 12px;
+    }
+
+    .before {
+      background: rgba(255, 71, 87, 0.15);
+      border: 2px solid #ff4757;
+    }
+
+    .after {
+      background: rgba(46, 213, 115, 0.15);
+      border: 2px solid #2ed573;
+    }
+
+    .comparison-title {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .comparison-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .comparison-list li {
+      padding: 8px 0;
+      padding-right: 25px;
+      position: relative;
+    }
+
+    .before .comparison-list li::before {
+      content: "❌";
+      position: absolute;
+      right: 0;
+    }
+
+    .after .comparison-list li::before {
+      content: "✅";
+      position: absolute;
+      right: 0;
+    }
+
+    .steps {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 30px;
+      margin: 30px 0;
+    }
+
+    .step {
+      display: flex;
+      gap: 20px;
+      margin: 20px 0;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      border-right: 4px solid #2ed573;
+    }
+
+    .step-number {
+      background: linear-gradient(135deg, #2ed573 0%, #26d0ce 100%);
+      color: #1e272e;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .step-content {
+      flex: 1;
+    }
+
+    .step-title {
+      font-size: 1.1rem;
+      font-weight: bold;
+      margin-bottom: 8px;
+      color: #2ed573;
+    }
+
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 18px;
+      margin: 15px 0;
+      border: none;
+      border-radius: 15px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-decoration: none;
+      text-align: center;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #2ed573 0%, #26d0ce 100%);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(46, 213, 115, 0.4);
+    }
+
+    .mockup {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 15px;
+      padding: 20px;
+      margin: 20px 0;
+      text-align: center;
+    }
+
+    .phone-frame {
+      background: #1e272e;
+      border-radius: 30px;
+      padding: 15px;
+      max-width: 300px;
+      margin: 0 auto;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+      border: 8px solid #2f3640;
+    }
+
+    .phone-screen {
+      background: linear-gradient(135deg, #1e272e 0%, #2f3640 100%);
+      border-radius: 20px;
+      padding: 20px;
+      min-height: 400px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .phone-header {
+      background: rgba(46, 213, 115, 0.1);
+      border: 1px solid #2ed573;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .phone-close {
+      background: #ff4757;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+
+    .phone-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 15px;
+      overflow-x: auto;
+    }
+
+    .phone-tab {
+      background: rgba(46, 213, 115, 0.2);
+      border: 1px solid #2ed573;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 0.7rem;
+      white-space: nowrap;
+    }
+
+    @media (max-width: 768px) {
+      h1 { font-size: 1.8rem; }
+      .comparison-grid { grid-template-columns: 1fr; }
+      .feature-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="hero">
+      <div class="emoji-large">📱✨</div>
+      <h1>الزر الذكي - Full Screen!</h1>
+      <p style="font-size: 1.2rem; margin: 15px 0;">
+        الآن شاشة الزر الذكي تفتح بشكل كامل على الموبايل!
+      </p>
+      <div class="version">
+        Version: v20251029_1761761367889
+      </div>
+    </div>
+
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🎯</div>
+        <div class="feature-title">شاشة كاملة</div>
+        <div class="feature-desc">
+          على الموبايل، الزر الذكي يفتح في modal بحجم الشاشة كاملة
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🖥️</div>
+        <div class="feature-title">عادي على الديسكتوب</div>
+        <div class="feature-desc">
+          على الكمبيوتر، يبقى التصميم الأصلي بدون تغيير
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🔝</div>
+        <div class="feature-title">يبدأ من الأعلى</div>
+        <div class="feature-desc">
+          تلقائياً يفتح من أعلى الشاشة - لا حاجة للتمرير!
+        </div>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">❌</div>
+        <div class="feature-title">زر إغلاق واضح</div>
+        <div class="feature-desc">
+          زر X في الأعلى للعودة بسهولة إلى القائمة
+        </div>
+      </div>
+    </div>
+
+    <div class="comparison">
+      <h2 style="text-align: center; font-size: 2rem; margin-bottom: 10px;">قبل vs بعد</h2>
+      <div class="comparison-grid">
+        <div class="comparison-item before">
+          <div class="comparison-title">
+            <span>❌</span>
+            <span>قبل</span>
+          </div>
+          <ul class="comparison-list">
+            <li>الشاشة تفتح لكن العنوان مخفي</li>
+            <li>تحتاج للتمرير للأعلى</li>
+            <li>تجربة مزعجة على الموبايل</li>
+            <li>المحتوى غير واضح</li>
+          </ul>
+        </div>
+
+        <div class="comparison-item after">
+          <div class="comparison-title">
+            <span>✅</span>
+            <span>بعد</span>
+          </div>
+          <ul class="comparison-list">
+            <li>شاشة كاملة من الأعلى</li>
+            <li>كل شيء واضح ومرتب</li>
+            <li>تجربة مستخدم رائعة</li>
+            <li>زر إغلاق سهل الوصول</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="mockup">
+      <h2 style="margin-bottom: 20px;">📱 شكل الشاشة على الموبايل</h2>
+      <div class="phone-frame">
+        <div class="phone-screen">
+          <div class="phone-header">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <div style="background: linear-gradient(135deg, #26d0ce, #2ed573); width: 30px; height: 30px; border-radius: 8px;"></div>
+              <span style="font-weight: bold; font-size: 0.9rem;">الزر الذكي</span>
+            </div>
+            <div class="phone-close">✕</div>
+          </div>
+
+          <div class="phone-tabs">
+            <div class="phone-tab">إعدادات</div>
+            <div class="phone-tab">الردود</div>
+            <div class="phone-tab">AI</div>
+            <div class="phone-tab">إحصاءات</div>
+          </div>
+
+          <div style="background: rgba(46, 213, 115, 0.05); border-radius: 10px; padding: 15px; margin-top: 15px;">
+            <div style="font-size: 0.8rem; margin-bottom: 10px;">⚙️ الإعدادات</div>
+            <div style="background: rgba(255, 255, 255, 0.05); height: 40px; border-radius: 8px; margin: 8px 0;"></div>
+            <div style="background: rgba(255, 255, 255, 0.05); height: 40px; border-radius: 8px; margin: 8px 0;"></div>
+            <div style="background: rgba(255, 255, 255, 0.05); height: 40px; border-radius: 8px; margin: 8px 0;"></div>
+          </div>
+        </div>
+      </div>
+      <p style="margin-top: 20px; font-size: 0.9rem; color: rgba(255, 255, 255, 0.8);">
+        الشاشة الكاملة على الموبايل = تجربة أفضل ✨
+      </p>
+    </div>
+
+    <div class="steps">
+      <h2 style="text-align: center; font-size: 2rem; margin-bottom: 20px;">📝 خطوات الاختبار</h2>
+
+      <div class="step">
+        <div class="step-number">1</div>
+        <div class="step-content">
+          <div class="step-title">افتح من الموبايل</div>
+          <p>افتح المنصة من جهاز موبايل حقيقي</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-number">2</div>
+        <div class="step-content">
+          <div class="step-title">اذهب للواتساب</div>
+          <p>من القائمة، اختر "الواتساب"</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-number">3</div>
+        <div class="step-content">
+          <div class="step-title">اضغط على "الزر الذكي"</div>
+          <p>من التبويبات في الأعلى</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-number">4</div>
+        <div class="step-content">
+          <div class="step-title">استمتع بالتجربة!</div>
+          <p>شاشة كاملة، واضحة، سهلة الاستخدام</p>
+        </div>
+      </div>
+    </div>
+
+    <a href="/" class="btn btn-primary">
+      🚀 جرّب الآن!
+    </a>
+
+    <div style="background: rgba(255, 193, 7, 0.15); border: 2px solid #ffc107; border-radius: 15px; padding: 20px; margin-top: 30px; text-align: center;">
+      <h3 style="margin-bottom: 10px;">💡 ملاحظة مهمة</h3>
+      <p>هذه الميزة تعمل فقط على شاشات أقل من 768px عرض (الموبايل والتابلت)</p>
+      <p style="margin-top: 10px;">على الديسكتوب، التصميم يبقى عادي كما كان</p>
+    </div>
+  </div>
+</body>
+</html>
