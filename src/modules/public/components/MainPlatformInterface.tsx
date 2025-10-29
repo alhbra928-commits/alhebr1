@@ -29,6 +29,7 @@ interface MainPlatformInterfaceProps {
   onAdminLogin?: () => void;
   onBackToAdmin?: () => void;
   onFarmOwnerLogin?: () => void;
+  onBackToGateway?: () => void;
 }
 
 export function MainPlatformInterface({
@@ -37,6 +38,7 @@ export function MainPlatformInterface({
   onAdminLogin,
   onBackToAdmin,
   onFarmOwnerLogin,
+  onBackToGateway,
 }: MainPlatformInterfaceProps) {
   const [farms, setFarms] = useState<PublicFarm[]>([]);
   const [showConceptModal, setShowConceptModal] = useState(false);
@@ -244,7 +246,7 @@ export function MainPlatformInterface({
         notificationCount={0}
         onNotificationClick={() => console.log('Notifications clicked')}
         onWhatsAppClick={() => console.log('WhatsApp clicked')}
-        onLogoClick={handleGoHome}
+        onLogoClick={onBackToGateway}
         onBackToAdmin={onBackToAdmin}
         onFilterChange={(filters) => {
           console.log('Filters changed:', filters);
