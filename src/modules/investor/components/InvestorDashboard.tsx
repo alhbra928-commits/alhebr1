@@ -15,6 +15,7 @@ import { ConnectionStatus } from './ConnectionStatus';
 import { EnhancedNotificationService, Notification, ConnectionStatus as ConnStatus } from '../services/enhancedNotificationService';
 import { CertificateModal } from './CertificateModal';
 import { SmartWelcomeModal } from './SmartWelcomeModal';
+import { BottomNavBar } from '../../../components/layout/BottomNavBar';
 
 interface InvestorDashboardProps {
   phone: string;
@@ -1239,6 +1240,29 @@ export function InvestorDashboard({ phone, onLogout, isFirstTimeLogin = false }:
           }}
         />
       )}
+
+      {/* Bottom Navigation Bar for Mobile */}
+      <BottomNavBar
+        userType="investor"
+        activeTab={activeTab === 'home' ? 'home' : activeTab === 'reservations' ? 'bookings' : activeTab === 'certificates' ? 'certificates' : activeTab === 'notifications' ? 'notifications' : 'more'}
+        onTabChange={(tabId) => {
+          if (tabId === 'home') setActiveTab('home');
+          else if (tabId === 'bookings') setActiveTab('reservations');
+          else if (tabId === 'certificates') setActiveTab('certificates');
+          else if (tabId === 'notifications') setActiveTab('notifications');
+          else if (tabId === 'more') {
+            // Show more options menu or navigate
+            setActiveTab('timeline');
+          }
+        }}
+        onActionClick={() => {
+          // Navigate to public platform for new booking
+          window.location.href = '/';
+        }}
+        notificationsCount={badgeCounts.notifications}
+        newBookingsCount={badgeCounts.reservations}
+        newCertificatesCount={badgeCounts.certificates}
+      />
     </div>
   );
 }
