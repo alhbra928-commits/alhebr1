@@ -15,6 +15,7 @@ import { InvestorRouter } from '../../investor/components/InvestorRouter';
 import { CertificateVerificationPage } from './CertificateVerificationPage';
 import { SimpleLoader } from '../../../components/common/SimpleLoader';
 import { AdminCrownButton } from './AdminCrownButton';
+import { BackToAdminButton } from './BackToAdminButton';
 import { GlowingConceptButton } from './GlowingConceptButton';
 import { ConceptIntroductionPage } from './ConceptIntroductionPage';
 import { IdeaOverviewSection } from './IdeaOverviewSection';
@@ -102,6 +103,10 @@ export function MainPlatformInterface({
           onClose={handleGoHome}
           onStartJourney={handleGoHome}
         />
+
+        {/* زر العودة للإدارة */}
+        <BackToAdminButton onBackToAdmin={onBackToAdmin} />
+
         <PublicBottomNavBar
           activeTab="concept"
           onTabChange={(tabId) => {
@@ -128,6 +133,10 @@ export function MainPlatformInterface({
     return (
       <>
         <CertificateVerificationPage onBack={handleGoHome} />
+
+        {/* زر العودة للإدارة */}
+        <BackToAdminButton onBackToAdmin={onBackToAdmin} />
+
         <PublicBottomNavBar
           activeTab="home"
           onTabChange={(tabId) => {
@@ -165,6 +174,10 @@ export function MainPlatformInterface({
           onBack={handleGoHome}
           onStartBooking={handleStartBooking}
         />
+
+        {/* زر العودة للإدارة */}
+        <BackToAdminButton onBackToAdmin={onBackToAdmin} />
+
         <PublicBottomNavBar
           activeTab="farms"
           onTabChange={(tabId) => {
@@ -194,6 +207,10 @@ export function MainPlatformInterface({
           onGoHome={handleGoHome}
           onGoToInvestor={handleGoToInvestorPanel}
         />
+
+        {/* زر العودة للإدارة */}
+        <BackToAdminButton onBackToAdmin={onBackToAdmin} />
+
         <PublicBottomNavBar
           activeTab="farms"
           onTabChange={(tabId) => {
@@ -272,6 +289,9 @@ export function MainPlatformInterface({
       <FixedBottomBar onIntroClick={() => setShowConceptModal(true)} />
 
       <AdminCrownButton onAdminLogin={onAdminLogin} onFarmOwnerLogin={onFarmOwnerLogin} />
+
+      {/* زر العودة للإدارة - يظهر فقط عند وجود جلسة نشطة */}
+      <BackToAdminButton onBackToAdmin={onBackToAdmin} />
 
       {showConceptModal && (
         <ConceptIntroModal onClose={() => setShowConceptModal(false)} />
