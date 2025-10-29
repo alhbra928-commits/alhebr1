@@ -6,7 +6,7 @@ import { BackupCenter } from '../../backups/components/BackupCenter';
 import { AdvancedTickerManager } from './AdvancedTickerManager';
 import { AdvancedTickerControl } from './AdvancedTickerControl';
 import { VersionHistoryPanel } from './VersionHistoryPanel';
-import { CacheSystemDiagnostics } from './CacheSystemDiagnostics';
+import { AdvancedCacheSystemDiagnostics } from './AdvancedCacheSystemDiagnostics';
 import { PlatformTextsManager } from './PlatformTextsManager';
 
 interface SettingsViewProps {
@@ -117,7 +117,7 @@ export function SettingsView({ onBack }: SettingsViewProps) {
         ) : activeTab === 'versions' ? (
           <VersionHistoryPanel />
         ) : activeTab === 'diagnostics' ? (
-          <CacheSystemDiagnostics />
+          <AdvancedCacheSystemDiagnostics />
         ) : activeTab === 'texts' ? (
           <PlatformTextsManager />
         ) : (
