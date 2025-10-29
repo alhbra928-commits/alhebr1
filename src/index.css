@@ -28,6 +28,22 @@
     max-width: 100vw;
   }
 
+  /* Fix for mobile keyboard covering input */
+  @supports (height: 100dvh) {
+    .mobile-keyboard-safe {
+      height: 100dvh;
+    }
+  }
+
+  /* Prevent zoom on input focus (iOS Safari) - Critical for UX */
+  input[type="text"],
+  input[type="search"],
+  input[type="email"],
+  input[type="tel"],
+  textarea {
+    font-size: 16px !important;
+  }
+
   /* Safe area support for notched devices */
   .safe-area-top {
     padding-top: env(safe-area-inset-top);

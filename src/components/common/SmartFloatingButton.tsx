@@ -42,6 +42,8 @@ export const SmartFloatingButton: React.FC = () => {
   const [currentSentiment, setCurrentSentiment] = useState<string | null>(null);
   const conversationEndRef = useRef<HTMLDivElement>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     initializeSession();
@@ -68,6 +70,39 @@ export const SmartFloatingButton: React.FC = () => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // Handle keyboard appearance on mobile
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleResize = () => {
+      // When keyboard appears, scroll input into view
+      if (inputRef.current && document.activeElement === inputRef.current) {
+        setTimeout(() => {
+          inputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 100);
+      }
+    };
+
+    const handleFocus = () => {
+      // Scroll to input when focused
+      setTimeout(() => {
+        if (inputRef.current) {
+          inputRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        // Also scroll messages to bottom
+        scrollToBottom();
+      }, 300);
+    };
+
+    window.addEventListener('resize', handleResize);
+    inputRef.current?.addEventListener('focus', handleFocus);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      inputRef.current?.removeEventListener('focus', handleFocus);
+    };
+  }, [isOpen]);
 
   const initializeSession = () => {
     let token = localStorage.getItem('smart_button_session');
@@ -426,13 +461,14 @@ export const SmartFloatingButton: React.FC = () => {
         )}
       </button>
 
-      {/* Chat Popup - Mobile Optimized */}
+      {/* Chat Popup - Mobile Optimized with Keyboard Support */}
       {isOpen && (
         <div
+          ref={chatContainerRef}
           className="fixed inset-0 sm:inset-auto sm:bottom-24 sm:right-6 sm:w-[420px] sm:max-h-[650px] z-50 bg-gray-900 sm:rounded-2xl shadow-2xl flex flex-col overflow-hidden"
           style={{
-            height: '100vh',
-            maxHeight: '100vh'
+            height: '100dvh', // Dynamic viewport height for mobile browsers
+            maxHeight: '100dvh'
           }}
           dir="rtl"
         >
@@ -507,8 +543,14 @@ export const SmartFloatingButton: React.FC = () => {
             )}
           </div>
 
-          {/* Messages Area - Flexible height */}
-          <div className="flex-1 overflow-y-auto p-3 space-y-2 bg-gray-800/50" style={{ WebkitOverflowScrolling: 'touch' }}>
+          {/* Messages Area - Flexible height with better mobile support */}
+          <div
+            className="flex-1 overflow-y-auto p-3 space-y-2 bg-gray-800/50 overscroll-contain"
+            style={{
+              WebkitOverflowScrolling: 'touch',
+              minHeight: '200px' // Minimum height to prevent collapsing
+            }}
+          >
             {messages.length === 0 ? (
               <div className="text-center py-8">
                 <MessageCircle className="w-12 h-12 text-gray-600 mx-auto mb-3" />
@@ -589,16 +631,27 @@ export const SmartFloatingButton: React.FC = () => {
                 </svg>
               </a>
 
-              {/* Input Field */}
+              {/* Input Field - Enhanced for Mobile Keyboard */}
               <input
+                ref={inputRef}
                 type="text"
                 value={inputMessage}
                 onChange={(e) => setInputMessage(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                onFocus={() => {
+                  // Ensure input is visible when keyboard appears
+                  setTimeout(() => {
+                    inputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'nearest' });
+                  }, 100);
+                }}
                 placeholder="اكتب رسالتك..."
                 disabled={sending}
                 className="flex-1 min-w-0 px-3 py-3 sm:py-2.5 bg-gray-800 border border-gray-700 rounded-xl text-white text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#A0916A] disabled:opacity-50"
                 style={{ fontSize: '16px' }}
+                autoComplete="off"
+                autoCorrect="off"
+                autoCapitalize="off"
+                spellCheck="false"
               />
 
               {/* Send Button - Larger on mobile */}
