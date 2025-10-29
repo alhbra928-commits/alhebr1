@@ -7,6 +7,7 @@
     "dev": "vite",
     "prebuild": "npm run clean && npm run generate-cache",
     "build": "vite build",
+    "postbuild": "node scripts/post-build.mjs",
     "clean": "rm -rf dist",
     "generate-cache": "node scripts/generate-cache-buster.js",
     "lint": "eslint .",
