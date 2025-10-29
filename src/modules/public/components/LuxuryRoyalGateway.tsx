@@ -219,7 +219,7 @@ export function LuxuryRoyalGateway({ onEnter }: RoyalGatewayProps) {
       </div>
 
       {/* Main Content */}
-      <div className="relative z-10 h-full flex flex-col items-center justify-center px-6">
+      <div className="relative z-10 h-full flex flex-col items-center justify-center px-4 sm:px-6 py-8 sm:py-0">
 
         {/* Royal Emblem */}
         <div
@@ -233,21 +233,21 @@ export function LuxuryRoyalGateway({ onEnter }: RoyalGatewayProps) {
             {/* Rotating Halo Rings */}
             <div className="absolute inset-0 flex items-center justify-center">
               <div
-                className="absolute w-56 h-56 rounded-full border border-[#C89B3C]/30"
+                className="absolute w-40 sm:w-56 h-40 sm:h-56 rounded-full border border-[#C89B3C]/30"
                 style={{
                   animation: `spin ${25 * animSpeed}s linear infinite`,
                   boxShadow: '0 0 30px rgba(200, 155, 60, 0.2)',
                 }}
               />
               <div
-                className="absolute w-48 h-48 rounded-full border-2 border-[#D4AF37]/25"
+                className="absolute w-36 sm:w-48 h-36 sm:h-48 rounded-full border-2 border-[#D4AF37]/25"
                 style={{
                   animation: `spinReverse ${20 * animSpeed}s linear infinite`,
                   boxShadow: '0 0 20px rgba(212, 175, 55, 0.15)',
                 }}
               />
               <div
-                className="absolute w-40 h-40 rounded-full border border-[#3D5B4B]/20"
+                className="absolute w-32 sm:w-40 h-32 sm:h-40 rounded-full border border-[#3D5B4B]/20"
                 style={{
                   animation: `spin ${15 * animSpeed}s linear infinite`,
                 }}
@@ -257,7 +257,7 @@ export function LuxuryRoyalGateway({ onEnter }: RoyalGatewayProps) {
             {/* Central Glow */}
             <div className="absolute inset-0 flex items-center justify-center">
               <div
-                className="w-40 h-40 rounded-full blur-3xl animate-pulse"
+                className="w-28 sm:w-40 h-28 sm:h-40 rounded-full blur-2xl sm:blur-3xl animate-pulse"
                 style={{
                   background: 'radial-gradient(circle, rgba(200, 155, 60, 0.3) 0%, rgba(61, 91, 75, 0.2) 50%, transparent 70%)',
                 }}
@@ -266,47 +266,47 @@ export function LuxuryRoyalGateway({ onEnter }: RoyalGatewayProps) {
 
             {/* Main Emblem Container */}
             <div className="relative">
-              <div className="bg-gradient-to-br from-[#2C2C2C]/70 via-[#3D5B4B]/50 to-[#2C2C2C]/70 backdrop-blur-xl p-12 rounded-full border-2 border-[#C89B3C]/40 shadow-2xl">
-                <div className="flex flex-col items-center gap-4">
+              <div className="bg-gradient-to-br from-[#2C2C2C]/70 via-[#3D5B4B]/50 to-[#2C2C2C]/70 backdrop-blur-xl p-6 sm:p-12 rounded-full border-2 border-[#C89B3C]/40 shadow-2xl">
+                <div className="flex flex-col items-center gap-2 sm:gap-4">
 
                   {/* Crown Icon */}
                   {settings.show_crown && (
-                    <div className="transform -translate-y-3 animate-bounce" style={{ animationDuration: `${3 * animSpeed}s` }}>
-                      <Crown className="w-14 h-14 text-[#C89B3C] drop-shadow-2xl" strokeWidth={1.5} />
+                    <div className="transform -translate-y-1 sm:-translate-y-3 animate-bounce" style={{ animationDuration: `${3 * animSpeed}s` }}>
+                      <Crown className="w-10 sm:w-14 h-10 sm:h-14 text-[#C89B3C] drop-shadow-2xl" strokeWidth={1.5} />
                     </div>
                   )}
 
                   {/* Tree Icons */}
-                  <div className="flex items-center gap-8">
+                  <div className="flex items-center gap-4 sm:gap-8">
                     <div className="relative group">
-                      <div className="absolute inset-0 bg-[#C89B3C]/20 rounded-full blur-2xl animate-pulse" />
-                      <span className="relative text-6xl drop-shadow-2xl transition-transform group-hover:scale-110">🌴</span>
+                      <div className="absolute inset-0 bg-[#C89B3C]/20 rounded-full blur-xl sm:blur-2xl animate-pulse" />
+                      <span className="relative text-4xl sm:text-6xl drop-shadow-2xl transition-transform group-hover:scale-110">🌴</span>
                     </div>
 
-                    <div className="w-1 h-12 bg-gradient-to-b from-transparent via-[#C89B3C]/60 to-transparent" />
+                    <div className="w-1 h-8 sm:h-12 bg-gradient-to-b from-transparent via-[#C89B3C]/60 to-transparent" />
 
                     <div className="relative group">
-                      <div className="absolute inset-0 bg-[#3D5B4B]/20 rounded-full blur-2xl animate-pulse" style={{ animationDelay: '1s' }} />
-                      <span className="relative text-6xl drop-shadow-2xl transition-transform group-hover:scale-110">🫒</span>
+                      <div className="absolute inset-0 bg-[#3D5B4B]/20 rounded-full blur-xl sm:blur-2xl animate-pulse" style={{ animationDelay: '1s' }} />
+                      <span className="relative text-4xl sm:text-6xl drop-shadow-2xl transition-transform group-hover:scale-110">🫒</span>
                     </div>
                   </div>
 
                   {/* Leaf Decoration */}
-                  <div className="transform translate-y-2 opacity-70">
-                    <Leaf className="w-10 h-10 text-[#3D5B4B]" strokeWidth={1.5} />
+                  <div className="transform translate-y-1 sm:translate-y-2 opacity-70">
+                    <Leaf className="w-6 sm:w-10 h-6 sm:h-10 text-[#3D5B4B]" strokeWidth={1.5} />
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Floating Sparkles */}
-            <div className="absolute -top-10 -right-10 animate-bounce" style={{ animationDuration: `${2.5 * animSpeed}s` }}>
-              <Sparkles className="w-9 h-9 text-[#D4AF37]" />
+            <div className="absolute -top-6 sm:-top-10 -right-6 sm:-right-10 animate-bounce" style={{ animationDuration: `${2.5 * animSpeed}s` }}>
+              <Sparkles className="w-6 sm:w-9 h-6 sm:h-9 text-[#D4AF37]" />
             </div>
-            <div className="absolute -bottom-10 -left-10 animate-bounce" style={{ animationDuration: `${2.5 * animSpeed}s`, animationDelay: '0.5s' }}>
-              <Sparkles className="w-9 h-9 text-[#C89B3C]" />
+            <div className="absolute -bottom-6 sm:-bottom-10 -left-6 sm:-left-10 animate-bounce" style={{ animationDuration: `${2.5 * animSpeed}s`, animationDelay: '0.5s' }}>
+              <Sparkles className="w-6 sm:w-9 h-6 sm:h-9 text-[#C89B3C]" />
             </div>
-            <div className="absolute top-0 left-20 animate-bounce" style={{ animationDuration: `${2.5 * animSpeed}s`, animationDelay: '1s' }}>
+            <div className="hidden sm:block absolute top-0 left-20 animate-bounce" style={{ animationDuration: `${2.5 * animSpeed}s`, animationDelay: '1s' }}>
               <Sparkles className="w-7 h-7 text-[#E8E1D3]" />
             </div>
           </div>
@@ -314,24 +314,24 @@ export function LuxuryRoyalGateway({ onEnter }: RoyalGatewayProps) {
 
         {/* Welcome Text */}
         <div
-          className={`mt-20 text-center max-w-3xl transition-all duration-1000 delay-300 ${
+          className={`mt-12 sm:mt-20 text-center max-w-3xl px-4 transition-all duration-1000 delay-300 ${
             phase === 'init'
               ? 'opacity-0 translate-y-16'
               : 'opacity-100 translate-y-0'
           }`}
         >
           {/* Main Title */}
-          <div className="relative mb-8">
+          <div className="relative mb-6 sm:mb-8">
             {/* Glow Effect */}
-            <div className="absolute inset-0 blur-2xl opacity-60">
-              <h1 className="text-5xl md:text-7xl font-black text-[#C89B3C]">
+            <div className="absolute inset-0 blur-xl sm:blur-2xl opacity-60">
+              <h1 className="text-3xl sm:text-5xl md:text-7xl font-black text-[#C89B3C] leading-tight">
                 {settings.welcome_text_ar}
               </h1>
             </div>
 
             {/* Actual Text */}
             <h1
-              className="relative text-5xl md:text-7xl font-black bg-gradient-to-r from-[#E8E1D3] via-[#D4AF37] to-[#E8E1D3] bg-clip-text text-transparent"
+              className="relative text-3xl sm:text-5xl md:text-7xl font-black bg-gradient-to-r from-[#E8E1D3] via-[#D4AF37] to-[#E8E1D3] bg-clip-text text-transparent leading-tight"
               style={{
                 backgroundSize: '200% 100%',
                 animation: `shimmerText ${3 * animSpeed}s linear infinite`,
@@ -342,13 +342,13 @@ export function LuxuryRoyalGateway({ onEnter }: RoyalGatewayProps) {
           </div>
 
           {/* Subtitle */}
-          <div className="space-y-4">
-            <p className="text-2xl md:text-3xl text-[#F4EBDD] font-bold flex items-center justify-center gap-4 flex-wrap">
-              <span className="w-12 h-0.5 bg-gradient-to-r from-transparent to-[#C89B3C]" />
-              <span>{settings.subtitle_text_ar}</span>
-              <span className="w-12 h-0.5 bg-gradient-to-l from-transparent to-[#C89B3C]" />
+          <div className="space-y-3 sm:space-y-4">
+            <p className="text-lg sm:text-2xl md:text-3xl text-[#F4EBDD] font-bold flex items-center justify-center gap-3 sm:gap-4 flex-wrap">
+              <span className="w-8 sm:w-12 h-0.5 bg-gradient-to-r from-transparent to-[#C89B3C]" />
+              <span className="text-center">{settings.subtitle_text_ar}</span>
+              <span className="w-8 sm:w-12 h-0.5 bg-gradient-to-l from-transparent to-[#C89B3C]" />
             </p>
-            <p className="text-lg md:text-xl text-[#E8E1D3]/80 font-medium">
+            <p className="text-base sm:text-lg md:text-xl text-[#E8E1D3]/80 font-medium px-4">
               {settings.description_text_ar}
             </p>
           </div>
@@ -357,15 +357,15 @@ export function LuxuryRoyalGateway({ onEnter }: RoyalGatewayProps) {
         {/* Progress Bar */}
         {settings.show_progress_bar && (
           <div
-            className={`mt-20 transition-all duration-700 delay-500 ${
+            className={`mt-12 sm:mt-20 transition-all duration-700 delay-500 ${
               phase === 'init'
                 ? 'opacity-0 scale-90'
                 : 'opacity-100 scale-100'
             }`}
           >
-            <div className="w-80 md:w-[32rem]">
+            <div className="w-full max-w-xs sm:max-w-md md:max-w-[32rem] px-4">
               {/* Progress Label */}
-              <div className="flex items-center justify-between mb-4 text-sm text-[#C89B3C] font-bold">
+              <div className="flex items-center justify-between mb-3 sm:mb-4 text-xs sm:text-sm text-[#C89B3C] font-bold">
                 <span>جاري تحضير التجربة</span>
                 <span className="tabular-nums">{Math.round(progress)}%</span>
               </div>
@@ -395,11 +395,11 @@ export function LuxuryRoyalGateway({ onEnter }: RoyalGatewayProps) {
               </div>
 
               {/* Loading Dots */}
-              <div className="flex items-center justify-center gap-2 mt-5">
+              <div className="flex items-center justify-center gap-1.5 sm:gap-2 mt-4 sm:mt-5">
                 {[0, 1, 2, 3].map((i) => (
                   <div
                     key={i}
-                    className="w-2 h-2 rounded-full bg-[#C89B3C]/70 animate-bounce"
+                    className="w-1.5 sm:w-2 h-1.5 sm:h-2 rounded-full bg-[#C89B3C]/70 animate-bounce"
                     style={{
                       animationDelay: `${i * 0.15}s`,
                       animationDuration: `${1 * animSpeed}s`,
@@ -413,29 +413,29 @@ export function LuxuryRoyalGateway({ onEnter }: RoyalGatewayProps) {
 
         {/* Ready Status */}
         <div
-          className={`mt-12 transition-all duration-500 ${
+          className={`mt-8 sm:mt-12 transition-all duration-500 ${
             phase === 'ready'
               ? 'opacity-100 translate-y-0'
               : 'opacity-0 translate-y-6'
           }`}
         >
-          <div className="flex items-center gap-3 px-8 py-4 rounded-full bg-[#3D5B4B]/30 backdrop-blur-sm border border-[#3D5B4B]/50">
-            <div className="w-3 h-3 bg-[#3D5B4B] rounded-full animate-pulse shadow-lg shadow-[#3D5B4B]/50" />
-            <span className="text-[#F4EBDD] font-bold text-lg">جاهز للدخول</span>
-            <div className="w-3 h-3 bg-[#3D5B4B] rounded-full animate-pulse shadow-lg shadow-[#3D5B4B]/50" />
+          <div className="flex items-center gap-2 sm:gap-3 px-6 sm:px-8 py-3 sm:py-4 rounded-full bg-[#3D5B4B]/30 backdrop-blur-sm border border-[#3D5B4B]/50">
+            <div className="w-2.5 sm:w-3 h-2.5 sm:h-3 bg-[#3D5B4B] rounded-full animate-pulse shadow-lg shadow-[#3D5B4B]/50" />
+            <span className="text-[#F4EBDD] font-bold text-base sm:text-lg">جاهز للدخول</span>
+            <div className="w-2.5 sm:w-3 h-2.5 sm:h-3 bg-[#3D5B4B] rounded-full animate-pulse shadow-lg shadow-[#3D5B4B]/50" />
           </div>
         </div>
 
         {/* Manual Enter Button */}
         {!settings.auto_enter_enabled && phase === 'ready' && (
-          <div className="mt-8">
+          <div className="mt-6 sm:mt-8">
             <button
               onClick={onEnter}
-              className="group px-10 py-5 bg-gradient-to-r from-[#3D5B4B] to-[#4A6F5C] text-white rounded-2xl font-black text-xl shadow-2xl hover:shadow-[#3D5B4B]/50 transition-all hover:scale-105 active:scale-95"
+              className="group px-8 sm:px-10 py-4 sm:py-5 bg-gradient-to-r from-[#3D5B4B] to-[#4A6F5C] text-white rounded-xl sm:rounded-2xl font-black text-lg sm:text-xl shadow-2xl hover:shadow-[#3D5B4B]/50 transition-all hover:scale-105 active:scale-95"
             >
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 sm:gap-3">
                 <span>دخول المنصة</span>
-                <ChevronDown className="w-6 h-6 group-hover:translate-y-1 transition-transform" />
+                <ChevronDown className="w-5 sm:w-6 h-5 sm:h-6 group-hover:translate-y-1 transition-transform" />
               </div>
             </button>
           </div>
