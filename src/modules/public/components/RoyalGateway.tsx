@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Sparkles, Crown, Leaf } from 'lucide-react';
+import { supabase } from '../../../lib/supabase';
 
 interface RoyalGatewayProps {
   onEnter: () => void;
@@ -8,14 +9,62 @@ interface RoyalGatewayProps {
 export function RoyalGateway({ onEnter }: RoyalGatewayProps) {
   const [progress, setProgress] = useState(0);
   const [phase, setPhase] = useState<'init' | 'reveal' | 'ready' | 'exit'>('init');
+  const [settings, setSettings] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    loadSettings();
+  }, []);
+
+  const loadSettings = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('royal_gateway_settings')
+        .select('*')
+        .limit(1)
+        .maybeSingle();
+
+      if (error) throw error;
+      setSettings(data || {
+        enabled: true,
+        auto_enter_enabled: true,
+        auto_enter_delay: 3,
+        show_progress_bar: true,
+        particle_density: 'medium',
+        animation_speed: 'medium',
+        welcome_text_ar: 'مرحباً بك في عالم الاستثمار الزراعي',
+        subtitle_text_ar: 'تملك أشجار النخيل والزيتون',
+        description_text_ar: 'استثمارك الآمن يبدأ الآن',
+        theme_color: 'amber',
+        show_crown: true,
+        show_sparkles: true,
+        show_particles: true,
+        show_rings: true,
+        show_geometric_pattern: true,
+        show_shimmer_effect: true,
+      });
+    } catch (error) {
+      console.error('Error loading gateway settings:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!settings || loading) return;
+
+    if (!settings.enabled) {
+      onEnter();
+      return;
+    }
+
+    const delay = settings.auto_enter_delay * 1000;
     const timeline = setTimeout(() => setPhase('reveal'), 300);
     const readyTimer = setTimeout(() => setPhase('ready'), 1500);
-    const exitTimer = setTimeout(() => {
+    const exitTimer = settings.auto_enter_enabled ? setTimeout(() => {
       setPhase('exit');
       setTimeout(() => onEnter(), 800);
-    }, 3000);
+    }, delay) : null;
 
     const progressInterval = setInterval(() => {
       setProgress((prev) => {
@@ -30,10 +79,24 @@ export function RoyalGateway({ onEnter }: RoyalGatewayProps) {
     return () => {
       clearTimeout(timeline);
       clearTimeout(readyTimer);
-      clearTimeout(exitTimer);
+      if (exitTimer) clearTimeout(exitTimer);
       clearInterval(progressInterval);
     };
-  }, [onEnter]);
+  }, [settings, loading, onEnter]);
+
+  if (loading) {
+    return (
+      <div className="fixed inset-0 z-[9999] bg-gradient-to-br from-amber-900 via-yellow-900 to-amber-950 flex items-center justify-center">
+        <div className="text-amber-200 text-xl">جاري التحميل...</div>
+      </div>
+    );
+  }
+
+  if (!settings?.enabled) {
+    return null;
+  }
+
+  const particleCount = settings.particle_density === 'low' ? 10 : settings.particle_density === 'high' ? 50 : 30;
 
   return (
     <div
@@ -104,7 +167,7 @@ export function RoyalGateway({ onEnter }: RoyalGatewayProps) {
         />
 
         {/* Particle System */}
-        {[...Array(30)].map((_, i) => (
+        {settings.show_particles && [...Array(particleCount)].map((_, i) => (
           <div
             key={`particle-${i}`}
             className="absolute w-1 h-1 bg-amber-400 rounded-full animate-particle"
@@ -131,26 +194,28 @@ export function RoyalGateway({ onEnter }: RoyalGatewayProps) {
         >
           <div className="relative">
             {/* Rotating Rings */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div
-                className="absolute w-48 h-48 rounded-full border-2 border-amber-500/20"
-                style={{
-                  animation: 'rotate 20s linear infinite',
-                }}
-              />
-              <div
-                className="absolute w-40 h-40 rounded-full border-2 border-yellow-400/30"
-                style={{
-                  animation: 'rotate-reverse 15s linear infinite',
-                }}
-              />
-              <div
-                className="absolute w-32 h-32 rounded-full border border-amber-300/40"
-                style={{
-                  animation: 'rotate 10s linear infinite',
-                }}
-              />
-            </div>
+            {settings.show_rings && (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div
+                  className="absolute w-48 h-48 rounded-full border-2 border-amber-500/20"
+                  style={{
+                    animation: 'rotate 20s linear infinite',
+                  }}
+                />
+                <div
+                  className="absolute w-40 h-40 rounded-full border-2 border-yellow-400/30"
+                  style={{
+                    animation: 'rotate-reverse 15s linear infinite',
+                  }}
+                />
+                <div
+                  className="absolute w-32 h-32 rounded-full border border-amber-300/40"
+                  style={{
+                    animation: 'rotate 10s linear infinite',
+                  }}
+                />
+              </div>
+            )}
 
             {/* Glowing Center */}
             <div className="relative">
@@ -162,9 +227,11 @@ export function RoyalGateway({ onEnter }: RoyalGatewayProps) {
               <div className="relative bg-gradient-to-br from-amber-900/40 via-yellow-900/30 to-amber-950/40 backdrop-blur-sm p-10 rounded-full border border-amber-500/30 shadow-2xl">
                 <div className="flex flex-col items-center gap-3">
                   {/* Crown */}
-                  <div className="transform -translate-y-2">
-                    <Crown className="w-12 h-12 text-amber-400 animate-pulse" strokeWidth={1.5} />
-                  </div>
+                  {settings.show_crown && (
+                    <div className="transform -translate-y-2">
+                      <Crown className="w-12 h-12 text-amber-400 animate-pulse" strokeWidth={1.5} />
+                    </div>
+                  )}
 
                   {/* Icons */}
                   <div className="flex items-center gap-6">
@@ -190,12 +257,16 @@ export function RoyalGateway({ onEnter }: RoyalGatewayProps) {
             </div>
 
             {/* Sparkles */}
-            <div className="absolute -top-8 -right-8 animate-bounce-slow">
-              <Sparkles className="w-8 h-8 text-yellow-300" />
-            </div>
-            <div className="absolute -bottom-8 -left-8 animate-bounce-slow delay-700">
-              <Sparkles className="w-8 h-8 text-amber-400" />
-            </div>
+            {settings.show_sparkles && (
+              <>
+                <div className="absolute -top-8 -right-8 animate-bounce-slow">
+                  <Sparkles className="w-8 h-8 text-yellow-300" />
+                </div>
+                <div className="absolute -bottom-8 -left-8 animate-bounce-slow delay-700">
+                  <Sparkles className="w-8 h-8 text-amber-400" />
+                </div>
+              </>
+            )}
           </div>
         </div>
 
@@ -211,37 +282,38 @@ export function RoyalGateway({ onEnter }: RoyalGatewayProps) {
             {/* Text Glow */}
             <div className="absolute inset-0 blur-xl opacity-50">
               <h1 className="text-4xl md:text-6xl font-black text-amber-400">
-                مرحباً بك في عالم الاستثمار الزراعي
+                {settings.welcome_text_ar}
               </h1>
             </div>
 
             {/* Main Text */}
             <h1 className="relative text-4xl md:text-6xl font-black mb-6 bg-gradient-to-r from-amber-200 via-yellow-300 to-amber-200 bg-clip-text text-transparent animate-shimmer-text">
-              مرحباً بك في عالم الاستثمار الزراعي
+              {settings.welcome_text_ar}
             </h1>
           </div>
 
           <div className="space-y-3 mt-6">
             <p className="text-xl md:text-2xl text-amber-100/90 font-bold flex items-center justify-center gap-3">
               <span className="w-8 h-0.5 bg-gradient-to-r from-transparent to-amber-400/50" />
-              <span>تملك أشجار النخيل والزيتون</span>
+              <span>{settings.subtitle_text_ar}</span>
               <span className="w-8 h-0.5 bg-gradient-to-l from-transparent to-amber-400/50" />
             </p>
             <p className="text-lg text-yellow-200/70 font-medium">
-              استثمارك الآمن يبدأ الآن
+              {settings.description_text_ar}
             </p>
           </div>
         </div>
 
         {/* Progress Bar */}
-        <div
-          className={`mt-16 transition-all duration-700 delay-500 ${
-            phase === 'init'
-              ? 'opacity-0 scale-95'
-              : 'opacity-100 scale-100'
-          }`}
-        >
-          <div className="w-64 md:w-96">
+        {settings.show_progress_bar && (
+          <div
+            className={`mt-16 transition-all duration-700 delay-500 ${
+              phase === 'init'
+                ? 'opacity-0 scale-95'
+                : 'opacity-100 scale-100'
+            }`}
+          >
+            <div className="w-64 md:w-96">
             {/* Progress Label */}
             <div className="flex items-center justify-between mb-3 text-sm text-amber-200/70 font-medium">
               <span>جاري التحميل</span>
@@ -282,6 +354,7 @@ export function RoyalGateway({ onEnter }: RoyalGatewayProps) {
             </div>
           </div>
         </div>
+        )}
 
         {/* Status Text */}
         <div
