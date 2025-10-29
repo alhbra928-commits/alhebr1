@@ -37,9 +37,12 @@ if (existsSync(distIndexPath)) {
 
   content = content.replace(/<head>[\s\S]*?<title>.*?<\/title>/i, headMeta);
 
-  // Add ultra-aggressive cache clearing script
-  const cacheScript = `
-    <!-- ULTRA AGGRESSIVE CACHE CLEARING - FINAL SOLUTION -->
+  // Add Service Worker registration first
+  const swScript = `
+    <!-- SERVICE WORKER - FORCE UPDATE SYSTEM -->
+    <script src="/register-sw.js?v=${version}"></script>
+
+    <!-- ULTRA AGGRESSIVE CACHE CLEARING - BACKUP SOLUTION -->
     <script>
       (function() {
         const VERSION = '${version}';
@@ -117,14 +120,28 @@ if (existsSync(distIndexPath)) {
     </script>
   </body>`;
 
-  content = content.replace('</body>', cacheScript);
+  content = content.replace('</body>', swScript);
   writeFileSync(distIndexPath, content, 'utf-8');
-  console.log('✅ Added ultra-aggressive cache prevention to dist/index.html');
+  console.log('✅ Added Service Worker + ultra-aggressive cache prevention to dist/index.html');
+
+  // Copy SW files to dist
+  const swFiles = ['sw-force-update.js', 'register-sw.js'];
+  swFiles.forEach(file => {
+    const srcPath = join(__dirname, '..', 'public', file);
+    const destPath = join(__dirname, '..', 'dist', file);
+    if (existsSync(srcPath)) {
+      let swContent = readFileSync(srcPath, 'utf-8');
+      // Replace version in SW files
+      swContent = swContent.replace(/v\d{8}_\d+/g, version);
+      writeFileSync(destPath, swContent, 'utf-8');
+      console.log(`✅ Copied and updated ${file} to dist/`);
+    }
+  });
 }
 
 // Create stronger _headers file
 const headersPath = join(__dirname, '..', 'dist', '_headers');
-writeFileSync(headersPath, `# AGGRESSIVE CACHE PREVENTION
+writeFileSync(headersPath, `# ULTRA AGGRESSIVE CACHE PREVENTION
 
 /*.html
   Cache-Control: no-cache, no-store, must-revalidate, max-age=0
@@ -136,6 +153,14 @@ writeFileSync(headersPath, `# AGGRESSIVE CACHE PREVENTION
   Cache-Control: no-cache, no-store, must-revalidate, max-age=0
   Pragma: no-cache
   Expires: 0
+
+# Service Worker files - NEVER CACHE
+/sw-force-update.js
+  Cache-Control: no-cache, no-store, must-revalidate, max-age=0
+  Service-Worker-Allowed: /
+
+/register-sw.js
+  Cache-Control: no-cache, no-store, must-revalidate, max-age=0
 
 /service-worker.js
   Cache-Control: no-cache, no-store, must-revalidate, max-age=0
