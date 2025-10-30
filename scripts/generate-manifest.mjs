@@ -88,10 +88,12 @@ const manifestHash = createHash('sha256').update(manifestContent).digest('hex');
 
 manifest.manifestHash = `sha256-${manifestHash}`;
 
-// Write manifest
+// Write manifest (both names for compatibility)
 const manifestPath = join(distPath, 'manifest.json');
+const versionManifestPath = join(distPath, 'version-manifest.json');
 writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
-console.log(`✅ Written manifest.json (${manifestContent.length} bytes)`);
+writeFileSync(versionManifestPath, JSON.stringify(manifest, null, 2));
+console.log(`✅ Written manifest.json and version-manifest.json (${manifestContent.length} bytes)`);
 
 // Write version.txt
 const versionPath = join(distPath, 'version.txt');

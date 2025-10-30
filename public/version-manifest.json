@@ -1,0 +1,23 @@
+{
+  "version": "dev-mode",
+  "timestamp": "0",
+  "buildNumber": 0,
+  "channel": "development",
+  "files": {
+    "index.html": {
+      "hash": "dev",
+      "size": 0,
+      "path": "/index.html"
+    }
+  },
+  "integrity": {
+    "algorithm": "sha256",
+    "verified": true
+  },
+  "deployment": {
+    "strategy": "atomic",
+    "rollbackEnabled": true,
+    "cdnPurgeRequired": false
+  },
+  "manifestHash": "dev-mode-hash"
+}

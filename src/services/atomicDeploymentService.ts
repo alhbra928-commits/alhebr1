@@ -41,6 +41,12 @@ class AtomicDeploymentService {
   }
 
   private async initialize() {
+    // Skip in dev mode completely
+    if (import.meta.env.DEV) {
+      console.log('%c⚛️ ATOMIC SYSTEM DISABLED IN DEV MODE', 'color: #ffa500; font-size: 14px; font-weight: bold');
+      return;
+    }
+
     console.log('%c⚛️ ATOMIC DEPLOYMENT SYSTEM', 'color: #4ec9b0; font-size: 20px; font-weight: bold');
     console.log('🔐 Security Level: Enterprise');
     console.log('📦 Strategy: Atomic with Rollback');
@@ -179,7 +185,7 @@ class AtomicDeploymentService {
   private async checkForUpdates() {
     try {
       // Fetch manifest with cache bypass
-      const response = await fetch(`/manifest.json?nocache=${Date.now()}`, {
+      const response = await fetch(`/version-manifest.json?nocache=${Date.now()}`, {
         cache: 'no-store',
         headers: {
           'Cache-Control': 'no-cache'
@@ -187,7 +193,7 @@ class AtomicDeploymentService {
       });
 
       if (!response.ok) {
-        console.log('⚛️ Manifest not available yet');
+        // Silently skip if manifest not available
         return;
       }
 
