@@ -67,81 +67,81 @@ export function FixedBottomBar({ onIntroClick }: FixedBottomBarProps) {
   }, []);
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 bg-gradient-to-r from-[#4a5d3e] via-[#5a6d4e] to-[#4a5d3e] border-t-2 border-[#8BA574] shadow-2xl">
+    <div className="fixed bottom-0 left-0 right-0 z-50 bg-gradient-to-r from-emerald-600 via-green-600 to-emerald-600 border-t-2 border-emerald-400 shadow-2xl">
       <div className="max-w-7xl mx-auto px-2 sm:px-4 py-2 sm:py-3">
         {/* Desktop Layout */}
         <div className="hidden md:flex items-center justify-between flex-wrap gap-3">
           <div className="flex items-center gap-6 flex-wrap">
             <div className="flex items-center gap-2 text-white">
-              <div className="p-1.5 rounded-lg bg-[#8BA574]/20 border border-[#8BA574]/40">
-                <Phone className="h-4 w-4 text-[#D4AF37]" />
+              <div className="p-1.5 rounded-lg bg-white/20 border border-white/30">
+                <Phone className="h-4 w-4 text-white" />
               </div>
               <div className="flex flex-col">
-                <span className="text-[10px] opacity-75">{contactTexts.call_us_label}</span>
+                <span className="text-[10px] opacity-90">{contactTexts.call_us_label}</span>
                 <span className="text-sm font-bold">{contactTexts.phone_number}</span>
               </div>
             </div>
 
-            <div className="h-8 w-px bg-[#8BA574]/40"></div>
+            <div className="h-8 w-px bg-white/30"></div>
 
             <div className="flex items-center gap-2 text-white">
-              <div className="p-1.5 rounded-lg bg-[#8BA574]/20 border border-[#8BA574]/40">
-                <Mail className="h-4 w-4 text-[#D4AF37]" />
+              <div className="p-1.5 rounded-lg bg-white/20 border border-white/30">
+                <Mail className="h-4 w-4 text-white" />
               </div>
               <div className="flex flex-col">
-                <span className="text-[10px] opacity-75">{contactTexts.email_label}</span>
+                <span className="text-[10px] opacity-90">{contactTexts.email_label}</span>
                 <span className="text-sm font-bold">{contactTexts.email_address}</span>
               </div>
             </div>
 
-            <div className="h-8 w-px bg-[#8BA574]/40"></div>
+            <div className="h-8 w-px bg-white/30"></div>
 
             <div className="flex items-center gap-2 text-white">
-              <div className="p-1.5 rounded-lg bg-[#8BA574]/20 border border-[#8BA574]/40">
-                <MapPin className="h-4 w-4 text-[#D4AF37]" />
+              <div className="p-1.5 rounded-lg bg-white/20 border border-white/30">
+                <MapPin className="h-4 w-4 text-white" />
               </div>
               <div className="flex flex-col">
-                <span className="text-[10px] opacity-75">{contactTexts.location_label}</span>
+                <span className="text-[10px] opacity-90">{contactTexts.location_label}</span>
                 <span className="text-sm font-bold">{contactTexts.location_text}</span>
               </div>
             </div>
           </div>
 
-          <div className="flex items-center gap-2 text-white bg-[#8BA574]/20 px-4 py-2 rounded-lg border border-[#8BA574]/40">
-            <Clock className="h-4 w-4 text-[#D4AF37] animate-pulse" />
+          <div className="flex items-center gap-2 text-white bg-white/20 px-4 py-2 rounded-lg border border-white/30">
+            <Clock className="h-4 w-4 text-white animate-pulse" />
             <div className="flex flex-col">
-              <span className="text-[10px] opacity-75">{contactTexts.hours_label}</span>
+              <span className="text-[10px] opacity-90">{contactTexts.hours_label}</span>
               <span className="text-sm font-bold">{contactTexts.hours_text}</span>
             </div>
           </div>
 
-          <div className="hidden lg:flex items-center gap-2 text-white bg-gradient-to-r from-[#D4AF37] to-[#F4E4A6] px-5 py-2 rounded-lg shadow-lg">
-            <span className="text-sm font-black text-[#2E2A26]">{contactTexts.cta_message}</span>
+          <div className="hidden lg:flex items-center gap-2 text-emerald-900 bg-white px-5 py-2 rounded-lg shadow-lg">
+            <span className="text-sm font-black">{contactTexts.cta_message}</span>
           </div>
         </div>
 
         {/* Mobile Layout */}
         <div className="md:hidden flex items-center justify-between gap-2">
-          <a href={`tel:${contactTexts.phone_number}`} className="flex items-center gap-1.5 text-white bg-[#8BA574]/20 px-2 py-1.5 rounded-lg border border-[#8BA574]/40 flex-1">
-            <Phone className="h-3.5 w-3.5 text-[#D4AF37]" />
+          <a href={`tel:${contactTexts.phone_number}`} className="flex items-center gap-1.5 text-white bg-white/20 px-2 py-1.5 rounded-lg border border-white/30 flex-1">
+            <Phone className="h-3.5 w-3.5 text-white" />
             <div className="flex flex-col">
-              <span className="text-[9px] opacity-75">{contactTexts.call_us_label}</span>
+              <span className="text-[9px] opacity-90">{contactTexts.call_us_label}</span>
               <span className="text-[11px] font-bold">{contactTexts.phone_number}</span>
             </div>
           </a>
 
-          <a href={`mailto:${contactTexts.email_address}`} className="flex items-center gap-1.5 text-white bg-[#8BA574]/20 px-2 py-1.5 rounded-lg border border-[#8BA574]/40 flex-1">
-            <Mail className="h-3.5 w-3.5 text-[#D4AF37]" />
+          <a href={`mailto:${contactTexts.email_address}`} className="flex items-center gap-1.5 text-white bg-white/20 px-2 py-1.5 rounded-lg border border-white/30 flex-1">
+            <Mail className="h-3.5 w-3.5 text-white" />
             <div className="flex flex-col">
-              <span className="text-[9px] opacity-75">{contactTexts.email_label}</span>
+              <span className="text-[9px] opacity-90">{contactTexts.email_label}</span>
               <span className="text-[11px] font-bold truncate">{contactTexts.email_address.split('@')[0]}</span>
             </div>
           </a>
 
-          <div className="flex items-center gap-1.5 text-white bg-[#8BA574]/20 px-2 py-1.5 rounded-lg border border-[#8BA574]/40">
-            <Clock className="h-3.5 w-3.5 text-[#D4AF37] animate-pulse" />
+          <div className="flex items-center gap-1.5 text-white bg-white/20 px-2 py-1.5 rounded-lg border border-white/30">
+            <Clock className="h-3.5 w-3.5 text-white animate-pulse" />
             <div className="flex flex-col">
-              <span className="text-[9px] opacity-75">{contactTexts.hours_label}</span>
+              <span className="text-[9px] opacity-90">{contactTexts.hours_label}</span>
               <span className="text-[11px] font-bold">{contactTexts.hours_text.split(' - ')[0]}</span>
             </div>
           </div>
@@ -149,7 +149,7 @@ export function FixedBottomBar({ onIntroClick }: FixedBottomBarProps) {
       </div>
 
       <div className="absolute inset-0 pointer-events-none opacity-10">
-        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#D4AF37] to-transparent"></div>
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white to-transparent"></div>
       </div>
     </div>
   );

@@ -47,7 +47,7 @@ export function AdminCrownButton({ onAdminLogin, onFarmOwnerLogin }: AdminCrownB
       <div
         className="absolute inset-0 rounded-full animate-pulse-slow"
         style={{
-          background: 'radial-gradient(circle, rgba(212, 175, 55, 0.4) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(16, 185, 129, 0.4) 0%, transparent 70%)',
           animation: 'pulse-glow 3s ease-in-out infinite',
         }}
       />
@@ -55,8 +55,8 @@ export function AdminCrownButton({ onAdminLogin, onFarmOwnerLogin }: AdminCrownB
       <div
         className="relative w-full h-full rounded-full flex items-center justify-center transform transition-all duration-500 group-hover:scale-110 group-hover:rotate-12"
         style={{
-          background: brandGradients.gold,
-          boxShadow: '0 8px 40px rgba(212, 175, 55, 0.6), 0 0 60px rgba(212, 175, 55, 0.3), inset 0 2px 10px rgba(255, 255, 255, 0.3)',
+          background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+          boxShadow: '0 8px 40px rgba(16, 185, 129, 0.6), 0 0 60px rgba(16, 185, 129, 0.3), inset 0 2px 10px rgba(255, 255, 255, 0.3)',
           border: '3px solid rgba(255, 255, 255, 0.4)',
         }}
       >
@@ -77,8 +77,8 @@ export function AdminCrownButton({ onAdminLogin, onFarmOwnerLogin }: AdminCrownB
       <div
         className="absolute -top-0.5 -right-0.5 w-3 h-3 sm:w-4 sm:h-4 rounded-full animate-ping"
         style={{
-          background: brandColors.primary.gold,
-          boxShadow: '0 0 10px rgba(212, 175, 55, 0.8)',
+          background: '#10b981',
+          boxShadow: '0 0 10px rgba(16, 185, 129, 0.8)',
         }}
       />
 
@@ -87,19 +87,19 @@ export function AdminCrownButton({ onAdminLogin, onFarmOwnerLogin }: AdminCrownB
         <div
           className="absolute bottom-full right-1/2 translate-x-1/2 mb-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-300 whitespace-nowrap pointer-events-none text-xs sm:text-sm"
           style={{
-            background: 'rgba(46, 42, 38, 0.95)',
+            background: 'rgba(16, 185, 129, 0.95)',
             backdropFilter: 'blur(10px)',
-            color: brandColors.primary.gold,
+            color: 'white',
             fontSize: '14px',
             fontWeight: 'bold',
-            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
+            boxShadow: '0 4px 20px rgba(16, 185, 129, 0.4)',
           }}
         >
           دخول لوحات التحكم
           <div
             className="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent"
             style={{
-              borderTopColor: 'rgba(46, 42, 38, 0.95)',
+              borderTopColor: 'rgba(16, 185, 129, 0.95)',
             }}
           />
         </div>
@@ -112,7 +112,7 @@ export function AdminCrownButton({ onAdminLogin, onFarmOwnerLogin }: AdminCrownB
           style={{
             background: 'rgba(255, 255, 255, 0.98)',
             backdropFilter: 'blur(20px)',
-            boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(212, 175, 55, 0.2)',
+            boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(16, 185, 129, 0.2)',
             animation: 'slideUp 0.3s ease-out',
           }}
           onClick={(e) => e.stopPropagation()}
@@ -121,8 +121,8 @@ export function AdminCrownButton({ onAdminLogin, onFarmOwnerLogin }: AdminCrownB
           <div
             className="px-3 sm:px-4 py-2.5 sm:py-3 text-center border-b"
             style={{
-              background: brandGradients.gold,
-              borderBottomColor: 'rgba(212, 175, 55, 0.3)',
+              background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+              borderBottomColor: 'rgba(16, 185, 129, 0.3)',
             }}
           >
             <div className="flex items-center justify-center gap-2">
