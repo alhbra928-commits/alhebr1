@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import {
-  Crown, Sparkles, Shield, Award, Star, TreePine, ArrowRight, Leaf
+  Crown, Sparkles, Star
 } from 'lucide-react';
 import { PublicFarm } from '../types/farm.types';
 import { PublicFarmService } from '../services/publicFarmService';
@@ -194,7 +194,6 @@ export function ModernRoyalPlatform({
                   <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-emerald-800 via-green-700 to-teal-800 bg-clip-text text-transparent">
                     منصة الملكية الزراعية
                   </h1>
-                  <p className="text-sm sm:text-base text-emerald-700 mt-1">استثمار أخضر في عالم النخيل والزيتون</p>
                 </div>
               </div>
 
@@ -202,77 +201,6 @@ export function ModernRoyalPlatform({
                 onAdminLogin={onAdminLogin}
                 onFarmOwnerLogin={onFarmOwnerLogin}
               />
-            </div>
-
-            {/* Stats Cards */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mt-6 sm:mt-8">
-              <div className="group relative">
-                <div className="absolute -inset-1 bg-gradient-to-r from-emerald-400 to-green-500 rounded-2xl blur opacity-25 group-hover:opacity-50 transition-opacity"></div>
-                <div className="relative bg-white/60 backdrop-blur-xl rounded-2xl p-4 sm:p-5 border border-white/80 hover:border-emerald-300 transition-all duration-300">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2.5 sm:p-3 bg-gradient-to-br from-emerald-500 to-green-600 rounded-xl shadow-lg">
-                      <TreePine className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
-                    </div>
-                    <div>
-                      <p className="text-xs sm:text-sm text-emerald-700 font-medium">إجمالي المزارع</p>
-                      <p className="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-emerald-700 to-green-600 bg-clip-text text-transparent">
-                        {farms.length}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="group relative">
-                <div className="absolute -inset-1 bg-gradient-to-r from-green-400 to-emerald-500 rounded-2xl blur opacity-25 group-hover:opacity-50 transition-opacity"></div>
-                <div className="relative bg-white/60 backdrop-blur-xl rounded-2xl p-4 sm:p-5 border border-white/80 hover:border-green-300 transition-all duration-300">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2.5 sm:p-3 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl shadow-lg">
-                      <Leaf className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
-                    </div>
-                    <div>
-                      <p className="text-xs sm:text-sm text-green-700 font-medium">أشجار متاحة</p>
-                      <p className="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-green-700 to-emerald-600 bg-clip-text text-transparent">
-                        {farms.reduce((sum, farm) => sum + (farm.available_trees || 0), 0)}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="group relative">
-                <div className="absolute -inset-1 bg-gradient-to-r from-teal-400 to-emerald-500 rounded-2xl blur opacity-25 group-hover:opacity-50 transition-opacity"></div>
-                <div className="relative bg-white/60 backdrop-blur-xl rounded-2xl p-4 sm:p-5 border border-white/80 hover:border-teal-300 transition-all duration-300">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2.5 sm:p-3 bg-gradient-to-br from-teal-500 to-emerald-600 rounded-xl shadow-lg">
-                      <Shield className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
-                    </div>
-                    <div>
-                      <p className="text-xs sm:text-sm text-teal-700 font-medium">استثمار آمن</p>
-                      <p className="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-teal-700 to-emerald-600 bg-clip-text text-transparent">
-                        100%
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="group relative">
-                <div className="absolute -inset-1 bg-gradient-to-r from-emerald-400 to-teal-500 rounded-2xl blur opacity-25 group-hover:opacity-50 transition-opacity"></div>
-                <div className="relative bg-white/60 backdrop-blur-xl rounded-2xl p-4 sm:p-5 border border-white/80 hover:border-emerald-300 transition-all duration-300">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2.5 sm:p-3 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl shadow-lg">
-                      <Award className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
-                    </div>
-                    <div>
-                      <p className="text-xs sm:text-sm text-emerald-700 font-medium">عوائد سنوية</p>
-                      <p className="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-emerald-700 to-teal-600 bg-clip-text text-transparent">
-                        25%+
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </header>
