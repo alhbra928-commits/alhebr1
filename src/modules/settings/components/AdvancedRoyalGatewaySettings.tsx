@@ -331,7 +331,7 @@ export function AdvancedRoyalGatewaySettings() {
   ];
 
   return (
-    <div className="space-y-6 pb-32">
+    <div className="space-y-6 min-h-screen">
       {/* Header */}
         <div className="bg-gradient-to-r from-emerald-600 via-green-500 to-teal-500 rounded-3xl p-8 shadow-2xl">
           <div className="flex items-center justify-between mb-6">
