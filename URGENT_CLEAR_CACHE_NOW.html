@@ -3,115 +3,183 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>حذف Cache - إظهار التصميم الداكن</title>
+    <title>🔥 حذف Cache الآن - حل فوري</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 20px;
+            color: white;
         }
         .container {
-            background: white;
-            border-radius: 20px;
-            padding: 40px;
-            max-width: 600px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 24px;
+            padding: 50px;
+            max-width: 800px;
+            width: 100%;
+            box-shadow: 0 40px 120px rgba(0,0,0,0.6);
             text-align: center;
+            color: #000;
         }
         h1 {
-            color: #667eea;
-            margin-bottom: 20px;
-            font-size: 32px;
+            color: #dc2626;
+            margin-bottom: 30px;
+            font-size: 42px;
+            font-weight: 900;
+            text-shadow: 2px 2px 4px rgba(220, 38, 38, 0.2);
         }
-        .warning {
-            background: #fff3cd;
-            border: 2px solid #ffc107;
-            border-radius: 10px;
-            padding: 20px;
-            margin: 20px 0;
-            color: #856404;
+        .warning-box {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border: 4px solid #f59e0b;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+            color: #78350f;
+            font-size: 20px;
+            font-weight: 700;
+            line-height: 1.8;
+            box-shadow: 0 10px 30px rgba(245, 158, 11, 0.3);
         }
-        .success {
-            background: #d4edda;
-            border: 2px solid #28a745;
-            border-radius: 10px;
-            padding: 20px;
-            margin: 20px 0;
-            color: #155724;
-            display: none;
+        .warning-box strong {
+            font-size: 24px;
+            display: block;
+            margin-bottom: 15px;
+            color: #dc2626;
         }
-        button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        .big-button {
+            background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
             color: white;
             border: none;
-            padding: 15px 40px;
-            font-size: 18px;
-            border-radius: 10px;
+            padding: 30px 80px;
+            font-size: 28px;
+            font-weight: 900;
+            border-radius: 20px;
             cursor: pointer;
-            margin: 10px;
-            transition: transform 0.2s;
+            margin: 30px auto;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 15px 50px rgba(220, 38, 38, 0.5);
+            display: inline-block;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
-        button:hover {
-            transform: scale(1.05);
+        .big-button:hover {
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: 0 25px 70px rgba(220, 38, 38, 0.7);
         }
-        button:active {
-            transform: scale(0.95);
+        .big-button:active {
+            transform: scale(0.98);
         }
-        .log {
-            background: #f8f9fa;
-            border: 1px solid #dee2e6;
-            border-radius: 10px;
-            padding: 20px;
-            margin: 20px 0;
-            max-height: 300px;
+        .success-box {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            border: 4px solid #10b981;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+            color: #065f46;
+            font-size: 20px;
+            font-weight: 700;
+            display: none;
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
+        }
+        .log-box {
+            background: #1f2937;
+            border: 3px solid #374151;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+            max-height: 500px;
             overflow-y: auto;
-            font-family: monospace;
-            font-size: 14px;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
             text-align: right;
             display: none;
+            color: #fff;
+            box-shadow: inset 0 4px 20px rgba(0,0,0,0.5);
         }
         .log-item {
-            padding: 5px;
-            border-bottom: 1px solid #e9ecef;
+            padding: 12px;
+            border-bottom: 1px solid #374151;
+            line-height: 1.8;
+            animation: slideIn 0.3s ease;
         }
-        .log-item:last-child {
-            border-bottom: none;
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
         }
-        .log-error { color: #dc3545; }
-        .log-success { color: #28a745; }
-        .log-info { color: #007bff; }
+        .log-item:last-child { border-bottom: none; }
+        .log-error { color: #ef4444; font-weight: bold; }
+        .log-success { color: #10b981; font-weight: bold; }
+        .log-info { color: #3b82f6; }
+        .log-warning { color: #f59e0b; }
+        .countdown {
+            font-size: 72px;
+            font-weight: 900;
+            color: #dc2626;
+            margin: 30px 0;
+            display: none;
+            text-shadow: 0 0 30px rgba(220, 38, 38, 0.5);
+            animation: pulse 1s ease infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        .note {
+            margin-top: 40px;
+            padding: 25px;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 15px;
+            color: #1e40af;
+            font-size: 17px;
+            line-height: 1.8;
+            border: 2px solid rgba(59, 130, 246, 0.3);
+        }
+        .highlight {
+            background: #fef3c7;
+            padding: 5px 10px;
+            border-radius: 8px;
+            color: #dc2626;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🔥 حذف Cache للتصميم الداكن</h1>
+        <h1>🔥 حذف الـ Cache - حل فوري</h1>
         
-        <div class="warning">
-            <strong>⚠️ المشكلة:</strong>
-            <p>التصميم الداكن موجود في الكود لكن المتصفح يعرض النسخة القديمة من الـ cache.</p>
+        <div class="warning-box">
+            <strong>⚠️ هذه الخطوة مطلوبة مرة واحدة فقط!</strong>
+            <p>المتصفح يستخدم نسخة قديمة محفوظة</p>
+            <p>بعد الحذف، كل التحديثات المستقبلية ستظهر تلقائياً</p>
         </div>
 
-        <p style="margin: 20px 0; font-size: 18px;">
-            اضغط الزر أدناه لحذف كل الـ cache وإعادة التحميل
-        </p>
+        <button class="big-button" onclick="clearEverything()">
+            🚀 حذف الآن وإظهار التحديث
+        </button>
 
-        <button onclick="clearEverything()">🚀 حذف Cache وإعادة التحميل</button>
+        <div id="countdown" class="countdown"></div>
 
-        <div id="successBox" class="success">
+        <div id="successBox" class="success-box">
             <strong>✅ تم بنجاح!</strong>
-            <p>سيتم إعادة التحميل خلال 3 ثواني...</p>
+            <p style="margin-top: 15px;">جاري إعادة التحميل للنسخة الجديدة...</p>
+            <p style="margin-top: 10px; font-size: 18px;">ستظهر المنصة بالتصميم الداكن الجديد 🎨</p>
         </div>
 
-        <div id="logBox" class="log"></div>
+        <div id="logBox" class="log-box"></div>
 
-        <p style="margin-top: 30px; color: #6c757d; font-size: 14px;">
-            ملاحظة: بياناتك المحفوظة (تسجيل الدخول) ستبقى آمنة
-        </p>
+        <div class="note">
+            <strong>💡 ملاحظة مهمة:</strong>
+            <p style="margin-top: 10px;">
+                • بياناتك المحفوظة (تسجيل الدخول) <span class="highlight">آمنة 100%</span><br>
+                • هذه الخطوة <span class="highlight">لمرة واحدة فقط</span><br>
+                • بعدها، كل build جديد سيظهر <span class="highlight">تلقائياً</span>
+            </p>
+        </div>
     </div>
 
     <script>
@@ -120,85 +188,147 @@
             logBox.style.display = 'block';
             const item = document.createElement('div');
             item.className = 'log-item log-' + type;
-            item.textContent = message;
+            
+            const timestamp = new Date().toLocaleTimeString('ar-SA');
+            item.textContent = timestamp + ' - ' + message;
+            
             logBox.appendChild(item);
             logBox.scrollTop = logBox.scrollHeight;
         }
 
         async function clearEverything() {
             try {
-                log('🔄 بدء عملية الحذف...', 'info');
+                log('🎬 بدء عملية التنظيف الشامل...', 'info');
 
-                // حفظ بيانات المصادقة
-                const auth = {};
+                // Hide button
+                document.querySelector('.big-button').style.display = 'none';
+
+                // Preserve auth data
+                const authData = {};
                 const authKeys = [
                     'admin_session_token',
                     'admin_data',
                     'investor_phone',
                     'investor_data',
                     'farm_owner_session',
-                    'farm_owner_data'
+                    'farm_owner_data',
+                    'admin-session',
+                    'investor-session',
+                    'farm-owner-session'
                 ];
                 
+                log('💾 حفظ بيانات المصادقة...', 'info');
                 authKeys.forEach(key => {
                     const value = localStorage.getItem(key);
                     if (value) {
-                        auth[key] = value;
-                        log(`💾 حفظ: ${key}`, 'info');
+                        authData[key] = value;
+                        log(`   ✓ حُفظ: ${key}`, 'success');
                     }
                 });
 
-                // حذف localStorage
-                log('🗑️ حذف localStorage...', 'info');
+                // Clear localStorage
+                log('🗑️ حذف localStorage...', 'warning');
+                const allKeys = Object.keys(localStorage);
+                log(`   وجدنا ${allKeys.length} عنصر محفوظ`, 'info');
                 localStorage.clear();
-                log('✅ تم حذف localStorage', 'success');
+                log('✅ تم حذف localStorage بالكامل', 'success');
 
-                // حذف sessionStorage
-                log('🗑️ حذف sessionStorage...', 'info');
+                // Clear sessionStorage
+                log('🗑️ حذف sessionStorage...', 'warning');
                 sessionStorage.clear();
-                log('✅ تم حذف sessionStorage', 'success');
+                log('✅ تم حذف sessionStorage بالكامل', 'success');
 
-                // حذف Cache API
+                // Clear Cache API
                 if ('caches' in window) {
                     const cacheNames = await caches.keys();
-                    log(`🗑️ حذف ${cacheNames.length} caches...`, 'info');
-                    await Promise.all(cacheNames.map(name => caches.delete(name)));
-                    log('✅ تم حذف جميع الـ caches', 'success');
+                    log(`🗑️ وجدنا ${cacheNames.length} cache(s)...`, 'warning');
+                    
+                    if (cacheNames.length > 0) {
+                        for (const name of cacheNames) {
+                            await caches.delete(name);
+                            log(`   ✓ حُذف: ${name}`, 'success');
+                        }
+                        log('✅ تم حذف جميع الـ caches', 'success');
+                    } else {
+                        log('   لا يوجد caches للحذف', 'info');
+                    }
                 }
 
-                // إلغاء Service Workers
+                // Unregister Service Workers
                 if ('serviceWorker' in navigator) {
                     const registrations = await navigator.serviceWorker.getRegistrations();
-                    log(`🗑️ إلغاء ${registrations.length} service workers...`, 'info');
-                    await Promise.all(registrations.map(reg => reg.unregister()));
-                    log('✅ تم إلغاء جميع الـ service workers', 'success');
+                    log(`🗑️ وجدنا ${registrations.length} service worker(s)...`, 'warning');
+                    
+                    if (registrations.length > 0) {
+                        for (const reg of registrations) {
+                            await reg.unregister();
+                            log(`   ✓ تم إلغاء: ${reg.scope}`, 'success');
+                        }
+                        log('✅ تم إلغاء جميع الـ service workers', 'success');
+                    } else {
+                        log('   لا يوجد service workers للإلغاء', 'info');
+                    }
                 }
 
-                // استرجاع بيانات المصادقة
-                Object.keys(auth).forEach(key => {
-                    localStorage.setItem(key, auth[key]);
-                    log(`♻️ استرجاع: ${key}`, 'success');
+                // Restore auth data
+                log('♻️ استرجاع بيانات المصادقة...', 'info');
+                Object.keys(authData).forEach(key => {
+                    localStorage.setItem(key, authData[key]);
+                    log(`   ✓ استُرجع: ${key}`, 'success');
                 });
 
-                // حفظ النسخة الجديدة
-                localStorage.setItem('app-version', 'DARK_FINAL_v20251030_002');
-                log('✅ تم حفظ النسخة الجديدة', 'success');
+                // IMPORTANT: Remove version keys to force reload
+                localStorage.removeItem('app-version');
+                localStorage.removeItem('last-deployed-version');
+                log('✅ تم حذف مفاتيح النسخ', 'success');
 
-                // إظهار رسالة النجاح
+                // Show success
                 document.getElementById('successBox').style.display = 'block';
-                log('🎉 اكتمل! إعادة التحميل...', 'success');
+                log('🎉 اكتمل! سيتم إعادة التحميل...', 'success');
 
-                // إعادة التحميل
-                setTimeout(() => {
-                    const baseUrl = window.location.origin;
-                    window.location.href = baseUrl + '/?_nocache=' + Date.now();
-                }, 3000);
+                // Countdown
+                const countdownEl = document.getElementById('countdown');
+                countdownEl.style.display = 'block';
+                let count = 3;
+                countdownEl.textContent = count;
+
+                const interval = setInterval(() => {
+                    count--;
+                    if (count > 0) {
+                        countdownEl.textContent = count;
+                    } else {
+                        clearInterval(interval);
+                        countdownEl.textContent = '🚀';
+                        
+                        log('🔄 إعادة التحميل الآن...', 'warning');
+                        
+                        // FORCE reload with multiple cache busters
+                        setTimeout(() => {
+                            const baseUrl = window.location.origin;
+                            const timestamp = Date.now();
+                            window.location.href = baseUrl + '/?cleared=true&t=' + timestamp + '&cache=bypass&v=' + timestamp;
+                        }, 500);
+                    }
+                }, 1000);
 
             } catch (error) {
                 log('❌ خطأ: ' + error.message, 'error');
-                alert('حدث خطأ: ' + error.message);
+                console.error(error);
+                alert('حدث خطأ: ' + error.message + '\n\nسيتم إعادة التحميل بأي حال...');
+                setTimeout(() => {
+                    window.location.reload(true);
+                }, 2000);
             }
         }
+
+        // Auto log on load
+        window.addEventListener('load', () => {
+            log('📱 تم تحميل الصفحة', 'info');
+            log('🌐 المتصفح: ' + navigator.userAgent.split(' ').slice(-2).join(' '), 'info');
+            log('⏰ الوقت: ' + new Date().toLocaleString('ar-SA'), 'info');
+            log('', 'info');
+            log('👆 اضغط الزر أعلاه للبدء', 'warning');
+        });
     </script>
 </body>
 </html>
