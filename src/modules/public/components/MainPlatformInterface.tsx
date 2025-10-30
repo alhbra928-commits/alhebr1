@@ -44,6 +44,7 @@ export function MainPlatformInterface({
   const [currentView, setCurrentView] = useState<ViewMode>('home');
   const [selectedFarm, setSelectedFarm] = useState<PublicFarm | null>(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [activeBottomTab, setActiveBottomTab] = useState<string>('');
 
   useEffect(() => {
     loadData();
@@ -324,8 +325,9 @@ export function MainPlatformInterface({
 
       {/* Bottom Navigation Bar for Public - Always Show */}
       <PublicBottomNavBar
-        activeTab={currentView === 'home' ? 'home' : currentView === 'investor' ? 'login' : 'home'}
+        activeTab={activeBottomTab}
         onTabChange={(tabId) => {
+          setActiveBottomTab(tabId);
           if (tabId === 'concept') {
             setShowConceptModal(true);
           } else if (tabId === 'login') {
