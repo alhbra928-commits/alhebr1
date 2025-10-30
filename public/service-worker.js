@@ -1,4 +1,4 @@
-const VERSION = 'v20251030_1761819296413';
+const VERSION = 'v20251030_1761821801249';
 const CACHE_NAME = `palm-olive-${VERSION}`;
 
 // استراتيجية: Network First للملفات الديناميكية
