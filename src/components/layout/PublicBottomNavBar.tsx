@@ -127,50 +127,52 @@ export const PublicBottomNavBar: React.FC<PublicBottomNavBarProps> = ({
                     hover:scale-105
                   `}
                 >
-                  {/* 3D Decorative Box Container */}
+                  {/* 3D Glass Box - All Green */}
                   <div
                     className={`
                       relative flex items-center justify-center
                       w-12 h-12 rounded-xl
                       transition-all duration-300
-                      ${isActive ? '-translate-y-1' : ''}
+                      ${isActive ? '-translate-y-1 scale-110' : ''}
                     `}
                     style={{
                       background: isBackToAdmin
                         ? 'linear-gradient(135deg, #059669 0%, #047857 100%)'
-                        : isActive
-                        ? 'linear-gradient(135deg, #10b981 0%, #34d399 100%)'
-                        : 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.85) 100%)',
-                      border: isBackToAdmin || isActive ? 'none' : '2px solid rgba(16, 185, 129, 0.2)',
-                      boxShadow: isBackToAdmin
-                        ? '0 6px 20px rgba(5, 150, 105, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3), inset 0 -1px 0 rgba(0, 0, 0, 0.1)'
-                        : isActive
-                        ? '0 6px 20px rgba(16, 185, 129, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3), inset 0 -1px 0 rgba(0, 0, 0, 0.1)'
-                        : '0 2px 8px rgba(16, 185, 129, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.9)'
+                        : 'linear-gradient(135deg, #10b981 0%, #34d399 100%)',
+                      boxShadow: isActive
+                        ? '0 8px 24px rgba(16, 185, 129, 0.6), 0 0 40px rgba(16, 185, 129, 0.3), inset 0 2px 0 rgba(255, 255, 255, 0.4), inset 0 -2px 0 rgba(0, 0, 0, 0.2)'
+                        : '0 6px 20px rgba(16, 185, 129, 0.5), 0 0 30px rgba(16, 185, 129, 0.2), inset 0 2px 0 rgba(255, 255, 255, 0.3), inset 0 -2px 0 rgba(0, 0, 0, 0.1)',
+                      border: 'none'
                     }}
                   >
-                    {/* Icon */}
+                    {/* Icon - Always White */}
                     <div
                       className={`
                         transition-all duration-300 transform
                         ${isActive ? 'scale-110' : 'scale-100'}
                       `}
                       style={{
-                        color: isBackToAdmin || isActive ? '#FFFFFF' : '#047857',
-                        filter: (isBackToAdmin || isActive)
-                          ? 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3))'
-                          : 'drop-shadow(0 1px 2px rgba(4, 120, 87, 0.2))'
+                        color: '#FFFFFF',
+                        filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3))'
                       }}
                     >
                       {item.icon}
                     </div>
+
+                    {/* Glass shine effect */}
+                    <div
+                      className="absolute inset-0 rounded-xl opacity-40"
+                      style={{
+                        background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.6) 0%, transparent 50%, rgba(255, 255, 255, 0.3) 100%)'
+                      }}
+                    />
 
                     {/* Ripple effect on active */}
                     {isActive && (
                       <div
                         className="absolute inset-0 rounded-xl animate-ping opacity-30"
                         style={{
-                          background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.5) 0%, rgba(52, 211, 153, 0.5) 100%)'
+                          background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.6) 0%, rgba(52, 211, 153, 0.6) 100%)'
                         }}
                       />
                     )}
@@ -180,17 +182,25 @@ export const PublicBottomNavBar: React.FC<PublicBottomNavBarProps> = ({
                       <div
                         className="absolute inset-0 rounded-xl animate-ping opacity-40"
                         style={{
-                          background: 'linear-gradient(135deg, rgba(5, 150, 105, 0.5) 0%, rgba(4, 120, 87, 0.5) 100%)',
+                          background: 'linear-gradient(135deg, rgba(5, 150, 105, 0.6) 0%, rgba(4, 120, 87, 0.6) 100%)',
                           animationDuration: '2s'
                         }}
                       />
                     )}
 
-                    {/* Shine effect */}
+                    {/* 3D depth layers */}
                     <div
-                      className="absolute inset-0 rounded-xl opacity-30"
+                      className="absolute inset-[2px] rounded-[10px] opacity-50"
                       style={{
-                        background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.5) 0%, transparent 50%, rgba(255, 255, 255, 0.2) 100%)'
+                        background: 'linear-gradient(135deg, transparent 0%, rgba(255, 255, 255, 0.1) 50%, transparent 100%)'
+                      }}
+                    />
+
+                    {/* Bottom reflection */}
+                    <div
+                      className="absolute bottom-0 left-0 right-0 h-1/2 rounded-b-xl opacity-20"
+                      style={{
+                        background: 'linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.3) 100%)'
                       }}
                     />
                   </div>
