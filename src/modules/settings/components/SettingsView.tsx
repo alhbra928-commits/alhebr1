@@ -3,9 +3,7 @@ import { Settings, Map, Video, Mail, Key, Globe, Bell, Shield, Database, BarChar
 import { Card3D } from '../../../components/ui/Card3D';
 import { BackButton } from '../../../components/common/BackButton';
 import { BackupCenter } from '../../backups/components/BackupCenter';
-import { AdvancedTickerManager } from './AdvancedTickerManager';
-import { AdvancedTickerControl } from './AdvancedTickerControl';
-import { UltraAdvancedTickerManager } from './UltraAdvancedTickerManager';
+import { UltraModernTickerManager } from './UltraModernTickerManager';
 import { VersionHistoryPanel } from './VersionHistoryPanel';
 import { AdvancedCacheSystemDiagnostics } from './AdvancedCacheSystemDiagnostics';
 import { PlatformTextsManager } from './PlatformTextsManager';
@@ -126,7 +124,7 @@ export function SettingsView({ onBack }: SettingsViewProps) {
         {activeTab === 'backup' ? (
           <BackupCenter />
         ) : activeTab === 'ticker' ? (
-          <UltraAdvancedTickerManager />
+          <UltraModernTickerManager />
         ) : activeTab === 'versions' ? (
           <VersionHistoryPanel />
         ) : activeTab === 'diagnostics' ? (

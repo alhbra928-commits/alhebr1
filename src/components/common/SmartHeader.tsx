@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Bell, MessageCircle, Home, MapPin, Filter, TrendingUp, Search, ChevronDown, Shield, ArrowRight, Star, Zap, Sparkles, Crown, Activity, TrendingUp as TrendingUpIcon } from 'lucide-react';
 import { brandColors, brandGradients } from '../../modules/finance/styles/brandColors';
 import { supabase } from '../../lib/supabase';
+import { Advanced3DTicker } from './Advanced3DTicker';
 
 interface SmartHeaderProps {
   currentView?: string;
@@ -364,61 +365,8 @@ export function SmartHeader({
           </div>
         </div>
 
-        {/* Innovative Ticker Bar */}
-        <div
-          className="relative overflow-hidden border-t border-b"
-          style={{
-            background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.15) 100%)',
-            borderColor: 'rgba(16, 185, 129, 0.2)',
-          }}
-        >
-          <div className="ticker-container py-2.5">
-            <div className="ticker-content">
-              {tickerMessages.length > 0 ? (
-                <>
-                  {/* Display messages from database - REAL DATA ONLY */}
-                  {tickerMessages.map((msg) => {
-                    const IconComponent = getIconComponent(msg.icon_name || msg.icon);
-                    const iconColorClass = msg.icon_color || msg.color || 'emerald-600';
-                    const textColorClass = msg.text_color || msg.color || 'emerald-800';
-                    return (
-                      <div key={msg.id} className="ticker-item">
-                        <IconComponent className={`w-4 h-4 ${getColorClass(iconColorClass)}`} />
-                        <span className={`text-sm font-bold ${getColorClass(textColorClass)}`}>
-                          {msg.content_ar || msg.label}
-                        </span>
-                      </div>
-                    );
-                  })}
-
-                  {/* Duplicate for seamless loop */}
-                  {tickerMessages.map((msg) => {
-                    const IconComponent = getIconComponent(msg.icon_name || msg.icon);
-                    const iconColorClass = msg.icon_color || msg.color || 'emerald-600';
-                    const textColorClass = msg.text_color || msg.color || 'emerald-800';
-                    return (
-                      <div key={`dup-${msg.id}`} className="ticker-item">
-                        <IconComponent className={`w-4 h-4 ${getColorClass(iconColorClass)}`} />
-                        <span className={`text-sm font-bold ${getColorClass(textColorClass)}`}>
-                          {msg.content_ar || msg.label}
-                        </span>
-                      </div>
-                    );
-                  })}
-                </>
-              ) : (
-                <div className="ticker-item">
-                  <Star className="w-4 h-4 text-gray-400" />
-                  <span className="text-sm font-bold text-gray-500">لا توجد رسائل في الشريط - أضف رسائل من الإعدادات</span>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Gradient Edges */}
-          <div className="absolute inset-y-0 left-0 w-20 bg-gradient-to-r from-white/80 to-transparent pointer-events-none" />
-          <div className="absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-white/80 to-transparent pointer-events-none" />
-        </div>
+        {/* Advanced 3D Ticker */}
+        <Advanced3DTicker />
 
         {/* Sub Header - Filter Chips */}
         <div
