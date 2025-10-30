@@ -128,128 +128,77 @@ export function RoyalGlassGateway({ onEnter }: GatewayProps) {
           {/* Outer Glow - Pure White/Crystal */}
           <div className="absolute inset-0 bg-gradient-to-r from-white/20 via-blue-50/20 to-white/20 blur-3xl animate-pulse" />
 
-          {/* Pure Crystal Glass Crown with Golden Border */}
+          {/* Pure Crystal Glass Crown with Thin Golden Border */}
           <div className="relative">
-            {/* Crystal Crown - White Fill */}
+            {/* Main Crystal Crown - Bright White Glass */}
             <Crown
-              className="w-80 h-80 sm:w-96 sm:h-96 md:w-[28rem] md:h-[28rem] lg:w-[32rem] lg:h-[32rem] absolute inset-0 transition-all duration-500 group-hover:scale-110 group-active:scale-95"
+              className="w-80 h-80 sm:w-96 sm:h-96 md:w-[28rem] md:h-[28rem] lg:w-[32rem] lg:h-[32rem] relative transition-all duration-500 group-hover:scale-110 group-active:scale-95"
               strokeWidth={0}
               style={{
-                color: 'rgba(255, 255, 255, 0.7)',
+                color: 'rgba(255, 255, 255, 0.95)',
+                fill: 'rgba(255, 255, 255, 0.5)',
                 filter: `
-                  drop-shadow(0 0 20px rgba(255, 255, 255, 0.4))
-                  drop-shadow(0 4px 30px rgba(147, 197, 253, 0.2))
+                  drop-shadow(0 0 50px rgba(255, 255, 255, 0.9))
+                  drop-shadow(0 10px 80px rgba(147, 197, 253, 0.5))
+                  drop-shadow(0 15px 100px rgba(255, 255, 255, 0.7))
                 `,
               }}
             />
 
-            {/* Golden Shiny Border */}
+            {/* Thin Golden Outline */}
             <Crown
-              className="w-80 h-80 sm:w-96 sm:h-96 md:w-[28rem] md:h-[28rem] lg:w-[32rem] lg:h-[32rem] relative transition-all duration-500 group-hover:scale-110 group-active:scale-95"
-              strokeWidth={3}
+              className="w-80 h-80 sm:w-96 sm:h-96 md:w-[28rem] md:h-[28rem] lg:w-[32rem] lg:h-[32rem] absolute inset-0 transition-all duration-500 group-hover:scale-110 group-active:scale-95"
+              strokeWidth={1.5}
               fill="none"
               style={{
                 stroke: 'url(#goldenGradient)',
                 filter: `
-                  drop-shadow(0 0 30px rgba(251, 191, 36, 0.8))
-                  drop-shadow(0 4px 40px rgba(217, 119, 6, 0.6))
-                  drop-shadow(0 8px 50px rgba(251, 191, 36, 0.4))
+                  drop-shadow(0 0 15px rgba(251, 191, 36, 0.5))
+                  drop-shadow(0 2px 8px rgba(217, 119, 6, 0.3))
                 `,
               }}
             />
 
-            {/* Artistic "مزاد" Logo Design - SVG Art */}
+            {/* Andalusian Style "مزاد" Text */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <svg
-                viewBox="0 0 200 80"
-                className="w-48 sm:w-56 md:w-64 lg:w-72"
+              <h1
+                className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-bold select-none"
                 style={{
                   marginTop: '8%',
-                  filter: 'drop-shadow(0 0 30px rgba(251, 191, 36, 0.8)) drop-shadow(0 4px 20px rgba(217, 119, 6, 0.6))',
+                  background: 'linear-gradient(135deg, #b45309 0%, #d97706 20%, #fbbf24 40%, #fef3c7 50%, #fbbf24 60%, #d97706 80%, #b45309 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                  textShadow: `
+                    0 0 60px rgba(251, 191, 36, 1),
+                    0 0 40px rgba(217, 119, 6, 0.8),
+                    0 4px 30px rgba(251, 191, 36, 0.6),
+                    0 8px 40px rgba(0, 0, 0, 0.3)
+                  `,
+                  fontFamily: "'Scheherazade New', 'Amiri', 'Lateef', 'Arabic Typesetting', serif",
+                  fontWeight: 700,
+                  letterSpacing: '0.15em',
+                  WebkitFontSmoothing: 'antialiased',
+                  MozOsxFontSmoothing: 'grayscale',
                 }}
               >
-                <defs>
-                  {/* Golden Gradient for Crown Border */}
-                  <linearGradient id="goldenGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" style={{ stopColor: '#fbbf24', stopOpacity: 1 }} />
-                    <stop offset="25%" style={{ stopColor: '#f59e0b', stopOpacity: 1 }} />
-                    <stop offset="50%" style={{ stopColor: '#fef3c7', stopOpacity: 1 }} />
-                    <stop offset="75%" style={{ stopColor: '#f59e0b', stopOpacity: 1 }} />
-                    <stop offset="100%" style={{ stopColor: '#fbbf24', stopOpacity: 1 }} />
-                  </linearGradient>
-
-                  {/* Golden Gradient for Logo */}
-                  <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" style={{ stopColor: '#d97706', stopOpacity: 1 }} />
-                    <stop offset="25%" style={{ stopColor: '#fbbf24', stopOpacity: 1 }} />
-                    <stop offset="50%" style={{ stopColor: '#fef3c7', stopOpacity: 1 }} />
-                    <stop offset="75%" style={{ stopColor: '#fbbf24', stopOpacity: 1 }} />
-                    <stop offset="100%" style={{ stopColor: '#d97706', stopOpacity: 1 }} />
-                  </linearGradient>
-
-                  <filter id="logoGlow">
-                    <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
-                    <feMerge>
-                      <feMergeNode in="coloredBlur"/>
-                      <feMergeNode in="SourceGraphic"/>
-                    </feMerge>
-                  </filter>
-                </defs>
-
-                {/* Artistic "مزاد" Design - Hand-drawn Style */}
-                <g filter="url(#logoGlow)">
-                  {/* م - First Letter */}
-                  <path
-                    d="M 25 45 Q 25 30 35 25 T 50 30 Q 50 40 45 45 Q 40 50 35 45 Q 30 40 35 35"
-                    stroke="url(#logoGradient)"
-                    strokeWidth="4"
-                    fill="none"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <circle cx="40" cy="38" r="2.5" fill="url(#logoGradient)" />
-
-                  {/* ز - Second Letter */}
-                  <path
-                    d="M 65 40 Q 70 35 75 35 Q 80 35 80 40 L 80 45"
-                    stroke="url(#logoGradient)"
-                    strokeWidth="4"
-                    fill="none"
-                    strokeLinecap="round"
-                  />
-                  <circle cx="78" cy="50" r="2" fill="url(#logoGradient)" />
-
-                  {/* ا - Third Letter */}
-                  <path
-                    d="M 95 50 L 95 25"
-                    stroke="url(#logoGradient)"
-                    strokeWidth="4"
-                    fill="none"
-                    strokeLinecap="round"
-                  />
-
-                  {/* د - Fourth Letter */}
-                  <path
-                    d="M 110 45 Q 115 40 120 40 Q 130 40 135 45 Q 140 50 135 53 L 110 53"
-                    stroke="url(#logoGradient)"
-                    strokeWidth="4"
-                    fill="none"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-
-                  {/* Decorative Flow Line */}
-                  <path
-                    d="M 20 55 Q 80 58 160 55"
-                    stroke="url(#logoGradient)"
-                    strokeWidth="1.5"
-                    fill="none"
-                    opacity="0.6"
-                    strokeLinecap="round"
-                  />
-                </g>
-              </svg>
+                مزاد
+              </h1>
             </div>
+
+            {/* Hidden SVG for gradients */}
+            <svg width="0" height="0" style={{ position: 'absolute' }}>
+              <defs>
+                {/* Golden Gradient for Crown Border */}
+                <linearGradient id="goldenGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style={{ stopColor: '#fbbf24', stopOpacity: 1 }} />
+                  <stop offset="25%" style={{ stopColor: '#f59e0b', stopOpacity: 1 }} />
+                  <stop offset="50%" style={{ stopColor: '#fef3c7', stopOpacity: 1 }} />
+                  <stop offset="75%" style={{ stopColor: '#f59e0b', stopOpacity: 1 }} />
+                  <stop offset="100%" style={{ stopColor: '#fbbf24', stopOpacity: 1 }} />
+                </linearGradient>
+              </defs>
+            </svg>
 
             {/* Crystal Sparkles - Pure White */}
             <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
