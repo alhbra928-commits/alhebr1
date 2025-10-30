@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔍 تشخيص سريع</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background: #1a1a2e;
+            color: #fff;
+            padding: 20px;
+        }
+        .container { max-width: 800px; margin: 0 auto; }
+        h1 { text-align: center; color: #4ec9b0; margin-bottom: 30px; }
+        .test {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(78,201,176,0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+        .result {
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            font-family: monospace;
+        }
+        .pass { background: rgba(16,185,129,0.2); border-left: 4px solid #10b981; }
+        .fail { background: rgba(239,68,68,0.2); border-left: 4px solid #ef4444; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 تشخيص سريع</h1>
+        <div class="test">
+            <h2>فحص manifest.json</h2>
+            <div id="result">جارٍ الفحص...</div>
+        </div>
+    </div>
+    <script>
+        async function test() {
+            const result = document.getElementById('result');
+            try {
+                const response = await fetch('/manifest.json?nocache=' + Date.now(), { cache: 'no-store' });
+                if (response.ok) {
+                    const manifest = await response.json();
+                    result.innerHTML = `
+                        <div class="result pass">
+                            ✅ النظام يعمل<br>
+                            Version: ${manifest.version}<br>
+                            Files: ${Object.keys(manifest.files).length}
+                        </div>
+                    `;
+                } else {
+                    result.innerHTML = `<div class="result fail">❌ manifest.json غير موجود (${response.status})</div>`;
+                }
+            } catch (error) {
+                result.innerHTML = `<div class="result fail">❌ خطأ: ${error.message}</div>`;
+            }
+        }
+        window.addEventListener('load', test);
+    </script>
+</body>
+</html>

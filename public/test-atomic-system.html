@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚛️ اختبار نظام Atomic Deployment</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #fff;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            font-size: 36px;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #4ec9b0, #569cd6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .section {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(78, 201, 176, 0.3);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+        .section h2 {
+            color: #4ec9b0;
+            margin-bottom: 15px;
+            font-size: 24px;
+        }
+        .status {
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        .success { background: rgba(16, 185, 129, 0.2); border-left: 4px solid #10b981; }
+        .info { background: rgba(59, 130, 246, 0.2); border-left: 4px solid #3b82f6; }
+        .warning { background: rgba(245, 158, 11, 0.2); border-left: 4px solid #f59e0b; }
+        .error { background: rgba(239, 68, 68, 0.2); border-left: 4px solid #ef4444; }
+        .button {
+            background: linear-gradient(135deg, #4ec9b0, #569cd6);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 10px 10px 10px 0;
+            transition: all 0.3s;
+        }
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(78, 201, 176, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⚛️ نظام Atomic Deployment - اختبار مباشر</h1>
+
+        <div class="section">
+            <h2>📊 حالة النظام</h2>
+            <div id="systemStatus">جارٍ التحميل...</div>
+        </div>
+
+        <div class="section">
+            <h2>🧪 اختبارات</h2>
+            <button class="button" onclick="checkSystem()">🔍 فحص النظام</button>
+            <button class="button" onclick="viewManifest()">📄 عرض Manifest</button>
+        </div>
+    </div>
+
+    <script>
+        async function checkSystem() {
+            const statusDiv = document.getElementById('systemStatus');
+            statusDiv.innerHTML = '<div class="status info">جارٍ الفحص...</div>';
+
+            try {
+                const response = await fetch('/manifest.json?nocache=' + Date.now(), {
+                    cache: 'no-store'
+                });
+
+                if (response.ok) {
+                    const manifest = await response.json();
+                    statusDiv.innerHTML = `
+                        <div class="status success">
+                            <strong>✅ Atomic System Active</strong><br>
+                            Version: ${manifest.version}<br>
+                            Channel: ${manifest.channel}<br>
+                            Strategy: ${manifest.deployment.strategy}<br>
+                            Files: ${Object.keys(manifest.files).length}
+                        </div>
+                    `;
+                } else {
+                    statusDiv.innerHTML = `
+                        <div class="status error">
+                            ❌ manifest.json غير موجود (HTTP ${response.status})
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                statusDiv.innerHTML = `
+                    <div class="status error">
+                        ❌ خطأ: ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        async function viewManifest() {
+            try {
+                const response = await fetch('/manifest.json?nocache=' + Date.now());
+                const manifest = await response.json();
+                const win = window.open('', '_blank');
+                win.document.write('<pre>' + JSON.stringify(manifest, null, 2) + '</pre>');
+                win.document.title = 'Manifest.json';
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        }
+
+        window.addEventListener('load', checkSystem);
+    </script>
+</body>
+</html>
