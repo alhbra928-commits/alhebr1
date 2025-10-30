@@ -18,38 +18,92 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <title>منصة النخيل والزيتون</title>
 
-    <!-- FORCE RELOAD FOR CDN/PREVIEW - HIGHEST PRIORITY -->
+    <!-- ⚛️ ATOMIC DEPLOYMENT SYSTEM - ENTERPRISE GRADE -->
+    <!-- This system works with manifest.json and Service Worker for automatic updates -->
     <script>
       (function() {
-        // Check if this is first load after deployment
+        console.log('%c⚛️ ATOMIC DEPLOYMENT INITIALIZING', 'color:#4ec9b0;font-size:20px;font-weight:bold');
+
+        // Legacy version check (for backward compatibility)
         const DEPLOYED_VERSION = '__BUILD_VERSION__';
         const lastKnownVersion = localStorage.getItem('last-deployed-version');
 
-        // If version changed OR no version stored, force hard reload ONCE
+        // First-time visit or old system migration
         if (!lastKnownVersion || lastKnownVersion !== DEPLOYED_VERSION) {
-          console.log('%c🚀 NEW DEPLOYMENT DETECTED', 'color:red;font-size:24px;font-weight:bold');
+          console.log('%c🚀 NEW DEPLOYMENT DETECTED (Legacy Check)', 'color:red;font-size:18px;font-weight:bold');
           console.log('Deployed:', DEPLOYED_VERSION);
           console.log('Last Known:', lastKnownVersion);
 
-          // Save the new version BEFORE reload to prevent loop
+          // Save version
           localStorage.setItem('last-deployed-version', DEPLOYED_VERSION);
 
-          // Check if we just reloaded (prevent infinite loop)
+          // Check if we just reloaded
           const justReloaded = sessionStorage.getItem('just-reloaded');
           if (!justReloaded) {
-            console.log('%c🔄 FORCING HARD RELOAD TO CLEAR CDN CACHE', 'color:orange;font-size:18px');
+            console.log('%c🔄 FORCING HARD RELOAD TO CLEAR CDN CACHE', 'color:orange;font-size:16px');
             sessionStorage.setItem('just-reloaded', 'true');
 
-            // Use multiple methods to ensure reload
+            // Force reload with cache bypass
             setTimeout(function() {
-              // Method 1: Location replace with timestamp
               window.location.replace(window.location.href.split('?')[0] + '?v=' + DEPLOYED_VERSION + '&t=' + Date.now());
             }, 100);
           } else {
-            console.log('%c✅ RELOAD COMPLETED - CDN CACHE CLEARED', 'color:green;font-size:18px');
+            console.log('%c✅ RELOAD COMPLETED - CDN CACHE CLEARED', 'color:green;font-size:16px');
             sessionStorage.removeItem('just-reloaded');
+
+            // Now check for Atomic Manifest
+            console.log('%c⚛️ Checking Atomic Manifest...', 'color:#4ec9b0;font-size:14px');
           }
+        } else {
+          console.log('%c✅ Version Up-to-Date (Legacy): ' + DEPLOYED_VERSION, 'color:green;font-size:14px');
+
+          // Check Atomic Manifest for real-time updates
+          console.log('%c⚛️ Atomic System Active - Monitoring manifest.json', 'color:#4ec9b0;font-size:14px');
         }
+
+        // Quick manifest check (non-blocking)
+        setTimeout(function() {
+          fetch('/manifest.json?nocache=' + Date.now(), {
+            cache: 'no-store',
+            headers: { 'Cache-Control': 'no-cache' }
+          })
+          .then(function(response) {
+            if (response.ok) {
+              return response.json();
+            }
+            throw new Error('Manifest not available');
+          })
+          .then(function(manifest) {
+            var atomicVersion = localStorage.getItem('atomic-version');
+
+            if (!atomicVersion) {
+              console.log('%c⚛️ First-time Atomic Setup', 'color:#4ec9b0;font-size:14px');
+              console.log('  Manifest Version:', manifest.version);
+              console.log('  Channel:', manifest.channel);
+              console.log('  Files:', Object.keys(manifest.files).length);
+              console.log('  Strategy:', manifest.deployment.strategy);
+
+              // Save atomic version
+              localStorage.setItem('atomic-version', manifest.version);
+              localStorage.setItem('atomic-timestamp', manifest.timestamp);
+              localStorage.setItem('atomic-channel', manifest.channel);
+
+              console.log('%c⚛️ Atomic System Initialized', 'color:#4ec9b0;font-size:14px;font-weight:bold');
+              console.log('  Auto-updates will work from now on');
+              console.log('  Service Worker will monitor every 30 seconds');
+            } else if (atomicVersion !== manifest.version) {
+              console.log('%c⚛️ NEW ATOMIC VERSION DETECTED!', 'color:#4ec9b0;font-size:16px;font-weight:bold');
+              console.log('  Current:', atomicVersion);
+              console.log('  New:', manifest.version);
+              console.log('  Service Worker will handle the update...');
+            } else {
+              console.log('%c✅ Atomic Version Current: ' + manifest.version, 'color:green;font-size:14px');
+            }
+          })
+          .catch(function(error) {
+            console.log('%c⚠️ Manifest check skipped (will retry via Service Worker)', 'color:orange;font-size:12px');
+          });
+        }, 500);
       })();
     </script>
   </head>
