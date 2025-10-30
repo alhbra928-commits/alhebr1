@@ -8,7 +8,7 @@ import { AdvancedTickerControl } from './AdvancedTickerControl';
 import { VersionHistoryPanel } from './VersionHistoryPanel';
 import { AdvancedCacheSystemDiagnostics } from './AdvancedCacheSystemDiagnostics';
 import { PlatformTextsManager } from './PlatformTextsManager';
-import { LuxuryGatewaySettings } from './LuxuryGatewaySettings';
+import { RoyalGatewaySettings } from './RoyalGatewaySettings';
 
 interface SettingsViewProps {
   onBack?: () => void;
@@ -133,7 +133,7 @@ export function SettingsView({ onBack }: SettingsViewProps) {
         ) : activeTab === 'texts' ? (
           <PlatformTextsManager />
         ) : activeTab === 'gateway' ? (
-          <LuxuryGatewaySettings />
+          <RoyalGatewaySettings />
         ) : (
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
