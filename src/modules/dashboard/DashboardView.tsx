@@ -59,17 +59,17 @@ export function DashboardView() {
 
   if (loading && !stats) {
     return (
-      <div className="min-h-screen bg-gray-50 p-6" dir="rtl">
+      <div className="min-h-screen bg-transparent p-6" dir="rtl">
         <div className="max-w-7xl mx-auto">
           <div className="mb-8">
-            <div className="h-8 bg-gray-200 rounded w-64 mb-2 animate-pulse"></div>
-            <div className="h-4 bg-gray-200 rounded w-48 animate-pulse"></div>
+            <div className="h-8 bg-emerald-900/30 backdrop-blur-sm rounded w-64 mb-2 animate-pulse"></div>
+            <div className="h-4 bg-emerald-900/30 backdrop-blur-sm rounded w-48 animate-pulse"></div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[1, 2, 3, 4].map(i => (
-              <div key={i} className="bg-white rounded-xl shadow-sm p-6 animate-pulse">
-                <div className="h-4 bg-gray-200 rounded w-24 mb-4"></div>
-                <div className="h-8 bg-gray-200 rounded w-32"></div>
+              <div key={i} className="bg-gray-900/50 backdrop-blur-xl rounded-xl border border-emerald-800/30 shadow-sm p-6 animate-pulse">
+                <div className="h-4 bg-emerald-900/30 rounded w-24 mb-4"></div>
+                <div className="h-8 bg-emerald-900/30 rounded w-32"></div>
               </div>
             ))}
           </div>
@@ -95,14 +95,14 @@ export function DashboardView() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6" dir="rtl">
+    <div className="min-h-screen bg-transparent p-6" dir="rtl">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8 flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent mb-2">
               لوحة التحكم الرئيسية
             </h1>
-            <p className="text-gray-600">منصة تملك النخيل والزيتون</p>
+            <p className="text-emerald-200/70">منصة تملك النخيل والزيتون</p>
           </div>
           <CompactLiveStatusIndicator
             isConnected={isLiveConnected}
@@ -142,60 +142,60 @@ export function DashboardView() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          <div className="bg-white rounded-xl shadow-sm p-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <Trees className="h-5 w-5 text-green-600" />
+          <div className="bg-gray-900/50 backdrop-blur-xl rounded-xl border border-emerald-800/30 shadow-lg p-6">
+            <h2 className="text-lg font-semibold text-emerald-100 mb-4 flex items-center gap-2">
+              <Trees className="h-5 w-5 text-emerald-400" />
               إحصائيات المزارع
             </h2>
             <div className="space-y-3">
-              <div className="flex justify-between items-center pb-2 border-b">
-                <span className="text-gray-600">مزارع نشطة</span>
-                <span className="font-semibold text-green-600">{stats?.farms?.active || 0}</span>
+              <div className="flex justify-between items-center pb-2 border-b border-emerald-800/30">
+                <span className="text-emerald-200/70">مزارع نشطة</span>
+                <span className="font-semibold text-emerald-400">{stats?.farms?.active || 0}</span>
               </div>
-              <div className="flex justify-between items-center pb-2 border-b">
-                <span className="text-gray-600">مزارع نخيل</span>
-                <span className="font-semibold">{stats?.farms?.palmFarms || 0}</span>
+              <div className="flex justify-between items-center pb-2 border-b border-emerald-800/30">
+                <span className="text-emerald-200/70">مزارع نخيل</span>
+                <span className="font-semibold text-emerald-300">{stats?.farms?.palmFarms || 0}</span>
               </div>
-              <div className="flex justify-between items-center pb-2 border-b">
-                <span className="text-gray-600">مزارع زيتون</span>
-                <span className="font-semibold">{stats?.farms?.oliveFarms || 0}</span>
+              <div className="flex justify-between items-center pb-2 border-b border-emerald-800/30">
+                <span className="text-emerald-200/70">مزارع زيتون</span>
+                <span className="font-semibold text-emerald-300">{stats?.farms?.oliveFarms || 0}</span>
               </div>
-              <div className="flex justify-between items-center pb-2 border-b">
-                <span className="text-gray-600">إجمالي الأشجار</span>
-                <span className="font-semibold text-blue-600">{stats?.farms?.totalTrees || 0}</span>
+              <div className="flex justify-between items-center pb-2 border-b border-emerald-800/30">
+                <span className="text-emerald-200/70">إجمالي الأشجار</span>
+                <span className="font-semibold text-teal-400">{stats?.farms?.totalTrees || 0}</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-gray-600">أشجار متاحة</span>
-                <span className="font-semibold text-orange-600">{stats?.farms?.availableTrees || 0}</span>
+                <span className="text-emerald-200/70">أشجار متاحة</span>
+                <span className="font-semibold text-orange-400">{stats?.farms?.availableTrees || 0}</span>
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-xl shadow-sm p-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <Activity className="h-5 w-5 text-blue-600" />
+          <div className="bg-gray-900/50 backdrop-blur-xl rounded-xl border border-emerald-800/30 shadow-lg p-6">
+            <h2 className="text-lg font-semibold text-emerald-100 mb-4 flex items-center gap-2">
+              <Activity className="h-5 w-5 text-teal-400" />
               حالة الحجوزات
             </h2>
             <div className="space-y-3">
-              <div className="flex justify-between items-center pb-2 border-b">
-                <span className="text-gray-600">قيد الانتظار</span>
-                <span className="font-semibold text-yellow-600">{stats?.reservations?.pending || 0}</span>
+              <div className="flex justify-between items-center pb-2 border-b border-emerald-800/30">
+                <span className="text-emerald-200/70">قيد الانتظار</span>
+                <span className="font-semibold text-yellow-400">{stats?.reservations?.pending || 0}</span>
               </div>
-              <div className="flex justify-between items-center pb-2 border-b">
-                <span className="text-gray-600">مؤكدة</span>
-                <span className="font-semibold text-blue-600">{stats?.reservations?.confirmed || 0}</span>
+              <div className="flex justify-between items-center pb-2 border-b border-emerald-800/30">
+                <span className="text-emerald-200/70">مؤكدة</span>
+                <span className="font-semibold text-blue-400">{stats?.reservations?.confirmed || 0}</span>
               </div>
-              <div className="flex justify-between items-center pb-2 border-b">
-                <span className="text-gray-600">نشطة</span>
-                <span className="font-semibold text-green-600">{stats?.reservations?.active || 0}</span>
+              <div className="flex justify-between items-center pb-2 border-b border-emerald-800/30">
+                <span className="text-emerald-200/70">نشطة</span>
+                <span className="font-semibold text-emerald-400">{stats?.reservations?.active || 0}</span>
               </div>
-              <div className="flex justify-between items-center pb-2 border-b">
-                <span className="text-gray-600">مكتملة</span>
-                <span className="font-semibold">{stats?.reservations?.completed || 0}</span>
+              <div className="flex justify-between items-center pb-2 border-b border-emerald-800/30">
+                <span className="text-emerald-200/70">مكتملة</span>
+                <span className="font-semibold text-emerald-300">{stats?.reservations?.completed || 0}</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-gray-600">ملغاة</span>
-                <span className="font-semibold text-red-600">{stats?.reservations?.cancelled || 0}</span>
+                <span className="text-emerald-200/70">ملغاة</span>
+                <span className="font-semibold text-red-400">{stats?.reservations?.cancelled || 0}</span>
               </div>
             </div>
           </div>
@@ -207,66 +207,66 @@ export function DashboardView() {
             <VisitorsSummaryCard />
           </div>
 
-          <div className="lg:col-span-2 bg-white rounded-xl shadow-sm p-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <Wallet className="h-5 w-5 text-emerald-600" />
+          <div className="lg:col-span-2 bg-gray-900/50 backdrop-blur-xl rounded-xl border border-emerald-800/30 shadow-lg p-6">
+            <h2 className="text-lg font-semibold text-emerald-100 mb-4 flex items-center gap-2">
+              <Wallet className="h-5 w-5 text-emerald-400" />
               المحافظ المالية
             </h2>
             <div className="space-y-3">
-              <div className="flex justify-between items-center pb-2 border-b">
-                <span className="text-gray-600">إجمالي المحافظ</span>
-                <span className="font-semibold">{stats?.wallets?.totalWallets || 0}</span>
+              <div className="flex justify-between items-center pb-2 border-b border-emerald-800/30">
+                <span className="text-emerald-200/70">إجمالي المحافظ</span>
+                <span className="font-semibold text-emerald-300">{stats?.wallets?.totalWallets || 0}</span>
               </div>
-              <div className="flex justify-between items-center pb-2 border-b">
-                <span className="text-gray-600">محافظ نشطة</span>
-                <span className="font-semibold text-green-600">{stats?.wallets?.activeWallets || 0}</span>
+              <div className="flex justify-between items-center pb-2 border-b border-emerald-800/30">
+                <span className="text-emerald-200/70">محافظ نشطة</span>
+                <span className="font-semibold text-emerald-400">{stats?.wallets?.activeWallets || 0}</span>
               </div>
-              <div className="flex justify-between items-center pb-2 border-b">
-                <span className="text-gray-600">إجمالي الرصيد</span>
-                <span className="font-semibold text-blue-600">
+              <div className="flex justify-between items-center pb-2 border-b border-emerald-800/30">
+                <span className="text-emerald-200/70">إجمالي الرصيد</span>
+                <span className="font-semibold text-teal-400">
                   {(stats?.wallets?.totalBalance || 0).toLocaleString('ar-SA')} ريال
                 </span>
               </div>
-              <div className="flex justify-between items-center pb-2 border-b">
-                <span className="text-gray-600">إجمالي الإيداعات</span>
-                <span className="font-semibold text-emerald-600">
+              <div className="flex justify-between items-center pb-2 border-b border-emerald-800/30">
+                <span className="text-emerald-200/70">إجمالي الإيداعات</span>
+                <span className="font-semibold text-emerald-400">
                   {(stats?.wallets?.totalDeposits || 0).toLocaleString('ar-SA')} ريال
                 </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-gray-600">إجمالي السحوبات</span>
-                <span className="font-semibold text-orange-600">
+                <span className="text-emerald-200/70">إجمالي السحوبات</span>
+                <span className="font-semibold text-orange-400">
                   {(stats?.wallets?.totalWithdrawals || 0).toLocaleString('ar-SA')} ريال
                 </span>
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-xl shadow-sm p-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <TrendingUp className="h-5 w-5 text-blue-600" />
+          <div className="bg-gray-900/50 backdrop-blur-xl rounded-xl border border-emerald-800/30 shadow-lg p-6">
+            <h2 className="text-lg font-semibold text-emerald-100 mb-4 flex items-center gap-2">
+              <TrendingUp className="h-5 w-5 text-teal-400" />
               ملخص الأداء
             </h2>
             <div className="space-y-3">
-              <div className="flex justify-between items-center pb-2 border-b">
-                <span className="text-gray-600">إجمالي الأشجار المحجوزة</span>
-                <span className="font-semibold text-green-600">{stats?.reservations?.totalTrees || 0}</span>
+              <div className="flex justify-between items-center pb-2 border-b border-emerald-800/30">
+                <span className="text-emerald-200/70">إجمالي الأشجار المحجوزة</span>
+                <span className="font-semibold text-emerald-400">{stats?.reservations?.totalTrees || 0}</span>
               </div>
-              <div className="flex justify-between items-center pb-2 border-b">
-                <span className="text-gray-600">أصحاب المزارع</span>
-                <span className="font-semibold">{stats?.users?.totalOwners || 0}</span>
+              <div className="flex justify-between items-center pb-2 border-b border-emerald-800/30">
+                <span className="text-emerald-200/70">أصحاب المزارع</span>
+                <span className="font-semibold text-emerald-300">{stats?.users?.totalOwners || 0}</span>
               </div>
-              <div className="flex justify-between items-center pb-2 border-b">
-                <span className="text-gray-600">معاملات مكتملة</span>
-                <span className="font-semibold text-green-600">{stats?.wallets?.completedTransactions || 0}</span>
+              <div className="flex justify-between items-center pb-2 border-b border-emerald-800/30">
+                <span className="text-emerald-200/70">معاملات مكتملة</span>
+                <span className="font-semibold text-emerald-400">{stats?.wallets?.completedTransactions || 0}</span>
               </div>
-              <div className="flex justify-between items-center pb-2 border-b">
-                <span className="text-gray-600">معاملات قيد الانتظار</span>
-                <span className="font-semibold text-yellow-600">{stats?.wallets?.pendingTransactions || 0}</span>
+              <div className="flex justify-between items-center pb-2 border-b border-emerald-800/30">
+                <span className="text-emerald-200/70">معاملات قيد الانتظار</span>
+                <span className="font-semibold text-yellow-400">{stats?.wallets?.pendingTransactions || 0}</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-gray-600">معدل الدفع</span>
-                <span className="font-semibold text-blue-600">
+                <span className="text-emerald-200/70">معدل الدفع</span>
+                <span className="font-semibold text-teal-400">
                   {stats?.reservations?.total > 0
                     ? Math.round((stats?.reservations?.paid / stats?.reservations?.total) * 100)
                     : 0}%

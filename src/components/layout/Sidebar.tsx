@@ -58,15 +58,15 @@ export function Sidebar({ activeModule, onModuleChange }: SidebarProps) {
   }
 
   return (
-    <div className="hidden lg:block h-screen w-64 bg-gradient-to-b from-amber-900 via-amber-800 to-orange-900 text-white fixed right-0 top-0 shadow-2xl overflow-y-auto" dir="rtl">
+    <div className="hidden lg:block h-screen w-64 bg-gradient-to-b from-emerald-950 via-teal-900 to-emerald-950 text-white fixed right-0 top-0 shadow-2xl overflow-y-auto border-l border-emerald-800/30 backdrop-blur-xl" dir="rtl">
       <div className="p-6">
         <div className="flex items-center gap-3 mb-8">
-          <div className="w-12 h-12 bg-gradient-to-br from-amber-400 to-orange-500 rounded-xl flex items-center justify-center shadow-lg">
+          <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-500/20">
             <MapPin className="h-7 w-7 text-white" />
           </div>
           <div>
-            <h1 className="text-xl font-bold">منصة النخيل والزيتون</h1>
-            <p className="text-xs text-gray-400">نظام الإدارة المتكامل</p>
+            <h1 className="text-xl font-bold bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">منصة النخيل والزيتون</h1>
+            <p className="text-xs text-emerald-300/70">نظام الإدارة المتكامل</p>
           </div>
         </div>
 
@@ -138,15 +138,15 @@ export function Sidebar({ activeModule, onModuleChange }: SidebarProps) {
                   className={`
                     w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200
                     ${isActive
-                      ? 'bg-gradient-to-r from-amber-400 to-orange-500 text-white shadow-lg transform scale-105'
-                      : 'text-amber-100 hover:bg-amber-700 hover:text-white'
+                      ? 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-lg shadow-emerald-500/30 transform scale-105'
+                      : 'text-emerald-100/80 hover:bg-emerald-900/50 hover:text-white backdrop-blur-sm'
                     }
                   `}
                 >
-                  <Icon className={`h-5 w-5 ${isActive ? item.color : ''}`} />
+                  <Icon className={`h-5 w-5 ${isActive ? 'text-white' : 'text-emerald-400'}`} />
                   <span className="font-medium">{item.label}</span>
                   {isActive && (
-                    <div className="mr-auto w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                    <div className="mr-auto w-2 h-2 bg-teal-300 rounded-full animate-pulse" />
                   )}
                 </button>
               );
@@ -168,15 +168,15 @@ export function Sidebar({ activeModule, onModuleChange }: SidebarProps) {
                 className={`
                   w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 relative
                   ${isActive
-                    ? 'bg-gradient-to-r from-amber-400 to-orange-500 text-white shadow-lg transform scale-105'
-                    : 'text-amber-100 hover:bg-amber-700 hover:text-white'
+                    ? 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-lg shadow-emerald-500/30 transform scale-105'
+                    : 'text-emerald-100/80 hover:bg-emerald-900/50 hover:text-white backdrop-blur-sm'
                   }
                 `}
               >
-                <Icon className={`h-5 w-5 ${isActive ? item.color : ''}`} />
+                <Icon className={`h-5 w-5 ${isActive ? 'text-white' : 'text-emerald-400'}`} />
                 <span className="font-medium">{item.label}</span>
                 {isActive && (
-                  <div className="mr-auto w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                  <div className="mr-auto w-2 h-2 bg-teal-300 rounded-full animate-pulse" />
                 )}
               </button>
             );
@@ -184,14 +184,14 @@ export function Sidebar({ activeModule, onModuleChange }: SidebarProps) {
         </nav>
       </div>
 
-      <div className="absolute bottom-0 right-0 left-0 p-6 bg-amber-950 border-t border-amber-700">
+      <div className="absolute bottom-0 right-0 left-0 p-6 bg-emerald-950/80 backdrop-blur-xl border-t border-emerald-800/30">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center">
+          <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center shadow-lg shadow-emerald-500/20">
             <span className="text-sm font-bold">م</span>
           </div>
           <div className="flex-1">
-            <p className="text-sm font-medium">مسؤول النظام</p>
-            <p className="text-xs text-amber-300">admin@platform.com</p>
+            <p className="text-sm font-medium text-emerald-100">مسؤول النظام</p>
+            <p className="text-xs text-emerald-300/70">admin@platform.com</p>
           </div>
         </div>
       </div>

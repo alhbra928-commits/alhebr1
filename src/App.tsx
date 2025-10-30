@@ -281,7 +281,7 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F9F8F6]" dir="rtl">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-950 via-teal-950 to-emerald-950" dir="rtl">
       {showAdminLogin && (
         <SmartAdminLoginPage
           onLoginSuccess={handleAdminLogin}
@@ -332,12 +332,12 @@ function App() {
         )}
 
         <Suspense fallback={
-          <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#F9F8F6] to-[#E8E6E1]">
+          <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-950 via-teal-950 to-emerald-950">
             <div className="text-center">
               <div className="flex justify-center mb-4">
-                <SimpleLoader size="lg" color="#C89B3C" />
+                <SimpleLoader size="lg" color="#10b981" />
               </div>
-              <p className="text-xl font-bold text-[#3D5B4B]">جاري التحميل...</p>
+              <p className="text-xl font-bold text-gray-100">جاري التحميل...</p>
             </div>
           </div>
         }>
