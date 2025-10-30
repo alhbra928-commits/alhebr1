@@ -120,43 +120,64 @@ export function RoyalGlassGateway({ onEnter }: GatewayProps) {
       {/* Main Content */}
       <div className="relative z-10 h-full flex flex-col items-center justify-center px-4 sm:px-6">
 
-        {/* Professional Crown with Diwani Text */}
+        {/* Crystal Glass Crown with Modern Text */}
         <div
           className="relative cursor-pointer group"
           onClick={onEnter}
         >
-          {/* Outer Glow */}
-          <div className="absolute inset-0 bg-gradient-to-r from-amber-300/50 via-yellow-200/50 to-amber-300/50 blur-3xl animate-pulse" />
+          {/* Outer Glow - Rainbow Glass Effect */}
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-200/30 via-purple-200/30 to-pink-200/30 blur-3xl animate-pulse" />
 
-          {/* Giant Crown Icon */}
+          {/* Crystal Glass Crown */}
           <div className="relative">
+            {/* Glass Effect Layer 1 - Blue/Purple Tint */}
             <Crown
-              className="w-80 h-80 sm:w-96 sm:h-96 md:w-[28rem] md:h-[28rem] lg:w-[32rem] lg:h-[32rem] transition-all duration-500 group-hover:scale-110 group-active:scale-95"
-              strokeWidth={1.5}
+              className="w-80 h-80 sm:w-96 sm:h-96 md:w-[28rem] md:h-[28rem] lg:w-[32rem] lg:h-[32rem] absolute inset-0 transition-all duration-500 group-hover:scale-110 group-active:scale-95"
+              strokeWidth={2}
               style={{
-                color: '#d97706',
-                filter: 'drop-shadow(0 20px 60px rgba(217, 119, 6, 0.5)) drop-shadow(0 10px 30px rgba(251, 191, 36, 0.3))',
+                color: 'rgba(147, 197, 253, 0.6)',
+                filter: 'blur(1px) drop-shadow(0 0 20px rgba(147, 197, 253, 0.5))',
               }}
             />
 
-            {/* Text "مزاد" in Diwani Style - Centered in Crown */}
+            {/* Glass Effect Layer 2 - White Crystal */}
+            <Crown
+              className="w-80 h-80 sm:w-96 sm:h-96 md:w-[28rem] md:h-[28rem] lg:w-[32rem] lg:h-[32rem] absolute inset-0 transition-all duration-500 group-hover:scale-110 group-active:scale-95"
+              strokeWidth={1.5}
+              style={{
+                color: 'rgba(255, 255, 255, 0.9)',
+                filter: 'drop-shadow(0 8px 32px rgba(255, 255, 255, 0.3)) drop-shadow(0 4px 16px rgba(217, 119, 6, 0.2))',
+              }}
+            />
+
+            {/* Glass Effect Layer 3 - Golden Accent */}
+            <Crown
+              className="w-80 h-80 sm:w-96 sm:h-96 md:w-[28rem] md:h-[28rem] lg:w-[32rem] lg:h-[32rem] relative transition-all duration-500 group-hover:scale-110 group-active:scale-95"
+              strokeWidth={1}
+              style={{
+                color: 'rgba(251, 191, 36, 0.4)',
+                filter: 'drop-shadow(0 20px 60px rgba(217, 119, 6, 0.3))',
+              }}
+            />
+
+            {/* Modern Text "مزاد" - Cairo/Tajawal Font */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
               <h1
-                className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold select-none"
+                className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black select-none"
                 style={{
                   marginTop: '10%',
-                  background: 'linear-gradient(135deg, #b45309 0%, #d97706 25%, #fbbf24 50%, #d97706 75%, #b45309 100%)',
+                  background: 'linear-gradient(135deg, #d97706 0%, #fbbf24 50%, #d97706 100%)',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
                   backgroundClip: 'text',
                   textShadow: `
-                    0 8px 32px rgba(217, 119, 6, 0.6),
-                    0 4px 16px rgba(217, 119, 6, 0.4),
-                    0 2px 8px rgba(0, 0, 0, 0.3)
+                    0 0 40px rgba(251, 191, 36, 0.8),
+                    0 0 20px rgba(217, 119, 6, 0.6),
+                    0 4px 16px rgba(0, 0, 0, 0.2)
                   `,
-                  fontFamily: "'Scheherazade New', 'Amiri', 'Lateef', 'Arabic Typesetting', serif",
-                  fontWeight: 700,
-                  letterSpacing: '0.1em',
+                  fontFamily: "'Cairo', 'Tajawal', 'Almarai', sans-serif",
+                  fontWeight: 900,
+                  letterSpacing: '0.05em',
                   WebkitFontSmoothing: 'antialiased',
                   MozOsxFontSmoothing: 'grayscale',
                 }}
@@ -165,21 +186,30 @@ export function RoyalGlassGateway({ onEnter }: GatewayProps) {
               </h1>
             </div>
 
-            {/* Decorative Sparkles */}
+            {/* Crystal Sparkles - Rainbow Colors */}
             <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
-              {[...Array(12)].map((_, i) => (
-                <div
-                  key={i}
-                  className="absolute w-2 h-2 bg-amber-400 rounded-full"
-                  style={{
-                    top: `${10 + Math.random() * 80}%`,
-                    left: `${10 + Math.random() * 80}%`,
-                    animation: `sparkle ${2 + Math.random() * 2}s ease-in-out infinite`,
-                    animationDelay: `${Math.random() * 2}s`,
-                  }}
-                />
-              ))}
+              {[...Array(16)].map((_, i) => {
+                const colors = ['#93c5fd', '#c4b5fd', '#f9a8d4', '#fbbf24', '#86efac'];
+                const color = colors[i % colors.length];
+                return (
+                  <div
+                    key={i}
+                    className="absolute w-2 h-2 rounded-full"
+                    style={{
+                      background: color,
+                      boxShadow: `0 0 10px ${color}`,
+                      top: `${10 + Math.random() * 80}%`,
+                      left: `${10 + Math.random() * 80}%`,
+                      animation: `sparkle ${1.5 + Math.random() * 2}s ease-in-out infinite`,
+                      animationDelay: `${Math.random() * 2}s`,
+                    }}
+                  />
+                );
+              })}
             </div>
+
+            {/* Glass Shine Effect */}
+            <div className="absolute top-1/4 left-1/4 w-1/3 h-1/3 bg-gradient-to-br from-white/40 to-transparent rounded-full blur-2xl pointer-events-none" />
           </div>
 
           {/* Progress Bar - Below Crown */}
