@@ -205,6 +205,62 @@ export function ModernRoyalPlatform({
           </div>
         </header>
 
+        {/* Innovative Ticker Bar - Below Title */}
+        <div className="relative overflow-hidden border-t border-b bg-gradient-to-r from-emerald-50/80 via-green-50/80 to-teal-50/80 backdrop-blur-sm">
+          <div className="ticker-container-main py-3">
+            <div className="ticker-content-main">
+              {/* Message 1 */}
+              <div className="ticker-item-main">
+                <Star className="w-5 h-5 text-emerald-600" fill="currentColor" />
+                <span className="text-sm sm:text-base font-bold text-emerald-800">استثمر في مستقبل أخضر مستدام</span>
+              </div>
+
+              {/* Message 2 */}
+              <div className="ticker-item-main">
+                <Sparkles className="w-5 h-5 text-green-600" />
+                <span className="text-sm sm:text-base font-bold text-green-800">عوائد سنوية مضمونة من أشجارك</span>
+              </div>
+
+              {/* Message 3 */}
+              <div className="ticker-item-main">
+                <Crown className="w-5 h-5 text-teal-600" />
+                <span className="text-sm sm:text-base font-bold text-teal-800">ملكية موثقة ومضمونة قانونياً</span>
+              </div>
+
+              {/* Message 4 */}
+              <div className="ticker-item-main">
+                <Star className="w-5 h-5 text-emerald-600" fill="currentColor" />
+                <span className="text-sm sm:text-base font-bold text-emerald-800">تملك أشجار النخيل والزيتون الآن</span>
+              </div>
+
+              {/* Duplicate for seamless loop */}
+              <div className="ticker-item-main">
+                <Star className="w-5 h-5 text-emerald-600" fill="currentColor" />
+                <span className="text-sm sm:text-base font-bold text-emerald-800">استثمر في مستقبل أخضر مستدام</span>
+              </div>
+
+              <div className="ticker-item-main">
+                <Sparkles className="w-5 h-5 text-green-600" />
+                <span className="text-sm sm:text-base font-bold text-green-800">عوائد سنوية مضمونة من أشجارك</span>
+              </div>
+
+              <div className="ticker-item-main">
+                <Crown className="w-5 h-5 text-teal-600" />
+                <span className="text-sm sm:text-base font-bold text-teal-800">ملكية موثقة ومضمونة قانونياً</span>
+              </div>
+
+              <div className="ticker-item-main">
+                <Star className="w-5 h-5 text-emerald-600" fill="currentColor" />
+                <span className="text-sm sm:text-base font-bold text-emerald-800">تملك أشجار النخيل والزيتون الآن</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Gradient Edges */}
+          <div className="absolute inset-y-0 left-0 w-16 sm:w-24 bg-gradient-to-r from-white/90 to-transparent pointer-events-none" />
+          <div className="absolute inset-y-0 right-0 w-16 sm:w-24 bg-gradient-to-l from-white/90 to-transparent pointer-events-none" />
+        </div>
+
         {/* Concept Button */}
         <GreenConceptButton onClick={() => setCurrentView('concept')} />
 
@@ -264,6 +320,49 @@ export function ModernRoyalPlatform({
           onBackToAdmin={onBackToAdmin}
         />
       </div>
+
+      <style>{`
+        /* Main Ticker Animation */
+        .ticker-container-main {
+          width: 100%;
+          overflow: hidden;
+        }
+
+        .ticker-content-main {
+          display: flex;
+          animation: ticker-main 35s linear infinite;
+          will-change: transform;
+        }
+
+        .ticker-item-main {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+          padding: 0 4rem;
+          white-space: nowrap;
+          flex-shrink: 0;
+        }
+
+        @keyframes ticker-main {
+          0% {
+            transform: translateX(0);
+          }
+          100% {
+            transform: translateX(-50%);
+          }
+        }
+
+        .ticker-content-main:hover {
+          animation-play-state: paused;
+        }
+
+        @media (max-width: 640px) {
+          .ticker-item-main {
+            padding: 0 2.5rem;
+            gap: 0.5rem;
+          }
+        }
+      `}</style>
     </div>
   );
 }
