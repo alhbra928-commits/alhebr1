@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Crown } from 'lucide-react';
 import { supabase } from '../../../lib/supabase';
 
 interface GatewayProps {
@@ -116,124 +117,84 @@ export function RoyalGlassGateway({ onEnter }: GatewayProps) {
         ))}
       </div>
 
-      {/* Main Content - Simple & Elegant */}
-      <div className="relative z-10 h-full flex flex-col items-center justify-center px-4">
+      {/* Main Content */}
+      <div className="relative z-10 h-full flex flex-col items-center justify-center px-4 sm:px-6">
 
-        {/* Ultra Modern 3D Circle - Same Style as Concept Button */}
-        <div className="relative mb-6 sm:mb-8 cursor-pointer group" onClick={onEnter}>
-          {/* Outer Glow Ring - Enhanced */}
-          <div
-            className="absolute inset-0 rounded-full animate-pulse"
+        {/* Crown Icon */}
+        <div className="mb-6 sm:mb-8 animate-bounce-slow">
+          <Crown
+            className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24"
+            strokeWidth={2}
             style={{
-              width: '300px',
-              height: '300px',
-              background: 'radial-gradient(circle, rgba(212, 175, 55, 0.4), transparent)',
-              filter: 'blur(40px)',
-              left: '50%',
-              top: '50%',
-              transform: 'translate(-50%, -50%)',
+              color: '#d97706',
+              filter: 'drop-shadow(0 4px 12px rgba(217, 119, 6, 0.4))',
             }}
           />
+        </div>
 
-          {/* 3D Circle - Exact Copy of Concept Button Style */}
-          <div
-            className="relative transition-all duration-500 hover:scale-110 active:scale-95"
-            style={{
-              width: '280px',
-              height: '280px',
-              borderRadius: '50%',
-              background: 'linear-gradient(135deg, #D4AF37 0%, #F8E45F 25%, #B8960A 50%, #8B7500 75%, #6B5D00 100%)',
-              border: '4px solid rgba(212, 175, 55, 0.6)',
-              boxShadow: `
-                0 12px 48px rgba(212, 175, 55, 0.5),
-                0 8px 32px rgba(212, 175, 55, 0.4),
-                0 4px 16px rgba(212, 175, 55, 0.3),
-                inset 0 2px 4px rgba(255, 255, 255, 0.3),
-                inset 0 -2px 4px rgba(0, 0, 0, 0.2)
-              `,
-            }}
-          >
-            {/* Shimmer Effect - Same as Concept Button */}
-            <div
-              className="absolute inset-0 rounded-full pointer-events-none"
-              style={{
-                background: 'linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%)',
-                backgroundSize: '200% 100%',
-                animation: 'shimmer 3s linear infinite',
-              }}
-            />
+        {/* Glass Card */}
+        <div
+          className="relative max-w-2xl w-full cursor-pointer group"
+          onClick={onEnter}
+        >
+          {/* Glow Effect */}
+          <div className="absolute inset-0 bg-gradient-to-r from-amber-300/30 via-yellow-200/30 to-amber-300/30 blur-3xl" />
 
-            {/* Inner Glow */}
-            <div
-              className="absolute inset-0 rounded-full"
-              style={{
-                background: 'radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.3), transparent 60%)',
-              }}
-            />
+          {/* Main Glass Card */}
+          <div className="relative backdrop-blur-2xl bg-white/40 border border-white/60 rounded-2xl sm:rounded-3xl shadow-2xl p-8 sm:p-12 md:p-16 transition-all duration-500 hover:scale-105 active:scale-95">
+            {/* Golden Border Animation */}
+            <div className="absolute inset-0 rounded-2xl sm:rounded-3xl border-2 border-amber-400/30 animate-pulse" />
 
-            {/* MZAD Arabic Text - Ultra Modern & Bigger */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <span
-                className="font-black select-none"
+            {/* MZAD Text - Ultra Large & Professional */}
+            <div className="text-center">
+              <h1
+                className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-black leading-tight select-none"
                 style={{
-                  fontSize: '92px',
+                  background: 'linear-gradient(135deg, #b45309 0%, #d97706 25%, #fbbf24 50%, #d97706 75%, #b45309 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                  textShadow: '0 4px 30px rgba(217, 119, 6, 0.4)',
+                  letterSpacing: '0.05em',
                   fontFamily: "'Tajawal', 'Cairo', sans-serif",
-                  color: '#ffffff',
-                  textShadow: `
-                    0 4px 8px rgba(0, 0, 0, 0.4),
-                    0 2px 4px rgba(0, 0, 0, 0.3),
-                    0 0 20px rgba(212, 175, 55, 0.6),
-                    0 0 40px rgba(212, 175, 55, 0.3)
-                  `,
-                  letterSpacing: '0.08em',
-                  fontWeight: 900,
-                  lineHeight: 1,
                 }}
               >
                 مزاد
-              </span>
+              </h1>
             </div>
+
+            {/* Progress Bar */}
+            {settings.auto_enter_enabled && (
+              <div className="mt-8 sm:mt-10">
+                <div className="relative h-2 sm:h-3 bg-amber-200/50 rounded-full overflow-hidden backdrop-blur-sm border border-amber-300/30">
+                  <div
+                    className="absolute inset-y-0 left-0 bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 rounded-full transition-all duration-300 ease-out"
+                    style={{ width: `${progress}%` }}
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent animate-shimmer" />
+                  </div>
+                </div>
+                <div className="flex justify-center items-center mt-4">
+                  <span
+                    className="text-sm sm:text-base font-bold"
+                    style={{
+                      color: '#92400e',
+                      letterSpacing: '-0.01em',
+                    }}
+                  >
+                    {Math.round(progress)}%
+                  </span>
+                </div>
+              </div>
+            )}
+
+            {/* Decorative Corners */}
+            <div className="absolute top-3 right-3 sm:top-4 sm:right-4 w-8 h-8 sm:w-10 sm:h-10 border-t-2 border-r-2 border-amber-400/50 rounded-tr-xl" />
+            <div className="absolute bottom-3 left-3 sm:bottom-4 sm:left-4 w-8 h-8 sm:w-10 sm:h-10 border-b-2 border-l-2 border-amber-400/50 rounded-bl-xl" />
+            <div className="absolute top-3 left-3 sm:top-4 sm:left-4 w-8 h-8 sm:w-10 sm:h-10 border-t-2 border-l-2 border-amber-400/50 rounded-tl-xl" />
+            <div className="absolute bottom-3 right-3 sm:bottom-4 sm:right-4 w-8 h-8 sm:w-10 sm:h-10 border-b-2 border-r-2 border-amber-400/50 rounded-br-xl" />
           </div>
         </div>
-
-        {/* MZAD English - 3D Small Text */}
-        <div
-          className="relative mb-8 sm:mb-12"
-          style={{
-            perspective: '500px',
-            transformStyle: 'preserve-3d',
-          }}
-        >
-          <h2
-            className="font-black tracking-[0.3em] select-none"
-            style={{
-              fontSize: '18px',
-              fontFamily: "'Poppins', sans-serif",
-              background: 'linear-gradient(180deg, #d97706 0%, #b45309 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-              textShadow: '0 4px 8px rgba(217, 119, 6, 0.3)',
-              transform: 'translateZ(10px) rotateX(5deg)',
-              letterSpacing: '0.3em',
-              fontWeight: 900,
-            }}
-          >
-            MZAD
-          </h2>
-        </div>
-
-        {/* Progress Bar - Minimal */}
-        {settings.auto_enter_enabled && (
-          <div className="w-48 sm:w-64">
-            <div className="relative h-1 bg-amber-200/40 rounded-full overflow-hidden">
-              <div
-                className="absolute inset-y-0 left-0 bg-gradient-to-r from-amber-500 to-yellow-400 rounded-full transition-all duration-300"
-                style={{ width: `${progress}%` }}
-              />
-            </div>
-          </div>
-        )}
       </div>
 
       {/* CSS Animations */}
@@ -249,6 +210,19 @@ export function RoyalGlassGateway({ onEnter }: GatewayProps) {
           }
         }
 
+        @keyframes bounce-slow {
+          0%, 100% {
+            transform: translateY(0);
+          }
+          50% {
+            transform: translateY(-10px);
+          }
+        }
+
+        .animate-bounce-slow {
+          animation: bounce-slow 3s ease-in-out infinite;
+        }
+
         @keyframes shimmer {
           0% {
             background-position: -200% 0;
@@ -256,6 +230,11 @@ export function RoyalGlassGateway({ onEnter }: GatewayProps) {
           100% {
             background-position: 200% 0;
           }
+        }
+
+        .animate-shimmer {
+          background-size: 200% 100%;
+          animation: shimmer 2s infinite;
         }
       `}</style>
     </div>
