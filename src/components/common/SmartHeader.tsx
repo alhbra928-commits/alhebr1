@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Bell, MessageCircle, Home, MapPin, Filter, TrendingUp, Search, ChevronDown, Shield, ArrowRight, Star, Zap, Sparkles, Crown, Activity, TrendingUp as TrendingUpIcon } from 'lucide-react';
+import { Bell, MessageCircle, Home, MapPin, Filter, TrendingUp, Search, ChevronDown, Shield, ArrowRight } from 'lucide-react';
 import { brandColors, brandGradients } from '../../modules/finance/styles/brandColors';
-import { supabase } from '../../lib/supabase';
 import { Advanced3DTicker } from './Advanced3DTicker';
 
 interface SmartHeaderProps {
@@ -31,7 +30,6 @@ export function SmartHeader({
   const [selectedFarmType, setSelectedFarmType] = useState('all');
   const [sortBy, setSortBy] = useState('latest');
   const [showFilters, setShowFilters] = useState(false);
-  const [tickerMessages, setTickerMessages] = useState<any[]>([]);
 
   // Check for admin session
   useEffect(() => {
@@ -71,46 +69,6 @@ export function SmartHeader({
     };
   }, [onBackToAdmin]);
 
-  // Load ticker messages from database
-  useEffect(() => {
-    const loadTickerMessages = async () => {
-      try {
-        const { data, error } = await supabase
-          .from('ticker_items')
-          .select('*')
-          .eq('ticker_type', 'main')
-          .eq('is_active', true)
-          .order('sort_order');
-
-        if (!error && data) {
-          console.log('✅ Ticker messages loaded:', data);
-          setTickerMessages(data);
-        } else {
-          console.error('Error loading ticker messages:', error);
-        }
-      } catch (err) {
-        console.error('Error loading ticker messages:', err);
-      }
-    };
-
-    loadTickerMessages();
-
-    // Realtime subscription for ticker updates
-    const channel = supabase
-      .channel('ticker_items_changes')
-      .on('postgres_changes',
-        { event: '*', schema: 'public', table: 'ticker_items' },
-        () => {
-          console.log('🔄 Ticker items changed, reloading...');
-          loadTickerMessages();
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, []);
 
   // Handle scroll behavior
   useEffect(() => {
@@ -130,45 +88,6 @@ export function SmartHeader({
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, [lastScrollY]);
-
-  // Get icon component from icon name
-  const getIconComponent = (iconName: string) => {
-    const icons: Record<string, any> = {
-      Star,
-      Zap,
-      Sparkles,
-      Crown,
-      Activity,
-      TrendingUp: TrendingUpIcon,
-    };
-    return icons[iconName] || Star;
-  };
-
-  // Get Tailwind color class from color name
-  const getColorClass = (colorName: string) => {
-    // Map color names to Tailwind classes
-    const colorMap: Record<string, string> = {
-      'emerald-600': 'text-emerald-600',
-      'emerald-800': 'text-emerald-800',
-      'green-600': 'text-green-600',
-      'green-800': 'text-green-800',
-      'teal-600': 'text-teal-600',
-      'teal-800': 'text-teal-800',
-      'blue-600': 'text-blue-600',
-      'blue-800': 'text-blue-800',
-      'purple-600': 'text-purple-600',
-      'purple-800': 'text-purple-800',
-      'amber-600': 'text-amber-600',
-      'amber-800': 'text-amber-800',
-      'red-600': 'text-red-600',
-      'red-800': 'text-red-800',
-      'orange-600': 'text-orange-600',
-      'orange-800': 'text-orange-800',
-      'yellow-600': 'text-yellow-600',
-      'yellow-800': 'text-yellow-800',
-    };
-    return colorMap[colorName] || 'text-emerald-600';
-  };
 
   // Get view title dynamically
   const getViewTitle = () => {
