@@ -128,18 +128,32 @@ export function RoyalGlassGateway({ onEnter }: GatewayProps) {
           {/* Outer Glow - Pure White/Crystal */}
           <div className="absolute inset-0 bg-gradient-to-r from-white/20 via-blue-50/20 to-white/20 blur-3xl animate-pulse" />
 
-          {/* Pure Crystal Glass Crown */}
+          {/* Pure Crystal Glass Crown with Golden Border */}
           <div className="relative">
-            {/* Single Pure Crystal Crown */}
+            {/* Crystal Crown - White Fill */}
             <Crown
-              className="w-80 h-80 sm:w-96 sm:h-96 md:w-[28rem] md:h-[28rem] lg:w-[32rem] lg:h-[32rem] transition-all duration-500 group-hover:scale-110 group-active:scale-95"
-              strokeWidth={2}
+              className="w-80 h-80 sm:w-96 sm:h-96 md:w-[28rem] md:h-[28rem] lg:w-[32rem] lg:h-[32rem] absolute inset-0 transition-all duration-500 group-hover:scale-110 group-active:scale-95"
+              strokeWidth={0}
               style={{
-                color: 'rgba(255, 255, 255, 0.85)',
+                color: 'rgba(255, 255, 255, 0.7)',
                 filter: `
-                  drop-shadow(0 0 30px rgba(255, 255, 255, 0.5))
-                  drop-shadow(0 8px 40px rgba(147, 197, 253, 0.3))
-                  drop-shadow(0 12px 50px rgba(255, 255, 255, 0.2))
+                  drop-shadow(0 0 20px rgba(255, 255, 255, 0.4))
+                  drop-shadow(0 4px 30px rgba(147, 197, 253, 0.2))
+                `,
+              }}
+            />
+
+            {/* Golden Shiny Border */}
+            <Crown
+              className="w-80 h-80 sm:w-96 sm:h-96 md:w-[28rem] md:h-[28rem] lg:w-[32rem] lg:h-[32rem] relative transition-all duration-500 group-hover:scale-110 group-active:scale-95"
+              strokeWidth={3}
+              fill="none"
+              style={{
+                stroke: 'url(#goldenGradient)',
+                filter: `
+                  drop-shadow(0 0 30px rgba(251, 191, 36, 0.8))
+                  drop-shadow(0 4px 40px rgba(217, 119, 6, 0.6))
+                  drop-shadow(0 8px 50px rgba(251, 191, 36, 0.4))
                 `,
               }}
             />
@@ -151,17 +165,30 @@ export function RoyalGlassGateway({ onEnter }: GatewayProps) {
                 className="w-48 sm:w-56 md:w-64 lg:w-72"
                 style={{
                   marginTop: '8%',
-                  filter: 'drop-shadow(0 4px 20px rgba(255, 255, 255, 0.4))',
+                  filter: 'drop-shadow(0 0 30px rgba(251, 191, 36, 0.8)) drop-shadow(0 4px 20px rgba(217, 119, 6, 0.6))',
                 }}
               >
                 <defs>
-                  <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" style={{ stopColor: '#ffffff', stopOpacity: 0.95 }} />
-                    <stop offset="50%" style={{ stopColor: '#e0f2fe', stopOpacity: 0.9 }} />
-                    <stop offset="100%" style={{ stopColor: '#ffffff', stopOpacity: 0.95 }} />
+                  {/* Golden Gradient for Crown Border */}
+                  <linearGradient id="goldenGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style={{ stopColor: '#fbbf24', stopOpacity: 1 }} />
+                    <stop offset="25%" style={{ stopColor: '#f59e0b', stopOpacity: 1 }} />
+                    <stop offset="50%" style={{ stopColor: '#fef3c7', stopOpacity: 1 }} />
+                    <stop offset="75%" style={{ stopColor: '#f59e0b', stopOpacity: 1 }} />
+                    <stop offset="100%" style={{ stopColor: '#fbbf24', stopOpacity: 1 }} />
                   </linearGradient>
+
+                  {/* Golden Gradient for Logo */}
+                  <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style={{ stopColor: '#d97706', stopOpacity: 1 }} />
+                    <stop offset="25%" style={{ stopColor: '#fbbf24', stopOpacity: 1 }} />
+                    <stop offset="50%" style={{ stopColor: '#fef3c7', stopOpacity: 1 }} />
+                    <stop offset="75%" style={{ stopColor: '#fbbf24', stopOpacity: 1 }} />
+                    <stop offset="100%" style={{ stopColor: '#d97706', stopOpacity: 1 }} />
+                  </linearGradient>
+
                   <filter id="logoGlow">
-                    <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                    <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
                     <feMerge>
                       <feMergeNode in="coloredBlur"/>
                       <feMergeNode in="SourceGraphic"/>
@@ -175,28 +202,28 @@ export function RoyalGlassGateway({ onEnter }: GatewayProps) {
                   <path
                     d="M 25 45 Q 25 30 35 25 T 50 30 Q 50 40 45 45 Q 40 50 35 45 Q 30 40 35 35"
                     stroke="url(#logoGradient)"
-                    strokeWidth="3"
+                    strokeWidth="4"
                     fill="none"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                   />
-                  <circle cx="40" cy="38" r="2" fill="url(#logoGradient)" opacity="0.8" />
+                  <circle cx="40" cy="38" r="2.5" fill="url(#logoGradient)" />
 
                   {/* ز - Second Letter */}
                   <path
                     d="M 65 40 Q 70 35 75 35 Q 80 35 80 40 L 80 45"
                     stroke="url(#logoGradient)"
-                    strokeWidth="3"
+                    strokeWidth="4"
                     fill="none"
                     strokeLinecap="round"
                   />
-                  <circle cx="78" cy="50" r="1.5" fill="url(#logoGradient)" />
+                  <circle cx="78" cy="50" r="2" fill="url(#logoGradient)" />
 
                   {/* ا - Third Letter */}
                   <path
                     d="M 95 50 L 95 25"
                     stroke="url(#logoGradient)"
-                    strokeWidth="3"
+                    strokeWidth="4"
                     fill="none"
                     strokeLinecap="round"
                   />
@@ -205,7 +232,7 @@ export function RoyalGlassGateway({ onEnter }: GatewayProps) {
                   <path
                     d="M 110 45 Q 115 40 120 40 Q 130 40 135 45 Q 140 50 135 53 L 110 53"
                     stroke="url(#logoGradient)"
-                    strokeWidth="3"
+                    strokeWidth="4"
                     fill="none"
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -215,9 +242,9 @@ export function RoyalGlassGateway({ onEnter }: GatewayProps) {
                   <path
                     d="M 20 55 Q 80 58 160 55"
                     stroke="url(#logoGradient)"
-                    strokeWidth="1"
+                    strokeWidth="1.5"
                     fill="none"
-                    opacity="0.4"
+                    opacity="0.6"
                     strokeLinecap="round"
                   />
                 </g>
