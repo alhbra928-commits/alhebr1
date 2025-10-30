@@ -5,6 +5,7 @@ import { BackButton } from '../../../components/common/BackButton';
 import { BackupCenter } from '../../backups/components/BackupCenter';
 import { AdvancedTickerManager } from './AdvancedTickerManager';
 import { AdvancedTickerControl } from './AdvancedTickerControl';
+import { UltraAdvancedTickerManager } from './UltraAdvancedTickerManager';
 import { VersionHistoryPanel } from './VersionHistoryPanel';
 import { AdvancedCacheSystemDiagnostics } from './AdvancedCacheSystemDiagnostics';
 import { PlatformTextsManager } from './PlatformTextsManager';
@@ -125,7 +126,7 @@ export function SettingsView({ onBack }: SettingsViewProps) {
         {activeTab === 'backup' ? (
           <BackupCenter />
         ) : activeTab === 'ticker' ? (
-          <AdvancedTickerControl />
+          <UltraAdvancedTickerManager />
         ) : activeTab === 'versions' ? (
           <VersionHistoryPanel />
         ) : activeTab === 'diagnostics' ? (
