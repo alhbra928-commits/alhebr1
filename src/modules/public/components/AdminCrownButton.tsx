@@ -21,22 +21,32 @@ export function AdminCrownButton({ onAdminLogin, onFarmOwnerLogin, onBackToAdmin
         localStorage.getItem('admin_data') !== null ||
         localStorage.getItem('adminUser') !== null;
 
-      setIsLoggedIn(hasAdminSession);
-
-      // Debug log
-      console.log('🔍 Login Status Check:', {
-        hasToken: !!localStorage.getItem('admin_session_token'),
-        hasData: !!localStorage.getItem('admin_data'),
-        hasAdminUser: !!localStorage.getItem('adminUser'),
-        isLoggedIn: hasAdminSession
-      });
+      // Update state only if changed to avoid unnecessary re-renders
+      if (hasAdminSession !== isLoggedIn) {
+        setIsLoggedIn(hasAdminSession);
+        console.log('🔄 Login Status Changed:', hasAdminSession ? 'Logged In' : 'Logged Out');
+      }
     };
 
     checkLoginStatus();
-    // Check every second for login status changes
-    const interval = setInterval(checkLoginStatus, 1000);
-    return () => clearInterval(interval);
-  }, []);
+    // Check every 500ms for faster response
+    const interval = setInterval(checkLoginStatus, 500);
+
+    // Listen for storage changes from other tabs
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key?.includes('admin')) {
+        console.log('📢 Storage changed:', e.key);
+        checkLoginStatus();
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, [isLoggedIn]);
 
   const handleAdminClick = () => {
     console.log('🎯 Admin clicked');
@@ -61,8 +71,13 @@ export function AdminCrownButton({ onAdminLogin, onFarmOwnerLogin, onBackToAdmin
   const handleBackToAdmin = () => {
     console.log('🎯 Back to Admin clicked');
     setShowMenu(false);
+
     if (onBackToAdmin) {
+      console.log('✅ Calling onBackToAdmin function');
       onBackToAdmin();
+    } else {
+      console.error('❌ onBackToAdmin function not provided!');
+      alert('⚠️ وظيفة الرجوع غير متوفرة. يرجى التحديث والمحاولة مجدداً.');
     }
   };
 

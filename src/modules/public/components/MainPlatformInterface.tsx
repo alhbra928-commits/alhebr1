@@ -291,7 +291,11 @@ export function MainPlatformInterface({
 
       <FixedBottomBar onIntroClick={() => setShowConceptModal(true)} />
 
-      <AdminCrownButton onAdminLogin={onAdminLogin} onFarmOwnerLogin={onFarmOwnerLogin} />
+      <AdminCrownButton
+        onAdminLogin={onAdminLogin}
+        onFarmOwnerLogin={onFarmOwnerLogin}
+        onBackToAdmin={onBackToAdmin}
+      />
 
       {showConceptModal && (
         <ConceptIntroModal onClose={() => setShowConceptModal(false)} />
