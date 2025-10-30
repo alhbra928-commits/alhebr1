@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import {
-  Crown, Sparkles, Shield, Award, Star, TreePine, ArrowRight
+  Crown, Sparkles, Shield, Award, Star, TreePine, ArrowRight, Leaf
 } from 'lucide-react';
 import { PublicFarm } from '../types/farm.types';
 import { PublicFarmService } from '../services/publicFarmService';
