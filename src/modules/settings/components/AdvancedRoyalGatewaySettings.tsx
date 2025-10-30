@@ -312,15 +312,8 @@ export function AdvancedRoyalGatewaySettings() {
   ];
 
   return (
-    <div
-      className="h-screen overflow-y-auto scroll-smooth"
-      style={{
-        WebkitOverflowScrolling: 'touch',
-        overscrollBehavior: 'contain',
-      }}
-    >
-      <div className="space-y-6 p-6 pb-32">
-        {/* Header */}
+    <div className="space-y-6 pb-32">
+      {/* Header */}
         <div className="bg-gradient-to-r from-emerald-600 via-green-500 to-teal-500 rounded-3xl p-8 shadow-2xl">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-4">
@@ -1312,7 +1305,7 @@ export function AdvancedRoyalGatewaySettings() {
         <button
           onClick={saveSettings}
           disabled={saving}
-          className="group relative px-12 py-4 bg-gradient-to-r from-emerald-500 via-green-500 to-teal-500 text-white rounded-2xl font-bold text-lg shadow-2xl hover:shadow-emerald-300 hover:scale-105 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+          className="group relative px-12 py-4 mb-96 bg-gradient-to-r from-emerald-500 via-green-500 to-teal-500 text-white rounded-2xl font-bold text-lg shadow-2xl hover:shadow-emerald-300 hover:scale-105 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
         >
           <div className="flex items-center gap-3 relative z-10">
             {saving ? (
@@ -1329,9 +1322,13 @@ export function AdvancedRoyalGatewaySettings() {
           </div>
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-700 rounded-2xl" />
         </button>
-
-        {/* مسافة فارغة كبيرة في الأسفل لضمان ظهور زر الحفظ */}
-        <div className="h-48"></div>
+      </div>
+      </div>
+      </div>
+      </div>
+      </div>
+      </div>
+      </div>
       </div>
       </div>
     </div>
