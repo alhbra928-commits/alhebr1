@@ -120,111 +120,60 @@ export function RoyalGlassGateway({ onEnter }: GatewayProps) {
       {/* Main Content */}
       <div className="relative z-10 h-full flex flex-col items-center justify-center px-4 sm:px-6">
 
-        {/* Giant Glass Crown with Kufi Text Inside */}
+        {/* Professional Crown with Diwani Text */}
         <div
           className="relative cursor-pointer group"
           onClick={onEnter}
         >
           {/* Outer Glow */}
-          <div className="absolute inset-0 bg-gradient-to-r from-amber-300/40 via-yellow-200/40 to-amber-300/40 blur-3xl animate-pulse" />
+          <div className="absolute inset-0 bg-gradient-to-r from-amber-300/50 via-yellow-200/50 to-amber-300/50 blur-3xl animate-pulse" />
 
-          {/* Giant Crown SVG - Glass Effect */}
+          {/* Giant Crown Icon */}
           <div className="relative">
-            <svg
-              viewBox="0 0 400 320"
-              className="w-72 h-60 sm:w-96 sm:h-80 md:w-[28rem] md:h-96 lg:w-[32rem] lg:h-[26rem] transition-all duration-500 group-hover:scale-110 group-active:scale-95"
+            <Crown
+              className="w-80 h-80 sm:w-96 sm:h-96 md:w-[28rem] md:h-[28rem] lg:w-[32rem] lg:h-[32rem] transition-all duration-500 group-hover:scale-110 group-active:scale-95"
+              strokeWidth={1.5}
               style={{
-                filter: 'drop-shadow(0 20px 60px rgba(217, 119, 6, 0.4))',
+                color: '#d97706',
+                filter: 'drop-shadow(0 20px 60px rgba(217, 119, 6, 0.5)) drop-shadow(0 10px 30px rgba(251, 191, 36, 0.3))',
               }}
-            >
-              {/* Crown Shape - Glass Style */}
-              <defs>
-                <linearGradient id="glassGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" style={{ stopColor: 'rgba(255, 255, 255, 0.6)', stopOpacity: 1 }} />
-                  <stop offset="50%" style={{ stopColor: 'rgba(255, 255, 255, 0.3)', stopOpacity: 1 }} />
-                  <stop offset="100%" style={{ stopColor: 'rgba(255, 255, 255, 0.5)', stopOpacity: 1 }} />
-                </linearGradient>
-                <linearGradient id="borderGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" style={{ stopColor: '#fbbf24', stopOpacity: 1 }} />
-                  <stop offset="50%" style={{ stopColor: '#d97706', stopOpacity: 1 }} />
-                  <stop offset="100%" style={{ stopColor: '#b45309', stopOpacity: 1 }} />
-                </linearGradient>
-                <filter id="glassBlur">
-                  <feGaussianBlur in="SourceGraphic" stdDeviation="1" />
-                </filter>
-              </defs>
+            />
 
-              {/* Crown Base */}
-              <path
-                d="M 50 280 L 80 180 L 120 220 L 200 140 L 280 220 L 320 180 L 350 280 Z"
-                fill="url(#glassGradient)"
-                stroke="url(#borderGradient)"
-                strokeWidth="4"
+            {/* Text "مزاد" in Diwani Style - Centered in Crown */}
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <h1
+                className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold select-none"
                 style={{
-                  backdropFilter: 'blur(20px)',
-                }}
-              />
-
-              {/* Crown Points */}
-              <circle cx="80" cy="180" r="20" fill="url(#glassGradient)" stroke="url(#borderGradient)" strokeWidth="3" />
-              <circle cx="120" cy="220" r="18" fill="url(#glassGradient)" stroke="url(#borderGradient)" strokeWidth="3" />
-              <circle cx="200" cy="140" r="25" fill="url(#glassGradient)" stroke="url(#borderGradient)" strokeWidth="4" />
-              <circle cx="280" cy="220" r="18" fill="url(#glassGradient)" stroke="url(#borderGradient)" strokeWidth="3" />
-              <circle cx="320" cy="180" r="20" fill="url(#glassGradient)" stroke="url(#borderGradient)" strokeWidth="3" />
-
-              {/* Crown Top Jewel */}
-              <circle cx="200" cy="110" r="15" fill="#fbbf24" stroke="#d97706" strokeWidth="3">
-                <animate attributeName="opacity" values="1;0.7;1" dur="2s" repeatCount="indefinite" />
-              </circle>
-
-              {/* Inner Shine Effect */}
-              <ellipse cx="200" cy="200" rx="120" ry="60" fill="rgba(255, 255, 255, 0.2)" opacity="0.6" />
-
-              {/* Text: مزاد in Kufi Style */}
-              <text
-                x="200"
-                y="235"
-                textAnchor="middle"
-                style={{
-                  fontSize: '72px',
-                  fontFamily: "'Amiri', 'Scheherazade New', 'Traditional Arabic', 'Noto Kufi Arabic', serif",
+                  marginTop: '10%',
+                  background: 'linear-gradient(135deg, #b45309 0%, #d97706 25%, #fbbf24 50%, #d97706 75%, #b45309 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                  textShadow: `
+                    0 8px 32px rgba(217, 119, 6, 0.6),
+                    0 4px 16px rgba(217, 119, 6, 0.4),
+                    0 2px 8px rgba(0, 0, 0, 0.3)
+                  `,
+                  fontFamily: "'Scheherazade New', 'Amiri', 'Lateef', 'Arabic Typesetting', serif",
                   fontWeight: 700,
-                  fill: 'url(#borderGradient)',
-                  letterSpacing: '0.08em',
+                  letterSpacing: '0.1em',
+                  WebkitFontSmoothing: 'antialiased',
+                  MozOsxFontSmoothing: 'grayscale',
                 }}
               >
                 مزاد
-              </text>
-
-              {/* Text Shadow Effect */}
-              <text
-                x="200"
-                y="235"
-                textAnchor="middle"
-                style={{
-                  fontSize: '72px',
-                  fontFamily: "'Amiri', 'Scheherazade New', 'Traditional Arabic', 'Noto Kufi Arabic', serif",
-                  fontWeight: 700,
-                  fill: 'none',
-                  stroke: '#92400e',
-                  strokeWidth: '1',
-                  opacity: 0.3,
-                  letterSpacing: '0.08em',
-                }}
-              >
-                مزاد
-              </text>
-            </svg>
+              </h1>
+            </div>
 
             {/* Decorative Sparkles */}
             <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
-              {[...Array(8)].map((_, i) => (
+              {[...Array(12)].map((_, i) => (
                 <div
                   key={i}
                   className="absolute w-2 h-2 bg-amber-400 rounded-full"
                   style={{
-                    top: `${Math.random() * 100}%`,
-                    left: `${Math.random() * 100}%`,
+                    top: `${10 + Math.random() * 80}%`,
+                    left: `${10 + Math.random() * 80}%`,
                     animation: `sparkle ${2 + Math.random() * 2}s ease-in-out infinite`,
                     animationDelay: `${Math.random() * 2}s`,
                   }}
