@@ -553,6 +553,12 @@ export class AdminSessionService {
     };
   }
 
+  static hasActiveSession(): boolean {
+    const token = localStorage.getItem('admin_session_token');
+    const adminData = localStorage.getItem('admin_data');
+    return !!(token && adminData);
+  }
+
   static async validateSession(): Promise<boolean> {
     try {
       const { token } = this.getCurrentSession();

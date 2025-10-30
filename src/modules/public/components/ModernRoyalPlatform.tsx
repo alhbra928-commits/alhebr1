@@ -8,7 +8,7 @@ import { FarmDetailPage } from './FarmDetailPage';
 import { TemporaryBookingPage } from './TemporaryBookingPage';
 import { InvestorRouter } from '../../investor/components/InvestorRouter';
 import { CertificateVerificationPage } from './CertificateVerificationPage';
-import { AdminCrownButton } from './AdminCrownButton';
+import { BackToAdminButton } from './BackToAdminButton';
 import { ConceptIntroductionPage } from './ConceptIntroductionPage';
 import { PublicBottomNavBar } from '../../../components/layout/PublicBottomNavBar';
 import { GreenConceptButton } from './GreenConceptButton';
@@ -27,15 +27,6 @@ export function ModernRoyalPlatform({
   onBackToAdmin,
   onFarmOwnerLogin,
 }: ModernRoyalPlatformProps) {
-  // Debug: Check if functions are provided
-  useEffect(() => {
-    console.log('🔍 ModernRoyalPlatform Props:', {
-      hasAdminLogin: !!onAdminLogin,
-      hasBackToAdmin: !!onBackToAdmin,
-      hasFarmOwnerLogin: !!onFarmOwnerLogin,
-    });
-  }, [onAdminLogin, onBackToAdmin, onFarmOwnerLogin]);
-
   const [farms, setFarms] = useState<PublicFarm[]>([]);
   const [currentView, setCurrentView] = useState<ViewMode>('home');
   const [selectedFarm, setSelectedFarm] = useState<PublicFarm | null>(null);
@@ -206,11 +197,9 @@ export function ModernRoyalPlatform({
                 </div>
               </div>
 
-              <AdminCrownButton
-                onAdminLogin={onAdminLogin}
-                onFarmOwnerLogin={onFarmOwnerLogin}
-                onBackToAdmin={onBackToAdmin}
-              />
+              {onBackToAdmin && (
+                <BackToAdminButton onBackToAdmin={onBackToAdmin} />
+              )}
             </div>
           </div>
         </header>
