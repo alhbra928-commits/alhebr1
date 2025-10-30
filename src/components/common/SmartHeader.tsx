@@ -481,17 +481,19 @@ export function SmartHeader({
               {[...activities, ...activities].map((activity, index) => (
                 <div
                   key={`${activity.id}-${index}`}
-                  className="flex items-center gap-2 px-6"
+                  className="flex items-center gap-2 px-6 pointer-events-none"
                   style={{
                     color: tickerSettings?.text_color || 'rgba(255, 255, 255, 0.95)',
                     fontSize: '13px',
                     fontWeight: '600',
                     textShadow: '0 1px 2px rgba(0,0,0,0.2)',
+                    pointerEvents: 'none',
+                    userSelect: 'none'
                   }}
                 >
-                  <span className="text-base">{activity.icon}</span>
-                  <span>{activity.message}</span>
-                  <span style={{ color: 'rgba(255, 255, 255, 0.4)', fontSize: '12px', margin: '0 8px' }}>•</span>
+                  <span className="text-base pointer-events-none">{activity.icon}</span>
+                  <span className="pointer-events-none">{activity.message}</span>
+                  <span className="pointer-events-none" style={{ color: 'rgba(255, 255, 255, 0.4)', fontSize: '12px', margin: '0 8px' }}>•</span>
                 </div>
               ))}
             </div>
@@ -527,6 +529,19 @@ export function SmartHeader({
           100% {
             transform: translateX(-50%);
           }
+        }
+
+        /* Ensure ticker doesn't block scroll */
+        .overflow-hidden.relative.pointer-events-none {
+          pointer-events: none !important;
+        }
+
+        .overflow-hidden.relative.pointer-events-none * {
+          pointer-events: none !important;
+        }
+
+        .overflow-hidden.relative.pointer-events-none .pointer-events-auto {
+          pointer-events: auto !important;
         }
 
         .scrollbar-hide::-webkit-scrollbar {
