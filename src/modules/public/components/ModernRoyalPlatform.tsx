@@ -203,9 +203,6 @@ export function ModernRoyalPlatform({
         </header>
 
         {/* Fixed Buttons */}
-        {onBackToAdmin && (
-          <BackToAdminButton onBackToAdmin={onBackToAdmin} />
-        )}
         <AdminCrownButton
           onAdminLogin={onAdminLogin}
           onFarmOwnerLogin={onFarmOwnerLogin}
