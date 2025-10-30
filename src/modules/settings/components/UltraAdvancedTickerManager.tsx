@@ -61,7 +61,8 @@ const colorOptions = [
 ];
 
 export function UltraAdvancedTickerManager() {
-  const [activeTickerType, setActiveTickerType] = useState<'header' | 'main'>('main');
+  // Fixed to 'main' - unified ticker
+  const activeTickerType = 'main';
   const [settings, setSettings] = useState<TickerSettings | null>(null);
   const [messages, setMessages] = useState<TickerMessage[]>([]);
   const [loading, setLoading] = useState(true);
@@ -72,7 +73,7 @@ export function UltraAdvancedTickerManager() {
 
   useEffect(() => {
     loadData();
-  }, [activeTickerType]);
+  }, []);
 
   const loadData = async () => {
     setLoading(true);
@@ -341,38 +342,13 @@ export function UltraAdvancedTickerManager() {
         </div>
       </div>
 
-      {/* Ticker Type Selector */}
-      <div className="bg-white rounded-xl shadow-sm border-2 border-gray-100 p-4">
+      {/* Unified Ticker Info */}
+      <div className="bg-gradient-to-r from-emerald-50 to-teal-50 rounded-xl shadow-sm border-2 border-emerald-200 p-4">
         <div className="flex items-center gap-3">
-          <Monitor className="w-5 h-5 text-gray-400" />
-          <span className="text-sm font-bold text-gray-700">اختر الشريط:</span>
-          <div className="flex gap-2 flex-1">
-            <button
-              onClick={() => setActiveTickerType('header')}
-              className={`flex-1 px-4 py-2.5 rounded-lg font-bold transition-all ${
-                activeTickerType === 'header'
-                  ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-              }`}
-            >
-              <div className="flex items-center justify-center gap-2">
-                <Layout className="w-4 h-4" />
-                <span>شريط الهيدر</span>
-              </div>
-            </button>
-            <button
-              onClick={() => setActiveTickerType('main')}
-              className={`flex-1 px-4 py-2.5 rounded-lg font-bold transition-all ${
-                activeTickerType === 'main'
-                  ? 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-lg'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-              }`}
-            >
-              <div className="flex items-center justify-center gap-2">
-                <Crown className="w-4 h-4" />
-                <span>شريط المنصة الرئيسية</span>
-              </div>
-            </button>
+          <Crown className="w-6 h-6 text-emerald-600" />
+          <div>
+            <h3 className="text-lg font-bold text-emerald-900">الشريط الموحد للمنصة</h3>
+            <p className="text-sm text-emerald-700">إدارة شريط واحد يظهر في جميع صفحات المنصة</p>
           </div>
         </div>
       </div>
