@@ -145,7 +145,7 @@ export function RoyalGlassGateway({ onEnter }: GatewayProps) {
             {/* Golden Border Animation */}
             <div className="absolute inset-0 rounded-2xl sm:rounded-3xl border-2 border-amber-400/30 animate-pulse" />
 
-            {/* MZAD Text - Ultra Large & Professional */}
+            {/* MZAD Logo Text - Professional Brand Style */}
             <div className="text-center">
               <h1
                 className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-black leading-tight select-none"
@@ -154,9 +154,17 @@ export function RoyalGlassGateway({ onEnter }: GatewayProps) {
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
                   backgroundClip: 'text',
-                  textShadow: '0 4px 30px rgba(217, 119, 6, 0.4)',
-                  letterSpacing: '0.05em',
-                  fontFamily: "'Tajawal', 'Cairo', sans-serif",
+                  textShadow: `
+                    0 6px 40px rgba(217, 119, 6, 0.5),
+                    0 3px 20px rgba(217, 119, 6, 0.4),
+                    0 1px 8px rgba(0, 0, 0, 0.3)
+                  `,
+                  letterSpacing: '0.15em',
+                  fontFamily: "'Almarai', 'Tajawal', 'Cairo', sans-serif",
+                  fontWeight: 900,
+                  textTransform: 'uppercase',
+                  WebkitFontSmoothing: 'antialiased',
+                  MozOsxFontSmoothing: 'grayscale',
                 }}
               >
                 مزاد
