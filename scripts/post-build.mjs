@@ -200,5 +200,23 @@ try {
   console.error('❌ Manifest generation failed:', error.message);
 }
 
+// 🔥 INJECT AGGRESSIVE CACHE BUSTERS
+try {
+  const { execSync } = await import('child_process');
+  execSync('node scripts/inject-cache-busters.mjs', { stdio: 'inherit' });
+  console.log('✅ Aggressive cache busters injected');
+} catch (error) {
+  console.error('⚠️ Cache busters injection skipped:', error.message);
+}
+
+// 🔥 FORCE CDN PURGE
+try {
+  const { execSync } = await import('child_process');
+  execSync('node scripts/force-cdn-purge.mjs', { stdio: 'inherit' });
+  console.log('✅ CDN Purge system activated');
+} catch (error) {
+  console.error('⚠️ CDN Purge system skipped:', error.message);
+}
+
 console.log('\n✅ Post-build tasks completed!\n');
 console.log(`📦 Version: ${version}\n`);
