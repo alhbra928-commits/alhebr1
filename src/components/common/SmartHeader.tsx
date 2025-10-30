@@ -350,7 +350,7 @@ export function SmartHeader({
             <div className="ticker-content">
               {tickerMessages.length > 0 ? (
                 <>
-                  {/* Display messages from database */}
+                  {/* Display messages from database - REAL DATA ONLY */}
                   {tickerMessages.map((msg) => {
                     const IconComponent = getIconComponent(msg.icon_name || msg.icon);
                     return (
@@ -377,42 +377,10 @@ export function SmartHeader({
                   })}
                 </>
               ) : (
-                <>
-                  {/* Fallback messages if database is empty */}
-                  <div className="ticker-item">
-                    <Star className="w-4 h-4 text-emerald-600" fill="currentColor" />
-                    <span className="text-sm font-bold text-emerald-800">استثمر في مستقبل أخضر مستدام</span>
-                  </div>
-                  <div className="ticker-item">
-                    <Zap className="w-4 h-4 text-green-600" fill="currentColor" />
-                    <span className="text-sm font-bold text-green-800">عوائد سنوية مضمونة من أشجارك</span>
-                  </div>
-                  <div className="ticker-item">
-                    <Sparkles className="w-4 h-4 text-teal-600" />
-                    <span className="text-sm font-bold text-teal-800">ملكية موثقة ومضمونة قانونياً</span>
-                  </div>
-                  <div className="ticker-item">
-                    <Crown className="w-4 h-4 text-emerald-600" />
-                    <span className="text-sm font-bold text-emerald-800">تملك أشجار النخيل والزيتون الآن</span>
-                  </div>
-                  {/* Duplicate */}
-                  <div className="ticker-item">
-                    <Star className="w-4 h-4 text-emerald-600" fill="currentColor" />
-                    <span className="text-sm font-bold text-emerald-800">استثمر في مستقبل أخضر مستدام</span>
-                  </div>
-                  <div className="ticker-item">
-                    <Zap className="w-4 h-4 text-green-600" fill="currentColor" />
-                    <span className="text-sm font-bold text-green-800">عوائد سنوية مضمونة من أشجارك</span>
-                  </div>
-                  <div className="ticker-item">
-                    <Sparkles className="w-4 h-4 text-teal-600" />
-                    <span className="text-sm font-bold text-teal-800">ملكية موثقة ومضمونة قانونياً</span>
-                  </div>
-                  <div className="ticker-item">
-                    <Crown className="w-4 h-4 text-emerald-600" />
-                    <span className="text-sm font-bold text-emerald-800">تملك أشجار النخيل والزيتون الآن</span>
-                  </div>
-                </>
+                <div className="ticker-item">
+                  <Star className="w-4 h-4 text-gray-400" />
+                  <span className="text-sm font-bold text-gray-500">لا توجد رسائل في الشريط - أضف رسائل من الإعدادات</span>
+                </div>
               )}
             </div>
           </div>
