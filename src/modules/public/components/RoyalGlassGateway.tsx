@@ -120,88 +120,143 @@ export function RoyalGlassGateway({ onEnter }: GatewayProps) {
       {/* Main Content */}
       <div className="relative z-10 h-full flex flex-col items-center justify-center px-4 sm:px-6">
 
-        {/* Crown Icon */}
-        <div className="mb-6 sm:mb-8 animate-bounce-slow">
-          <Crown
-            className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24"
-            strokeWidth={2}
-            style={{
-              color: '#d97706',
-              filter: 'drop-shadow(0 4px 12px rgba(217, 119, 6, 0.4))',
-            }}
-          />
-        </div>
-
-        {/* Glass Card */}
+        {/* Giant Glass Crown with Kufi Text Inside */}
         <div
-          className="relative max-w-2xl w-full cursor-pointer group"
+          className="relative cursor-pointer group"
           onClick={onEnter}
         >
-          {/* Glow Effect */}
-          <div className="absolute inset-0 bg-gradient-to-r from-amber-300/30 via-yellow-200/30 to-amber-300/30 blur-3xl" />
+          {/* Outer Glow */}
+          <div className="absolute inset-0 bg-gradient-to-r from-amber-300/40 via-yellow-200/40 to-amber-300/40 blur-3xl animate-pulse" />
 
-          {/* Main Glass Card */}
-          <div className="relative backdrop-blur-2xl bg-white/40 border border-white/60 rounded-2xl sm:rounded-3xl shadow-2xl p-8 sm:p-12 md:p-16 transition-all duration-500 hover:scale-105 active:scale-95">
-            {/* Golden Border Animation */}
-            <div className="absolute inset-0 rounded-2xl sm:rounded-3xl border-2 border-amber-400/30 animate-pulse" />
+          {/* Giant Crown SVG - Glass Effect */}
+          <div className="relative">
+            <svg
+              viewBox="0 0 400 320"
+              className="w-72 h-60 sm:w-96 sm:h-80 md:w-[28rem] md:h-96 lg:w-[32rem] lg:h-[26rem] transition-all duration-500 group-hover:scale-110 group-active:scale-95"
+              style={{
+                filter: 'drop-shadow(0 20px 60px rgba(217, 119, 6, 0.4))',
+              }}
+            >
+              {/* Crown Shape - Glass Style */}
+              <defs>
+                <linearGradient id="glassGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" style={{ stopColor: 'rgba(255, 255, 255, 0.6)', stopOpacity: 1 }} />
+                  <stop offset="50%" style={{ stopColor: 'rgba(255, 255, 255, 0.3)', stopOpacity: 1 }} />
+                  <stop offset="100%" style={{ stopColor: 'rgba(255, 255, 255, 0.5)', stopOpacity: 1 }} />
+                </linearGradient>
+                <linearGradient id="borderGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" style={{ stopColor: '#fbbf24', stopOpacity: 1 }} />
+                  <stop offset="50%" style={{ stopColor: '#d97706', stopOpacity: 1 }} />
+                  <stop offset="100%" style={{ stopColor: '#b45309', stopOpacity: 1 }} />
+                </linearGradient>
+                <filter id="glassBlur">
+                  <feGaussianBlur in="SourceGraphic" stdDeviation="1" />
+                </filter>
+              </defs>
 
-            {/* MZAD Logo Text - Professional Brand Style */}
-            <div className="text-center">
-              <h1
-                className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-black leading-tight select-none"
+              {/* Crown Base */}
+              <path
+                d="M 50 280 L 80 180 L 120 220 L 200 140 L 280 220 L 320 180 L 350 280 Z"
+                fill="url(#glassGradient)"
+                stroke="url(#borderGradient)"
+                strokeWidth="4"
                 style={{
-                  background: 'linear-gradient(135deg, #b45309 0%, #d97706 25%, #fbbf24 50%, #d97706 75%, #b45309 100%)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text',
-                  textShadow: `
-                    0 6px 40px rgba(217, 119, 6, 0.5),
-                    0 3px 20px rgba(217, 119, 6, 0.4),
-                    0 1px 8px rgba(0, 0, 0, 0.3)
-                  `,
-                  letterSpacing: '0.15em',
-                  fontFamily: "'Almarai', 'Tajawal', 'Cairo', sans-serif",
-                  fontWeight: 900,
-                  textTransform: 'uppercase',
-                  WebkitFontSmoothing: 'antialiased',
-                  MozOsxFontSmoothing: 'grayscale',
+                  backdropFilter: 'blur(20px)',
+                }}
+              />
+
+              {/* Crown Points */}
+              <circle cx="80" cy="180" r="20" fill="url(#glassGradient)" stroke="url(#borderGradient)" strokeWidth="3" />
+              <circle cx="120" cy="220" r="18" fill="url(#glassGradient)" stroke="url(#borderGradient)" strokeWidth="3" />
+              <circle cx="200" cy="140" r="25" fill="url(#glassGradient)" stroke="url(#borderGradient)" strokeWidth="4" />
+              <circle cx="280" cy="220" r="18" fill="url(#glassGradient)" stroke="url(#borderGradient)" strokeWidth="3" />
+              <circle cx="320" cy="180" r="20" fill="url(#glassGradient)" stroke="url(#borderGradient)" strokeWidth="3" />
+
+              {/* Crown Top Jewel */}
+              <circle cx="200" cy="110" r="15" fill="#fbbf24" stroke="#d97706" strokeWidth="3">
+                <animate attributeName="opacity" values="1;0.7;1" dur="2s" repeatCount="indefinite" />
+              </circle>
+
+              {/* Inner Shine Effect */}
+              <ellipse cx="200" cy="200" rx="120" ry="60" fill="rgba(255, 255, 255, 0.2)" opacity="0.6" />
+
+              {/* Text: مزاد in Kufi Style */}
+              <text
+                x="200"
+                y="235"
+                textAnchor="middle"
+                style={{
+                  fontSize: '72px',
+                  fontFamily: "'Amiri', 'Scheherazade New', 'Traditional Arabic', 'Noto Kufi Arabic', serif",
+                  fontWeight: 700,
+                  fill: 'url(#borderGradient)',
+                  letterSpacing: '0.08em',
                 }}
               >
                 مزاد
-              </h1>
-            </div>
+              </text>
 
-            {/* Progress Bar */}
-            {settings.auto_enter_enabled && (
-              <div className="mt-8 sm:mt-10">
-                <div className="relative h-2 sm:h-3 bg-amber-200/50 rounded-full overflow-hidden backdrop-blur-sm border border-amber-300/30">
-                  <div
-                    className="absolute inset-y-0 left-0 bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 rounded-full transition-all duration-300 ease-out"
-                    style={{ width: `${progress}%` }}
-                  >
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent animate-shimmer" />
-                  </div>
-                </div>
-                <div className="flex justify-center items-center mt-4">
-                  <span
-                    className="text-sm sm:text-base font-bold"
-                    style={{
-                      color: '#92400e',
-                      letterSpacing: '-0.01em',
-                    }}
-                  >
-                    {Math.round(progress)}%
-                  </span>
+              {/* Text Shadow Effect */}
+              <text
+                x="200"
+                y="235"
+                textAnchor="middle"
+                style={{
+                  fontSize: '72px',
+                  fontFamily: "'Amiri', 'Scheherazade New', 'Traditional Arabic', 'Noto Kufi Arabic', serif",
+                  fontWeight: 700,
+                  fill: 'none',
+                  stroke: '#92400e',
+                  strokeWidth: '1',
+                  opacity: 0.3,
+                  letterSpacing: '0.08em',
+                }}
+              >
+                مزاد
+              </text>
+            </svg>
+
+            {/* Decorative Sparkles */}
+            <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
+              {[...Array(8)].map((_, i) => (
+                <div
+                  key={i}
+                  className="absolute w-2 h-2 bg-amber-400 rounded-full"
+                  style={{
+                    top: `${Math.random() * 100}%`,
+                    left: `${Math.random() * 100}%`,
+                    animation: `sparkle ${2 + Math.random() * 2}s ease-in-out infinite`,
+                    animationDelay: `${Math.random() * 2}s`,
+                  }}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* Progress Bar - Below Crown */}
+          {settings.auto_enter_enabled && (
+            <div className="mt-8 sm:mt-10 max-w-md mx-auto">
+              <div className="relative h-2 sm:h-3 bg-amber-200/50 rounded-full overflow-hidden backdrop-blur-sm border border-amber-300/30">
+                <div
+                  className="absolute inset-y-0 left-0 bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 rounded-full transition-all duration-300 ease-out"
+                  style={{ width: `${progress}%` }}
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent animate-shimmer" />
                 </div>
               </div>
-            )}
-
-            {/* Decorative Corners */}
-            <div className="absolute top-3 right-3 sm:top-4 sm:right-4 w-8 h-8 sm:w-10 sm:h-10 border-t-2 border-r-2 border-amber-400/50 rounded-tr-xl" />
-            <div className="absolute bottom-3 left-3 sm:bottom-4 sm:left-4 w-8 h-8 sm:w-10 sm:h-10 border-b-2 border-l-2 border-amber-400/50 rounded-bl-xl" />
-            <div className="absolute top-3 left-3 sm:top-4 sm:left-4 w-8 h-8 sm:w-10 sm:h-10 border-t-2 border-l-2 border-amber-400/50 rounded-tl-xl" />
-            <div className="absolute bottom-3 right-3 sm:bottom-4 sm:right-4 w-8 h-8 sm:w-10 sm:h-10 border-b-2 border-r-2 border-amber-400/50 rounded-br-xl" />
-          </div>
+              <div className="flex justify-center items-center mt-4">
+                <span
+                  className="text-sm sm:text-base font-bold"
+                  style={{
+                    color: '#92400e',
+                    letterSpacing: '-0.01em',
+                  }}
+                >
+                  {Math.round(progress)}%
+                </span>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
@@ -218,19 +273,6 @@ export function RoyalGlassGateway({ onEnter }: GatewayProps) {
           }
         }
 
-        @keyframes bounce-slow {
-          0%, 100% {
-            transform: translateY(0);
-          }
-          50% {
-            transform: translateY(-10px);
-          }
-        }
-
-        .animate-bounce-slow {
-          animation: bounce-slow 3s ease-in-out infinite;
-        }
-
         @keyframes shimmer {
           0% {
             background-position: -200% 0;
@@ -243,6 +285,17 @@ export function RoyalGlassGateway({ onEnter }: GatewayProps) {
         .animate-shimmer {
           background-size: 200% 100%;
           animation: shimmer 2s infinite;
+        }
+
+        @keyframes sparkle {
+          0%, 100% {
+            opacity: 0;
+            transform: scale(0);
+          }
+          50% {
+            opacity: 1;
+            transform: scale(1);
+          }
         }
       `}</style>
     </div>
