@@ -4,7 +4,6 @@ import { PublicFarm } from '../types/farm.types';
 import { PublicFarmService } from '../services/publicFarmService';
 import { FarmDetailService } from '../services/farmDetailService';
 import { PremiumHeader } from './PremiumHeader';
-import { SmartHeader } from '../../../components/common/SmartHeader';
 import { FarmCard3D } from './FarmCard3D';
 import { ModernMobileFarmCard } from './ModernMobileFarmCard';
 import { FixedBottomBar } from './FixedBottomBar';
@@ -238,21 +237,9 @@ export function MainPlatformInterface({
         </div>
       )}
 
-      {/* Smart Header الجديد - يحتوي على Ticker داخله */}
-      <SmartHeader
-        currentView={currentView}
-        notificationCount={0}
-        onNotificationClick={() => console.log('Notifications clicked')}
-        onWhatsAppClick={() => console.log('WhatsApp clicked')}
-        onBackToAdmin={onBackToAdmin}
-        onFilterChange={(filters) => {
-          console.log('Filters changed:', filters);
-          // TODO: Apply filters to farms
-        }}
-      />
 
       {/* الزر الذهبي */}
-      <div className="pt-20 md:pt-24">
+      <div className="pt-8 md:pt-12">
         <GlowingConceptButton onClick={() => setShowIdeaOverview(true)} />
       </div>
 
