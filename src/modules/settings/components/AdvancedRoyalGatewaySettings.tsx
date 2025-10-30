@@ -1329,6 +1329,9 @@ export function AdvancedRoyalGatewaySettings() {
           </div>
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-700 rounded-2xl" />
         </button>
+
+        {/* مسافة فارغة كبيرة في الأسفل لضمان ظهور زر الحفظ */}
+        <div className="h-48"></div>
       </div>
       </div>
     </div>
