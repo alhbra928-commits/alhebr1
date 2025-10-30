@@ -33,13 +33,13 @@ export function BackToAdminButton({ onBackToAdmin }: BackToAdminButtonProps) {
   return (
     <button
       onClick={handleClick}
-      className="fixed bottom-6 left-6 z-50 flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-emerald-600 to-emerald-700 text-white rounded-full shadow-2xl hover:shadow-emerald-500/50 hover:scale-105 transition-all duration-300 font-semibold"
+      className="fixed bottom-6 left-6 z-50 flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-emerald-600 to-emerald-700 text-white rounded-full shadow-2xl hover:shadow-emerald-500/50 hover:scale-105 transition-all duration-300 font-semibold text-sm"
       style={{
         backdropFilter: 'blur(10px)',
         border: '1px solid rgba(255,255,255,0.2)',
       }}
     >
-      <ArrowLeft className="w-5 h-5" />
+      <ArrowLeft className="w-4 h-4" />
       <span>لوحة الإدارة</span>
     </button>
   );
