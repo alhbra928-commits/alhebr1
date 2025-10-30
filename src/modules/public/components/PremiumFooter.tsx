@@ -63,15 +63,15 @@ export function PremiumFooter() {
     <footer
       className="relative py-16 px-6"
       style={{
-        background: 'linear-gradient(180deg, #2E2A26 0%, #1F1D1A 100%)',
-        borderTop: '3px solid rgba(212, 175, 55, 0.3)',
+        background: 'linear-gradient(180deg, #047857 0%, #065f46 100%)',
+        borderTop: '3px solid rgba(16, 185, 129, 0.3)',
       }}
     >
       <div
         className="absolute top-0 left-0 right-0 h-px"
         style={{
-          background: brandGradients.gold,
-          boxShadow: '0 0 20px rgba(212, 175, 55, 0.5)',
+          background: 'linear-gradient(90deg, transparent, #10b981, transparent)',
+          boxShadow: '0 0 20px rgba(16, 185, 129, 0.5)',
         }}
       />
 
@@ -81,7 +81,7 @@ export function PremiumFooter() {
             <h3
               className="text-3xl font-black mb-4"
               style={{
-                background: brandGradients.gold,
+                background: 'linear-gradient(135deg, #10b981 0%, #34d399 100%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text',
@@ -94,7 +94,7 @@ export function PremiumFooter() {
             </p>
 
             <div className="mt-6 flex items-start gap-3">
-              <MapPin className="h-5 w-5 mt-1" style={{ color: brandColors.primary.gold }} />
+              <MapPin className="h-5 w-5 mt-1" style={{ color: '#10b981' }} />
               <div className="text-gray-400 font-medium">
                 <div className="font-bold text-white mb-1">المقر الرئيسي</div>
                 {footerTexts.address}
@@ -106,7 +106,7 @@ export function PremiumFooter() {
             <h3
               className="text-3xl font-black mb-4"
               style={{
-                background: brandGradients.gold,
+                background: 'linear-gradient(135deg, #10b981 0%, #34d399 100%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text',
@@ -123,8 +123,8 @@ export function PremiumFooter() {
                   rel="noopener noreferrer"
                   className="flex items-center gap-3 p-3 rounded-xl transition-all duration-300 hover:scale-105 group"
                   style={{
-                    background: 'rgba(212, 175, 55, 0.1)',
-                    border: '2px solid rgba(212, 175, 55, 0.2)',
+                    background: 'rgba(16, 185, 129, 0.1)',
+                    border: '2px solid rgba(16, 185, 129, 0.2)',
                   }}
                 >
                   <div
@@ -141,9 +141,9 @@ export function PremiumFooter() {
                 </a>
               ))}
 
-              <div className="flex items-center gap-3 p-3 rounded-xl" style={{ background: 'rgba(212, 175, 55, 0.1)' }}>
-                <div className="p-2 rounded-lg" style={{ background: 'rgba(212, 175, 55, 0.2)' }}>
-                  <Phone className="h-5 w-5" style={{ color: brandColors.primary.gold }} />
+              <div className="flex items-center gap-3 p-3 rounded-xl" style={{ background: 'rgba(16, 185, 129, 0.1)' }}>
+                <div className="p-2 rounded-lg" style={{ background: 'rgba(16, 185, 129, 0.2)' }}>
+                  <Phone className="h-5 w-5" style={{ color: '#10b981' }} />
                 </div>
                 <div className="text-gray-300 font-bold">
                   <div className="text-sm opacity-75">الدعم الفني</div>
@@ -157,7 +157,7 @@ export function PremiumFooter() {
             <h3
               className="text-3xl font-black mb-4"
               style={{
-                background: brandGradients.gold,
+                background: 'linear-gradient(135deg, #10b981 0%, #34d399 100%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text',
@@ -175,7 +175,7 @@ export function PremiumFooter() {
                     textShadow: '0 0 10px transparent',
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.textShadow = '0 0 10px rgba(212, 175, 55, 0.5)';
+                    e.currentTarget.style.textShadow = '0 0 10px rgba(16, 185, 129, 0.5)';
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.textShadow = '0 0 10px transparent';
@@ -190,13 +190,13 @@ export function PremiumFooter() {
 
         <div
           className="pt-8 border-t text-center"
-          style={{ borderColor: 'rgba(212, 175, 55, 0.2)' }}
+          style={{ borderColor: 'rgba(16, 185, 129, 0.2)' }}
         >
           <div className="flex items-center justify-center gap-2 mb-4">
             <div
               className="text-2xl font-black"
               style={{
-                background: brandGradients.gold,
+                background: 'linear-gradient(135deg, #10b981 0%, #34d399 100%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text',
@@ -217,7 +217,7 @@ export function PremiumFooter() {
       <div
         className="absolute inset-0 pointer-events-none opacity-10"
         style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23D4AF37' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2310b981' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
         }}
       />
     </footer>
