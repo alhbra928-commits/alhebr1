@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import {
   Crown, Sparkles, ArrowRight, TreePine, Leaf,
-  CheckCircle2, Shield, TrendingUp, Award, Star
+  Shield, Award, Star
 } from 'lucide-react';
 import { PublicFarm } from '../types/farm.types';
 import { PublicFarmService } from '../services/publicFarmService';
@@ -313,52 +313,6 @@ export function ModernRoyalPlatform({
 
         {/* Main Content */}
         <main className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 md:py-12 pb-24 sm:pb-32">
-          {/* Features Section */}
-          <div className="mb-8 sm:mb-12">
-            <div className="text-center mb-8 sm:mb-10">
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-emerald-800 via-green-700 to-teal-800 bg-clip-text text-transparent mb-3 sm:mb-4">
-                لماذا تستثمر معنا؟
-              </h2>
-              <p className="text-base sm:text-lg text-emerald-700 max-w-2xl mx-auto px-4">
-                منصة استثمار زراعي متطورة بتقنيات حديثة وضمانات قوية
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 max-w-6xl mx-auto">
-              {[
-                {
-                  icon: Shield,
-                  title: 'استثمار آمن ومضمون',
-                  description: 'ملكية مؤكدة بعقود رسمية وشهادات موثقة',
-                  gradient: 'from-emerald-500 to-green-600'
-                },
-                {
-                  icon: TrendingUp,
-                  title: 'عوائد مجزية',
-                  description: 'عوائد سنوية مرتفعة من محاصيل عالية الجودة',
-                  gradient: 'from-green-500 to-emerald-600'
-                },
-                {
-                  icon: CheckCircle2,
-                  title: 'إدارة احترافية',
-                  description: 'فريق خبير يدير استثمارك بأعلى المعايير',
-                  gradient: 'from-teal-500 to-emerald-600'
-                }
-              ].map((feature, index) => (
-                <div key={index} className="group relative">
-                  <div className={`absolute -inset-1 bg-gradient-to-r ${feature.gradient} rounded-3xl blur opacity-25 group-hover:opacity-50 transition-opacity`}></div>
-                  <div className="relative bg-white/70 backdrop-blur-xl rounded-3xl p-6 sm:p-8 border border-white/90 hover:border-emerald-300 transition-all duration-300 h-full">
-                    <div className={`inline-flex p-3 sm:p-4 bg-gradient-to-br ${feature.gradient} rounded-2xl mb-4 sm:mb-5 shadow-lg`}>
-                      <feature.icon className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
-                    </div>
-                    <h3 className="text-lg sm:text-xl font-bold text-emerald-900 mb-2 sm:mb-3">{feature.title}</h3>
-                    <p className="text-sm sm:text-base text-emerald-700 leading-relaxed">{feature.description}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
           {/* Farms Grid */}
           <div>
             <div className="flex items-center justify-between mb-6 sm:mb-8">
