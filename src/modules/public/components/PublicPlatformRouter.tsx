@@ -16,7 +16,7 @@ interface PublicPlatformRouterProps {
 export function PublicPlatformRouter({ onAdminLogin, onBackToAdmin, onFarmOwnerLogin }: PublicPlatformRouterProps) {
   const [currentView, setCurrentView] = useState<View>('gateway'); // سيتم تحديثها بعد تحميل الإعدادات
   const [selectedBarcode, setSelectedBarcode] = useState<string>('');
-  const [gatewayDuration, setGatewayDuration] = useState<string>('1hour');
+  const [gatewayDuration, setGatewayDuration] = useState<number>(3600); // القيمة الافتراضية: ساعة واحدة
 
   // تحميل إعدادات البوابة والتحقق من المدة
   useEffect(() => {
@@ -29,51 +29,55 @@ export function PublicPlatformRouter({ onAdminLogin, onBackToAdmin, onFarmOwnerL
           .maybeSingle();
 
         if (!error && data) {
-          const duration = data.gateway_reappear_duration || '1hour';
+          const duration = data.gateway_reappear_duration ?? 3600; // القيمة الافتراضية: ساعة واحدة
           setGatewayDuration(duration);
 
           // التحقق من آخر مرة تم عرض البوابة فيها
           const lastGatewayView = localStorage.getItem('last_gateway_view');
 
-          if (duration === 'always') {
-            // ظهور متكرر - دائماً عرض البوابة
+          // إذا كانت المدة 0، ظهور متكرر دائماً
+          if (duration === 0) {
+            console.log('🔄 Repeated Gateway: Always show gateway');
             setCurrentView('gateway');
             return;
           }
 
           if (!lastGatewayView) {
             // أول زيارة - عرض البوابة
+            console.log('🎯 First visit: Show gateway');
             setCurrentView('gateway');
             return;
           }
 
           const lastViewTime = parseInt(lastGatewayView, 10);
           const currentTime = Date.now();
+          const timeDiff = currentTime - lastViewTime;
+          const requiredDuration = duration * 1000; // تحويل من ثواني إلى ميلي ثانية
 
-          // تحويل المدة إلى ميلي ثانية
-          const durationMap: Record<string, number> = {
-            '30min': 30 * 60 * 1000,
-            '1hour': 60 * 60 * 1000,
-            '2hours': 2 * 60 * 60 * 1000,
-            '6hours': 6 * 60 * 60 * 1000,
-            '24hours': 24 * 60 * 60 * 1000,
-          };
-
-          const requiredDuration = durationMap[duration] || durationMap['1hour'];
+          console.log('⏰ Gateway timing check:', {
+            duration: `${duration} seconds`,
+            timeDiff: `${Math.floor(timeDiff / 1000)} seconds`,
+            required: `${duration} seconds`,
+            shouldShow: timeDiff >= requiredDuration
+          });
 
           // إذا مر الوقت المطلوب، عرض البوابة
-          if (currentTime - lastViewTime >= requiredDuration) {
+          if (timeDiff >= requiredDuration) {
+            console.log('✅ Time passed: Show gateway');
             setCurrentView('gateway');
           } else {
             // لم يمر الوقت بعد - الذهاب للمنصة مباشرة
+            const remaining = Math.ceil((requiredDuration - timeDiff) / 1000);
+            console.log(`⏳ Time remaining: ${remaining} seconds - Skip gateway`);
             setCurrentView('main');
           }
         } else {
           // في حالة خطأ، استخدام القيمة الافتراضية
+          console.log('⚠️ Error loading settings: Show gateway by default');
           setCurrentView('gateway');
         }
       } catch (error) {
-        console.error('Error loading gateway settings:', error);
+        console.error('❌ Error loading gateway settings:', error);
         setCurrentView('gateway');
       }
     };
@@ -96,9 +100,13 @@ export function PublicPlatformRouter({ onAdminLogin, onBackToAdmin, onFarmOwnerL
   }, [currentView]);
 
   const handleEnterPlatform = () => {
-    // حفظ وقت عرض البوابة (إلا في حالة always)
-    if (gatewayDuration !== 'always') {
-      localStorage.setItem('last_gateway_view', Date.now().toString());
+    // حفظ وقت عرض البوابة (إلا في حالة الظهور المتكرر - القيمة 0)
+    if (gatewayDuration !== 0) {
+      const timestamp = Date.now().toString();
+      localStorage.setItem('last_gateway_view', timestamp);
+      console.log('💾 Gateway view timestamp saved:', timestamp);
+    } else {
+      console.log('🔄 Repeated gateway mode: Not saving timestamp');
     }
     setCurrentView('main');
   };
