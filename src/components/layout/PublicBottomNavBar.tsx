@@ -115,7 +115,7 @@ export const PublicBottomNavBar: React.FC<PublicBottomNavBarProps> = ({
           {/* Navigation Items */}
           <div className="flex items-center justify-around relative px-2 py-2">
             {navItems.map((item, index) => {
-              const isActive = activeTab === item.id;
+              const isActive = activeTab && activeTab.length > 0 && activeTab === item.id;
               const isMiddle = index === Math.floor(navItems.length / 2);
 
               // Leave space for FAB in the middle
