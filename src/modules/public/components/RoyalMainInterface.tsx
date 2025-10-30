@@ -173,7 +173,10 @@ export function RoyalMainInterface({
               </div>
             </div>
 
-            <AdminCrownButton onClick={onAdminLogin} />
+            <AdminCrownButton
+              onAdminLogin={onAdminLogin}
+              onFarmOwnerLogin={onFarmOwnerLogin}
+            />
           </div>
 
           {/* Stats Bar */}
