@@ -130,31 +130,44 @@ export function RoyalGlassGateway({ onEnter }: GatewayProps) {
 
           {/* Pure Crystal Glass Crown with Thin Golden Border */}
           <div className="relative">
-            {/* Main Crystal Crown - Bright White Glass */}
+            {/* Main White Crystal Crown - Fill Only */}
             <Crown
-              className="w-80 h-80 sm:w-96 sm:h-96 md:w-[28rem] md:h-[28rem] lg:w-[32rem] lg:h-[32rem] relative transition-all duration-500 group-hover:scale-110 group-active:scale-95"
+              className="w-80 h-80 sm:w-96 sm:h-96 md:w-[28rem] md:h-[28rem] lg:w-[32rem] lg:h-[32rem] absolute inset-0 transition-all duration-500 group-hover:scale-110 group-active:scale-95"
               strokeWidth={0}
               style={{
-                color: 'rgba(255, 255, 255, 0.95)',
-                fill: 'rgba(255, 255, 255, 0.5)',
+                color: '#ffffff',
+                fill: '#ffffff',
+                opacity: 0.85,
                 filter: `
-                  drop-shadow(0 0 50px rgba(255, 255, 255, 0.9))
-                  drop-shadow(0 10px 80px rgba(147, 197, 253, 0.5))
-                  drop-shadow(0 15px 100px rgba(255, 255, 255, 0.7))
+                  drop-shadow(0 0 60px rgba(255, 255, 255, 0.9))
+                  drop-shadow(0 15px 100px rgba(147, 197, 253, 0.4))
+                  drop-shadow(0 20px 120px rgba(255, 255, 255, 0.7))
                 `,
               }}
             />
 
-            {/* Thin Golden Outline */}
+            {/* White Crystal Stroke */}
             <Crown
               className="w-80 h-80 sm:w-96 sm:h-96 md:w-[28rem] md:h-[28rem] lg:w-[32rem] lg:h-[32rem] absolute inset-0 transition-all duration-500 group-hover:scale-110 group-active:scale-95"
+              strokeWidth={3}
+              fill="none"
+              style={{
+                stroke: '#ffffff',
+                opacity: 0.95,
+                filter: 'drop-shadow(0 0 30px rgba(255, 255, 255, 0.8))',
+              }}
+            />
+
+            {/* Thin Golden Outline on Top */}
+            <Crown
+              className="w-80 h-80 sm:w-96 sm:h-96 md:w-[28rem] md:h-[28rem] lg:w-[32rem] lg:h-[32rem] relative transition-all duration-500 group-hover:scale-110 group-active:scale-95"
               strokeWidth={1.5}
               fill="none"
               style={{
                 stroke: 'url(#goldenGradient)',
                 filter: `
-                  drop-shadow(0 0 15px rgba(251, 191, 36, 0.5))
-                  drop-shadow(0 2px 8px rgba(217, 119, 6, 0.3))
+                  drop-shadow(0 0 20px rgba(251, 191, 36, 0.6))
+                  drop-shadow(0 2px 10px rgba(217, 119, 6, 0.4))
                 `,
               }}
             />
