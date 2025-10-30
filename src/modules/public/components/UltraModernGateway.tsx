@@ -34,12 +34,13 @@ interface Particle {
 }
 
 export function UltraModernGateway({ onEnter }: GatewayProps) {
-  const [phase, setPhase] = useState<'init' | 'analyze' | 'process' | 'ready' | 'enter'>('init');
+  const [phase, setPhase] = useState<'init' | 'analyze' | 'process' | 'ready' | 'enter' | 'transition'>('init');
   const [progress, setProgress] = useState(0);
   const [settings, setSettings] = useState<GatewaySettings | null>(null);
   const [loading, setLoading] = useState(true);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [rotation, setRotation] = useState({ x: 0, y: 0 });
+  const [showTransition, setShowTransition] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -260,8 +261,12 @@ export function UltraModernGateway({ onEnter }: GatewayProps) {
 
     const timer4 = settings.auto_enter_enabled
       ? setTimeout(() => {
-          setPhase('enter');
-          setTimeout(() => onEnter(), 600);
+          setPhase('transition');
+          setShowTransition(true);
+          setTimeout(() => {
+            setPhase('enter');
+            setTimeout(() => onEnter(), 1200);
+          }, 1000);
         }, delay)
       : null;
 
@@ -296,6 +301,7 @@ export function UltraModernGateway({ onEnter }: GatewayProps) {
     analyze: 'تحليل البيانات',
     process: 'معالجة المعلومات',
     ready: 'جاهز للدخول',
+    transition: 'جاري الانتقال',
     enter: 'جاري الدخول',
   };
 
@@ -569,7 +575,14 @@ export function UltraModernGateway({ onEnter }: GatewayProps) {
         {/* CTA Button */}
         {phase === 'ready' && !settings.auto_enter_enabled && (
           <button
-            onClick={onEnter}
+            onClick={() => {
+              setPhase('transition');
+              setShowTransition(true);
+              setTimeout(() => {
+                setPhase('enter');
+                setTimeout(() => onEnter(), 1200);
+              }, 1000);
+            }}
             className="mt-12 group relative overflow-hidden"
           >
             {/* Glow effect */}
@@ -587,6 +600,80 @@ export function UltraModernGateway({ onEnter }: GatewayProps) {
           </button>
         )}
       </div>
+
+      {/* Smooth Transition Screen */}
+      {showTransition && (
+        <div
+          className="fixed inset-0 z-[10000] flex items-center justify-center bg-[#050911] transition-opacity duration-500"
+          style={{
+            opacity: phase === 'transition' ? 1 : 0,
+          }}
+        >
+          {/* Animated Plant Icon */}
+          <div className="relative">
+            {/* Outer glow ring */}
+            <div
+              className="absolute inset-0 -m-16 rounded-full border-2 border-[#10B981]/30"
+              style={{
+                animation: 'spin 3s linear infinite',
+              }}
+            />
+
+            {/* Inner pulsing ring */}
+            <div
+              className="absolute inset-0 -m-8 rounded-full"
+              style={{
+                background: 'radial-gradient(circle, rgba(16, 185, 129, 0.2) 0%, transparent 70%)',
+                animation: 'pulse 2s ease-in-out infinite',
+              }}
+            />
+
+            {/* Center icon */}
+            <div className="relative flex items-center justify-center w-32 h-32">
+              <Sprout
+                className="w-20 h-20 text-[#10B981]"
+                strokeWidth={1.5}
+                style={{
+                  filter: 'drop-shadow(0 0 20px rgba(16, 185, 129, 0.6))',
+                  animation: 'float 2s ease-in-out infinite',
+                }}
+              />
+            </div>
+
+            {/* Floating particles */}
+            {[...Array(6)].map((_, i) => (
+              <div
+                key={i}
+                className="absolute w-2 h-2 bg-[#10B981] rounded-full"
+                style={{
+                  top: `${Math.sin((i / 6) * Math.PI * 2) * 60 + 50}%`,
+                  left: `${Math.cos((i / 6) * Math.PI * 2) * 60 + 50}%`,
+                  animation: `ping 2s ease-in-out infinite`,
+                  animationDelay: `${i * 0.2}s`,
+                  boxShadow: '0 0 10px rgba(16, 185, 129, 0.8)',
+                }}
+              />
+            ))}
+          </div>
+
+          {/* Loading text */}
+          <div className="absolute bottom-1/3 text-center">
+            <p className="text-[#10B981] text-xl font-bold mb-2">جاري تحميل المنصة</p>
+            <div className="flex justify-center gap-1">
+              {[...Array(3)].map((_, i) => (
+                <div
+                  key={i}
+                  className="w-2 h-2 bg-[#10B981] rounded-full"
+                  style={{
+                    animation: 'pulse 1.5s ease-in-out infinite',
+                    animationDelay: `${i * 0.2}s`,
+                  }}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* CSS Animations */}
       <style>{`
@@ -633,6 +720,11 @@ export function UltraModernGateway({ onEnter }: GatewayProps) {
         @keyframes pulse {
           0%, 100% { opacity: 1; transform: scale(1); }
           50% { opacity: 0.6; transform: scale(0.95); }
+        }
+
+        @keyframes float {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-10px); }
         }
       `}</style>
     </div>
