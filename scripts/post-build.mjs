@@ -190,5 +190,15 @@ const redirectsPath = join(__dirname, '..', 'dist', '_redirects');
 writeFileSync(redirectsPath, '/*    /index.html   200\n');
 console.log('✅ Created _redirects file');
 
+// Generate Atomic Deployment Manifest
+console.log('\n🔐 Generating Atomic Deployment Manifest...\n');
+try {
+  const { execSync } = await import('child_process');
+  execSync('node scripts/generate-manifest.mjs', { stdio: 'inherit' });
+  console.log('✅ Manifest generation completed');
+} catch (error) {
+  console.error('❌ Manifest generation failed:', error.message);
+}
+
 console.log('\n✅ Post-build tasks completed!\n');
 console.log(`📦 Version: ${version}\n`);
