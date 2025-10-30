@@ -121,8 +121,15 @@ export function RoyalGlassGateway({ onEnter }: GatewayProps) {
       <div className="relative z-10 h-full flex flex-col items-center justify-center px-4 sm:px-6">
 
         {/* Crown Icon */}
-        <div className="mb-8 animate-bounce-slow">
-          <Crown className="w-16 h-16 text-amber-600" strokeWidth={1.5} />
+        <div className="mb-6 sm:mb-8 animate-bounce-slow">
+          <Crown
+            className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24"
+            strokeWidth={2}
+            style={{
+              color: '#d97706',
+              filter: 'drop-shadow(0 4px 12px rgba(217, 119, 6, 0.4))',
+            }}
+          />
         </div>
 
         {/* Glass Card */}
@@ -136,31 +143,31 @@ export function RoyalGlassGateway({ onEnter }: GatewayProps) {
             <div className="absolute inset-0 rounded-3xl border-2 border-amber-400/30 animate-pulse" />
 
             {/* Trees Container */}
-            <div className="flex items-center justify-center gap-8 mb-8">
+            <div className="flex items-center justify-center gap-6 sm:gap-8 mb-10">
               {/* Palm Tree */}
               <div className="relative group">
                 <div className="absolute inset-0 bg-green-400/20 blur-2xl rounded-full scale-150 group-hover:scale-175 transition-transform duration-500" />
                 <Palmtree
-                  className="relative w-20 h-20 sm:w-24 sm:h-24 text-green-700 group-hover:scale-110 transition-transform duration-300"
-                  strokeWidth={1.5}
+                  className="relative w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 text-green-700 group-hover:scale-110 transition-transform duration-300"
+                  strokeWidth={1.8}
                   style={{
-                    filter: 'drop-shadow(0 4px 8px rgba(34, 197, 94, 0.3))',
+                    filter: 'drop-shadow(0 4px 12px rgba(34, 197, 94, 0.4))',
                     animation: 'sway 3s ease-in-out infinite',
                   }}
                 />
               </div>
 
               {/* Divider */}
-              <div className="h-24 w-px bg-gradient-to-b from-transparent via-amber-400 to-transparent" />
+              <div className="h-28 sm:h-32 md:h-36 w-0.5 bg-gradient-to-b from-transparent via-amber-400 to-transparent opacity-60" />
 
               {/* Olive Tree */}
               <div className="relative group">
                 <div className="absolute inset-0 bg-emerald-400/20 blur-2xl rounded-full scale-150 group-hover:scale-175 transition-transform duration-500" />
                 <Leaf
-                  className="relative w-20 h-20 sm:w-24 sm:h-24 text-emerald-700 group-hover:scale-110 transition-transform duration-300"
-                  strokeWidth={1.5}
+                  className="relative w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 text-emerald-700 group-hover:scale-110 transition-transform duration-300"
+                  strokeWidth={1.8}
                   style={{
-                    filter: 'drop-shadow(0 4px 8px rgba(16, 185, 129, 0.3))',
+                    filter: 'drop-shadow(0 4px 12px rgba(16, 185, 129, 0.4))',
                     animation: 'sway 3s ease-in-out infinite 0.5s',
                   }}
                 />
@@ -169,15 +176,38 @@ export function RoyalGlassGateway({ onEnter }: GatewayProps) {
 
             {/* Welcome Text */}
             <div className="text-center mb-8">
-              <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-amber-700 via-yellow-600 to-amber-700 bg-clip-text text-transparent">
+              <h1
+                className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-5 leading-tight"
+                style={{
+                  background: 'linear-gradient(135deg, #b45309 0%, #d97706 25%, #fbbf24 50%, #d97706 75%, #b45309 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                  textShadow: '0 2px 20px rgba(217, 119, 6, 0.3)',
+                  letterSpacing: '-0.02em',
+                }}
+              >
                 {settings.welcome_text_ar}
               </h1>
 
-              <p className="text-xl sm:text-2xl text-amber-800/90 font-semibold mb-3">
+              <p
+                className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold mb-4 leading-relaxed"
+                style={{
+                  color: '#92400e',
+                  textShadow: '0 1px 2px rgba(146, 64, 14, 0.1)',
+                  letterSpacing: '-0.01em',
+                }}
+              >
                 {settings.subtitle_text_ar}
               </p>
 
-              <p className="text-base sm:text-lg text-amber-700/80">
+              <p
+                className="text-base sm:text-lg md:text-xl font-medium leading-relaxed px-2"
+                style={{
+                  color: '#b45309',
+                  letterSpacing: '-0.005em',
+                }}
+              >
                 {settings.description_text_ar}
               </p>
             </div>
@@ -185,7 +215,7 @@ export function RoyalGlassGateway({ onEnter }: GatewayProps) {
             {/* Progress Bar */}
             {settings.auto_enter_enabled && (
               <div className="mb-6">
-                <div className="relative h-2 bg-amber-200/50 rounded-full overflow-hidden backdrop-blur-sm border border-amber-300/30">
+                <div className="relative h-3 bg-amber-200/50 rounded-full overflow-hidden backdrop-blur-sm border border-amber-300/30">
                   <div
                     className="absolute inset-y-0 left-0 bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 rounded-full transition-all duration-300 ease-out"
                     style={{ width: `${progress}%` }}
@@ -193,9 +223,24 @@ export function RoyalGlassGateway({ onEnter }: GatewayProps) {
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent animate-shimmer" />
                   </div>
                 </div>
-                <div className="flex justify-between items-center mt-2 text-sm text-amber-700/70">
-                  <span>جاري الدخول...</span>
-                  <span className="font-mono">{Math.round(progress)}%</span>
+                <div className="flex justify-between items-center mt-3">
+                  <span
+                    className="text-sm sm:text-base font-bold"
+                    style={{
+                      color: '#92400e',
+                      letterSpacing: '-0.01em',
+                    }}
+                  >
+                    جاري الدخول...
+                  </span>
+                  <span
+                    className="text-base sm:text-lg font-black font-mono"
+                    style={{
+                      color: '#b45309',
+                    }}
+                  >
+                    {Math.round(progress)}%
+                  </span>
                 </div>
               </div>
             )}
@@ -203,15 +248,28 @@ export function RoyalGlassGateway({ onEnter }: GatewayProps) {
             {/* Enter Button */}
             <button
               onClick={onEnter}
-              className="group relative w-full py-4 rounded-2xl overflow-hidden transition-all duration-300 hover:scale-105"
+              className="group relative w-full py-5 sm:py-6 rounded-2xl overflow-hidden transition-all duration-300 hover:scale-105 active:scale-95"
             >
               {/* Button Glow */}
               <div className="absolute inset-0 bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-400 opacity-90 group-hover:opacity-100 transition-opacity" />
 
               {/* Button Content */}
-              <div className="relative flex items-center justify-center gap-3 text-amber-900">
-                <span className="text-xl font-bold">دخول المنصة</span>
-                <ArrowLeft className="w-6 h-6 group-hover:translate-x-2 transition-transform" />
+              <div className="relative flex items-center justify-center gap-3">
+                <span
+                  className="text-xl sm:text-2xl md:text-3xl font-black"
+                  style={{
+                    color: '#451a03',
+                    textShadow: '0 1px 2px rgba(255, 255, 255, 0.3)',
+                    letterSpacing: '-0.01em',
+                  }}
+                >
+                  دخول المنصة
+                </span>
+                <ArrowLeft
+                  className="w-6 h-6 sm:w-7 sm:h-7 group-hover:-translate-x-2 transition-transform"
+                  style={{ color: '#451a03' }}
+                  strokeWidth={2.5}
+                />
               </div>
 
               {/* Shine Effect */}
@@ -228,7 +286,13 @@ export function RoyalGlassGateway({ onEnter }: GatewayProps) {
 
         {/* Bottom Decorative Text */}
         <div className="mt-8 text-center">
-          <p className="text-sm text-amber-700/60 font-medium">
+          <p
+            className="text-base sm:text-lg font-bold tracking-wide"
+            style={{
+              color: '#92400e',
+              textShadow: '0 1px 2px rgba(146, 64, 14, 0.1)',
+            }}
+          >
             استثمارك يبدأ من هنا
           </p>
         </div>
