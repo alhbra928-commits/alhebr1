@@ -16,6 +16,15 @@ export function PublicPlatformRouter({ onAdminLogin, onBackToAdmin, onFarmOwnerL
   const [currentView, setCurrentView] = useState<View>('gateway');
   const [selectedBarcode, setSelectedBarcode] = useState<string>('');
 
+  // Debug: Check if functions are provided
+  useEffect(() => {
+    console.log('🔍 PublicPlatformRouter Props:', {
+      hasAdminLogin: !!onAdminLogin,
+      hasBackToAdmin: !!onBackToAdmin,
+      hasFarmOwnerLogin: !!onFarmOwnerLogin,
+    });
+  }, [onAdminLogin, onBackToAdmin, onFarmOwnerLogin]);
+
   // تهيئة السكربتات التحليلية عند التحميل الأول
   useEffect(() => {
     const initAnalytics = async () => {

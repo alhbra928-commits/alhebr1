@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>اختبار زر الرجوع - Debug</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+      color: white;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 2.5rem;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 30px;
+      margin-bottom: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .step {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 20px;
+      border-radius: 15px;
+      margin-bottom: 15px;
+      border-left: 4px solid #10b981;
+    }
+
+    h2, h3 {
+      margin-bottom: 15px;
+      color: #10b981;
+    }
+
+    .code {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 15px;
+      border-radius: 10px;
+      font-family: 'Courier New', monospace;
+      margin: 10px 0;
+      overflow-x: auto;
+      white-space: pre;
+    }
+
+    .highlight {
+      background: rgba(16, 185, 129, 0.3);
+      padding: 2px 5px;
+      border-radius: 3px;
+      font-weight: bold;
+    }
+
+    .status {
+      background: rgba(16, 185, 129, 0.2);
+      border: 2px solid #10b981;
+      padding: 20px;
+      border-radius: 15px;
+      margin-top: 20px;
+    }
+
+    .warning {
+      background: rgba(245, 158, 11, 0.2);
+      border: 2px solid #f59e0b;
+      padding: 15px;
+      border-radius: 10px;
+      margin: 15px 0;
+    }
+
+    .success {
+      background: rgba(16, 185, 129, 0.2);
+      border: 2px solid #10b981;
+      padding: 15px;
+      border-radius: 10px;
+      margin: 15px 0;
+    }
+
+    ul {
+      margin: 10px 0 10px 30px;
+    }
+
+    li {
+      margin: 5px 0;
+    }
+
+    .button {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      margin: 10px;
+      transition: all 0.3s;
+    }
+
+    .button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4);
+    }
+
+    .test-section {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 20px;
+      border-radius: 15px;
+      margin: 20px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔍 اختبار زر الرجوع - Debug Mode</h1>
+
+    <div class="card">
+      <h2>📋 خطوات التحقق من عمل الزر</h2>
+
+      <div class="step">
+        <h3>الخطوة 1: تسجيل الدخول</h3>
+        <p>قبل أي شيء، يجب تسجيل دخولك كمدير:</p>
+        <div class="code">1. اضغط على زر التاج 👑 في المنصة
+2. اختر "لوحة الإدارة"
+3. أدخل رقم الجوال والرمز
+4. سجل الدخول بنجاح</div>
+        <div class="success">
+          <strong>✅ الآن localStorage يحتوي على:</strong>
+          <div class="code">admin_session_token: "..."
+admin_data: {...}</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <h3>الخطوة 2: افتح Console (F12)</h3>
+        <p>يجب أن ترى هذه الرسائل بالترتيب:</p>
+        <div class="code">🔍 PublicPlatformRouter Props: {
+  hasAdminLogin: true,
+  hasBackToAdmin: true,
+  hasFarmOwnerLogin: true
+}
+
+🔍 ModernRoyalPlatform Props: {
+  hasAdminLogin: true,
+  hasBackToAdmin: true,
+  hasFarmOwnerLogin: true
+}
+
+🔄 Login Status Changed: Logged In</div>
+        <div class="warning">
+          <strong>⚠️ إذا رأيت false في أي منها:</strong><br>
+          معناها الوظيفة لم تُمرّر بشكل صحيح!
+        </div>
+      </div>
+
+      <div class="step">
+        <h3>الخطوة 3: تحقق من ظهور الزر</h3>
+        <p>في أسفل يسار الشاشة يجب أن ترى:</p>
+        <div class="code">[← لوحة الإدارة] [👑]
+     زر الرجوع    زر التاج</div>
+        <div class="success">
+          <strong>✅ إذا ظهر الزر:</strong><br>
+          معناها التحقق من الجلسة يعمل بنجاح
+        </div>
+        <div class="warning">
+          <strong>⚠️ إذا لم يظهر:</strong><br>
+          تحقق من localStorage في Console:<br>
+          <div class="code">localStorage.getItem('admin_session_token')
+localStorage.getItem('admin_data')</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <h3>الخطوة 4: اضغط على زر "لوحة الإدارة"</h3>
+        <p>عند الضغط، يجب أن ترى في Console:</p>
+        <div class="code">🎯 Back to Admin clicked
+✅ Calling onBackToAdmin function</div>
+        <div class="success">
+          <strong>✅ إذا رأيت هاتين الرسالتين:</strong><br>
+          معناها الزر يعمل والوظيفة موجودة
+        </div>
+        <div class="warning">
+          <strong>⚠️ إذا رأيت رسالة خطأ:</strong><br>
+          <div class="code">❌ onBackToAdmin function not provided!</div>
+          معناها الوظيفة لم تُمرّر للزر!
+        </div>
+      </div>
+
+      <div class="step">
+        <h3>الخطوة 5: التحقق من الانتقال</h3>
+        <p>بعد الضغط على الزر:</p>
+        <div class="success">
+          <strong>✅ يجب أن تنتقل إلى لوحة الإدارة</strong><br>
+          ستظهر لك واجهة الإدارة الرئيسية
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>🧪 اختبارات سريعة</h2>
+
+      <div class="test-section">
+        <h3>Test 1: فحص localStorage</h3>
+        <button class="button" onclick="checkStorage()">
+          فحص localStorage
+        </button>
+        <div id="storage-result" class="code" style="display:none;"></div>
+      </div>
+
+      <div class="test-section">
+        <h3>Test 2: محاكاة تسجيل الدخول</h3>
+        <button class="button" onclick="simulateLogin()">
+          تسجيل دخول تجريبي
+        </button>
+        <div id="login-result" class="code" style="display:none;"></div>
+      </div>
+
+      <div class="test-section">
+        <h3>Test 3: محاكاة تسجيل الخروج</h3>
+        <button class="button" onclick="simulateLogout()">
+          تسجيل خروج تجريبي
+        </button>
+        <div id="logout-result" class="code" style="display:none;"></div>
+      </div>
+    </div>
+
+    <div class="status">
+      <h2>📊 حالة النظام</h2>
+      <p><strong>Build Version:</strong> v20251030_1761854622793</p>
+      <p><strong>Build Time:</strong> ٣٠‏/١٠‏/٢٠٢٥، ٧:٥٧:٠٢ م</p>
+      <p><strong>Debug Logs:</strong> ✅ مفعّلة</p>
+      <p><strong>الملفات المعدلة:</strong></p>
+      <ul>
+        <li>AdminCrownButton.tsx - ✅ فحص الجلسة + Debug</li>
+        <li>PublicPlatformRouter.tsx - ✅ Debug logs</li>
+        <li>ModernRoyalPlatform.tsx - ✅ Debug logs</li>
+        <li>MainPlatformInterface.tsx - ✅ تمرير onBackToAdmin</li>
+      </ul>
+    </div>
+
+    <div class="warning">
+      <h3>⚠️ تعليمات مهمة:</h3>
+      <ul>
+        <li>امسح الكاش بـ <strong>Ctrl+Shift+R</strong></li>
+        <li>افتح Console قبل بدء الاختبار</li>
+        <li>سجل دخول أولاً قبل التحقق من الزر</li>
+        <li>تابع الرسائل في Console خطوة بخطوة</li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    function checkStorage() {
+      const result = document.getElementById('storage-result');
+      const token = localStorage.getItem('admin_session_token');
+      const data = localStorage.getItem('admin_data');
+      const adminUser = localStorage.getItem('adminUser');
+
+      result.style.display = 'block';
+      result.textContent = `
+📦 localStorage Status:
+━━━━━━━━━━━━━━━━━━━━━━━
+admin_session_token: ${token ? '✅ موجود' : '❌ غير موجود'}
+admin_data: ${data ? '✅ موجود' : '❌ غير موجود'}
+adminUser: ${adminUser ? '✅ موجود' : '❌ غير موجود'}
+
+النتيجة: ${token || data || adminUser ? '✅ مسجل دخول' : '❌ غير مسجل'}
+`;
+    }
+
+    function simulateLogin() {
+      const result = document.getElementById('login-result');
+
+      // محاكاة بيانات الجلسة
+      const sessionToken = 'test_token_' + Date.now();
+      const adminData = {
+        phone: '0500000000',
+        name: 'مدير تجريبي',
+        permissions: {}
+      };
+
+      localStorage.setItem('admin_session_token', sessionToken);
+      localStorage.setItem('admin_data', JSON.stringify(adminData));
+
+      result.style.display = 'block';
+      result.textContent = `
+✅ تم تسجيل الدخول التجريبي!
+
+تم حفظ:
+━━━━━━━━━━━━━━━━━━━━━━━
+admin_session_token: ${sessionToken}
+admin_data: ${JSON.stringify(adminData, null, 2)}
+
+الآن يجب أن يظهر زر "لوحة الإدارة" في خلال 500ms
+`;
+
+      console.log('✅ Simulated Login:', { sessionToken, adminData });
+    }
+
+    function simulateLogout() {
+      const result = document.getElementById('logout-result');
+
+      localStorage.removeItem('admin_session_token');
+      localStorage.removeItem('admin_data');
+      localStorage.removeItem('adminUser');
+
+      result.style.display = 'block';
+      result.textContent = `
+✅ تم تسجيل الخروج التجريبي!
+
+تم حذف:
+━━━━━━━━━━━━━━━━━━━━━━━
+❌ admin_session_token
+❌ admin_data
+❌ adminUser
+
+الآن يجب أن يختفي زر "لوحة الإدارة" في خلال 500ms
+`;
+
+      console.log('✅ Simulated Logout');
+    }
+
+    // Auto-check on page load
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        console.log('🔍 Auto-check localStorage on page load:');
+        checkStorage();
+      }, 1000);
+    });
+  </script>
+</body>
+</html>
