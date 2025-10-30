@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Sprout, TreePine, Palmtree, ChevronDown, Sparkles } from 'lucide-react';
+import { Sprout, TreePine, Palmtree } from 'lucide-react';
 
 interface ModernAgriculturalGatewayProps {
   onEnter: () => void;
@@ -8,6 +8,15 @@ interface ModernAgriculturalGatewayProps {
 export function ModernAgriculturalGateway({ onEnter }: ModernAgriculturalGatewayProps) {
   const [isAnimating, setIsAnimating] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+
+  // Auto-enter after 3 seconds
+  useEffect(() => {
+    const autoEnterTimer = setTimeout(() => {
+      handleEnter();
+    }, 3000);
+
+    return () => clearTimeout(autoEnterTimer);
+  }, []);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -22,6 +31,7 @@ export function ModernAgriculturalGateway({ onEnter }: ModernAgriculturalGateway
   }, []);
 
   const handleEnter = () => {
+    if (isAnimating) return;
     setIsAnimating(true);
     setTimeout(() => {
       onEnter();
@@ -44,7 +54,7 @@ export function ModernAgriculturalGateway({ onEnter }: ModernAgriculturalGateway
       </div>
 
       {/* Floating Particles */}
-      {[...Array(20)].map((_, i) => (
+      {[...Array(30)].map((_, i) => (
         <div
           key={i}
           className="absolute w-2 h-2 bg-emerald-400/20 rounded-full animate-float"
@@ -57,20 +67,16 @@ export function ModernAgriculturalGateway({ onEnter }: ModernAgriculturalGateway
         />
       ))}
 
-      {/* Main Content */}
-      <div className={`relative z-10 min-h-screen flex flex-col items-center justify-center p-4 transition-all duration-800 ${isAnimating ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}>
+      {/* Main Content - Centered Rotating Icons */}
+      <div className={`relative z-10 min-h-screen flex items-center justify-center transition-all duration-800 ${isAnimating ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}>
 
-        {/* Top Badge */}
-        <div className="mb-8 animate-fade-in-down">
-          <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-emerald-500/10 backdrop-blur-sm border border-emerald-400/20">
-            <Sparkles className="w-4 h-4 text-emerald-400" />
-            <span className="text-emerald-100 text-sm font-semibold tracking-wide">منصة الاستثمار الزراعي</span>
-          </div>
-        </div>
-
-        {/* Animated Icons Circle */}
-        <div className="relative w-64 h-64 mb-12">
-          {/* Center Glow */}
+        {/* Clickable Rotating Icons Circle - LARGER */}
+        <button
+          onClick={handleEnter}
+          className="relative w-96 h-96 sm:w-[32rem] sm:h-[32rem] md:w-[40rem] md:h-[40rem] lg:w-[48rem] lg:h-[48rem] xl:w-[56rem] xl:h-[56rem] group cursor-pointer"
+          aria-label="دخول المنصة"
+        >
+          {/* Outer Glow - Pulsing */}
           <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/20 to-teal-500/20 rounded-full blur-3xl animate-pulse" />
 
           {/* Rotating Icons */}
@@ -82,96 +88,50 @@ export function ModernAgriculturalGateway({ onEnter }: ModernAgriculturalGateway
             ].map(({ Icon, angle, delay }, index) => (
               <div
                 key={index}
-                className="absolute top-1/2 left-1/2 w-16 h-16"
+                className="absolute top-1/2 left-1/2 w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32"
                 style={{
-                  transform: `translate(-50%, -50%) rotate(${angle}deg) translateY(-100px)`,
+                  transform: `translate(-50%, -50%) rotate(${angle}deg) translateY(-${window.innerWidth < 640 ? '160' : window.innerWidth < 768 ? '200' : window.innerWidth < 1024 ? '240' : window.innerWidth < 1280 ? '280' : '320'}px)`,
                   animationDelay: `${delay}s`,
                 }}
               >
                 <div
-                  className="w-full h-full flex items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500/20 to-teal-500/20 backdrop-blur-md border border-emerald-400/30 animate-float"
+                  className="w-full h-full flex items-center justify-center rounded-2xl sm:rounded-3xl bg-gradient-to-br from-emerald-500/20 to-teal-500/20 backdrop-blur-md border border-emerald-400/30 animate-float group-hover:from-emerald-500/30 group-hover:to-teal-500/30 transition-all duration-500"
                   style={{ animationDelay: `${delay}s` }}
                 >
-                  <Icon className="w-8 h-8 text-emerald-300" />
+                  <Icon className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 text-emerald-300" />
                 </div>
               </div>
             ))}
           </div>
 
-          {/* Center Logo */}
+          {/* Center Logo - LARGER */}
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="relative group">
-              <div className="absolute inset-0 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full blur-xl opacity-50 group-hover:opacity-75 transition-opacity" />
-              <div className="relative w-24 h-24 rounded-full bg-gradient-to-br from-emerald-600 to-teal-600 flex items-center justify-center border-4 border-emerald-400/30 backdrop-blur-sm">
-                <span className="text-4xl font-black text-white">مزاد</span>
+            <div className="relative">
+              {/* Outer Glow */}
+              <div className="absolute inset-0 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full blur-2xl opacity-50 group-hover:opacity-75 group-hover:blur-3xl transition-all duration-500" />
+
+              {/* Main Circle */}
+              <div className="relative w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 lg:w-56 lg:h-56 xl:w-64 xl:h-64 rounded-full bg-gradient-to-br from-emerald-600 to-teal-600 flex items-center justify-center border-4 sm:border-6 md:border-8 border-emerald-400/30 backdrop-blur-sm group-hover:scale-110 group-hover:border-emerald-400/50 transition-all duration-500 shadow-2xl">
+                <span className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black text-white drop-shadow-2xl">
+                  مزاد
+                </span>
               </div>
+
+              {/* Inner Glow */}
+              <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-white/5 rounded-full blur-xl" />
             </div>
           </div>
-        </div>
 
-        {/* Title */}
-        <h1 className="text-5xl md:text-7xl font-black text-center mb-6 animate-fade-in-up">
-          <span className="bg-gradient-to-r from-emerald-200 via-teal-100 to-emerald-200 bg-clip-text text-transparent">
-            مزاد زراعي
-          </span>
-        </h1>
-
-        {/* Subtitle */}
-        <p className="text-xl md:text-2xl text-emerald-100/80 text-center mb-4 max-w-2xl animate-fade-in-up animation-delay-200">
-          استثمر في مزارع النخيل والزيتون
-        </p>
-
-        <p className="text-base md:text-lg text-emerald-200/60 text-center mb-12 max-w-xl animate-fade-in-up animation-delay-300">
-          منصة متكاملة لإدارة وتملك الأشجار المثمرة بطريقة عصرية ومبتكرة
-        </p>
-
-        {/* Enter Button */}
-        <button
-          onClick={handleEnter}
-          className="group relative px-12 py-5 rounded-2xl overflow-hidden animate-fade-in-up animation-delay-400 hover:scale-105 transition-all duration-300"
-        >
-          {/* Button Glow */}
-          <div className="absolute inset-0 bg-gradient-to-r from-emerald-500 to-teal-500 blur-xl opacity-50 group-hover:opacity-75 transition-opacity" />
-
-          {/* Button Background */}
-          <div className="absolute inset-0 bg-gradient-to-r from-emerald-600 to-teal-600 group-hover:from-emerald-500 group-hover:to-teal-500 transition-all duration-300" />
-
-          {/* Button Border */}
-          <div className="absolute inset-0 border-2 border-emerald-400/50 rounded-2xl" />
-
-          {/* Button Content */}
-          <div className="relative flex items-center gap-3">
-            <span className="text-xl font-black text-white">استكشف المنصة</span>
-            <ChevronDown className="w-6 h-6 text-white animate-bounce" />
+          {/* Click Hint - Subtle */}
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <div className="absolute -bottom-24 sm:-bottom-28 md:-bottom-32 text-center opacity-50 group-hover:opacity-100 transition-opacity duration-300">
+              <p className="text-emerald-200 text-sm sm:text-base md:text-lg font-semibold animate-pulse">
+                انقر للدخول
+              </p>
+            </div>
           </div>
         </button>
 
-        {/* Features Pills */}
-        <div className="mt-16 flex flex-wrap justify-center gap-4 max-w-4xl animate-fade-in-up animation-delay-500">
-          {[
-            '🌴 مزارع معتمدة',
-            '💎 استثمار آمن',
-            '📊 إدارة ذكية',
-            '🔒 توثيق رقمي',
-          ].map((feature, index) => (
-            <div
-              key={index}
-              className="px-6 py-3 rounded-full bg-white/5 backdrop-blur-sm border border-emerald-400/20 hover:bg-white/10 transition-all duration-300 hover:scale-105 cursor-default"
-            >
-              <span className="text-emerald-100 font-semibold text-sm">{feature}</span>
-            </div>
-          ))}
-        </div>
-
-        {/* Bottom Scroll Indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-          <div className="flex flex-col items-center gap-2 opacity-50">
-            <div className="w-6 h-10 rounded-full border-2 border-emerald-400/30 flex items-start justify-center p-1">
-              <div className="w-1 h-3 bg-emerald-400/50 rounded-full animate-scroll-down" />
-            </div>
-            <span className="text-xs text-emerald-300/50 font-semibold">ابدأ الاستكشاف</span>
-          </div>
-        </div>
       </div>
 
       <style>{`
@@ -199,80 +159,12 @@ export function ModernAgriculturalGateway({ onEnter }: ModernAgriculturalGateway
           }
         }
 
-        @keyframes scroll-down {
-          0% {
-            transform: translateY(0);
-            opacity: 0;
-          }
-          50% {
-            opacity: 1;
-          }
-          100% {
-            transform: translateY(20px);
-            opacity: 0;
-          }
-        }
-
-        @keyframes fade-in-up {
-          from {
-            opacity: 0;
-            transform: translateY(30px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes fade-in-down {
-          from {
-            opacity: 0;
-            transform: translateY(-30px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
         .animate-float {
           animation: float 10s ease-in-out infinite;
         }
 
         .animate-spin-slow {
           animation: spin-slow 20s linear infinite;
-        }
-
-        .animate-scroll-down {
-          animation: scroll-down 2s ease-in-out infinite;
-        }
-
-        .animate-fade-in-up {
-          animation: fade-in-up 0.8s ease-out forwards;
-        }
-
-        .animate-fade-in-down {
-          animation: fade-in-down 0.8s ease-out forwards;
-        }
-
-        .animation-delay-200 {
-          animation-delay: 0.2s;
-          opacity: 0;
-        }
-
-        .animation-delay-300 {
-          animation-delay: 0.3s;
-          opacity: 0;
-        }
-
-        .animation-delay-400 {
-          animation-delay: 0.4s;
-          opacity: 0;
-        }
-
-        .animation-delay-500 {
-          animation-delay: 0.5s;
-          opacity: 0;
         }
       `}</style>
     </div>
