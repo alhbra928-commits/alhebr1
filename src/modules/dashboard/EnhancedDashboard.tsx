@@ -348,7 +348,7 @@ export function EnhancedDashboard({ onModuleSelect, onLogout, onGoToPublic, onSh
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
           {/* بطاقة تعريف الموظف */}
           {adminInfo && (
-            <div className="mb-6 bg-gray-900/50 backdrop-blur-xl rounded-2xl shadow-lg border border-emerald-800/30 overflow-hidden">
+            <div className="mb-6 royal-green-card rounded-2xl shadow-lg border border-emerald-800/30 overflow-hidden">
               <div className="bg-gradient-to-r from-emerald-900 to-teal-900 px-6 py-4">
                 <div className="flex items-center gap-4">
                   <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 to-teal-600 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg shadow-emerald-500/20">
@@ -407,7 +407,7 @@ export function EnhancedDashboard({ onModuleSelect, onLogout, onGoToPublic, onSh
                     onMouseLeave={() => setHoveredCard(null)}
                     className={`
                       w-full p-4 sm:p-5 lg:p-6 rounded-2xl sm:rounded-3xl transition-all duration-500 ease-out
-                      bg-gray-900/50 backdrop-blur-xl
+                      royal-green-card
                       ${isHovered ? 'shadow-2xl shadow-emerald-500/20 scale-105' : 'shadow-lg'}
                       border-2
                       ${isHovered ? 'border-emerald-500/50' : 'border-emerald-800/30'}
@@ -472,7 +472,7 @@ export function EnhancedDashboard({ onModuleSelect, onLogout, onGoToPublic, onSh
           </div>
 
           <div className="mt-8 sm:mt-10 lg:mt-12 grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
-            <div className="p-4 sm:p-5 lg:p-6 bg-gray-900/50 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-lg border-2 border-emerald-800/30">
+            <div className="p-4 sm:p-5 lg:p-6 royal-green-card rounded-2xl sm:rounded-3xl shadow-lg border-2 border-emerald-800/30">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-bold text-emerald-100">إجمالي الإيرادات</h3>
                 <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-500/20">
@@ -485,7 +485,7 @@ export function EnhancedDashboard({ onModuleSelect, onLogout, onGoToPublic, onSh
               <p className="text-sm text-emerald-200/70 mt-2">من جميع الحجوزات</p>
             </div>
 
-            <div className="p-4 sm:p-5 lg:p-6 bg-gray-900/50 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-lg border-2 border-emerald-800/30">
+            <div className="p-4 sm:p-5 lg:p-6 royal-green-card rounded-2xl sm:rounded-3xl shadow-lg border-2 border-emerald-800/30">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-bold text-emerald-100">إجمالي الأشجار</h3>
                 <div className="w-12 h-12 bg-gradient-to-br from-emerald-600 to-teal-700 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-600/20">
@@ -498,7 +498,7 @@ export function EnhancedDashboard({ onModuleSelect, onLogout, onGoToPublic, onSh
               <p className="text-sm text-emerald-200/70 mt-2">في جميع المزارع</p>
             </div>
 
-            <div className="p-4 sm:p-5 lg:p-6 bg-gray-900/50 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-lg border-2 border-emerald-800/30">
+            <div className="p-4 sm:p-5 lg:p-6 royal-green-card rounded-2xl sm:rounded-3xl shadow-lg border-2 border-emerald-800/30">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-bold text-emerald-100">الأشجار المتاحة</h3>
                 <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center shadow-lg shadow-orange-500/20">

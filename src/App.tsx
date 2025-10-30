@@ -281,7 +281,7 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-950 via-teal-950 to-emerald-950" dir="rtl">
+    <div className="min-h-screen royal-green-bg" dir="rtl">
       {showAdminLogin && (
         <SmartAdminLoginPage
           onLoginSuccess={handleAdminLogin}
