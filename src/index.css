@@ -2,6 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 🌿 ROYAL GREEN THEME - ALWAYS ACTIVE */
+body {
+  background: linear-gradient(135deg, #ECFDF5 0%, #F0FDF4 50%, #F0FDFA 100%) !important;
+  min-height: 100vh !important;
+}
+
+/* Override any dark backgrounds */
+.bg-gradient-to-br.from-emerald-950,
+.bg-emerald-950,
+.bg-teal-950,
+.bg-gray-900 {
+  background: linear-gradient(135deg, #ECFDF5 0%, #F0FDF4 50%, #F0FDFA 100%) !important;
+}
+
 /* PWA & Mobile Optimization */
 @layer base {
   * {
@@ -14,12 +28,14 @@
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
     touch-action: manipulation;
+    background: linear-gradient(135deg, #ECFDF5 0%, #F0FDF4 50%, #F0FDFA 100%) !important;
   }
 
   body {
     overscroll-behavior-y: none;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    background: linear-gradient(135deg, #ECFDF5 0%, #F0FDF4 50%, #F0FDFA 100%) !important;
   }
 
   /* Prevent horizontal scroll */

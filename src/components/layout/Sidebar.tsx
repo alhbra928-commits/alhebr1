@@ -58,15 +58,15 @@ export function Sidebar({ activeModule, onModuleChange }: SidebarProps) {
   }
 
   return (
-    <div className="hidden lg:block h-screen w-64 bg-gradient-to-b from-emerald-950 via-teal-900 to-emerald-950 text-white fixed right-0 top-0 shadow-2xl overflow-y-auto border-l border-emerald-800/30 backdrop-blur-xl" dir="rtl">
+    <div className="hidden lg:block h-screen w-64 bg-white border-l-4 border-emerald-500 text-gray-800 fixed right-0 top-0 shadow-2xl overflow-y-auto border-l border-emerald-800/30 backdrop-blur-xl" dir="rtl">
       <div className="p-6">
         <div className="flex items-center gap-3 mb-8">
           <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-500/20">
             <MapPin className="h-7 w-7 text-white" />
           </div>
           <div>
-            <h1 className="text-xl font-bold bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">منصة النخيل والزيتون</h1>
-            <p className="text-xs text-emerald-300/70">نظام الإدارة المتكامل</p>
+            <h1 className="text-xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">منصة النخيل والزيتون</h1>
+            <p className="text-xs text-gray-600">نظام الإدارة المتكامل</p>
           </div>
         </div>
 
@@ -79,7 +79,7 @@ export function Sidebar({ activeModule, onModuleChange }: SidebarProps) {
           return null;
         })()}
         {currentAdminPhone && !isAdmin && (
-          <div className="mb-4 p-4 bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl text-white shadow-lg border-2 border-blue-400">
+          <div className="mb-4 p-4 bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl text-gray-800 shadow-lg border-2 border-blue-400">
             {console.log('✅✅✅ BLUE BOX IS RENDERING NOW!')}
             <div className="font-bold text-lg mb-2 flex items-center gap-2">
               🔍 معلومات الحساب
@@ -139,11 +139,11 @@ export function Sidebar({ activeModule, onModuleChange }: SidebarProps) {
                     w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200
                     ${isActive
                       ? 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-lg shadow-emerald-500/30 transform scale-105'
-                      : 'text-emerald-100/80 hover:bg-emerald-900/50 hover:text-white backdrop-blur-sm'
+                      : 'text-gray-700 hover:bg-emerald-50 hover:text-emerald-700'
                     }
                   `}
                 >
-                  <Icon className={`h-5 w-5 ${isActive ? 'text-white' : 'text-emerald-400'}`} />
+                  <Icon className={`h-5 w-5 ${isActive ? 'text-white' : 'text-emerald-600'}`} />
                   <span className="font-medium">{item.label}</span>
                   {isActive && (
                     <div className="mr-auto w-2 h-2 bg-teal-300 rounded-full animate-pulse" />
@@ -169,11 +169,11 @@ export function Sidebar({ activeModule, onModuleChange }: SidebarProps) {
                   w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 relative
                   ${isActive
                     ? 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-lg shadow-emerald-500/30 transform scale-105'
-                    : 'text-emerald-100/80 hover:bg-emerald-900/50 hover:text-white backdrop-blur-sm'
+                    : 'text-gray-700 hover:bg-emerald-50 hover:text-emerald-700'
                   }
                 `}
               >
-                <Icon className={`h-5 w-5 ${isActive ? 'text-white' : 'text-emerald-400'}`} />
+                <Icon className={`h-5 w-5 ${isActive ? 'text-white' : 'text-emerald-600'}`} />
                 <span className="font-medium">{item.label}</span>
                 {isActive && (
                   <div className="mr-auto w-2 h-2 bg-teal-300 rounded-full animate-pulse" />

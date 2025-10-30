@@ -7,7 +7,7 @@ export function ForceThemeUpdate() {
 
   useEffect(() => {
     const lastVersion = localStorage.getItem('app-theme-version');
-    const currentVersion = 'royal-green-v1';
+    const currentVersion = 'royal-green-v2-force';
 
     if (lastVersion !== currentVersion) {
       setShow(true);
@@ -37,12 +37,12 @@ export function ForceThemeUpdate() {
         document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
       });
 
-      localStorage.setItem('app-theme-version', 'royal-green-v1');
+      localStorage.setItem('app-theme-version', 'royal-green-v2-force');
 
       setTimeout(() => {
-        window.location.href = window.location.pathname + '?v=' + Date.now();
+        window.location.href = window.location.pathname + '?v=' + Date.now() + '&force-green=true';
         setTimeout(() => {
-          window.location.reload();
+          location.reload(true);
         }, 100);
       }, 500);
 
