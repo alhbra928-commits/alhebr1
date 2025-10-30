@@ -63,18 +63,20 @@ export default defineConfig({
   },
   build: {
     assetsInlineLimit: 0,
+    // Force new hash on every build for cache-busting
+    cssCodeSplit: true,
     rollupOptions: {
       output: {
         assetFileNames: (assetInfo) => {
           const info = assetInfo.name.split('.');
           const ext = info[info.length - 1];
           if (/png|jpe?g|svg|gif|tiff|bmp|ico/i.test(ext)) {
-            return `assets/images/[name]-[hash][extname]`;
+            return `assets/images/[name]-[hash]-${Date.now()}[extname]`;
           }
-          return `assets/[name]-[hash][extname]`;
+          return `assets/[name]-[hash]-${Date.now()}[extname]`;
         },
-        chunkFileNames: 'assets/[name]-[hash].js',
-        entryFileNames: 'assets/[name]-[hash].js',
+        chunkFileNames: `assets/[name]-[hash]-${Date.now()}.js`,
+        entryFileNames: `assets/[name]-[hash]-${Date.now()}.js`,
         manualChunks: (id) => {
           if (id.includes('node_modules')) {
             if (id.includes('react') || id.includes('react-dom')) {

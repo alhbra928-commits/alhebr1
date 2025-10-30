@@ -1,74 +1,121 @@
-const VERSION = 'v20251030_1761821801249';
+// PROFESSIONAL SERVICE WORKER - AUTO CACHE CLEARING
+const BUILD_TIMESTAMP = Date.now(); // Will be replaced during build
+const VERSION = `v3_DARK_${BUILD_TIMESTAMP}`;
 const CACHE_NAME = `palm-olive-${VERSION}`;
 
-// استراتيجية: Network First للملفات الديناميكية
+// NO CACHE for HTML and main files - always fetch fresh
+const NO_CACHE = [
+  '/',
+  '/index.html',
+  '.html'
+];
+
+// Network First for dynamic content
 const NETWORK_FIRST = [
   '/version-manifest.json',
   '/api/',
+  '.json'
 ];
 
-// استراتيجية: Cache First للأصول الثابتة
-const CACHE_FIRST = [
+// Cache with short TTL for assets
+const CACHE_SHORT = [
   '/manifest.json',
   '/icon.svg',
+  '.css',
+  '.js'
 ];
 
 self.addEventListener('install', (event) => {
-  console.log('[SW] Installing version:', VERSION);
+  console.log('%c[SW] Installing Dark Theme v3', 'color:green;font-weight:bold', VERSION);
 
+  // Skip waiting immediately - activate new SW right away
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      console.log('[SW] Cache opened:', CACHE_NAME);
-      return cache.addAll(CACHE_FIRST);
-    }).then(() => {
-      console.log('[SW] Skip waiting');
+    Promise.resolve().then(() => {
+      console.log('%c[SW] Skip waiting - activating immediately', 'color:orange;font-weight:bold');
       return self.skipWaiting();
     })
   );
 });
 
 self.addEventListener('activate', (event) => {
-  console.log('[SW] Activating version:', VERSION);
+  console.log('%c[SW] Activating Dark Theme v3', 'color:blue;font-weight:bold', VERSION);
 
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((cacheName) => {
-          if (cacheName !== CACHE_NAME) {
-            console.log('[SW] Deleting old cache:', cacheName);
-            return caches.delete(cacheName);
-          }
-        })
-      );
-    }).then(() => {
-      console.log('[SW] Claiming clients');
-      return self.clients.claim();
-    })
+    Promise.all([
+      // Delete ALL old caches
+      caches.keys().then((cacheNames) => {
+        console.log('%c[SW] Found ' + cacheNames.length + ' cache(s)', 'color:blue', cacheNames);
+        return Promise.all(
+          cacheNames.map((cacheName) => {
+            if (cacheName !== CACHE_NAME) {
+              console.log('%c[SW] 🗑️ Deleting old cache:', 'color:red;font-weight:bold', cacheName);
+              return caches.delete(cacheName);
+            } else {
+              console.log('%c[SW] ✅ Keeping current cache:', 'color:green', cacheName);
+            }
+          })
+        );
+      }),
+      // Claim all clients immediately
+      self.clients.claim().then(() => {
+        console.log('%c[SW] ✅ Claimed all clients', 'color:green;font-weight:bold');
+        // Notify all clients about the update
+        return self.clients.matchAll().then(clients => {
+          clients.forEach(client => {
+            console.log('%c[SW] 📢 Notifying client:', 'color:blue', client.url);
+            client.postMessage({
+              type: 'SW_ACTIVATED',
+              version: VERSION,
+              timestamp: BUILD_TIMESTAMP
+            });
+          });
+        });
+      })
+    ])
   );
 });
 
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
 
-  // تجاهل الطلبات الخارجية
+  // Ignore external requests
   if (url.origin !== location.origin) {
     return;
   }
 
-  // تجاهل Chrome Extensions
-  if (url.protocol === 'chrome-extension:') {
+  // Ignore extensions
+  if (url.protocol === 'chrome-extension:' || url.protocol === 'moz-extension:') {
     return;
   }
 
-  // Network First للملفات الديناميكية
+  // NEVER cache HTML files - always fetch fresh
+  if (NO_CACHE.some(path => url.pathname.includes(path) || url.pathname.endsWith(path))) {
+    console.log('[SW] NO_CACHE for:', url.pathname);
+    event.respondWith(
+      fetch(event.request, {
+        cache: 'no-store',
+        headers: {
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache'
+        }
+      })
+    );
+    return;
+  }
+
+  // Network First for dynamic content
   if (NETWORK_FIRST.some(path => url.pathname.includes(path))) {
     event.respondWith(
-      fetch(event.request)
+      fetch(event.request, {
+        cache: 'no-cache'
+      })
         .then(response => {
-          const responseClone = response.clone();
-          caches.open(CACHE_NAME).then(cache => {
-            cache.put(event.request, responseClone);
-          });
+          if (response && response.status === 200) {
+            const responseClone = response.clone();
+            caches.open(CACHE_NAME).then(cache => {
+              cache.put(event.request, responseClone);
+            });
+          }
           return response;
         })
         .catch(() => caches.match(event.request))
@@ -76,20 +123,12 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Cache First للأصول الثابتة
-  if (CACHE_FIRST.some(path => url.pathname.includes(path))) {
-    event.respondWith(
-      caches.match(event.request)
-        .then(response => response || fetch(event.request))
-    );
-    return;
-  }
-
-  // Network First للباقي (HTML, JS, CSS)
+  // Cache assets but always revalidate
   event.respondWith(
-    fetch(event.request)
+    fetch(event.request, {
+      cache: 'reload'
+    })
       .then(response => {
-        // لا تخزن الاستجابات غير الناجحة
         if (!response || response.status !== 200 || response.type !== 'basic') {
           return response;
         }
