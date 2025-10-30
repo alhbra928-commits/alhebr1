@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Bell, MessageCircle, Home, MapPin, Filter, TrendingUp, Search, ChevronDown, Shield, ArrowRight, Crown, Sparkles, Star, Zap } from 'lucide-react';
+import { Bell, MessageCircle, Home, MapPin, Filter, TrendingUp, Search, ChevronDown, Shield, ArrowRight, Star, Zap, Sparkles, Crown } from 'lucide-react';
 import { brandColors, brandGradients } from '../../modules/finance/styles/brandColors';
 
 interface SmartHeaderProps {
@@ -161,43 +161,27 @@ export function SmartHeader({
         {/* Top Bar */}
         <div className="max-w-7xl mx-auto px-3 sm:px-4 py-3 sm:py-4">
           <div className="flex items-center justify-between gap-2">
-            {/* Logo & Platform Name with Crown */}
+            {/* Logo & Platform Name */}
             <button
               onClick={onLogoClick}
-              className="flex items-center gap-2 sm:gap-3 hover:scale-105 transition-transform duration-300 flex-shrink-0 group"
+              className="flex items-center gap-2 sm:gap-3 hover:scale-105 transition-transform duration-300 flex-shrink-0"
             >
-              {/* Crown Icon */}
-              <div className="relative">
-                <div
-                  className="relative p-2 sm:p-2.5 rounded-xl group-hover:rotate-6 transition-transform duration-300"
-                  style={{
-                    background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
-                    boxShadow: '0 4px 20px rgba(16, 185, 129, 0.4), 0 0 0 3px rgba(16, 185, 129, 0.2)',
-                  }}
-                >
-                  <Crown className="w-5 h-5 sm:w-6 sm:h-6 text-white" strokeWidth={2.5} />
-                  <div className="absolute -top-1 -right-1">
-                    <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 text-emerald-300 animate-pulse" />
-                  </div>
-                </div>
-              </div>
-
-              {/* Platform Name */}
+              <div className="text-2xl sm:text-3xl">🌴</div>
               <div className="flex flex-col items-start">
                 <h1
-                  className="text-lg sm:text-2xl md:text-3xl font-black leading-tight"
+                  className="text-base sm:text-xl md:text-2xl font-black leading-tight"
                   style={{
-                    background: 'linear-gradient(135deg, #059669 0%, #10B981 50%, #34D399 100%)',
+                    background: brandGradients.gold,
                     WebkitBackgroundClip: 'text',
                     WebkitTextFillColor: 'transparent',
                     backgroundClip: 'text',
-                    textShadow: '0 2px 10px rgba(16, 185, 129, 0.4)',
-                    filter: 'drop-shadow(0 2px 4px rgba(16, 185, 129, 0.3))',
+                    textShadow: '0 2px 10px rgba(212, 175, 55, 0.4)',
+                    filter: 'drop-shadow(0 2px 4px rgba(212, 175, 55, 0.3))',
                   }}
                 >
-                  منصة الملكية الزراعية
+                  منصة التملك
                 </h1>
-                <p className="text-[10px] sm:text-xs font-bold" style={{ color: '#059669' }}>النخيل والزيتون</p>
+                <p className="text-[10px] sm:text-xs text-gray-600 font-bold">النخيل والزيتون</p>
               </div>
             </button>
 

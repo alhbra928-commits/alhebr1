@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import {
-  Star
+  Star, Crown, Sparkles
 } from 'lucide-react';
 import { PublicFarm } from '../types/farm.types';
 import { PublicFarmService } from '../services/publicFarmService';
@@ -171,6 +171,39 @@ export function ModernRoyalPlatform({
 
       {/* Content */}
       <div className="relative z-10">
+        {/* Hero Header */}
+        <header className="relative overflow-hidden pt-6 pb-4">
+          {/* Glass Background */}
+          <div className="absolute inset-0 bg-white/40 backdrop-blur-xl"></div>
+
+          <div className="relative container mx-auto px-4 sm:px-6">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-6">
+              {/* Logo & Title */}
+              <div className="flex items-center gap-3 sm:gap-4">
+                <div className="relative group">
+                  <div className="absolute -inset-2 bg-gradient-to-r from-emerald-400 via-green-500 to-teal-500 rounded-full blur-xl opacity-60 group-hover:opacity-80 transition-opacity"></div>
+                  <div className="relative bg-gradient-to-br from-emerald-500 to-green-600 p-3 sm:p-4 rounded-2xl shadow-2xl">
+                    <Crown className="w-8 h-8 sm:w-10 sm:h-10 text-white" strokeWidth={2.5} />
+                    <div className="absolute -top-1 -right-1">
+                      <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-300 animate-pulse" />
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-emerald-800 via-green-700 to-teal-800 bg-clip-text text-transparent">
+                    منصة الملكية الزراعية
+                  </h1>
+                </div>
+              </div>
+
+              <AdminCrownButton
+                onAdminLogin={onAdminLogin}
+                onFarmOwnerLogin={onFarmOwnerLogin}
+              />
+            </div>
+          </div>
+        </header>
 
         {/* Concept Button */}
         <GreenConceptButton onClick={() => setCurrentView('concept')} />
