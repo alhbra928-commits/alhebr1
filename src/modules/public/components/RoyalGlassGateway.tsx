@@ -119,101 +119,80 @@ export function RoyalGlassGateway({ onEnter }: GatewayProps) {
       {/* Main Content - Simple & Elegant */}
       <div className="relative z-10 h-full flex flex-col items-center justify-center px-4">
 
-        {/* 3D Circle with MZAD Text */}
-        <div
-          className="relative mb-6 sm:mb-8 cursor-pointer"
-          onClick={onEnter}
-          style={{
-            perspective: '1000px',
-            transformStyle: 'preserve-3d',
-          }}
-        >
-          {/* Outer Glow Ring */}
+        {/* Ultra Modern 3D Circle - Same Style as Concept Button */}
+        <div className="relative mb-6 sm:mb-8 cursor-pointer group" onClick={onEnter}>
+          {/* Outer Glow Ring - Enhanced */}
           <div
             className="absolute inset-0 rounded-full animate-pulse"
             style={{
-              width: '200px',
-              height: '200px',
-              background: 'radial-gradient(circle, rgba(217, 119, 6, 0.3), transparent)',
-              filter: 'blur(30px)',
-              transform: 'translateZ(-20px)',
+              width: '300px',
+              height: '300px',
+              background: 'radial-gradient(circle, rgba(212, 175, 55, 0.4), transparent)',
+              filter: 'blur(40px)',
+              left: '50%',
+              top: '50%',
+              transform: 'translate(-50%, -50%)',
             }}
           />
 
-          {/* 3D Circle */}
+          {/* 3D Circle - Exact Copy of Concept Button Style */}
           <div
-            className="relative group transition-all duration-500 hover:scale-110 active:scale-95"
+            className="relative transition-all duration-500 hover:scale-110 active:scale-95"
             style={{
-              width: '180px',
-              height: '180px',
+              width: '280px',
+              height: '280px',
               borderRadius: '50%',
-              background: 'linear-gradient(145deg, #f59e0b, #d97706)',
+              background: 'linear-gradient(135deg, #D4AF37 0%, #F8E45F 25%, #B8960A 50%, #8B7500 75%, #6B5D00 100%)',
+              border: '4px solid rgba(212, 175, 55, 0.6)',
               boxShadow: `
-                0 20px 60px rgba(217, 119, 6, 0.4),
-                inset 0 1px 0 rgba(255, 255, 255, 0.3),
-                inset 0 -10px 30px rgba(180, 83, 9, 0.5)
+                0 12px 48px rgba(212, 175, 55, 0.5),
+                0 8px 32px rgba(212, 175, 55, 0.4),
+                0 4px 16px rgba(212, 175, 55, 0.3),
+                inset 0 2px 4px rgba(255, 255, 255, 0.3),
+                inset 0 -2px 4px rgba(0, 0, 0, 0.2)
               `,
-              transform: 'rotateX(10deg) rotateY(-10deg)',
-              transformStyle: 'preserve-3d',
-              animation: 'rotate3d 8s ease-in-out infinite',
             }}
           >
-            {/* Inner Shine */}
+            {/* Shimmer Effect - Same as Concept Button */}
             <div
-              className="absolute inset-0 rounded-full"
+              className="absolute inset-0 rounded-full pointer-events-none"
               style={{
-                background: 'radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.4), transparent 60%)',
-                transform: 'translateZ(5px)',
+                background: 'linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%)',
+                backgroundSize: '200% 100%',
+                animation: 'shimmer 3s linear infinite',
               }}
             />
 
-            {/* MZAD Arabic Text - Ultra Professional */}
+            {/* Inner Glow */}
             <div
-              className="absolute inset-0 flex items-center justify-center"
+              className="absolute inset-0 rounded-full"
               style={{
-                transform: 'translateZ(20px)',
+                background: 'radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.3), transparent 60%)',
               }}
-            >
+            />
+
+            {/* MZAD Arabic Text - Ultra Modern & Bigger */}
+            <div className="absolute inset-0 flex items-center justify-center">
               <span
                 className="font-black select-none"
                 style={{
-                  fontSize: '56px',
+                  fontSize: '92px',
                   fontFamily: "'Tajawal', 'Cairo', sans-serif",
-                  background: 'linear-gradient(180deg, #ffffff 0%, #fef3c7 50%, #fbbf24 100%)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text',
+                  color: '#ffffff',
                   textShadow: `
-                    0 2px 10px rgba(0, 0, 0, 0.3),
-                    0 0 30px rgba(251, 191, 36, 0.5)
+                    0 4px 8px rgba(0, 0, 0, 0.4),
+                    0 2px 4px rgba(0, 0, 0, 0.3),
+                    0 0 20px rgba(212, 175, 55, 0.6),
+                    0 0 40px rgba(212, 175, 55, 0.3)
                   `,
-                  letterSpacing: '0.05em',
+                  letterSpacing: '0.08em',
                   fontWeight: 900,
                   lineHeight: 1,
-                  transform: 'translateY(-5px)',
                 }}
               >
                 مزاد
               </span>
             </div>
-
-            {/* Circle Border Effect */}
-            <div
-              className="absolute inset-0 rounded-full"
-              style={{
-                border: '3px solid rgba(255, 255, 255, 0.2)',
-                transform: 'translateZ(10px)',
-              }}
-            />
-
-            {/* Rotating Border Effect */}
-            <div
-              className="absolute inset-0 rounded-full"
-              style={{
-                background: 'conic-gradient(from 0deg, transparent 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%)',
-                animation: 'spin 4s linear infinite',
-              }}
-            />
           </div>
         </div>
 
@@ -270,27 +249,12 @@ export function RoyalGlassGateway({ onEnter }: GatewayProps) {
           }
         }
 
-        @keyframes rotate3d {
-          0%, 100% {
-            transform: rotateX(10deg) rotateY(-10deg);
-          }
-          25% {
-            transform: rotateX(15deg) rotateY(5deg);
-          }
-          50% {
-            transform: rotateX(10deg) rotateY(10deg);
-          }
-          75% {
-            transform: rotateX(5deg) rotateY(-5deg);
-          }
-        }
-
-        @keyframes spin {
+        @keyframes shimmer {
           0% {
-            transform: rotate(0deg);
+            background-position: -200% 0;
           }
           100% {
-            transform: rotate(360deg);
+            background-position: 200% 0;
           }
         }
       `}</style>
