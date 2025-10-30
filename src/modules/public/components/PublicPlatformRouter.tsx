@@ -3,6 +3,7 @@ import { ModernRoyalPlatform } from './ModernRoyalPlatform';
 import { PreviewInspectionPage } from './PreviewInspectionPage';
 import { RevolutionaryGreenGateway } from './RevolutionaryGreenGateway';
 import { marketingAnalyticsService } from '../../../services/marketingAnalyticsService';
+import { supabase } from '../../../lib/supabase';
 
 type View = 'gateway' | 'main' | 'preview';
 
@@ -13,29 +14,72 @@ interface PublicPlatformRouterProps {
 }
 
 export function PublicPlatformRouter({ onAdminLogin, onBackToAdmin, onFarmOwnerLogin }: PublicPlatformRouterProps) {
-  const [currentView, setCurrentView] = useState<View>(() => {
-    // التحقق من آخر مرة تم عرض البوابة فيها
-    const lastGatewayView = localStorage.getItem('last_gateway_view');
-
-    if (!lastGatewayView) {
-      // أول زيارة - عرض البوابة
-      return 'gateway';
-    }
-
-    const lastViewTime = parseInt(lastGatewayView, 10);
-    const currentTime = Date.now();
-    const oneHour = 60 * 60 * 1000; // ساعة واحدة بالميلي ثانية
-
-    // إذا مر أكثر من ساعة، عرض البوابة مرة أخرى
-    if (currentTime - lastViewTime >= oneHour) {
-      return 'gateway';
-    }
-
-    // لم يمر ساعة بعد - الذهاب مباشرة للمنصة
-    return 'main';
-  });
-
+  const [currentView, setCurrentView] = useState<View>('gateway'); // سيتم تحديثها بعد تحميل الإعدادات
   const [selectedBarcode, setSelectedBarcode] = useState<string>('');
+  const [gatewayDuration, setGatewayDuration] = useState<string>('1hour');
+
+  // تحميل إعدادات البوابة والتحقق من المدة
+  useEffect(() => {
+    const loadGatewaySettings = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('royal_gateway_settings')
+          .select('gateway_reappear_duration')
+          .limit(1)
+          .maybeSingle();
+
+        if (!error && data) {
+          const duration = data.gateway_reappear_duration || '1hour';
+          setGatewayDuration(duration);
+
+          // التحقق من آخر مرة تم عرض البوابة فيها
+          const lastGatewayView = localStorage.getItem('last_gateway_view');
+
+          if (duration === 'always') {
+            // ظهور متكرر - دائماً عرض البوابة
+            setCurrentView('gateway');
+            return;
+          }
+
+          if (!lastGatewayView) {
+            // أول زيارة - عرض البوابة
+            setCurrentView('gateway');
+            return;
+          }
+
+          const lastViewTime = parseInt(lastGatewayView, 10);
+          const currentTime = Date.now();
+
+          // تحويل المدة إلى ميلي ثانية
+          const durationMap: Record<string, number> = {
+            '30min': 30 * 60 * 1000,
+            '1hour': 60 * 60 * 1000,
+            '2hours': 2 * 60 * 60 * 1000,
+            '6hours': 6 * 60 * 60 * 1000,
+            '24hours': 24 * 60 * 60 * 1000,
+          };
+
+          const requiredDuration = durationMap[duration] || durationMap['1hour'];
+
+          // إذا مر الوقت المطلوب، عرض البوابة
+          if (currentTime - lastViewTime >= requiredDuration) {
+            setCurrentView('gateway');
+          } else {
+            // لم يمر الوقت بعد - الذهاب للمنصة مباشرة
+            setCurrentView('main');
+          }
+        } else {
+          // في حالة خطأ، استخدام القيمة الافتراضية
+          setCurrentView('gateway');
+        }
+      } catch (error) {
+        console.error('Error loading gateway settings:', error);
+        setCurrentView('gateway');
+      }
+    };
+
+    loadGatewaySettings();
+  }, []);
 
   // تهيئة السكربتات التحليلية عند التحميل الأول
   useEffect(() => {
@@ -52,8 +96,10 @@ export function PublicPlatformRouter({ onAdminLogin, onBackToAdmin, onFarmOwnerL
   }, [currentView]);
 
   const handleEnterPlatform = () => {
-    // حفظ وقت عرض البوابة
-    localStorage.setItem('last_gateway_view', Date.now().toString());
+    // حفظ وقت عرض البوابة (إلا في حالة always)
+    if (gatewayDuration !== 'always') {
+      localStorage.setItem('last_gateway_view', Date.now().toString());
+    }
     setCurrentView('main');
   };
 

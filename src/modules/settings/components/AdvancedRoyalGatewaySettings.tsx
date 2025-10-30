@@ -41,6 +41,9 @@ interface AdvancedGatewaySettings {
   id: string;
   enabled: boolean;
 
+  // Reappear Duration
+  gateway_reappear_duration: 'always' | '30min' | '1hour' | '2hours' | '6hours' | '24hours';
+
   // Auto Enter Settings
   auto_enter_enabled: boolean;
   auto_enter_delay: number;
@@ -128,6 +131,7 @@ export function AdvancedRoyalGatewaySettings() {
         const mappedSettings: AdvancedGatewaySettings = {
           id: data.id,
           enabled: data.enabled ?? true,
+          gateway_reappear_duration: data.gateway_reappear_duration || '1hour',
           auto_enter_enabled: data.auto_enter_enabled ?? true,
           auto_enter_delay: data.auto_enter_delay ?? 5,
           show_progress_bar: data.show_progress_bar ?? true,
@@ -229,6 +233,7 @@ export function AdvancedRoyalGatewaySettings() {
       // فقط الحقول الموجودة في الجدول حالياً
       const updateData = {
         enabled: settings.enabled,
+        gateway_reappear_duration: settings.gateway_reappear_duration,
         auto_enter_enabled: settings.auto_enter_enabled,
         auto_enter_delay: settings.auto_enter_delay,
         show_progress_bar: settings.show_progress_bar,
@@ -442,6 +447,57 @@ export function AdvancedRoyalGatewaySettings() {
                     }`}
                   />
                 </button>
+              </div>
+            </div>
+
+            {/* Reappear Duration */}
+            <div className="p-5 bg-gradient-to-br from-amber-50 to-yellow-50 rounded-xl border-2 border-amber-200">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-2 bg-amber-500 rounded-lg">
+                  <RefreshCw className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <p className="font-black text-gray-900 text-lg">مدة إعادة ظهور البوابة</p>
+                  <p className="text-sm text-gray-700">متى تظهر البوابة للمستخدم مرة أخرى</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                {[
+                  { value: 'always', label: 'ظهور متكرر', desc: 'في كل مرة', color: 'red' },
+                  { value: '30min', label: '٣٠ دقيقة', desc: 'نصف ساعة', color: 'orange' },
+                  { value: '1hour', label: 'ساعة واحدة', desc: '60 دقيقة', color: 'amber' },
+                  { value: '2hours', label: 'ساعتين', desc: '120 دقيقة', color: 'yellow' },
+                  { value: '6hours', label: '٦ ساعات', desc: 'نصف يوم', color: 'lime' },
+                  { value: '24hours', label: '٢٤ ساعة', desc: 'يوم كامل', color: 'green' },
+                ].map((option) => (
+                  <button
+                    key={option.value}
+                    onClick={() => setSettings({ ...settings, gateway_reappear_duration: option.value as any })}
+                    className={`p-4 rounded-xl text-right transition-all border-2 ${
+                      settings.gateway_reappear_duration === option.value
+                        ? `bg-${option.color}-500 text-white border-${option.color}-600 shadow-lg scale-105`
+                        : 'bg-white text-gray-700 border-gray-200 hover:border-amber-300'
+                    }`}
+                  >
+                    <div className="font-bold text-sm">{option.label}</div>
+                    <div className="text-xs opacity-80 mt-1">{option.desc}</div>
+                  </button>
+                ))}
+              </div>
+
+              <div className="mt-4 p-3 bg-white rounded-lg border border-amber-200">
+                <div className="flex items-start gap-2">
+                  <Info className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                  <p className="text-xs text-gray-700">
+                    {settings.gateway_reappear_duration === 'always' && '🔄 البوابة ستظهر في كل مرة يزور فيها المستخدم المنصة'}
+                    {settings.gateway_reappear_duration === '30min' && '⏱️ بعد نصف ساعة من آخر دخول، ستظهر البوابة مرة أخرى'}
+                    {settings.gateway_reappear_duration === '1hour' && '⏳ بعد ساعة كاملة من آخر دخول، ستظهر البوابة مرة أخرى'}
+                    {settings.gateway_reappear_duration === '2hours' && '⏰ بعد ساعتين من آخر دخول، ستظهر البوابة مرة أخرى'}
+                    {settings.gateway_reappear_duration === '6hours' && '🕐 بعد 6 ساعات من آخر دخول، ستظهر البوابة مرة أخرى'}
+                    {settings.gateway_reappear_duration === '24hours' && '📅 بعد يوم كامل من آخر دخول، ستظهر البوابة مرة أخرى'}
+                  </p>
+                </div>
               </div>
             </div>
 

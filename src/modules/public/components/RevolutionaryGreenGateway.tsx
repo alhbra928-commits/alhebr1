@@ -31,15 +31,27 @@ export function RevolutionaryGreenGateway({ onEnter, onAdminLogin, onFarmOwnerLo
   }, []);
 
   useEffect(() => {
+    // تحسين الأداء: throttle للـ mousemove
+    let rafId: number;
     const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({
-        x: (e.clientX / window.innerWidth) * 100,
-        y: (e.clientY / window.innerHeight) * 100,
+      if (rafId) {
+        cancelAnimationFrame(rafId);
+      }
+      rafId = requestAnimationFrame(() => {
+        setMousePosition({
+          x: (e.clientX / window.innerWidth) * 100,
+          y: (e.clientY / window.innerHeight) * 100,
+        });
       });
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      if (rafId) {
+        cancelAnimationFrame(rafId);
+      }
+    };
   }, []);
 
   const generateParticles = () => {
@@ -134,7 +146,9 @@ export function RevolutionaryGreenGateway({ onEnter, onAdminLogin, onFarmOwnerLo
         background: `
           radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, rgba(16, 185, 129, 0.15) 0%, transparent 50%),
           linear-gradient(135deg, #ecfdf5 0%, #d1fae5 25%, #a7f3d0 50%, #6ee7b7 75%, #34d399 100%)
-        `
+        `,
+        willChange: 'background',
+        transform: 'translateZ(0)',
       }}
     >
       {/* Animated Background Pattern */}
