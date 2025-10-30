@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import {
-  Crown, Sparkles, ArrowRight, TreePine, Leaf,
-  Shield, Award, Star
+  Crown, Sparkles, Shield, Award, Star, TreePine, ArrowRight
 } from 'lucide-react';
 import { PublicFarm } from '../types/farm.types';
 import { PublicFarmService } from '../services/publicFarmService';
@@ -14,6 +13,7 @@ import { AdminCrownButton } from './AdminCrownButton';
 import { ConceptIntroductionPage } from './ConceptIntroductionPage';
 import { PublicBottomNavBar } from '../../../components/layout/PublicBottomNavBar';
 import { GreenConceptButton } from './GreenConceptButton';
+import { InnovativeFarmCard } from './InnovativeFarmCard';
 
 type ViewMode = 'home' | 'farmDetail' | 'booking' | 'investor' | 'verification' | 'concept';
 
@@ -321,56 +321,24 @@ export function ModernRoyalPlatform({
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                 {farms.map((farm) => (
-                  <div
+                  <InnovativeFarmCard
                     key={farm.id}
+                    farm={{
+                      id: farm.id,
+                      farm_name: farm.farm_name,
+                      farm_code: farm.farm_code,
+                      location: farm.location,
+                      tree_type: farm.tree_type,
+                      available_trees: farm.available_trees,
+                      price_per_tree: farm.price_per_tree,
+                      marketing_price: farm.marketing_price,
+                      description_ar: farm.description_ar,
+                      images: farm.images,
+                      aerial_map_url: farm.aerial_map_url,
+                      sales_status: farm.sales_status
+                    }}
                     onClick={() => handleFarmClick(farm)}
-                    className="group relative cursor-pointer"
-                  >
-                    <div className="absolute -inset-1 bg-gradient-to-r from-emerald-400 via-green-500 to-teal-500 rounded-3xl blur opacity-25 group-hover:opacity-60 transition-opacity"></div>
-                    <div className="relative bg-white/80 backdrop-blur-xl rounded-3xl overflow-hidden border border-white/90 hover:border-emerald-300 transition-all duration-300 h-full">
-                      {/* Farm Image/Icon */}
-                      <div className="relative h-48 bg-gradient-to-br from-emerald-100 to-green-200 overflow-hidden">
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <TreePine className="w-24 h-24 text-emerald-600/30" strokeWidth={1.5} />
-                        </div>
-                        <div className="absolute top-4 right-4 px-3 py-1.5 bg-white/90 backdrop-blur-sm rounded-full">
-                          <span className="text-sm font-bold text-emerald-700">{farm.tree_type}</span>
-                        </div>
-                        {farm.available_trees > 0 && (
-                          <div className="absolute bottom-4 left-4 px-3 py-1.5 bg-green-500 rounded-full">
-                            <span className="text-sm font-bold text-white">متاح للحجز</span>
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Farm Info */}
-                      <div className="p-5 sm:p-6">
-                        <h3 className="text-lg sm:text-xl font-bold text-emerald-900 mb-3 line-clamp-2">
-                          {farm.farm_name}
-                        </h3>
-
-                        <div className="space-y-2.5 mb-5">
-                          <div className="flex items-center justify-between text-sm">
-                            <span className="text-emerald-700">الموقع:</span>
-                            <span className="font-semibold text-emerald-900">{farm.location}</span>
-                          </div>
-                          <div className="flex items-center justify-between text-sm">
-                            <span className="text-emerald-700">الأشجار المتاحة:</span>
-                            <span className="font-bold text-green-600">{farm.available_trees || 0}</span>
-                          </div>
-                          <div className="flex items-center justify-between text-sm">
-                            <span className="text-emerald-700">السعر للشجرة:</span>
-                            <span className="font-bold text-emerald-900">{farm.price_per_tree?.toLocaleString('ar-SA')} ريال</span>
-                          </div>
-                        </div>
-
-                        <button className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white font-bold rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl group-hover:scale-105">
-                          <span>عرض التفاصيل</span>
-                          <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
+                  />
                 ))}
               </div>
             )}
