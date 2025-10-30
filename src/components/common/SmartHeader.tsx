@@ -460,7 +460,7 @@ export function SmartHeader({
         {/* شريط الإعلانات المتحرك - Ticker */}
         {(!tickerSettings || tickerSettings.is_enabled) && (
           <div
-            className="overflow-hidden relative"
+            className="overflow-hidden relative pointer-events-none"
             style={{
               background: tickerSettings?.background_color || (isScrolled
                 ? 'linear-gradient(90deg, rgba(212, 175, 55, 0.95) 0%, rgba(184, 134, 11, 0.95) 100%)'
@@ -473,7 +473,7 @@ export function SmartHeader({
             }}
           >
             <div
-              className="flex items-center h-full whitespace-nowrap"
+              className="flex items-center h-full whitespace-nowrap pointer-events-none"
               style={{
                 animation: isPaused ? 'none' : `ticker-scroll ${tickerSettings?.speed || 30}s linear infinite`,
               }}
@@ -498,7 +498,7 @@ export function SmartHeader({
 
             {/* زر التحكم */}
             <button
-              className="absolute left-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full flex items-center justify-center hover:scale-110 transition-transform"
+              className="absolute left-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full flex items-center justify-center hover:scale-110 transition-transform pointer-events-auto"
               style={{
                 background: 'rgba(255, 255, 255, 0.25)',
                 backdropFilter: 'blur(8px)',
