@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Home, Search, HelpCircle, User, Phone, Plus, Shield } from 'lucide-react';
+import { Home, Search, HelpCircle, User, Phone, Plus, Shield, MessageCircle, Users } from 'lucide-react';
 
 interface PublicBottomNavBarProps {
-  activeTab: string;
+  activeTab?: string;
   onTabChange: (tabId: string) => void;
   onBookNow?: () => void;
   onBackToAdmin?: () => void;
@@ -20,21 +20,13 @@ export const PublicBottomNavBar: React.FC<PublicBottomNavBarProps> = ({
   // Check for admin session
   useEffect(() => {
     const checkAdminSession = () => {
-      const adminToken = localStorage.getItem('admin_session_token');
-      const adminData = localStorage.getItem('admin_data');
-      const hasSession = !!(adminToken || adminData);
-      console.log('[PublicBottomNav] Has admin session:', hasSession);
-      setHasAdminSession(hasSession);
+      const sessionData = localStorage.getItem('admin_session');
+      setHasAdminSession(!!sessionData);
     };
 
     checkAdminSession();
-    const interval = setInterval(checkAdminSession, 2000);
-    window.addEventListener('storage', checkAdminSession);
-
-    return () => {
-      clearInterval(interval);
-      window.removeEventListener('storage', checkAdminSession);
-    };
+    const interval = setInterval(checkAdminSession, 1000);
+    return () => clearInterval(interval);
   }, []);
 
   // Build nav items dynamically
@@ -97,17 +89,13 @@ export const PublicBottomNavBar: React.FC<PublicBottomNavBarProps> = ({
   return (
     <>
       {/* Bottom Navigation Bar */}
-      <div
-        className="fixed bottom-0 left-0 right-0 z-50"
-        style={{
-          paddingBottom: 'env(safe-area-inset-bottom, 0px)'
-        }}
-      >
-        {/* Glassmorphism Background */}
+      <div className="fixed bottom-0 left-0 right-0 z-50 pb-safe">
+        {/* Background with gradient and 3D effect */}
         <div
-          className="relative backdrop-blur-xl"
+          className="relative mx-auto max-w-7xl px-4"
           style={{
-            background: 'linear-gradient(180deg, rgba(233, 245, 236, 0.98) 0%, rgba(233, 245, 236, 0.95) 100%)',
+            background: 'linear-gradient(180deg, rgba(233, 245, 236, 0.98) 0%, rgba(220, 238, 227, 0.98) 100%)',
+            backdropFilter: 'blur(16px) saturate(180%)',
             borderTop: '3px solid #10b981',
             boxShadow: '0 -4px 20px rgba(16, 185, 129, 0.25), 0 -1px 0 rgba(16, 185, 129, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.8)'
           }}
@@ -149,16 +137,16 @@ export const PublicBottomNavBar: React.FC<PublicBottomNavBarProps> = ({
                     `}
                     style={{
                       background: isBackToAdmin
-                        ? 'linear-gradient(135deg, #10b981 0%, #059669 100%)'
+                        ? 'linear-gradient(135deg, #059669 0%, #047857 100%)'
                         : isActive
-                        ? 'linear-gradient(135deg, #C7A742 0%, #E4C56A 100%)'
-                        : 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.7) 100%)',
-                      border: isBackToAdmin || isActive ? 'none' : '2px solid rgba(12, 102, 51, 0.15)',
+                        ? 'linear-gradient(135deg, #10b981 0%, #34d399 100%)'
+                        : 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.85) 100%)',
+                      border: isBackToAdmin || isActive ? 'none' : '2px solid rgba(16, 185, 129, 0.2)',
                       boxShadow: isBackToAdmin
-                        ? '0 6px 20px rgba(16, 185, 129, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3), inset 0 -1px 0 rgba(0, 0, 0, 0.1)'
+                        ? '0 6px 20px rgba(5, 150, 105, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3), inset 0 -1px 0 rgba(0, 0, 0, 0.1)'
                         : isActive
-                        ? '0 6px 20px rgba(199, 167, 66, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3), inset 0 -1px 0 rgba(0, 0, 0, 0.1)'
-                        : '0 2px 8px rgba(12, 102, 51, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.8)'
+                        ? '0 6px 20px rgba(16, 185, 129, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3), inset 0 -1px 0 rgba(0, 0, 0, 0.1)'
+                        : '0 2px 8px rgba(16, 185, 129, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.9)'
                     }}
                   >
                     {/* Icon */}
@@ -168,10 +156,10 @@ export const PublicBottomNavBar: React.FC<PublicBottomNavBarProps> = ({
                         ${isActive ? 'scale-110' : 'scale-100'}
                       `}
                       style={{
-                        color: isBackToAdmin || isActive ? '#FFFFFF' : '#0C6633',
+                        color: isBackToAdmin || isActive ? '#FFFFFF' : '#047857',
                         filter: (isBackToAdmin || isActive)
                           ? 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3))'
-                          : 'drop-shadow(0 1px 2px rgba(12, 102, 51, 0.2))'
+                          : 'drop-shadow(0 1px 2px rgba(4, 120, 87, 0.2))'
                       }}
                     >
                       {item.icon}
@@ -182,7 +170,7 @@ export const PublicBottomNavBar: React.FC<PublicBottomNavBarProps> = ({
                       <div
                         className="absolute inset-0 rounded-xl animate-ping opacity-30"
                         style={{
-                          background: 'linear-gradient(135deg, rgba(199, 167, 66, 0.5) 0%, rgba(228, 197, 106, 0.5) 100%)'
+                          background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.5) 0%, rgba(52, 211, 153, 0.5) 100%)'
                         }}
                       />
                     )}
@@ -192,7 +180,7 @@ export const PublicBottomNavBar: React.FC<PublicBottomNavBarProps> = ({
                       <div
                         className="absolute inset-0 rounded-xl animate-ping opacity-40"
                         style={{
-                          background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.5) 0%, rgba(5, 150, 105, 0.5) 100%)',
+                          background: 'linear-gradient(135deg, rgba(5, 150, 105, 0.5) 0%, rgba(4, 120, 87, 0.5) 100%)',
                           animationDuration: '2s'
                         }}
                       />
@@ -215,15 +203,15 @@ export const PublicBottomNavBar: React.FC<PublicBottomNavBarProps> = ({
                     `}
                     style={{
                       color: isBackToAdmin
+                        ? '#059669'
+                        : isActive
                         ? '#10b981'
-                        : isActive
-                        ? '#C7A742'
-                        : '#0C6633',
+                        : '#047857',
                       textShadow: isBackToAdmin
-                        ? '0 2px 4px rgba(16, 185, 129, 0.3)'
+                        ? '0 2px 4px rgba(5, 150, 105, 0.3)'
                         : isActive
-                        ? '0 2px 4px rgba(199, 167, 66, 0.3)'
-                        : '0 1px 2px rgba(12, 102, 51, 0.2)'
+                        ? '0 2px 4px rgba(16, 185, 129, 0.3)'
+                        : '0 1px 2px rgba(4, 120, 87, 0.2)'
                     }}
                   >
                     {item.label}
@@ -233,7 +221,7 @@ export const PublicBottomNavBar: React.FC<PublicBottomNavBarProps> = ({
             })}
           </div>
 
-          {/* Floating Action Button (FAB) - 3D Enhanced Green */}
+          {/* Floating Action Button (FAB) - Green Theme */}
           {onBookNow && (
             <button
               onClick={onBookNow}
@@ -279,86 +267,117 @@ export const PublicBottomNavBar: React.FC<PublicBottomNavBarProps> = ({
       {/* Contact Menu Modal */}
       {showContactMenu && (
         <div
-          className="fixed inset-0 z-[60] bg-black/40 backdrop-blur-sm flex items-end justify-center"
+          className="fixed inset-0 z-[60] flex items-end justify-center"
           onClick={() => setShowContactMenu(false)}
         >
+          {/* Backdrop */}
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
+
+          {/* Menu Content */}
           <div
-            className="w-full max-w-md mb-20 mx-4 animate-in slide-in-from-bottom-4 duration-300"
+            className="relative w-full max-w-lg mx-4 mb-24 rounded-3xl overflow-hidden"
+            style={{
+              background: 'linear-gradient(180deg, #E9F5EC 0%, #DCEEE3 100%)',
+              boxShadow: '0 20px 60px rgba(16, 185, 129, 0.4), 0 0 0 1px rgba(16, 185, 129, 0.2)'
+            }}
             onClick={(e) => e.stopPropagation()}
           >
+            {/* Header */}
             <div
-              className="backdrop-blur-xl rounded-2xl p-6 shadow-2xl border-2"
+              className="px-6 py-4 text-center border-b-2"
               style={{
-                background: 'linear-gradient(180deg, rgba(233, 245, 236, 0.98) 0%, rgba(233, 245, 236, 0.95) 100%)',
-                borderColor: 'rgba(16, 185, 129, 0.3)',
-                boxShadow: '0 20px 50px rgba(16, 185, 129, 0.2)'
+                borderColor: 'rgba(16, 185, 129, 0.2)',
+                background: 'linear-gradient(180deg, rgba(16, 185, 129, 0.1) 0%, transparent 100%)'
               }}
             >
-              <h3 className="text-lg font-bold mb-4 text-center" style={{ color: '#0C6633' }}>
+              <h3 className="text-xl font-bold" style={{ color: '#047857' }}>
                 تواصل معنا
               </h3>
+            </div>
 
-              <div className="space-y-3">
-                <a
-                  href="https://wa.me/966569335257"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-3 p-3 rounded-xl transition-colors"
+            {/* Menu Items */}
+            <div className="p-4 space-y-3">
+              {/* WhatsApp */}
+              <a
+                href="https://wa.me/966500000000"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-4 p-4 rounded-2xl transition-all duration-300 hover:scale-105 active:scale-95"
+                style={{
+                  background: 'linear-gradient(135deg, #10b981 0%, #34d399 100%)',
+                  boxShadow: '0 4px 12px rgba(16, 185, 129, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3)'
+                }}
+              >
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-white/20">
+                  <MessageCircle className="w-6 h-6 text-white" />
+                </div>
+                <div className="flex-1 text-right">
+                  <div className="text-white font-bold text-lg">واتساب</div>
+                  <div className="text-white/80 text-sm">تواصل فوري</div>
+                </div>
+              </a>
+
+              {/* Phone */}
+              <a
+                href="tel:+966500000000"
+                className="flex items-center gap-4 p-4 rounded-2xl transition-all duration-300 hover:scale-105 active:scale-95"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.7) 100%)',
+                  border: '2px solid rgba(16, 185, 129, 0.2)',
+                  boxShadow: '0 4px 12px rgba(16, 185, 129, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.8)'
+                }}
+              >
+                <div
+                  className="w-12 h-12 rounded-xl flex items-center justify-center"
                   style={{
-                    background: 'linear-gradient(135deg, #25D366 0%, #128C7E 100%)',
-                    color: 'white'
+                    background: 'linear-gradient(135deg, #10b981 0%, #34d399 100%)'
                   }}
                 >
-                  <span className="text-2xl">💬</span>
-                  <div className="flex-1">
-                    <p className="font-bold">واتساب</p>
-                    <p className="text-xs opacity-90">تواصل فوري</p>
-                  </div>
-                </a>
+                  <Phone className="w-6 h-6 text-white" />
+                </div>
+                <div className="flex-1 text-right">
+                  <div className="font-bold text-lg" style={{ color: '#047857' }}>اتصال هاتفي</div>
+                  <div className="text-sm" style={{ color: '#059669' }}>+966 50 000 0000</div>
+                </div>
+              </a>
 
-                <a
-                  href="tel:+966569335257"
-                  className="flex items-center gap-3 p-3 rounded-xl transition-all duration-300 hover:scale-105 active:scale-95"
+              {/* Support */}
+              <button
+                onClick={() => {
+                  setShowContactMenu(false);
+                  onTabChange('concept');
+                }}
+                className="w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-300 hover:scale-105 active:scale-95"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.7) 100%)',
+                  border: '2px solid rgba(16, 185, 129, 0.2)',
+                  boxShadow: '0 4px 12px rgba(16, 185, 129, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.8)'
+                }}
+              >
+                <div
+                  className="w-12 h-12 rounded-xl flex items-center justify-center"
                   style={{
-                    background: 'linear-gradient(135deg, #C7A742 0%, #E4C56A 100%)',
-                    color: 'white',
-                    boxShadow: '0 4px 12px rgba(199, 167, 66, 0.3)'
+                    background: 'linear-gradient(135deg, #10b981 0%, #34d399 100%)'
                   }}
                 >
-                  <span className="text-2xl">📞</span>
-                  <div className="flex-1">
-                    <p className="font-bold">اتصال مباشر</p>
-                    <p className="text-xs opacity-90" dir="ltr">+966 56 933 5257</p>
-                  </div>
-                </a>
+                  <Users className="w-6 h-6 text-white" />
+                </div>
+                <div className="flex-1 text-right">
+                  <div className="font-bold text-lg" style={{ color: '#047857' }}>الدعم الفني</div>
+                  <div className="text-sm" style={{ color: '#059669' }}>مساعدة واستفسارات</div>
+                </div>
+              </button>
+            </div>
 
-                <button
-                  onClick={() => {
-                    setShowContactMenu(false);
-                    onTabChange('login');
-                  }}
-                  className="w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-300 hover:scale-105 active:scale-95"
-                  style={{
-                    background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-                    color: 'white',
-                    boxShadow: '0 4px 12px rgba(16, 185, 129, 0.3)'
-                  }}
-                >
-                  <span className="text-2xl">👤</span>
-                  <div className="flex-1 text-right">
-                    <p className="font-bold">دخول المستثمرين</p>
-                    <p className="text-xs opacity-90">تابع حجوزاتك</p>
-                  </div>
-                </button>
-              </div>
-
+            {/* Close Button */}
+            <div className="px-4 pb-4">
               <button
                 onClick={() => setShowContactMenu(false)}
-                className="w-full mt-4 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 hover:scale-105 active:scale-95"
+                className="w-full py-3 rounded-xl font-bold transition-all duration-300 hover:scale-105 active:scale-95"
                 style={{
-                  background: 'linear-gradient(135deg, rgba(12, 102, 51, 0.1) 0%, rgba(12, 102, 51, 0.05) 100%)',
-                  color: '#0C6633',
-                  border: '2px solid rgba(12, 102, 51, 0.2)'
+                  background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%)',
+                  border: '2px solid rgba(16, 185, 129, 0.2)',
+                  color: '#047857'
                 }}
               >
                 إغلاق
@@ -367,9 +386,6 @@ export const PublicBottomNavBar: React.FC<PublicBottomNavBarProps> = ({
           </div>
         </div>
       )}
-
-      {/* Spacer to prevent content from being hidden behind the nav bar */}
-      <div className="h-20"></div>
     </>
   );
 };
