@@ -24,20 +24,21 @@ export function PublicPlatformRouter({ onAdminLogin, onBackToAdmin, onFarmOwnerL
       try {
         const { data, error } = await supabase
           .from('royal_gateway_settings')
-          .select('gateway_reappear_duration')
+          .select('gateway_reappear_duration, enable_repeated_gateway')
           .limit(1)
           .maybeSingle();
 
         if (!error && data) {
           const duration = data.gateway_reappear_duration ?? 3600; // القيمة الافتراضية: ساعة واحدة
+          const enableRepeated = data.enable_repeated_gateway ?? false;
           setGatewayDuration(duration);
 
           // التحقق من آخر مرة تم عرض البوابة فيها
           const lastGatewayView = localStorage.getItem('last_gateway_view');
 
-          // إذا كانت المدة 0، ظهور متكرر دائماً
-          if (duration === 0) {
-            console.log('🔄 Repeated Gateway: Always show gateway');
+          // إذا كان الظهور المتكرر مفعّل أو المدة 0، ظهور متكرر دائماً
+          if (enableRepeated || duration === 0) {
+            console.log('🔄 Repeated Gateway Mode: Always show gateway (enabled:', enableRepeated, 'duration:', duration, ')');
             setCurrentView('gateway');
             return;
           }

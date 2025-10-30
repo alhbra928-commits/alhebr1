@@ -11,6 +11,7 @@ interface GatewaySettings {
   enabled: boolean;
   auto_enter_delay: number;
   gateway_reappear_duration: number;
+  enable_repeated_gateway: boolean;
   theme_style: 'green' | 'gold' | 'elegant';
   particle_count: number;
   particle_speed: number;
@@ -30,6 +31,7 @@ export function AdvancedRoyalGatewaySettings() {
     enabled: true,
     auto_enter_delay: 5,
     gateway_reappear_duration: 1800, // 30 دقيقة بالثواني
+    enable_repeated_gateway: false,
     theme_style: 'green',
     particle_count: 50,
     particle_speed: 2,
@@ -351,19 +353,85 @@ export function AdvancedRoyalGatewaySettings() {
               </div>
             </div>
 
-            {/* Gateway Reappear Duration */}
+            {/* Enable Repeated Gateway Toggle */}
             <div className="bg-white rounded-3xl p-8 shadow-xl border-2 border-gray-100 lg:col-span-2">
-              <div className="flex items-center gap-4 mb-6 pb-6 border-b-2 border-gray-100">
-                <div className="p-4 bg-gradient-to-br from-orange-400 to-red-500 rounded-2xl shadow-lg">
-                  <RefreshCw className="w-7 h-7 text-white" />
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className={`p-4 bg-gradient-to-br rounded-2xl shadow-lg transition-all ${
+                    settings.enable_repeated_gateway
+                      ? 'from-red-400 to-orange-500'
+                      : 'from-gray-300 to-gray-400'
+                  }`}>
+                    <RefreshCw className={`w-7 h-7 text-white ${settings.enable_repeated_gateway ? 'animate-spin-slow' : ''}`} />
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-black text-gray-900">الظهور المتكرر للبوابة</h3>
+                    <p className="text-gray-600">
+                      {settings.enable_repeated_gateway
+                        ? 'البوابة تظهر في كل تحديث للصفحة (∞)'
+                        : 'البوابة تظهر حسب المدة المحددة'}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="text-2xl font-black text-gray-900">مدة إعادة ظهور البوابة</h3>
-                  <p className="text-gray-600">متى تظهر البوابة مرة أخرى عند التحديث أو الزيارة الجديدة</p>
-                </div>
+                <button
+                  onClick={() => setSettings({
+                    ...settings,
+                    enable_repeated_gateway: !settings.enable_repeated_gateway,
+                    gateway_reappear_duration: !settings.enable_repeated_gateway ? 0 : 3600
+                  })}
+                  className={`relative inline-flex h-14 w-28 items-center rounded-full transition-all duration-300 ${
+                    settings.enable_repeated_gateway
+                      ? 'bg-gradient-to-r from-red-500 to-orange-500 shadow-lg shadow-red-500/50'
+                      : 'bg-gray-300'
+                  }`}
+                >
+                  <span
+                    className={`inline-block h-10 w-10 transform rounded-full bg-white shadow-xl transition-transform duration-300 ${
+                      settings.enable_repeated_gateway ? 'translate-x-16' : 'translate-x-2'
+                    }`}
+                  >
+                    {settings.enable_repeated_gateway ? (
+                      <Check className="w-10 h-10 text-red-600 p-2" />
+                    ) : (
+                      <X className="w-10 h-10 text-gray-400 p-2" />
+                    )}
+                  </span>
+                </button>
               </div>
 
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+              {settings.enable_repeated_gateway && (
+                <div className="mt-6 p-4 bg-gradient-to-r from-red-50 to-orange-50 rounded-xl border-2 border-red-200 animate-pulse-slow">
+                  <div className="flex items-start gap-3">
+                    <div className="p-2 bg-red-500 rounded-lg mt-0.5">
+                      <RefreshCw className="w-5 h-5 text-white animate-spin-slow" />
+                    </div>
+                    <div>
+                      <p className="font-bold text-red-900 mb-1">⚠️ وضع الظهور المتكرر مفعّل</p>
+                      <p className="text-red-700 text-sm">
+                        البوابة ستظهر في كل مرة يحدث المستخدم الصفحة أو يزور المنصة.
+                        هذا الوضع مناسب للحملات التسويقية المكثفة فقط.
+                        قد يزعج المستخدمين عند الاستخدام الدائم.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Gateway Reappear Duration */}
+            {!settings.enable_repeated_gateway && (
+              <div className="bg-white rounded-3xl p-8 shadow-xl border-2 border-gray-100 lg:col-span-2">
+                <div className="flex items-center gap-4 mb-6 pb-6 border-b-2 border-gray-100">
+                  <div className="p-4 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-2xl shadow-lg">
+                    <Clock className="w-7 h-7 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-black text-gray-900">مدة إعادة ظهور البوابة</h3>
+                    <p className="text-gray-600">متى تظهر البوابة مرة أخرى عند التحديث أو الزيارة الجديدة</p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                 <button
                   onClick={() => setSettings({ ...settings, gateway_reappear_duration: 1800 })}
                   className={`p-6 rounded-2xl border-4 transition-all hover:scale-105 ${
@@ -449,7 +517,8 @@ export function AdvancedRoyalGatewaySettings() {
                   </div>
                 </div>
               </div>
-            </div>
+              </div>
+            )}
 
             {/* Theme Style */}
             <div className="bg-white rounded-3xl p-8 shadow-xl border-2 border-gray-100 lg:col-span-2">
