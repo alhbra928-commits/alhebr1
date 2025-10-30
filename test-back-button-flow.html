@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>اختبار زر الرجوع - السيناريو الكامل</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #059669;
+      border-bottom: 3px solid #059669;
+      padding-bottom: 10px;
+    }
+    .scenario {
+      background: #f0fdf4;
+      padding: 20px;
+      border-radius: 10px;
+      margin: 20px 0;
+      border-right: 4px solid #059669;
+    }
+    .step {
+      background: white;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: 1px solid #d1d5db;
+    }
+    .step-number {
+      display: inline-block;
+      background: #059669;
+      color: white;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 30px;
+      margin-left: 10px;
+      font-weight: bold;
+    }
+    .expected {
+      background: #dbeafe;
+      padding: 10px;
+      border-radius: 5px;
+      margin-top: 10px;
+      border-right: 3px solid #3b82f6;
+    }
+    .code {
+      background: #1f2937;
+      color: #10b981;
+      padding: 15px;
+      border-radius: 5px;
+      font-family: monospace;
+      margin: 10px 0;
+      overflow-x: auto;
+    }
+    button {
+      background: linear-gradient(135deg, #059669 0%, #047857 100%);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      margin: 5px;
+    }
+    button:hover {
+      transform: scale(1.05);
+    }
+    .status {
+      padding: 10px;
+      border-radius: 5px;
+      margin: 10px 0;
+      font-weight: bold;
+    }
+    .status.success {
+      background: #d1fae5;
+      color: #065f46;
+    }
+    .status.error {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🧪 اختبار زر الرجوع - السيناريو الكامل</h1>
+
+    <div class="scenario">
+      <h2>📋 السيناريو المطلوب:</h2>
+
+      <div class="step">
+        <span class="step-number">1</span>
+        <strong>المدير يسجل دخول في لوحة الإدارة</strong>
+        <div class="expected">
+          ✅ المتوقع: يتم حفظ الجلسة في localStorage
+        </div>
+      </div>
+
+      <div class="step">
+        <span class="step-number">2</span>
+        <strong>المدير يضغط "استكشاف المنصة" من لوحة الإدارة</strong>
+        <div class="expected">
+          ✅ المتوقع: ينتقل للمنصة العامة (activeModule = 'public')
+        </div>
+      </div>
+
+      <div class="step">
+        <span class="step-number">3</span>
+        <strong>في المنصة العامة</strong>
+        <div class="expected">
+          ✅ المتوقع: يظهر زر "العودة للوحة الإدارة" أسفل اليسار
+          <br>✅ المتوقع: يظهر زر التاج 👑 فوقه
+        </div>
+      </div>
+
+      <div class="step">
+        <span class="step-number">4</span>
+        <strong>المدير يضغط زر "العودة للوحة الإدارة"</strong>
+        <div class="expected">
+          ✅ المتوقع: يرجع فوراً للوحة الإدارة (activeModule = 'dashboard')
+        </div>
+      </div>
+
+      <div class="step">
+        <span class="step-number">5</span>
+        <strong>المدير يسجل خروج</strong>
+        <div class="expected">
+          ✅ المتوقع: يتم حذف الجلسة من localStorage
+        </div>
+      </div>
+
+      <div class="step">
+        <span class="step-number">6</span>
+        <strong>يذهب للمنصة العامة</strong>
+        <div class="expected">
+          ✅ المتوقع: لا يظهر زر "العودة للوحة الإدارة"
+          <br>✅ المتوقع: يظهر فقط زر التاج 👑
+        </div>
+      </div>
+    </div>
+
+    <div class="scenario">
+      <h2>🔍 اختبار hasActiveSession()</h2>
+
+      <button onclick="testNoSession()">Test 1: بدون جلسة</button>
+      <button onclick="testWithSession()">Test 2: مع جلسة</button>
+      <button onclick="testAfterLogout()">Test 3: بعد الخروج</button>
+      <button onclick="clearAll()">مسح الكل</button>
+
+      <div id="result"></div>
+
+      <div class="code">
+// hasActiveSession logic
+function hasActiveSession() {
+  const token = localStorage.getItem('admin_session_token');
+  const adminData = localStorage.getItem('admin_data');
+  return !!(token && adminData);
+}
+      </div>
+    </div>
+
+    <div class="scenario">
+      <h2>✅ التحقق من الحالة الحالية:</h2>
+      <button onclick="checkCurrentState()">فحص الحالة الآن</button>
+      <div id="currentState"></div>
+    </div>
+  </div>
+
+  <script>
+    function hasActiveSession() {
+      const token = localStorage.getItem('admin_session_token');
+      const adminData = localStorage.getItem('admin_data');
+      return !!(token && adminData);
+    }
+
+    function showResult(test, result, expected) {
+      const resultDiv = document.getElementById('result');
+      const isCorrect = result === expected;
+      resultDiv.innerHTML = `
+        <div class="status ${isCorrect ? 'success' : 'error'}">
+          <strong>${test}</strong><br>
+          النتيجة: ${result}<br>
+          المتوقع: ${expected}<br>
+          ${isCorrect ? '✅ صحيح' : '❌ خطأ'}
+        </div>
+      `;
+    }
+
+    function testNoSession() {
+      localStorage.removeItem('admin_session_token');
+      localStorage.removeItem('admin_data');
+      const result = hasActiveSession();
+      showResult('Test 1: بدون جلسة', result, false);
+    }
+
+    function testWithSession() {
+      localStorage.setItem('admin_session_token', 'test-token-123');
+      localStorage.setItem('admin_data', JSON.stringify({name: 'Test Admin'}));
+      const result = hasActiveSession();
+      showResult('Test 2: مع جلسة', result, true);
+    }
+
+    function testAfterLogout() {
+      localStorage.setItem('admin_session_token', 'test-token-123');
+      localStorage.setItem('admin_data', JSON.stringify({name: 'Test Admin'}));
+      localStorage.removeItem('admin_session_token');
+      localStorage.removeItem('admin_data');
+      const result = hasActiveSession();
+      showResult('Test 3: بعد الخروج', result, false);
+    }
+
+    function clearAll() {
+      localStorage.clear();
+      document.getElementById('result').innerHTML = '<div class="status success">تم مسح كل البيانات ✅</div>';
+    }
+
+    function checkCurrentState() {
+      const token = localStorage.getItem('admin_session_token');
+      const adminData = localStorage.getItem('admin_data');
+      const hasSession = hasActiveSession();
+
+      const stateDiv = document.getElementById('currentState');
+      stateDiv.innerHTML = `
+        <div class="code">
+admin_session_token: ${token ? '✅ موجود' : '❌ غير موجود'}<br>
+admin_data: ${adminData ? '✅ موجود' : '❌ غير موجود'}<br>
+<br>
+hasActiveSession(): ${hasSession ? '✅ true' : '❌ false'}<br>
+<br>
+${hasSession ?
+  '<strong style="color:#059669">✅ يجب أن يظهر زر الرجوع</strong>' :
+  '<strong style="color:#dc2626">❌ لا يجب أن يظهر زر الرجوع</strong>'
+}
+        </div>
+      `;
+    }
+  </script>
+</body>
+</html>
