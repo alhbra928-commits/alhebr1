@@ -10,8 +10,12 @@ interface AdminCrownButtonProps {
 export function AdminCrownButton({ onAdminLogin, onFarmOwnerLogin }: AdminCrownButtonProps) {
   const [showMenu, setShowMenu] = useState(false);
 
-  // Debug on mount
-  console.log('🔄 AdminCrownButton v2 loaded', { onAdminLogin: !!onAdminLogin, onFarmOwnerLogin: !!onFarmOwnerLogin });
+  // Debug on mount - TIMESTAMP: 1761842000
+  console.log('🔄 AdminCrownButton v3 FINAL - 1761842000', {
+    onAdminLogin: !!onAdminLogin,
+    onFarmOwnerLogin: !!onFarmOwnerLogin,
+    timestamp: new Date().toISOString()
+  });
 
   const handleAdminClick = () => {
     console.log('🎯 Admin clicked - v2');
