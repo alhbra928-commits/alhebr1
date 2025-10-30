@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { MainPlatformInterface } from './MainPlatformInterface';
 import { PreviewInspectionPage } from './PreviewInspectionPage';
-import { FuturisticAgriGateway } from './FuturisticAgriGateway';
+import { UltraModernGateway } from './UltraModernGateway';
 import { marketingAnalyticsService } from '../../../services/marketingAnalyticsService';
 
 type View = 'gateway' | 'main' | 'preview';
@@ -52,7 +52,7 @@ export function PublicPlatformRouter({ onAdminLogin, onBackToAdmin, onFarmOwnerL
 
   switch (currentView) {
     case 'gateway':
-      return <FuturisticAgriGateway onEnter={handleEnterPlatform} />;
+      return <UltraModernGateway onEnter={handleEnterPlatform} />;
 
     case 'preview':
       return (
