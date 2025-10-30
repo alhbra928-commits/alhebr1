@@ -159,42 +159,16 @@ export function ModernRoyalPlatform({
   // Modern Home View
   return (
     <div
-      className="min-h-screen overflow-hidden"
+      className="min-h-screen overflow-hidden relative"
       style={{
         background: `
-          radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, rgba(16, 185, 129, 0.12) 0%, transparent 50%),
-          linear-gradient(135deg, #ecfdf5 0%, #d1fae5 20%, #a7f3d0 40%, #6ee7b7 60%, #34d399 80%, #10b981 100%)
+          radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, rgba(16, 185, 129, 0.08) 0%, transparent 50%),
+          linear-gradient(135deg, #f0fdf4 0%, #dcfce7 50%, #bbf7d0 100%)
         `
       }}
     >
-      {/* Animated Background Pattern */}
-      <div className="fixed inset-0 opacity-[0.15] pointer-events-none">
-        <div className="absolute inset-0" style={{
-          backgroundImage: `
-            linear-gradient(30deg, #10b981 12%, transparent 12.5%, transparent 87%, #10b981 87.5%),
-            linear-gradient(150deg, #10b981 12%, transparent 12.5%, transparent 87%, #10b981 87.5%),
-            linear-gradient(60deg, #059669 25%, transparent 25.5%, transparent 75%, #059669 75%)
-          `,
-          backgroundSize: '80px 140px',
-          backgroundPosition: '0 0, 0 0, 40px 70px'
-        }}></div>
-      </div>
-
-      {/* Floating Particles */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        {[...Array(20)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute w-2 h-2 bg-emerald-400/30 rounded-full"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animation: `float ${5 + Math.random() * 10}s ease-in-out infinite`,
-              animationDelay: `${Math.random() * 5}s`
-            }}
-          />
-        ))}
-      </div>
+      {/* Glass Overlay - Simple and Clean */}
+      <div className="fixed inset-0 bg-white/30 backdrop-blur-[2px] pointer-events-none"></div>
 
       {/* Content */}
       <div className="relative z-10">
@@ -416,15 +390,6 @@ export function ModernRoyalPlatform({
           onBackToAdmin={onBackToAdmin}
         />
       </div>
-
-      <style>{`
-        @keyframes float {
-          0%, 100% { transform: translateY(0px) translateX(0px); }
-          25% { transform: translateY(-20px) translateX(10px); }
-          50% { transform: translateY(-10px) translateX(-10px); }
-          75% { transform: translateY(-30px) translateX(5px); }
-        }
-      `}</style>
     </div>
   );
 }
