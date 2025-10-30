@@ -438,7 +438,7 @@ export function AdvancedRoyalGatewaySettings() {
 
       {/* General Tab */}
       {activeTab === 'general' && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 pb-96">
           {/* Main Controls */}
           <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm space-y-5">
             <div className="flex items-center gap-3 pb-4 border-b border-gray-200">
@@ -760,7 +760,7 @@ export function AdvancedRoyalGatewaySettings() {
 
       {/* Visual Tab */}
       {activeTab === 'visual' && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 pb-96">
           {/* Particles Settings */}
           <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm space-y-5">
             <div className="flex items-center gap-3 pb-4 border-b border-gray-200">
@@ -1050,7 +1050,7 @@ export function AdvancedRoyalGatewaySettings() {
 
       {/* Content Tab */}
       {activeTab === 'content' && (
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-4xl mx-auto pb-96">
           <div className="bg-white rounded-2xl border border-gray-200 p-8 shadow-sm space-y-6">
             <div className="flex items-center gap-3 pb-6 border-b border-gray-200">
               <div className="p-4 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-xl shadow-lg">
@@ -1172,7 +1172,7 @@ export function AdvancedRoyalGatewaySettings() {
 
       {/* Advanced Tab */}
       {activeTab === 'advanced' && (
-        <div className="max-w-4xl mx-auto space-y-6">
+        <div className="max-w-4xl mx-auto space-y-6 pb-96">
           {/* Blur Settings */}
           <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
             <div className="flex items-center gap-3 pb-4 border-b border-gray-200">
