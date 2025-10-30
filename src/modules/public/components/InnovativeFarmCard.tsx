@@ -80,29 +80,8 @@ export const InnovativeFarmCard: React.FC<InnovativeFarmCardProps> = ({ farm, on
             </>
           )}
 
-          {/* Top Badges Row */}
-          <div className="absolute top-4 inset-x-4 flex justify-between items-start gap-2">
-            {/* Farm Code Badge */}
-            {farm.barcode && (
-              <div className="px-3 py-2 bg-white/95 backdrop-blur-md rounded-xl shadow-lg border border-white/60 transform transition-all duration-300 hover:scale-105">
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
-                  <span className="text-xs text-emerald-600 font-semibold">#{farm.barcode}</span>
-                </div>
-              </div>
-            )}
-
-            {/* New Badge */}
-            {isNew && (
-              <div className="px-3 py-2 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-xl shadow-lg animate-bounce">
-                <div className="flex items-center gap-1.5">
-                  <Sparkles className="w-3 h-3 text-white" />
-                  <span className="text-xs font-bold text-white">جديد</span>
-                </div>
-              </div>
-            )}
-
-            {/* Tree Type Badge */}
+          {/* Top Badge - Tree Type Only */}
+          <div className="absolute top-4 right-4">
             <div className="px-4 py-2 bg-gradient-to-r from-emerald-500 to-green-600 rounded-xl shadow-xl border border-white/30">
               <div className="flex items-center gap-2">
                 <span className="text-2xl drop-shadow-lg">{getTreeIcon(farm.tree_type)}</span>
