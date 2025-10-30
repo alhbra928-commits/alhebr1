@@ -1,14 +1,29 @@
-import { useState } from 'react';
-import { Crown, Building2, Shield } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Crown, Building2, Shield, ArrowRight } from 'lucide-react';
 import { brandColors, brandGradients } from '../../finance/styles/brandColors';
 
 interface AdminCrownButtonProps {
   onAdminLogin?: () => void;
   onFarmOwnerLogin?: () => void;
+  onBackToAdmin?: () => void;
 }
 
-export function AdminCrownButton({ onAdminLogin, onFarmOwnerLogin }: AdminCrownButtonProps) {
+export function AdminCrownButton({ onAdminLogin, onFarmOwnerLogin, onBackToAdmin }: AdminCrownButtonProps) {
   const [showMenu, setShowMenu] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  // Check if user is logged in
+  useEffect(() => {
+    const checkLoginStatus = () => {
+      const hasAdminSession = localStorage.getItem('adminUser') !== null;
+      setIsLoggedIn(hasAdminSession);
+    };
+
+    checkLoginStatus();
+    // Check every second for login status changes
+    const interval = setInterval(checkLoginStatus, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   // Debug on mount - TIMESTAMP: 1761842000
   console.log('🔄 AdminCrownButton v3 FINAL - 1761842000', {
@@ -36,6 +51,52 @@ export function AdminCrownButton({ onAdminLogin, onFarmOwnerLogin }: AdminCrownB
       alert('⚠️ Cache issue! Press Ctrl+Shift+Delete and clear cache, then Ctrl+F5');
     }
   };
+
+  const handleBackToAdmin = () => {
+    console.log('🎯 Back to Admin clicked');
+    setShowMenu(false);
+    if (onBackToAdmin) {
+      onBackToAdmin();
+    }
+  };
+
+  // If logged in, show "Back to Admin" button instead
+  if (isLoggedIn && onBackToAdmin) {
+    return (
+      <button
+        onClick={handleBackToAdmin}
+        className="fixed bottom-20 left-4 sm:bottom-24 sm:left-6 z-50 group touch-manipulation active:scale-90 transition-all duration-300"
+        aria-label="العودة للوحة الإدارة"
+      >
+        <div className="relative">
+          {/* Glow Effect */}
+          <div
+            className="absolute inset-0 rounded-full blur-xl animate-pulse-slow"
+            style={{
+              background: 'radial-gradient(circle, rgba(16, 185, 129, 0.6) 0%, transparent 70%)',
+            }}
+          />
+
+          {/* Button */}
+          <div
+            className="relative px-4 py-3 sm:px-5 sm:py-3.5 rounded-full flex items-center gap-2 sm:gap-3 transform transition-all duration-300 group-hover:scale-105 group-hover:shadow-2xl"
+            style={{
+              background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+              boxShadow: '0 8px 30px rgba(16, 185, 129, 0.5), 0 0 40px rgba(16, 185, 129, 0.2)',
+            }}
+          >
+            <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 text-white" strokeWidth={2.5} />
+            <span className="text-sm sm:text-base font-bold text-white hidden sm:inline">
+              لوحة الإدارة
+            </span>
+          </div>
+
+          {/* Sparkle Effect */}
+          <div className="absolute -top-1 -right-1 w-3 h-3 sm:w-4 sm:h-4 bg-yellow-300 rounded-full animate-ping" />
+        </div>
+      </button>
+    );
+  }
 
   return (
     <>

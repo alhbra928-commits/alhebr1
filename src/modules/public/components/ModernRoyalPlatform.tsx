@@ -200,6 +200,7 @@ export function ModernRoyalPlatform({
               <AdminCrownButton
                 onAdminLogin={onAdminLogin}
                 onFarmOwnerLogin={onFarmOwnerLogin}
+                onBackToAdmin={onBackToAdmin}
               />
             </div>
           </div>
