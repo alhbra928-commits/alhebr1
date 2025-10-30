@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>اختبار زر التاج - دليل التشخيص</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 20px;
+      margin: 0;
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    h1 {
+      color: #667eea;
+      text-align: center;
+      font-size: 2em;
+      margin-bottom: 10px;
+    }
+    .status {
+      background: #f0f4ff;
+      padding: 20px;
+      border-radius: 12px;
+      margin: 20px 0;
+      border-right: 5px solid #667eea;
+    }
+    .error {
+      background: #fff0f0;
+      border-right-color: #ff4444;
+    }
+    .success {
+      background: #f0fff4;
+      border-right-color: #00cc66;
+    }
+    .warning {
+      background: #fffbf0;
+      border-right-color: #ffaa00;
+    }
+    .step {
+      background: #f9fafb;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border-right: 3px solid #667eea;
+    }
+    .step h3 {
+      margin: 0 0 10px 0;
+      color: #667eea;
+      font-size: 1.1em;
+    }
+    .code {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      padding: 15px;
+      border-radius: 8px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9em;
+      overflow-x: auto;
+      margin: 10px 0;
+      direction: ltr;
+      text-align: left;
+    }
+    .check {
+      color: #00cc66;
+      font-weight: bold;
+    }
+    .cross {
+      color: #ff4444;
+      font-weight: bold;
+    }
+    .emoji {
+      font-size: 1.5em;
+      margin-left: 10px;
+    }
+    ul {
+      line-height: 1.8;
+    }
+    .highlight {
+      background: #fff3cd;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: bold;
+    }
+    .btn {
+      display: inline-block;
+      padding: 12px 24px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+      margin: 10px 5px;
+      transition: transform 0.2s;
+    }
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔧 دليل إصلاح زر التاج الذهبي</h1>
+
+    <div class="status success">
+      <h2><span class="emoji">✅</span>تم تطبيق الإصلاح!</h2>
+      <p><strong>Build Version:</strong> v20251030_1761840549818</p>
+      <p>تم إضافة نظام تشخيص شامل لتتبع مشكلة زر التاج</p>
+    </div>
+
+    <div class="status warning">
+      <h2><span class="emoji">⚠️</span>المشكلة المحتملة</h2>
+      <p>زر التاج لا يستجيب عند الضغط على أي من الخيارين:</p>
+      <ul>
+        <li>❌ لوحة المزرعة (لا تفتح)</li>
+        <li>❌ لوحة التحكم (لا تفتح صفحة تسجيل الدخول)</li>
+      </ul>
+    </div>
+
+    <h2>🔍 خطوات التشخيص</h2>
+
+    <div class="step">
+      <h3>الخطوة 1: افتح Console</h3>
+      <p>اضغط <span class="highlight">F12</span> أو:</p>
+      <ul>
+        <li>Chrome/Edge: Ctrl+Shift+J</li>
+        <li>Firefox: Ctrl+Shift+K</li>
+        <li>Safari: Cmd+Option+C</li>
+      </ul>
+    </div>
+
+    <div class="step">
+      <h3>الخطوة 2: انتقل للمنصة العامة</h3>
+      <p>تأكد أنك في الصفحة الرئيسية (البوابة الخضراء)</p>
+      <p>يجب أن ترى في Console:</p>
+      <div class="code">
+📋 PublicPlatformRouter Props: {
+  onAdminLogin: true,
+  onBackToAdmin: true,
+  onFarmOwnerLogin: true
+}
+      </div>
+      <p><strong>⚠️ إذا رأيت false بدلاً من true فالمشكلة في تمرير الـ props!</strong></p>
+    </div>
+
+    <div class="step">
+      <h3>الخطوة 3: اضغط على زر التاج الذهبي</h3>
+      <p>الزر موجود أسفل يسار الشاشة ⭐</p>
+      <p>يجب أن تظهر قائمة بخيارين</p>
+    </div>
+
+    <div class="step">
+      <h3>الخطوة 4: اضغط على "لوحة التحكم"</h3>
+      <p>راقب Console، يجب أن ترى بالترتيب:</p>
+      <div class="code">
+🔵 Admin button clicked
+🔵 onAdminLogin function: ƒ ()
+✅ onAdminLogin called
+🎯 App.tsx: onAdminLogin triggered
+🎯 showAdminLogin set to true
+      </div>
+      <p><strong>إذا رأيت هذه الرسائل ولم تفتح صفحة تسجيل الدخول:</strong></p>
+      <ul>
+        <li>المشكلة في عرض <span class="highlight">SmartAdminLoginPage</span></li>
+        <li>تحقق من showAdminLogin state</li>
+      </ul>
+    </div>
+
+    <div class="step">
+      <h3>الخطوة 5: اضغط على "لوحة المزرعة"</h3>
+      <p>راقب Console، يجب أن ترى:</p>
+      <div class="code">
+🟢 Farm Owner button clicked
+🟢 onFarmOwnerLogin function: ƒ ()
+✅ onFarmOwnerLogin called
+🎯 App.tsx: onFarmOwnerLogin triggered
+🎯 activeModule set to farm-owner
+      </div>
+      <p><strong>إذا رأيت الرسائل:</strong></p>
+      <ul>
+        <li>✅ الوظائف تعمل بشكل صحيح</li>
+        <li>✅ يجب أن تنتقل لصفحة صاحب المزرعة</li>
+      </ul>
+    </div>
+
+    <h2>🐛 الأخطاء الشائعة وحلولها</h2>
+
+    <div class="step error">
+      <h3>❌ الخطأ: onAdminLogin is undefined</h3>
+      <p><strong>المعنى:</strong> الوظيفة لم تصل للمكون</p>
+      <p><strong>الحل:</strong></p>
+      <div class="code">
+// تأكد من تمرير الـ props بشكل صحيح
+&lt;AdminCrownButton
+  onAdminLogin={onAdminLogin}
+  onFarmOwnerLogin={onFarmOwnerLogin}
+/&gt;
+      </div>
+    </div>
+
+    <div class="step error">
+      <h3>❌ الخطأ: لا تظهر أي رسائل في Console</h3>
+      <p><strong>المعنى:</strong> الزر لا يستجيب للضغط</p>
+      <p><strong>الحل المحتمل:</strong></p>
+      <ul>
+        <li>تحقق من z-index للزر (يجب أن يكون أعلى من العناصر الأخرى)</li>
+        <li>تحقق من pointer-events</li>
+        <li>امسح الكاش (Ctrl+Shift+Delete)</li>
+        <li>أعد تحميل الصفحة (Ctrl+F5)</li>
+      </ul>
+    </div>
+
+    <div class="step error">
+      <h3>❌ الخطأ: الرسائل تظهر لكن لا شيء يحدث</h3>
+      <p><strong>المعنى:</strong> الوظائف تُستدعى لكن State لا يتحدث</p>
+      <p><strong>الحل:</strong></p>
+      <ul>
+        <li>تحقق من activeModule في App.tsx</li>
+        <li>تحقق من showAdminLogin state</li>
+        <li>قد تكون هناك مشكلة في React re-render</li>
+      </ul>
+    </div>
+
+    <h2>📋 نسخة التقرير للمطور</h2>
+    <div class="step">
+      <p>إذا استمرت المشكلة، أرسل هذه المعلومات:</p>
+      <div class="code">
+Build: v20251030_1761840549818
+Browser: [اسم المتصفح والإصدار]
+Device: [Desktop/Mobile]
+Issue: [وصف دقيق للمشكلة]
+
+Console Output:
+[انسخ جميع الرسائل من Console هنا]
+
+Steps Taken:
+1. [ماذا فعلت]
+2. [ماذا حدث]
+3. [ماذا توقعت أن يحدث]
+      </div>
+    </div>
+
+    <h2>🎯 الحل السريع</h2>
+    <div class="step success">
+      <h3>✅ جرب هذا أولاً:</h3>
+      <ol>
+        <li><strong>امسح الكاش:</strong> Ctrl+Shift+Delete → حذف الكل</li>
+        <li><strong>أعد تحميل الصفحة:</strong> Ctrl+F5 (Hard Reload)</li>
+        <li><strong>افتح في وضع التخفي:</strong> Ctrl+Shift+N</li>
+        <li><strong>جرب متصفح آخر</strong></li>
+      </ol>
+    </div>
+
+    <div class="status">
+      <h2><span class="emoji">📞</span>الدعم الفني</h2>
+      <p>إذا استمرت المشكلة بعد كل هذه الخطوات:</p>
+      <ul>
+        <li>✉️ أرسل تقرير مفصل مع لقطات شاشة</li>
+        <li>🎥 سجل فيديو يوضح المشكلة</li>
+        <li>📋 انسخ محتوى Console كاملاً</li>
+      </ul>
+    </div>
+
+    <div style="text-align: center; margin-top: 30px;">
+      <a href="/" class="btn">🏠 العودة للمنصة</a>
+      <a href="#" onclick="window.location.reload(true); return false;" class="btn">🔄 إعادة تحميل</a>
+    </div>
+
+    <hr style="margin: 30px 0; border: none; border-top: 2px solid #eee;">
+
+    <div class="status">
+      <h3>📝 ملاحظات تقنية</h3>
+      <p><strong>التعديلات المطبقة:</strong></p>
+      <ul>
+        <li>✅ إضافة console.log في AdminCrownButton</li>
+        <li>✅ إضافة console.log في PublicPlatformRouter</li>
+        <li>✅ إضافة console.log في App.tsx</li>
+        <li>✅ تتبع كامل لسلسلة الأحداث</li>
+      </ul>
+      <p><strong>الملفات المعدلة:</strong></p>
+      <ul>
+        <li>src/modules/public/components/AdminCrownButton.tsx</li>
+        <li>src/modules/public/components/PublicPlatformRouter.tsx</li>
+        <li>src/App.tsx</li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    console.log('📄 test-crown-button-fix.html loaded');
+    console.log('📦 Expected Build: v20251030_1761840549818');
+    console.log('🔍 Ready for debugging');
+    console.log('');
+    console.log('👉 Instructions:');
+    console.log('1. Open the main platform');
+    console.log('2. Click the crown button (bottom-left)');
+    console.log('3. Watch for console messages');
+    console.log('4. Report any issues with console output');
+  </script>
+</body>
+</html>

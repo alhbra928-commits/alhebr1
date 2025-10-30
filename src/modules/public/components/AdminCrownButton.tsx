@@ -11,13 +11,27 @@ export function AdminCrownButton({ onAdminLogin, onFarmOwnerLogin }: AdminCrownB
   const [showMenu, setShowMenu] = useState(false);
 
   const handleAdminClick = () => {
+    console.log('🔵 Admin button clicked');
+    console.log('🔵 onAdminLogin function:', onAdminLogin);
     setShowMenu(false);
-    onAdminLogin?.();
+    if (onAdminLogin) {
+      onAdminLogin();
+      console.log('✅ onAdminLogin called');
+    } else {
+      console.error('❌ onAdminLogin is undefined!');
+    }
   };
 
   const handleFarmOwnerClick = () => {
+    console.log('🟢 Farm Owner button clicked');
+    console.log('🟢 onFarmOwnerLogin function:', onFarmOwnerLogin);
     setShowMenu(false);
-    onFarmOwnerLogin?.();
+    if (onFarmOwnerLogin) {
+      onFarmOwnerLogin();
+      console.log('✅ onFarmOwnerLogin called');
+    } else {
+      console.error('❌ onFarmOwnerLogin is undefined!');
+    }
   };
 
   return (

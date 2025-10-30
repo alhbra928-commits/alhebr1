@@ -186,9 +186,17 @@ function App() {
         case 'public':
           return (
             <PublicPlatformRouter
-              onAdminLogin={() => setShowAdminLogin(true)}
+              onAdminLogin={() => {
+                console.log('🎯 App.tsx: onAdminLogin triggered');
+                setShowAdminLogin(true);
+                console.log('🎯 showAdminLogin set to true');
+              }}
               onBackToAdmin={() => setActiveModule('dashboard')}
-              onFarmOwnerLogin={() => setActiveModule('farm-owner')}
+              onFarmOwnerLogin={() => {
+                console.log('🎯 App.tsx: onFarmOwnerLogin triggered');
+                setActiveModule('farm-owner');
+                console.log('🎯 activeModule set to farm-owner');
+              }}
             />
           );
       case 'farm-owner':
