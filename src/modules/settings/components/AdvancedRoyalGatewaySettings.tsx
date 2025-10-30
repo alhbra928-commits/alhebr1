@@ -10,6 +10,7 @@ interface GatewaySettings {
   id?: string;
   enabled: boolean;
   auto_enter_delay: number;
+  gateway_reappear_duration: number;
   theme_style: 'green' | 'gold' | 'elegant';
   particle_count: number;
   particle_speed: number;
@@ -28,6 +29,7 @@ export function AdvancedRoyalGatewaySettings() {
   const [settings, setSettings] = useState<GatewaySettings>({
     enabled: true,
     auto_enter_delay: 5,
+    gateway_reappear_duration: 1800, // 30 دقيقة بالثواني
     theme_style: 'green',
     particle_count: 50,
     particle_speed: 2,
@@ -345,6 +347,106 @@ export function AdvancedRoyalGatewaySettings() {
                 <div className="flex justify-between text-sm text-gray-500">
                   <span>فوري (0ث)</span>
                   <span>30 ثانية</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Gateway Reappear Duration */}
+            <div className="bg-white rounded-3xl p-8 shadow-xl border-2 border-gray-100 lg:col-span-2">
+              <div className="flex items-center gap-4 mb-6 pb-6 border-b-2 border-gray-100">
+                <div className="p-4 bg-gradient-to-br from-orange-400 to-red-500 rounded-2xl shadow-lg">
+                  <RefreshCw className="w-7 h-7 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-black text-gray-900">مدة إعادة ظهور البوابة</h3>
+                  <p className="text-gray-600">متى تظهر البوابة مرة أخرى عند التحديث أو الزيارة الجديدة</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                <button
+                  onClick={() => setSettings({ ...settings, gateway_reappear_duration: 1800 })}
+                  className={`p-6 rounded-2xl border-4 transition-all hover:scale-105 ${
+                    settings.gateway_reappear_duration === 1800
+                      ? 'border-orange-500 bg-orange-50 shadow-2xl'
+                      : 'border-gray-200 bg-white hover:border-orange-300'
+                  }`}
+                >
+                  <div className="text-center">
+                    <Clock className={`w-12 h-12 mx-auto mb-3 ${
+                      settings.gateway_reappear_duration === 1800 ? 'text-orange-600' : 'text-gray-400'
+                    }`} />
+                    <p className="font-black text-2xl text-gray-900 mb-1">30</p>
+                    <p className="text-sm font-bold text-gray-600">دقيقة</p>
+                  </div>
+                </button>
+
+                <button
+                  onClick={() => setSettings({ ...settings, gateway_reappear_duration: 3600 })}
+                  className={`p-6 rounded-2xl border-4 transition-all hover:scale-105 ${
+                    settings.gateway_reappear_duration === 3600
+                      ? 'border-blue-500 bg-blue-50 shadow-2xl'
+                      : 'border-gray-200 bg-white hover:border-blue-300'
+                  }`}
+                >
+                  <div className="text-center">
+                    <Clock className={`w-12 h-12 mx-auto mb-3 ${
+                      settings.gateway_reappear_duration === 3600 ? 'text-blue-600' : 'text-gray-400'
+                    }`} />
+                    <p className="font-black text-2xl text-gray-900 mb-1">1</p>
+                    <p className="text-sm font-bold text-gray-600">ساعة</p>
+                  </div>
+                </button>
+
+                <button
+                  onClick={() => setSettings({ ...settings, gateway_reappear_duration: 21600 })}
+                  className={`p-6 rounded-2xl border-4 transition-all hover:scale-105 ${
+                    settings.gateway_reappear_duration === 21600
+                      ? 'border-purple-500 bg-purple-50 shadow-2xl'
+                      : 'border-gray-200 bg-white hover:border-purple-300'
+                  }`}
+                >
+                  <div className="text-center">
+                    <Clock className={`w-12 h-12 mx-auto mb-3 ${
+                      settings.gateway_reappear_duration === 21600 ? 'text-purple-600' : 'text-gray-400'
+                    }`} />
+                    <p className="font-black text-2xl text-gray-900 mb-1">6</p>
+                    <p className="text-sm font-bold text-gray-600">ساعات</p>
+                  </div>
+                </button>
+
+                <button
+                  onClick={() => setSettings({ ...settings, gateway_reappear_duration: 86400 })}
+                  className={`p-6 rounded-2xl border-4 transition-all hover:scale-105 ${
+                    settings.gateway_reappear_duration === 86400
+                      ? 'border-green-500 bg-green-50 shadow-2xl'
+                      : 'border-gray-200 bg-white hover:border-green-300'
+                  }`}
+                >
+                  <div className="text-center">
+                    <Clock className={`w-12 h-12 mx-auto mb-3 ${
+                      settings.gateway_reappear_duration === 86400 ? 'text-green-600' : 'text-gray-400'
+                    }`} />
+                    <p className="font-black text-2xl text-gray-900 mb-1">24</p>
+                    <p className="text-sm font-bold text-gray-600">ساعة</p>
+                  </div>
+                </button>
+              </div>
+
+              <div className="mt-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border-2 border-blue-200">
+                <div className="flex items-start gap-3">
+                  <div className="p-2 bg-blue-500 rounded-lg mt-0.5">
+                    <Sparkles className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <p className="font-bold text-gray-900 mb-1">المدة المختارة:</p>
+                    <p className="text-gray-700">
+                      {settings.gateway_reappear_duration === 1800 && 'البوابة تظهر مرة أخرى بعد 30 دقيقة من آخر زيارة'}
+                      {settings.gateway_reappear_duration === 3600 && 'البوابة تظهر مرة أخرى بعد ساعة واحدة من آخر زيارة'}
+                      {settings.gateway_reappear_duration === 21600 && 'البوابة تظهر مرة أخرى بعد 6 ساعات من آخر زيارة'}
+                      {settings.gateway_reappear_duration === 86400 && 'البوابة تظهر مرة أخرى بعد 24 ساعة (يوم كامل) من آخر زيارة'}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
