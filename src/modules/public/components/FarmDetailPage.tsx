@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { ArrowRight, MapPin, Trees, TrendingUp, CheckCircle2, Droplets, Zap, Shield, Navigation, Sprout } from 'lucide-react';
 import { brandColors, brandGradients } from '../../finance/styles/brandColors';
 import { FarmDetailService, FarmDetail } from '../services/farmDetailService';
-import { SimpleLoader } from '../../../components/common/SimpleLoader';
+import { TransitionLoader } from '../../../components/common/TransitionLoader';
 
 interface FarmDetailPageProps {
   farmId: string;
@@ -70,18 +70,7 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
   const reservationPercentage = farm ? Math.round((reservedTrees / farm.total_trees) * 100) : 0;
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: brandGradients.beige }}>
-        <div className="text-center">
-          <div className="flex justify-center mb-4">
-            <SimpleLoader size="lg" color={brandColors.primary.gold} />
-          </div>
-          <p className="text-xl font-bold" style={{ color: brandColors.text.primary }}>
-            جاري التحميل...
-          </p>
-        </div>
-      </div>
-    );
+    return <TransitionLoader message="جاري تحميل تفاصيل المزرعة..." />;
   }
 
   if (!farm) {

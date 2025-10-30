@@ -23,7 +23,7 @@ import {
 } from 'lucide-react';
 import { brandColors, brandGradients } from '../../finance/styles/brandColors';
 import { FarmDetailService, FarmVariety, CreateReservationData } from '../services/farmDetailService';
-import { SimpleLoader } from '../../../components/common/SimpleLoader';
+import { FarmTypeLoader } from '../../../components/common/FarmTypeLoader';
 
 interface TemporaryBookingPageProps {
   farmId: string;
@@ -188,32 +188,10 @@ export function TemporaryBookingPage({
 
   if (loading) {
     return (
-      <div
-        className="min-h-screen flex items-center justify-center p-4"
-        style={{
-          background: `radial-gradient(circle at top right, ${oliveTheme.lightest}, ${oliveTheme.cream})`
-        }}
-      >
-        <div className="text-center">
-          <div
-            className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-2xl sm:rounded-3xl mx-auto mb-4 sm:mb-5 md:mb-6 flex items-center justify-center animate-pulse relative"
-            style={{
-              background: getFarmGradient(),
-              boxShadow: `0 20px 60px ${oliveTheme.primary}40`
-            }}
-          >
-            <span className="text-4xl sm:text-5xl md:text-6xl">{getFarmIcon()}</span>
-            <div className="absolute inset-0 rounded-2xl sm:rounded-3xl animate-ping opacity-20" style={{ background: oliveTheme.primary }} />
-          </div>
-          <div className="flex justify-center mb-3 sm:mb-4 md:mb-5">
-            <SimpleLoader size="lg" color={oliveTheme.primary} />
-          </div>
-          <p className="text-xl sm:text-2xl md:text-3xl font-black mb-1.5 sm:mb-2 px-4" style={{ color: oliveTheme.darkest }}>
-            جاري التحميل...
-          </p>
-          <p className="text-sm sm:text-base text-gray-600">الرجاء الانتظار</p>
-        </div>
-      </div>
+      <FarmTypeLoader
+        type={isPalm ? 'palm' : 'olive'}
+        message={isPalm ? 'جاري تحميل أصناف النخيل...' : 'جاري تحميل أصناف الزيتون...'}
+      />
     );
   }
 
