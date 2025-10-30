@@ -15,8 +15,21 @@ export function AdminCrownButton({ onAdminLogin, onFarmOwnerLogin, onBackToAdmin
   // Check if user is logged in
   useEffect(() => {
     const checkLoginStatus = () => {
-      const hasAdminSession = localStorage.getItem('adminUser') !== null;
+      // Check multiple possible session keys
+      const hasAdminSession =
+        localStorage.getItem('admin_session_token') !== null ||
+        localStorage.getItem('admin_data') !== null ||
+        localStorage.getItem('adminUser') !== null;
+
       setIsLoggedIn(hasAdminSession);
+
+      // Debug log
+      console.log('🔍 Login Status Check:', {
+        hasToken: !!localStorage.getItem('admin_session_token'),
+        hasData: !!localStorage.getItem('admin_data'),
+        hasAdminUser: !!localStorage.getItem('adminUser'),
+        isLoggedIn: hasAdminSession
+      });
     };
 
     checkLoginStatus();
