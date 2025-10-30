@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { MainPlatformInterface } from './MainPlatformInterface';
 import { PreviewInspectionPage } from './PreviewInspectionPage';
-import { UltraModernGateway } from './UltraModernGateway';
 import { marketingAnalyticsService } from '../../../services/marketingAnalyticsService';
 
-type View = 'gateway' | 'main' | 'preview';
+type View = 'main' | 'preview';
 
 interface PublicPlatformRouterProps {
   onAdminLogin?: () => void;
@@ -13,7 +12,7 @@ interface PublicPlatformRouterProps {
 }
 
 export function PublicPlatformRouter({ onAdminLogin, onBackToAdmin, onFarmOwnerLogin }: PublicPlatformRouterProps) {
-  const [currentView, setCurrentView] = useState<View>('gateway');
+  const [currentView, setCurrentView] = useState<View>('main');
   const [selectedBarcode, setSelectedBarcode] = useState<string>('');
 
   // تهيئة السكربتات التحليلية عند التحميل الأول
@@ -30,11 +29,6 @@ export function PublicPlatformRouter({ onAdminLogin, onBackToAdmin, onFarmOwnerL
     marketingAnalyticsService.trackCurrentPage();
   }, [currentView]);
 
-
-  const handleEnterPlatform = () => {
-    setCurrentView('main');
-  };
-
   const handlePreviewSelect = (barcode: string) => {
     setSelectedBarcode(barcode);
     setCurrentView('preview');
@@ -49,11 +43,7 @@ export function PublicPlatformRouter({ onAdminLogin, onBackToAdmin, onFarmOwnerL
     setSelectedBarcode('');
   };
 
-
   switch (currentView) {
-    case 'gateway':
-      return <UltraModernGateway onEnter={handleEnterPlatform} />;
-
     case 'preview':
       return (
         <PreviewInspectionPage
