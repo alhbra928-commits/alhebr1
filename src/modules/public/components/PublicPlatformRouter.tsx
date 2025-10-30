@@ -13,7 +13,28 @@ interface PublicPlatformRouterProps {
 }
 
 export function PublicPlatformRouter({ onAdminLogin, onBackToAdmin, onFarmOwnerLogin }: PublicPlatformRouterProps) {
-  const [currentView, setCurrentView] = useState<View>('gateway');
+  const [currentView, setCurrentView] = useState<View>(() => {
+    // التحقق من آخر مرة تم عرض البوابة فيها
+    const lastGatewayView = localStorage.getItem('last_gateway_view');
+
+    if (!lastGatewayView) {
+      // أول زيارة - عرض البوابة
+      return 'gateway';
+    }
+
+    const lastViewTime = parseInt(lastGatewayView, 10);
+    const currentTime = Date.now();
+    const oneHour = 60 * 60 * 1000; // ساعة واحدة بالميلي ثانية
+
+    // إذا مر أكثر من ساعة، عرض البوابة مرة أخرى
+    if (currentTime - lastViewTime >= oneHour) {
+      return 'gateway';
+    }
+
+    // لم يمر ساعة بعد - الذهاب مباشرة للمنصة
+    return 'main';
+  });
+
   const [selectedBarcode, setSelectedBarcode] = useState<string>('');
 
   // تهيئة السكربتات التحليلية عند التحميل الأول
@@ -31,6 +52,8 @@ export function PublicPlatformRouter({ onAdminLogin, onBackToAdmin, onFarmOwnerL
   }, [currentView]);
 
   const handleEnterPlatform = () => {
+    // حفظ وقت عرض البوابة
+    localStorage.setItem('last_gateway_view', Date.now().toString());
     setCurrentView('main');
   };
 
