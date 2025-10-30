@@ -3,7 +3,6 @@ import { Settings, Map, Video, Mail, Key, Globe, Bell, Shield, Database, BarChar
 import { Card3D } from '../../../components/ui/Card3D';
 import { BackButton } from '../../../components/common/BackButton';
 import { BackupCenter } from '../../backups/components/BackupCenter';
-import { UltraModernTickerManager } from './UltraModernTickerManager';
 import { VersionHistoryPanel } from './VersionHistoryPanel';
 import { AdvancedCacheSystemDiagnostics } from './AdvancedCacheSystemDiagnostics';
 import { PlatformTextsManager } from './PlatformTextsManager';
@@ -14,7 +13,7 @@ interface SettingsViewProps {
 }
 
 export function SettingsView({ onBack }: SettingsViewProps) {
-  const [activeTab, setActiveTab] = useState<'general' | 'backup' | 'ticker' | 'versions' | 'diagnostics' | 'texts' | 'gateway'>('general');
+  const [activeTab, setActiveTab] = useState<'general' | 'backup' | 'versions' | 'diagnostics' | 'texts' | 'gateway'>('general');
   const [settings, setSettings] = useState({
     mapApiKey: 'AIza*********************',
     videoService: 'youtube',
@@ -52,17 +51,6 @@ export function SettingsView({ onBack }: SettingsViewProps) {
           >
             <Settings className="h-5 w-5" />
             الإعدادات العامة
-          </button>
-          <button
-            onClick={() => setActiveTab('ticker')}
-            className={`flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all ${
-              activeTab === 'ticker'
-                ? 'bg-gradient-to-r from-[#0EA5E9] to-[#06B6D4] text-white shadow-lg'
-                : 'bg-white text-[#2C2C2C] hover:bg-[#F4EBDD]'
-            }`}
-          >
-            <BarChart3 className="h-5 w-5" />
-            الشريط المتحرك
           </button>
           <button
             onClick={() => setActiveTab('backup')}
@@ -123,8 +111,6 @@ export function SettingsView({ onBack }: SettingsViewProps) {
 
         {activeTab === 'backup' ? (
           <BackupCenter />
-        ) : activeTab === 'ticker' ? (
-          <UltraModernTickerManager />
         ) : activeTab === 'versions' ? (
           <VersionHistoryPanel />
         ) : activeTab === 'diagnostics' ? (
