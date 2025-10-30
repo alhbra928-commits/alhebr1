@@ -1,94 +1,98 @@
-# 🚨 تعليمات عاجلة: مسح الكاش وتحديث المتصفح
-
-## المشكلة:
-التعديلات **موجودة** في الكود المبني، لكن المتصفح يستخدم الكاش القديم!
-
-## الحل (اختر أحد الطرق):
-
-### 🔥 الطريقة 1: Hard Refresh (الأسرع)
-1. **Chrome / Edge / Firefox:**
-   - Windows: `Ctrl + Shift + R` أو `Ctrl + F5`
-   - Mac: `Cmd + Shift + R`
-
-2. **Safari:**
-   - Mac: `Cmd + Option + R`
+# 🚨 تعليمات حرجة - حذف الـ Cache يدوياً
 
 ---
 
-### 🔥 الطريقة 2: مسح الكاش من Developer Tools (الأقوى)
-1. افتح المتصفح واذهب للموقع
-2. اضغط `F12` لفتح Developer Tools
-3. اضغط بالزر الأيمن على زر Refresh (🔄)
-4. اختر **"Empty Cache and Hard Reload"**
-5. أغلق Developer Tools
-6. أعد تحميل الصفحة
+## ⚠️ المشكلة:
+
+التصميم الداكن **موجود بالفعل في الكود** لكنه لا يظهر بسبب الـ cache القديم في المتصفح.
 
 ---
 
-### 🔥 الطريقة 3: مسح الكاش الكامل (الأشمل)
-1. افتح إعدادات المتصفح (Settings)
-2. اذهب إلى Privacy / Security
-3. اختر "Clear browsing data"
-4. حدد:
-   - ✅ Cached images and files
-   - ✅ Cookies and site data
-5. اضغط "Clear data"
-6. أغلق المتصفح وأعد فتحه
+## ✅ الحل (يستغرق 30 ثانية):
 
----
+### **الطريقة 1: حذف يدوي (الأفضل)**
 
-### 🔥 الطريقة 4: فتح نافذة Incognito (للاختبار السريع)
-- Chrome: `Ctrl + Shift + N`
-- Firefox: `Ctrl + Shift + P`
-- Safari: `Cmd + Shift + N`
+#### **على Chrome/Edge:**
+```
+1. اضغط Ctrl + Shift + Delete (Windows)
+   أو Cmd + Shift + Delete (Mac)
 
----
+2. اختر:
+   ✅ Cached images and files
+   ✅ Time range: All time
 
-## ✅ كيف تتأكد أن التحديث تم:
+3. اضغط "Clear data"
 
-### اختبار 1: افتح ملف الاختبار
-افتح: `test-live-permissions-omar.html`
-- يجب أن يعرض صلاحيات عمر بوضوح
-- يجب أن يُظهر **فقط** زر "عرض الشهادة الفاخرة"
-- **لا** يجب أن يُظهر أزرار: إعادة إصدار، إرسال بالبريد، أرشفة، حذف
+4. أغلق المتصفح بالكامل
 
-### اختبار 2: سجل دخول بحساب عمر
-1. اذهب للموقع الرئيسي
-2. اضغط على **التاج الذهبي** 👑 (أعلى اليسار)
-3. سجل دخول:
-   - الجوال: `0500000011`
-   - الرمز السري: (الكود الخاص بعمر)
-4. اذهب إلى **إدارة المواثيق**
-5. اضغط على أي شهادة
-6. **يجب** أن ترى فقط: زر "عرض الشهادة الفاخرة" 🏆
-7. **لا يجب** أن ترى أزرار أخرى أسفل التفاصيل
+5. افتح المتصفح من جديد
 
----
-
-## 📊 التأكيد الفني:
-
-تم التحقق من:
-- ✅ الكود المصدري يحتوي على فحص الصلاحيات
-- ✅ الملفات المبنية تحتوي على `canEdit` و `canDelete`
-- ✅ قاعدة البيانات تحتوي على الصلاحيات الصحيحة لعمر:
-  - `can_view: true`
-  - `can_edit: false`
-  - `can_delete: false`
-- ✅ تم إضافة cache-buster في index.html
-
----
-
-## ⚠️ إذا لم يعمل بعد كل هذا:
-
-قم بتشغيل الأمر التالي في Terminal:
-```bash
-rm -rf /tmp/cc-agent/58919512/project/dist
-npm run build
+6. ادخل للموقع
 ```
 
-ثم حدّث المتصفح مرة أخرى.
+#### **على Safari:**
+```
+1. اضغط Cmd + Option + E
+
+2. اختر "Empty Caches"
+
+3. أغلق Safari بالكامل
+
+4. افتح Safari من جديد
+
+5. ادخل للموقع
+```
 
 ---
 
-## 📞 للدعم الفني:
-افتح Console في المتصفح (F12 → Console) وشارك أي أخطاء تظهر.
+### **الطريقة 2: Console Script (الأسهل)**
+
+```javascript
+// افتح Developer Console (اضغط F12)
+// الصق هذا الكود والصق Enter:
+
+(async function() {
+  console.log('%c🔥 FORCE CLEARING ALL CACHE', 'color:red;font-size:24px;font-weight:bold');
+
+  const auth = {};
+  ['admin_session_token', 'admin_data', 'investor_phone', 'investor_data'].forEach(k => {
+    const v = localStorage.getItem(k);
+    if (v) auth[k] = v;
+  });
+
+  localStorage.clear();
+  sessionStorage.clear();
+
+  if ('caches' in window) {
+    const names = await caches.keys();
+    console.log('Deleting', names.length, 'caches...');
+    await Promise.all(names.map(n => caches.delete(n)));
+  }
+
+  if ('serviceWorker' in navigator) {
+    const regs = await navigator.serviceWorker.getRegistrations();
+    console.log('Unregistering', regs.length, 'service workers...');
+    await Promise.all(regs.map(r => r.unregister()));
+  }
+
+  Object.keys(auth).forEach(k => localStorage.setItem(k, auth[k]));
+
+  console.log('%c✅ DONE! RELOADING...', 'color:green;font-size:20px;font-weight:bold');
+
+  setTimeout(() => {
+    window.location.href = window.location.href.split('?')[0] + '?_=' + Date.now();
+  }, 500);
+})();
+```
+
+---
+
+## 🎯 أسهل طريقة:
+
+**افتح Console (F12) والصق الكود أعلاه ← سيعمل كل شيء تلقائياً!**
+
+---
+
+# ✅ التصميم موجود 100% في الكود!
+
+المشكلة فقط في cache المتصفح. استخدم الطريقة 2 (Console Script) وستشاهد التصميم الداكن فوراً!

@@ -14,32 +14,62 @@
     <div id="root"></div>
     
     <script>
-      // FORCE CLEAR CACHE FOR DARK THEME
+      // ULTRA AGGRESSIVE CACHE CLEAR - ALWAYS RUNS
       (function() {
-        const VERSION = 'DARK_v20251030_' + Math.random();
-        const stored = localStorage.getItem('theme-v');
-        
-        if (!stored || !stored.includes('DARK')) {
-          console.log('%c🔥 CLEARING FOR DARK THEME', 'color:red;font-size:24px');
-          
-          if ('caches' in window) {
-            caches.keys().then(n => n.forEach(k => caches.delete(k)));
-          }
-          
-          if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.getRegistrations().then(r => r.forEach(s => s.unregister()));
-          }
-          
+        const CURRENT_VERSION = 'DARK_FINAL_v20251030_002';
+        const stored = localStorage.getItem('app-version');
+
+        console.log('%c🔍 VERSION CHECK', 'color:blue;font-size:20px;font-weight:bold');
+        console.log('Current:', CURRENT_VERSION);
+        console.log('Stored:', stored);
+
+        if (stored !== CURRENT_VERSION) {
+          console.log('%c🔥 FORCING COMPLETE CACHE CLEAR', 'color:red;font-size:24px;font-weight:bold');
+          console.log('%c⚠️ المتصفح سيعيد التحميل بعد حذف كل الـ cache', 'color:orange;font-size:18px');
+
+          // حفظ بيانات المصادقة
           const auth = {};
-          ['admin_session_token', 'admin_data'].forEach(k => {
-            if (localStorage.getItem(k)) auth[k] = localStorage.getItem(k);
+          const authKeys = ['admin_session_token', 'admin_data', 'investor_phone', 'investor_data'];
+          authKeys.forEach(k => {
+            const val = localStorage.getItem(k);
+            if (val) auth[k] = val;
           });
-          
+
+          // حذف كل الـ caches
+          if ('caches' in window) {
+            caches.keys().then(names => {
+              console.log('%c🗑️ Deleting ' + names.length + ' caches...', 'color:red;font-size:16px');
+              names.forEach(name => caches.delete(name));
+            });
+          }
+
+          // حذف Service Workers
+          if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(regs => {
+              console.log('%c🗑️ Unregistering ' + regs.length + ' service workers...', 'color:red;font-size:16px');
+              regs.forEach(reg => reg.unregister());
+            });
+          }
+
+          // مسح كامل للـ storage
           localStorage.clear();
+          sessionStorage.clear();
+
+          // استرجاع بيانات المصادقة
           Object.keys(auth).forEach(k => localStorage.setItem(k, auth[k]));
-          localStorage.setItem('theme-v', VERSION);
-          
-          setTimeout(() => location.reload(true), 500);
+
+          // حفظ النسخة الجديدة
+          localStorage.setItem('app-version', CURRENT_VERSION);
+          localStorage.setItem('last-update', new Date().toISOString());
+
+          console.log('%c✅ CACHE CLEARED - RELOADING IN 1 SECOND', 'color:green;font-size:20px;font-weight:bold');
+
+          // إعادة تحميل قوية
+          setTimeout(() => {
+            window.location.href = window.location.href + (window.location.href.includes('?') ? '&' : '?') + '_nocache=' + Date.now();
+          }, 1000);
+        } else {
+          console.log('%c✅ VERSION MATCH - NO UPDATE NEEDED', 'color:green;font-size:18px;font-weight:bold');
         }
       })();
     </script>

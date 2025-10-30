@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🚨 تعليمات مهمة جداً</title>
+    <title>حذف Cache - إظهار التصميم الداكن</title>
     <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -16,134 +17,188 @@
         }
         .container {
             background: white;
-            border-radius: 30px;
-            padding: 50px;
-            max-width: 800px;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
         }
         h1 {
-            color: #e53e3e;
-            font-size: 48px;
-            margin-bottom: 30px;
-            text-align: center;
-            animation: pulse 2s infinite;
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 32px;
         }
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-        .step {
-            background: #f7fafc;
-            border-right: 6px solid #4299e1;
+        .warning {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 10px;
             padding: 20px;
             margin: 20px 0;
-            border-radius: 10px;
-            font-size: 20px;
-            font-weight: bold;
-        }
-        .important {
-            background: #fff5f5;
-            border: 3px solid #fc8181;
-            padding: 30px;
-            border-radius: 15px;
-            margin: 30px 0;
+            color: #856404;
         }
         .success {
-            background: #f0fff4;
-            border: 3px solid #68d391;
+            background: #d4edda;
+            border: 2px solid #28a745;
+            border-radius: 10px;
             padding: 20px;
-            border-radius: 15px;
             margin: 20px 0;
+            color: #155724;
+            display: none;
         }
-        code {
-            background: #2d3748;
-            color: #68d391;
-            padding: 5px 10px;
-            border-radius: 5px;
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
             font-size: 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            margin: 10px;
+            transition: transform 0.2s;
         }
+        button:hover {
+            transform: scale(1.05);
+        }
+        button:active {
+            transform: scale(0.95);
+        }
+        .log {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 14px;
+            text-align: right;
+            display: none;
+        }
+        .log-item {
+            padding: 5px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .log-item:last-child {
+            border-bottom: none;
+        }
+        .log-error { color: #dc3545; }
+        .log-success { color: #28a745; }
+        .log-info { color: #007bff; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🚨 التعليمات الإلزامية 🚨</h1>
+        <h1>🔥 حذف Cache للتصميم الداكن</h1>
         
-        <div class="important">
-            <h2 style="color: #e53e3e; font-size: 32px;">⚠️ المشكلة:</h2>
-            <p style="font-size: 22px;">المتصفح يستخدم الملفات القديمة من الـ Cache!</p>
-            <p style="font-size: 20px; color: #718096;">لن ترى التغييرات الجديدة بدون مسح الـ Cache</p>
+        <div class="warning">
+            <strong>⚠️ المشكلة:</strong>
+            <p>التصميم الداكن موجود في الكود لكن المتصفح يعرض النسخة القديمة من الـ cache.</p>
         </div>
 
-        <h2 style="color: #4299e1; font-size: 32px; margin-top: 40px;">✅ الخطوات (بالترتيب):</h2>
+        <p style="margin: 20px 0; font-size: 18px;">
+            اضغط الزر أدناه لحذف كل الـ cache وإعادة التحميل
+        </p>
 
-        <div class="step">
-            <strong>1️⃣ افتح Developer Tools</strong>
-            <p style="margin: 10px 0; font-size: 18px;">اضغط <code>F12</code> على الكيبورد</p>
+        <button onclick="clearEverything()">🚀 حذف Cache وإعادة التحميل</button>
+
+        <div id="successBox" class="success">
+            <strong>✅ تم بنجاح!</strong>
+            <p>سيتم إعادة التحميل خلال 3 ثواني...</p>
         </div>
 
-        <div class="step">
-            <strong>2️⃣ اذهب إلى Application</strong>
-            <p style="margin: 10px 0; font-size: 18px;">اضغط على تبويب <code>Application</code> في الأعلى</p>
-        </div>
+        <div id="logBox" class="log"></div>
 
-        <div class="step">
-            <strong>3️⃣ اذهب إلى Storage</strong>
-            <p style="margin: 10px 0; font-size: 18px;">من القائمة اليسرى، اضغط <code>Storage</code></p>
-        </div>
-
-        <div class="step">
-            <strong>4️⃣ امسح كل شيء</strong>
-            <p style="margin: 10px 0; font-size: 18px;">اضغط <code>Clear site data</code></p>
-        </div>
-
-        <div class="step">
-            <strong>5️⃣ Hard Reload</strong>
-            <p style="margin: 10px 0; font-size: 18px;">اضغط <code>Ctrl + Shift + R</code> معاً</p>
-        </div>
-
-        <div class="step">
-            <strong>6️⃣ سجل دخول</strong>
-            <p style="margin: 10px 0; font-size: 18px;">رقم الجوال: <code>0500000000</code></p>
-        </div>
-
-        <div class="step">
-            <strong>7️⃣ اذهب إلى إدارة الحجوزات</strong>
-            <p style="margin: 10px 0; font-size: 18px;">من القائمة الرئيسية</p>
-        </div>
-
-        <div class="step">
-            <strong>8️⃣ اضغط "عرض التفاصيل والإجراءات"</strong>
-            <p style="margin: 10px 0; font-size: 18px;">على أي حجز</p>
-        </div>
-
-        <div class="step">
-            <strong>9️⃣ اضغط "اعتماد"</strong>
-            <p style="margin: 10px 0; font-size: 18px;">في Panel من الجانب</p>
-        </div>
-
-        <div class="success">
-            <h3 style="color: #38a169; font-size: 28px;">🎉 النتيجة المتوقعة:</h3>
-            <ul style="font-size: 20px; line-height: 2;">
-                <li>✅ Modal أخضر جميل يظهر</li>
-                <li>✅ معلومات الحجز كاملة</li>
-                <li>✅ شرح واضح للإجراء</li>
-                <li>✅ زر "تأكيد الاعتماد" مميز</li>
-                <li>✅ زر "إلغاء" واضح</li>
-                <li>✅ تصميم احترافي 100%</li>
-            </ul>
-        </div>
-
-        <div class="important" style="margin-top: 40px;">
-            <h3 style="color: #e53e3e; font-size: 24px;">⚠️ تنبيه مهم جداً:</h3>
-            <p style="font-size: 20px;">إذا لم تمسح الـ Cache، سترى الشاشة السوداء القديمة!</p>
-            <p style="font-size: 18px; color: #718096;">الكود الجديد موجود في:</p>
-            <code style="display: block; margin: 10px 0;">dist/assets/reservations-module-CckYifhs.js</code>
-            <p style="font-size: 18px; color: #718096;">حجم الملف: <strong>64.37 kB</strong> (تم البناء بنجاح!)</p>
-        </div>
-
-        <div style="text-align: center; margin-top: 40px; font-size: 24px; color: #4299e1; font-weight: bold;">
-            🚀 التغييرات موجودة وجاهزة! فقط امسح الـ Cache!
-        </div>
+        <p style="margin-top: 30px; color: #6c757d; font-size: 14px;">
+            ملاحظة: بياناتك المحفوظة (تسجيل الدخول) ستبقى آمنة
+        </p>
     </div>
+
+    <script>
+        function log(message, type = 'info') {
+            const logBox = document.getElementById('logBox');
+            logBox.style.display = 'block';
+            const item = document.createElement('div');
+            item.className = 'log-item log-' + type;
+            item.textContent = message;
+            logBox.appendChild(item);
+            logBox.scrollTop = logBox.scrollHeight;
+        }
+
+        async function clearEverything() {
+            try {
+                log('🔄 بدء عملية الحذف...', 'info');
+
+                // حفظ بيانات المصادقة
+                const auth = {};
+                const authKeys = [
+                    'admin_session_token',
+                    'admin_data',
+                    'investor_phone',
+                    'investor_data',
+                    'farm_owner_session',
+                    'farm_owner_data'
+                ];
+                
+                authKeys.forEach(key => {
+                    const value = localStorage.getItem(key);
+                    if (value) {
+                        auth[key] = value;
+                        log(`💾 حفظ: ${key}`, 'info');
+                    }
+                });
+
+                // حذف localStorage
+                log('🗑️ حذف localStorage...', 'info');
+                localStorage.clear();
+                log('✅ تم حذف localStorage', 'success');
+
+                // حذف sessionStorage
+                log('🗑️ حذف sessionStorage...', 'info');
+                sessionStorage.clear();
+                log('✅ تم حذف sessionStorage', 'success');
+
+                // حذف Cache API
+                if ('caches' in window) {
+                    const cacheNames = await caches.keys();
+                    log(`🗑️ حذف ${cacheNames.length} caches...`, 'info');
+                    await Promise.all(cacheNames.map(name => caches.delete(name)));
+                    log('✅ تم حذف جميع الـ caches', 'success');
+                }
+
+                // إلغاء Service Workers
+                if ('serviceWorker' in navigator) {
+                    const registrations = await navigator.serviceWorker.getRegistrations();
+                    log(`🗑️ إلغاء ${registrations.length} service workers...`, 'info');
+                    await Promise.all(registrations.map(reg => reg.unregister()));
+                    log('✅ تم إلغاء جميع الـ service workers', 'success');
+                }
+
+                // استرجاع بيانات المصادقة
+                Object.keys(auth).forEach(key => {
+                    localStorage.setItem(key, auth[key]);
+                    log(`♻️ استرجاع: ${key}`, 'success');
+                });
+
+                // حفظ النسخة الجديدة
+                localStorage.setItem('app-version', 'DARK_FINAL_v20251030_002');
+                log('✅ تم حفظ النسخة الجديدة', 'success');
+
+                // إظهار رسالة النجاح
+                document.getElementById('successBox').style.display = 'block';
+                log('🎉 اكتمل! إعادة التحميل...', 'success');
+
+                // إعادة التحميل
+                setTimeout(() => {
+                    const baseUrl = window.location.origin;
+                    window.location.href = baseUrl + '/?_nocache=' + Date.now();
+                }, 3000);
+
+            } catch (error) {
+                log('❌ خطأ: ' + error.message, 'error');
+                alert('حدث خطأ: ' + error.message);
+            }
+        }
+    </script>
 </body>
 </html>
