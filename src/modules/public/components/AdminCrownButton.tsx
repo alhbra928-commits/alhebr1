@@ -65,7 +65,7 @@ export function AdminCrownButton({ onAdminLogin, onFarmOwnerLogin, onBackToAdmin
     return (
       <button
         onClick={handleBackToAdmin}
-        className="fixed bottom-20 left-4 sm:bottom-24 sm:left-6 z-50 group touch-manipulation active:scale-90 transition-all duration-300"
+        className="fixed bottom-28 left-4 sm:bottom-32 sm:left-6 z-[60] group touch-manipulation active:scale-90 transition-all duration-300"
         aria-label="العودة للوحة الإدارة"
       >
         <div className="relative">
@@ -102,7 +102,7 @@ export function AdminCrownButton({ onAdminLogin, onFarmOwnerLogin, onBackToAdmin
     <>
       <button
         onClick={() => setShowMenu(!showMenu)}
-        className="fixed bottom-20 left-4 sm:bottom-24 sm:left-6 z-50 group touch-manipulation active:scale-90 transition-all duration-300 w-14 h-14 sm:w-[60px] sm:h-[60px] rounded-full"
+        className="fixed bottom-28 left-4 sm:bottom-32 sm:left-6 z-[60] group touch-manipulation active:scale-90 transition-all duration-300 w-14 h-14 sm:w-[60px] sm:h-[60px] rounded-full"
       aria-label="دخول الإدارة"
     >
       <div
