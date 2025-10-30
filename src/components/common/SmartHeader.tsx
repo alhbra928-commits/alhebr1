@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Bell, MessageCircle, Home, MapPin, Filter, TrendingUp, Search, ChevronDown, Shield, ArrowRight } from 'lucide-react';
+import { Bell, MessageCircle, Home, MapPin, Filter, TrendingUp, Search, ChevronDown, Shield, ArrowRight, Crown, Sparkles, Star, Zap } from 'lucide-react';
 import { brandColors, brandGradients } from '../../modules/finance/styles/brandColors';
 
 interface SmartHeaderProps {
@@ -161,34 +161,50 @@ export function SmartHeader({
         {/* Top Bar */}
         <div className="max-w-7xl mx-auto px-3 sm:px-4 py-3 sm:py-4">
           <div className="flex items-center justify-between gap-2">
-            {/* Logo & Platform Name */}
+            {/* Logo & Platform Name with Crown */}
             <button
               onClick={onLogoClick}
-              className="flex items-center gap-2 sm:gap-3 hover:scale-105 transition-transform duration-300 flex-shrink-0"
+              className="flex items-center gap-2 sm:gap-3 hover:scale-105 transition-transform duration-300 flex-shrink-0 group"
             >
-              <div className="text-2xl sm:text-3xl">🌴</div>
+              {/* Crown Icon */}
+              <div className="relative">
+                <div
+                  className="relative p-2 sm:p-2.5 rounded-xl group-hover:rotate-6 transition-transform duration-300"
+                  style={{
+                    background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
+                    boxShadow: '0 4px 20px rgba(16, 185, 129, 0.4), 0 0 0 3px rgba(16, 185, 129, 0.2)',
+                  }}
+                >
+                  <Crown className="w-5 h-5 sm:w-6 sm:h-6 text-white" strokeWidth={2.5} />
+                  <div className="absolute -top-1 -right-1">
+                    <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 text-emerald-300 animate-pulse" />
+                  </div>
+                </div>
+              </div>
+
+              {/* Platform Name */}
               <div className="flex flex-col items-start">
                 <h1
-                  className="text-base sm:text-xl md:text-2xl font-black leading-tight"
+                  className="text-lg sm:text-2xl md:text-3xl font-black leading-tight"
                   style={{
-                    background: brandGradients.gold,
+                    background: 'linear-gradient(135deg, #059669 0%, #10B981 50%, #34D399 100%)',
                     WebkitBackgroundClip: 'text',
                     WebkitTextFillColor: 'transparent',
                     backgroundClip: 'text',
-                    textShadow: '0 2px 10px rgba(212, 175, 55, 0.4)',
-                    filter: 'drop-shadow(0 2px 4px rgba(212, 175, 55, 0.3))',
+                    textShadow: '0 2px 10px rgba(16, 185, 129, 0.4)',
+                    filter: 'drop-shadow(0 2px 4px rgba(16, 185, 129, 0.3))',
                   }}
                 >
-                  منصة التملك
+                  منصة الملكية الزراعية
                 </h1>
-                <p className="text-[10px] sm:text-xs text-gray-600 font-bold">النخيل والزيتون</p>
+                <p className="text-[10px] sm:text-xs font-bold" style={{ color: '#059669' }}>النخيل والزيتون</p>
               </div>
             </button>
 
             {/* Center - Dynamic Title - Hidden on mobile */}
-            <div className="hidden md:block">
+            <div className="hidden lg:block">
               <h2
-                className="text-lg font-bold px-6 py-2 rounded-full"
+                className="text-base font-bold px-5 py-2 rounded-full"
                 style={{
                   background: 'rgba(255, 255, 255, 0.6)',
                   color: brandColors.text.primary,
@@ -280,6 +296,68 @@ export function SmartHeader({
               </button>
             </div>
           </div>
+        </div>
+
+        {/* Innovative Ticker Bar */}
+        <div
+          className="relative overflow-hidden border-t border-b"
+          style={{
+            background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.15) 100%)',
+            borderColor: 'rgba(16, 185, 129, 0.2)',
+          }}
+        >
+          <div className="ticker-container py-2.5">
+            <div className="ticker-content">
+              {/* Message 1 */}
+              <div className="ticker-item">
+                <Star className="w-4 h-4 text-emerald-600" fill="currentColor" />
+                <span className="text-sm font-bold text-emerald-800">استثمر في مستقبل أخضر مستدام</span>
+              </div>
+
+              {/* Message 2 */}
+              <div className="ticker-item">
+                <Zap className="w-4 h-4 text-green-600" fill="currentColor" />
+                <span className="text-sm font-bold text-green-800">عوائد سنوية مضمونة من أشجارك</span>
+              </div>
+
+              {/* Message 3 */}
+              <div className="ticker-item">
+                <Sparkles className="w-4 h-4 text-teal-600" />
+                <span className="text-sm font-bold text-teal-800">ملكية موثقة ومضمونة قانونياً</span>
+              </div>
+
+              {/* Message 4 */}
+              <div className="ticker-item">
+                <Crown className="w-4 h-4 text-emerald-600" />
+                <span className="text-sm font-bold text-emerald-800">تملك أشجار النخيل والزيتون الآن</span>
+              </div>
+
+              {/* Duplicate for seamless loop */}
+              <div className="ticker-item">
+                <Star className="w-4 h-4 text-emerald-600" fill="currentColor" />
+                <span className="text-sm font-bold text-emerald-800">استثمر في مستقبل أخضر مستدام</span>
+              </div>
+
+              <div className="ticker-item">
+                <Zap className="w-4 h-4 text-green-600" fill="currentColor" />
+                <span className="text-sm font-bold text-green-800">عوائد سنوية مضمونة من أشجارك</span>
+              </div>
+
+              <div className="ticker-item">
+                <Sparkles className="w-4 h-4 text-teal-600" />
+                <span className="text-sm font-bold text-teal-800">ملكية موثقة ومضمونة قانونياً</span>
+              </div>
+
+              <div className="ticker-item">
+                <Crown className="w-4 h-4 text-emerald-600" />
+                <span className="text-sm font-bold text-emerald-800">تملك أشجار النخيل والزيتون الآن</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Gradient Edges */}
+          <div className="absolute inset-y-0 left-0 w-20 bg-gradient-to-r from-white/80 to-transparent pointer-events-none" />
+          <div className="absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-white/80 to-transparent pointer-events-none" />
         </div>
 
         {/* Sub Header - Filter Chips */}
@@ -389,8 +467,8 @@ export function SmartHeader({
 
       </header>
 
-      {/* Spacer to prevent content jump - Responsive */}
-      <div className="h-[85px] sm:h-[90px] md:h-[96px]" />
+      {/* Spacer to prevent content jump - Responsive - Increased for ticker */}
+      <div className="h-[130px] sm:h-[140px] md:h-[150px]" />
 
       <style>{`
         .scrollbar-hide::-webkit-scrollbar {
@@ -400,6 +478,40 @@ export function SmartHeader({
         .scrollbar-hide {
           -ms-overflow-style: none;
           scrollbar-width: none;
+        }
+
+        /* Ticker Animation */
+        .ticker-container {
+          width: 100%;
+          overflow: hidden;
+        }
+
+        .ticker-content {
+          display: flex;
+          animation: ticker 30s linear infinite;
+          will-change: transform;
+        }
+
+        .ticker-item {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          padding: 0 3rem;
+          white-space: nowrap;
+          flex-shrink: 0;
+        }
+
+        @keyframes ticker {
+          0% {
+            transform: translateX(0);
+          }
+          100% {
+            transform: translateX(-50%);
+          }
+        }
+
+        .ticker-content:hover {
+          animation-play-state: paused;
         }
 
         @keyframes whatsapp-pulse {
