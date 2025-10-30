@@ -121,9 +121,9 @@ export function RoyalGlassGateway({ onEnter }: GatewayProps) {
       <div className="relative z-10 h-full flex flex-col items-center justify-center px-4 sm:px-6">
 
         {/* Crown Icon */}
-        <div className="mb-6 sm:mb-8 animate-bounce-slow">
+        <div className="mb-4 sm:mb-6 md:mb-8 animate-bounce-slow">
           <Crown
-            className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24"
+            className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-24 lg:h-24"
             strokeWidth={2}
             style={{
               color: '#d97706',
@@ -138,17 +138,17 @@ export function RoyalGlassGateway({ onEnter }: GatewayProps) {
           <div className="absolute inset-0 bg-gradient-to-r from-amber-300/30 via-yellow-200/30 to-amber-300/30 blur-3xl" />
 
           {/* Main Glass Card */}
-          <div className="relative backdrop-blur-2xl bg-white/40 border border-white/60 rounded-3xl shadow-2xl p-8 sm:p-12">
+          <div className="relative backdrop-blur-2xl bg-white/40 border border-white/60 rounded-2xl sm:rounded-3xl shadow-2xl p-6 sm:p-8 md:p-10 lg:p-12">
             {/* Golden Border Animation */}
             <div className="absolute inset-0 rounded-3xl border-2 border-amber-400/30 animate-pulse" />
 
             {/* Trees Container */}
-            <div className="flex items-center justify-center gap-6 sm:gap-8 mb-10">
+            <div className="flex items-center justify-center gap-4 sm:gap-6 md:gap-8 mb-6 sm:mb-8 md:mb-10">
               {/* Palm Tree */}
               <div className="relative group">
                 <div className="absolute inset-0 bg-green-400/20 blur-2xl rounded-full scale-150 group-hover:scale-175 transition-transform duration-500" />
                 <Palmtree
-                  className="relative w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 text-green-700 group-hover:scale-110 transition-transform duration-300"
+                  className="relative w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-32 lg:h-32 text-green-700 group-hover:scale-110 transition-transform duration-300"
                   strokeWidth={1.8}
                   style={{
                     filter: 'drop-shadow(0 4px 12px rgba(34, 197, 94, 0.4))',
@@ -158,13 +158,13 @@ export function RoyalGlassGateway({ onEnter }: GatewayProps) {
               </div>
 
               {/* Divider */}
-              <div className="h-28 sm:h-32 md:h-36 w-0.5 bg-gradient-to-b from-transparent via-amber-400 to-transparent opacity-60" />
+              <div className="h-20 sm:h-24 md:h-28 lg:h-36 w-0.5 bg-gradient-to-b from-transparent via-amber-400 to-transparent opacity-60" />
 
               {/* Olive Tree */}
               <div className="relative group">
                 <div className="absolute inset-0 bg-emerald-400/20 blur-2xl rounded-full scale-150 group-hover:scale-175 transition-transform duration-500" />
                 <Leaf
-                  className="relative w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 text-emerald-700 group-hover:scale-110 transition-transform duration-300"
+                  className="relative w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-32 lg:h-32 text-emerald-700 group-hover:scale-110 transition-transform duration-300"
                   strokeWidth={1.8}
                   style={{
                     filter: 'drop-shadow(0 4px 12px rgba(16, 185, 129, 0.4))',
@@ -175,9 +175,9 @@ export function RoyalGlassGateway({ onEnter }: GatewayProps) {
             </div>
 
             {/* Welcome Text */}
-            <div className="text-center mb-8">
+            <div className="text-center mb-6 sm:mb-8">
               <h1
-                className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-5 leading-tight"
+                className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-black mb-3 sm:mb-4 md:mb-5 leading-tight"
                 style={{
                   background: 'linear-gradient(135deg, #b45309 0%, #d97706 25%, #fbbf24 50%, #d97706 75%, #b45309 100%)',
                   WebkitBackgroundClip: 'text',
@@ -191,7 +191,7 @@ export function RoyalGlassGateway({ onEnter }: GatewayProps) {
               </h1>
 
               <p
-                className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold mb-4 leading-relaxed"
+                className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold mb-3 sm:mb-4 leading-relaxed"
                 style={{
                   color: '#92400e',
                   textShadow: '0 1px 2px rgba(146, 64, 14, 0.1)',
@@ -202,7 +202,7 @@ export function RoyalGlassGateway({ onEnter }: GatewayProps) {
               </p>
 
               <p
-                className="text-base sm:text-lg md:text-xl font-medium leading-relaxed px-2"
+                className="text-sm sm:text-base md:text-lg font-medium leading-relaxed px-2"
                 style={{
                   color: '#b45309',
                   letterSpacing: '-0.005em',
@@ -248,15 +248,15 @@ export function RoyalGlassGateway({ onEnter }: GatewayProps) {
             {/* Enter Button */}
             <button
               onClick={onEnter}
-              className="group relative w-full py-5 sm:py-6 rounded-2xl overflow-hidden transition-all duration-300 hover:scale-105 active:scale-95"
+              className="group relative w-full py-4 sm:py-5 md:py-6 rounded-xl sm:rounded-2xl overflow-hidden transition-all duration-300 hover:scale-105 active:scale-95"
             >
               {/* Button Glow */}
               <div className="absolute inset-0 bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-400 opacity-90 group-hover:opacity-100 transition-opacity" />
 
               {/* Button Content */}
-              <div className="relative flex items-center justify-center gap-3">
+              <div className="relative flex items-center justify-center gap-2 sm:gap-3">
                 <span
-                  className="text-xl sm:text-2xl md:text-3xl font-black"
+                  className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-black"
                   style={{
                     color: '#451a03',
                     textShadow: '0 1px 2px rgba(255, 255, 255, 0.3)',
@@ -266,7 +266,7 @@ export function RoyalGlassGateway({ onEnter }: GatewayProps) {
                   دخول المنصة
                 </span>
                 <ArrowLeft
-                  className="w-6 h-6 sm:w-7 sm:h-7 group-hover:-translate-x-2 transition-transform"
+                  className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 group-hover:-translate-x-2 transition-transform"
                   style={{ color: '#451a03' }}
                   strokeWidth={2.5}
                 />
@@ -277,17 +277,17 @@ export function RoyalGlassGateway({ onEnter }: GatewayProps) {
             </button>
 
             {/* Decorative Corners */}
-            <div className="absolute top-4 right-4 w-8 h-8 border-t-2 border-r-2 border-amber-400/50 rounded-tr-xl" />
-            <div className="absolute bottom-4 left-4 w-8 h-8 border-b-2 border-l-2 border-amber-400/50 rounded-bl-xl" />
-            <div className="absolute top-4 left-4 w-8 h-8 border-t-2 border-l-2 border-amber-400/50 rounded-tl-xl" />
-            <div className="absolute bottom-4 right-4 w-8 h-8 border-b-2 border-r-2 border-amber-400/50 rounded-br-xl" />
+            <div className="absolute top-2 right-2 sm:top-4 sm:right-4 w-6 h-6 sm:w-8 sm:h-8 border-t-2 border-r-2 border-amber-400/50 rounded-tr-lg sm:rounded-tr-xl" />
+            <div className="absolute bottom-2 left-2 sm:bottom-4 sm:left-4 w-6 h-6 sm:w-8 sm:h-8 border-b-2 border-l-2 border-amber-400/50 rounded-bl-lg sm:rounded-bl-xl" />
+            <div className="absolute top-2 left-2 sm:top-4 sm:left-4 w-6 h-6 sm:w-8 sm:h-8 border-t-2 border-l-2 border-amber-400/50 rounded-tl-lg sm:rounded-tl-xl" />
+            <div className="absolute bottom-2 right-2 sm:bottom-4 sm:right-4 w-6 h-6 sm:w-8 sm:h-8 border-b-2 border-r-2 border-amber-400/50 rounded-br-lg sm:rounded-br-xl" />
           </div>
         </div>
 
         {/* Bottom Decorative Text */}
-        <div className="mt-8 text-center">
+        <div className="mt-6 sm:mt-8 text-center">
           <p
-            className="text-base sm:text-lg font-bold tracking-wide"
+            className="text-sm sm:text-base md:text-lg font-bold tracking-wide"
             style={{
               color: '#92400e',
               textShadow: '0 1px 2px rgba(146, 64, 14, 0.1)',
