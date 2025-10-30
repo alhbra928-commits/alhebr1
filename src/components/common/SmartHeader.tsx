@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Bell, MessageCircle, Home, MapPin, Filter, TrendingUp, Search, ChevronDown, Shield, ArrowRight, Star, Zap, Sparkles, Crown } from 'lucide-react';
+import { Bell, MessageCircle, Home, MapPin, Filter, TrendingUp, Search, ChevronDown, Shield, ArrowRight, Star, Zap, Sparkles, Crown, Activity, TrendingUp as TrendingUpIcon } from 'lucide-react';
 import { brandColors, brandGradients } from '../../modules/finance/styles/brandColors';
+import { supabase } from '../../lib/supabase';
 
 interface SmartHeaderProps {
   currentView?: string;
@@ -29,6 +30,7 @@ export function SmartHeader({
   const [selectedFarmType, setSelectedFarmType] = useState('all');
   const [sortBy, setSortBy] = useState('latest');
   const [showFilters, setShowFilters] = useState(false);
+  const [tickerMessages, setTickerMessages] = useState<any[]>([]);
 
   // Check for admin session
   useEffect(() => {
@@ -68,6 +70,47 @@ export function SmartHeader({
     };
   }, [onBackToAdmin]);
 
+  // Load ticker messages from database
+  useEffect(() => {
+    const loadTickerMessages = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('ticker_items')
+          .select('*')
+          .eq('ticker_type', 'main')
+          .eq('is_active', true)
+          .order('sort_order');
+
+        if (!error && data) {
+          console.log('✅ Ticker messages loaded:', data);
+          setTickerMessages(data);
+        } else {
+          console.error('Error loading ticker messages:', error);
+        }
+      } catch (err) {
+        console.error('Error loading ticker messages:', err);
+      }
+    };
+
+    loadTickerMessages();
+
+    // Realtime subscription for ticker updates
+    const channel = supabase
+      .channel('ticker_items_changes')
+      .on('postgres_changes',
+        { event: '*', schema: 'public', table: 'ticker_items' },
+        () => {
+          console.log('🔄 Ticker items changed, reloading...');
+          loadTickerMessages();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
   // Handle scroll behavior
   useEffect(() => {
     const handleScroll = () => {
@@ -86,6 +129,19 @@ export function SmartHeader({
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, [lastScrollY]);
+
+  // Get icon component from icon name
+  const getIconComponent = (iconName: string) => {
+    const icons: Record<string, any> = {
+      Star,
+      Zap,
+      Sparkles,
+      Crown,
+      Activity,
+      TrendingUp: TrendingUpIcon,
+    };
+    return icons[iconName] || Star;
+  };
 
   // Get view title dynamically
   const getViewTitle = () => {
@@ -292,50 +348,72 @@ export function SmartHeader({
         >
           <div className="ticker-container py-2.5">
             <div className="ticker-content">
-              {/* Message 1 */}
-              <div className="ticker-item">
-                <Star className="w-4 h-4 text-emerald-600" fill="currentColor" />
-                <span className="text-sm font-bold text-emerald-800">استثمر في مستقبل أخضر مستدام</span>
-              </div>
+              {tickerMessages.length > 0 ? (
+                <>
+                  {/* Display messages from database */}
+                  {tickerMessages.map((msg) => {
+                    const IconComponent = getIconComponent(msg.icon_name || msg.icon);
+                    return (
+                      <div key={msg.id} className="ticker-item">
+                        <IconComponent className={`w-4 h-4 text-${msg.icon_color || msg.color}`} />
+                        <span className={`text-sm font-bold text-${msg.text_color || msg.color}`}>
+                          {msg.content_ar || msg.label}
+                        </span>
+                      </div>
+                    );
+                  })}
 
-              {/* Message 2 */}
-              <div className="ticker-item">
-                <Zap className="w-4 h-4 text-green-600" fill="currentColor" />
-                <span className="text-sm font-bold text-green-800">عوائد سنوية مضمونة من أشجارك</span>
-              </div>
-
-              {/* Message 3 */}
-              <div className="ticker-item">
-                <Sparkles className="w-4 h-4 text-teal-600" />
-                <span className="text-sm font-bold text-teal-800">ملكية موثقة ومضمونة قانونياً</span>
-              </div>
-
-              {/* Message 4 */}
-              <div className="ticker-item">
-                <Crown className="w-4 h-4 text-emerald-600" />
-                <span className="text-sm font-bold text-emerald-800">تملك أشجار النخيل والزيتون الآن</span>
-              </div>
-
-              {/* Duplicate for seamless loop */}
-              <div className="ticker-item">
-                <Star className="w-4 h-4 text-emerald-600" fill="currentColor" />
-                <span className="text-sm font-bold text-emerald-800">استثمر في مستقبل أخضر مستدام</span>
-              </div>
-
-              <div className="ticker-item">
-                <Zap className="w-4 h-4 text-green-600" fill="currentColor" />
-                <span className="text-sm font-bold text-green-800">عوائد سنوية مضمونة من أشجارك</span>
-              </div>
-
-              <div className="ticker-item">
-                <Sparkles className="w-4 h-4 text-teal-600" />
-                <span className="text-sm font-bold text-teal-800">ملكية موثقة ومضمونة قانونياً</span>
-              </div>
-
-              <div className="ticker-item">
-                <Crown className="w-4 h-4 text-emerald-600" />
-                <span className="text-sm font-bold text-emerald-800">تملك أشجار النخيل والزيتون الآن</span>
-              </div>
+                  {/* Duplicate for seamless loop */}
+                  {tickerMessages.map((msg) => {
+                    const IconComponent = getIconComponent(msg.icon_name || msg.icon);
+                    return (
+                      <div key={`dup-${msg.id}`} className="ticker-item">
+                        <IconComponent className={`w-4 h-4 text-${msg.icon_color || msg.color}`} />
+                        <span className={`text-sm font-bold text-${msg.text_color || msg.color}`}>
+                          {msg.content_ar || msg.label}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </>
+              ) : (
+                <>
+                  {/* Fallback messages if database is empty */}
+                  <div className="ticker-item">
+                    <Star className="w-4 h-4 text-emerald-600" fill="currentColor" />
+                    <span className="text-sm font-bold text-emerald-800">استثمر في مستقبل أخضر مستدام</span>
+                  </div>
+                  <div className="ticker-item">
+                    <Zap className="w-4 h-4 text-green-600" fill="currentColor" />
+                    <span className="text-sm font-bold text-green-800">عوائد سنوية مضمونة من أشجارك</span>
+                  </div>
+                  <div className="ticker-item">
+                    <Sparkles className="w-4 h-4 text-teal-600" />
+                    <span className="text-sm font-bold text-teal-800">ملكية موثقة ومضمونة قانونياً</span>
+                  </div>
+                  <div className="ticker-item">
+                    <Crown className="w-4 h-4 text-emerald-600" />
+                    <span className="text-sm font-bold text-emerald-800">تملك أشجار النخيل والزيتون الآن</span>
+                  </div>
+                  {/* Duplicate */}
+                  <div className="ticker-item">
+                    <Star className="w-4 h-4 text-emerald-600" fill="currentColor" />
+                    <span className="text-sm font-bold text-emerald-800">استثمر في مستقبل أخضر مستدام</span>
+                  </div>
+                  <div className="ticker-item">
+                    <Zap className="w-4 h-4 text-green-600" fill="currentColor" />
+                    <span className="text-sm font-bold text-green-800">عوائد سنوية مضمونة من أشجارك</span>
+                  </div>
+                  <div className="ticker-item">
+                    <Sparkles className="w-4 h-4 text-teal-600" />
+                    <span className="text-sm font-bold text-teal-800">ملكية موثقة ومضمونة قانونياً</span>
+                  </div>
+                  <div className="ticker-item">
+                    <Crown className="w-4 h-4 text-emerald-600" />
+                    <span className="text-sm font-bold text-emerald-800">تملك أشجار النخيل والزيتون الآن</span>
+                  </div>
+                </>
+              )}
             </div>
           </div>
 

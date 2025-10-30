@@ -207,8 +207,14 @@ export function UltraAdvancedTickerManager() {
         }
       }
 
-      // Reload data to ensure consistency
-      await loadData();
+      // Reload messages only (without triggering loading state)
+      const { data: messagesData } = await supabase
+        .from('ticker_items')
+        .select('*')
+        .eq('ticker_type', activeTickerType)
+        .order('sort_order');
+
+      setMessages(messagesData || []);
       setEditingMessage(null);
       setShowNewMessageForm(false);
       alert('تم حفظ الرسالة بنجاح!');
