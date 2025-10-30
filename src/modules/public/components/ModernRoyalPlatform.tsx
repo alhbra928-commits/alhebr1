@@ -9,6 +9,7 @@ import { TemporaryBookingPage } from './TemporaryBookingPage';
 import { InvestorRouter } from '../../investor/components/InvestorRouter';
 import { CertificateVerificationPage } from './CertificateVerificationPage';
 import { BackToAdminButton } from './BackToAdminButton';
+import { AdminCrownButton } from './AdminCrownButton';
 import { ConceptIntroductionPage } from './ConceptIntroductionPage';
 import { PublicBottomNavBar } from '../../../components/layout/PublicBottomNavBar';
 import { GreenConceptButton } from './GreenConceptButton';
@@ -197,12 +198,18 @@ export function ModernRoyalPlatform({
                 </div>
               </div>
 
-              {onBackToAdmin && (
-                <BackToAdminButton onBackToAdmin={onBackToAdmin} />
-              )}
             </div>
           </div>
         </header>
+
+        {/* Fixed Buttons */}
+        {onBackToAdmin && (
+          <BackToAdminButton onBackToAdmin={onBackToAdmin} />
+        )}
+        <AdminCrownButton
+          onAdminLogin={onAdminLogin}
+          onFarmOwnerLogin={onFarmOwnerLogin}
+        />
 
         {/* Innovative Ticker Bar - Below Title */}
         <div className="relative overflow-hidden border-t border-b bg-gradient-to-r from-emerald-50/80 via-green-50/80 to-teal-50/80 backdrop-blur-sm">

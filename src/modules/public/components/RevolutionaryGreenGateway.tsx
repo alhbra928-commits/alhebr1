@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Leaf, Sparkles, ArrowRight, Sprout, TreePine, Droplets, Sun, Wind } from 'lucide-react';
 import { supabase } from '../../../lib/supabase';
+import { AdminCrownButton } from './AdminCrownButton';
 
 interface GatewayProps {
   onEnter: () => void;
@@ -420,6 +421,10 @@ export function RevolutionaryGreenGateway({ onEnter, onAdminLogin, onFarmOwnerLo
       `}</style>
 
       {/* Admin Crown Button */}
+      <AdminCrownButton
+        onAdminLogin={onAdminLogin}
+        onFarmOwnerLogin={onFarmOwnerLogin}
+      />
     </div>
   );
 }
