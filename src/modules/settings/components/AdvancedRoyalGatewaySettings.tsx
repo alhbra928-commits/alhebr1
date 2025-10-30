@@ -42,8 +42,8 @@ interface AdvancedGatewaySettings {
   id: string;
   enabled: boolean;
 
-  // Reappear Duration
-  gateway_reappear_duration: 'always' | '30min' | '1hour' | '2hours' | '6hours' | '24hours';
+  // Reappear Duration (stored as seconds in DB)
+  gateway_reappear_duration: number;
 
   // Auto Enter Settings
   auto_enter_enabled: boolean;
@@ -104,6 +104,21 @@ interface AdvancedGatewaySettings {
   desktop_optimized: boolean;
 }
 
+// Helper functions for duration conversion
+const DURATION_MAP = {
+  'always': 0,
+  '30min': 1800,
+  '1hour': 3600,
+  '2hours': 7200,
+  '6hours': 21600,
+  '24hours': 86400,
+} as const;
+
+const secondsToDurationKey = (seconds: number): keyof typeof DURATION_MAP => {
+  const entry = Object.entries(DURATION_MAP).find(([_, value]) => value === seconds);
+  return (entry?.[0] as keyof typeof DURATION_MAP) || '1hour';
+};
+
 export function AdvancedRoyalGatewaySettings() {
   const [settings, setSettings] = useState<AdvancedGatewaySettings | null>(null);
   const [loading, setLoading] = useState(true);
@@ -111,6 +126,7 @@ export function AdvancedRoyalGatewaySettings() {
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const [previewMode, setPreviewMode] = useState(false);
   const [activeTab, setActiveTab] = useState<'general' | 'visual' | 'content' | 'advanced'>('general');
+  const [durationDisplay, setDurationDisplay] = useState<keyof typeof DURATION_MAP>('1hour');
 
   useEffect(() => {
     loadSettings();
@@ -129,10 +145,13 @@ export function AdvancedRoyalGatewaySettings() {
 
       if (data) {
         // تحويل البيانات من الجدول القديم إلى الواجهة الجديدة
+        const durationKey = secondsToDurationKey(data.gateway_reappear_duration || 3600);
+        setDurationDisplay(durationKey);
+
         const mappedSettings: AdvancedGatewaySettings = {
           id: data.id,
           enabled: data.enabled ?? true,
-          gateway_reappear_duration: data.gateway_reappear_duration || '1hour',
+          gateway_reappear_duration: data.gateway_reappear_duration || 3600,
           auto_enter_enabled: data.auto_enter_enabled ?? true,
           auto_enter_delay: data.auto_enter_delay ?? 5,
           show_progress_bar: data.show_progress_bar ?? true,
@@ -482,9 +501,13 @@ export function AdvancedRoyalGatewaySettings() {
                 ].map((option) => (
                   <button
                     key={option.value}
-                    onClick={() => setSettings({ ...settings, gateway_reappear_duration: option.value as any })}
+                    onClick={() => {
+                      const seconds = DURATION_MAP[option.value as keyof typeof DURATION_MAP];
+                      setDurationDisplay(option.value as keyof typeof DURATION_MAP);
+                      setSettings({ ...settings, gateway_reappear_duration: seconds });
+                    }}
                     className={`p-4 rounded-xl text-right transition-all border-2 ${
-                      settings.gateway_reappear_duration === option.value
+                      durationDisplay === option.value
                         ? `bg-${option.color}-500 text-white border-${option.color}-600 shadow-lg scale-105`
                         : 'bg-white text-gray-700 border-gray-200 hover:border-amber-300'
                     }`}
@@ -499,12 +522,12 @@ export function AdvancedRoyalGatewaySettings() {
                 <div className="flex items-start gap-2">
                   <Info className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
                   <p className="text-xs text-gray-700">
-                    {settings.gateway_reappear_duration === 'always' && '🔄 البوابة ستظهر في كل مرة يزور فيها المستخدم المنصة'}
-                    {settings.gateway_reappear_duration === '30min' && '⏱️ بعد نصف ساعة من آخر دخول، ستظهر البوابة مرة أخرى'}
-                    {settings.gateway_reappear_duration === '1hour' && '⏳ بعد ساعة كاملة من آخر دخول، ستظهر البوابة مرة أخرى'}
-                    {settings.gateway_reappear_duration === '2hours' && '⏰ بعد ساعتين من آخر دخول، ستظهر البوابة مرة أخرى'}
-                    {settings.gateway_reappear_duration === '6hours' && '🕐 بعد 6 ساعات من آخر دخول، ستظهر البوابة مرة أخرى'}
-                    {settings.gateway_reappear_duration === '24hours' && '📅 بعد يوم كامل من آخر دخول، ستظهر البوابة مرة أخرى'}
+                    {durationDisplay === 'always' && '🔄 البوابة ستظهر في كل مرة يزور فيها المستخدم المنصة'}
+                    {durationDisplay === '30min' && '⏱️ بعد نصف ساعة من آخر دخول، ستظهر البوابة مرة أخرى'}
+                    {durationDisplay === '1hour' && '⏳ بعد ساعة كاملة من آخر دخول، ستظهر البوابة مرة أخرى'}
+                    {durationDisplay === '2hours' && '⏰ بعد ساعتين من آخر دخول، ستظهر البوابة مرة أخرى'}
+                    {durationDisplay === '6hours' && '🕐 بعد 6 ساعات من آخر دخول، ستظهر البوابة مرة أخرى'}
+                    {durationDisplay === '24hours' && '📅 بعد يوم كامل من آخر دخول، ستظهر البوابة مرة أخرى'}
                   </p>
                 </div>
               </div>
