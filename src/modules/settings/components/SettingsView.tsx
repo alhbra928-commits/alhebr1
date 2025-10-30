@@ -8,7 +8,7 @@ import { AdvancedTickerControl } from './AdvancedTickerControl';
 import { VersionHistoryPanel } from './VersionHistoryPanel';
 import { AdvancedCacheSystemDiagnostics } from './AdvancedCacheSystemDiagnostics';
 import { PlatformTextsManager } from './PlatformTextsManager';
-import { RoyalGatewaySettings } from './RoyalGatewaySettings';
+import { AdvancedRoyalGatewaySettings } from './AdvancedRoyalGatewaySettings';
 
 interface SettingsViewProps {
   onBack?: () => void;
@@ -113,12 +113,12 @@ export function SettingsView({ onBack }: SettingsViewProps) {
             onClick={() => setActiveTab('gateway')}
             className={`flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all ${
               activeTab === 'gateway'
-                ? 'bg-gradient-to-r from-[#C89B3C] to-[#D4AF37] text-white shadow-lg'
+                ? 'bg-gradient-to-r from-emerald-500 via-green-500 to-teal-500 text-white shadow-lg'
                 : 'bg-white text-[#2C2C2C] hover:bg-[#F4EBDD]'
             }`}
           >
             <Crown className="h-5 w-5" />
-            البوابة الملكية
+            البوابة الملكية الخضراء
           </button>
         </div>
 
@@ -133,7 +133,7 @@ export function SettingsView({ onBack }: SettingsViewProps) {
         ) : activeTab === 'texts' ? (
           <PlatformTextsManager />
         ) : activeTab === 'gateway' ? (
-          <RoyalGatewaySettings />
+          <AdvancedRoyalGatewaySettings />
         ) : (
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
