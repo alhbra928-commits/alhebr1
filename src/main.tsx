@@ -1,12 +1,17 @@
-import { StrictMode } from 'react';
+import { StrictMode, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
 import { AdminUsersStorage } from './modules/admin/services/adminUsersStorage';
 import atomicDeploymentService from './services/atomicDeploymentService';
+import { injectThemeVariables } from './styles/royalGreenTheme';
 
 // تهيئة نظام المستخدمين عند بداية التطبيق
 AdminUsersStorage.initialize();
+
+// تطبيق البوابة الملكية الخضراء
+injectThemeVariables();
+document.body.classList.add('royal-green-theme');
 
 // ⚛️ ATOMIC DEPLOYMENT SYSTEM - Enterprise Grade
 // Automatically handles updates with integrity verification and rollback

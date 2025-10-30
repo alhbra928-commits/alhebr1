@@ -59,17 +59,17 @@ export function DashboardView() {
 
   if (loading && !stats) {
     return (
-      <div className="min-h-screen bg-transparent p-6" dir="rtl">
+      <div className="min-h-screen p-6" dir="rtl">
         <div className="max-w-7xl mx-auto">
           <div className="mb-8">
-            <div className="h-8 bg-emerald-900/30 backdrop-blur-sm rounded w-64 mb-2 animate-pulse"></div>
-            <div className="h-4 bg-emerald-900/30 backdrop-blur-sm rounded w-48 animate-pulse"></div>
+            <div className="h-8 bg-emerald-100 rounded-xl w-64 mb-2 animate-pulse"></div>
+            <div className="h-4 bg-emerald-50 rounded-lg w-48 animate-pulse"></div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[1, 2, 3, 4].map(i => (
-              <div key={i} className="bg-gray-900/50 backdrop-blur-xl rounded-xl border border-emerald-800/30 shadow-sm p-6 animate-pulse">
-                <div className="h-4 bg-emerald-900/30 rounded w-24 mb-4"></div>
-                <div className="h-8 bg-emerald-900/30 rounded w-32"></div>
+              <div key={i} className="royal-green-card p-6 animate-pulse">
+                <div className="h-4 bg-emerald-100 rounded w-24 mb-4"></div>
+                <div className="h-8 bg-emerald-50 rounded w-32"></div>
               </div>
             ))}
           </div>
@@ -81,11 +81,11 @@ export function DashboardView() {
   if (error) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <div className="text-center">
-          <p className="text-red-600 text-lg">{error}</p>
+        <div className="royal-green-card p-8 text-center">
+          <p className="text-red-600 text-lg mb-4">{error}</p>
           <button
             onClick={loadDashboardData}
-            className="mt-4 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+            className="royal-green-button"
           >
             إعادة المحاولة
           </button>
@@ -95,15 +95,16 @@ export function DashboardView() {
   }
 
   return (
-    <div className="min-h-screen bg-transparent p-6" dir="rtl">
+    <div className="min-h-screen p-6" dir="rtl">
       <div className="max-w-7xl mx-auto">
-        <div className="mb-8 flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent mb-2">
-              لوحة التحكم الرئيسية
-            </h1>
-            <p className="text-emerald-200/70">منصة تملك النخيل والزيتون</p>
-          </div>
+        <div className="royal-green-section-header">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-4xl font-black royal-green-text mb-2">
+                لوحة التحكم الرئيسية
+              </h1>
+              <p className="text-gray-600">منصة تملك النخيل والزيتون</p>
+            </div>
           <CompactLiveStatusIndicator
             isConnected={isLiveConnected}
             lastUpdate={lastLiveUpdate}
@@ -115,15 +116,15 @@ export function DashboardView() {
             title="إجمالي المزارع"
             value={stats?.farms?.total || 0}
             icon={MapPin}
-            bgColor="bg-green-50"
-            iconColor="text-green-600"
+            bgColor="bg-emerald-50"
+            iconColor="text-emerald-600"
           />
           <StatCard
             title="إجمالي الحجوزات"
             value={stats?.reservations?.total || 0}
             icon={Calendar}
-            bgColor="bg-blue-50"
-            iconColor="text-blue-600"
+            bgColor="bg-teal-50"
+            iconColor="text-teal-600"
           />
           <StatCard
             title="إجمالي المستثمرين"
