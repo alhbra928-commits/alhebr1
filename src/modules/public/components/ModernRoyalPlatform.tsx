@@ -4,7 +4,6 @@ import {
 } from 'lucide-react';
 import { PublicFarm } from '../types/farm.types';
 import { PublicFarmService } from '../services/publicFarmService';
-import { SmartStockTicker } from './SmartStockTicker';
 import { FarmDetailPage } from './FarmDetailPage';
 import { TemporaryBookingPage } from './TemporaryBookingPage';
 import { InvestorRouter } from '../../investor/components/InvestorRouter';
@@ -280,14 +279,6 @@ export function ModernRoyalPlatform({
 
         {/* Concept Button */}
         <GreenConceptButton onClick={() => setCurrentView('concept')} />
-
-        {/* Ticker */}
-        <div className="relative py-4 sm:py-6">
-          <div className="absolute inset-0 bg-gradient-to-r from-emerald-600/10 via-green-500/10 to-teal-600/10 backdrop-blur-sm"></div>
-          <div className="relative">
-            <SmartStockTicker />
-          </div>
-        </div>
 
         {/* Main Content */}
         <main className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 md:py-12 pb-24 sm:pb-32">

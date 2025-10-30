@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { Crown, Sparkles, ArrowRight, TreePine, Users, Shield, Award } from 'lucide-react';
 import { PublicFarm } from '../types/farm.types';
 import { PublicFarmService } from '../services/publicFarmService';
-import { SmartStockTicker } from './SmartStockTicker';
 import { FarmDetailPage } from './FarmDetailPage';
 import { TemporaryBookingPage } from './TemporaryBookingPage';
 import { InvestorRouter } from '../../investor/components/InvestorRouter';
@@ -231,9 +230,6 @@ export function RoyalMainInterface({
           </div>
         </div>
       </header>
-
-      {/* Ticker */}
-      <SmartStockTicker />
 
       {/* Main Content */}
       <main className="relative container mx-auto px-6 py-12">

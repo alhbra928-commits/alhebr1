@@ -5,7 +5,6 @@ import { PublicFarmService } from '../services/publicFarmService';
 import { FarmDetailService } from '../services/farmDetailService';
 import { PremiumHeader } from './PremiumHeader';
 import { SmartHeader } from '../../../components/common/SmartHeader';
-import { SmartStockTicker } from './SmartStockTicker';
 import { FarmCard3D } from './FarmCard3D';
 import { ModernMobileFarmCard } from './ModernMobileFarmCard';
 import { FixedBottomBar } from './FixedBottomBar';
