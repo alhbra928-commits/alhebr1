@@ -13,6 +13,7 @@ import { CertificateVerificationPage } from './CertificateVerificationPage';
 import { AdminCrownButton } from './AdminCrownButton';
 import { ConceptIntroductionPage } from './ConceptIntroductionPage';
 import { PublicBottomNavBar } from '../../../components/layout/PublicBottomNavBar';
+import { GreenConceptButton } from './GreenConceptButton';
 
 type ViewMode = 'home' | 'farmDetail' | 'booking' | 'investor' | 'verification' | 'concept';
 
@@ -302,6 +303,9 @@ export function ModernRoyalPlatform({
             </div>
           </div>
         </header>
+
+        {/* Concept Button */}
+        <GreenConceptButton onClick={() => setCurrentView('concept')} />
 
         {/* Ticker */}
         <div className="relative py-4 sm:py-6">
