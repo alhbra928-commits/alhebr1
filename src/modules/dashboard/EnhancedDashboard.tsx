@@ -218,30 +218,30 @@ export function EnhancedDashboard({ onModuleSelect, onLogout, onGoToPublic, onSh
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#F9F8F6]">
+      <div className="min-h-screen flex items-center justify-center bg-transparent">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-[#C89B3C] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-lg text-[#2C2C2C] font-medium">جاري تحميل لوحة التحكم...</p>
+          <div className="w-16 h-16 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-lg text-emerald-100 font-medium">جاري تحميل لوحة التحكم...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#F9F8F6]" dir="rtl">
+    <div className="min-h-screen bg-transparent" dir="rtl">
       <div className="relative">
-        <div className="bg-gradient-to-r from-[#C89B3C] to-[#D4AF37] shadow-lg">
+        <div className="bg-gradient-to-r from-emerald-900 to-teal-900 shadow-lg border-b border-emerald-800/30 backdrop-blur-xl">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
             <div className="flex items-center justify-between flex-wrap gap-4">
               <div className="flex items-center gap-3 sm:gap-4">
-                <div className="w-12 h-12 sm:w-14 sm:h-14 bg-white/20 backdrop-blur-sm rounded-xl sm:rounded-2xl flex items-center justify-center shadow-xl">
+                <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-emerald-500 to-teal-600 backdrop-blur-sm rounded-xl sm:rounded-2xl flex items-center justify-center shadow-xl shadow-emerald-500/20">
                   <MapPin className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white">
+                  <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">
                     لوحة التحكم الرئيسية
                   </h1>
-                  <p className="text-white/90 text-xs sm:text-sm">منصة تملك النخيل والزيتون</p>
+                  <p className="text-emerald-200/70 text-xs sm:text-sm">منصة تملك النخيل والزيتون</p>
                 </div>
               </div>
               <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
@@ -250,7 +250,7 @@ export function EnhancedDashboard({ onModuleSelect, onLogout, onGoToPublic, onSh
                   onClick={toggleFullscreen}
                   className="group relative flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-3 rounded-lg sm:rounded-xl font-bold text-white transition-all hover:scale-105 active:scale-95 text-sm sm:text-base"
                   style={{
-                    background: 'rgba(255, 255, 255, 0.2)',
+                    background: 'rgba(16, 185, 129, 0.2)',
                     backdropFilter: 'blur(10px)',
                   }}
                   title={isFullscreen ? 'الخروج من ملء الشاشة' : 'ملء الشاشة'}
@@ -282,8 +282,8 @@ export function EnhancedDashboard({ onModuleSelect, onLogout, onGoToPublic, onSh
                   }}
                   className="group relative flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 lg:px-6 py-2 sm:py-3 rounded-lg sm:rounded-xl font-bold sm:font-black text-white transition-all hover:scale-105 active:scale-95 overflow-hidden text-sm sm:text-base"
                   style={{
-                    background: 'linear-gradient(135deg, #D4AF37 0%, #F4D03F 100%)',
-                    boxShadow: '0 4px 20px rgba(212, 175, 55, 0.5)',
+                    background: 'linear-gradient(135deg, #10b981 0%, #14b8a6 100%)',
+                    boxShadow: '0 4px 20px rgba(16, 185, 129, 0.5)',
                   }}
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
@@ -348,17 +348,17 @@ export function EnhancedDashboard({ onModuleSelect, onLogout, onGoToPublic, onSh
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
           {/* بطاقة تعريف الموظف */}
           {adminInfo && (
-            <div className="mb-6 bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
-              <div className="bg-gradient-to-r from-[#C89B3C] to-[#D4AF37] px-6 py-4">
+            <div className="mb-6 bg-gray-900/50 backdrop-blur-xl rounded-2xl shadow-lg border border-emerald-800/30 overflow-hidden">
+              <div className="bg-gradient-to-r from-emerald-900 to-teal-900 px-6 py-4">
                 <div className="flex items-center gap-4">
-                  <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg">
+                  <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 to-teal-600 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg shadow-emerald-500/20">
                     <Shield className="h-8 w-8 text-white" />
                   </div>
                   <div className="flex-1">
-                    <h3 className="text-xl font-bold text-white mb-1">
+                    <h3 className="text-xl font-bold bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent mb-1">
                       {adminInfo.name || 'مدير النظام'}
                     </h3>
-                    <div className="flex items-center gap-4 text-white/90 text-sm">
+                    <div className="flex items-center gap-4 text-emerald-200/70 text-sm">
                       <span className="flex items-center gap-2">
                         📱 {adminInfo.phone}
                       </span>
@@ -367,9 +367,9 @@ export function EnhancedDashboard({ onModuleSelect, onLogout, onGoToPublic, onSh
                       </span>
                     </div>
                   </div>
-                  <div className="hidden sm:flex items-center gap-2 px-4 py-2 bg-white/20 backdrop-blur-sm rounded-lg">
-                    <div className="w-2.5 h-2.5 bg-green-400 rounded-full animate-pulse"></div>
-                    <span className="text-white text-sm font-medium">متصل</span>
+                  <div className="hidden sm:flex items-center gap-2 px-4 py-2 bg-emerald-500/20 backdrop-blur-sm rounded-lg border border-emerald-700/30">
+                    <div className="w-2.5 h-2.5 bg-emerald-400 rounded-full animate-pulse"></div>
+                    <span className="text-emerald-100 text-sm font-medium">متصل</span>
                   </div>
                 </div>
               </div>
@@ -407,12 +407,11 @@ export function EnhancedDashboard({ onModuleSelect, onLogout, onGoToPublic, onSh
                     onMouseLeave={() => setHoveredCard(null)}
                     className={`
                       w-full p-4 sm:p-5 lg:p-6 rounded-2xl sm:rounded-3xl transition-all duration-500 ease-out
-                      ${module.bgColor}
-                      ${isHovered ? 'shadow-2xl scale-105' : 'shadow-lg'}
-                      border-2 border-transparent
-                      ${isHovered ? 'border-[#C89B3C]' : ''}
-                      hover:bg-white/80
-                      backdrop-blur-sm
+                      bg-gray-900/50 backdrop-blur-xl
+                      ${isHovered ? 'shadow-2xl shadow-emerald-500/20 scale-105' : 'shadow-lg'}
+                      border-2
+                      ${isHovered ? 'border-emerald-500/50' : 'border-emerald-800/30'}
+                      hover:bg-gray-900/70
                       transform
                       group
                       relative
@@ -420,7 +419,7 @@ export function EnhancedDashboard({ onModuleSelect, onLogout, onGoToPublic, onSh
                     `}
                   >
                     <div className={`
-                      absolute inset-0 bg-gradient-to-br from-[#C89B3C]/0 to-[#C89B3C]/10
+                      absolute inset-0 bg-gradient-to-br from-emerald-500/0 to-emerald-500/10
                       opacity-0 group-hover:opacity-100 transition-opacity duration-500
                     `}></div>
 
@@ -440,30 +439,30 @@ export function EnhancedDashboard({ onModuleSelect, onLogout, onGoToPublic, onSh
                         </div>
                         <div
                           className={`
-                            px-3 py-1.5 bg-white/90 backdrop-blur-sm rounded-xl
+                            px-3 py-1.5 bg-emerald-500/20 backdrop-blur-sm rounded-xl border border-emerald-700/30
                             transition-all duration-300
                             ${isHovered ? 'scale-110' : ''}
                           `}
                         >
-                          <span className="text-2xl font-bold text-[#C89B3C]">
+                          <span className="text-2xl font-bold bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">
                             {module.value}
                           </span>
                         </div>
                       </div>
 
                       <div className="text-right">
-                        <h3 className="text-xl font-bold text-[#2C2C2C] mb-1 group-hover:text-[#C89B3C] transition-colors">
+                        <h3 className="text-xl font-bold text-emerald-100 mb-1 group-hover:text-emerald-300 transition-colors">
                           {module.title}
                         </h3>
-                        <p className="text-sm text-[#2C2C2C]/70">
+                        <p className="text-sm text-emerald-200/70">
                           {module.subtitle}
                         </p>
                       </div>
 
                       <div className={`
-                        mt-4 h-1 bg-gradient-to-r from-[#C89B3C]/20 to-transparent rounded-full
+                        mt-4 h-1 bg-gradient-to-r from-emerald-500/20 to-transparent rounded-full
                         transition-all duration-500
-                        ${isHovered ? 'from-[#C89B3C] scale-105' : ''}
+                        ${isHovered ? 'from-emerald-500 scale-105' : ''}
                       `}></div>
                     </div>
                   </button>
@@ -473,43 +472,43 @@ export function EnhancedDashboard({ onModuleSelect, onLogout, onGoToPublic, onSh
           </div>
 
           <div className="mt-8 sm:mt-10 lg:mt-12 grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
-            <div className="p-4 sm:p-5 lg:p-6 bg-white/80 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-lg border-2 border-[#C89B3C]/20">
+            <div className="p-4 sm:p-5 lg:p-6 bg-gray-900/50 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-lg border-2 border-emerald-800/30">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-bold text-[#2C2C2C]">إجمالي الإيرادات</h3>
-                <div className="w-12 h-12 bg-gradient-to-br from-[#C89B3C] to-[#E8C170] rounded-xl flex items-center justify-center">
+                <h3 className="text-lg font-bold text-emerald-100">إجمالي الإيرادات</h3>
+                <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-500/20">
                   <Wallet className="h-6 w-6 text-white" />
                 </div>
               </div>
-              <p className="text-3xl font-black text-[#C89B3C]">
+              <p className="text-3xl font-black bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">
                 {(stats?.revenue?.total || 0).toLocaleString('ar-SA')} ريال
               </p>
-              <p className="text-sm text-[#2C2C2C]/70 mt-2">من جميع الحجوزات</p>
+              <p className="text-sm text-emerald-200/70 mt-2">من جميع الحجوزات</p>
             </div>
 
-            <div className="p-4 sm:p-5 lg:p-6 bg-white/80 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-lg border-2 border-[#3D5B4B]/20">
+            <div className="p-4 sm:p-5 lg:p-6 bg-gray-900/50 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-lg border-2 border-emerald-800/30">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-bold text-[#2C2C2C]">إجمالي الأشجار</h3>
-                <div className="w-12 h-12 bg-gradient-to-br from-[#3D5B4B] to-[#5A8672] rounded-xl flex items-center justify-center">
+                <h3 className="text-lg font-bold text-emerald-100">إجمالي الأشجار</h3>
+                <div className="w-12 h-12 bg-gradient-to-br from-emerald-600 to-teal-700 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-600/20">
                   <MapPin className="h-6 w-6 text-white" />
                 </div>
               </div>
-              <p className="text-3xl font-black text-[#3D5B4B]">
+              <p className="text-3xl font-black bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">
                 {(stats?.farms?.totalTrees || 0).toLocaleString('ar-SA')}
               </p>
-              <p className="text-sm text-[#2C2C2C]/70 mt-2">في جميع المزارع</p>
+              <p className="text-sm text-emerald-200/70 mt-2">في جميع المزارع</p>
             </div>
 
-            <div className="p-4 sm:p-5 lg:p-6 bg-white/80 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-lg border-2 border-[#8B7355]/20">
+            <div className="p-4 sm:p-5 lg:p-6 bg-gray-900/50 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-lg border-2 border-emerald-800/30">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-bold text-[#2C2C2C]">الأشجار المتاحة</h3>
-                <div className="w-12 h-12 bg-gradient-to-br from-[#8B7355] to-[#A68968] rounded-xl flex items-center justify-center">
+                <h3 className="text-lg font-bold text-emerald-100">الأشجار المتاحة</h3>
+                <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center shadow-lg shadow-orange-500/20">
                   <Calendar className="h-6 w-6 text-white" />
                 </div>
               </div>
-              <p className="text-3xl font-black text-[#8B7355]">
+              <p className="text-3xl font-black bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent">
                 {(stats?.farms?.availableTrees || 0).toLocaleString('ar-SA')}
               </p>
-              <p className="text-sm text-[#2C2C2C]/70 mt-2">جاهزة للحجز</p>
+              <p className="text-sm text-emerald-200/70 mt-2">جاهزة للحجز</p>
             </div>
           </div>
         </div>

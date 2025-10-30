@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مقارنة التصميم القديم والجديد</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e1e1e 0%, #2d2d2d 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #10b981;
+            font-size: 3rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 30px rgba(16, 185, 129, 0.5);
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #d1d5db;
+            font-size: 1.3rem;
+            margin-bottom: 50px;
+        }
+
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .theme-box {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .theme-title {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .old-theme .theme-title {
+            color: #C89B3C;
+        }
+
+        .new-theme .theme-title {
+            color: #10b981;
+        }
+
+        .preview {
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            min-height: 300px;
+        }
+
+        .old-theme .preview {
+            background: linear-gradient(135deg, #F9F8F6 0%, #E8E6E1 100%);
+        }
+
+        .new-theme .preview {
+            background: linear-gradient(135deg, #064e3b 0%, #115e59 100%);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .demo-header {
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .old-theme .demo-header {
+            background: linear-gradient(135deg, #C89B3C 0%, #D4AF37 100%);
+            color: white;
+        }
+
+        .new-theme .demo-header {
+            background: linear-gradient(135deg, #064e3b 0%, #047857 100%);
+            color: #d1fae5;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .demo-card {
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .old-theme .demo-card {
+            background: white;
+            border: 1px solid #E8E6E1;
+            color: #2C2C2C;
+        }
+
+        .new-theme .demo-card {
+            background: rgba(31, 41, 55, 0.5);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #d1fae5;
+        }
+
+        .features-list {
+            list-style: none;
+            padding: 20px;
+        }
+
+        .features-list li {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+        }
+
+        .old-theme .features-list li {
+            background: rgba(200, 155, 60, 0.1);
+            color: #5a4a2c;
+        }
+
+        .new-theme .features-list li {
+            background: rgba(16, 185, 129, 0.1);
+            color: #d1fae5;
+        }
+
+        .icon {
+            display: inline-block;
+            margin-left: 10px;
+            font-size: 1.3rem;
+        }
+
+        .steps {
+            background: rgba(16, 185, 129, 0.1);
+            border: 2px solid rgba(16, 185, 129, 0.3);
+            border-radius: 20px;
+            padding: 40px;
+            margin-top: 50px;
+        }
+
+        .steps h2 {
+            color: #10b981;
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+        }
+
+        .step {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-right: 5px solid #10b981;
+        }
+
+        .step-number {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #10b981 0%, #14b8a6 100%);
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 40px;
+            font-weight: bold;
+            margin-left: 15px;
+            font-size: 1.2rem;
+        }
+
+        .step-title {
+            color: #10b981;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .step-desc {
+            color: #d1d5db;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .highlight {
+            background: linear-gradient(135deg, #10b981 0%, #14b8a6 100%);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .comparison {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .subtitle {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 التصميم الجديد جاهز!</h1>
+        <p class="subtitle">مقارنة بين التصميم القديم والجديد الفاخر</p>
+
+        <div class="comparison">
+            <!-- Old Theme -->
+            <div class="theme-box old-theme">
+                <h2 class="theme-title">❌ التصميم القديم</h2>
+                <div class="preview">
+                    <div class="demo-header">
+                        لوحة التحكم
+                    </div>
+                    <div class="demo-card">
+                        <strong>كارت عادي</strong><br>
+                        خلفية بيضاء تقليدية
+                    </div>
+                    <div class="demo-card">
+                        <strong>نصوص داكنة</strong><br>
+                        على خلفية فاتحة
+                    </div>
+                </div>
+                <ul class="features-list">
+                    <li><span class="icon">❌</span> خلفية بيضاء/بيج</li>
+                    <li><span class="icon">❌</span> ألوان ذهبية</li>
+                    <li><span class="icon">❌</span> كروت عادية بيضاء</li>
+                    <li><span class="icon">❌</span> لا توافق مع البوابة</li>
+                </ul>
+            </div>
+
+            <!-- New Theme -->
+            <div class="theme-box new-theme">
+                <h2 class="theme-title">✅ التصميم الجديد</h2>
+                <div class="preview">
+                    <div class="demo-header">
+                        لوحة التحكم الملكية
+                    </div>
+                    <div class="demo-card">
+                        <strong>كارت فاخر</strong><br>
+                        Glass morphism effect مع backdrop blur
+                    </div>
+                    <div class="demo-card">
+                        <strong>نصوص فاتحة</strong><br>
+                        مع gradient effects راقية
+                    </div>
+                </div>
+                <ul class="features-list">
+                    <li><span class="icon">✅</span> خلفية داكنة فاخرة</li>
+                    <li><span class="icon">✅</span> ألوان Emerald/Teal</li>
+                    <li><span class="icon">✅</span> Glass morphism cards</li>
+                    <li><span class="icon">✅</span> متوافق مع البوابة 100%</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="steps">
+            <h2>🚀 كيف ترى التصميم الجديد؟</h2>
+
+            <div class="step">
+                <span class="step-number">1</span>
+                <div class="step-title">مسح الذاكرة المؤقتة (Cache)</div>
+                <div class="step-desc">
+                    اضغط <span class="highlight">Ctrl + Shift + R</span> (Windows/Linux)<br>
+                    أو <span class="highlight">Cmd + Shift + R</span> (Mac)
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">2</span>
+                <div class="step-title">على الموبايل (iPhone/Safari)</div>
+                <div class="step-desc">
+                    الإعدادات → Safari → <span class="highlight">مسح السجل وبيانات الموقع</span>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">3</span>
+                <div class="step-title">الطريقة المضمونة 100%</div>
+                <div class="step-desc">
+                    افتح <span class="highlight">Developer Tools (F12)</span><br>
+                    كليك يمين على زر التحديث<br>
+                    اختر <span class="highlight">"Empty Cache and Hard Reload"</span>
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">4</span>
+                <div class="step-title">استمتع بالتصميم الجديد!</div>
+                <div class="step-desc">
+                    ستشاهد تصميماً داكناً فاخراً متوافقاً 100% مع البوابة الملكية ✨
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
