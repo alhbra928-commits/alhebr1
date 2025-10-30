@@ -4,14 +4,54 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#064e3b" />
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, proxy-revalidate, max-age=0" />
+
+    <!-- ULTRA AGGRESSIVE CACHE PREVENTION FOR CDN -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, proxy-revalidate, s-maxage=0, max-age=0" />
     <meta http-equiv="Pragma" content="no-cache" />
-    <meta http-equiv="Expires" content="0" />
+    <meta http-equiv="Expires" content="-1" />
     <meta name="cache-control" content="no-cache, no-store, must-revalidate" />
-    <meta name="expires" content="0" />
+    <meta name="expires" content="-1" />
     <meta name="pragma" content="no-cache" />
+    <meta name="last-modified" content="__BUILD_VERSION__" />
+    <meta name="version" content="__BUILD_VERSION__" />
+
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <title>منصة النخيل والزيتون</title>
+
+    <!-- FORCE RELOAD FOR CDN/PREVIEW - HIGHEST PRIORITY -->
+    <script>
+      (function() {
+        // Check if this is first load after deployment
+        const DEPLOYED_VERSION = '__BUILD_VERSION__';
+        const lastKnownVersion = localStorage.getItem('last-deployed-version');
+
+        // If version changed OR no version stored, force hard reload ONCE
+        if (!lastKnownVersion || lastKnownVersion !== DEPLOYED_VERSION) {
+          console.log('%c🚀 NEW DEPLOYMENT DETECTED', 'color:red;font-size:24px;font-weight:bold');
+          console.log('Deployed:', DEPLOYED_VERSION);
+          console.log('Last Known:', lastKnownVersion);
+
+          // Save the new version BEFORE reload to prevent loop
+          localStorage.setItem('last-deployed-version', DEPLOYED_VERSION);
+
+          // Check if we just reloaded (prevent infinite loop)
+          const justReloaded = sessionStorage.getItem('just-reloaded');
+          if (!justReloaded) {
+            console.log('%c🔄 FORCING HARD RELOAD TO CLEAR CDN CACHE', 'color:orange;font-size:18px');
+            sessionStorage.setItem('just-reloaded', 'true');
+
+            // Use multiple methods to ensure reload
+            setTimeout(function() {
+              // Method 1: Location replace with timestamp
+              window.location.replace(window.location.href.split('?')[0] + '?v=' + DEPLOYED_VERSION + '&t=' + Date.now());
+            }, 100);
+          } else {
+            console.log('%c✅ RELOAD COMPLETED - CDN CACHE CLEARED', 'color:green;font-size:18px');
+            sessionStorage.removeItem('just-reloaded');
+          }
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

@@ -136,34 +136,46 @@ if (existsSync(distIndexPath)) {
   });
 }
 
-// Create stronger _headers file
+// Create CDN-compatible _headers file
 const headersPath = join(__dirname, '..', 'dist', '_headers');
-writeFileSync(headersPath, `# ULTRA AGGRESSIVE CACHE PREVENTION
+writeFileSync(headersPath, `# ULTRA AGGRESSIVE CACHE PREVENTION FOR CDN/PREVIEW
+# Compatible with Netlify, Vercel, Cloudflare, etc.
 
+# HTML files - NEVER CACHE (for immediate updates)
 /*.html
-  Cache-Control: no-cache, no-store, must-revalidate, max-age=0
+  Cache-Control: no-cache, no-store, must-revalidate, proxy-revalidate, s-maxage=0, max-age=0
   Pragma: no-cache
-  Expires: 0
+  Expires: -1
   X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  Vary: *
 
 /index.html
-  Cache-Control: no-cache, no-store, must-revalidate, max-age=0
+  Cache-Control: no-cache, no-store, must-revalidate, proxy-revalidate, s-maxage=0, max-age=0
   Pragma: no-cache
-  Expires: 0
+  Expires: -1
+  X-Version: ${version}
+  Last-Modified: ${new Date().toUTCString()}
+  Vary: *
 
 # Service Worker files - NEVER CACHE
 /sw-force-update.js
-  Cache-Control: no-cache, no-store, must-revalidate, max-age=0
+  Cache-Control: no-cache, no-store, must-revalidate, s-maxage=0, max-age=0
   Service-Worker-Allowed: /
+  Vary: *
 
 /register-sw.js
-  Cache-Control: no-cache, no-store, must-revalidate, max-age=0
+  Cache-Control: no-cache, no-store, must-revalidate, s-maxage=0, max-age=0
+  Vary: *
 
 /service-worker.js
-  Cache-Control: no-cache, no-store, must-revalidate, max-age=0
+  Cache-Control: no-cache, no-store, must-revalidate, s-maxage=0, max-age=0
+  Vary: *
 
 /version-manifest.json
-  Cache-Control: no-cache, no-store, must-revalidate, max-age=0
+  Cache-Control: no-cache, no-store, must-revalidate, s-maxage=0, max-age=0
+  Content-Type: application/json
+  Vary: *
 
 # Assets can be cached (they have hash in filename)
 /assets/*.js
