@@ -131,49 +131,47 @@ export const PublicBottomNavBar: React.FC<PublicBottomNavBarProps> = ({
                   key={item.id}
                   onClick={item.onClick}
                   className={`
-                    relative flex flex-col items-center justify-center
-                    min-w-[60px] px-3 py-2.5 rounded-2xl
+                    relative flex flex-col items-center justify-center gap-1
+                    min-w-[70px] px-2 py-2
                     transition-all duration-300 transform
-                    ${isActive ? 'scale-110 -translate-y-1' : 'scale-100'}
-                    ${isBackToAdmin ? 'animate-pulse' : ''}
-                    active:scale-95 active:translate-y-0
+                    ${isActive ? 'scale-105' : 'scale-100'}
+                    active:scale-95
                     hover:scale-105
                   `}
-                  style={{
-                    background: isBackToAdmin
-                      ? 'linear-gradient(135deg, rgba(199, 167, 66, 0.25) 0%, rgba(199, 167, 66, 0.15) 100%)'
-                      : isActive
-                      ? 'linear-gradient(135deg, rgba(199, 167, 66, 0.2) 0%, rgba(199, 167, 66, 0.1) 100%)'
-                      : 'transparent',
-                    border: isBackToAdmin
-                      ? '2px solid rgba(199, 167, 66, 0.4)'
-                      : isActive
-                      ? '2px solid rgba(199, 167, 66, 0.3)'
-                      : 'none',
-                    boxShadow: isBackToAdmin
-                      ? '0 4px 16px rgba(199, 167, 66, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.5)'
-                      : isActive
-                      ? '0 4px 12px rgba(199, 167, 66, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.4)'
-                      : 'none'
-                  }}
                 >
-                  {/* Icon with 3D effect and glow */}
+                  {/* 3D Decorative Box Container */}
                   <div
                     className={`
-                      relative transition-all duration-300 transform
-                      ${isActive ? 'scale-110' : 'scale-100'}
+                      relative flex items-center justify-center
+                      w-12 h-12 rounded-xl
+                      transition-all duration-300
+                      ${isActive ? '-translate-y-1' : ''}
                     `}
                     style={{
-                      filter: isBackToAdmin
-                        ? 'drop-shadow(0 4px 8px rgba(199, 167, 66, 0.5)) drop-shadow(0 0 12px rgba(199, 167, 66, 0.8))'
+                      background: isBackToAdmin
+                        ? 'linear-gradient(135deg, #10b981 0%, #059669 100%)'
                         : isActive
-                        ? 'drop-shadow(0 3px 6px rgba(199, 167, 66, 0.4)) drop-shadow(0 0 10px rgba(199, 167, 66, 0.6))'
-                        : 'drop-shadow(0 2px 3px rgba(12, 102, 51, 0.3))'
+                        ? 'linear-gradient(135deg, #C7A742 0%, #E4C56A 100%)'
+                        : 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.7) 100%)',
+                      border: isBackToAdmin || isActive ? 'none' : '2px solid rgba(12, 102, 51, 0.15)',
+                      boxShadow: isBackToAdmin
+                        ? '0 6px 20px rgba(16, 185, 129, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3), inset 0 -1px 0 rgba(0, 0, 0, 0.1)'
+                        : isActive
+                        ? '0 6px 20px rgba(199, 167, 66, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3), inset 0 -1px 0 rgba(0, 0, 0, 0.1)'
+                        : '0 2px 8px rgba(12, 102, 51, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.8)'
                     }}
                   >
+                    {/* Icon */}
                     <div
+                      className={`
+                        transition-all duration-300 transform
+                        ${isActive ? 'scale-110' : 'scale-100'}
+                      `}
                       style={{
-                        color: isBackToAdmin ? '#C7A742' : isActive ? '#C7A742' : '#0C6633'
+                        color: isBackToAdmin || isActive ? '#FFFFFF' : '#0C6633',
+                        filter: (isBackToAdmin || isActive)
+                          ? 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3))'
+                          : 'drop-shadow(0 1px 2px rgba(12, 102, 51, 0.2))'
                       }}
                     >
                       {item.icon}
@@ -182,57 +180,67 @@ export const PublicBottomNavBar: React.FC<PublicBottomNavBarProps> = ({
                     {/* Ripple effect on active */}
                     {isActive && (
                       <div
-                        className="absolute inset-0 rounded-full animate-ping"
+                        className="absolute inset-0 rounded-xl animate-ping opacity-30"
                         style={{
-                          background: 'radial-gradient(circle, rgba(199, 167, 66, 0.4) 0%, transparent 70%)'
+                          background: 'linear-gradient(135deg, rgba(199, 167, 66, 0.5) 0%, rgba(228, 197, 106, 0.5) 100%)'
                         }}
                       />
                     )}
+
+                    {/* Admin pulse effect */}
+                    {isBackToAdmin && (
+                      <div
+                        className="absolute inset-0 rounded-xl animate-ping opacity-40"
+                        style={{
+                          background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.5) 0%, rgba(5, 150, 105, 0.5) 100%)',
+                          animationDuration: '2s'
+                        }}
+                      />
+                    )}
+
+                    {/* Shine effect */}
+                    <div
+                      className="absolute inset-0 rounded-xl opacity-30"
+                      style={{
+                        background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.5) 0%, transparent 50%, rgba(255, 255, 255, 0.2) 100%)'
+                      }}
+                    />
                   </div>
 
-                  {/* Label with shadow */}
+                  {/* Label */}
                   <span
                     className={`
-                      text-[11px] mt-1.5 font-medium transition-all duration-300
-                      ${isBackToAdmin ? 'font-black' : isActive ? 'font-bold' : 'font-semibold'}
+                      text-[10px] font-bold transition-all duration-300
+                      ${isBackToAdmin ? 'animate-pulse' : ''}
                     `}
                     style={{
-                      color: isBackToAdmin ? '#C7A742' : isActive ? '#C7A742' : '#0C6633',
-                      textShadow: isBackToAdmin
-                        ? '0 2px 6px rgba(199, 167, 66, 0.6)'
+                      color: isBackToAdmin
+                        ? '#10b981'
                         : isActive
-                        ? '0 2px 4px rgba(199, 167, 66, 0.4)'
+                        ? '#C7A742'
+                        : '#0C6633',
+                      textShadow: isBackToAdmin
+                        ? '0 2px 4px rgba(16, 185, 129, 0.3)'
+                        : isActive
+                        ? '0 2px 4px rgba(199, 167, 66, 0.3)'
                         : '0 1px 2px rgba(12, 102, 51, 0.2)'
                     }}
                   >
                     {item.label}
                   </span>
-
-                  {/* Active Indicator with glow */}
-                  {(isActive || isBackToAdmin) && (
-                    <div
-                      className={`absolute -bottom-1 left-1/2 transform -translate-x-1/2 rounded-full ${isBackToAdmin ? 'w-2.5 h-2.5 animate-pulse' : 'w-1.5 h-1.5'}`}
-                      style={{
-                        background: 'linear-gradient(135deg, #C7A742 0%, #F4E4A6 100%)',
-                        boxShadow: isBackToAdmin
-                          ? '0 0 20px rgba(199, 167, 66, 1), 0 0 40px rgba(199, 167, 66, 0.5)'
-                          : '0 0 16px rgba(199, 167, 66, 0.8), 0 0 30px rgba(199, 167, 66, 0.4)'
-                      }}
-                    />
-                  )}
                 </button>
               );
             })}
           </div>
 
-          {/* Floating Action Button (FAB) - 3D Enhanced */}
+          {/* Floating Action Button (FAB) - 3D Enhanced Green */}
           {onBookNow && (
             <button
               onClick={onBookNow}
               className="absolute left-1/2 transform -translate-x-1/2 -top-9 w-16 h-16 rounded-full flex items-center justify-center shadow-2xl active:scale-90 transition-all duration-300 hover:scale-110 group"
               style={{
-                background: 'linear-gradient(135deg, #C7A742 0%, #E4C56A 50%, #C7A742 100%)',
-                boxShadow: '0 8px 24px rgba(199, 167, 66, 0.6), 0 0 40px rgba(199, 167, 66, 0.4), inset 0 2px 0 rgba(255, 255, 255, 0.5), inset 0 -2px 0 rgba(0, 0, 0, 0.2)',
+                background: 'linear-gradient(135deg, #10b981 0%, #34d399 50%, #10b981 100%)',
+                boxShadow: '0 8px 24px rgba(16, 185, 129, 0.6), 0 0 40px rgba(16, 185, 129, 0.4), inset 0 2px 0 rgba(255, 255, 255, 0.5), inset 0 -2px 0 rgba(0, 0, 0, 0.2)',
                 border: '3px solid rgba(255, 255, 255, 0.3)'
               }}
             >
@@ -242,14 +250,14 @@ export const PublicBottomNavBar: React.FC<PublicBottomNavBarProps> = ({
               <div
                 className="absolute inset-0 rounded-full animate-ping opacity-40"
                 style={{
-                  background: 'radial-gradient(circle, rgba(199, 167, 66, 0.8) 0%, transparent 70%)',
+                  background: 'radial-gradient(circle, rgba(16, 185, 129, 0.8) 0%, transparent 70%)',
                   animationDuration: '2s'
                 }}
               />
               <div
                 className="absolute inset-0 rounded-full animate-ping opacity-30"
                 style={{
-                  background: 'radial-gradient(circle, rgba(199, 167, 66, 0.6) 0%, transparent 70%)',
+                  background: 'radial-gradient(circle, rgba(16, 185, 129, 0.6) 0%, transparent 70%)',
                   animationDuration: '3s',
                   animationDelay: '0.5s'
                 }}
