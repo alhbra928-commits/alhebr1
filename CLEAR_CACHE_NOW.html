@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔥 حذف Cache - افتح هذا الملف</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: white;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 700px;
+            box-shadow: 0 30px 90px rgba(0,0,0,0.5);
+            text-align: center;
+            color: #000;
+        }
+        h1 {
+            color: #dc2626;
+            margin-bottom: 20px;
+            font-size: 36px;
+            font-weight: bold;
+        }
+        .warning {
+            background: #fef3c7;
+            border: 3px solid #f59e0b;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 25px 0;
+            color: #78350f;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        .big-button {
+            background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+            color: white;
+            border: none;
+            padding: 25px 60px;
+            font-size: 24px;
+            font-weight: bold;
+            border-radius: 15px;
+            cursor: pointer;
+            margin: 20px;
+            transition: all 0.3s;
+            box-shadow: 0 10px 30px rgba(220, 38, 38, 0.4);
+        }
+        .big-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(220, 38, 38, 0.6);
+        }
+        .big-button:active {
+            transform: scale(0.95);
+        }
+        .success {
+            background: #d1fae5;
+            border: 3px solid #10b981;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 25px 0;
+            color: #065f46;
+            font-size: 18px;
+            font-weight: 600;
+            display: none;
+        }
+        .log {
+            background: #1f2937;
+            border: 2px solid #374151;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 25px 0;
+            max-height: 400px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 15px;
+            text-align: right;
+            display: none;
+            color: #fff;
+        }
+        .log-item {
+            padding: 8px;
+            border-bottom: 1px solid #374151;
+            line-height: 1.6;
+        }
+        .log-item:last-child { border-bottom: none; }
+        .log-error { color: #ef4444; font-weight: bold; }
+        .log-success { color: #10b981; font-weight: bold; }
+        .log-info { color: #3b82f6; }
+        .log-warning { color: #f59e0b; }
+        .countdown {
+            font-size: 48px;
+            font-weight: bold;
+            color: #dc2626;
+            margin: 20px 0;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔥 حذف الـ Cache</h1>
+        
+        <div class="warning">
+            <strong>⚠️ انتبه!</strong>
+            <p style="margin-top: 10px;">المتصفح يستخدم نسخة قديمة من الموقع</p>
+            <p>اضغط الزر أدناه لحذف كل الـ cache وعرض النسخة الجديدة</p>
+        </div>
+
+        <button class="big-button" onclick="clearEverything()">
+            🚀 حذف الـ Cache وإظهار التصميم الداكن
+        </button>
+
+        <div id="countdown" class="countdown"></div>
+
+        <div id="successBox" class="success">
+            <strong>✅ تم بنجاح!</strong>
+            <p style="margin-top: 10px;">جاري إعادة التحميل...</p>
+        </div>
+
+        <div id="logBox" class="log"></div>
+
+        <p style="margin-top: 30px; color: #6b7280; font-size: 15px;">
+            ملاحظة: بياناتك المحفوظة (تسجيل الدخول) ستبقى آمنة ✅
+        </p>
+    </div>
+
+    <script>
+        function log(message, type = 'info') {
+            const logBox = document.getElementById('logBox');
+            logBox.style.display = 'block';
+            const item = document.createElement('div');
+            item.className = 'log-item log-' + type;
+            item.textContent = new Date().toLocaleTimeString() + ' - ' + message;
+            logBox.appendChild(item);
+            logBox.scrollTop = logBox.scrollHeight;
+        }
+
+        async function clearEverything() {
+            try {
+                log('🔄 بدء عملية الحذف الشامل...', 'info');
+
+                // Hide button
+                document.querySelector('.big-button').style.display = 'none';
+
+                // Preserve auth data
+                const auth = {};
+                const authKeys = [
+                    'admin_session_token',
+                    'admin_data',
+                    'investor_phone',
+                    'investor_data',
+                    'farm_owner_session',
+                    'farm_owner_data',
+                    'admin-session',
+                    'investor-session',
+                    'farm-owner-session'
+                ];
+                
+                authKeys.forEach(key => {
+                    const value = localStorage.getItem(key);
+                    if (value) {
+                        auth[key] = value;
+                        log(`💾 حفظ البيانات: ${key}`, 'info');
+                    }
+                });
+
+                // Clear localStorage
+                log('🗑️ حذف localStorage...', 'warning');
+                const allKeys = Object.keys(localStorage);
+                log(`   وجدنا ${allKeys.length} عنصر محفوظ`, 'info');
+                localStorage.clear();
+                log('✅ تم حذف localStorage بالكامل', 'success');
+
+                // Clear sessionStorage
+                log('🗑️ حذف sessionStorage...', 'warning');
+                sessionStorage.clear();
+                log('✅ تم حذف sessionStorage بالكامل', 'success');
+
+                // Clear Cache API
+                if ('caches' in window) {
+                    const cacheNames = await caches.keys();
+                    log(`🗑️ وجدنا ${cacheNames.length} cache(s)...`, 'warning');
+                    
+                    if (cacheNames.length > 0) {
+                        for (const name of cacheNames) {
+                            await caches.delete(name);
+                            log(`   ✅ تم حذف: ${name}`, 'success');
+                        }
+                        log('✅ تم حذف جميع الـ caches', 'success');
+                    } else {
+                        log('   لا يوجد caches للحذف', 'info');
+                    }
+                }
+
+                // Unregister Service Workers
+                if ('serviceWorker' in navigator) {
+                    const registrations = await navigator.serviceWorker.getRegistrations();
+                    log(`🗑️ وجدنا ${registrations.length} service worker(s)...`, 'warning');
+                    
+                    if (registrations.length > 0) {
+                        for (const reg of registrations) {
+                            await reg.unregister();
+                            log(`   ✅ تم إلغاء: ${reg.scope}`, 'success');
+                        }
+                        log('✅ تم إلغاء جميع الـ service workers', 'success');
+                    } else {
+                        log('   لا يوجد service workers للإلغاء', 'info');
+                    }
+                }
+
+                // Restore auth data
+                log('♻️ استرجاع بيانات المصادقة...', 'info');
+                Object.keys(auth).forEach(key => {
+                    localStorage.setItem(key, auth[key]);
+                    log(`   ✅ تم استرجاع: ${key}`, 'success');
+                });
+
+                // Save new version
+                localStorage.setItem('app-version', 'CLEARED_' + Date.now());
+                log('✅ تم حفظ إشارة التحديث', 'success');
+
+                // Show success
+                document.getElementById('successBox').style.display = 'block';
+                log('🎉 اكتمل! سيتم إعادة التحميل...', 'success');
+
+                // Countdown
+                const countdownEl = document.getElementById('countdown');
+                countdownEl.style.display = 'block';
+                let count = 3;
+                countdownEl.textContent = count;
+
+                const interval = setInterval(() => {
+                    count--;
+                    if (count > 0) {
+                        countdownEl.textContent = count;
+                    } else {
+                        clearInterval(interval);
+                        countdownEl.textContent = '🚀';
+                        
+                        // Hard reload
+                        setTimeout(() => {
+                            window.location.href = window.location.origin + '/?cleared=' + Date.now();
+                        }, 500);
+                    }
+                }, 1000);
+
+            } catch (error) {
+                log('❌ خطأ: ' + error.message, 'error');
+                console.error(error);
+                alert('حدث خطأ: ' + error.message + '\n\nسيتم إعادة التحميل بأي حال...');
+                setTimeout(() => {
+                    window.location.reload(true);
+                }, 2000);
+            }
+        }
+
+        // Auto log on load
+        window.addEventListener('load', () => {
+            log('📱 تم تحميل الصفحة', 'info');
+            log('🌐 المتصفح: ' + navigator.userAgent.split(' ').pop(), 'info');
+            log('⏰ الوقت: ' + new Date().toLocaleString(), 'info');
+            log('', 'info');
+            log('👆 اضغط الزر أعلاه للبدء', 'warning');
+        });
+    </script>
+</body>
+</html>
