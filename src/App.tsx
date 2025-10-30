@@ -13,6 +13,7 @@ import { MobileSidebar } from './components/layout/MobileSidebar';
 const PublicPlatformRouter = lazy(() => import('./modules/public/components/PublicPlatformRouter').then(m => ({ default: m.PublicPlatformRouter })));
 const FarmOwnerRouter = lazy(() => import('./modules/farm-owner/components/FarmOwnerRouter').then(m => ({ default: m.FarmOwnerRouter })));
 const EnhancedDashboard = lazy(() => import('./modules/dashboard/EnhancedDashboard').then(m => ({ default: m.EnhancedDashboard })));
+const OperationsDashboard = lazy(() => import('./modules/operations/components/OperationsDashboard').then(m => ({ default: m.OperationsDashboard })));
 const OwnersView = lazy(() => import('./modules/owners/components/OwnersView').then(m => ({ default: m.OwnersView })));
 const FarmsView = lazy(() => import('./modules/farms/components/FarmsView').then(m => ({ default: m.FarmsView })));
 const ModernBookingsInterface = lazy(() => import('./modules/reservations/components/ModernBookingsInterface').then(m => ({ default: m.ModernBookingsInterface })));
@@ -202,6 +203,8 @@ function App() {
             onShowLogin={() => setShowAdminLogin(true)}
           />
         );
+      case 'operations':
+        return <OperationsDashboard />;
       case 'owners':
         return <OwnersView onBack={() => setActiveModule('dashboard')} />;
       case 'farms':
