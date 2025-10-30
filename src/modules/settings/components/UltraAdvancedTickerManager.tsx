@@ -147,63 +147,118 @@ export function UltraAdvancedTickerManager() {
   };
 
   const handleSaveMessage = async (message: TickerMessage) => {
+    setSaving(true);
     try {
       if (message.id) {
         // Update existing
-        await supabase
+        const { error } = await supabase
           .from('ticker_messages')
-          .update(message)
+          .update({
+            content_ar: message.content_ar,
+            content_en: message.content_en,
+            icon_name: message.icon_name,
+            icon_color: message.icon_color,
+            text_color: message.text_color,
+            is_active: message.is_active,
+            sort_order: message.sort_order,
+          })
           .eq('id', message.id);
+
+        if (error) {
+          console.error('Error updating message:', error);
+          alert('حدث خطأ في تحديث الرسالة: ' + error.message);
+          return;
+        }
+        console.log('✅ Message updated successfully');
       } else {
         // Insert new
-        const { data } = await supabase
+        const { data, error } = await supabase
           .from('ticker_messages')
           .insert([{
-            ...message,
+            ticker_type: message.ticker_type,
+            content_ar: message.content_ar,
+            content_en: message.content_en || null,
+            icon_name: message.icon_name,
+            icon_color: message.icon_color,
+            text_color: message.text_color,
+            is_active: message.is_active,
             sort_order: messages.length,
           }])
           .select()
           .single();
 
+        if (error) {
+          console.error('Error inserting message:', error);
+          alert('حدث خطأ في إضافة الرسالة: ' + error.message);
+          return;
+        }
+
         if (data) {
+          console.log('✅ Message inserted successfully:', data);
           setMessages([...messages, data]);
         }
       }
-      loadData();
+
+      // Reload data to ensure consistency
+      await loadData();
       setEditingMessage(null);
       setShowNewMessageForm(false);
+      alert('تم حفظ الرسالة بنجاح!');
     } catch (error) {
       console.error('Error saving message:', error);
+      alert('حدث خطأ غير متوقع');
+    } finally {
+      setSaving(false);
     }
   };
 
   const handleDeleteMessage = async (id: string) => {
     if (!confirm('هل أنت متأكد من حذف هذه الرسالة؟')) return;
 
+    setSaving(true);
     try {
-      await supabase
+      const { error } = await supabase
         .from('ticker_messages')
         .delete()
         .eq('id', id);
 
+      if (error) {
+        console.error('Error deleting message:', error);
+        alert('حدث خطأ في حذف الرسالة: ' + error.message);
+        return;
+      }
+
+      console.log('✅ Message deleted successfully');
       setMessages(messages.filter(m => m.id !== id));
+      alert('تم حذف الرسالة بنجاح!');
     } catch (error) {
       console.error('Error deleting message:', error);
+      alert('حدث خطأ غير متوقع');
+    } finally {
+      setSaving(false);
     }
   };
 
   const handleToggleMessage = async (id: string, isActive: boolean) => {
     try {
-      await supabase
+      const { error } = await supabase
         .from('ticker_messages')
         .update({ is_active: isActive })
         .eq('id', id);
 
+      if (error) {
+        console.error('Error toggling message:', error);
+        alert('حدث خطأ في تغيير حالة الرسالة: ' + error.message);
+        return;
+      }
+
+      console.log('✅ Message toggled successfully');
       setMessages(messages.map(m =>
         m.id === id ? { ...m, is_active: isActive } : m
       ));
     } catch (error) {
       console.error('Error toggling message:', error);
+      alert('حدث خطأ غير متوقع');
     }
   };
 
@@ -221,16 +276,28 @@ export function UltraAdvancedTickerManager() {
       sort_order: idx,
     }));
 
+    setSaving(true);
     try {
       for (const update of updates) {
-        await supabase
+        const { error } = await supabase
           .from('ticker_messages')
           .update({ sort_order: update.sort_order })
           .eq('id', update.id);
+
+        if (error) {
+          console.error('Error updating sort order:', error);
+          alert('حدث خطأ في إعادة ترتيب الرسائل: ' + error.message);
+          return;
+        }
       }
-      setMessages(newMessages);
+
+      console.log('✅ Messages reordered successfully');
+      setMessages(newMessages.map((msg, idx) => ({ ...msg, sort_order: idx })));
     } catch (error) {
       console.error('Error reordering messages:', error);
+      alert('حدث خطأ غير متوقع');
+    } finally {
+      setSaving(false);
     }
   };
 
