@@ -1,0 +1,8 @@
+# Don't ignore these critical files
+!dist/manifest.json
+!dist/version.txt
+!dist/atomic-sw.js
+!dist/service-worker.js
+!dist/deployment-info.json
+!dist/test-atomic-system.html
+!dist/quick-diagnostic.html

@@ -1,3 +1,25 @@
+[build]
+  publish = "dist"
+  command = "npm run build"
+
+[[headers]]
+  for = "/manifest.json"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate, s-maxage=0, max-age=0"
+    Content-Type = "application/json"
+    Access-Control-Allow-Origin = "*"
+
+[[headers]]
+  for = "/atomic-sw.js"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate, s-maxage=0, max-age=0"
+    Service-Worker-Allowed = "/"
+
+[[headers]]
+  for = "/version.txt"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate, s-maxage=0, max-age=0"
+
 [[headers]]
   for = "/*.html"
   [headers.values]
