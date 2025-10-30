@@ -1650,3 +1650,415 @@ a:focus-visible {
     -webkit-transform: translateZ(0);
   }
 }
+
+/* ============================================
+   ROYAL GREEN GATEWAY THEME
+   البوابة الملكية الخضراء - نظام الثيم الموحد
+   ============================================ */
+
+:root {
+  /* Primary Green Colors */
+  --emerald-50: #ECFDF5;
+  --emerald-100: #D1FAE5;
+  --emerald-200: #A7F3D0;
+  --emerald-300: #6EE7B7;
+  --emerald-400: #34D399;
+  --emerald-500: #10B981;
+  --emerald-600: #059669;
+  --emerald-700: #047857;
+  --emerald-800: #065F46;
+  --emerald-900: #064E3B;
+
+  /* Green Shades */
+  --green-50: #F0FDF4;
+  --green-100: #DCFCE7;
+  --green-200: #BBF7D0;
+  --green-300: #86EFAC;
+  --green-400: #4ADE80;
+  --green-500: #22C55E;
+  --green-600: #16A34A;
+  --green-700: #15803D;
+  --green-800: #166534;
+  --green-900: #14532D;
+
+  /* Teal Colors */
+  --teal-50: #F0FDFA;
+  --teal-100: #CCFBF1;
+  --teal-200: #99F6E4;
+  --teal-300: #5EEAD4;
+  --teal-400: #2DD4BF;
+  --teal-500: #14B8A6;
+  --teal-600: #0D9488;
+  --teal-700: #0F766E;
+  --teal-800: #115E59;
+  --teal-900: #134E4A;
+
+  /* Theme Gradients */
+  --gradient-primary: linear-gradient(135deg, var(--emerald-500) 0%, var(--green-500) 50%, var(--teal-500) 100%);
+  --gradient-primary-hover: linear-gradient(135deg, var(--emerald-600) 0%, var(--green-600) 50%, var(--teal-600) 100%);
+  --gradient-background: linear-gradient(135deg, var(--emerald-50) 0%, var(--green-50) 50%, var(--teal-50) 100%);
+  --gradient-glass: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(34, 197, 94, 0.1) 50%, rgba(20, 184, 166, 0.1) 100%);
+
+  /* Shadows */
+  --shadow-emerald-sm: 0 1px 2px 0 rgba(16, 185, 129, 0.05);
+  --shadow-emerald: 0 4px 6px -1px rgba(16, 185, 129, 0.1), 0 2px 4px -2px rgba(16, 185, 129, 0.1);
+  --shadow-emerald-lg: 0 10px 15px -3px rgba(16, 185, 129, 0.1), 0 4px 6px -4px rgba(16, 185, 129, 0.1);
+  --shadow-emerald-xl: 0 20px 25px -5px rgba(16, 185, 129, 0.1), 0 8px 10px -6px rgba(16, 185, 129, 0.1);
+  --shadow-glow: 0 0 30px rgba(16, 185, 129, 0.3);
+  --shadow-glow-strong: 0 0 50px rgba(16, 185, 129, 0.5);
+}
+
+/* Royal Green Theme Utilities */
+.royal-green-gradient {
+  background: var(--gradient-primary);
+}
+
+.royal-green-gradient-hover:hover {
+  background: var(--gradient-primary-hover);
+}
+
+.royal-green-bg {
+  background: var(--gradient-background);
+}
+
+.royal-green-text {
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.royal-green-glass {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(16, 185, 129, 0.1);
+}
+
+.royal-green-card {
+  background: white;
+  border-radius: 1.5rem;
+  border: 1px solid var(--emerald-100);
+  box-shadow: var(--shadow-emerald);
+  transition: all 0.3s ease;
+}
+
+.royal-green-card:hover {
+  box-shadow: var(--shadow-emerald-lg);
+  transform: translateY(-2px);
+}
+
+.royal-green-button {
+  background: var(--gradient-primary);
+  color: white;
+  border: none;
+  border-radius: 0.75rem;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  box-shadow: var(--shadow-emerald);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.royal-green-button:hover {
+  background: var(--gradient-primary-hover);
+  box-shadow: var(--shadow-emerald-xl);
+  transform: translateY(-1px);
+}
+
+.royal-green-button:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-emerald);
+}
+
+.royal-green-glow {
+  box-shadow: var(--shadow-glow);
+  animation: glow-pulse 2s ease-in-out infinite;
+}
+
+@keyframes glow-pulse {
+  0%, 100% {
+    box-shadow: var(--shadow-glow);
+  }
+  50% {
+    box-shadow: var(--shadow-glow-strong);
+  }
+}
+
+.royal-green-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.royal-green-shimmer::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    transparent 100%
+  );
+  transform: translateX(-100%);
+  animation: shimmer-slide 2s infinite;
+}
+
+@keyframes shimmer-slide {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Particle Effects */
+.royal-green-particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: radial-gradient(circle, var(--emerald-400), transparent);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: float-particle 6s ease-in-out infinite;
+}
+
+@keyframes float-particle {
+  0%, 100% {
+    transform: translateY(0) translateX(0);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateY(-30px) translateX(10px);
+    opacity: 1;
+  }
+}
+
+/* Glass Effect Enhanced */
+.royal-green-glass-strong {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  box-shadow: 0 8px 32px rgba(16, 185, 129, 0.15);
+}
+
+/* Badge Styles */
+.royal-green-badge {
+  background: var(--gradient-primary);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  box-shadow: var(--shadow-emerald);
+}
+
+/* Input Styles */
+.royal-green-input {
+  border: 2px solid var(--emerald-200);
+  border-radius: 0.75rem;
+  padding: 0.75rem 1rem;
+  transition: all 0.3s ease;
+  background: white;
+}
+
+.royal-green-input:focus {
+  outline: none;
+  border-color: var(--emerald-500);
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+}
+
+/* Section Headers */
+.royal-green-section-header {
+  background: var(--gradient-background);
+  border-radius: 1.5rem;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  border: 1px solid var(--emerald-100);
+}
+
+/* Progress Bar */
+.royal-green-progress {
+  background: var(--emerald-100);
+  height: 0.5rem;
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.royal-green-progress-fill {
+  background: var(--gradient-primary);
+  height: 100%;
+  transition: width 0.3s ease;
+  animation: shimmer-slide 2s infinite;
+}
+
+/* Divider */
+.royal-green-divider {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--emerald-200) 50%,
+    transparent 100%
+  );
+  margin: 2rem 0;
+}
+
+/* Stats Display */
+.royal-green-stat {
+  background: white;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  border: 1px solid var(--emerald-100);
+  box-shadow: var(--shadow-emerald-sm);
+  transition: all 0.3s ease;
+}
+
+.royal-green-stat:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-emerald);
+}
+
+/* Icon Container */
+.royal-green-icon {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 1rem;
+  background: var(--gradient-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  box-shadow: var(--shadow-emerald);
+}
+
+/* Alert Boxes */
+.royal-green-alert {
+  background: var(--emerald-50);
+  border: 1px solid var(--emerald-200);
+  border-right: 4px solid var(--emerald-500);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  color: var(--emerald-900);
+}
+
+/* Loading Spinner */
+.royal-green-spinner {
+  width: 2rem;
+  height: 2rem;
+  border: 3px solid var(--emerald-100);
+  border-top-color: var(--emerald-500);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Tooltip */
+.royal-green-tooltip {
+  background: rgba(16, 185, 129, 0.95);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  box-shadow: var(--shadow-emerald-lg);
+  backdrop-filter: blur(8px);
+}
+
+/* Toggle Switch */
+.royal-green-toggle {
+  width: 3.5rem;
+  height: 2rem;
+  background: var(--emerald-100);
+  border-radius: 9999px;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.royal-green-toggle.active {
+  background: var(--gradient-primary);
+}
+
+.royal-green-toggle-thumb {
+  width: 1.5rem;
+  height: 1.5rem;
+  background: white;
+  border-radius: 50%;
+  position: absolute;
+  top: 0.25rem;
+  left: 0.25rem;
+  transition: transform 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.royal-green-toggle.active .royal-green-toggle-thumb {
+  transform: translateX(1.5rem);
+}
+
+/* Checkbox */
+.royal-green-checkbox {
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid var(--emerald-300);
+  border-radius: 0.25rem;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.royal-green-checkbox:checked {
+  background: var(--emerald-500);
+  border-color: var(--emerald-500);
+}
+
+/* Radio Button */
+.royal-green-radio {
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid var(--emerald-300);
+  border-radius: 50%;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.royal-green-radio:checked {
+  border-color: var(--emerald-500);
+  background: radial-gradient(circle, var(--emerald-500) 40%, white 40%);
+}
+
+/* Success States */
+.royal-green-success {
+  color: var(--emerald-700);
+  background: var(--emerald-50);
+  border-color: var(--emerald-200);
+}
+
+/* Info States */
+.royal-green-info {
+  color: var(--teal-700);
+  background: var(--teal-50);
+  border-color: var(--teal-200);
+}
+
+/* Apply theme globally to body */
+body.royal-green-theme {
+  background: var(--gradient-background);
+  min-height: 100vh;
+}
+
+/* Override default focus styles with green theme */
+*:focus-visible {
+  outline: 2px solid var(--emerald-500);
+  outline-offset: 2px;
+}
