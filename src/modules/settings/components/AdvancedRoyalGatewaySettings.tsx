@@ -313,14 +313,13 @@ export function AdvancedRoyalGatewaySettings() {
 
   return (
     <div
-      className="min-h-screen overflow-y-auto pb-20 scroll-smooth"
+      className="h-screen overflow-y-auto scroll-smooth"
       style={{
-        maxHeight: '100vh',
         WebkitOverflowScrolling: 'touch',
         overscrollBehavior: 'contain',
       }}
     >
-      <div className="space-y-6 p-6">
+      <div className="space-y-6 p-6 pb-32">
         {/* Header */}
         <div className="bg-gradient-to-r from-emerald-600 via-green-500 to-teal-500 rounded-3xl p-8 shadow-2xl">
           <div className="flex items-center justify-between mb-6">
