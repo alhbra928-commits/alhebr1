@@ -124,7 +124,50 @@ export function AdvancedRoyalGatewaySettings() {
       if (error) throw error;
 
       if (data) {
-        setSettings(data as any);
+        // تحويل البيانات من الجدول القديم إلى الواجهة الجديدة
+        const mappedSettings: AdvancedGatewaySettings = {
+          id: data.id,
+          enabled: data.enabled ?? true,
+          auto_enter_enabled: data.auto_enter_enabled ?? true,
+          auto_enter_delay: data.auto_enter_delay ?? 5,
+          show_progress_bar: data.show_progress_bar ?? true,
+          show_countdown: true,
+          welcome_text_ar: data.welcome_text_ar || 'مرحباً بكم في عالم الاستثمار الأخضر',
+          subtitle_text_ar: data.subtitle_text_ar || 'منصة التطوير الزراعي المتقدمة',
+          description_text_ar: data.description_text_ar || 'تكنولوجيا زراعية حديثة لمستقبل مستدام',
+          button_text_ar: 'ادخل إلى المنصة',
+          theme_style: 'green',
+          background_style: 'gradient',
+          glass_intensity: 'medium',
+          show_crown: data.show_crown ?? false,
+          show_particles: data.show_particles ?? true,
+          particle_count: data.particle_density === 'low' ? 15 : data.particle_density === 'high' ? 40 : 30,
+          particle_color: 'emerald',
+          show_floating_icons: true,
+          show_orbiting_icons: data.show_rings ?? true,
+          show_decorative_shapes: data.show_geometric_pattern ?? true,
+          animation_speed: (data.animation_speed as any) || 'medium',
+          enable_mouse_tracking: true,
+          enable_parallax: true,
+          enable_sound_effects: false,
+          show_feature_pills: true,
+          feature_pill_1: 'تكنولوجيا متقدمة',
+          feature_pill_2: 'استثمار مستدام',
+          feature_pill_3: 'بيئة صحية',
+          feature_pill_4: 'ري ذكي',
+          show_top_badge: true,
+          top_badge_text: 'تصميم ثوري',
+          show_bottom_badge: true,
+          bottom_badge_text: 'صديق للبيئة',
+          blur_background: true,
+          blur_intensity: 20,
+          border_glow: data.show_shimmer_effect ?? true,
+          custom_css: '',
+          mobile_optimized: true,
+          tablet_optimized: true,
+          desktop_optimized: true,
+        };
+        setSettings(mappedSettings);
       } else {
         setSettings({
           id: '',
@@ -183,23 +226,47 @@ export function AdvancedRoyalGatewaySettings() {
     try {
       setSaving(true);
 
+      // فقط الحقول الموجودة في الجدول حالياً
+      const updateData = {
+        enabled: settings.enabled,
+        auto_enter_enabled: settings.auto_enter_enabled,
+        auto_enter_delay: settings.auto_enter_delay,
+        show_progress_bar: settings.show_progress_bar,
+        particle_density: settings.particle_count <= 15 ? 'low' : settings.particle_count >= 35 ? 'high' : 'medium',
+        animation_speed: settings.animation_speed,
+        welcome_text_ar: settings.welcome_text_ar,
+        subtitle_text_ar: settings.subtitle_text_ar,
+        description_text_ar: settings.description_text_ar,
+        theme_color: settings.theme_style === 'green' ? 'amber' : settings.theme_style,
+        show_crown: settings.show_crown,
+        show_sparkles: true,
+        show_particles: settings.show_particles,
+        show_rings: settings.show_orbiting_icons,
+        show_geometric_pattern: settings.show_decorative_shapes,
+        show_shimmer_effect: settings.border_glow,
+        updated_at: new Date().toISOString(),
+      };
+
       const { error } = settings.id
         ? await supabase
             .from('royal_gateway_settings')
-            .update({
-              ...settings,
-              updated_at: new Date().toISOString(),
-            })
+            .update(updateData)
             .eq('id', settings.id)
-        : await supabase.from('royal_gateway_settings').insert([settings]);
+        : await supabase.from('royal_gateway_settings').insert([{
+            ...updateData,
+            id: crypto.randomUUID(),
+          }]);
 
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase error:', error);
+        throw error;
+      }
 
       showMessage('success', '✅ تم حفظ الإعدادات بنجاح! سيتم تطبيقها فوراً');
       await loadSettings();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error saving settings:', error);
-      showMessage('error', '❌ فشل حفظ الإعدادات. حاول مرة أخرى');
+      showMessage('error', `❌ فشل حفظ الإعدادات: ${error.message || 'حاول مرة أخرى'}`);
     } finally {
       setSaving(false);
     }
