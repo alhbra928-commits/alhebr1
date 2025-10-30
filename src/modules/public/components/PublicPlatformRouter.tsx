@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { MainPlatformInterface } from './MainPlatformInterface';
+import { RoyalMainInterface } from './RoyalMainInterface';
 import { PreviewInspectionPage } from './PreviewInspectionPage';
-import { ModernAgriculturalGateway } from './ModernAgriculturalGateway';
+import { RoyalGlassGateway } from './RoyalGlassGateway';
 import { marketingAnalyticsService } from '../../../services/marketingAnalyticsService';
 
 type View = 'gateway' | 'main' | 'preview';
@@ -50,7 +50,7 @@ export function PublicPlatformRouter({ onAdminLogin, onBackToAdmin, onFarmOwnerL
 
   switch (currentView) {
     case 'gateway':
-      return <ModernAgriculturalGateway onEnter={handleEnterPlatform} />;
+      return <RoyalGlassGateway onEnter={handleEnterPlatform} />;
 
     case 'preview':
       return (
@@ -64,9 +64,7 @@ export function PublicPlatformRouter({ onAdminLogin, onBackToAdmin, onFarmOwnerL
     case 'main':
     default:
       return (
-        <MainPlatformInterface
-          onFarmSelect={handlePreviewSelect}
-          onPreviewSelect={handlePreviewSelect}
+        <RoyalMainInterface
           onAdminLogin={onAdminLogin}
           onBackToAdmin={onBackToAdmin}
           onFarmOwnerLogin={onFarmOwnerLogin}
