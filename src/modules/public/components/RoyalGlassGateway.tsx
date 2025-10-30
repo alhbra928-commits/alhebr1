@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Palmtree, Leaf, ArrowLeft, Crown } from 'lucide-react';
 import { supabase } from '../../../lib/supabase';
 
 interface GatewayProps {
@@ -117,185 +116,145 @@ export function RoyalGlassGateway({ onEnter }: GatewayProps) {
         ))}
       </div>
 
-      {/* Main Content */}
-      <div className="relative z-10 h-full flex flex-col items-center justify-center px-4 sm:px-6">
+      {/* Main Content - Simple & Elegant */}
+      <div className="relative z-10 h-full flex flex-col items-center justify-center px-4">
 
-        {/* Crown Icon */}
-        <div className="mb-4 sm:mb-6 md:mb-8 animate-bounce-slow">
-          <Crown
-            className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-24 lg:h-24"
-            strokeWidth={2}
+        {/* 3D Circle with MZAD Text */}
+        <div
+          className="relative mb-6 sm:mb-8 cursor-pointer"
+          onClick={onEnter}
+          style={{
+            perspective: '1000px',
+            transformStyle: 'preserve-3d',
+          }}
+        >
+          {/* Outer Glow Ring */}
+          <div
+            className="absolute inset-0 rounded-full animate-pulse"
             style={{
-              color: '#d97706',
-              filter: 'drop-shadow(0 4px 12px rgba(217, 119, 6, 0.4))',
+              width: '200px',
+              height: '200px',
+              background: 'radial-gradient(circle, rgba(217, 119, 6, 0.3), transparent)',
+              filter: 'blur(30px)',
+              transform: 'translateZ(-20px)',
             }}
           />
-        </div>
 
-        {/* Glass Card */}
-        <div className="relative max-w-2xl w-full">
-          {/* Glow Effect */}
-          <div className="absolute inset-0 bg-gradient-to-r from-amber-300/30 via-yellow-200/30 to-amber-300/30 blur-3xl" />
+          {/* 3D Circle */}
+          <div
+            className="relative group transition-all duration-500 hover:scale-110 active:scale-95"
+            style={{
+              width: '180px',
+              height: '180px',
+              borderRadius: '50%',
+              background: 'linear-gradient(145deg, #f59e0b, #d97706)',
+              boxShadow: `
+                0 20px 60px rgba(217, 119, 6, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3),
+                inset 0 -10px 30px rgba(180, 83, 9, 0.5)
+              `,
+              transform: 'rotateX(10deg) rotateY(-10deg)',
+              transformStyle: 'preserve-3d',
+              animation: 'rotate3d 8s ease-in-out infinite',
+            }}
+          >
+            {/* Inner Shine */}
+            <div
+              className="absolute inset-0 rounded-full"
+              style={{
+                background: 'radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.4), transparent 60%)',
+                transform: 'translateZ(5px)',
+              }}
+            />
 
-          {/* Main Glass Card */}
-          <div className="relative backdrop-blur-2xl bg-white/40 border border-white/60 rounded-2xl sm:rounded-3xl shadow-2xl p-6 sm:p-8 md:p-10 lg:p-12">
-            {/* Golden Border Animation */}
-            <div className="absolute inset-0 rounded-3xl border-2 border-amber-400/30 animate-pulse" />
-
-            {/* Trees Container */}
-            <div className="flex items-center justify-center gap-4 sm:gap-6 md:gap-8 mb-6 sm:mb-8 md:mb-10">
-              {/* Palm Tree */}
-              <div className="relative group">
-                <div className="absolute inset-0 bg-green-400/20 blur-2xl rounded-full scale-150 group-hover:scale-175 transition-transform duration-500" />
-                <Palmtree
-                  className="relative w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-32 lg:h-32 text-green-700 group-hover:scale-110 transition-transform duration-300"
-                  strokeWidth={1.8}
-                  style={{
-                    filter: 'drop-shadow(0 4px 12px rgba(34, 197, 94, 0.4))',
-                    animation: 'sway 3s ease-in-out infinite',
-                  }}
-                />
-              </div>
-
-              {/* Divider */}
-              <div className="h-20 sm:h-24 md:h-28 lg:h-36 w-0.5 bg-gradient-to-b from-transparent via-amber-400 to-transparent opacity-60" />
-
-              {/* Olive Tree */}
-              <div className="relative group">
-                <div className="absolute inset-0 bg-emerald-400/20 blur-2xl rounded-full scale-150 group-hover:scale-175 transition-transform duration-500" />
-                <Leaf
-                  className="relative w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-32 lg:h-32 text-emerald-700 group-hover:scale-110 transition-transform duration-300"
-                  strokeWidth={1.8}
-                  style={{
-                    filter: 'drop-shadow(0 4px 12px rgba(16, 185, 129, 0.4))',
-                    animation: 'sway 3s ease-in-out infinite 0.5s',
-                  }}
-                />
-              </div>
-            </div>
-
-            {/* Welcome Text */}
-            <div className="text-center mb-6 sm:mb-8">
-              <h1
-                className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-black mb-3 sm:mb-4 md:mb-5 leading-tight"
+            {/* MZAD Arabic Text - Ultra Professional */}
+            <div
+              className="absolute inset-0 flex items-center justify-center"
+              style={{
+                transform: 'translateZ(20px)',
+              }}
+            >
+              <span
+                className="font-black select-none"
                 style={{
-                  background: 'linear-gradient(135deg, #b45309 0%, #d97706 25%, #fbbf24 50%, #d97706 75%, #b45309 100%)',
+                  fontSize: '56px',
+                  fontFamily: "'Tajawal', 'Cairo', sans-serif",
+                  background: 'linear-gradient(180deg, #ffffff 0%, #fef3c7 50%, #fbbf24 100%)',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
                   backgroundClip: 'text',
-                  textShadow: '0 2px 20px rgba(217, 119, 6, 0.3)',
-                  letterSpacing: '-0.02em',
+                  textShadow: `
+                    0 2px 10px rgba(0, 0, 0, 0.3),
+                    0 0 30px rgba(251, 191, 36, 0.5)
+                  `,
+                  letterSpacing: '0.05em',
+                  fontWeight: 900,
+                  lineHeight: 1,
+                  transform: 'translateY(-5px)',
                 }}
               >
-                {settings.welcome_text_ar}
-              </h1>
-
-              <p
-                className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold mb-3 sm:mb-4 leading-relaxed"
-                style={{
-                  color: '#92400e',
-                  textShadow: '0 1px 2px rgba(146, 64, 14, 0.1)',
-                  letterSpacing: '-0.01em',
-                }}
-              >
-                {settings.subtitle_text_ar}
-              </p>
-
-              <p
-                className="text-sm sm:text-base md:text-lg font-medium leading-relaxed px-2"
-                style={{
-                  color: '#b45309',
-                  letterSpacing: '-0.005em',
-                }}
-              >
-                {settings.description_text_ar}
-              </p>
+                مزاد
+              </span>
             </div>
 
-            {/* Progress Bar */}
-            {settings.auto_enter_enabled && (
-              <div className="mb-6">
-                <div className="relative h-3 bg-amber-200/50 rounded-full overflow-hidden backdrop-blur-sm border border-amber-300/30">
-                  <div
-                    className="absolute inset-y-0 left-0 bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 rounded-full transition-all duration-300 ease-out"
-                    style={{ width: `${progress}%` }}
-                  >
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent animate-shimmer" />
-                  </div>
-                </div>
-                <div className="flex justify-between items-center mt-3">
-                  <span
-                    className="text-sm sm:text-base font-bold"
-                    style={{
-                      color: '#92400e',
-                      letterSpacing: '-0.01em',
-                    }}
-                  >
-                    جاري الدخول...
-                  </span>
-                  <span
-                    className="text-base sm:text-lg font-black font-mono"
-                    style={{
-                      color: '#b45309',
-                    }}
-                  >
-                    {Math.round(progress)}%
-                  </span>
-                </div>
-              </div>
-            )}
+            {/* Circle Border Effect */}
+            <div
+              className="absolute inset-0 rounded-full"
+              style={{
+                border: '3px solid rgba(255, 255, 255, 0.2)',
+                transform: 'translateZ(10px)',
+              }}
+            />
 
-            {/* Enter Button */}
-            <button
-              onClick={onEnter}
-              className="group relative w-full py-4 sm:py-5 md:py-6 rounded-xl sm:rounded-2xl overflow-hidden transition-all duration-300 hover:scale-105 active:scale-95"
-            >
-              {/* Button Glow */}
-              <div className="absolute inset-0 bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-400 opacity-90 group-hover:opacity-100 transition-opacity" />
-
-              {/* Button Content */}
-              <div className="relative flex items-center justify-center gap-2 sm:gap-3">
-                <span
-                  className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-black"
-                  style={{
-                    color: '#451a03',
-                    textShadow: '0 1px 2px rgba(255, 255, 255, 0.3)',
-                    letterSpacing: '-0.01em',
-                  }}
-                >
-                  دخول المنصة
-                </span>
-                <ArrowLeft
-                  className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 group-hover:-translate-x-2 transition-transform"
-                  style={{ color: '#451a03' }}
-                  strokeWidth={2.5}
-                />
-              </div>
-
-              {/* Shine Effect */}
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-700" />
-            </button>
-
-            {/* Decorative Corners */}
-            <div className="absolute top-2 right-2 sm:top-4 sm:right-4 w-6 h-6 sm:w-8 sm:h-8 border-t-2 border-r-2 border-amber-400/50 rounded-tr-lg sm:rounded-tr-xl" />
-            <div className="absolute bottom-2 left-2 sm:bottom-4 sm:left-4 w-6 h-6 sm:w-8 sm:h-8 border-b-2 border-l-2 border-amber-400/50 rounded-bl-lg sm:rounded-bl-xl" />
-            <div className="absolute top-2 left-2 sm:top-4 sm:left-4 w-6 h-6 sm:w-8 sm:h-8 border-t-2 border-l-2 border-amber-400/50 rounded-tl-lg sm:rounded-tl-xl" />
-            <div className="absolute bottom-2 right-2 sm:bottom-4 sm:right-4 w-6 h-6 sm:w-8 sm:h-8 border-b-2 border-r-2 border-amber-400/50 rounded-br-lg sm:rounded-br-xl" />
+            {/* Rotating Border Effect */}
+            <div
+              className="absolute inset-0 rounded-full"
+              style={{
+                background: 'conic-gradient(from 0deg, transparent 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%)',
+                animation: 'spin 4s linear infinite',
+              }}
+            />
           </div>
         </div>
 
-        {/* Bottom Decorative Text */}
-        <div className="mt-6 sm:mt-8 text-center">
-          <p
-            className="text-sm sm:text-base md:text-lg font-bold tracking-wide"
+        {/* MZAD English - 3D Small Text */}
+        <div
+          className="relative mb-8 sm:mb-12"
+          style={{
+            perspective: '500px',
+            transformStyle: 'preserve-3d',
+          }}
+        >
+          <h2
+            className="font-black tracking-[0.3em] select-none"
             style={{
-              color: '#92400e',
-              textShadow: '0 1px 2px rgba(146, 64, 14, 0.1)',
+              fontSize: '18px',
+              fontFamily: "'Poppins', sans-serif",
+              background: 'linear-gradient(180deg, #d97706 0%, #b45309 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+              textShadow: '0 4px 8px rgba(217, 119, 6, 0.3)',
+              transform: 'translateZ(10px) rotateX(5deg)',
+              letterSpacing: '0.3em',
+              fontWeight: 900,
             }}
           >
-            استثمارك يبدأ من هنا
-          </p>
+            MZAD
+          </h2>
         </div>
+
+        {/* Progress Bar - Minimal */}
+        {settings.auto_enter_enabled && (
+          <div className="w-48 sm:w-64">
+            <div className="relative h-1 bg-amber-200/40 rounded-full overflow-hidden">
+              <div
+                className="absolute inset-y-0 left-0 bg-gradient-to-r from-amber-500 to-yellow-400 rounded-full transition-all duration-300"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
+          </div>
+        )}
       </div>
 
       {/* CSS Animations */}
@@ -311,43 +270,28 @@ export function RoyalGlassGateway({ onEnter }: GatewayProps) {
           }
         }
 
-        @keyframes sway {
+        @keyframes rotate3d {
           0%, 100% {
-            transform: rotate(0deg);
+            transform: rotateX(10deg) rotateY(-10deg);
           }
           25% {
-            transform: rotate(2deg);
-          }
-          75% {
-            transform: rotate(-2deg);
-          }
-        }
-
-        @keyframes shimmer {
-          0% {
-            background-position: -200% 0;
-          }
-          100% {
-            background-position: 200% 0;
-          }
-        }
-
-        @keyframes bounce-slow {
-          0%, 100% {
-            transform: translateY(0);
+            transform: rotateX(15deg) rotateY(5deg);
           }
           50% {
-            transform: translateY(-10px);
+            transform: rotateX(10deg) rotateY(10deg);
+          }
+          75% {
+            transform: rotateX(5deg) rotateY(-5deg);
           }
         }
 
-        .animate-bounce-slow {
-          animation: bounce-slow 3s ease-in-out infinite;
-        }
-
-        .animate-shimmer {
-          background-size: 200% 100%;
-          animation: shimmer 2s infinite;
+        @keyframes spin {
+          0% {
+            transform: rotate(0deg);
+          }
+          100% {
+            transform: rotate(360deg);
+          }
         }
       `}</style>
     </div>
