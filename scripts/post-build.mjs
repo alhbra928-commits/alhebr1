@@ -20,22 +20,9 @@ const distIndexPath = join(__dirname, '..', 'dist', 'index.html');
 if (existsSync(distIndexPath)) {
   let content = readFileSync(distIndexPath, 'utf-8');
 
-  // Add aggressive cache prevention in <head>
-  const headMeta = `<head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/icon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <!-- AGGRESSIVE CACHE PREVENTION -->
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
-    <meta name="cache-buster" content="${version}">
-    <meta name="app-version" content="${version}">
-
-    <title>منصة تملك الأشجار</title>`;
-
-  content = content.replace(/<head>[\s\S]*?<title>.*?<\/title>/i, headMeta);
+  // Replace __BUILD_VERSION__ placeholder with actual version
+  content = content.replace(/__BUILD_VERSION__/g, version);
+  console.log(`✅ Replaced __BUILD_VERSION__ with ${version}`);
 
   // Add Service Worker registration first
   const swScript = `
@@ -123,6 +110,16 @@ if (existsSync(distIndexPath)) {
   content = content.replace('</body>', swScript);
   writeFileSync(distIndexPath, content, 'utf-8');
   console.log('✅ Added Service Worker + ultra-aggressive cache prevention to dist/index.html');
+
+  // Copy and update service-worker.js
+  const swPath = join(__dirname, '..', 'public', 'service-worker.js');
+  const swDestPath = join(__dirname, '..', 'dist', 'service-worker.js');
+  if (existsSync(swPath)) {
+    let swContent = readFileSync(swPath, 'utf-8');
+    swContent = swContent.replace(/__SW_VERSION__/g, version);
+    writeFileSync(swDestPath, swContent, 'utf-8');
+    console.log(`✅ Copied and updated service-worker.js with version ${version}`);
+  }
 
   // Copy SW files to dist
   const swFiles = ['sw-force-update.js', 'register-sw.js'];

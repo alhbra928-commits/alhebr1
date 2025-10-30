@@ -1,6 +1,5 @@
 // PROFESSIONAL SERVICE WORKER - AUTO CACHE CLEARING
-const BUILD_TIMESTAMP = Date.now(); // Will be replaced during build
-const VERSION = `v3_DARK_${BUILD_TIMESTAMP}`;
+const VERSION = '__SW_VERSION__'; // Will be replaced during build
 const CACHE_NAME = `palm-olive-${VERSION}`;
 
 // NO CACHE for HTML and main files - always fetch fresh
@@ -65,8 +64,7 @@ self.addEventListener('activate', (event) => {
             console.log('%c[SW] 📢 Notifying client:', 'color:blue', client.url);
             client.postMessage({
               type: 'SW_ACTIVATED',
-              version: VERSION,
-              timestamp: BUILD_TIMESTAMP
+              version: VERSION
             });
           });
         });

@@ -19,8 +19,7 @@
     <script>
       // PROFESSIONAL CACHE BUSTING SYSTEM - DARK THEME v3
       (function() {
-        const BUILD_TIMESTAMP = Date.now(); // Will be replaced during build
-        const CURRENT_VERSION = 'DARK_THEME_v3_' + BUILD_TIMESTAMP;
+        const BUILD_VERSION = '__BUILD_VERSION__'; // Will be replaced during build
         const stored = localStorage.getItem('app-version');
 
         // Disable back-forward cache (bfcache)
@@ -32,11 +31,10 @@
         });
 
         console.log('%c🔍 PROFESSIONAL CACHE CHECK', 'color:blue;font-size:20px;font-weight:bold');
-        console.log('Build:', BUILD_TIMESTAMP);
-        console.log('Current Version:', CURRENT_VERSION);
+        console.log('Build Version:', BUILD_VERSION);
         console.log('Stored Version:', stored);
 
-        if (stored !== CURRENT_VERSION) {
+        if (stored !== BUILD_VERSION) {
           console.log('%c🔥 NEW VERSION DETECTED - CLEARING ALL CACHE', 'color:red;font-size:24px;font-weight:bold');
           console.log('%c⚠️ سيتم حذف كل الـ cache القديم وإعادة التحميل', 'color:orange;font-size:18px');
 
@@ -96,8 +94,7 @@
               });
 
               // Save new version
-              localStorage.setItem('app-version', CURRENT_VERSION);
-              localStorage.setItem('build-timestamp', BUILD_TIMESTAMP.toString());
+              localStorage.setItem('app-version', BUILD_VERSION);
               localStorage.setItem('last-cache-clear', new Date().toISOString());
 
               console.log('%c✅ CACHE CLEARED SUCCESSFULLY', 'color:green;font-size:20px;font-weight:bold');
@@ -105,9 +102,8 @@
 
               // Hard reload with cache bypass
               setTimeout(() => {
-                const url = new URL(window.location.href);
-                url.searchParams.set('_t', BUILD_TIMESTAMP);
-                url.searchParams.set('_cache', 'bypass');
+                const url = new URL(window.location.href.split('?')[0]);
+                url.searchParams.set('v', BUILD_VERSION);
                 window.location.replace(url.toString());
               }, 1000);
 
@@ -125,7 +121,7 @@
           if ('caches' in window) {
             caches.keys().then(names => {
               names.forEach(name => {
-                if (!name.includes(BUILD_TIMESTAMP.toString())) {
+                if (!name.includes(BUILD_VERSION)) {
                   console.log('%c🧹 Cleaning old cache: ' + name, 'color:gray;font-size:12px');
                   caches.delete(name);
                 }
