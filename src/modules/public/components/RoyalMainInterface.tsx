@@ -47,6 +47,7 @@ export function RoyalMainInterface({
   };
 
   const handleFarmClick = (farm: PublicFarm) => {
+    console.log('[RoyalMainInterface] Farm clicked:', farm.id, farm.farm_name);
     setSelectedFarm(farm);
     setCurrentView('farmDetail');
   };
@@ -98,9 +99,9 @@ export function RoyalMainInterface({
     return (
       <>
         <FarmDetailPage
-          farm={selectedFarm}
+          farmId={selectedFarm.id}
           onBack={handleGoHome}
-          onBookNow={() => setCurrentView('booking')}
+          onStartBooking={() => setCurrentView('booking')}
         />
         <PublicBottomNavBar
           activeTab="home"
@@ -119,9 +120,13 @@ export function RoyalMainInterface({
     return (
       <>
         <TemporaryBookingPage
-          farm={selectedFarm}
+          farmId={selectedFarm.id}
+          farmName={selectedFarm.farm_name}
+          farmType={selectedFarm.tree_type === 'نخيل' ? 'palm' : 'olive'}
           onBack={() => setCurrentView('farmDetail')}
           onSuccess={handleGoHome}
+          onGoHome={handleGoHome}
+          onGoToInvestor={() => setCurrentView('investor')}
         />
         <PublicBottomNavBar
           activeTab="home"
