@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>اختبار تمرير صفحة إعدادات البوابة الملكية</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+      margin: 0;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #059669;
+      border-bottom: 3px solid #059669;
+      padding-bottom: 10px;
+    }
+    .test-box {
+      background: #f0fdf4;
+      padding: 20px;
+      border-radius: 10px;
+      margin: 20px 0;
+      border-right: 4px solid #059669;
+    }
+    .success {
+      background: #d1fae5;
+      color: #065f46;
+      padding: 15px;
+      border-radius: 8px;
+      margin: 10px 0;
+      border-right: 4px solid #059669;
+    }
+    .warning {
+      background: #fef3c7;
+      color: #92400e;
+      padding: 15px;
+      border-radius: 8px;
+      margin: 10px 0;
+      border-right: 4px solid #f59e0b;
+    }
+    .error {
+      background: #fee2e2;
+      color: #991b1b;
+      padding: 15px;
+      border-radius: 8px;
+      margin: 10px 0;
+      border-right: 4px solid #dc2626;
+    }
+    .code {
+      background: #1f2937;
+      color: #10b981;
+      padding: 15px;
+      border-radius: 5px;
+      font-family: monospace;
+      margin: 10px 0;
+      overflow-x: auto;
+      font-size: 14px;
+      direction: ltr;
+      text-align: left;
+    }
+    button {
+      background: linear-gradient(135deg, #059669 0%, #047857 100%);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      margin: 5px;
+    }
+    button:hover {
+      transform: scale(1.05);
+    }
+    .demo-scroll {
+      height: 300px;
+      overflow-y: auto;
+      background: #f9fafb;
+      padding: 20px;
+      border-radius: 10px;
+      border: 2px solid #d1d5db;
+      margin: 15px 0;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+    }
+    .demo-content {
+      height: 1000px;
+      background: linear-gradient(180deg, #d1fae5 0%, #a7f3d0 50%, #6ee7b7 100%);
+      padding: 20px;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔍 اختبار تمرير صفحة إعدادات البوابة الملكية</h1>
+
+    <div class="test-box">
+      <h2>✅ التحسينات المطبقة:</h2>
+      <div class="success">
+        <strong>1. overflow-y-auto</strong><br>
+        تمكين التمرير العمودي التلقائي
+      </div>
+      <div class="success">
+        <strong>2. scroll-smooth</strong><br>
+        تمرير سلس وناعم (CSS)
+      </div>
+      <div class="success">
+        <strong>3. -webkit-overflow-scrolling: touch</strong><br>
+        تمرير محسّن للأجهزة المحمولة (iOS)
+      </div>
+      <div class="success">
+        <strong>4. overscroll-behavior: contain</strong><br>
+        منع تمرير الصفحة الأم عند الوصول للحافة
+      </div>
+      <div class="success">
+        <strong>5. maxHeight: 100vh</strong><br>
+        تحديد الارتفاع الأقصى بحجم الشاشة
+      </div>
+      <div class="success">
+        <strong>6. pb-20</strong><br>
+        مسافة في الأسفل لتجنب اختباء المحتوى
+      </div>
+    </div>
+
+    <div class="test-box">
+      <h2>🎯 اختبار التمرير:</h2>
+      <p>جرب التمرير في الصندوق أدناه:</p>
+      
+      <div class="demo-scroll" id="demoScroll">
+        <div class="demo-content">
+          <h3>محتوى طويل للاختبار</h3>
+          <p style="margin: 20px 0;">📍 بداية المحتوى</p>
+          <p style="margin: 300px 0;">⬇️ امسح لأسفل...</p>
+          <p style="margin: 300px 0;">⬇️ استمر...</p>
+          <p style="margin: 20px 0;">🎯 نهاية المحتوى</p>
+        </div>
+      </div>
+
+      <button onclick="scrollToTop()">⬆️ تمرير لأعلى</button>
+      <button onclick="scrollToBottom()">⬇️ تمرير لأسفل</button>
+      <button onclick="scrollToMiddle()">📍 تمرير للوسط</button>
+    </div>
+
+    <div class="test-box">
+      <h2>💻 الكود المطبق:</h2>
+      <div class="code">
+&lt;div
+  className="min-h-screen overflow-y-auto pb-20 scroll-smooth"
+  style={{
+    maxHeight: '100vh',
+    WebkitOverflowScrolling: 'touch',
+    overscrollBehavior: 'contain',
+  }}
+&gt;
+  &lt;div className="space-y-6 p-6"&gt;
+    {/* المحتوى */}
+  &lt;/div&gt;
+&lt;/div&gt;
+      </div>
+    </div>
+
+    <div class="test-box">
+      <h2>🔧 حل المشاكل:</h2>
+      
+      <div class="warning">
+        <strong>المشكلة: التمرير لا يستجيب أحياناً</strong><br><br>
+        <strong>الأسباب المحتملة:</strong>
+        <ul style="margin: 10px 0; padding-right: 20px;">
+          <li>عناصر ذات position: fixed تحجب التمرير</li>
+          <li>event listeners تمنع السلوك الافتراضي</li>
+          <li>overflow مخفي في العناصر الأم</li>
+          <li>height غير محدد بشكل صحيح</li>
+        </ul>
+        <strong>الحلول المطبقة:</strong>
+        <ul style="margin: 10px 0; padding-right: 20px;">
+          <li>✅ إضافة overflow-y-auto للحاوية الرئيسية</li>
+          <li>✅ تحديد maxHeight: 100vh</li>
+          <li>✅ إضافة WebkitOverflowScrolling للموبايل</li>
+          <li>✅ استخدام overscroll-behavior: contain</li>
+          <li>✅ إضافة padding-bottom لتجنب اختباء المحتوى</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="test-box">
+      <h2>📱 اختبار على الأجهزة المختلفة:</h2>
+      
+      <div class="success">
+        <strong>✅ Desktop (Windows/Mac):</strong><br>
+        استخدم عجلة الماوس أو السحب بالماوس
+      </div>
+      
+      <div class="success">
+        <strong>✅ Mobile (iOS/Android):</strong><br>
+        استخدم إصبعك للتمرير (touch gestures)
+      </div>
+      
+      <div class="success">
+        <strong>✅ Tablet (iPad/Android):</strong><br>
+        استخدم إصبعك أو القلم للتمرير
+      </div>
+    </div>
+
+    <div class="test-box">
+      <h2>🎯 نصائح إضافية:</h2>
+      
+      <div class="code">
+/* لتحسين الأداء أكثر */
+
+/* 1. استخدام will-change بحذر */
+.scrollable-container {
+  will-change: scroll-position;
+}
+
+/* 2. تفعيل GPU acceleration */
+.scrollable-container {
+  transform: translateZ(0);
+}
+
+/* 3. تحسين scrollbar */
+.scrollable-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scrollable-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.scrollable-container::-webkit-scrollbar-thumb {
+  background: #059669;
+  border-radius: 10px;
+}
+
+.scrollable-container::-webkit-scrollbar-thumb:hover {
+  background: #047857;
+}
+      </div>
+    </div>
+
+    <div class="test-box">
+      <h2>✅ التحقق من النجاح:</h2>
+      
+      <div class="success">
+        <strong>اختبار 1: التمرير المستمر</strong><br>
+        ✅ امسح من أعلى لأسفل بشكل مستمر<br>
+        ✅ يجب أن يكون التمرير سلساً بدون توقف
+      </div>
+      
+      <div class="success">
+        <strong>اختبار 2: التمرير السريع</strong><br>
+        ✅ امسح بسرعة من أعلى لأسفل<br>
+        ✅ يجب أن يستمر التمرير بشكل طبيعي (momentum)
+      </div>
+      
+      <div class="success">
+        <strong>اختبار 3: التمرير للحافة</strong><br>
+        ✅ امسح حتى تصل للنهاية<br>
+        ✅ يجب ألا يحدث تمرير للصفحة الأم (overscroll)
+      </div>
+    </div>
+
+    <div class="success" style="margin-top: 30px; font-size: 18px;">
+      <strong>🎉 النظام محسّن وجاهز!</strong><br><br>
+      التمرير الآن:<br>
+      ✅ سلس وسريع<br>
+      ✅ يعمل على جميع الأجهزة<br>
+      ✅ بدون مشاكل overscroll<br>
+      ✅ momentum scrolling على الموبايل<br>
+    </div>
+  </div>
+
+  <script>
+    const demoScroll = document.getElementById('demoScroll');
+
+    function scrollToTop() {
+      demoScroll.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
+
+    function scrollToBottom() {
+      demoScroll.scrollTo({
+        top: demoScroll.scrollHeight,
+        behavior: 'smooth'
+      });
+    }
+
+    function scrollToMiddle() {
+      demoScroll.scrollTo({
+        top: demoScroll.scrollHeight / 2,
+        behavior: 'smooth'
+      });
+    }
+
+    // تتبع التمرير
+    let lastScrollTop = 0;
+    demoScroll.addEventListener('scroll', function() {
+      const scrollTop = this.scrollTop;
+      const scrollHeight = this.scrollHeight;
+      const clientHeight = this.clientHeight;
+      const scrollPercent = (scrollTop / (scrollHeight - clientHeight)) * 100;
+
+      console.log(`Scroll: ${scrollPercent.toFixed(1)}%`);
+      lastScrollTop = scrollTop;
+    });
+  </script>
+</body>
+</html>

@@ -34,6 +34,7 @@ import {
   Target,
   Award,
   Shield,
+  ArrowRight,
 } from 'lucide-react';
 import { supabase } from '../../../lib/supabase';
 
@@ -311,34 +312,50 @@ export function AdvancedRoyalGatewaySettings() {
   ];
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-emerald-600 via-green-500 to-teal-500 rounded-3xl p-8 shadow-2xl">
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-4">
-            <div className="relative">
-              <div className="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-xl flex items-center justify-center shadow-lg border border-white/30">
-                <Leaf className="w-8 h-8 text-white" strokeWidth={2.5} />
+    <div
+      className="min-h-screen overflow-y-auto pb-20 scroll-smooth"
+      style={{
+        maxHeight: '100vh',
+        WebkitOverflowScrolling: 'touch',
+        overscrollBehavior: 'contain',
+      }}
+    >
+      <div className="space-y-6 p-6">
+        {/* Header */}
+        <div className="bg-gradient-to-r from-emerald-600 via-green-500 to-teal-500 rounded-3xl p-8 shadow-2xl">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-4">
+              <div className="relative">
+                <div className="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-xl flex items-center justify-center shadow-lg border border-white/30">
+                  <Leaf className="w-8 h-8 text-white" strokeWidth={2.5} />
+                </div>
+                <div className="absolute -top-2 -right-2 bg-gradient-to-br from-yellow-400 to-amber-500 p-2 rounded-full shadow-lg animate-bounce">
+                  <Sparkles className="w-4 h-4 text-white" />
+                </div>
               </div>
-              <div className="absolute -top-2 -right-2 bg-gradient-to-br from-yellow-400 to-amber-500 p-2 rounded-full shadow-lg animate-bounce">
-                <Sparkles className="w-4 h-4 text-white" />
+              <div>
+                <h1 className="text-3xl font-black text-white mb-2">البوابة الملكية الخضراء</h1>
+                <p className="text-emerald-100 text-lg">إعدادات متقدمة وشاملة للتحكم الكامل في التصميم والمحتوى</p>
               </div>
             </div>
-            <div>
-              <h1 className="text-3xl font-black text-white mb-2">البوابة الملكية الخضراء</h1>
-              <p className="text-emerald-100 text-lg">إعدادات متقدمة وشاملة للتحكم الكامل في التصميم والمحتوى</p>
-            </div>
-          </div>
 
-          <div className="flex gap-3">
-            <button
-              onClick={() => setPreviewMode(!previewMode)}
-              className="flex items-center gap-2 px-6 py-3 rounded-xl bg-white/20 backdrop-blur-xl border border-white/30 text-white hover:bg-white/30 transition-all shadow-lg"
-            >
-              {previewMode ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-              <span className="font-semibold">{previewMode ? 'إخفاء المعاينة' : 'معاينة حية'}</span>
-            </button>
-          </div>
+            <div className="flex gap-3">
+              <button
+                onClick={() => window.history.back()}
+                className="flex items-center gap-2 px-6 py-3 rounded-xl bg-white/20 backdrop-blur-xl border border-white/30 text-white hover:bg-white/30 transition-all shadow-lg hover:scale-105"
+                title="رجوع للإعدادات"
+              >
+                <ArrowRight className="w-5 h-5" />
+                <span className="font-semibold">رجوع</span>
+              </button>
+              <button
+                onClick={() => setPreviewMode(!previewMode)}
+                className="flex items-center gap-2 px-6 py-3 rounded-xl bg-white/20 backdrop-blur-xl border border-white/30 text-white hover:bg-white/30 transition-all shadow-lg"
+              >
+                {previewMode ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                <span className="font-semibold">{previewMode ? 'إخفاء المعاينة' : 'معاينة حية'}</span>
+              </button>
+            </div>
         </div>
 
         {/* Stats Bar */}
@@ -1313,6 +1330,7 @@ export function AdvancedRoyalGatewaySettings() {
           </div>
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-700 rounded-2xl" />
         </button>
+      </div>
       </div>
     </div>
   );
