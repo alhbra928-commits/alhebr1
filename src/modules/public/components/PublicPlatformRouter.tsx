@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { RoyalMainInterface } from './RoyalMainInterface';
 import { PreviewInspectionPage } from './PreviewInspectionPage';
-import { RoyalGlassGateway } from './RoyalGlassGateway';
+import { RevolutionaryGreenGateway } from './RevolutionaryGreenGateway';
 import { marketingAnalyticsService } from '../../../services/marketingAnalyticsService';
 
 type View = 'gateway' | 'main' | 'preview';
@@ -50,7 +50,7 @@ export function PublicPlatformRouter({ onAdminLogin, onBackToAdmin, onFarmOwnerL
 
   switch (currentView) {
     case 'gateway':
-      return <RoyalGlassGateway onEnter={handleEnterPlatform} />;
+      return <RevolutionaryGreenGateway onEnter={handleEnterPlatform} />;
 
     case 'preview':
       return (
