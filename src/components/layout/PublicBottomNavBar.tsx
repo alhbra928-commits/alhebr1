@@ -107,9 +107,9 @@ export const PublicBottomNavBar: React.FC<PublicBottomNavBarProps> = ({
         <div
           className="relative backdrop-blur-xl"
           style={{
-            background: 'rgba(245, 241, 232, 0.85)',
-            borderTop: '3px solid #D4AF37',
-            boxShadow: '0 -4px 20px rgba(212, 175, 55, 0.25), 0 -1px 0 rgba(212, 175, 55, 0.5)'
+            background: 'linear-gradient(180deg, rgba(233, 245, 236, 0.98) 0%, rgba(233, 245, 236, 0.95) 100%)',
+            borderTop: '3px solid #10b981',
+            boxShadow: '0 -4px 20px rgba(16, 185, 129, 0.25), 0 -1px 0 rgba(16, 185, 129, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.8)'
           }}
         >
           {/* Navigation Items */}
@@ -132,58 +132,91 @@ export const PublicBottomNavBar: React.FC<PublicBottomNavBarProps> = ({
                   onClick={item.onClick}
                   className={`
                     relative flex flex-col items-center justify-center
-                    min-w-[60px] px-2 py-2 rounded-xl
-                    transition-all duration-300
-                    ${isActive ? 'scale-110' : 'scale-100'}
+                    min-w-[60px] px-3 py-2.5 rounded-2xl
+                    transition-all duration-300 transform
+                    ${isActive ? 'scale-110 -translate-y-1' : 'scale-100'}
                     ${isBackToAdmin ? 'animate-pulse' : ''}
-                    active:scale-95
+                    active:scale-95 active:translate-y-0
+                    hover:scale-105
                   `}
                   style={{
                     background: isBackToAdmin
-                      ? 'linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(212, 175, 55, 0.1) 100%)'
+                      ? 'linear-gradient(135deg, rgba(199, 167, 66, 0.25) 0%, rgba(199, 167, 66, 0.15) 100%)'
                       : isActive
-                      ? 'rgba(160, 145, 106, 0.15)'
+                      ? 'linear-gradient(135deg, rgba(199, 167, 66, 0.2) 0%, rgba(199, 167, 66, 0.1) 100%)'
                       : 'transparent',
-                    border: isBackToAdmin ? '2px solid #D4AF37' : 'none',
-                    boxShadow: isBackToAdmin ? '0 2px 12px rgba(212, 175, 55, 0.4)' : 'none'
+                    border: isBackToAdmin
+                      ? '2px solid rgba(199, 167, 66, 0.4)'
+                      : isActive
+                      ? '2px solid rgba(199, 167, 66, 0.3)'
+                      : 'none',
+                    boxShadow: isBackToAdmin
+                      ? '0 4px 16px rgba(199, 167, 66, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.5)'
+                      : isActive
+                      ? '0 4px 12px rgba(199, 167, 66, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.4)'
+                      : 'none'
                   }}
                 >
-                  {/* Icon with glow effect */}
+                  {/* Icon with 3D effect and glow */}
                   <div
                     className={`
-                      transition-all duration-300
-                      ${isBackToAdmin ? 'drop-shadow-[0_0_16px_rgba(212,175,55,1)]' : ''}
-                      ${isActive ? 'drop-shadow-[0_0_12px_rgba(212,175,55,0.8)]' : 'drop-shadow-[0_2px_4px_rgba(212,175,55,0.2)]'}
+                      relative transition-all duration-300 transform
+                      ${isActive ? 'scale-110' : 'scale-100'}
                     `}
                     style={{
-                      color: isBackToAdmin ? '#D4AF37' : isActive ? '#D4AF37' : '#D4AF37',
-                      filter: isBackToAdmin ? 'brightness(1.3)' : isActive ? 'brightness(1.2)' : 'brightness(0.95)'
+                      filter: isBackToAdmin
+                        ? 'drop-shadow(0 4px 8px rgba(199, 167, 66, 0.5)) drop-shadow(0 0 12px rgba(199, 167, 66, 0.8))'
+                        : isActive
+                        ? 'drop-shadow(0 3px 6px rgba(199, 167, 66, 0.4)) drop-shadow(0 0 10px rgba(199, 167, 66, 0.6))'
+                        : 'drop-shadow(0 2px 3px rgba(12, 102, 51, 0.3))'
                     }}
                   >
-                    {item.icon}
+                    <div
+                      style={{
+                        color: isBackToAdmin ? '#C7A742' : isActive ? '#C7A742' : '#0C6633'
+                      }}
+                    >
+                      {item.icon}
+                    </div>
+
+                    {/* Ripple effect on active */}
+                    {isActive && (
+                      <div
+                        className="absolute inset-0 rounded-full animate-ping"
+                        style={{
+                          background: 'radial-gradient(circle, rgba(199, 167, 66, 0.4) 0%, transparent 70%)'
+                        }}
+                      />
+                    )}
                   </div>
 
-                  {/* Label */}
+                  {/* Label with shadow */}
                   <span
                     className={`
-                      text-[11px] mt-1 font-medium transition-all duration-300
-                      ${isBackToAdmin ? 'font-black' : isActive ? 'font-bold' : 'font-normal'}
+                      text-[11px] mt-1.5 font-medium transition-all duration-300
+                      ${isBackToAdmin ? 'font-black' : isActive ? 'font-bold' : 'font-semibold'}
                     `}
                     style={{
-                      color: isBackToAdmin ? '#D4AF37' : isActive ? '#D4AF37' : '#B8993B',
-                      textShadow: isBackToAdmin ? '0 2px 4px rgba(212, 175, 55, 0.5)' : isActive ? '0 1px 2px rgba(212, 175, 55, 0.3)' : 'none'
+                      color: isBackToAdmin ? '#C7A742' : isActive ? '#C7A742' : '#0C6633',
+                      textShadow: isBackToAdmin
+                        ? '0 2px 6px rgba(199, 167, 66, 0.6)'
+                        : isActive
+                        ? '0 2px 4px rgba(199, 167, 66, 0.4)'
+                        : '0 1px 2px rgba(12, 102, 51, 0.2)'
                     }}
                   >
                     {item.label}
                   </span>
 
-                  {/* Active Indicator - Enhanced for Back to Admin */}
+                  {/* Active Indicator with glow */}
                   {(isActive || isBackToAdmin) && (
                     <div
-                      className={`absolute -bottom-1 left-1/2 transform -translate-x-1/2 rounded-full ${isBackToAdmin ? 'w-2 h-2 animate-pulse' : 'w-1 h-1'}`}
+                      className={`absolute -bottom-1 left-1/2 transform -translate-x-1/2 rounded-full ${isBackToAdmin ? 'w-2.5 h-2.5 animate-pulse' : 'w-1.5 h-1.5'}`}
                       style={{
-                        background: 'linear-gradient(135deg, #D4AF37 0%, #F4D03F 100%)',
-                        boxShadow: isBackToAdmin ? '0 0 16px rgba(212, 175, 55, 1)' : '0 0 10px rgba(212, 175, 55, 0.8)'
+                        background: 'linear-gradient(135deg, #C7A742 0%, #F4E4A6 100%)',
+                        boxShadow: isBackToAdmin
+                          ? '0 0 20px rgba(199, 167, 66, 1), 0 0 40px rgba(199, 167, 66, 0.5)'
+                          : '0 0 16px rgba(199, 167, 66, 0.8), 0 0 30px rgba(199, 167, 66, 0.4)'
                       }}
                     />
                   )}
@@ -192,23 +225,42 @@ export const PublicBottomNavBar: React.FC<PublicBottomNavBarProps> = ({
             })}
           </div>
 
-          {/* Floating Action Button (FAB) */}
+          {/* Floating Action Button (FAB) - 3D Enhanced */}
           {onBookNow && (
             <button
               onClick={onBookNow}
-              className="absolute left-1/2 transform -translate-x-1/2 -top-8 w-14 h-14 rounded-full flex items-center justify-center shadow-2xl active:scale-95 transition-all duration-300"
+              className="absolute left-1/2 transform -translate-x-1/2 -top-9 w-16 h-16 rounded-full flex items-center justify-center shadow-2xl active:scale-90 transition-all duration-300 hover:scale-110 group"
               style={{
-                background: 'linear-gradient(135deg, #C9A962 0%, #A0916A 100%)',
-                boxShadow: '0 4px 20px rgba(160, 145, 106, 0.5), 0 0 30px rgba(201, 169, 98, 0.3)'
+                background: 'linear-gradient(135deg, #C7A742 0%, #E4C56A 50%, #C7A742 100%)',
+                boxShadow: '0 8px 24px rgba(199, 167, 66, 0.6), 0 0 40px rgba(199, 167, 66, 0.4), inset 0 2px 0 rgba(255, 255, 255, 0.5), inset 0 -2px 0 rgba(0, 0, 0, 0.2)',
+                border: '3px solid rgba(255, 255, 255, 0.3)'
               }}
             >
-              <Plus className="w-7 h-7 text-white" strokeWidth={2.5} />
+              <Plus className="w-8 h-8 text-white drop-shadow-lg" strokeWidth={3} />
 
-              {/* Pulsing ring effect */}
+              {/* Double pulsing ring effect */}
+              <div
+                className="absolute inset-0 rounded-full animate-ping opacity-40"
+                style={{
+                  background: 'radial-gradient(circle, rgba(199, 167, 66, 0.8) 0%, transparent 70%)',
+                  animationDuration: '2s'
+                }}
+              />
               <div
                 className="absolute inset-0 rounded-full animate-ping opacity-30"
                 style={{
-                  background: 'linear-gradient(135deg, #C9A962 0%, #A0916A 100%)'
+                  background: 'radial-gradient(circle, rgba(199, 167, 66, 0.6) 0%, transparent 70%)',
+                  animationDuration: '3s',
+                  animationDelay: '0.5s'
+                }}
+              />
+
+              {/* Rotating glow */}
+              <div
+                className="absolute inset-0 rounded-full opacity-50 group-hover:opacity-100 transition-opacity duration-300"
+                style={{
+                  background: 'conic-gradient(from 0deg, transparent, rgba(255, 255, 255, 0.3), transparent)',
+                  animation: 'spin 3s linear infinite'
                 }}
               />
             </button>
@@ -227,13 +279,14 @@ export const PublicBottomNavBar: React.FC<PublicBottomNavBarProps> = ({
             onClick={(e) => e.stopPropagation()}
           >
             <div
-              className="backdrop-blur-xl rounded-2xl p-6 shadow-2xl border"
+              className="backdrop-blur-xl rounded-2xl p-6 shadow-2xl border-2"
               style={{
-                background: 'rgba(245, 241, 232, 0.95)',
-                borderColor: 'rgba(160, 145, 106, 0.2)'
+                background: 'linear-gradient(180deg, rgba(233, 245, 236, 0.98) 0%, rgba(233, 245, 236, 0.95) 100%)',
+                borderColor: 'rgba(16, 185, 129, 0.3)',
+                boxShadow: '0 20px 50px rgba(16, 185, 129, 0.2)'
               }}
             >
-              <h3 className="text-lg font-bold mb-4 text-center" style={{ color: '#8B7355' }}>
+              <h3 className="text-lg font-bold mb-4 text-center" style={{ color: '#0C6633' }}>
                 تواصل معنا
               </h3>
 
@@ -257,10 +310,11 @@ export const PublicBottomNavBar: React.FC<PublicBottomNavBarProps> = ({
 
                 <a
                   href="tel:+966569335257"
-                  className="flex items-center gap-3 p-3 rounded-xl transition-colors"
+                  className="flex items-center gap-3 p-3 rounded-xl transition-all duration-300 hover:scale-105 active:scale-95"
                   style={{
-                    background: 'linear-gradient(135deg, #A0916A 0%, #C9A962 100%)',
-                    color: 'white'
+                    background: 'linear-gradient(135deg, #C7A742 0%, #E4C56A 100%)',
+                    color: 'white',
+                    boxShadow: '0 4px 12px rgba(199, 167, 66, 0.3)'
                   }}
                 >
                   <span className="text-2xl">📞</span>
@@ -275,10 +329,11 @@ export const PublicBottomNavBar: React.FC<PublicBottomNavBarProps> = ({
                     setShowContactMenu(false);
                     onTabChange('login');
                   }}
-                  className="w-full flex items-center gap-3 p-3 rounded-xl transition-colors"
+                  className="w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-300 hover:scale-105 active:scale-95"
                   style={{
-                    background: 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)',
-                    color: 'white'
+                    background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                    color: 'white',
+                    boxShadow: '0 4px 12px rgba(16, 185, 129, 0.3)'
                   }}
                 >
                   <span className="text-2xl">👤</span>
@@ -291,7 +346,12 @@ export const PublicBottomNavBar: React.FC<PublicBottomNavBarProps> = ({
 
               <button
                 onClick={() => setShowContactMenu(false)}
-                className="w-full mt-4 py-2 rounded-lg text-sm font-medium transition-colors bg-gray-200 text-gray-700 hover:bg-gray-300"
+                className="w-full mt-4 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 hover:scale-105 active:scale-95"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(12, 102, 51, 0.1) 0%, rgba(12, 102, 51, 0.05) 100%)',
+                  color: '#0C6633',
+                  border: '2px solid rgba(12, 102, 51, 0.2)'
+                }}
               >
                 إغلاق
               </button>
