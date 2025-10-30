@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { RoyalMainInterface } from './RoyalMainInterface';
+import { ModernRoyalPlatform } from './ModernRoyalPlatform';
 import { PreviewInspectionPage } from './PreviewInspectionPage';
 import { RevolutionaryGreenGateway } from './RevolutionaryGreenGateway';
 import { marketingAnalyticsService } from '../../../services/marketingAnalyticsService';
@@ -70,7 +70,7 @@ export function PublicPlatformRouter({ onAdminLogin, onBackToAdmin, onFarmOwnerL
     case 'main':
     default:
       return (
-        <RoyalMainInterface
+        <ModernRoyalPlatform
           onAdminLogin={onAdminLogin}
           onBackToAdmin={onBackToAdmin}
           onFarmOwnerLogin={onFarmOwnerLogin}
