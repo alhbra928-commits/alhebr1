@@ -1,43 +1,33 @@
 import React, { useState } from 'react';
 import { MapPin, TreePine, TrendingUp, CheckCircle, ArrowLeft } from 'lucide-react';
-
-interface Farm {
-  id: string;
-  farm_name: string;
-  farm_code?: string;
-  location: string;
-  tree_type: string;
-  available_trees: number;
-  price_per_tree: number;
-  marketing_price?: number;
-  description_ar?: string;
-  images?: string[];
-  aerial_map_url?: string;
-  sales_status?: string;
-}
+import { PublicFarm } from '../types/farm.types';
 
 interface InnovativeFarmCardProps {
-  farm: Farm;
+  farm: PublicFarm;
   onClick: () => void;
 }
 
 export const InnovativeFarmCard: React.FC<InnovativeFarmCardProps> = ({ farm, onClick }) => {
   const [imageError, setImageError] = useState(false);
 
-  const farmImage = farm.aerial_map_url ||
-    (farm.images && farm.images.length > 0 ? farm.images[0] : null);
+  const farmImage = farm.aerial_image ||
+    (farm.ground_images && farm.ground_images.length > 0 ? farm.ground_images[0] : null);
 
   const hasValidImage = farmImage && !imageError;
 
-  const getTreeIcon = (type: string) => {
-    if (type?.includes('نخيل')) return '🌴';
-    if (type?.includes('زيتون')) return '🫒';
+  const getTreeIcon = (type: 'palm' | 'olive' | 'mixed') => {
+    if (type === 'palm') return '🌴';
+    if (type === 'olive') return '🫒';
     return '🌳';
   };
 
-  const discount = farm.marketing_price && farm.price_per_tree
-    ? Math.round(((farm.marketing_price - farm.price_per_tree) / farm.marketing_price) * 100)
-    : 0;
+  const getTreeTypeLabel = (type: 'palm' | 'olive' | 'mixed') => {
+    if (type === 'palm') return 'نخيل';
+    if (type === 'olive') return 'زيتون';
+    return 'مختلط';
+  };
+
+  const location = `${farm.location_city}${farm.location_region ? ` - ${farm.location_region}` : ''}`;
 
   return (
     <div
@@ -76,11 +66,11 @@ export const InnovativeFarmCard: React.FC<InnovativeFarmCardProps> = ({ farm, on
           )}
 
           {/* Farm Code Badge */}
-          {farm.farm_code && (
+          {farm.barcode && (
             <div className="absolute top-4 left-4 px-4 py-2 bg-white/95 backdrop-blur-sm rounded-xl shadow-lg border border-white/60">
               <div className="flex items-center gap-2">
                 <span className="text-xs text-emerald-600 font-medium">رقم المزرعة</span>
-                <span className="text-sm font-bold text-emerald-800">{farm.farm_code}</span>
+                <span className="text-sm font-bold text-emerald-800">{farm.barcode}</span>
               </div>
             </div>
           )}
@@ -89,24 +79,31 @@ export const InnovativeFarmCard: React.FC<InnovativeFarmCardProps> = ({ farm, on
           <div className="absolute top-4 right-4 px-4 py-2 bg-gradient-to-r from-emerald-500 to-green-600 rounded-xl shadow-lg">
             <div className="flex items-center gap-2">
               <span className="text-2xl">{getTreeIcon(farm.tree_type)}</span>
-              <span className="text-sm font-bold text-white">{farm.tree_type}</span>
+              <span className="text-sm font-bold text-white">{getTreeTypeLabel(farm.tree_type)}</span>
             </div>
           </div>
 
-          {/* Discount Badge */}
-          {discount > 0 && (
-            <div className="absolute bottom-4 left-4 px-4 py-2 bg-red-500 rounded-xl shadow-lg animate-pulse">
-              <span className="text-sm font-bold text-white">خصم {discount}%</span>
-            </div>
-          )}
-
           {/* Available Badge */}
-          {farm.available_trees > 0 && (
+          {farm.available_trees > 0 && farm.status === 'open' && (
             <div className="absolute bottom-4 right-4 px-4 py-2 bg-green-500/95 backdrop-blur-sm rounded-xl shadow-lg">
               <div className="flex items-center gap-1.5">
                 <CheckCircle className="w-4 h-4 text-white" />
                 <span className="text-sm font-bold text-white">متاح</span>
               </div>
+            </div>
+          )}
+
+          {/* Almost Full Badge */}
+          {farm.status === 'almost_full' && (
+            <div className="absolute bottom-4 left-4 px-4 py-2 bg-orange-500 rounded-xl shadow-lg animate-pulse">
+              <span className="text-sm font-bold text-white">اقتراب الامتلاء</span>
+            </div>
+          )}
+
+          {/* Full Badge */}
+          {farm.status === 'full' && (
+            <div className="absolute bottom-4 left-4 px-4 py-2 bg-red-500 rounded-xl shadow-lg">
+              <span className="text-sm font-bold text-white">مكتمل</span>
             </div>
           )}
         </div>
@@ -127,7 +124,7 @@ export const InnovativeFarmCard: React.FC<InnovativeFarmCardProps> = ({ farm, on
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-xs text-emerald-600 font-medium mb-0.5">الموقع</p>
-                <p className="text-sm font-bold text-emerald-900 truncate">{farm.location}</p>
+                <p className="text-sm font-bold text-emerald-900 truncate">{location}</p>
               </div>
             </div>
 
@@ -149,37 +146,49 @@ export const InnovativeFarmCard: React.FC<InnovativeFarmCardProps> = ({ farm, on
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-xs text-teal-600 font-medium mb-0.5">السعر</p>
-                <div className="flex flex-col">
-                  <p className="text-sm font-bold text-teal-800">
-                    {farm.price_per_tree?.toLocaleString('ar-SA')}
-                  </p>
-                  {farm.marketing_price && farm.marketing_price > farm.price_per_tree && (
-                    <p className="text-xs text-gray-500 line-through">
-                      {farm.marketing_price.toLocaleString('ar-SA')}
-                    </p>
-                  )}
-                </div>
+                <p className="text-sm font-bold text-teal-800">
+                  {farm.base_price?.toLocaleString('ar-SA')} ر.س
+                </p>
               </div>
             </div>
           </div>
 
           {/* Description */}
-          {farm.description_ar && (
+          {farm.description && (
             <p className="text-sm text-emerald-700 mb-4 line-clamp-2 leading-relaxed">
-              {farm.description_ar}
+              {farm.description}
             </p>
+          )}
+
+          {/* Progress Bar */}
+          {farm.booking_percentage > 0 && (
+            <div className="mb-4">
+              <div className="flex items-center justify-between text-xs text-emerald-600 mb-1">
+                <span>نسبة الحجز</span>
+                <span className="font-bold">{farm.booking_percentage}%</span>
+              </div>
+              <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-gradient-to-r from-emerald-500 to-green-500 transition-all duration-500"
+                  style={{ width: `${farm.booking_percentage}%` }}
+                ></div>
+              </div>
+            </div>
           )}
 
           {/* Action Button */}
           <button
-            className="w-full flex items-center justify-center gap-2 px-5 py-3.5 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white font-bold rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl group/btn"
+            className="w-full flex items-center justify-center gap-2 px-5 py-3.5 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white font-bold rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl group/btn disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={(e) => {
               e.stopPropagation();
               onClick();
             }}
+            disabled={farm.status === 'full'}
           >
-            <span>عرض التفاصيل واحجز الآن</span>
-            <ArrowLeft className="w-5 h-5 group-hover/btn:-translate-x-1 transition-transform" />
+            <span>{farm.status === 'full' ? 'مكتملة' : 'عرض التفاصيل واحجز الآن'}</span>
+            {farm.status !== 'full' && (
+              <ArrowLeft className="w-5 h-5 group-hover/btn:-translate-x-1 transition-transform" />
+            )}
           </button>
         </div>
 

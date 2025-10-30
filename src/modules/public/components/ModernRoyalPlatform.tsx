@@ -323,20 +323,7 @@ export function ModernRoyalPlatform({
                 {farms.map((farm) => (
                   <InnovativeFarmCard
                     key={farm.id}
-                    farm={{
-                      id: farm.id,
-                      farm_name: farm.farm_name,
-                      farm_code: farm.farm_code,
-                      location: farm.location,
-                      tree_type: farm.tree_type,
-                      available_trees: farm.available_trees,
-                      price_per_tree: farm.price_per_tree,
-                      marketing_price: farm.marketing_price,
-                      description_ar: farm.description_ar,
-                      images: farm.images,
-                      aerial_map_url: farm.aerial_map_url,
-                      sales_status: farm.sales_status
-                    }}
+                    farm={farm}
                     onClick={() => handleFarmClick(farm)}
                   />
                 ))}
