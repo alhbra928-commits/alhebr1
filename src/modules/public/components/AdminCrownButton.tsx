@@ -10,14 +10,27 @@ interface AdminCrownButtonProps {
 export function AdminCrownButton({ onAdminLogin, onFarmOwnerLogin }: AdminCrownButtonProps) {
   const [showMenu, setShowMenu] = useState(false);
 
+  // Debug on mount
+  console.log('🔄 AdminCrownButton v2 loaded', { onAdminLogin: !!onAdminLogin, onFarmOwnerLogin: !!onFarmOwnerLogin });
+
   const handleAdminClick = () => {
+    console.log('🎯 Admin clicked - v2');
     setShowMenu(false);
-    onAdminLogin?.();
+    if (onAdminLogin) {
+      onAdminLogin();
+    } else {
+      alert('⚠️ Cache issue! Press Ctrl+Shift+Delete and clear cache, then Ctrl+F5');
+    }
   };
 
   const handleFarmOwnerClick = () => {
+    console.log('🎯 Farm Owner clicked - v2');
     setShowMenu(false);
-    onFarmOwnerLogin?.();
+    if (onFarmOwnerLogin) {
+      onFarmOwnerLogin();
+    } else {
+      alert('⚠️ Cache issue! Press Ctrl+Shift+Delete and clear cache, then Ctrl+F5');
+    }
   };
 
   return (

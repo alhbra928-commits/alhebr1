@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>⚠️ امسح الكاش فوراً!</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      border-radius: 30px;
+      padding: 40px;
+      max-width: 600px;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
+      animation: slideIn 0.5s ease-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .warning-icon {
+      font-size: 80px;
+      text-align: center;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    h1 {
+      color: #ff416c;
+      text-align: center;
+      font-size: 2.5em;
+      margin: 20px 0;
+    }
+
+    .problem {
+      background: #fff0f0;
+      border-right: 5px solid #ff416c;
+      padding: 20px;
+      border-radius: 12px;
+      margin: 20px 0;
+    }
+
+    .problem h2 {
+      color: #ff416c;
+      margin-bottom: 10px;
+    }
+
+    .solution {
+      background: #f0fff4;
+      border-right: 5px solid #00cc66;
+      padding: 20px;
+      border-radius: 12px;
+      margin: 20px 0;
+    }
+
+    .solution h2 {
+      color: #00cc66;
+      margin-bottom: 15px;
+    }
+
+    .steps {
+      counter-reset: step;
+      list-style: none;
+    }
+
+    .steps li {
+      counter-increment: step;
+      margin: 15px 0;
+      padding: 15px;
+      background: white;
+      border-radius: 10px;
+      position: relative;
+      padding-right: 60px;
+      font-size: 1.1em;
+      line-height: 1.6;
+    }
+
+    .steps li::before {
+      content: counter(step);
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: linear-gradient(135deg, #ff416c, #ff4b2b);
+      color: white;
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.2em;
+    }
+
+    .big-button {
+      display: block;
+      width: 100%;
+      padding: 20px;
+      background: linear-gradient(135deg, #00cc66, #00aa55);
+      color: white;
+      border: none;
+      border-radius: 15px;
+      font-size: 1.5em;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin: 20px 0;
+      text-decoration: none;
+      text-align: center;
+    }
+
+    .big-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(0, 204, 102, 0.4);
+    }
+
+    .big-button:active {
+      transform: translateY(0);
+    }
+
+    .keyboard {
+      display: inline-block;
+      background: #333;
+      color: white;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-family: monospace;
+      font-size: 1.1em;
+      font-weight: bold;
+      margin: 0 3px;
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    .note {
+      background: #fffbf0;
+      border: 2px dashed #ffaa00;
+      padding: 15px;
+      border-radius: 10px;
+      margin: 20px 0;
+      font-size: 0.95em;
+    }
+
+    .version {
+      text-align: center;
+      color: #666;
+      font-size: 0.9em;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 2px solid #eee;
+    }
+
+    .flash {
+      animation: flash 1.5s infinite;
+    }
+
+    @keyframes flash {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="warning-icon flash">⚠️</div>
+    <h1>مشكلة الكاش!</h1>
+
+    <div class="problem">
+      <h2>🔴 المشكلة:</h2>
+      <p style="font-size: 1.1em; line-height: 1.8;">
+        المتصفح يستخدم <strong>نسخة قديمة</strong> من الموقع!<br>
+        التحديثات موجودة لكن الكاش يمنع تحميلها.<br>
+        <strong style="color: #ff416c;">يجب مسح الكاش فوراً!</strong>
+      </p>
+    </div>
+
+    <div class="solution">
+      <h2>✅ الحل السريع:</h2>
+      <ul class="steps">
+        <li>
+          اضغط:
+          <span class="keyboard">Ctrl</span>
+          <span class="keyboard">Shift</span>
+          <span class="keyboard">Delete</span>
+        </li>
+        <li>
+          اختر <strong>"كل البيانات"</strong> أو <strong>"All Time"</strong>
+        </li>
+        <li>
+          تأكد من تحديد:
+          <ul style="margin-top: 10px; margin-right: 20px;">
+            <li>✓ Cached images and files</li>
+            <li>✓ Cookies and site data</li>
+          </ul>
+        </li>
+        <li>
+          اضغط <strong>"مسح البيانات"</strong> / <strong>"Clear Data"</strong>
+        </li>
+        <li>
+          بعد المسح، اضغط:
+          <span class="keyboard">Ctrl</span>
+          <span class="keyboard">F5</span>
+          <br>
+          لإعادة تحميل الصفحة بقوة
+        </li>
+      </ul>
+    </div>
+
+    <button class="big-button" onclick="clearAndReload()">
+      🔄 امسح الكاش وأعد التحميل
+    </button>
+
+    <div class="note">
+      <strong>💡 ملاحظة:</strong><br>
+      إذا لم يعمل الزر أعلاه، استخدم الطريقة اليدوية:<br>
+      <span class="keyboard">Ctrl</span> +
+      <span class="keyboard">Shift</span> +
+      <span class="keyboard">Delete</span>
+    </div>
+
+    <div class="note">
+      <strong>🔍 كيف تعرف أن المشكلة حُلت؟</strong><br>
+      افتح Console (F12) وابحث عن:<br>
+      <code style="background: #333; color: #0f0; padding: 5px 10px; border-radius: 5px; display: inline-block; margin-top: 10px;">
+        🔄 AdminCrownButton v2 loaded
+      </code><br>
+      إذا ظهرت هذه الرسالة، الكاش تم مسحه بنجاح! ✅
+    </div>
+
+    <div class="solution">
+      <h2>🌐 بدائل أخرى:</h2>
+      <ol style="margin-right: 20px; line-height: 2;">
+        <li><strong>وضع التخفي:</strong>
+          <span class="keyboard">Ctrl</span> +
+          <span class="keyboard">Shift</span> +
+          <span class="keyboard">N</span>
+        </li>
+        <li><strong>جرب متصفح آخر</strong> (Chrome, Firefox, Edge)</li>
+        <li><strong>امسح بيانات الموقع فقط:</strong><br>
+          افتح إعدادات المتصفح → Privacy → Site Data → ابحث عن الموقع → Delete
+        </li>
+      </ol>
+    </div>
+
+    <div class="version">
+      <strong>Build المطلوب:</strong> v20251030_1761841881083<br>
+      <strong>التاريخ:</strong> 30 أكتوبر 2025<br>
+      <strong>الإصلاح:</strong> زر التاج الذهبي + props صحيحة
+    </div>
+  </div>
+
+  <script>
+    function clearAndReload() {
+      console.log('🧹 Attempting to clear cache...');
+
+      // Try to clear cache using Cache API
+      if ('caches' in window) {
+        caches.keys().then(function(names) {
+          for (let name of names) {
+            caches.delete(name);
+            console.log('✅ Deleted cache:', name);
+          }
+        });
+      }
+
+      // Clear localStorage
+      try {
+        localStorage.clear();
+        console.log('✅ Cleared localStorage');
+      } catch (e) {
+        console.warn('⚠️ Could not clear localStorage:', e);
+      }
+
+      // Clear sessionStorage
+      try {
+        sessionStorage.clear();
+        console.log('✅ Cleared sessionStorage');
+      } catch (e) {
+        console.warn('⚠️ Could not clear sessionStorage:', e);
+      }
+
+      // Force reload with cache bypass
+      console.log('🔄 Reloading with cache bypass...');
+
+      alert('✅ تم محاولة مسح الكاش!\n\nسيتم إعادة تحميل الصفحة الآن.\n\nإذا استمرت المشكلة، استخدم:\nCtrl+Shift+Delete');
+
+      setTimeout(() => {
+        // Hard reload
+        window.location.reload(true);
+      }, 1000);
+    }
+
+    // Log on page load
+    console.log('📄 URGENT_CLEAR_CACHE.html loaded');
+    console.log('⚠️ You need to clear cache to see the latest updates!');
+    console.log('🎯 Expected build: v20251030_1761841881083');
+    console.log('');
+    console.log('Quick fix: Press Ctrl+Shift+Delete, then Ctrl+F5');
+  </script>
+</body>
+</html>
