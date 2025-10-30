@@ -50,7 +50,13 @@ export function PublicPlatformRouter({ onAdminLogin, onBackToAdmin, onFarmOwnerL
 
   switch (currentView) {
     case 'gateway':
-      return <RevolutionaryGreenGateway onEnter={handleEnterPlatform} />;
+      return (
+        <RevolutionaryGreenGateway
+          onEnter={handleEnterPlatform}
+          onAdminLogin={onAdminLogin}
+          onFarmOwnerLogin={onFarmOwnerLogin}
+        />
+      );
 
     case 'preview':
       return (

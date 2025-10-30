@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Leaf, Sparkles, ArrowRight, Sprout, TreePine, Droplets, Sun, Wind } from 'lucide-react';
 import { supabase } from '../../../lib/supabase';
+import { AdminCrownButton } from './AdminCrownButton';
 
 interface GatewayProps {
   onEnter: () => void;
+  onAdminLogin?: () => void;
+  onFarmOwnerLogin?: () => void;
 }
 
 interface GatewaySettings {
@@ -15,7 +18,7 @@ interface GatewaySettings {
   description_text_ar: string;
 }
 
-export function RevolutionaryGreenGateway({ onEnter }: GatewayProps) {
+export function RevolutionaryGreenGateway({ onEnter, onAdminLogin, onFarmOwnerLogin }: GatewayProps) {
   const [settings, setSettings] = useState<GatewaySettings | null>(null);
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(0);
@@ -416,6 +419,12 @@ export function RevolutionaryGreenGateway({ onEnter }: GatewayProps) {
           animation: shimmer 2s infinite;
         }
       `}</style>
+
+      {/* Admin Crown Button */}
+      <AdminCrownButton
+        onAdminLogin={onAdminLogin}
+        onFarmOwnerLogin={onFarmOwnerLogin}
+      />
     </div>
   );
 }
