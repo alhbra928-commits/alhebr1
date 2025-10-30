@@ -1314,7 +1314,7 @@ export function AdvancedRoyalGatewaySettings() {
       )}
 
       {/* Action Buttons */}
-      <div className="sticky bottom-6 flex justify-center gap-4">
+      <div className="flex justify-center gap-4 mt-8 pb-32">
         <button
           onClick={resetToDefaults}
           className="group px-8 py-4 bg-white border-2 border-gray-300 text-gray-700 rounded-2xl font-bold text-lg shadow-lg hover:shadow-xl hover:scale-105 hover:border-gray-400 transition-all"
@@ -1328,7 +1328,7 @@ export function AdvancedRoyalGatewaySettings() {
         <button
           onClick={saveSettings}
           disabled={saving}
-          className="group relative px-12 py-4 mb-96 bg-gradient-to-r from-emerald-500 via-green-500 to-teal-500 text-white rounded-2xl font-bold text-lg shadow-2xl hover:shadow-emerald-300 hover:scale-105 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+          className="group relative px-12 py-4 bg-gradient-to-r from-emerald-500 via-green-500 to-teal-500 text-white rounded-2xl font-bold text-lg shadow-2xl hover:shadow-emerald-300 hover:scale-105 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
         >
           <div className="flex items-center gap-3 relative z-10">
             {saving ? (
