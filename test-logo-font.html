@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>اختبار خط مزاد الاحترافي</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&family=Tajawal:wght@400;500;700;800;900&family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #fef3c7 0%, #fef9c3 50%, #fef3c7 100%);
+      font-family: 'Almarai', 'Tajawal', 'Cairo', sans-serif;
+      padding: 20px;
+    }
+
+    .container {
+      text-align: center;
+      max-width: 1200px;
+      width: 100%;
+    }
+
+    .comparison {
+      display: flex;
+      flex-direction: column;
+      gap: 60px;
+      margin-top: 40px;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.4);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      border-radius: 24px;
+      padding: 60px 40px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+    }
+
+    .label {
+      font-size: 18px;
+      font-weight: 700;
+      color: #92400e;
+      margin-bottom: 30px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    /* الخط القديم */
+    .old-style {
+      font-size: clamp(48px, 10vw, 128px);
+      font-family: 'Tajawal', 'Cairo', sans-serif;
+      font-weight: 900;
+      background: linear-gradient(135deg, #b45309 0%, #d97706 25%, #fbbf24 50%, #d97706 75%, #b45309 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 4px 30px rgba(217, 119, 6, 0.4);
+      letter-spacing: 0.05em;
+      line-height: 1.2;
+    }
+
+    /* الخط الجديد - احترافي كشعار */
+    .new-style {
+      font-size: clamp(48px, 10vw, 128px);
+      font-family: 'Almarai', 'Tajawal', 'Cairo', sans-serif;
+      font-weight: 900;
+      background: linear-gradient(135deg, #b45309 0%, #d97706 25%, #fbbf24 50%, #d97706 75%, #b45309 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 
+        0 6px 40px rgba(217, 119, 6, 0.5),
+        0 3px 20px rgba(217, 119, 6, 0.4),
+        0 1px 8px rgba(0, 0, 0, 0.3);
+      letter-spacing: 0.15em;
+      line-height: 1.2;
+      text-transform: uppercase;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-top: 40px;
+      text-align: right;
+    }
+
+    .feature {
+      background: rgba(217, 119, 6, 0.1);
+      padding: 20px;
+      border-radius: 12px;
+      border: 1px solid rgba(217, 119, 6, 0.2);
+    }
+
+    .feature-title {
+      font-weight: 700;
+      color: #92400e;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    .feature-value {
+      color: #d97706;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .highlight {
+      background: rgba(251, 191, 36, 0.2);
+      border: 2px solid #fbbf24;
+    }
+
+    .arrow {
+      font-size: 48px;
+      color: #d97706;
+      margin: 20px 0;
+    }
+
+    @media (max-width: 768px) {
+      .card {
+        padding: 40px 20px;
+      }
+      
+      .features {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 style="font-size: 24px; font-weight: 700; color: #92400e; margin-bottom: 20px;">
+      اختبار خط "مزاد" الاحترافي
+    </h1>
+    <p style="font-size: 16px; color: #78350f; margin-bottom: 40px;">
+      قارن بين الخط القديم والجديد (بشكل شعار Logo)
+    </p>
+
+    <div class="comparison">
+      <!-- الخط القديم -->
+      <div class="card">
+        <div class="label">❌ الخط القديم (ضيق)</div>
+        <div class="old-style">مزاد</div>
+        <div class="features">
+          <div class="feature">
+            <div class="feature-title">Letter Spacing</div>
+            <div class="feature-value">0.05em (ضيق)</div>
+          </div>
+          <div class="feature">
+            <div class="feature-title">Text Shadow</div>
+            <div class="feature-value">طبقة واحدة</div>
+          </div>
+          <div class="feature">
+            <div class="feature-title">الخط</div>
+            <div class="feature-value">Tajawal/Cairo</div>
+          </div>
+          <div class="feature">
+            <div class="feature-title">Smoothing</div>
+            <div class="feature-value">عادي</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="arrow">⬇️</div>
+
+      <!-- الخط الجديد -->
+      <div class="card highlight">
+        <div class="label">✅ الخط الجديد - احترافي كشعار Logo!</div>
+        <div class="new-style">مزاد</div>
+        <div class="features">
+          <div class="feature highlight">
+            <div class="feature-title">Letter Spacing</div>
+            <div class="feature-value">0.15em (واسع 3×!)</div>
+          </div>
+          <div class="feature highlight">
+            <div class="feature-title">Text Shadow</div>
+            <div class="feature-value">3 طبقات احترافية</div>
+          </div>
+          <div class="feature highlight">
+            <div class="feature-title">الخط</div>
+            <div class="feature-value">Almarai (عصري)</div>
+          </div>
+          <div class="feature highlight">
+            <div class="feature-title">Smoothing</div>
+            <div class="feature-value">Antialiased</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: 60px; padding: 30px; background: rgba(217, 119, 6, 0.1); border-radius: 16px; border: 2px solid #fbbf24;">
+      <h2 style="font-size: 20px; font-weight: 700; color: #92400e; margin-bottom: 20px;">
+        🎯 الفرق الرئيسي:
+      </h2>
+      <ul style="text-align: right; color: #78350f; font-size: 16px; line-height: 2;">
+        <li>✅ مسافات أوسع بين الحروف (0.15em بدلاً من 0.05em)</li>
+        <li>✅ 3 طبقات من الظلال للعمق الثلاثي</li>
+        <li>✅ خط Almarai العصري والاحترافي</li>
+        <li>✅ تنعيم Antialiased للحواف الناعمة</li>
+        <li>✅ توهج ذهبي أقوى وأوضح</li>
+      </ul>
+    </div>
+
+    <div style="margin-top: 40px; padding: 20px; background: rgba(251, 191, 36, 0.2); border-radius: 12px;">
+      <p style="font-size: 18px; font-weight: 700; color: #92400e;">
+        📦 الإصدار: v20251030_1761825229292
+      </p>
+      <p style="font-size: 14px; color: #78350f; margin-top: 10px;">
+        الخط الجديد يبدو كشعار Logo احترافي مع مسافات واسعة وظلال متعددة!
+      </p>
+    </div>
+  </div>
+</body>
+</html>
