@@ -159,17 +159,17 @@ export function SmartHeader({
         }}
       >
         {/* Top Bar */}
-        <div className="max-w-7xl mx-auto px-4 py-3">
-          <div className="flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 py-3 sm:py-4">
+          <div className="flex items-center justify-between gap-2">
             {/* Logo & Platform Name */}
             <button
               onClick={onLogoClick}
-              className="flex items-center gap-3 hover:scale-105 transition-transform duration-300"
+              className="flex items-center gap-2 sm:gap-3 hover:scale-105 transition-transform duration-300 flex-shrink-0"
             >
-              <div className="text-3xl">🌴</div>
+              <div className="text-2xl sm:text-3xl">🌴</div>
               <div className="flex flex-col items-start">
                 <h1
-                  className="text-xl md:text-2xl font-black leading-tight"
+                  className="text-base sm:text-xl md:text-2xl font-black leading-tight"
                   style={{
                     background: brandGradients.gold,
                     WebkitBackgroundClip: 'text',
@@ -181,11 +181,11 @@ export function SmartHeader({
                 >
                   منصة التملك
                 </h1>
-                <p className="text-xs text-gray-600 font-bold">النخيل والزيتون</p>
+                <p className="text-[10px] sm:text-xs text-gray-600 font-bold">النخيل والزيتون</p>
               </div>
             </button>
 
-            {/* Center - Dynamic Title */}
+            {/* Center - Dynamic Title - Hidden on mobile */}
             <div className="hidden md:block">
               <h2
                 className="text-lg font-bold px-6 py-2 rounded-full"
@@ -200,28 +200,28 @@ export function SmartHeader({
             </div>
 
             {/* Right - Action Icons */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-1.5 sm:gap-2 md:gap-3 flex-shrink-0">
               {console.log('[SmartHeader RENDER] hasAdminSession:', hasAdminSession, 'onBackToAdmin:', !!onBackToAdmin)}
               {/* Back to Admin Button - Shows only when admin session exists */}
               {hasAdminSession && onBackToAdmin && (
                 <button
                   onClick={onBackToAdmin}
-                  className="flex items-center gap-2 px-3 py-2 rounded-xl hover:scale-105 transition-all duration-300 group relative z-[60]"
+                  className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg sm:rounded-xl hover:scale-105 transition-all duration-300 group relative z-[60]"
                   style={{
                     background: 'linear-gradient(135deg, #fff 0%, #fffef8 100%)',
-                    boxShadow: '0 4px 20px rgba(212, 175, 55, 0.5), 0 0 0 3px rgba(212, 175, 55, 0.2)',
-                    border: `3px solid ${brandColors.primary.gold}`
+                    boxShadow: '0 2px 10px rgba(212, 175, 55, 0.4), 0 0 0 2px rgba(212, 175, 55, 0.15)',
+                    border: `2px solid ${brandColors.primary.gold}`
                   }}
                   title="العودة للوحة الإدارة"
                 >
                   <div
-                    className="w-8 h-8 rounded-lg flex items-center justify-center transition-transform duration-300 group-hover:rotate-6"
+                    className="w-6 h-6 sm:w-8 sm:h-8 rounded-md sm:rounded-lg flex items-center justify-center transition-transform duration-300 group-hover:rotate-6"
                     style={{
                       background: brandGradients.gold,
                       boxShadow: '0 2px 8px rgba(212, 175, 55, 0.4)'
                     }}
                   >
-                    <Shield className="h-4 w-4 text-white" strokeWidth={2.5} />
+                    <Shield className="h-3 w-3 sm:h-4 sm:w-4 text-white" strokeWidth={2.5} />
                   </div>
                   <div className="hidden sm:flex flex-col items-start">
                     <div className="flex items-center gap-1">
@@ -244,19 +244,19 @@ export function SmartHeader({
               {/* Notifications */}
               <button
                 onClick={onNotificationClick}
-                className="relative p-2.5 rounded-xl hover:scale-110 transition-all duration-300"
+                className="relative p-2 sm:p-2.5 rounded-lg sm:rounded-xl hover:scale-110 transition-all duration-300"
                 style={{
                   background: 'rgba(255, 255, 255, 0.7)',
                   boxShadow: '0 2px 10px rgba(0, 0, 0, 0.08)'
                 }}
               >
                 <Bell
-                  className="h-5 w-5"
+                  className="h-4 w-4 sm:h-5 sm:w-5"
                   style={{ color: brandColors.primary.gold }}
                 />
                 {notificationCount > 0 && (
                   <div
-                    className="absolute -top-1 -right-1 h-5 w-5 rounded-full flex items-center justify-center text-xs font-bold text-white animate-pulse"
+                    className="absolute -top-0.5 -right-0.5 sm:-top-1 sm:-right-1 h-4 w-4 sm:h-5 sm:w-5 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-bold text-white animate-pulse"
                     style={{
                       background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
                       boxShadow: '0 0 10px rgba(239, 68, 68, 0.6)'
@@ -270,13 +270,13 @@ export function SmartHeader({
               {/* WhatsApp Smart Button */}
               <button
                 onClick={onWhatsAppClick}
-                className="p-2.5 rounded-xl hover:scale-110 transition-all duration-300 whatsapp-glow"
+                className="p-2 sm:p-2.5 rounded-lg sm:rounded-xl hover:scale-110 transition-all duration-300 whatsapp-glow"
                 style={{
                   background: 'linear-gradient(135deg, #25D366 0%, #128C7E 100%)',
                   boxShadow: '0 4px 15px rgba(37, 211, 102, 0.4)'
                 }}
               >
-                <MessageCircle className="h-5 w-5 text-white" />
+                <MessageCircle className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
               </button>
             </div>
           </div>
@@ -290,12 +290,12 @@ export function SmartHeader({
             borderColor: 'rgba(212, 175, 55, 0.2)'
           }}
         >
-          <div className="max-w-7xl mx-auto px-4 py-2.5">
-            <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide">
+          <div className="max-w-7xl mx-auto px-3 sm:px-4 py-2 sm:py-2.5">
+            <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto scrollbar-hide">
               {/* Search */}
               <button
                 onClick={() => setShowFilters(!showFilters)}
-                className="flex-shrink-0 flex items-center gap-2 px-4 py-2 rounded-full font-bold transition-all duration-300 hover:scale-105"
+                className="flex-shrink-0 flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-bold transition-all duration-300 hover:scale-105"
                 style={{
                   background: showFilters
                     ? brandGradients.gold
@@ -305,16 +305,16 @@ export function SmartHeader({
                   border: `2px solid ${brandColors.primary.gold}40`
                 }}
               >
-                <Search className="h-4 w-4" />
-                <span>بحث</span>
-                <ChevronDown className={`h-4 w-4 transition-transform ${showFilters ? 'rotate-180' : ''}`} />
+                <Search className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                <span className="hidden sm:inline">بحث</span>
+                <ChevronDown className={`h-3.5 w-3.5 sm:h-4 sm:w-4 transition-transform ${showFilters ? 'rotate-180' : ''}`} />
               </button>
 
               {/* Region Filter */}
               <select
                 value={selectedRegion}
                 onChange={(e) => handleFilterChange('region', e.target.value)}
-                className="flex-shrink-0 px-4 py-2 rounded-full font-bold cursor-pointer transition-all duration-300 hover:scale-105"
+                className="flex-shrink-0 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-bold cursor-pointer transition-all duration-300 hover:scale-105"
                 style={{
                   background: 'rgba(255, 255, 255, 0.8)',
                   color: brandColors.text.primary,
@@ -334,7 +334,7 @@ export function SmartHeader({
               <select
                 value={selectedFarmType}
                 onChange={(e) => handleFilterChange('farmType', e.target.value)}
-                className="flex-shrink-0 px-4 py-2 rounded-full font-bold cursor-pointer transition-all duration-300 hover:scale-105"
+                className="flex-shrink-0 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-bold cursor-pointer transition-all duration-300 hover:scale-105"
                 style={{
                   background: 'rgba(255, 255, 255, 0.8)',
                   color: brandColors.text.primary,
@@ -354,7 +354,7 @@ export function SmartHeader({
               <select
                 value={sortBy}
                 onChange={(e) => handleFilterChange('sortBy', e.target.value)}
-                className="flex-shrink-0 px-4 py-2 rounded-full font-bold cursor-pointer transition-all duration-300 hover:scale-105"
+                className="flex-shrink-0 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-bold cursor-pointer transition-all duration-300 hover:scale-105"
                 style={{
                   background: 'rgba(255, 255, 255, 0.8)',
                   color: brandColors.text.primary,
@@ -370,9 +370,9 @@ export function SmartHeader({
                 ))}
               </select>
 
-              {/* Filter Button */}
+              {/* Filter Button - Hide on mobile */}
               <button
-                className="flex-shrink-0 flex items-center gap-2 px-4 py-2 rounded-full font-bold transition-all duration-300 hover:scale-105"
+                className="hidden md:flex flex-shrink-0 items-center gap-2 px-4 py-2 rounded-full font-bold transition-all duration-300 hover:scale-105"
                 style={{
                   background: 'rgba(255, 255, 255, 0.8)',
                   color: brandColors.text.primary,
@@ -389,8 +389,8 @@ export function SmartHeader({
 
       </header>
 
-      {/* Spacer to prevent content jump */}
-      <div style={{ height: '96px' }} />
+      {/* Spacer to prevent content jump - Responsive */}
+      <div className="h-[85px] sm:h-[90px] md:h-[96px]" />
 
       <style>{`
         .scrollbar-hide::-webkit-scrollbar {
