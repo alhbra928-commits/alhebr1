@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>البوابة التقنية الزراعية 🌱⚡</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0B1120 0%, #1a1f35 50%, #0B1120 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated Grid */
+        #grid-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.4;
+        }
+
+        /* Gradient Overlays */
+        .gradient-overlay {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+        }
+
+        .top-gradient {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 33%;
+            background: linear-gradient(to bottom, rgba(16, 185, 129, 0.1), transparent);
+        }
+
+        .bottom-gradient {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 33%;
+            background: linear-gradient(to top, rgba(59, 130, 246, 0.1), transparent);
+        }
+
+        /* Scan Line */
+        .scan-line {
+            position: fixed;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(to right, transparent, #10B981, transparent);
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.8);
+            animation: scan 3s ease-in-out infinite;
+        }
+
+        @keyframes scan {
+            0%, 100% { top: 0%; opacity: 0; }
+            50% { top: 100%; opacity: 1; }
+        }
+
+        /* Main Container */
+        .container {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        /* Tech Logo */
+        .tech-logo {
+            position: relative;
+            width: 8rem;
+            height: 8rem;
+            margin-bottom: 3rem;
+        }
+
+        .outer-ring {
+            position: absolute;
+            inset: -3rem;
+            border: 2px solid rgba(16, 185, 129, 0.3);
+            border-radius: 50%;
+            animation: spin 8s linear infinite;
+        }
+
+        .middle-ring {
+            position: absolute;
+            inset: -1.5rem;
+            border: 2px solid rgba(59, 130, 246, 0.4);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.4; }
+            50% { transform: scale(1.05); opacity: 0.6; }
+        }
+
+        .hexagon {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(59, 130, 246, 0.2));
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(16, 185, 129, 0.5);
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            display: flex;
+            align-items: center;
+            justify-center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .hexagon::before {
+            content: '';
+            position: absolute;
+            inset: -20px;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(59, 130, 246, 0.2));
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            filter: blur(30px);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .leaf-icon {
+            position: relative;
+            font-size: 3.5rem;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .corner-accent {
+            position: absolute;
+            width: 1.5rem;
+            height: 1.5rem;
+            border-color: #10B981;
+        }
+
+        .top-right {
+            top: -0.5rem;
+            right: -0.5rem;
+            border-top: 2px solid;
+            border-right: 2px solid;
+        }
+
+        .bottom-left {
+            bottom: -0.5rem;
+            left: -0.5rem;
+            border-bottom: 2px solid;
+            border-left: 2px solid;
+            border-color: #3B82F6;
+        }
+
+        /* Title */
+        .title {
+            font-size: clamp(3rem, 10vw, 6rem);
+            font-weight: 900;
+            line-height: 1;
+            margin-bottom: 2rem;
+            background: linear-gradient(to right, #10B981, #34D399, #10B981);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradient-x 3s linear infinite;
+        }
+
+        @keyframes gradient-x {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        /* Tech Badge */
+        .tech-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            background: linear-gradient(to right, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.1));
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 9999px;
+            margin-bottom: 2rem;
+        }
+
+        .badge-text {
+            font-size: clamp(1.25rem, 3vw, 2rem);
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .zap-icon, .trend-icon {
+            font-size: 1.5rem;
+        }
+
+        .zap-icon {
+            color: #10B981;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .trend-icon {
+            color: #3B82F6;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        /* Description */
+        .description {
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            color: rgba(16, 185, 129, 0.8);
+            font-weight: 500;
+            margin-bottom: 3rem;
+        }
+
+        /* Phase Indicators */
+        .phase-dots {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+        }
+
+        .phase-dot {
+            width: 0.5rem;
+            height: 0.5rem;
+            border-radius: 50%;
+            background: rgba(16, 185, 129, 0.3);
+            transition: all 0.3s;
+        }
+
+        .phase-dot.active {
+            background: #10B981;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        /* Progress Section */
+        .progress-section {
+            width: 100%;
+            max-width: 28rem;
+            margin-bottom: 3rem;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            font-size: 0.875rem;
+        }
+
+        .progress-label {
+            color: rgba(16, 185, 129, 0.7);
+            font-weight: 500;
+        }
+
+        .progress-value {
+            color: #10B981;
+            font-weight: 700;
+        }
+
+        .progress-track {
+            position: relative;
+            height: 0.5rem;
+            background: #0B1120;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 9999px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            position: absolute;
+            inset-y: 0;
+            left: 0;
+            background: linear-gradient(to right, #10B981, #34D399);
+            border-radius: 9999px;
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
+            transition: width 0.3s ease-out;
+        }
+
+        .progress-shimmer {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* Data Bars */
+        .data-bars {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .data-bar {
+            width: 0.25rem;
+            background: #10B981;
+            border-radius: 9999px;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        /* Tech Cards */
+        .tech-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            max-width: 42rem;
+            margin-top: 3rem;
+        }
+
+        .tech-card {
+            position: relative;
+            padding: 1.5rem;
+            background: rgba(11, 17, 32, 0.5);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 1rem;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .tech-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(16, 185, 129, 0.6);
+            box-shadow: 0 10px 40px rgba(16, 185, 129, 0.2);
+        }
+
+        .tech-card::before {
+            content: '';
+            position: absolute;
+            inset: -10px;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(59, 130, 246, 0.2));
+            border-radius: 1rem;
+            filter: blur(20px);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .tech-card:hover::before {
+            opacity: 1;
+        }
+
+        .card-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-label {
+            font-size: 0.75rem;
+            color: rgba(16, 185, 129, 0.7);
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .card-value {
+            font-size: 0.875rem;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 700;
+        }
+
+        /* Info Card */
+        .info-card {
+            max-width: 50rem;
+            margin-top: 4rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.05), rgba(59, 130, 246, 0.05));
+            backdrop-filter: blur(30px);
+            border: 2px solid rgba(16, 185, 129, 0.2);
+            border-radius: 1.5rem;
+        }
+
+        .info-title {
+            font-size: 2rem;
+            font-weight: 900;
+            color: #10B981;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: start;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(16, 185, 129, 0.05);
+            border-radius: 0.75rem;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .check-icon {
+            color: #10B981;
+            font-size: 1.5rem;
+            font-weight: 900;
+            flex-shrink: 0;
+        }
+
+        .feature-text {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.875rem;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Grid Canvas -->
+    <canvas id="grid-canvas"></canvas>
+
+    <!-- Gradient Overlays -->
+    <div class="gradient-overlay">
+        <div class="top-gradient"></div>
+        <div class="bottom-gradient"></div>
+    </div>
+
+    <!-- Scan Line -->
+    <div class="scan-line"></div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Tech Logo -->
+        <div class="tech-logo">
+            <div class="outer-ring"></div>
+            <div class="middle-ring"></div>
+            <div class="hexagon">
+                <div class="leaf-icon">🌱</div>
+            </div>
+            <div class="corner-accent top-right"></div>
+            <div class="corner-accent bottom-left"></div>
+        </div>
+
+        <!-- Title -->
+        <h1 class="title">الزراعة الذكية</h1>
+
+        <!-- Tech Badge -->
+        <div class="tech-badge">
+            <span class="zap-icon">⚡</span>
+            <span class="badge-text">مستقبل الاستثمار الزراعي</span>
+            <span class="trend-icon">📈</span>
+        </div>
+
+        <!-- Description -->
+        <p class="description">تقنية متقدمة • عوائد مستدامة • شفافية كاملة</p>
+
+        <!-- Phase Dots -->
+        <div class="phase-dots">
+            <div class="phase-dot" id="dot1"></div>
+            <div class="phase-dot active" id="dot2"></div>
+            <div class="phase-dot" id="dot3"></div>
+        </div>
+
+        <!-- Progress Section -->
+        <div class="progress-section">
+            <div class="progress-info">
+                <span class="progress-label" id="statusText">فحص البيانات...</span>
+                <span class="progress-value" id="progressPercent">0%</span>
+            </div>
+            <div class="progress-track">
+                <div class="progress-fill" id="progressFill">
+                    <div class="progress-shimmer"></div>
+                </div>
+            </div>
+            <div class="data-bars">
+                <div class="data-bar" style="height: 30px; animation-delay: 0s;"></div>
+                <div class="data-bar" style="height: 45px; animation-delay: 0.1s;"></div>
+                <div class="data-bar" style="height: 25px; animation-delay: 0.2s;"></div>
+                <div class="data-bar" style="height: 50px; animation-delay: 0.3s;"></div>
+                <div class="data-bar" style="height: 35px; animation-delay: 0.4s;"></div>
+            </div>
+        </div>
+
+        <!-- Tech Cards -->
+        <div class="tech-cards">
+            <div class="tech-card">
+                <div class="card-icon">🌱</div>
+                <div class="card-label">AI-Powered</div>
+                <div class="card-value">ذكاء اصطناعي</div>
+            </div>
+            <div class="tech-card">
+                <div class="card-icon">📊</div>
+                <div class="card-label">Real-Time</div>
+                <div class="card-value">بيانات حية</div>
+            </div>
+            <div class="tech-card">
+                <div class="card-icon">🔒</div>
+                <div class="card-label">Blockchain</div>
+                <div class="card-value">سلسلة كتل</div>
+            </div>
+        </div>
+
+        <!-- Info Card -->
+        <div class="info-card">
+            <h2 class="info-title">🌱 البوابة التقنية الزراعية الثورية</h2>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <span class="check-icon">✓</span>
+                    <span class="feature-text"><strong>Animated Grid:</strong> شبكة متحركة بـ Canvas</span>
+                </div>
+                <div class="feature-item">
+                    <span class="check-icon">✓</span>
+                    <span class="feature-text"><strong>Scan Line:</strong> خط فحص متحرك</span>
+                </div>
+                <div class="feature-item">
+                    <span class="check-icon">✓</span>
+                    <span class="feature-text"><strong>Hexagon Logo:</strong> شكل سداسي تقني</span>
+                </div>
+                <div class="feature-item">
+                    <span class="check-icon">✓</span>
+                    <span class="feature-text"><strong>Gradient Text:</strong> نص بتدرج متحرك</span>
+                </div>
+                <div class="feature-item">
+                    <span class="check-icon">✓</span>
+                    <span class="feature-text"><strong>Tech Colors:</strong> أخضر #10B981 + أزرق #3B82F6</span>
+                </div>
+                <div class="feature-item">
+                    <span class="check-icon">✓</span>
+                    <span class="feature-text"><strong>Data Visualization:</strong> أعمدة بيانات حية</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Animated Grid
+        const canvas = document.getElementById('grid-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let time = 0;
+
+        function animateGrid() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            time += 0.01;
+
+            ctx.strokeStyle = 'rgba(16, 185, 129, 0.1)';
+            ctx.lineWidth = 1;
+
+            const gridSize = 60;
+
+            // Vertical lines
+            for (let x = 0; x < canvas.width; x += gridSize) {
+                const wave = Math.sin((x / canvas.width) * Math.PI * 2 + time) * 10;
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+                ctx.stroke();
+            }
+
+            // Horizontal lines
+            for (let y = 0; y < canvas.height; y += gridSize) {
+                const wave = Math.cos((y / canvas.height) * Math.PI * 2 + time) * 10;
+                ctx.beginPath();
+                ctx.moveTo(0, y + wave);
+                ctx.lineTo(canvas.width, y + wave);
+                ctx.stroke();
+            }
+
+            // Data streams
+            const streams = 8;
+            for (let i = 0; i < streams; i++) {
+                const x = (i / streams) * canvas.width;
+                const gradient = ctx.createLinearGradient(x, 0, x, canvas.height);
+                gradient.addColorStop(0, 'transparent');
+                gradient.addColorStop(0.5, 'rgba(16, 185, 129, 0.3)');
+                gradient.addColorStop(1, 'transparent');
+
+                ctx.fillStyle = gradient;
+                const offset = ((time * 200) % canvas.height);
+                ctx.fillRect(x - 1, offset - 100, 2, 100);
+            }
+
+            requestAnimationFrame(animateGrid);
+        }
+
+        animateGrid();
+
+        // Progress Animation
+        let progress = 0;
+        let phase = 0;
+
+        const progressFill = document.getElementById('progressFill');
+        const progressPercent = document.getElementById('progressPercent');
+        const statusText = document.getElementById('statusText');
+        const dot1 = document.getElementById('dot1');
+        const dot2 = document.getElementById('dot2');
+        const dot3 = document.getElementById('dot3');
+
+        const statuses = ['تهيئة النظام...', 'فحص البيانات...', 'جاهز للدخول'];
+
+        const interval = setInterval(() => {
+            progress += 2;
+
+            if (progress <= 100) {
+                progressFill.style.width = progress + '%';
+                progressPercent.textContent = Math.round(progress) + '%';
+
+                // Update phase
+                if (progress > 30 && phase === 0) {
+                    phase = 1;
+                    dot1.classList.remove('active');
+                    dot2.classList.add('active');
+                    statusText.textContent = statuses[1];
+                }
+                if (progress > 70 && phase === 1) {
+                    phase = 2;
+                    dot2.classList.remove('active');
+                    dot3.classList.add('active');
+                    statusText.textContent = statuses[2];
+                }
+            } else {
+                clearInterval(interval);
+            }
+        }, 80);
+
+        // Resize handler
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+</html>
