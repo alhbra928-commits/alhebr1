@@ -9,6 +9,7 @@ import { UpdateNotificationBanner } from './components/common/UpdateNotification
 import { SmartFloatingButton } from './components/common/SmartFloatingButton';
 import { MobileHeader } from './components/layout/MobileHeader';
 import { MobileSidebar } from './components/layout/MobileSidebar';
+import { ForceThemeUpdate } from './components/common/ForceThemeUpdate';
 
 const PublicPlatformRouter = lazy(() => import('./modules/public/components/PublicPlatformRouter').then(m => ({ default: m.PublicPlatformRouter })));
 const FarmOwnerRouter = lazy(() => import('./modules/farm-owner/components/FarmOwnerRouter').then(m => ({ default: m.FarmOwnerRouter })));
@@ -282,6 +283,8 @@ function App() {
 
   return (
     <div className="min-h-screen royal-green-bg" dir="rtl">
+      <ForceThemeUpdate />
+
       {showAdminLogin && (
         <SmartAdminLoginPage
           onLoginSuccess={handleAdminLogin}
