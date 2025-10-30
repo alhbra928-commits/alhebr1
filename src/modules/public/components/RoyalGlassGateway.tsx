@@ -129,15 +129,15 @@ export function RoyalGlassGateway({ onEnter }: GatewayProps) {
           <div className="absolute inset-0 bg-gradient-to-r from-white/20 via-blue-50/20 to-white/20 blur-3xl animate-pulse" />
 
           {/* Pure Crystal Glass Crown with Thin Golden Border */}
-          <div className="relative">
-            {/* Main White Crystal Crown - Fill Only */}
+          <div className="relative w-80 h-80 sm:w-96 sm:h-96 md:w-[28rem] md:h-[28rem] lg:w-[32rem] lg:h-[32rem]">
+            {/* Layer 1: White Fill */}
             <Crown
-              className="w-80 h-80 sm:w-96 sm:h-96 md:w-[28rem] md:h-[28rem] lg:w-[32rem] lg:h-[32rem] absolute inset-0 transition-all duration-500 group-hover:scale-110 group-active:scale-95"
+              className="absolute inset-0 w-full h-full transition-all duration-500 group-hover:scale-110 group-active:scale-95"
               strokeWidth={0}
               style={{
                 color: '#ffffff',
                 fill: '#ffffff',
-                opacity: 0.85,
+                opacity: 0.9,
                 filter: `
                   drop-shadow(0 0 60px rgba(255, 255, 255, 0.9))
                   drop-shadow(0 15px 100px rgba(147, 197, 253, 0.4))
@@ -146,28 +146,29 @@ export function RoyalGlassGateway({ onEnter }: GatewayProps) {
               }}
             />
 
-            {/* White Crystal Stroke */}
+            {/* Layer 2: White Stroke (thicker) */}
             <Crown
-              className="w-80 h-80 sm:w-96 sm:h-96 md:w-[28rem] md:h-[28rem] lg:w-[32rem] lg:h-[32rem] absolute inset-0 transition-all duration-500 group-hover:scale-110 group-active:scale-95"
-              strokeWidth={3}
+              className="absolute inset-0 w-full h-full transition-all duration-500 group-hover:scale-110 group-active:scale-95"
+              strokeWidth={4}
               fill="none"
               style={{
                 stroke: '#ffffff',
-                opacity: 0.95,
-                filter: 'drop-shadow(0 0 30px rgba(255, 255, 255, 0.8))',
+                opacity: 1,
+                filter: 'drop-shadow(0 0 40px rgba(255, 255, 255, 0.9))',
               }}
             />
 
-            {/* Thin Golden Outline on Top */}
+            {/* Layer 3: Thin Golden Outline (on top) */}
             <Crown
-              className="w-80 h-80 sm:w-96 sm:h-96 md:w-[28rem] md:h-[28rem] lg:w-[32rem] lg:h-[32rem] relative transition-all duration-500 group-hover:scale-110 group-active:scale-95"
-              strokeWidth={1.5}
+              className="absolute inset-0 w-full h-full transition-all duration-500 group-hover:scale-110 group-active:scale-95"
+              strokeWidth={2}
               fill="none"
               style={{
                 stroke: 'url(#goldenGradient)',
+                opacity: 0.8,
                 filter: `
-                  drop-shadow(0 0 20px rgba(251, 191, 36, 0.6))
-                  drop-shadow(0 2px 10px rgba(217, 119, 6, 0.4))
+                  drop-shadow(0 0 25px rgba(251, 191, 36, 0.7))
+                  drop-shadow(0 3px 15px rgba(217, 119, 6, 0.5))
                 `,
               }}
             />
