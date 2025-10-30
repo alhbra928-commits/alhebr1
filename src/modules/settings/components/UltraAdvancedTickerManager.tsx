@@ -154,6 +154,10 @@ export function UltraAdvancedTickerManager() {
         const { error } = await supabase
           .from('ticker_items')
           .update({
+            label: message.content_ar, // Keep label in sync
+            label_en: message.content_en || null,
+            icon: message.icon_name || 'Star',
+            color: message.icon_color || 'emerald-600',
             content_ar: message.content_ar,
             content_en: message.content_en,
             icon_name: message.icon_name,
@@ -176,6 +180,10 @@ export function UltraAdvancedTickerManager() {
           .from('ticker_items')
           .insert([{
             ticker_type: message.ticker_type,
+            label: message.content_ar, // Required NOT NULL field
+            label_en: message.content_en || null,
+            icon: message.icon_name || 'Star',
+            color: message.icon_color || 'emerald-600',
             content_ar: message.content_ar,
             content_en: message.content_en || null,
             icon_name: message.icon_name,
