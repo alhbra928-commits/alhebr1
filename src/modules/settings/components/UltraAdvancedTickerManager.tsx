@@ -110,7 +110,7 @@ export function UltraAdvancedTickerManager() {
 
       // Load messages
       const { data: messagesData } = await supabase
-        .from('ticker_messages')
+        .from('ticker_items')
         .select('*')
         .eq('ticker_type', activeTickerType)
         .order('sort_order');
@@ -152,7 +152,7 @@ export function UltraAdvancedTickerManager() {
       if (message.id) {
         // Update existing
         const { error } = await supabase
-          .from('ticker_messages')
+          .from('ticker_items')
           .update({
             content_ar: message.content_ar,
             content_en: message.content_en,
@@ -173,7 +173,7 @@ export function UltraAdvancedTickerManager() {
       } else {
         // Insert new
         const { data, error } = await supabase
-          .from('ticker_messages')
+          .from('ticker_items')
           .insert([{
             ticker_type: message.ticker_type,
             content_ar: message.content_ar,
@@ -218,7 +218,7 @@ export function UltraAdvancedTickerManager() {
     setSaving(true);
     try {
       const { error } = await supabase
-        .from('ticker_messages')
+        .from('ticker_items')
         .delete()
         .eq('id', id);
 
@@ -242,7 +242,7 @@ export function UltraAdvancedTickerManager() {
   const handleToggleMessage = async (id: string, isActive: boolean) => {
     try {
       const { error } = await supabase
-        .from('ticker_messages')
+        .from('ticker_items')
         .update({ is_active: isActive })
         .eq('id', id);
 
@@ -280,7 +280,7 @@ export function UltraAdvancedTickerManager() {
     try {
       for (const update of updates) {
         const { error } = await supabase
-          .from('ticker_messages')
+          .from('ticker_items')
           .update({ sort_order: update.sort_order })
           .eq('id', update.id);
 
