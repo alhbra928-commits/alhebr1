@@ -120,96 +120,131 @@ export function RoyalGlassGateway({ onEnter }: GatewayProps) {
       {/* Main Content */}
       <div className="relative z-10 h-full flex flex-col items-center justify-center px-4 sm:px-6">
 
-        {/* Crystal Glass Crown with Modern Text */}
+        {/* Pure Crystal Glass Crown with Artistic Logo */}
         <div
           className="relative cursor-pointer group"
           onClick={onEnter}
         >
-          {/* Outer Glow - Rainbow Glass Effect */}
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-200/30 via-purple-200/30 to-pink-200/30 blur-3xl animate-pulse" />
+          {/* Outer Glow - Pure White/Crystal */}
+          <div className="absolute inset-0 bg-gradient-to-r from-white/20 via-blue-50/20 to-white/20 blur-3xl animate-pulse" />
 
-          {/* Crystal Glass Crown */}
+          {/* Pure Crystal Glass Crown */}
           <div className="relative">
-            {/* Glass Effect Layer 1 - Blue/Purple Tint */}
+            {/* Single Pure Crystal Crown */}
             <Crown
-              className="w-80 h-80 sm:w-96 sm:h-96 md:w-[28rem] md:h-[28rem] lg:w-[32rem] lg:h-[32rem] absolute inset-0 transition-all duration-500 group-hover:scale-110 group-active:scale-95"
+              className="w-80 h-80 sm:w-96 sm:h-96 md:w-[28rem] md:h-[28rem] lg:w-[32rem] lg:h-[32rem] transition-all duration-500 group-hover:scale-110 group-active:scale-95"
               strokeWidth={2}
               style={{
-                color: 'rgba(147, 197, 253, 0.6)',
-                filter: 'blur(1px) drop-shadow(0 0 20px rgba(147, 197, 253, 0.5))',
+                color: 'rgba(255, 255, 255, 0.85)',
+                filter: `
+                  drop-shadow(0 0 30px rgba(255, 255, 255, 0.5))
+                  drop-shadow(0 8px 40px rgba(147, 197, 253, 0.3))
+                  drop-shadow(0 12px 50px rgba(255, 255, 255, 0.2))
+                `,
               }}
             />
 
-            {/* Glass Effect Layer 2 - White Crystal */}
-            <Crown
-              className="w-80 h-80 sm:w-96 sm:h-96 md:w-[28rem] md:h-[28rem] lg:w-[32rem] lg:h-[32rem] absolute inset-0 transition-all duration-500 group-hover:scale-110 group-active:scale-95"
-              strokeWidth={1.5}
-              style={{
-                color: 'rgba(255, 255, 255, 0.9)',
-                filter: 'drop-shadow(0 8px 32px rgba(255, 255, 255, 0.3)) drop-shadow(0 4px 16px rgba(217, 119, 6, 0.2))',
-              }}
-            />
-
-            {/* Glass Effect Layer 3 - Golden Accent */}
-            <Crown
-              className="w-80 h-80 sm:w-96 sm:h-96 md:w-[28rem] md:h-[28rem] lg:w-[32rem] lg:h-[32rem] relative transition-all duration-500 group-hover:scale-110 group-active:scale-95"
-              strokeWidth={1}
-              style={{
-                color: 'rgba(251, 191, 36, 0.4)',
-                filter: 'drop-shadow(0 20px 60px rgba(217, 119, 6, 0.3))',
-              }}
-            />
-
-            {/* Modern Text "مزاد" - Cairo/Tajawal Font */}
+            {/* Artistic "مزاد" Logo Design - SVG Art */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <h1
-                className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black select-none"
+              <svg
+                viewBox="0 0 200 80"
+                className="w-48 sm:w-56 md:w-64 lg:w-72"
                 style={{
-                  marginTop: '10%',
-                  background: 'linear-gradient(135deg, #d97706 0%, #fbbf24 50%, #d97706 100%)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text',
-                  textShadow: `
-                    0 0 40px rgba(251, 191, 36, 0.8),
-                    0 0 20px rgba(217, 119, 6, 0.6),
-                    0 4px 16px rgba(0, 0, 0, 0.2)
-                  `,
-                  fontFamily: "'Cairo', 'Tajawal', 'Almarai', sans-serif",
-                  fontWeight: 900,
-                  letterSpacing: '0.05em',
-                  WebkitFontSmoothing: 'antialiased',
-                  MozOsxFontSmoothing: 'grayscale',
+                  marginTop: '8%',
+                  filter: 'drop-shadow(0 4px 20px rgba(255, 255, 255, 0.4))',
                 }}
               >
-                مزاد
-              </h1>
-            </div>
+                <defs>
+                  <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style={{ stopColor: '#ffffff', stopOpacity: 0.95 }} />
+                    <stop offset="50%" style={{ stopColor: '#e0f2fe', stopOpacity: 0.9 }} />
+                    <stop offset="100%" style={{ stopColor: '#ffffff', stopOpacity: 0.95 }} />
+                  </linearGradient>
+                  <filter id="logoGlow">
+                    <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                    <feMerge>
+                      <feMergeNode in="coloredBlur"/>
+                      <feMergeNode in="SourceGraphic"/>
+                    </feMerge>
+                  </filter>
+                </defs>
 
-            {/* Crystal Sparkles - Rainbow Colors */}
-            <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
-              {[...Array(16)].map((_, i) => {
-                const colors = ['#93c5fd', '#c4b5fd', '#f9a8d4', '#fbbf24', '#86efac'];
-                const color = colors[i % colors.length];
-                return (
-                  <div
-                    key={i}
-                    className="absolute w-2 h-2 rounded-full"
-                    style={{
-                      background: color,
-                      boxShadow: `0 0 10px ${color}`,
-                      top: `${10 + Math.random() * 80}%`,
-                      left: `${10 + Math.random() * 80}%`,
-                      animation: `sparkle ${1.5 + Math.random() * 2}s ease-in-out infinite`,
-                      animationDelay: `${Math.random() * 2}s`,
-                    }}
+                {/* Artistic "مزاد" Design - Hand-drawn Style */}
+                <g filter="url(#logoGlow)">
+                  {/* م - First Letter */}
+                  <path
+                    d="M 25 45 Q 25 30 35 25 T 50 30 Q 50 40 45 45 Q 40 50 35 45 Q 30 40 35 35"
+                    stroke="url(#logoGradient)"
+                    strokeWidth="3"
+                    fill="none"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
-                );
-              })}
+                  <circle cx="40" cy="38" r="2" fill="url(#logoGradient)" opacity="0.8" />
+
+                  {/* ز - Second Letter */}
+                  <path
+                    d="M 65 40 Q 70 35 75 35 Q 80 35 80 40 L 80 45"
+                    stroke="url(#logoGradient)"
+                    strokeWidth="3"
+                    fill="none"
+                    strokeLinecap="round"
+                  />
+                  <circle cx="78" cy="50" r="1.5" fill="url(#logoGradient)" />
+
+                  {/* ا - Third Letter */}
+                  <path
+                    d="M 95 50 L 95 25"
+                    stroke="url(#logoGradient)"
+                    strokeWidth="3"
+                    fill="none"
+                    strokeLinecap="round"
+                  />
+
+                  {/* د - Fourth Letter */}
+                  <path
+                    d="M 110 45 Q 115 40 120 40 Q 130 40 135 45 Q 140 50 135 53 L 110 53"
+                    stroke="url(#logoGradient)"
+                    strokeWidth="3"
+                    fill="none"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+
+                  {/* Decorative Flow Line */}
+                  <path
+                    d="M 20 55 Q 80 58 160 55"
+                    stroke="url(#logoGradient)"
+                    strokeWidth="1"
+                    fill="none"
+                    opacity="0.4"
+                    strokeLinecap="round"
+                  />
+                </g>
+              </svg>
             </div>
 
-            {/* Glass Shine Effect */}
-            <div className="absolute top-1/4 left-1/4 w-1/3 h-1/3 bg-gradient-to-br from-white/40 to-transparent rounded-full blur-2xl pointer-events-none" />
+            {/* Crystal Sparkles - Pure White */}
+            <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
+              {[...Array(20)].map((_, i) => (
+                <div
+                  key={i}
+                  className="absolute w-1.5 h-1.5 rounded-full bg-white"
+                  style={{
+                    boxShadow: '0 0 15px rgba(255, 255, 255, 0.8), 0 0 8px rgba(147, 197, 253, 0.4)',
+                    top: `${5 + Math.random() * 90}%`,
+                    left: `${5 + Math.random() * 90}%`,
+                    animation: `sparkle ${1 + Math.random() * 2}s ease-in-out infinite`,
+                    animationDelay: `${Math.random() * 2}s`,
+                    opacity: 0.7 + Math.random() * 0.3,
+                  }}
+                />
+              ))}
+            </div>
+
+            {/* Multiple Glass Shine Effects */}
+            <div className="absolute top-1/4 left-1/4 w-1/3 h-1/3 bg-gradient-to-br from-white/50 to-transparent rounded-full blur-3xl pointer-events-none animate-pulse" />
+            <div className="absolute top-1/3 right-1/4 w-1/4 h-1/4 bg-gradient-to-bl from-blue-100/30 to-transparent rounded-full blur-2xl pointer-events-none" />
           </div>
 
           {/* Progress Bar - Below Crown */}
