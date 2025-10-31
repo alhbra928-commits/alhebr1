@@ -552,10 +552,16 @@ export const SmartFloatingButton: React.FC = () => {
             }}
           >
             {messages.length === 0 ? (
-              <div className="text-center py-8">
-                <MessageCircle className="w-12 h-12 text-gray-600 mx-auto mb-3" />
-                <p className="text-gray-400 text-sm">ابدأ محادثة جديدة</p>
-                <p className="text-gray-500 text-xs mt-2">نحن هنا للإجابة على استفساراتك</p>
+              <div className="text-center py-12">
+                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-emerald-500/20 to-teal-500/20 flex items-center justify-center mx-auto mb-4 backdrop-blur-sm border-2 border-emerald-500/30">
+                  <MessageCircle className="w-10 h-10 text-emerald-400" />
+                </div>
+                <p className="text-white text-base font-bold mb-2">ابدأ محادثة جديدة</p>
+                <p className="text-gray-400 text-sm">نحن هنا للإجابة على استفساراتك 🌿</p>
+                <div className="mt-4 flex items-center justify-center gap-2 text-xs text-emerald-400">
+                  <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
+                  <span>متصل الآن</span>
+                </div>
               </div>
             ) : (
               messages.slice(-15).map((message) => {
@@ -565,24 +571,26 @@ export const SmartFloatingButton: React.FC = () => {
                   className={`flex ${message.direction === 'inbound' ? 'justify-end' : 'justify-start'}`}
                 >
                   <div
-                    className={`max-w-[85%] sm:max-w-[80%] rounded-2xl px-3 py-2 ${
+                    className={`max-w-[85%] sm:max-w-[80%] rounded-2xl px-4 py-3 shadow-lg ${
                       message.direction === 'inbound'
-                        ? 'bg-[#8B7355] text-white'
+                        ? 'bg-gradient-to-br from-emerald-600 to-teal-700 text-white font-medium'
                         : message.isAutoResponse
-                        ? 'bg-blue-500/20 text-blue-200 border border-blue-500/30'
+                        ? 'bg-gradient-to-br from-blue-600 to-indigo-700 text-white font-medium border-2 border-blue-400/30'
                         : message.isAdminResponse
-                        ? 'bg-green-500/20 text-green-200 border border-green-500/30'
-                        : 'bg-gray-700 text-white'
+                        ? 'bg-gradient-to-br from-amber-600 to-orange-700 text-white font-medium border-2 border-amber-400/30'
+                        : 'bg-gradient-to-br from-slate-700 to-slate-800 text-white font-medium'
                     }`}
                   >
                     {message.direction === 'outbound' && (
-                      <p className="text-xs opacity-70 mb-1">
-                        {getMessageSenderLabel(message)}
+                      <p className="text-xs font-bold opacity-90 mb-1.5 flex items-center gap-1.5">
+                        {message.isAutoResponse && <span>🤖</span>}
+                        {message.isAdminResponse && <span>👤</span>}
+                        <span className="drop-shadow-sm">{getMessageSenderLabel(message)}</span>
                       </p>
                     )}
-                    <p className="text-sm leading-relaxed whitespace-pre-wrap break-words">{message.content}</p>
+                    <p className="text-sm sm:text-[15px] leading-relaxed whitespace-pre-wrap break-words drop-shadow-sm">{message.content}</p>
 
-                    <p className="text-xs opacity-70 mt-1">
+                    <p className="text-xs opacity-80 mt-2 font-medium">
                       {new Date(message.timestamp).toLocaleTimeString('ar-SA', {
                         hour: '2-digit',
                         minute: '2-digit'
@@ -598,14 +606,17 @@ export const SmartFloatingButton: React.FC = () => {
 
           {/* Smart Suggestions - More compact */}
           {suggestions.length > 0 && (
-            <div className="px-3 py-2 bg-gray-800 border-t border-gray-700 flex-shrink-0">
-              <p className="text-xs text-gray-400 mb-2">اقتراحات ذكية:</p>
-              <div className="flex flex-wrap gap-1.5">
+            <div className="px-3 py-3 bg-gradient-to-b from-gray-800 to-gray-900 border-t border-emerald-500/20 flex-shrink-0">
+              <p className="text-xs font-bold text-emerald-400 mb-2.5 flex items-center gap-1.5">
+                <span>✨</span>
+                <span>اقتراحات ذكية</span>
+              </p>
+              <div className="flex flex-wrap gap-2">
                 {suggestions.map((suggestion) => (
                   <button
                     key={suggestion.id}
                     onClick={() => handleSuggestionClick(suggestion)}
-                    className="px-2.5 py-1.5 bg-blue-500/20 text-blue-200 text-xs rounded-lg hover:bg-blue-500/30 transition-colors border border-blue-500/30 active:scale-95"
+                    className="px-3.5 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-medium rounded-xl transition-all border-2 border-emerald-400/20 hover:border-emerald-400/40 active:scale-95 shadow-lg hover:shadow-emerald-500/30"
                   >
                     {suggestion.text}
                   </button>
