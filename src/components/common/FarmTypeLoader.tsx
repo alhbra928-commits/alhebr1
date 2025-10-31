@@ -134,7 +134,7 @@ export function FarmTypeLoader({ type, message }: FarmTypeLoaderProps) {
           </h3>
 
           <p className="text-base sm:text-lg text-gray-700 font-medium">
-            {isPalm ? '🌴 استثمار في أشجار النخيل' : '🫒 استثمار في أشجار الزيتون'}
+            {isPalm ? '🌴 استثمار في أشجار النخيل' : '🌳 استثمار في أشجار الزيتون'}
           </p>
 
           {/* Loading Dots */}

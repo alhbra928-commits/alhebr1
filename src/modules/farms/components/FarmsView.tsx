@@ -286,7 +286,7 @@ export function FarmsView({ onBack }: FarmsViewProps) {
       case 'نخيل':
         return '🌴';
       case 'زيتون':
-        return '🫒';
+        return '🌳';
       case 'مختلط':
         return '🌾';
       default:
@@ -412,7 +412,7 @@ export function FarmsView({ onBack }: FarmsViewProps) {
             >
               <option value="all">كل الأنواع</option>
               <option value="نخيل">نخيل 🌴</option>
-              <option value="زيتون">زيتون 🫒</option>
+              <option value="زيتون">زيتون 🌳</option>
               <option value="مختلط">مختلط 🌾</option>
             </select>
 

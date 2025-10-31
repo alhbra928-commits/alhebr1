@@ -85,7 +85,7 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
     if (!type) return '🌳';
     const normalizedType = type.toLowerCase();
     if (normalizedType === 'نخيل' || normalizedType === 'palm') return '🌴';
-    if (normalizedType === 'زيتون' || normalizedType === 'olive') return '🫒';
+    if (normalizedType === 'زيتون' || normalizedType === 'olive') return '🌳';
     return '🌳';
   };
 

@@ -60,7 +60,7 @@ export const ConceptIntroductionPage: React.FC<ConceptIntroductionPageProps> = (
           <div className="concept-card bg-gradient-to-br from-amber-800/40 to-yellow-900/40 backdrop-blur-md rounded-2xl md:rounded-3xl p-5 sm:p-6 md:p-8 border-2 border-amber-400/30 shadow-2xl hover:scale-105 transition-all duration-500">
             <div className="flex items-center gap-3 md:gap-4 mb-4 md:mb-6">
               <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full bg-amber-500/20 flex items-center justify-center flex-shrink-0">
-                <span className="text-3xl sm:text-3xl md:text-4xl">🫒</span>
+                <span className="text-3xl sm:text-3xl md:text-4xl">🌳</span>
               </div>
               <h2
                 className="text-xl sm:text-xl md:text-2xl font-bold text-white"

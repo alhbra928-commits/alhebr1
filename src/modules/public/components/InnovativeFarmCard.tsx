@@ -18,7 +18,7 @@ export const InnovativeFarmCard: React.FC<InnovativeFarmCardProps> = ({ farm, on
 
   const getTreeIcon = (type: 'palm' | 'olive' | 'mixed') => {
     if (type === 'palm') return '🌴';
-    if (type === 'olive') return '🫒';
+    if (type === 'olive') return '🌳';
     return '🌳';
   };
 

@@ -433,7 +433,7 @@ export function OwnerFormModal({ isOpen, onClose, onSubmit, initialData, mode }:
                   className="w-full px-4 py-3 bg-white border-2 border-amber-200 rounded-xl focus:outline-none focus:border-amber-400"
                 >
                   <option value="نخيل">🌴 نخيل</option>
-                  <option value="زيتون">🫒 زيتون</option>
+                  <option value="زيتون">🌳 زيتون</option>
                   <option value="مختلط">🌾 مختلط</option>
                 </select>
               </div>
@@ -499,7 +499,7 @@ export function OwnerFormModal({ isOpen, onClose, onSubmit, initialData, mode }:
                                   className="w-full px-3 py-2 bg-gray-50 border-2 border-green-200 rounded-lg focus:outline-none focus:border-green-400 text-sm"
                                 >
                                   <option value="نخيل">🌴 نخيل</option>
-                                  <option value="زيتون">🫒 زيتون</option>
+                                  <option value="زيتون">🌳 زيتون</option>
                                 </select>
                               </div>
                             )}

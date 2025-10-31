@@ -34,7 +34,7 @@ export function LuxuryShowcase({ onViewDetails }: LuxuryShowcaseProps) {
       <div
         className="absolute top-20 left-20 w-64 h-64 opacity-5 pointer-events-none"
         style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='80' font-size='80' opacity='0.3'%3E🫒%3C/text%3E%3C/svg%3E")`,
+          backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='80' font-size='80' opacity='0.3'%3E🌳%3C/text%3E%3C/svg%3E")`,
           backgroundSize: 'contain',
           backgroundRepeat: 'no-repeat',
         }}

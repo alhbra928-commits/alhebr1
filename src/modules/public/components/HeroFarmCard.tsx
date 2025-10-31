@@ -21,7 +21,7 @@ export function HeroFarmCard({
 }: HeroFarmCardProps) {
   const [isHovered, setIsHovered] = useState(false);
 
-  const typeIcon = farmType.includes('نخيل') ? '🌴' : farmType.includes('زيتون') ? '🫒' : '🌿';
+  const typeIcon = farmType.includes('نخيل') ? '🌴' : farmType.includes('زيتون') ? '🌳' : '🌿';
 
   return (
     <div className="relative perspective-1000">

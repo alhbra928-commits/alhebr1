@@ -94,7 +94,7 @@ export function ConceptIntroModal({ isOpen, onClose }: ConceptIntroModalProps) {
               >
                 فكرة تملك شجرة
               </h2>
-              <span className="text-2xl sm:text-4xl">🫒</span>
+              <span className="text-2xl sm:text-4xl">🌳</span>
             </div>
             <p className="text-white text-sm sm:text-lg font-medium">
               استثمار راقٍ في الزراعة المستدامة
@@ -125,7 +125,7 @@ export function ConceptIntroModal({ isOpen, onClose }: ConceptIntroModalProps) {
               }}>
                 <div className="flex items-center gap-2 text-3xl sm:text-4xl">
                   <span>🌴</span>
-                  <span>🫒</span>
+                  <span>🌳</span>
                 </div>
               </div>
               <h3 className="text-xl sm:text-2xl md:text-3xl font-black mb-4 sm:mb-5" style={{

@@ -57,8 +57,8 @@ export function AdvancedHeroCard({ farm, onReserve }: AdvancedHeroCardProps) {
     return () => clearInterval(timer);
   }, [farm.totalTrees, farm.availableTrees, farm.pricePerTree]);
 
-  const typeIcon = farm.type === 'نخيل' ? '🌴' : farm.type === 'زيتون' ? '🫒' : '🌿';
-  const typeEmoji = farm.type === 'نخيل' ? '🌴' : '🫒';
+  const typeIcon = farm.type === 'نخيل' ? '🌴' : farm.type === 'زيتون' ? '🌳' : '🌿';
+  const typeEmoji = farm.type === 'نخيل' ? '🌴' : '🌳';
 
   const getButtonText = () => {
     if (farm.status === 'full') return 'مكتمل';

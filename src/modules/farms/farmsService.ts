@@ -364,7 +364,7 @@ export class FarmsService {
   static getFarmTypeEmoji(type: string): string {
     const emojiMap: { [key: string]: string } = {
       'نخيل': '🌴',
-      'زيتون': '🫒',
+      'زيتون': '🌳',
       'مختلط': '🌾'
     };
     return emojiMap[type] || '🌱';

@@ -36,7 +36,7 @@ export function ModernMobileFarmCard({ farm, onOwn, onClick }: ModernMobileFarmC
   };
 
   const getTreeEmoji = () => {
-    if (isOlive) return '🫒';
+    if (isOlive) return '🌳';
     if (isPalm) return '🌴';
     return '🌳';
   };

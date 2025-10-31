@@ -598,7 +598,7 @@ export function FarmFormModal({ isOpen, onClose, onSubmit, owners, initialData, 
                     className="w-full px-4 py-3 bg-white border-2 border-[#C89B3C]/20 rounded-xl focus:outline-none focus:border-[#C89B3C]"
                   >
                     <option value="نخيل">🌴 نخيل</option>
-                    <option value="زيتون">🫒 زيتون</option>
+                    <option value="زيتون">🌳 زيتون</option>
                     <option value="مختلط">🌾 مختلط</option>
                   </select>
                 </div>

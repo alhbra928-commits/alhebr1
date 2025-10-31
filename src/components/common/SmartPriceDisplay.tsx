@@ -31,7 +31,7 @@ export function SmartPriceDisplay({
       case 'نخيل':
         return '🌴';
       case 'زيتون':
-        return '🫒';
+        return '🌳';
       case 'مختلط':
         return '🌾';
       default:

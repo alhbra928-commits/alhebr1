@@ -299,7 +299,7 @@ export function RoyalMainInterface({
                             {farm.farm_name}
                           </h3>
                           <p className="text-amber-600 text-sm">
-                            {farm.tree_type === 'نخيل' ? '🌴 مزرعة نخيل' : '🫒 مزرعة زيتون'}
+                            {farm.tree_type === 'نخيل' ? '🌴 مزرعة نخيل' : '🌳 مزرعة زيتون'}
                           </p>
                         </div>
                         <div className="text-right">

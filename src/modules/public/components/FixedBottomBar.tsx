@@ -16,7 +16,7 @@ export function FixedBottomBar({ onIntroClick }: FixedBottomBarProps) {
     location_text: 'الرياض، السعودية',
     hours_label: 'ساعات العمل',
     hours_text: '8 صباحاً - 8 مساءً',
-    cta_message: '🌴 استثمر في مستقبل مستدام 🫒'
+    cta_message: '🌴 استثمر في مستقبل مستدام 🌳'
   });
 
   useEffect(() => {
@@ -35,7 +35,7 @@ export function FixedBottomBar({ onIntroClick }: FixedBottomBarProps) {
           location_text: texts.location_text?.ar || 'الرياض، السعودية',
           hours_label: texts.hours_label?.ar || 'ساعات العمل',
           hours_text: texts.hours_text?.ar || '8 صباحاً - 8 مساءً',
-          cta_message: texts.cta_message?.ar || '🌴 استثمر في مستقبل مستدام 🫒'
+          cta_message: texts.cta_message?.ar || '🌴 استثمر في مستقبل مستدام 🌳'
         };
         console.log('✅ Contact bar texts set:', newTexts);
         setContactTexts(newTexts);
@@ -57,7 +57,7 @@ export function FixedBottomBar({ onIntroClick }: FixedBottomBarProps) {
           location_text: texts.location_text?.ar || 'الرياض، السعودية',
           hours_label: texts.hours_label?.ar || 'ساعات العمل',
           hours_text: texts.hours_text?.ar || '8 صباحاً - 8 مساءً',
-          cta_message: texts.cta_message?.ar || '🌴 استثمر في مستقبل مستدام 🫒'
+          cta_message: texts.cta_message?.ar || '🌴 استثمر في مستقبل مستدام 🌳'
         });
         console.log('✅ Contact bar texts updated:', texts);
       }

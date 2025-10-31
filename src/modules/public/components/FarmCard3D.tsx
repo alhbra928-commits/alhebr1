@@ -31,7 +31,7 @@ export function FarmCard3D({ farm, onOwn, onClick }: FarmCard3DProps) {
   };
 
   const getTreeEmoji = () => {
-    if (isOlive) return '🫒';
+    if (isOlive) return '🌳';
     if (isPalm) return '🌴';
     return '🌳';
   };

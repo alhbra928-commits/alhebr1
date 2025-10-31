@@ -72,7 +72,7 @@ export function TemporaryBookingPage({
   const normalizedFarmType = farmType?.toLowerCase() || '';
   const isPalm = normalizedFarmType === 'palm' || normalizedFarmType === 'نخيل';
 
-  const getFarmIcon = () => isPalm ? '🌴' : '🫒';
+  const getFarmIcon = () => isPalm ? '🌴' : '🌳';
   const getFarmColor = () => isPalm ? brandColors.primary.gold : oliveTheme.primary;
   const getFarmGradient = () => isPalm
     ? `linear-gradient(135deg, ${brandColors.primary.gold}, ${brandColors.primary.goldDark})`

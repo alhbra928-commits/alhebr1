@@ -52,7 +52,7 @@ export function FarmVarietiesManager({ farmType, varieties, onChange, basePrice 
     return varieties.reduce((sum, v) => sum + v.tree_count, 0);
   };
 
-  const treeTypeIcon = farmType === 'نخيل' ? '🌴' : farmType === 'زيتون' ? '🫒' : '🌿';
+  const treeTypeIcon = farmType === 'نخيل' ? '🌴' : farmType === 'زيتون' ? '🌳' : '🌿';
   const treeTypeLabel = farmType === 'نخيل' ? 'النخيل' : farmType === 'زيتون' ? 'الزيتون' : 'الأشجار';
 
   return (
@@ -72,7 +72,7 @@ export function FarmVarietiesManager({ farmType, varieties, onChange, basePrice 
               <div key={index} className="bg-white rounded-lg p-4 border border-emerald-200 shadow-sm flex items-center justify-between">
                 <div className="flex-1">
                   <div className="flex items-center gap-3">
-                    <span className="text-2xl">{variety.tree_type === 'نخيل' ? '🌴' : '🫒'}</span>
+                    <span className="text-2xl">{variety.tree_type === 'نخيل' ? '🌴' : '🌳'}</span>
                     <div>
                       <p className="font-bold text-gray-800">{variety.variety_name}</p>
                       <p className="text-sm text-gray-600">

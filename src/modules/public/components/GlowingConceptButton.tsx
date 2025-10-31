@@ -15,7 +15,7 @@ export const GlowingConceptButton: React.FC<GlowingConceptButtonProps> = ({ onCl
 
   const texts: TextRotation[] = [
     { icon: '🌴', text: 'اكتشف فكرة تملك النخيل' },
-    { icon: '🫒', text: 'تعرف على تملك أشجار الزيتون' }
+    { icon: '🌳', text: 'تعرف على تملك أشجار الزيتون' }
   ];
 
   useEffect(() => {

@@ -350,7 +350,7 @@ export class OwnersService {
   static getFarmTypeEmoji(type: string): string {
     const map: any = {
       'نخيل': '🌴',
-      'زيتون': '🫒',
+      'زيتون': '🌳',
       'مختلط': '🌾'
     };
     return map[type] || '🌱';
