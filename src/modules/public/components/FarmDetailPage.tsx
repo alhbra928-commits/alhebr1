@@ -530,45 +530,46 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
           </div>
         )}
 
-        {/* 🟦 قسم النبذة التفصيلية */}
+        {/* 🟩 قسم النبذة التفصيلية - أخضر زجاجي */}
         {farm.description_ar && farm.description_ar.trim() && (
           <div
-            className="mb-4 sm:mb-6 md:mb-8 p-3 sm:p-4 md:p-6 lg:p-8 rounded-xl sm:rounded-2xl md:rounded-3xl"
+            className="mb-4 sm:mb-6 md:mb-8 p-3 sm:p-4 md:p-6 lg:p-8 rounded-xl sm:rounded-2xl md:rounded-3xl backdrop-blur-xl"
             style={{
-              background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 250, 240, 0.9))',
-              boxShadow: '0 15px 40px rgba(16, 185, 129, 0.2)',
-              border: '2px solid rgba(5, 150, 105, 0.2)'
+              background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(5, 150, 105, 0.08), rgba(240, 253, 244, 0.95))',
+              boxShadow: '0 15px 40px rgba(16, 185, 129, 0.25), 0 8px 20px rgba(16, 185, 129, 0.15)',
+              border: '2px solid rgba(16, 185, 129, 0.25)'
             }}
           >
-            <h3 className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl font-black mb-2 sm:mb-3 md:mb-4">
-              📖 نبذة عن المزرعة
+            <h3 className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl font-black mb-2 sm:mb-3 md:mb-4 flex items-center gap-2.5" style={{ color: '#047857' }}>
+              <span className="text-2xl sm:text-3xl">📖</span>
+              نبذة عن المزرعة
             </h3>
             <p
               className="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl leading-relaxed"
-              style={{ color: '#6b7280', lineHeight: '1.8' }}
+              style={{ color: '#374151', lineHeight: '1.8' }}
             >
               {farm.description_ar}
             </p>
           </div>
         )}
 
-        {/* 🟧 قسم الملاحظات الفنية */}
+        {/* 🟩 قسم الملاحظات الفنية - أخضر زجاجي محسّن */}
         {farm.technical_notes && farm.technical_notes.trim() && (
           <div
-            className="mb-4 sm:mb-6 md:mb-8 p-3 sm:p-4 md:p-6 lg:p-8 rounded-xl sm:rounded-2xl md:rounded-3xl"
+            className="mb-4 sm:mb-6 md:mb-8 p-3 sm:p-4 md:p-6 lg:p-8 rounded-xl sm:rounded-2xl md:rounded-3xl backdrop-blur-xl"
             style={{
-              background: `linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.05))`,
-              boxShadow: `0 15px 40px rgba(16, 185, 129, 0.15)`,
-              border: `2px solid rgba(16, 185, 129, 0.3)`
+              background: `linear-gradient(135deg, rgba(16, 185, 129, 0.18), rgba(5, 150, 105, 0.12), rgba(236, 253, 245, 0.95))`,
+              boxShadow: `0 15px 40px rgba(16, 185, 129, 0.3), 0 8px 20px rgba(16, 185, 129, 0.2)`,
+              border: `2px solid rgba(16, 185, 129, 0.35)`
             }}
           >
-            <h3 className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-black mb-2 sm:mb-3 md:mb-4 flex items-center gap-2">
-              <Sprout className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-emerald-600" />
+            <h3 className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-black mb-2 sm:mb-3 md:mb-4 flex items-center gap-2.5" style={{ color: '#047857' }}>
+              <Sprout className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-emerald-600" />
               ملاحظات فنية
             </h3>
             <p
               className="text-xs sm:text-sm md:text-base lg:text-lg leading-relaxed"
-              style={{ color: '#6b7280', lineHeight: '1.7' }}
+              style={{ color: '#374151', lineHeight: '1.7' }}
             >
               {farm.technical_notes}
             </p>
@@ -748,24 +749,38 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
           )}
         </div>
 
-        {/* 🟫 قسم الثقة والتحفيز */}
+        {/* 🟩 قسم الثقة والتحفيز - بطاقة زجاجية */}
         <div
-          className="text-center py-8 sm:py-12 border-t-2"
-          style={{ borderColor: 'rgba(5, 150, 105, 0.2)' }}
+          className="text-center py-8 sm:py-12 px-4 sm:px-6 rounded-2xl sm:rounded-3xl backdrop-blur-xl mb-6 sm:mb-8"
+          style={{
+            background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(5, 150, 105, 0.1), rgba(240, 253, 244, 0.9))',
+            border: '2px solid rgba(16, 185, 129, 0.3)',
+            boxShadow: '0 20px 50px rgba(16, 185, 129, 0.25), 0 10px 25px rgba(16, 185, 129, 0.15)'
+          }}
         >
-          <p className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4">
+          <p className="text-2xl sm:text-3xl md:text-4xl font-black mb-3 sm:mb-4" style={{ color: '#047857', textShadow: '0 2px 4px rgba(16, 185, 129, 0.2)' }}>
             استثمارك يبدأ من شجرة واحدة...
           </p>
-          <p className="text-lg sm:text-xl">
-            ملكك مدى الحياة 🌿
+          <p className="text-lg sm:text-xl md:text-2xl font-bold" style={{ color: '#059669' }}>
+            🌿 ملكك مدى الحياة
           </p>
         </div>
       </div>
 
-      {/* 🟬 الفوتر */}
-      <div className="py-6 sm:py-8 text-center" style={{ background: '#047857' }}>
-        <p className="text-white text-sm sm:text-base opacity-80">
-          © 2025 منصة تملك المزارع - جميع الحقوق محفوظة
+      {/* 🟩 الفوتر - زجاجي أخضر */}
+      <div
+        className="py-8 sm:py-12 text-center backdrop-blur-xl"
+        style={{
+          background: 'linear-gradient(180deg, rgba(16, 185, 129, 0.95) 0%, rgba(4, 120, 87, 0.98) 100%)',
+          borderTop: '2px solid rgba(255, 255, 255, 0.2)',
+          boxShadow: 'inset 0 4px 20px rgba(255, 255, 255, 0.2)'
+        }}
+      >
+        <p className="text-white text-base sm:text-lg md:text-xl font-bold mb-2" style={{ textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)' }}>
+          منصة تملك المزارع 🌴
+        </p>
+        <p className="text-white text-sm sm:text-base opacity-90">
+          © 2025 جميع الحقوق محفوظة
         </p>
       </div>
 
