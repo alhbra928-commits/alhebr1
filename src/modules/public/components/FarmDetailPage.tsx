@@ -3,6 +3,7 @@ import { ArrowRight, MapPin, Trees, TrendingUp, CheckCircle2, Droplets, Zap, Shi
 import { brandColors, brandGradients } from '../../finance/styles/brandColors';
 import { FarmDetailService, FarmDetail } from '../services/farmDetailService';
 import { TransitionLoader } from '../../../components/common/TransitionLoader';
+import { getPlatformTextsBySection } from '../../../services/platformTextsService';
 
 interface FarmDetailPageProps {
   farmId: string;
@@ -14,9 +15,11 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
   const [farm, setFarm] = useState<FarmDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [platformName, setPlatformName] = useState('منصة الحبر');
 
   useEffect(() => {
     loadFarmData();
+    loadPlatformTexts();
   }, [farmId]);
 
   const loadFarmData = async () => {
@@ -47,6 +50,17 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
     } finally {
       setLoading(false);
       console.log(`[PERF] FarmDetailPage: TOTAL took ${(performance.now() - pageStart).toFixed(0)}ms`);
+    }
+  };
+
+  const loadPlatformTexts = async () => {
+    try {
+      const homeTexts = await getPlatformTextsBySection('home');
+      if (homeTexts.main_title) {
+        setPlatformName(homeTexts.main_title.ar);
+      }
+    } catch (error) {
+      console.error('Error loading platform texts:', error);
     }
   };
 
@@ -128,7 +142,7 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
               style={{ background: brandGradients.gold }}
             />
             <span className="font-bold text-xs sm:text-sm md:text-base" style={{ color: brandColors.primary.gold }}>
-              منصة النخيل والزيتون
+              {platformName}
             </span>
           </div>
         </div>

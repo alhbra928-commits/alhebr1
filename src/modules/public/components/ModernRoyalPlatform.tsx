@@ -16,6 +16,7 @@ import { GreenConceptButton } from './GreenConceptButton';
 import { InnovativeFarmCard } from './InnovativeFarmCard';
 import { Modern3DTicker } from '../../../components/common/Modern3DTicker';
 import { modern3DTickerService, TickerMessage, TickerSettings } from '../../../services/modern3DTickerService';
+import { getPlatformTextsBySection } from '../../../services/platformTextsService';
 
 type ViewMode = 'home' | 'farmDetail' | 'booking' | 'investor' | 'verification' | 'concept';
 
@@ -42,10 +43,12 @@ export function ModernRoyalPlatform({
     speed: 40,
     height: '80px'
   });
+  const [platformName, setPlatformName] = useState('منصة الحبر');
 
   useEffect(() => {
     loadData();
     loadTickerData();
+    loadPlatformTexts();
 
     // Subscribe to ticker updates
     const unsubscribeMessages = modern3DTickerService.subscribeToMessages((messages) => {
@@ -95,6 +98,17 @@ export function ModernRoyalPlatform({
       setTickerSettings(settings);
     } catch (error) {
       console.error('Error loading ticker data:', error);
+    }
+  };
+
+  const loadPlatformTexts = async () => {
+    try {
+      const homeTexts = await getPlatformTextsBySection('home');
+      if (homeTexts.main_title) {
+        setPlatformName(homeTexts.main_title.ar);
+      }
+    } catch (error) {
+      console.error('Error loading platform texts:', error);
     }
   };
 
@@ -230,7 +244,7 @@ export function ModernRoyalPlatform({
 
                 <div>
                   <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-emerald-800 via-green-700 to-teal-800 bg-clip-text text-transparent">
-                    منصة الملكية الزراعية
+                    {platformName}
                   </h1>
                 </div>
               </div>
