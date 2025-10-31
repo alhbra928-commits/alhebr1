@@ -273,36 +273,48 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
           {/* 🟦 تفاصيل الاستثمار - 3 بطاقات */}
           <div className="grid grid-cols-1 xs:grid-cols-3 gap-2.5 sm:gap-3 md:gap-4 lg:gap-6 mb-4 sm:mb-5 md:mb-6 lg:mb-8">
             <div
-              className="p-3 sm:p-4 md:p-5 lg:p-6 rounded-lg sm:rounded-xl md:rounded-2xl text-center transition-all active:scale-95 sm:hover:scale-105 touch-manipulation"
-              style={{ background: 'rgba(255, 255, 255, 0.5)' }}
+              className="p-3 sm:p-4 md:p-5 lg:p-6 rounded-lg sm:rounded-xl md:rounded-2xl text-center transition-all active:scale-95 sm:hover:scale-105 touch-manipulation backdrop-blur-xl border-2"
+              style={{
+                background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.15))',
+                borderColor: 'rgba(16, 185, 129, 0.3)',
+                boxShadow: '0 8px 32px rgba(16, 185, 129, 0.2)'
+              }}
             >
-              <Trees className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 lg:w-8 lg:h-8 mx-auto mb-1.5 sm:mb-2 md:mb-3" />
-              <div className="text-base sm:text-xl md:text-2xl lg:text-3xl font-black mb-0.5 sm:mb-1 md:mb-2">
+              <Trees className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 lg:w-8 lg:h-8 mx-auto mb-1.5 sm:mb-2 md:mb-3 text-emerald-600" />
+              <div className="text-base sm:text-xl md:text-2xl lg:text-3xl font-black mb-0.5 sm:mb-1 md:mb-2 text-emerald-800">
                 {farm.total_trees.toLocaleString('ar-SA')}
               </div>
-              <div className="text-[10px] sm:text-xs md:text-sm">إجمالي الأشجار</div>
+              <div className="text-[10px] sm:text-xs md:text-sm text-emerald-700 font-semibold">إجمالي الأشجار</div>
             </div>
 
             <div
-              className="p-4 sm:p-5 md:p-6 rounded-xl sm:rounded-2xl text-center transition-all active:scale-95 sm:hover:scale-105 touch-manipulation"
-              style={{ background: 'rgba(255, 255, 255, 0.5)' }}
+              className="p-4 sm:p-5 md:p-6 rounded-xl sm:rounded-2xl text-center transition-all active:scale-95 sm:hover:scale-105 touch-manipulation backdrop-blur-xl border-2"
+              style={{
+                background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.15))',
+                borderColor: 'rgba(16, 185, 129, 0.3)',
+                boxShadow: '0 8px 32px rgba(16, 185, 129, 0.2)'
+              }}
             >
-              <TrendingUp className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 mx-auto mb-2 sm:mb-3" />
-              <div className="text-xl sm:text-2xl md:text-3xl font-black mb-1 sm:mb-2">
+              <TrendingUp className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 mx-auto mb-2 sm:mb-3 text-emerald-600" />
+              <div className="text-xl sm:text-2xl md:text-3xl font-black mb-1 sm:mb-2 text-emerald-800">
                 {farm.price_per_tree.toLocaleString('ar-SA')} ر.س
               </div>
-              <div className="text-xs sm:text-sm">السعر لكل شجرة</div>
+              <div className="text-xs sm:text-sm text-emerald-700 font-semibold">السعر لكل شجرة</div>
             </div>
 
             <div
-              className="p-4 sm:p-5 md:p-6 rounded-xl sm:rounded-2xl text-center transition-all active:scale-95 sm:hover:scale-105 touch-manipulation"
-              style={{ background: 'rgba(255, 255, 255, 0.5)' }}
+              className="p-4 sm:p-5 md:p-6 rounded-xl sm:rounded-2xl text-center transition-all active:scale-95 sm:hover:scale-105 touch-manipulation backdrop-blur-xl border-2"
+              style={{
+                background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.15))',
+                borderColor: 'rgba(16, 185, 129, 0.3)',
+                boxShadow: '0 8px 32px rgba(16, 185, 129, 0.2)'
+              }}
             >
-              <CheckCircle2 className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 mx-auto mb-2 sm:mb-3" />
-              <div className="text-xl sm:text-2xl md:text-3xl font-black mb-1 sm:mb-2">
+              <CheckCircle2 className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 mx-auto mb-2 sm:mb-3 text-emerald-600" />
+              <div className="text-xl sm:text-2xl md:text-3xl font-black mb-1 sm:mb-2 text-emerald-800">
                 {farm.available_trees.toLocaleString('ar-SA')}
               </div>
-              <div className="text-xs sm:text-sm">متاح للحجز</div>
+              <div className="text-xs sm:text-sm text-emerald-700 font-semibold">متاح للحجز</div>
             </div>
           </div>
 
@@ -392,20 +404,23 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-3 md:gap-4">
               {farm.has_well && (
                 <div
-                  className="flex items-center gap-2.5 sm:gap-3 p-2.5 sm:p-3 md:p-4 rounded-lg sm:rounded-xl transition-all active:scale-95 sm:hover:scale-105 touch-manipulation"
-                  style={{ background: 'rgba(255, 255, 255, 0.5)' }}
+                  className="flex items-center gap-2.5 sm:gap-3 p-2.5 sm:p-3 md:p-4 rounded-lg sm:rounded-xl transition-all active:scale-95 sm:hover:scale-105 touch-manipulation backdrop-blur-xl border"
+                  style={{
+                    background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(5, 150, 105, 0.1))',
+                    borderColor: 'rgba(16, 185, 129, 0.25)'
+                  }}
                 >
                   <div
                     className="w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center flex-shrink-0"
                     style={{ background: 'rgba(16, 185, 129, 0.15)' }}
                   >
-                    <Droplets className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
+                    <Droplets className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-emerald-600" />
                   </div>
                   <div>
-                    <div className="text-xs sm:text-sm md:text-base font-bold">
+                    <div className="text-xs sm:text-sm md:text-base font-bold text-emerald-800">
                       بئر ماء
                     </div>
-                    <div className="text-[10px] sm:text-xs md:text-sm">
+                    <div className="text-[10px] sm:text-xs md:text-sm text-emerald-700">
                       متوفر للري
                     </div>
                   </div>
@@ -414,20 +429,23 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
 
               {farm.has_electricity && (
                 <div
-                  className="flex items-center gap-2.5 sm:gap-3 p-2.5 sm:p-3 md:p-4 rounded-lg sm:rounded-xl transition-all active:scale-95 sm:hover:scale-105 touch-manipulation"
-                  style={{ background: 'rgba(255, 255, 255, 0.5)' }}
+                  className="flex items-center gap-2.5 sm:gap-3 p-2.5 sm:p-3 md:p-4 rounded-lg sm:rounded-xl transition-all active:scale-95 sm:hover:scale-105 touch-manipulation backdrop-blur-xl border"
+                  style={{
+                    background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(5, 150, 105, 0.1))',
+                    borderColor: 'rgba(16, 185, 129, 0.25)'
+                  }}
                 >
                   <div
                     className="w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center flex-shrink-0"
                     style={{ background: 'rgba(16, 185, 129, 0.15)' }}
                   >
-                    <Zap className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
+                    <Zap className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-emerald-600" />
                   </div>
                   <div>
-                    <div className="text-xs sm:text-sm md:text-base font-bold">
+                    <div className="text-xs sm:text-sm md:text-base font-bold text-emerald-800">
                       كهرباء
                     </div>
-                    <div className="text-[10px] sm:text-xs md:text-sm">
+                    <div className="text-[10px] sm:text-xs md:text-sm text-emerald-700">
                       مصدر طاقة متوفر
                     </div>
                   </div>
@@ -436,20 +454,23 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
 
               {farm.has_fence && (
                 <div
-                  className="flex items-center gap-2.5 sm:gap-3 p-2.5 sm:p-3 md:p-4 rounded-lg sm:rounded-xl transition-all active:scale-95 sm:hover:scale-105 touch-manipulation"
-                  style={{ background: 'rgba(255, 255, 255, 0.5)' }}
+                  className="flex items-center gap-2.5 sm:gap-3 p-2.5 sm:p-3 md:p-4 rounded-lg sm:rounded-xl transition-all active:scale-95 sm:hover:scale-105 touch-manipulation backdrop-blur-xl border"
+                  style={{
+                    background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(5, 150, 105, 0.1))',
+                    borderColor: 'rgba(16, 185, 129, 0.25)'
+                  }}
                 >
                   <div
                     className="w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center flex-shrink-0"
                     style={{ background: 'rgba(16, 185, 129, 0.15)' }}
                   >
-                    <Shield className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
+                    <Shield className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-emerald-600" />
                   </div>
                   <div>
-                    <div className="text-xs sm:text-sm md:text-base font-bold">
+                    <div className="text-xs sm:text-sm md:text-base font-bold text-emerald-800">
                       سور محيط
                     </div>
-                    <div className="text-[10px] sm:text-xs md:text-sm">
+                    <div className="text-[10px] sm:text-xs md:text-sm text-emerald-700">
                       حماية وأمان
                     </div>
                   </div>
@@ -458,20 +479,23 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
 
               {farm.has_road && (
                 <div
-                  className="flex items-center gap-2.5 sm:gap-3 p-2.5 sm:p-3 md:p-4 rounded-lg sm:rounded-xl transition-all active:scale-95 sm:hover:scale-105 touch-manipulation"
-                  style={{ background: 'rgba(255, 255, 255, 0.5)' }}
+                  className="flex items-center gap-2.5 sm:gap-3 p-2.5 sm:p-3 md:p-4 rounded-lg sm:rounded-xl transition-all active:scale-95 sm:hover:scale-105 touch-manipulation backdrop-blur-xl border"
+                  style={{
+                    background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(5, 150, 105, 0.1))',
+                    borderColor: 'rgba(16, 185, 129, 0.25)'
+                  }}
                 >
                   <div
                     className="w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center flex-shrink-0"
                     style={{ background: 'rgba(16, 185, 129, 0.15)' }}
                   >
-                    <Navigation className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
+                    <Navigation className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-emerald-600" />
                   </div>
                   <div>
-                    <div className="text-xs sm:text-sm md:text-base font-bold">
+                    <div className="text-xs sm:text-sm md:text-base font-bold text-emerald-800">
                       طريق معبد
                     </div>
-                    <div className="text-[10px] sm:text-xs md:text-sm">
+                    <div className="text-[10px] sm:text-xs md:text-sm text-emerald-700">
                       سهولة الوصول
                     </div>
                   </div>
@@ -480,20 +504,23 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
 
               {farm.has_sterilization && (
                 <div
-                  className="flex items-center gap-2.5 sm:gap-3 p-2.5 sm:p-3 md:p-4 rounded-lg sm:rounded-xl transition-all active:scale-95 sm:hover:scale-105 touch-manipulation"
-                  style={{ background: 'rgba(255, 255, 255, 0.5)' }}
+                  className="flex items-center gap-2.5 sm:gap-3 p-2.5 sm:p-3 md:p-4 rounded-lg sm:rounded-xl transition-all active:scale-95 sm:hover:scale-105 touch-manipulation backdrop-blur-xl border"
+                  style={{
+                    background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(5, 150, 105, 0.1))',
+                    borderColor: 'rgba(16, 185, 129, 0.25)'
+                  }}
                 >
                   <div
                     className="w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center flex-shrink-0"
                     style={{ background: 'rgba(16, 185, 129, 0.15)' }}
                   >
-                    <Sprout className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
+                    <Sprout className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-emerald-600" />
                   </div>
                   <div>
-                    <div className="text-xs sm:text-sm md:text-base font-bold">
+                    <div className="text-xs sm:text-sm md:text-base font-bold text-emerald-800">
                       معقم ومعالج
                     </div>
-                    <div className="text-[10px] sm:text-xs md:text-sm">
+                    <div className="text-[10px] sm:text-xs md:text-sm text-emerald-700">
                       رعاية صحية متكاملة
                     </div>
                   </div>
@@ -536,7 +563,7 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
             }}
           >
             <h3 className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-black mb-2 sm:mb-3 md:mb-4 flex items-center gap-2">
-              <Sprout className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
+              <Sprout className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-emerald-600" />
               ملاحظات فنية
             </h3>
             <p
