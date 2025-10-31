@@ -82,8 +82,9 @@ export function Modern3DTicker({
 
   if (activeMessages.length === 0) return null;
 
-  // Duplicate messages for seamless loop
-  const displayMessages = [...activeMessages, ...activeMessages];
+  // حساب العرض الكلي للرسائل لتحديد مدة الحركة المناسبة
+  const messageCount = activeMessages.length;
+  const adjustedSpeed = speed * Math.max(1, messageCount / 4); // تعديل السرعة حسب عدد الرسائل
 
   return (
     <div
@@ -102,10 +103,10 @@ export function Modern3DTicker({
         <div
           className={`modern-3d-ticker-track ${isPaused ? 'paused' : ''}`}
           style={{
-            animationDuration: `${speed}s`
+            animationDuration: `${adjustedSpeed}s`
           }}
         >
-          {displayMessages.map((message, index) => {
+          {activeMessages.map((message, index) => {
             const IconComponent = iconMap[message.icon_name] || Star;
 
             return (
@@ -254,10 +255,10 @@ export function Modern3DTicker({
         /* Animations */
         @keyframes ticker-scroll {
           0% {
-            transform: translateX(0);
+            transform: translateX(100%);
           }
           100% {
-            transform: translateX(-50%);
+            transform: translateX(-100%);
           }
         }
 
