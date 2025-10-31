@@ -150,12 +150,13 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
 
       {/* Content */}
       <div className="relative z-10">
-      {/* 🟩 الهيدر العلوي */}
+      {/* 🟩 الهيدر العلوي - أخضر زجاجي */}
       <div
-        className="sticky top-0 z-50 backdrop-blur-md border-b"
+        className="sticky top-0 z-50 backdrop-blur-xl border-b"
         style={{
-          background: 'rgba(255, 250, 240, 0.95)',
-          borderColor: 'rgba(16, 185, 129, 0.2)'
+          background: 'linear-gradient(180deg, rgba(240, 253, 244, 0.98) 0%, rgba(236, 253, 245, 0.95) 100%)',
+          borderColor: 'rgba(16, 185, 129, 0.3)',
+          boxShadow: '0 4px 15px rgba(16, 185, 129, 0.15)'
         }}
       >
         <div className="max-w-7xl mx-auto px-3 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
@@ -386,18 +387,18 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
           </div>
         </div>
 
-        {/* 🟩 قسم مميزات المزرعة */}
+        {/* 🟩 قسم مميزات المزرعة - أخضر زجاجي */}
         {(farm.has_well || farm.has_electricity || farm.has_fence || farm.has_road || farm.has_sterilization) && (
           <div
-            className="mb-6 sm:mb-8 p-4 sm:p-6 md:p-8 rounded-2xl sm:rounded-3xl"
+            className="mb-6 sm:mb-8 p-4 sm:p-6 md:p-8 rounded-2xl sm:rounded-3xl backdrop-blur-xl"
             style={{
-              background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 250, 240, 0.9))',
-              boxShadow: '0 15px 40px rgba(16, 185, 129, 0.2)',
-              border: '2px solid rgba(5, 150, 105, 0.2)'
+              background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(5, 150, 105, 0.08), rgba(240, 253, 244, 0.95))',
+              boxShadow: '0 15px 40px rgba(16, 185, 129, 0.25), 0 8px 20px rgba(16, 185, 129, 0.15)',
+              border: '2px solid rgba(16, 185, 129, 0.25)'
             }}
           >
-            <h3 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-black mb-3 sm:mb-4 md:mb-6 flex items-center gap-2 sm:gap-3">
-              <CheckCircle2 className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 lg:w-8 lg:h-8" />
+            <h3 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-black mb-3 sm:mb-4 md:mb-6 flex items-center gap-2 sm:gap-3" style={{ color: '#047857' }}>
+              <CheckCircle2 className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 lg:w-8 lg:h-8 text-emerald-600" />
               مميزات المزرعة
             </h3>
 
