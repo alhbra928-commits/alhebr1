@@ -5,7 +5,7 @@ import { IdleSessionWarning } from './modules/admin/components/IdleSessionWarnin
 import { LoginNotification } from './modules/admin/components/LoginNotification';
 import { AdminSessionService } from './modules/admin/services/adminSessionService';
 import { PermissionsProvider } from './contexts/PermissionsContext';
-import { UpdateNotificationBanner } from './components/common/UpdateNotificationBanner';
+// import { UpdateNotificationBanner } from './components/common/UpdateNotificationBanner';
 import { SmartFloatingButton } from './components/common/SmartFloatingButton';
 import { MobileHeader } from './components/layout/MobileHeader';
 import { MobileSidebar } from './components/layout/MobileSidebar';
@@ -302,9 +302,7 @@ function App() {
         />
       )}
 
-      {adminSession && activeModule !== 'public' && (
-        <UpdateNotificationBanner userRole="admin" />
-      )}
+      {/* Temporarily disabled - UpdateNotificationBanner */}
 
       {showLoginNotification && adminSession && (
         <LoginNotification
