@@ -807,38 +807,26 @@ export function TemporaryBookingPage({
                         </div>
                       </div>
 
-                      {/* زر الحجز العادي - للأجهزة الكبيرة فقط */}
+                      {/* زر الحجز - للأجهزة الكبيرة فقط */}
                       <button
                         onClick={handleSubmit}
                         disabled={submitting || !investorName || !investorPhone}
-                        className="hidden lg:flex w-full py-4 rounded-2xl font-black text-lg text-white transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed items-center justify-center gap-2 mt-5 touch-manipulation relative overflow-hidden group"
+                        className="hidden lg:flex w-full py-4 rounded-xl font-black text-lg text-white transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed items-center justify-center gap-2 mt-5"
                         style={{
                           background: `linear-gradient(135deg, ${greenTheme.light}, ${greenTheme.primary})`,
-                          boxShadow: `
-                            0 10px 40px rgba(16, 185, 129, 0.4),
-                            0 5px 20px rgba(16, 185, 129, 0.3),
-                            inset 0 2px 8px rgba(255, 255, 255, 0.3)
-                          `,
+                          boxShadow: `0 8px 24px rgba(16, 185, 129, 0.4)`,
                           minHeight: '56px'
                         }}
                       >
-                        <div
-                          className="absolute inset-0 opacity-0 group-active:opacity-100 transition-opacity pointer-events-none"
-                          style={{
-                            background: 'linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.4) 50%, transparent 70%)'
-                          }}
-                        />
-
                         {submitting ? (
                           <>
                             <SimpleLoader size="sm" color="#FFFFFF" />
-                            <span className="mr-2 text-lg font-black">جاري التأكيد...</span>
+                            <span>جاري الحجز...</span>
                           </>
                         ) : (
                           <>
-                            <CheckCircle2 className="h-6 w-6 relative z-10" />
-                            <span className="relative z-10 text-lg">تأكيد الحجز الآن</span>
-                            <ArrowRight className="h-5 w-5 mr-1 relative z-10 transform rotate-180" />
+                            <CheckCircle2 className="w-6 h-6" />
+                            <span>تأكيد الحجز الآن</span>
                           </>
                         )}
                       </button>
@@ -873,184 +861,92 @@ export function TemporaryBookingPage({
         </div>
       </div>
 
-      {/* زر الحجز العائم المبتكر - للجوال والتابلت فقط */}
+      {/* زر الحجز العائم البسيط - للجوال فقط */}
       {selections.size > 0 && (
-        <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 safe-bottom">
-          {/* خلفية ضبابية */}
+        <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50" style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}>
           <div
-            className="absolute inset-0 -top-20"
+            className="mx-3 mb-4 p-4 rounded-2xl backdrop-blur-xl"
             style={{
-              background: 'linear-gradient(to top, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.95) 60%, transparent 100%)',
-              backdropFilter: 'blur(20px) saturate(180%)',
-              WebkitBackdropFilter: 'blur(20px) saturate(180%)'
+              background: 'rgba(255, 255, 255, 0.95)',
+              boxShadow: '0 -10px 40px rgba(0, 0, 0, 0.15), 0 10px 40px rgba(16, 185, 129, 0.2)'
             }}
-          />
-
-          <div className="relative px-3 pt-3 pb-4">
-            {/* معلومات سريعة */}
-            <div
-              className="flex items-center justify-between mb-3 px-4 py-2.5 rounded-xl"
-              style={{
-                background: `linear-gradient(135deg, ${greenTheme.lightest}, white)`,
-                border: `2px solid ${greenTheme.lighter}`,
-                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)'
-              }}
-            >
+          >
+            {/* شريط المعلومات */}
+            <div className="flex items-center justify-between mb-3 pb-3 border-b-2" style={{ borderColor: greenTheme.lighter }}>
               <div className="flex items-center gap-2">
-                <TreeDeciduous className="w-5 h-5" style={{ color: greenTheme.primary }} />
+                <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: greenTheme.lightest }}>
+                  <TreeDeciduous className="w-4 h-4" style={{ color: greenTheme.primary }} />
+                </div>
                 <span className="font-black text-sm" style={{ color: greenTheme.darkest }}>
                   {calculateTotalTrees()} شجرة
                 </span>
               </div>
-              <div className="text-left">
-                <span className="font-black text-lg" style={{ color: greenTheme.darkest }}>
+              <div>
+                <span className="font-black text-xl" style={{ color: greenTheme.primary }}>
                   {calculateTotal().toLocaleString()}
                 </span>
                 <span className="text-xs text-gray-600 font-bold mr-1">ريال</span>
               </div>
             </div>
 
-            {/* الزر العائم الرئيسي */}
+            {/* الزر الرئيسي */}
             <button
               onClick={handleSubmit}
               disabled={submitting || !investorName || !investorPhone}
-              className="w-full py-4 rounded-2xl font-black text-lg text-white transition-all active:scale-[0.97] disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2.5 touch-manipulation relative overflow-hidden group"
+              className="w-full py-4 rounded-xl font-black text-lg text-white transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 relative overflow-hidden"
               style={{
-                background: submitting
-                  ? `linear-gradient(135deg, ${greenTheme.primary}, ${greenTheme.dark})`
-                  : `linear-gradient(135deg, ${greenTheme.light}, ${greenTheme.primary})`,
-                boxShadow: `
-                  0 20px 60px rgba(16, 185, 129, 0.5),
-                  0 10px 30px rgba(16, 185, 129, 0.4),
-                  0 5px 15px rgba(16, 185, 129, 0.3),
-                  inset 0 3px 12px rgba(255, 255, 255, 0.4),
-                  inset 0 -3px 8px rgba(0, 0, 0, 0.15)
-                `,
-                minHeight: '60px',
-                transform: 'translateZ(0)'
+                background: `linear-gradient(135deg, ${greenTheme.light}, ${greenTheme.primary})`,
+                boxShadow: `0 8px 24px rgba(16, 185, 129, 0.4)`,
+                minHeight: '56px'
               }}
             >
-              {/* شبكة ثلاثية الأبعاد */}
-              <div
-                className="absolute inset-0 opacity-10 pointer-events-none"
-                style={{
-                  background: `
-                    repeating-linear-gradient(0deg, transparent, transparent 4px, rgba(255, 255, 255, 0.15) 4px, rgba(255, 255, 255, 0.15) 8px),
-                    repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(255, 255, 255, 0.15) 4px, rgba(255, 255, 255, 0.15) 8px)
-                  `
-                }}
-              />
-
-              {/* موجة متحركة */}
-              <div
-                className="absolute inset-0 opacity-0 group-active:opacity-100 transition-opacity duration-300 pointer-events-none"
-                style={{
-                  background: 'radial-gradient(circle at center, rgba(255, 255, 255, 0.5) 0%, transparent 70%)'
-                }}
-              />
-
-              {/* بريق علوي */}
-              <div
-                className="absolute top-0 left-0 right-0 h-10 opacity-50 pointer-events-none"
-                style={{
-                  background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.6) 0%, transparent 100%)'
-                }}
-              />
-
-              {/* المحتوى */}
-              <div className="relative z-10 flex items-center gap-2.5">
-                {submitting ? (
-                  <>
-                    <SimpleLoader size="sm" color="#FFFFFF" />
-                    <span className="font-black text-lg">جاري التأكيد...</span>
-                  </>
-                ) : (
-                  <>
-                    <div
-                      className="w-10 h-10 rounded-full flex items-center justify-center animate-pulse"
-                      style={{
-                        background: 'rgba(255, 255, 255, 0.3)',
-                        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)'
-                      }}
-                    >
-                      <CheckCircle2 className="h-6 w-6" />
-                    </div>
-                    <span className="font-black text-lg">تأكيد الحجز الآن</span>
-                    <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: 'rgba(255, 255, 255, 0.2)' }}>
-                      <ArrowRight className="h-5 w-5 transform rotate-180" />
-                    </div>
-                  </>
-                )}
-              </div>
-
-              {/* تأثير الحواف */}
-              <div
-                className="absolute inset-0 rounded-2xl pointer-events-none"
-                style={{
-                  border: '2px solid rgba(255, 255, 255, 0.4)'
-                }}
-              />
+              {submitting ? (
+                <>
+                  <SimpleLoader size="sm" color="#FFFFFF" />
+                  <span>جاري الحجز...</span>
+                </>
+              ) : (
+                <>
+                  <CheckCircle2 className="w-6 h-6" />
+                  <span>تأكيد الحجز الآن</span>
+                </>
+              )}
             </button>
 
-            {/* تلميح تحذيري */}
+            {/* تنبيه البيانات */}
             {(!investorName || !investorPhone) && (
-              <p className="text-center text-xs text-gray-500 mt-2 font-bold px-2">
-                يرجى إدخال الاسم ورقم الجوال لإتمام الحجز
+              <p className="text-center text-xs text-gray-500 mt-2 font-bold">
+                ⚠️ أدخل الاسم ورقم الجوال أعلاه
               </p>
             )}
           </div>
         </div>
       )}
 
-      {/* Custom Animations & Mobile Optimizations */}
+      {/* Custom CSS */}
       <style>{`
         @keyframes shimmer {
           0% { background-position: -200% 0; }
           100% { background-position: 200% 0; }
         }
 
-        /* Safe area support for mobile notches */
         .safe-top {
           padding-top: max(0.75rem, env(safe-area-inset-top));
         }
 
-        .safe-bottom {
-          padding-bottom: env(safe-area-inset-bottom, 0px);
-        }
-
-        /* Smooth scrolling for mobile */
         .overscroll-contain {
           overscroll-behavior: contain;
           -webkit-overflow-scrolling: touch;
         }
 
-        /* Better tap targets for mobile */
         .touch-manipulation {
           touch-action: manipulation;
           -webkit-tap-highlight-color: transparent;
         }
 
-        /* Prevent text selection on interactive elements */
-        button, .group {
+        button {
           -webkit-user-select: none;
           user-select: none;
-        }
-
-        /* Ensure submit button is always visible on mobile */
-        @media (max-width: 1024px) {
-          .lg\\:col-span-1 {
-            padding-bottom: env(safe-area-inset-bottom, 0px);
-          }
-        }
-
-        /* Smooth button animations */
-        button:active:not(:disabled) {
-          transform: scale(0.95);
-        }
-
-        /* Better contrast for disabled state */
-        button:disabled {
-          filter: grayscale(30%);
         }
       `}</style>
     </div>
