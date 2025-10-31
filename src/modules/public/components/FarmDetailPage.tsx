@@ -17,11 +17,24 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
   const [imageLoaded, setImageLoaded] = useState(false);
   const [platformName, setPlatformName] = useState('منصة الحبر');
   const [farmType, setFarmType] = useState<'palm' | 'olive'>('palm');
+  const [mousePosition, setMousePosition] = useState({ x: 50, y: 50 });
 
   useEffect(() => {
     loadFarmData();
     loadPlatformTexts();
   }, [farmId]);
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePosition({
+        x: (e.clientX / window.innerWidth) * 100,
+        y: (e.clientY / window.innerHeight) * 100,
+      });
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
 
   const loadFarmData = async () => {
     const pageStart = performance.now();
@@ -122,7 +135,21 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
       : 'https://images.unsplash.com/photo-1474440692490-2e83ae13ba29?w=1920&q=80');
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-yellow-50 to-amber-100" dir="rtl">
+    <div
+      className="min-h-screen overflow-hidden relative"
+      style={{
+        background: `
+          radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, rgba(16, 185, 129, 0.08) 0%, transparent 50%),
+          linear-gradient(135deg, #f0fdf4 0%, #dcfce7 50%, #bbf7d0 100%)
+        `
+      }}
+      dir="rtl"
+    >
+      {/* Glass Overlay */}
+      <div className="fixed inset-0 bg-white/30 backdrop-blur-[2px] pointer-events-none"></div>
+
+      {/* Content */}
+      <div className="relative z-10">
       {/* 🟩 الهيدر العلوي */}
       <div
         className="sticky top-0 z-50 backdrop-blur-md border-b"
@@ -521,40 +548,57 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
           </div>
         )}
 
-        {/* 🎯 زر الحجز - نفس تصميم زر "تعرف على فكرة التملك" */}
+        {/* 🎯 زر الحجز - تصميم أخضر ثلاثي الأبعاد زجاجي */}
         <div className="w-full flex justify-center items-center py-6 px-4 relative" style={{ zIndex: 10 }}>
           <button
             onClick={onStartBooking}
             disabled={reservationPercentage === 100}
-            className="relative overflow-hidden px-6 py-4 md:px-10 md:py-5 rounded-full font-bold text-base md:text-xl text-white transition-all duration-500 hover:scale-110 active:scale-95 shadow-2xl disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:scale-100"
+            className="group relative overflow-hidden px-8 py-5 md:px-12 md:py-7 rounded-3xl font-bold text-lg md:text-2xl text-white transition-all duration-500 hover:scale-105 active:scale-95 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:scale-100"
             style={{
               zIndex: 10,
               fontFamily: 'Tajawal, sans-serif',
               background: reservationPercentage === 100
-                ? 'linear-gradient(135deg, #4B5563 0%, #374151 50%, #1F2937 100%)'
-                : !farm.farm_type || farm.farm_type === 'نخيل'
-                  ? 'linear-gradient(135deg, #DAA520 0%, #C5A028 25%, #B8942A 50%, #996515 75%, #704214 100%)'
-                  : 'linear-gradient(135deg, #10b981 0%, #34d399 25%, #059669 50%, #047857 75%, #065f46 100%)',
-              border: reservationPercentage === 100
-                ? '3px solid rgba(156, 163, 175, 0.6)'
-                : !farm.farm_type || farm.farm_type === 'نخيل'
-                  ? '3px solid rgba(218, 165, 32, 0.6)'
-                  : '3px solid rgba(16, 185, 129, 0.6)',
+                ? 'linear-gradient(145deg, rgba(75, 85, 99, 0.95), rgba(55, 65, 81, 0.95))'
+                : 'linear-gradient(145deg, rgba(16, 185, 129, 0.95), rgba(5, 150, 105, 0.95))',
+              backdropFilter: 'blur(20px)',
+              border: '2px solid rgba(255, 255, 255, 0.3)',
               boxShadow: reservationPercentage === 100
-                ? '0 8px 32px rgba(75, 85, 99, 0.4)'
-                : !farm.farm_type || farm.farm_type === 'نخيل'
-                  ? '0 8px 32px rgba(218, 165, 32, 0.4), 0 4px 16px rgba(212, 175, 55, 0.3), inset 0 2px 4px rgba(255, 255, 255, 0.3), inset 0 -2px 4px rgba(0, 0, 0, 0.2)'
-                  : '0 8px 32px rgba(16, 185, 129, 0.4), 0 4px 16px rgba(16, 185, 129, 0.3), inset 0 2px 4px rgba(255, 255, 255, 0.3), inset 0 -2px 4px rgba(0, 0, 0, 0.2)'
+                ? '0 20px 60px rgba(0, 0, 0, 0.3), inset 0 2px 8px rgba(255, 255, 255, 0.15), inset 0 -2px 8px rgba(0, 0, 0, 0.25)'
+                : '0 20px 60px rgba(16, 185, 129, 0.4), 0 10px 30px rgba(16, 185, 129, 0.3), inset 0 2px 8px rgba(255, 255, 255, 0.3), inset 0 -2px 8px rgba(0, 0, 0, 0.15)',
+              transform: 'perspective(1000px) rotateX(5deg)',
+              transformStyle: 'preserve-3d'
             }}
           >
-            <div className="relative z-10 flex items-center gap-3 justify-center">
+            {/* شبكة خلفية ثلاثية الأبعاد */}
+            <div
+              className="absolute inset-0 opacity-20 pointer-events-none"
+              style={{
+                background: reservationPercentage === 100
+                  ? 'none'
+                  : `repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(255, 255, 255, 0.1) 3px, rgba(255, 255, 255, 0.1) 6px),
+                     repeating-linear-gradient(90deg, transparent, transparent 3px, rgba(255, 255, 255, 0.1) 3px, rgba(255, 255, 255, 0.1) 6px)`,
+                backgroundSize: '30px 30px'
+              }}
+            />
+
+            {/* توهج متحرك */}
+            <div
+              className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+              style={{
+                background: 'radial-gradient(circle at center, rgba(255, 255, 255, 0.3) 0%, transparent 70%)',
+                animation: 'pulse 2s ease-in-out infinite'
+              }}
+            />
+
+            {/* محتوى الزر */}
+            <div className="relative z-10 flex items-center gap-4 justify-center" style={{ transform: 'translateZ(30px)' }}>
               {reservationPercentage === 100 ? (
                 <>
-                  <span className="text-2xl md:text-3xl">🔒</span>
+                  <span className="text-3xl md:text-4xl">🔒</span>
                   <span
-                    className="whitespace-nowrap"
+                    className="whitespace-nowrap font-black"
                     style={{
-                      textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)'
+                      textShadow: '0 3px 6px rgba(0, 0, 0, 0.4), 0 0 15px rgba(255, 255, 255, 0.2)'
                     }}
                   >
                     اكتملت المقاعد
@@ -562,13 +606,14 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
                 </>
               ) : (
                 <>
-                  <span className="text-2xl md:text-3xl animate-bounce">
+                  <span className="text-3xl md:text-4xl animate-bounce" style={{ filter: 'drop-shadow(0 0 10px rgba(255, 255, 255, 0.5))' }}>
                     {getTreeEmoji(farm.farm_type)}
                   </span>
                   <span
-                    className="whitespace-nowrap"
+                    className="whitespace-nowrap font-black"
                     style={{
-                      textShadow: '0 2px 4px rgba(0, 0, 0, 0.3), 0 0 10px rgba(255, 255, 255, 0.3)'
+                      textShadow: '0 3px 6px rgba(0, 0, 0, 0.4), 0 0 15px rgba(255, 255, 255, 0.3)',
+                      letterSpacing: '0.02em'
                     }}
                   >
                     امتلك {getTreeName(farm.farm_type)}
@@ -577,13 +622,12 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
               )}
             </div>
 
-            {/* Shimmer Effect */}
+            {/* بريق زجاجي */}
             <div
-              className="absolute inset-0 rounded-full pointer-events-none"
+              className="absolute top-0 left-0 right-0 h-1/2 pointer-events-none"
               style={{
-                background: 'linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%)',
-                backgroundSize: '200% 100%',
-                animation: 'shimmer 3s linear infinite'
+                background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.25) 0%, transparent 100%)',
+                borderRadius: '1.5rem 1.5rem 0 0'
               }}
             />
           </button>
@@ -656,6 +700,7 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
           100% { background-position: 200% 0; }
         }
       `}</style>
+      </div>
     </div>
   );
 }
