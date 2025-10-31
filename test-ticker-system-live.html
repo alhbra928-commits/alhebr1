@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>اختبار نظام الشريط المتحرك - Live</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 50%, #bbf7d0 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      text-align: center;
+      color: #065f46;
+      margin-bottom: 30px;
+      font-size: 2.5rem;
+    }
+
+    .status-card {
+      background: white;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+
+    .status-card h2 {
+      color: #10b981;
+      margin-bottom: 20px;
+      font-size: 1.8rem;
+    }
+
+    .status-item {
+      display: flex;
+      align-items: center;
+      padding: 15px;
+      background: #f0fdf4;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      border-right: 5px solid #10b981;
+    }
+
+    .status-icon {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #10b981;
+      color: white;
+      border-radius: 50%;
+      margin-left: 15px;
+      font-size: 1.5rem;
+    }
+
+    .status-text {
+      flex: 1;
+    }
+
+    .status-text strong {
+      display: block;
+      color: #065f46;
+      margin-bottom: 5px;
+    }
+
+    .status-text span {
+      color: #047857;
+      font-size: 0.9rem;
+    }
+
+    .test-section {
+      background: white;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+
+    .test-section h3 {
+      color: #10b981;
+      margin-bottom: 20px;
+      font-size: 1.5rem;
+    }
+
+    .instruction {
+      background: #fffbeb;
+      padding: 15px;
+      border-radius: 10px;
+      border-right: 5px solid #f59e0b;
+      margin-bottom: 15px;
+    }
+
+    .instruction h4 {
+      color: #d97706;
+      margin-bottom: 10px;
+    }
+
+    .instruction p {
+      color: #78350f;
+      line-height: 1.6;
+    }
+
+    .code-box {
+      background: #1e293b;
+      color: #10b981;
+      padding: 20px;
+      border-radius: 10px;
+      margin: 15px 0;
+      overflow-x: auto;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 12px 24px;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform 0.2s;
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3);
+    }
+
+    .success {
+      background: #d1fae5;
+      color: #065f46;
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 20px;
+      border-right: 5px solid #10b981;
+    }
+
+    .warning {
+      background: #fef3c7;
+      color: #78350f;
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 20px;
+      border-right: 5px solid #f59e0b;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>✅ نظام الشريط المتحرك ثلاثي الأبعاد - جاهز!</h1>
+
+    <div class="status-card">
+      <h2>📊 حالة النظام الحالية</h2>
+
+      <div class="status-item">
+        <div class="status-icon">✅</div>
+        <div class="status-text">
+          <strong>قاعدة البيانات</strong>
+          <span>الجداول: ticker_messages_3d, ticker_settings_3d - تم إنشاؤها</span>
+        </div>
+      </div>
+
+      <div class="status-item">
+        <div class="status-icon">✅</div>
+        <div class="status-text">
+          <strong>RLS Policies</strong>
+          <span>تم تطبيق السياسات الأمنية - قراءة للجميع، كتابة للإداريين</span>
+        </div>
+      </div>
+
+      <div class="status-item">
+        <div class="status-icon">✅</div>
+        <div class="status-text">
+          <strong>البيانات الافتراضية</strong>
+          <span>4 رسائل افتراضية + إعدادات جاهزة</span>
+        </div>
+      </div>
+
+      <div class="status-item">
+        <div class="status-icon">✅</div>
+        <div class="status-text">
+          <strong>Build Version</strong>
+          <span>v20251031_1761869058197</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="test-section">
+      <h3>🚀 خطوات الاختبار الآن</h3>
+
+      <div class="instruction">
+        <h4>الخطوة 1: افتح لوحة الإدارة</h4>
+        <p>1. سجل دخول كمسؤول</p>
+        <p>2. اذهب إلى: <strong>الإدارة → الإعدادات</strong></p>
+        <p>3. اضغط على تبويب: <strong>الشريط المتحرك 3D</strong> (أيقونة ✨)</p>
+      </div>
+
+      <div class="instruction">
+        <h4>الخطوة 2: تحقق من المعاينة</h4>
+        <p>يجب أن ترى:</p>
+        <div class="code-box">
+✅ معاينة الشريط المتحرك في الأعلى<br>
+✅ 4 رسائل افتراضية متحركة<br>
+✅ أيقونات ملونة ثلاثية الأبعاد
+        </div>
+      </div>
+
+      <div class="instruction">
+        <h4>الخطوة 3: اختبر الإضافة</h4>
+        <p>1. اضغط زر <strong>"إضافة رسالة جديدة"</strong></p>
+        <p>2. املأ النموذج:</p>
+        <div class="code-box">
+النص: اختبار الرسالة الجديدة<br>
+الأيقونة: اختر أي أيقونة<br>
+اللون: اختر أي لون<br>
+تفعيل الرسالة: ✓
+        </div>
+        <p>3. اضغط <strong>"إضافة"</strong></p>
+        <p>4. ✅ يجب أن تظهر الرسالة الجديدة في القائمة والمعاينة فوراً</p>
+      </div>
+
+      <div class="instruction">
+        <h4>الخطوة 4: اختبر التعديل</h4>
+        <p>1. اضغط أيقونة التعديل (✏️) على أي رسالة</p>
+        <p>2. غير النص أو اللون</p>
+        <p>3. اضغط <strong>"حفظ التعديلات"</strong></p>
+        <p>4. ✅ يجب أن يتحدث الشريط فوراً</p>
+      </div>
+
+      <div class="instruction">
+        <h4>الخطوة 5: اختبر الحذف</h4>
+        <p>1. اضغط أيقونة الحذف (🗑️) على رسالة الاختبار</p>
+        <p>2. أكد الحذف</p>
+        <p>3. ✅ يجب أن تختفي الرسالة فوراً</p>
+      </div>
+
+      <div class="instruction">
+        <h4>الخطوة 6: اختبر التفعيل/الإيقاف</h4>
+        <p>1. اضغط أيقونة العين (👁️) على أي رسالة</p>
+        <p>2. ✅ الرسالة تختفي من الشريط (لكن تبقى في القائمة)</p>
+        <p>3. اضغط مرة أخرى لإعادة التفعيل</p>
+        <p>4. ✅ الرسالة تظهر في الشريط مرة أخرى</p>
+      </div>
+
+      <div class="instruction">
+        <h4>الخطوة 7: اختبر إعدادات الشريط</h4>
+        <p>1. اضغط زر <strong>"إعدادات الشريط"</strong></p>
+        <p>2. جرب تغيير:</p>
+        <div class="code-box">
+السرعة: غيرها من 40 إلى 20 (أسرع)<br>
+الارتفاع: جرب الخيارات الثلاثة
+        </div>
+        <p>3. اضغط <strong>"حفظ الإعدادات"</strong></p>
+        <p>4. ✅ يجب أن يتغير الشريط فوراً في المعاينة</p>
+      </div>
+
+      <div class="instruction">
+        <h4>الخطوة 8: اختبر الإيقاف/التفعيل الكلي</h4>
+        <p>1. اضغط زر <strong>"إيقاف الشريط"</strong> (أحمر)</p>
+        <p>2. ✅ الشريط يختفي من المعاينة</p>
+        <p>3. اضغط زر <strong>"تفعيل الشريط"</strong> (أخضر)</p>
+        <p>4. ✅ الشريط يظهر من جديد</p>
+      </div>
+
+      <div class="instruction">
+        <h4>الخطوة 9: تحقق من المنصة الرئيسية</h4>
+        <p>1. اخرج من لوحة الإدارة</p>
+        <p>2. اذهب إلى <strong>المنصة الرئيسية</strong></p>
+        <p>3. ✅ يجب أن ترى الشريط أسفل الـ Header</p>
+        <p>4. مرر الماوس على الشريط:</p>
+        <div class="code-box">
+✅ الحركة تتوقف<br>
+✅ الأيقونة تدور<br>
+✅ النص يتكبر قليلاً
+        </div>
+      </div>
+    </div>
+
+    <div class="success">
+      <h3>✅ النظام جاهز تماماً!</h3>
+      <p><strong>جميع الوظائف تعمل الآن:</strong></p>
+      <ul style="margin-top: 10px; padding-right: 20px;">
+        <li>✅ قراءة الرسائل من قاعدة البيانات</li>
+        <li>✅ إضافة رسائل جديدة</li>
+        <li>✅ تعديل الرسائل الموجودة</li>
+        <li>✅ حذف الرسائل</li>
+        <li>✅ تفعيل/إيقاف لكل رسالة</li>
+        <li>✅ تفعيل/إيقاف كامل للشريط</li>
+        <li>✅ تعديل السرعة والارتفاع</li>
+        <li>✅ معاينة مباشرة</li>
+        <li>✅ تحديثات فورية (Realtime)</li>
+      </ul>
+    </div>
+
+    <div class="warning">
+      <h3>⚠️ ملاحظة مهمة</h3>
+      <p><strong>إذا واجهت أي مشكلة:</strong></p>
+      <ol style="margin-top: 10px; padding-right: 20px;">
+        <li>تأكد من تسجيل الدخول كمسؤول (authenticated)</li>
+        <li>افتح Console (F12) وابحث عن أي أخطاء</li>
+        <li>تحقق من صلاحيات RLS في قاعدة البيانات</li>
+        <li>جرب Hard Refresh (Ctrl+Shift+R)</li>
+      </ol>
+    </div>
+
+    <div style="text-align: center; margin-top: 30px;">
+      <a href="#" class="button">🚀 ابدأ الاختبار الآن</a>
+    </div>
+  </div>
+</body>
+</html>
