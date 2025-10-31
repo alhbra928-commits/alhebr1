@@ -23,7 +23,7 @@ import {
 } from 'lucide-react';
 import { brandColors, brandGradients } from '../../finance/styles/brandColors';
 import { FarmDetailService, FarmVariety, CreateReservationData } from '../services/farmDetailService';
-import { FarmTypeLoader } from '../../../components/common/FarmTypeLoader';
+import { FarmLoader } from '../../../components/common/FarmLoader';
 
 interface TemporaryBookingPageProps {
   farmId: string;
@@ -188,8 +188,8 @@ export function TemporaryBookingPage({
 
   if (loading) {
     return (
-      <FarmTypeLoader
-        type={isPalm ? 'palm' : 'olive'}
+      <FarmLoader
+        farmType={isPalm ? 'palm' : 'olive'}
         message={isPalm ? 'جاري تحميل أصناف النخيل...' : 'جاري تحميل أصناف الزيتون...'}
       />
     );

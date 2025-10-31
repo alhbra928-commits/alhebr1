@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { ArrowRight, MapPin, Trees, TrendingUp, CheckCircle2, Droplets, Zap, Shield, Navigation, Sprout } from 'lucide-react';
 import { brandColors, brandGradients } from '../../finance/styles/brandColors';
 import { FarmDetailService, FarmDetail } from '../services/farmDetailService';
-import { TransitionLoader } from '../../../components/common/TransitionLoader';
+import { FarmLoader } from '../../../components/common/FarmLoader';
 import { getPlatformTextsBySection } from '../../../services/platformTextsService';
 
 interface FarmDetailPageProps {
@@ -16,6 +16,7 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
   const [loading, setLoading] = useState(true);
   const [imageLoaded, setImageLoaded] = useState(false);
   const [platformName, setPlatformName] = useState('منصة الحبر');
+  const [farmType, setFarmType] = useState<'palm' | 'olive'>('palm');
 
   useEffect(() => {
     loadFarmData();
@@ -36,6 +37,14 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
         const totalTrees = farmDetail.varieties.reduce((sum, v) => sum + v.total_trees, 0);
 
         console.log('[PERF] FarmDetailPage: Setting farm state with', { totalAvailable, totalTrees });
+
+        // تحديد نوع الشجرة
+        const type = farmDetail.tree_type?.toLowerCase();
+        if (type === 'زيتون' || type === 'olive') {
+          setFarmType('olive');
+        } else {
+          setFarmType('palm');
+        }
 
         setFarm({
           ...farmDetail,
@@ -84,7 +93,7 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
   const reservationPercentage = farm ? Math.round((reservedTrees / farm.total_trees) * 100) : 0;
 
   if (loading) {
-    return <TransitionLoader message="جاري تحميل تفاصيل المزرعة..." />;
+    return <FarmLoader farmType={farmType} message="جاري تحميل تفاصيل المزرعة..." />;
   }
 
   if (!farm) {
