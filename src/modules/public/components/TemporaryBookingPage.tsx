@@ -807,11 +807,11 @@ export function TemporaryBookingPage({
                         </div>
                       </div>
 
-                      {/* زر الحجز - محسّن للجوال */}
+                      {/* زر الحجز العادي - للأجهزة الكبيرة فقط */}
                       <button
                         onClick={handleSubmit}
                         disabled={submitting || !investorName || !investorPhone}
-                        className="w-full py-4 sm:py-4 md:py-4 rounded-2xl sm:rounded-2xl font-black text-base sm:text-lg text-white transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 sm:gap-2 mt-4 sm:mt-5 touch-manipulation relative overflow-hidden group"
+                        className="hidden lg:flex w-full py-4 rounded-2xl font-black text-lg text-white transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed items-center justify-center gap-2 mt-5 touch-manipulation relative overflow-hidden group"
                         style={{
                           background: `linear-gradient(135deg, ${greenTheme.light}, ${greenTheme.primary})`,
                           boxShadow: `
@@ -822,7 +822,6 @@ export function TemporaryBookingPage({
                           minHeight: '56px'
                         }}
                       >
-                        {/* بريق متحرك */}
                         <div
                           className="absolute inset-0 opacity-0 group-active:opacity-100 transition-opacity pointer-events-none"
                           style={{
@@ -833,13 +832,13 @@ export function TemporaryBookingPage({
                         {submitting ? (
                           <>
                             <SimpleLoader size="sm" color="#FFFFFF" />
-                            <span className="mr-2 text-base sm:text-lg font-black">جاري التأكيد...</span>
+                            <span className="mr-2 text-lg font-black">جاري التأكيد...</span>
                           </>
                         ) : (
                           <>
-                            <CheckCircle2 className="h-6 w-6 sm:h-6 sm:w-6 relative z-10" />
-                            <span className="relative z-10 text-base sm:text-lg">تأكيد الحجز الآن</span>
-                            <ArrowRight className="h-5 w-5 sm:h-5 sm:w-5 mr-1 relative z-10 transform rotate-180" />
+                            <CheckCircle2 className="h-6 w-6 relative z-10" />
+                            <span className="relative z-10 text-lg">تأكيد الحجز الآن</span>
+                            <ArrowRight className="h-5 w-5 mr-1 relative z-10 transform rotate-180" />
                           </>
                         )}
                       </button>
@@ -874,6 +873,135 @@ export function TemporaryBookingPage({
         </div>
       </div>
 
+      {/* زر الحجز العائم المبتكر - للجوال والتابلت فقط */}
+      {selections.size > 0 && (
+        <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 safe-bottom">
+          {/* خلفية ضبابية */}
+          <div
+            className="absolute inset-0 -top-20"
+            style={{
+              background: 'linear-gradient(to top, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.95) 60%, transparent 100%)',
+              backdropFilter: 'blur(20px) saturate(180%)',
+              WebkitBackdropFilter: 'blur(20px) saturate(180%)'
+            }}
+          />
+
+          <div className="relative px-3 pt-3 pb-4">
+            {/* معلومات سريعة */}
+            <div
+              className="flex items-center justify-between mb-3 px-4 py-2.5 rounded-xl"
+              style={{
+                background: `linear-gradient(135deg, ${greenTheme.lightest}, white)`,
+                border: `2px solid ${greenTheme.lighter}`,
+                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)'
+              }}
+            >
+              <div className="flex items-center gap-2">
+                <TreeDeciduous className="w-5 h-5" style={{ color: greenTheme.primary }} />
+                <span className="font-black text-sm" style={{ color: greenTheme.darkest }}>
+                  {calculateTotalTrees()} شجرة
+                </span>
+              </div>
+              <div className="text-left">
+                <span className="font-black text-lg" style={{ color: greenTheme.darkest }}>
+                  {calculateTotal().toLocaleString()}
+                </span>
+                <span className="text-xs text-gray-600 font-bold mr-1">ريال</span>
+              </div>
+            </div>
+
+            {/* الزر العائم الرئيسي */}
+            <button
+              onClick={handleSubmit}
+              disabled={submitting || !investorName || !investorPhone}
+              className="w-full py-4 rounded-2xl font-black text-lg text-white transition-all active:scale-[0.97] disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2.5 touch-manipulation relative overflow-hidden group"
+              style={{
+                background: submitting
+                  ? `linear-gradient(135deg, ${greenTheme.primary}, ${greenTheme.dark})`
+                  : `linear-gradient(135deg, ${greenTheme.light}, ${greenTheme.primary})`,
+                boxShadow: `
+                  0 20px 60px rgba(16, 185, 129, 0.5),
+                  0 10px 30px rgba(16, 185, 129, 0.4),
+                  0 5px 15px rgba(16, 185, 129, 0.3),
+                  inset 0 3px 12px rgba(255, 255, 255, 0.4),
+                  inset 0 -3px 8px rgba(0, 0, 0, 0.15)
+                `,
+                minHeight: '60px',
+                transform: 'translateZ(0)'
+              }}
+            >
+              {/* شبكة ثلاثية الأبعاد */}
+              <div
+                className="absolute inset-0 opacity-10 pointer-events-none"
+                style={{
+                  background: `
+                    repeating-linear-gradient(0deg, transparent, transparent 4px, rgba(255, 255, 255, 0.15) 4px, rgba(255, 255, 255, 0.15) 8px),
+                    repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(255, 255, 255, 0.15) 4px, rgba(255, 255, 255, 0.15) 8px)
+                  `
+                }}
+              />
+
+              {/* موجة متحركة */}
+              <div
+                className="absolute inset-0 opacity-0 group-active:opacity-100 transition-opacity duration-300 pointer-events-none"
+                style={{
+                  background: 'radial-gradient(circle at center, rgba(255, 255, 255, 0.5) 0%, transparent 70%)'
+                }}
+              />
+
+              {/* بريق علوي */}
+              <div
+                className="absolute top-0 left-0 right-0 h-10 opacity-50 pointer-events-none"
+                style={{
+                  background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.6) 0%, transparent 100%)'
+                }}
+              />
+
+              {/* المحتوى */}
+              <div className="relative z-10 flex items-center gap-2.5">
+                {submitting ? (
+                  <>
+                    <SimpleLoader size="sm" color="#FFFFFF" />
+                    <span className="font-black text-lg">جاري التأكيد...</span>
+                  </>
+                ) : (
+                  <>
+                    <div
+                      className="w-10 h-10 rounded-full flex items-center justify-center animate-pulse"
+                      style={{
+                        background: 'rgba(255, 255, 255, 0.3)',
+                        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)'
+                      }}
+                    >
+                      <CheckCircle2 className="h-6 w-6" />
+                    </div>
+                    <span className="font-black text-lg">تأكيد الحجز الآن</span>
+                    <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: 'rgba(255, 255, 255, 0.2)' }}>
+                      <ArrowRight className="h-5 w-5 transform rotate-180" />
+                    </div>
+                  </>
+                )}
+              </div>
+
+              {/* تأثير الحواف */}
+              <div
+                className="absolute inset-0 rounded-2xl pointer-events-none"
+                style={{
+                  border: '2px solid rgba(255, 255, 255, 0.4)'
+                }}
+              />
+            </button>
+
+            {/* تلميح تحذيري */}
+            {(!investorName || !investorPhone) && (
+              <p className="text-center text-xs text-gray-500 mt-2 font-bold px-2">
+                يرجى إدخال الاسم ورقم الجوال لإتمام الحجز
+              </p>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* Custom Animations & Mobile Optimizations */}
       <style>{`
         @keyframes shimmer {
@@ -884,6 +1012,10 @@ export function TemporaryBookingPage({
         /* Safe area support for mobile notches */
         .safe-top {
           padding-top: max(0.75rem, env(safe-area-inset-top));
+        }
+
+        .safe-bottom {
+          padding-bottom: env(safe-area-inset-bottom, 0px);
         }
 
         /* Smooth scrolling for mobile */
