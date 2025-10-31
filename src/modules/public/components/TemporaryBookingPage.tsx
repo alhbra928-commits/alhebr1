@@ -24,6 +24,7 @@ import {
 import { brandColors, brandGradients } from '../../finance/styles/brandColors';
 import { FarmDetailService, FarmVariety, CreateReservationData } from '../services/farmDetailService';
 import { FarmLoader } from '../../../components/common/FarmLoader';
+import { SimpleLoader } from '../../../components/common/SimpleLoader';
 
 interface TemporaryBookingPageProps {
   farmId: string;
@@ -214,8 +215,7 @@ export function TemporaryBookingPage({
             background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(240, 253, 244, 0.95))',
             boxShadow: `0 40px 100px rgba(16, 185, 129, 0.3), 0 20px 60px rgba(16, 185, 129, 0.2)`,
             backdropFilter: 'blur(20px)',
-            border: '2px solid rgba(16, 185, 129, 0.2)',
-            border: `2px sm:3px solid ${greenTheme.lighter}`
+            border: `2px solid ${greenTheme.lighter}`
           }}
         >
           <div
@@ -299,7 +299,7 @@ export function TemporaryBookingPage({
               style={{
                 background: 'white',
                 color: greenTheme.primary,
-                border: `2px sm:3px solid ${greenTheme.primary}`
+                border: `2px solid ${greenTheme.primary}`
               }}
             >
               <User className="h-5 w-5 sm:h-6 sm:w-6" />
