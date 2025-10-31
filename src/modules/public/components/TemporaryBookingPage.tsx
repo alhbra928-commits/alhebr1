@@ -699,7 +699,7 @@ export function TemporaryBookingPage({
             </div>
           </div>
 
-          <div className="lg:col-span-1">
+          <div className="lg:col-span-1 pb-48 lg:pb-0">
             <div className="lg:sticky lg:top-24">
               {selections.size > 0 ? (
                 <div
@@ -861,43 +861,25 @@ export function TemporaryBookingPage({
         </div>
       </div>
 
-      {/* زر الحجز العائم البسيط - للجوال فقط */}
+      {/* زر الحجز العائم - للجوال فقط */}
       {selections.size > 0 && (
-        <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50" style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}>
+        <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50" style={{ paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))' }}>
           <div
-            className="mx-3 mb-4 p-4 rounded-2xl backdrop-blur-xl"
+            className="mx-3 mb-3 p-3 rounded-xl backdrop-blur-xl"
             style={{
-              background: 'rgba(255, 255, 255, 0.95)',
-              boxShadow: '0 -10px 40px rgba(0, 0, 0, 0.15), 0 10px 40px rgba(16, 185, 129, 0.2)'
+              background: 'rgba(255, 255, 255, 0.96)',
+              boxShadow: '0 -8px 32px rgba(0, 0, 0, 0.12), 0 4px 16px rgba(16, 185, 129, 0.2)'
             }}
           >
-            {/* شريط المعلومات */}
-            <div className="flex items-center justify-between mb-3 pb-3 border-b-2" style={{ borderColor: greenTheme.lighter }}>
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: greenTheme.lightest }}>
-                  <TreeDeciduous className="w-4 h-4" style={{ color: greenTheme.primary }} />
-                </div>
-                <span className="font-black text-sm" style={{ color: greenTheme.darkest }}>
-                  {calculateTotalTrees()} شجرة
-                </span>
-              </div>
-              <div>
-                <span className="font-black text-xl" style={{ color: greenTheme.primary }}>
-                  {calculateTotal().toLocaleString()}
-                </span>
-                <span className="text-xs text-gray-600 font-bold mr-1">ريال</span>
-              </div>
-            </div>
-
             {/* الزر الرئيسي */}
             <button
               onClick={handleSubmit}
               disabled={submitting || !investorName || !investorPhone}
-              className="w-full py-4 rounded-xl font-black text-lg text-white transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 relative overflow-hidden"
+              className="w-full py-3.5 rounded-lg font-black text-base text-white transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               style={{
                 background: `linear-gradient(135deg, ${greenTheme.light}, ${greenTheme.primary})`,
-                boxShadow: `0 8px 24px rgba(16, 185, 129, 0.4)`,
-                minHeight: '56px'
+                boxShadow: `0 6px 20px rgba(16, 185, 129, 0.4)`,
+                minHeight: '52px'
               }}
             >
               {submitting ? (
@@ -907,16 +889,16 @@ export function TemporaryBookingPage({
                 </>
               ) : (
                 <>
-                  <CheckCircle2 className="w-6 h-6" />
-                  <span>تأكيد الحجز الآن</span>
+                  <CheckCircle2 className="w-5 h-5" />
+                  <span>حجز {calculateTotalTrees()} شجرة • {calculateTotal().toLocaleString()} ريال</span>
                 </>
               )}
             </button>
 
             {/* تنبيه البيانات */}
             {(!investorName || !investorPhone) && (
-              <p className="text-center text-xs text-gray-500 mt-2 font-bold">
-                ⚠️ أدخل الاسم ورقم الجوال أعلاه
+              <p className="text-center text-xs text-red-600 mt-2 font-bold">
+                يرجى إدخال الاسم ورقم الجوال أولاً
               </p>
             )}
           </div>
