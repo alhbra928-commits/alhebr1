@@ -364,37 +364,142 @@ export function TemporaryBookingPage({
 
       <div className="max-w-6xl mx-auto px-2 sm:px-3 md:px-4 lg:px-6 py-3 sm:py-4 md:py-6 lg:py-8">
         <div
-          className="rounded-xl sm:rounded-2xl md:rounded-3xl p-4 sm:p-6 md:p-8 lg:p-12 mb-3 sm:mb-4 md:mb-6 lg:mb-8 text-center relative overflow-hidden"
+          className="group rounded-2xl sm:rounded-3xl md:rounded-[2rem] p-5 sm:p-7 md:p-10 lg:p-14 mb-3 sm:mb-4 md:mb-6 lg:mb-8 text-center relative overflow-hidden transition-all duration-500 hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
           style={{
-            background: `linear-gradient(135deg, ${greenTheme.dark}, ${greenTheme.darkest})`,
-            boxShadow: `0 12px 30px ${greenTheme.darkest}30`
+            background: `linear-gradient(145deg, rgba(16, 185, 129, 0.95) 0%, rgba(5, 150, 105, 0.98) 50%, rgba(4, 120, 87, 1) 100%)`,
+            backdropFilter: 'blur(20px) saturate(180%)',
+            WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+            border: '3px solid rgba(255, 255, 255, 0.3)',
+            boxShadow: `
+              0 30px 80px rgba(16, 185, 129, 0.5),
+              0 20px 50px rgba(16, 185, 129, 0.4),
+              0 10px 30px rgba(16, 185, 129, 0.3),
+              inset 0 4px 20px rgba(255, 255, 255, 0.3),
+              inset 0 -4px 15px rgba(0, 0, 0, 0.2)
+            `,
+            transform: 'perspective(1000px) rotateX(2deg)',
+            transformStyle: 'preserve-3d'
           }}
         >
-          <div className="absolute -top-10 -right-10 w-32 sm:w-40 md:w-60 h-32 sm:h-40 md:h-60 rounded-full opacity-5 sm:opacity-8 md:opacity-10" style={{ background: greenTheme.lightest }} />
-          <div className="absolute -bottom-10 -left-10 w-32 sm:w-40 md:w-60 h-32 sm:h-40 md:h-60 rounded-full opacity-5 sm:opacity-8 md:opacity-10" style={{ background: greenTheme.lightest }} />
-          <div className="absolute top-4 sm:top-6 md:top-10 left-4 sm:left-6 md:left-10 opacity-5 sm:opacity-10 md:opacity-15">
-            <Leaf className="w-10 sm:w-14 md:w-20 lg:w-24 h-10 sm:h-14 md:h-20 lg:h-24 text-white animate-pulse" />
+          {/* شبكة خلفية ثلاثية الأبعاد */}
+          <div
+            className="absolute inset-0 opacity-10 pointer-events-none"
+            style={{
+              background: `
+                repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(255, 255, 255, 0.1) 3px, rgba(255, 255, 255, 0.1) 6px),
+                repeating-linear-gradient(90deg, transparent, transparent 3px, rgba(255, 255, 255, 0.1) 3px, rgba(255, 255, 255, 0.1) 6px)
+              `
+            }}
+          />
+
+          {/* بريق متحرك */}
+          <div
+            className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
+            style={{
+              background: 'linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.3) 50%, transparent 70%)',
+              backgroundSize: '200% 100%',
+              animation: 'shimmer 2s infinite'
+            }}
+          />
+
+          {/* نقاط إضاءة */}
+          <div
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 sm:w-96 sm:h-96 rounded-full pointer-events-none"
+            style={{
+              background: 'radial-gradient(circle at center, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.1) 40%, transparent 70%)',
+              filter: 'blur(40px)'
+            }}
+          />
+
+          {/* أوراق شجر ثلاثية الأبعاد */}
+          <div className="absolute top-4 sm:top-6 md:top-10 left-4 sm:left-6 md:left-10 opacity-20 group-hover:opacity-30 transition-opacity">
+            <Leaf className="w-10 sm:w-14 md:w-20 lg:w-24 h-10 sm:h-14 md:h-20 lg:h-24 text-white animate-pulse" style={{ filter: 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3))' }} />
           </div>
-          <div className="absolute bottom-4 sm:bottom-6 md:bottom-10 right-4 sm:right-6 md:right-10 opacity-5 sm:opacity-10 md:opacity-15">
-            <TreeDeciduous className="w-10 sm:w-14 md:w-20 lg:w-24 h-10 sm:h-14 md:h-20 lg:h-24 text-white animate-pulse" style={{ animationDelay: '1s' }} />
+          <div className="absolute bottom-4 sm:bottom-6 md:bottom-10 right-4 sm:right-6 md:right-10 opacity-20 group-hover:opacity-30 transition-opacity">
+            <TreeDeciduous className="w-10 sm:w-14 md:w-20 lg:w-24 h-10 sm:h-14 md:h-20 lg:h-24 text-white animate-pulse" style={{ animationDelay: '1s', filter: 'drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3))' }} />
           </div>
 
+          {/* شعاع ضوئي علوي */}
+          <div
+            className="absolute top-0 left-0 right-0 h-32 opacity-40 pointer-events-none"
+            style={{
+              background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.2) 30%, transparent 100%)'
+            }}
+          />
+
           <div className="relative z-10">
-            <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-black mb-2 sm:mb-3 md:mb-4 text-white leading-tight px-1">
-              احجز أشجارك الآن
-            </h1>
-            <p className="text-xs sm:text-sm md:text-base lg:text-lg text-white opacity-90 mb-3 sm:mb-4 md:mb-5 lg:mb-6 px-2">
-              اختر الأصناف والكميات المطلوبة واحصل على حجزك الفوري
-            </p>
-            <div
-              className="inline-flex items-center gap-1.5 sm:gap-2 md:gap-3 px-3 sm:px-5 md:px-6 lg:px-8 py-2 sm:py-2.5 md:py-3 lg:py-4 rounded-lg sm:rounded-xl md:rounded-2xl shadow-lg"
+            {/* أيقونة مركزية متحركة */}
+            <div className="inline-flex mb-4 sm:mb-5 md:mb-6">
+              <div
+                className="relative group-hover:scale-110 transition-transform duration-500"
+                style={{
+                  filter: 'drop-shadow(0 8px 16px rgba(0, 0, 0, 0.3))'
+                }}
+              >
+                <div
+                  className="absolute inset-0 rounded-full animate-ping"
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.5)',
+                    animationDuration: '2s'
+                  }}
+                />
+                <div
+                  className="relative w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-full flex items-center justify-center"
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.25)',
+                    backdropFilter: 'blur(10px)',
+                    border: '3px solid rgba(255, 255, 255, 0.5)'
+                  }}
+                >
+                  <ShoppingCart className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 text-white" style={{ filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3))' }} />
+                </div>
+              </div>
+            </div>
+
+            <h1
+              className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-black mb-2 sm:mb-3 md:mb-4 text-white leading-tight px-1 group-hover:scale-105 transition-transform duration-300"
               style={{
-                background: 'white',
-                border: `2px sm:2.5px md:3px solid ${greenTheme.accent}`
+                textShadow: '0 4px 12px rgba(0, 0, 0, 0.4), 0 2px 6px rgba(0, 0, 0, 0.3), 0 0 20px rgba(255, 255, 255, 0.2)',
+                fontFamily: 'Cairo, Tajawal, sans-serif'
               }}
             >
-              <TreeDeciduous className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" style={{ color: greenTheme.primary }} />
-              <span className="font-black text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl" style={{ color: greenTheme.darkest }}>
+              احجز أشجارك الآن
+            </h1>
+            <p
+              className="text-sm sm:text-base md:text-lg lg:text-xl text-white mb-4 sm:mb-5 md:mb-6 lg:mb-7 px-2 group-hover:scale-105 transition-transform duration-300"
+              style={{
+                textShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
+                opacity: 0.95
+              }}
+            >
+              اختر الأصناف والكميات المطلوبة واحصل على حجزك الفوري
+            </p>
+            {/* شارة عدد الأصناف - ثلاثية الأبعاد */}
+            <div
+              className="inline-flex items-center gap-2 sm:gap-2.5 md:gap-3 px-4 sm:px-6 md:px-8 lg:px-10 py-2.5 sm:py-3 md:py-3.5 lg:py-4 rounded-xl sm:rounded-2xl md:rounded-3xl transition-all duration-300 hover:scale-105 active:scale-95"
+              style={{
+                background: 'rgba(255, 255, 255, 0.95)',
+                backdropFilter: 'blur(20px)',
+                border: '3px solid rgba(255, 255, 255, 0.5)',
+                boxShadow: `
+                  0 8px 32px rgba(0, 0, 0, 0.3),
+                  0 4px 16px rgba(0, 0, 0, 0.2),
+                  inset 0 2px 8px rgba(255, 255, 255, 0.8),
+                  inset 0 -2px 8px rgba(0, 0, 0, 0.1)
+                `,
+                transform: 'perspective(500px) translateZ(10px)'
+              }}
+            >
+              <div
+                className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-full flex items-center justify-center"
+                style={{
+                  background: `linear-gradient(135deg, ${greenTheme.light}, ${greenTheme.primary})`,
+                  boxShadow: '0 4px 12px rgba(16, 185, 129, 0.4)'
+                }}
+              >
+                <TreeDeciduous className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-white" />
+              </div>
+              <span className="font-black text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl" style={{ color: greenTheme.darkest }}>
                 {varieties.length} {varieties.length === 1 ? 'صنف متميز' : 'أصناف متميزة'}
               </span>
             </div>
@@ -753,6 +858,14 @@ export function TemporaryBookingPage({
           </div>
         </div>
       </div>
+
+      {/* Custom Animations */}
+      <style>{`
+        @keyframes shimmer {
+          0% { background-position: -200% 0; }
+          100% { background-position: 200% 0; }
+        }
+      `}</style>
     </div>
   );
 }
