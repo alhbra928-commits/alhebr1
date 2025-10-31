@@ -289,7 +289,7 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = ({
       {/* Long Press Quick View Menu */}
       {longPressItem === 'notifications' && (
         <div
-          className="fixed bottom-20 left-4 right-4 z-[60] animate-in fade-in slide-in-from-bottom-4 duration-300"
+          className="fixed bottom-20 left-4 right-4 z-[80] animate-in fade-in slide-in-from-bottom-4 duration-300 lg:hidden"
           onClick={(e) => e.stopPropagation()}
         >
           <div
@@ -350,7 +350,7 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = ({
       {/* AI Helper Bubble */}
       {showAiHelper && (
         <div
-          className="fixed bottom-24 right-4 z-[60] animate-in fade-in slide-in-from-right-4 duration-300"
+          className="fixed bottom-24 right-4 z-[90] animate-in fade-in slide-in-from-right-4 duration-300 lg:hidden"
           style={{ maxWidth: '280px' }}
         >
           <div
@@ -418,16 +418,16 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = ({
         </div>
       )}
 
-      {/* AI Helper Icon (bottom right) */}
+      {/* AI Helper Icon (bottom right) - Above Bottom Nav */}
       <button
         onClick={() => setShowAiHelper(!showAiHelper)}
-        className="fixed bottom-24 right-4 w-12 h-12 rounded-full shadow-xl flex items-center justify-center z-50 active:scale-95 transition-all duration-300"
+        className="fixed bottom-24 right-4 w-14 h-14 rounded-full shadow-2xl flex items-center justify-center z-[100] active:scale-95 transition-all duration-300 lg:hidden"
         style={{
           background: 'linear-gradient(135deg, #A0916A 0%, #C9A962 100%)',
-          boxShadow: '0 4px 15px rgba(160, 145, 106, 0.4)'
+          boxShadow: '0 8px 24px rgba(160, 145, 106, 0.5), 0 4px 12px rgba(0, 0, 0, 0.2)'
         }}
       >
-        <span className="text-xl">🤖</span>
+        <span className="text-2xl">🤖</span>
         {/* Pulsing effect */}
         {!showAiHelper && (
           <div
