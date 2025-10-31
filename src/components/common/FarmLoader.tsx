@@ -63,7 +63,7 @@ export function FarmLoader({ farmType = 'palm', message = 'جاري التحمي
                 animationDuration: '2s'
               }}
             >
-              {isPalm ? '🌴' : '🫒'}
+              {isPalm ? '🌴' : '🌳'}
             </div>
 
             {/* شرارات متحركة حول الشجرة */}
