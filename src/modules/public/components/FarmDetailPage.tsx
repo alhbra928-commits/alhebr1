@@ -577,23 +577,25 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
 
         {/* 🎯 قسم الحجز - تصميم محسّن ومنظم */}
         <div className="w-full flex flex-col items-center justify-center py-8 px-4 relative" style={{ zIndex: 10 }}>
-          {/* زر امتلك نخلة - في الوسط وبتصميم جميل */}
+          {/* زر امتلك نخلة - زجاجي لامع مع خط جميل */}
           <button
             onClick={onStartBooking}
             disabled={reservationPercentage === 100}
-            className="group relative overflow-hidden px-10 py-6 md:px-16 md:py-8 rounded-3xl font-black text-xl md:text-3xl text-white transition-all duration-500 hover:scale-110 active:scale-95 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:scale-100 shadow-2xl"
+            className="group relative overflow-hidden px-12 py-7 md:px-20 md:py-10 rounded-[2rem] text-2xl md:text-4xl text-white transition-all duration-700 hover:scale-[1.12] active:scale-95 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:scale-100"
             style={{
               zIndex: 10,
-              fontFamily: 'Tajawal, sans-serif',
+              fontFamily: 'Cairo, Tajawal, sans-serif',
+              fontWeight: 900,
               background: reservationPercentage === 100
-                ? 'linear-gradient(145deg, rgba(75, 85, 99, 0.95), rgba(55, 65, 81, 0.95))'
-                : 'linear-gradient(145deg, #10b981 0%, #059669 50%, #047857 100%)',
-              backdropFilter: 'blur(20px)',
-              border: '3px solid rgba(255, 255, 255, 0.4)',
+                ? 'linear-gradient(145deg, rgba(75, 85, 99, 0.85) 0%, rgba(55, 65, 81, 0.9) 100%)'
+                : 'linear-gradient(145deg, rgba(16, 185, 129, 0.85) 0%, rgba(5, 150, 105, 0.9) 50%, rgba(4, 120, 87, 0.95) 100%)',
+              backdropFilter: 'blur(40px) saturate(180%)',
+              WebkitBackdropFilter: 'blur(40px) saturate(180%)',
+              border: '3px solid rgba(255, 255, 255, 0.5)',
               boxShadow: reservationPercentage === 100
-                ? '0 25px 70px rgba(0, 0, 0, 0.4), inset 0 2px 10px rgba(255, 255, 255, 0.2), inset 0 -3px 10px rgba(0, 0, 0, 0.3)'
-                : '0 25px 70px rgba(16, 185, 129, 0.5), 0 15px 40px rgba(16, 185, 129, 0.4), inset 0 3px 12px rgba(255, 255, 255, 0.4), inset 0 -3px 12px rgba(0, 0, 0, 0.2)',
-              transform: 'perspective(1000px) rotateX(3deg)',
+                ? '0 30px 80px rgba(0, 0, 0, 0.5), 0 15px 40px rgba(0, 0, 0, 0.3), inset 0 2px 15px rgba(255, 255, 255, 0.25), inset 0 -4px 15px rgba(0, 0, 0, 0.3)'
+                : '0 30px 80px rgba(16, 185, 129, 0.6), 0 20px 50px rgba(16, 185, 129, 0.5), 0 10px 30px rgba(16, 185, 129, 0.4), inset 0 4px 20px rgba(255, 255, 255, 0.5), inset 0 -4px 15px rgba(0, 0, 0, 0.2)',
+              transform: 'perspective(1000px) rotateX(2deg)',
               transformStyle: 'preserve-3d'
             }}
           >
@@ -609,12 +611,21 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
               }}
             />
 
-            {/* توهج متحرك */}
+            {/* توهج متحرك لامع */}
             <div
-              className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+              className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
               style={{
-                background: 'radial-gradient(circle at center, rgba(255, 255, 255, 0.3) 0%, transparent 70%)',
-                animation: 'pulse 2s ease-in-out infinite'
+                background: 'radial-gradient(circle at center, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.2) 40%, transparent 80%)',
+                animation: 'pulse 2.5s ease-in-out infinite'
+              }}
+            />
+
+            {/* حلقات توهج خارجية */}
+            <div
+              className="absolute inset-0 opacity-50 group-hover:opacity-70 transition-opacity duration-700 pointer-events-none"
+              style={{
+                background: 'radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.3) 0%, transparent 50%)',
+                filter: 'blur(20px)'
               }}
             />
 
@@ -634,14 +645,18 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
                 </>
               ) : (
                 <>
-                  <span className="text-3xl md:text-4xl animate-bounce" style={{ filter: 'drop-shadow(0 0 10px rgba(255, 255, 255, 0.5))' }}>
+                  <span className="text-4xl md:text-5xl animate-bounce" style={{ filter: 'drop-shadow(0 0 15px rgba(255, 255, 255, 0.7))' }}>
                     {getTreeEmoji(farm.farm_type)}
                   </span>
                   <span
-                    className="whitespace-nowrap font-black"
+                    className="whitespace-nowrap"
                     style={{
-                      textShadow: '0 3px 6px rgba(0, 0, 0, 0.4), 0 0 15px rgba(255, 255, 255, 0.3)',
-                      letterSpacing: '0.02em'
+                      fontFamily: 'Cairo, Tajawal, sans-serif',
+                      fontWeight: 900,
+                      fontSize: 'inherit',
+                      textShadow: '0 4px 8px rgba(0, 0, 0, 0.5), 0 2px 4px rgba(0, 0, 0, 0.3), 0 0 20px rgba(255, 255, 255, 0.4)',
+                      letterSpacing: '0.03em',
+                      lineHeight: 1.2
                     }}
                   >
                     امتلك {getTreeName(farm.farm_type)}
@@ -650,12 +665,21 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
               )}
             </div>
 
-            {/* بريق زجاجي */}
+            {/* بريق زجاجي لامع */}
             <div
               className="absolute top-0 left-0 right-0 h-1/2 pointer-events-none"
               style={{
-                background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.25) 0%, transparent 100%)',
-                borderRadius: '1.5rem 1.5rem 0 0'
+                background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.2) 30%, transparent 100%)',
+                borderRadius: '2rem 2rem 0 0'
+              }}
+            />
+
+            {/* انعكاس زجاجي إضافي */}
+            <div
+              className="absolute bottom-0 left-0 right-0 h-1/3 pointer-events-none"
+              style={{
+                background: 'linear-gradient(0deg, rgba(0, 0, 0, 0.2) 0%, transparent 100%)',
+                borderRadius: '0 0 2rem 2rem'
               }}
             />
           </button>
