@@ -67,6 +67,11 @@ export function TemporaryBookingPage({
   const [showSuccess, setShowSuccess] = useState(false);
   const [investorName, setInvestorName] = useState('');
   const [investorPhone, setInvestorPhone] = useState('');
+
+  // التحقق من صحة البيانات
+  const isValidName = investorName.trim().length >= 3;
+  const isValidPhone = investorPhone.trim().length === 10 && /^05[0-9]{8}$/.test(investorPhone.trim());
+  const isFormValid = isValidName && isValidPhone;
   const [expandedVariety, setExpandedVariety] = useState<string | null>(null);
 
   const normalizedFarmType = farmType?.toLowerCase() || '';
@@ -768,13 +773,19 @@ export function TemporaryBookingPage({
                           type="text"
                           value={investorName}
                           onChange={(e) => setInvestorName(e.target.value)}
-                          placeholder="أدخل اسمك الكامل"
+                          placeholder="أدخل اسمك الكامل (3 أحرف على الأقل)"
                           className="w-full px-3 sm:px-3 md:px-4 py-2.5 sm:py-3 md:py-3 rounded-xl sm:rounded-xl border-2 focus:outline-none transition-all font-bold text-sm sm:text-sm md:text-base shadow-inner touch-manipulation"
                           style={{
-                            borderColor: investorName ? greenTheme.primary : '#d1d5db',
-                            background: investorName ? greenTheme.cream : 'white'
+                            borderColor: isValidName ? greenTheme.primary : investorName ? '#f59e0b' : '#d1d5db',
+                            background: isValidName ? greenTheme.cream : 'white'
                           }}
                         />
+                        {investorName && !isValidName && (
+                          <p className="text-xs text-amber-600 font-bold mt-1 flex items-center gap-1">
+                            <AlertCircle className="w-3 h-3" />
+                            يجب إدخال 3 أحرف على الأقل
+                          </p>
+                        )}
                       </div>
 
                       <div>
@@ -796,21 +807,36 @@ export function TemporaryBookingPage({
                           <input
                             type="tel"
                             value={investorPhone}
-                            onChange={(e) => setInvestorPhone(e.target.value)}
-                            placeholder="5xxxxxxxx"
+                            onChange={(e) => {
+                              const value = e.target.value.replace(/\D/g, '');
+                              if (value.length <= 10) {
+                                setInvestorPhone(value);
+                              }
+                            }}
+                            placeholder="5xxxxxxxx (10 أرقام)"
+                            maxLength={10}
                             className="flex-1 min-w-0 px-2.5 sm:px-3 md:px-4 py-2 sm:py-2.5 md:py-3 rounded-lg sm:rounded-xl border-2 focus:outline-none transition-all font-bold text-xs sm:text-sm md:text-base shadow-inner"
                             style={{
-                              borderColor: investorPhone ? greenTheme.primary : '#d1d5db',
-                              background: investorPhone ? greenTheme.cream : 'white'
+                              borderColor: isValidPhone ? greenTheme.primary : investorPhone ? '#f59e0b' : '#d1d5db',
+                              background: isValidPhone ? greenTheme.cream : 'white'
                             }}
                           />
                         </div>
+                        {investorPhone && !isValidPhone && (
+                          <p className="text-xs text-amber-600 font-bold mt-1 flex items-center gap-1">
+                            <AlertCircle className="w-3 h-3" />
+                            {investorPhone.length < 10
+                              ? `أدخل ${10 - investorPhone.length} أرقام إضافية`
+                              : 'يجب أن يبدأ الرقم بـ 05'
+                            }
+                          </p>
+                        )}
                       </div>
 
                       {/* زر الحجز - للأجهزة الكبيرة فقط */}
                       <button
                         onClick={handleSubmit}
-                        disabled={submitting || !investorName || !investorPhone}
+                        disabled={submitting || !isFormValid}
                         className="hidden lg:flex w-full py-4 rounded-xl font-black text-lg text-white transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed items-center justify-center gap-2 mt-5"
                         style={{
                           background: `linear-gradient(135deg, ${greenTheme.light}, ${greenTheme.primary})`,
@@ -888,7 +914,7 @@ export function TemporaryBookingPage({
             {/* الزر الرئيسي الضخم */}
             <button
               onClick={handleSubmit}
-              disabled={submitting || !investorName || !investorPhone}
+              disabled={submitting || !isFormValid}
               className="w-full py-4 rounded-xl font-black text-lg text-white transition-all active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2.5 shadow-lg"
               style={{
                 background: submitting
@@ -932,20 +958,26 @@ export function TemporaryBookingPage({
             </button>
 
             {/* تنبيه البيانات الناقصة */}
-            {(!investorName || !investorPhone) && (
+            {!isFormValid && (
               <div
-                className="mt-2.5 px-3 py-2 rounded-lg flex items-center justify-center gap-2"
+                className="mt-2.5 px-3 py-2 rounded-lg flex flex-col gap-1.5"
                 style={{
                   background: 'rgba(239, 68, 68, 0.1)',
                   border: '1.5px solid rgba(239, 68, 68, 0.3)'
                 }}
               >
-                <svg className="w-4 h-4 text-red-600" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                </svg>
-                <p className="text-xs text-red-700 font-bold">
-                  يرجى إدخال الاسم ورقم الجوال أعلاه
-                </p>
+                <div className="flex items-center justify-center gap-2">
+                  <svg className="w-4 h-4 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                  </svg>
+                  <p className="text-xs text-red-700 font-bold">
+                    يرجى إكمال البيانات المطلوبة:
+                  </p>
+                </div>
+                <div className="text-center text-[11px] text-red-600 font-bold space-y-0.5">
+                  {!isValidName && <div>• الاسم (3 أحرف على الأقل)</div>}
+                  {!isValidPhone && <div>• رقم الجوال (10 أرقام تبدأ بـ 05)</div>}
+                </div>
               </div>
             )}
           </div>
