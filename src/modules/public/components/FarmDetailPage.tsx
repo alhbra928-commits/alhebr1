@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { ArrowRight, MapPin, Trees, TrendingUp, CheckCircle2, Droplets, Zap, Shield, Navigation, Sprout } from 'lucide-react';
-import { brandColors, brandGradients } from '../../finance/styles/brandColors';
+// Colors removed - using emerald green theme only
 import { FarmDetailService, FarmDetail } from '../services/farmDetailService';
 import { FarmLoader } from '../../../components/common/FarmLoader';
 import { getPlatformTextsBySection } from '../../../services/platformTextsService';
@@ -111,15 +111,15 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
 
   if (!farm) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-amber-50 via-yellow-50 to-amber-100">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-50 via-green-50 to-emerald-100">
         <div className="text-center">
-          <p className="text-2xl font-bold mb-4" style={{ color: brandColors.text.primary }}>
+          <p className="text-2xl font-bold mb-4" style={{ '#1f2937' }}>
             لم يتم العثور على المزرعة
           </p>
           <button
             onClick={onBack}
             className="px-8 py-3 rounded-xl font-bold text-white transition-all hover:scale-105"
-            style={{ background: brandGradients.gold }}
+            style={{ background: linear-gradient(135deg, #10b981, #059669) }}
           >
             العودة للرئيسية
           </button>
@@ -155,7 +155,7 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
         className="sticky top-0 z-50 backdrop-blur-md border-b"
         style={{
           background: 'rgba(255, 250, 240, 0.95)',
-          borderColor: brandColors.border.light
+          borderColor: rgba(16, 185, 129, 0.2)
         }}
       >
         <div className="max-w-7xl mx-auto px-3 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
@@ -164,8 +164,8 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
             className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-xl font-bold transition-all active:scale-95 sm:hover:scale-105 touch-manipulation"
             style={{
               background: 'white',
-              color: brandColors.primary.gold,
-              boxShadow: '0 4px 12px rgba(212, 175, 55, 0.2)'
+              #059669,
+              boxShadow: '0 4px 12px rgba(16, 185, 129, 0.2)'
             }}
           >
             <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -175,9 +175,9 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
           <div className="flex items-center gap-1.5 sm:gap-2">
             <div
               className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full animate-pulse"
-              style={{ background: brandGradients.gold }}
+              style={{ background: linear-gradient(135deg, #10b981, #059669) }}
             />
-            <span className="font-bold text-xs sm:text-sm md:text-base" style={{ color: brandColors.primary.gold }}>
+            <span className="font-bold text-xs sm:text-sm md:text-base" style={{ '#059669' }}>
               {platformName}
             </span>
           </div>
@@ -238,8 +238,8 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
           className="mb-6 sm:mb-8 p-4 sm:p-6 md:p-8 rounded-2xl sm:rounded-3xl backdrop-blur-sm transform active:scale-[0.99] sm:hover:scale-[1.01] transition-all duration-300"
           style={{
             background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 250, 240, 0.9))',
-            boxShadow: `0 20px 60px rgba(212, 175, 55, 0.3)`,
-            border: `2px solid ${brandColors.primary.gold}30`
+            boxShadow: `0 20px 60px rgba(16, 185, 129, 0.3)`,
+            border: `2px solid rgba(5, 150, 105, 0.2)30`
           }}
         >
           {/* العنوان والموقع */}
@@ -247,26 +247,26 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
             <div className="flex-1">
               <div className="flex items-center gap-2 sm:gap-3 mb-1.5 sm:mb-2 md:mb-3">
                 <div className="text-2xl sm:text-3xl md:text-4xl">{getTreeEmoji(farm.farm_type)}</div>
-                <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-black leading-tight" style={{ color: brandColors.primary.gold }}>
+                <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-black leading-tight" style={{ '#059669' }}>
                   {farm.name_ar}
                 </h2>
               </div>
-              <div className="flex items-center gap-1.5 sm:gap-2 text-sm sm:text-base md:text-lg" style={{ color: brandColors.text.secondary }}>
+              <div className="flex items-center gap-1.5 sm:gap-2 text-sm sm:text-base md:text-lg" style={{ '#6b7280' }}>
                 <MapPin className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
                 <span>{farm.city}, {farm.region}</span>
               </div>
             </div>
 
             <div className="text-right w-full sm:w-auto">
-              <div className="text-xs sm:text-sm" style={{ color: brandColors.text.secondary }}>رمز المزرعة</div>
-              <div className="text-lg sm:text-xl md:text-2xl font-bold" style={{ color: brandColors.primary.gold }}>
+              <div className="text-xs sm:text-sm" style={{ '#6b7280' }}>رمز المزرعة</div>
+              <div className="text-lg sm:text-xl md:text-2xl font-bold" style={{ '#059669' }}>
                 {farm.name_ar}
               </div>
             </div>
           </div>
 
           {/* النبذة التعريفية */}
-          <p className="text-xs sm:text-sm md:text-base lg:text-lg leading-relaxed mb-4 sm:mb-5 md:mb-6 lg:mb-8" style={{ color: brandColors.text.secondary }}>
+          <p className="text-xs sm:text-sm md:text-base lg:text-lg leading-relaxed mb-4 sm:mb-5 md:mb-6 lg:mb-8" style={{ '#6b7280' }}>
             {farm.description_ar}
           </p>
 
@@ -274,35 +274,35 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
           <div className="grid grid-cols-1 xs:grid-cols-3 gap-2.5 sm:gap-3 md:gap-4 lg:gap-6 mb-4 sm:mb-5 md:mb-6 lg:mb-8">
             <div
               className="p-3 sm:p-4 md:p-5 lg:p-6 rounded-lg sm:rounded-xl md:rounded-2xl text-center transition-all active:scale-95 sm:hover:scale-105 touch-manipulation"
-              style={{ background: brandColors.neutral.beige }}
+              style={{ background: rgba(255, 255, 255, 0.5) }}
             >
-              <Trees className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 lg:w-8 lg:h-8 mx-auto mb-1.5 sm:mb-2 md:mb-3" style={{ color: brandColors.accent.olive }} />
-              <div className="text-base sm:text-xl md:text-2xl lg:text-3xl font-black mb-0.5 sm:mb-1 md:mb-2" style={{ color: brandColors.primary.gold }}>
+              <Trees className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 lg:w-8 lg:h-8 mx-auto mb-1.5 sm:mb-2 md:mb-3" style={{ '#10b981' }} />
+              <div className="text-base sm:text-xl md:text-2xl lg:text-3xl font-black mb-0.5 sm:mb-1 md:mb-2" style={{ '#059669' }}>
                 {farm.total_trees.toLocaleString('ar-SA')}
               </div>
-              <div className="text-[10px] sm:text-xs md:text-sm" style={{ color: brandColors.text.secondary }}>إجمالي الأشجار</div>
+              <div className="text-[10px] sm:text-xs md:text-sm" style={{ '#6b7280' }}>إجمالي الأشجار</div>
             </div>
 
             <div
               className="p-4 sm:p-5 md:p-6 rounded-xl sm:rounded-2xl text-center transition-all active:scale-95 sm:hover:scale-105 touch-manipulation"
-              style={{ background: brandColors.neutral.beige }}
+              style={{ background: rgba(255, 255, 255, 0.5) }}
             >
-              <TrendingUp className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 mx-auto mb-2 sm:mb-3" style={{ color: brandColors.accent.olive }} />
-              <div className="text-xl sm:text-2xl md:text-3xl font-black mb-1 sm:mb-2" style={{ color: brandColors.primary.gold }}>
+              <TrendingUp className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 mx-auto mb-2 sm:mb-3" style={{ '#10b981' }} />
+              <div className="text-xl sm:text-2xl md:text-3xl font-black mb-1 sm:mb-2" style={{ '#059669' }}>
                 {farm.price_per_tree.toLocaleString('ar-SA')} ر.س
               </div>
-              <div className="text-xs sm:text-sm" style={{ color: brandColors.text.secondary }}>السعر لكل شجرة</div>
+              <div className="text-xs sm:text-sm" style={{ '#6b7280' }}>السعر لكل شجرة</div>
             </div>
 
             <div
               className="p-4 sm:p-5 md:p-6 rounded-xl sm:rounded-2xl text-center transition-all active:scale-95 sm:hover:scale-105 touch-manipulation"
-              style={{ background: brandColors.neutral.beige }}
+              style={{ background: rgba(255, 255, 255, 0.5) }}
             >
-              <CheckCircle2 className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 mx-auto mb-2 sm:mb-3" style={{ color: brandColors.accent.olive }} />
-              <div className="text-xl sm:text-2xl md:text-3xl font-black mb-1 sm:mb-2" style={{ color: brandColors.primary.gold }}>
+              <CheckCircle2 className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 mx-auto mb-2 sm:mb-3" style={{ '#10b981' }} />
+              <div className="text-xl sm:text-2xl md:text-3xl font-black mb-1 sm:mb-2" style={{ '#059669' }}>
                 {farm.available_trees.toLocaleString('ar-SA')}
               </div>
-              <div className="text-xs sm:text-sm" style={{ color: brandColors.text.secondary }}>متاح للحجز</div>
+              <div className="text-xs sm:text-sm" style={{ '#6b7280' }}>متاح للحجز</div>
             </div>
           </div>
 
@@ -310,15 +310,15 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
             <div
               className="mb-4 sm:mb-6 p-3 sm:p-4 rounded-xl sm:rounded-2xl text-center animate-pulse-gentle"
               style={{
-                background: 'linear-gradient(135deg, rgba(139, 165, 116, 0.15) 0%, rgba(107, 142, 35, 0.15) 100%)',
-                border: '2px solid rgba(107, 142, 35, 0.3)',
-                boxShadow: '0 8px 25px rgba(139, 165, 116, 0.2)',
+                background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(16, 185, 129, 0.15) 100%)',
+                border: '2px solid rgba(16, 185, 129, 0.3)',
+                boxShadow: '0 8px 25px rgba(16, 185, 129, 0.2)',
               }}
             >
-              <p className="text-sm sm:text-base md:text-lg lg:text-xl font-black mb-1 sm:mb-2" style={{ color: brandColors.primary.olive }}>
+              <p className="text-sm sm:text-base md:text-lg lg:text-xl font-black mb-1 sm:mb-2" style={{ '#059669' }}>
                 ⚡ بقي القليل! المزرعة على وشك الاكتمال
               </p>
-              <p className="text-xs sm:text-sm md:text-base" style={{ color: brandColors.text.secondary }}>
+              <p className="text-xs sm:text-sm md:text-base" style={{ '#6b7280' }}>
                 {100 - reservationPercentage}% فقط متبقي من المزرعة
               </p>
             </div>
@@ -328,9 +328,9 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
             <div
               className="mb-4 sm:mb-6 p-3 sm:p-4 rounded-xl sm:rounded-2xl text-center"
               style={{
-                background: 'linear-gradient(135deg, #D4AF37 0%, #C5A028 50%, #B8942A 100%)',
+                background: 'linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%)',
                 border: '2px solid rgba(255, 255, 255, 0.6)',
-                boxShadow: '0 12px 35px rgba(212, 175, 55, 0.6), 0 0 25px rgba(212, 175, 55, 0.3)',
+                boxShadow: '0 12px 35px rgba(16, 185, 129, 0.6), 0 0 25px rgba(16, 185, 129, 0.3)',
               }}
             >
               <p className="text-base sm:text-lg md:text-xl lg:text-2xl font-black text-white" style={{ textShadow: '0 2px 4px rgba(0,0,0,0.3)' }}>
@@ -345,29 +345,29 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
           {/* Progress Bar - نسبة الحجز */}
           <div className="mb-4 sm:mb-6">
             <div className="flex items-center justify-between mb-1.5 sm:mb-2">
-              <span className="font-bold text-xs sm:text-sm md:text-base" style={{ color: brandColors.text.primary }}>
+              <span className="font-bold text-xs sm:text-sm md:text-base" style={{ '#1f2937' }}>
                 نسبة الحجز
               </span>
-              <span className="text-base sm:text-lg md:text-xl lg:text-2xl font-black" style={{ color: brandColors.primary.gold }}>
+              <span className="text-base sm:text-lg md:text-xl lg:text-2xl font-black" style={{ '#059669' }}>
                 {reservationPercentage}%
               </span>
             </div>
             <div
               className="h-2.5 sm:h-3 md:h-4 rounded-full overflow-hidden relative"
-              style={{ background: brandColors.neutral.beige }}
+              style={{ background: rgba(255, 255, 255, 0.5) }}
             >
               <div
                 className="h-full rounded-full transition-all duration-1000 ease-out"
                 style={{
                   width: `${reservationPercentage}%`,
                   background: reservationPercentage === 100
-                    ? 'linear-gradient(90deg, #D4AF37, #C5A028, #B8942A)'
-                    : `linear-gradient(90deg, ${brandColors.primary.gold}, ${brandColors.primary.goldDark})`
+                    ? 'linear-gradient(90deg, #10b981, #059669, #047857)'
+                    : `linear-gradient(90deg, rgba(5, 150, 105, 0.2), ${#059669Dark})`
                 }}
               />
             </div>
             {reservationPercentage < 60 && (
-              <p className="text-[10px] sm:text-xs md:text-sm mt-1.5 sm:mt-2 text-center font-bold" style={{ color: brandColors.status.warning }}>
+              <p className="text-[10px] sm:text-xs md:text-sm mt-1.5 sm:mt-2 text-center font-bold" style={{ '#f59e0b' }}>
                 🔥 {reservationPercentage}٪ من حجوزات المزرعة اكتملت
               </p>
             )}
@@ -380,11 +380,11 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
             className="mb-6 sm:mb-8 p-4 sm:p-6 md:p-8 rounded-2xl sm:rounded-3xl"
             style={{
               background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 250, 240, 0.9))',
-              boxShadow: `0 15px 40px rgba(212, 175, 55, 0.2)`,
-              border: `2px solid ${brandColors.primary.gold}20`
+              boxShadow: `0 15px 40px rgba(16, 185, 129, 0.2)`,
+              border: `2px solid rgba(5, 150, 105, 0.2)20`
             }}
           >
-            <h3 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-black mb-3 sm:mb-4 md:mb-6 flex items-center gap-2 sm:gap-3" style={{ color: brandColors.primary.gold }}>
+            <h3 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-black mb-3 sm:mb-4 md:mb-6 flex items-center gap-2 sm:gap-3" style={{ '#059669' }}>
               <CheckCircle2 className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 lg:w-8 lg:h-8" />
               مميزات المزرعة
             </h3>
@@ -393,19 +393,19 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
               {farm.has_well && (
                 <div
                   className="flex items-center gap-2.5 sm:gap-3 p-2.5 sm:p-3 md:p-4 rounded-lg sm:rounded-xl transition-all active:scale-95 sm:hover:scale-105 touch-manipulation"
-                  style={{ background: brandColors.neutral.beige }}
+                  style={{ background: rgba(255, 255, 255, 0.5) }}
                 >
                   <div
                     className="w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center flex-shrink-0"
-                    style={{ background: `${brandColors.primary.gold}15` }}
+                    style={{ background: `rgba(5, 150, 105, 0.2)15` }}
                   >
-                    <Droplets className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" style={{ color: brandColors.primary.gold }} />
+                    <Droplets className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" style={{ '#059669' }} />
                   </div>
                   <div>
-                    <div className="text-xs sm:text-sm md:text-base font-bold" style={{ color: brandColors.text.primary }}>
+                    <div className="text-xs sm:text-sm md:text-base font-bold" style={{ '#1f2937' }}>
                       بئر ماء
                     </div>
-                    <div className="text-[10px] sm:text-xs md:text-sm" style={{ color: brandColors.text.secondary }}>
+                    <div className="text-[10px] sm:text-xs md:text-sm" style={{ '#6b7280' }}>
                       متوفر للري
                     </div>
                   </div>
@@ -415,19 +415,19 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
               {farm.has_electricity && (
                 <div
                   className="flex items-center gap-2.5 sm:gap-3 p-2.5 sm:p-3 md:p-4 rounded-lg sm:rounded-xl transition-all active:scale-95 sm:hover:scale-105 touch-manipulation"
-                  style={{ background: brandColors.neutral.beige }}
+                  style={{ background: rgba(255, 255, 255, 0.5) }}
                 >
                   <div
                     className="w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center flex-shrink-0"
-                    style={{ background: `${brandColors.primary.gold}15` }}
+                    style={{ background: `rgba(5, 150, 105, 0.2)15` }}
                   >
-                    <Zap className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" style={{ color: brandColors.primary.gold }} />
+                    <Zap className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" style={{ '#059669' }} />
                   </div>
                   <div>
-                    <div className="text-xs sm:text-sm md:text-base font-bold" style={{ color: brandColors.text.primary }}>
+                    <div className="text-xs sm:text-sm md:text-base font-bold" style={{ '#1f2937' }}>
                       كهرباء
                     </div>
-                    <div className="text-[10px] sm:text-xs md:text-sm" style={{ color: brandColors.text.secondary }}>
+                    <div className="text-[10px] sm:text-xs md:text-sm" style={{ '#6b7280' }}>
                       مصدر طاقة متوفر
                     </div>
                   </div>
@@ -437,19 +437,19 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
               {farm.has_fence && (
                 <div
                   className="flex items-center gap-2.5 sm:gap-3 p-2.5 sm:p-3 md:p-4 rounded-lg sm:rounded-xl transition-all active:scale-95 sm:hover:scale-105 touch-manipulation"
-                  style={{ background: brandColors.neutral.beige }}
+                  style={{ background: rgba(255, 255, 255, 0.5) }}
                 >
                   <div
                     className="w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center flex-shrink-0"
-                    style={{ background: `${brandColors.primary.gold}15` }}
+                    style={{ background: `rgba(5, 150, 105, 0.2)15` }}
                   >
-                    <Shield className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" style={{ color: brandColors.primary.gold }} />
+                    <Shield className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" style={{ '#059669' }} />
                   </div>
                   <div>
-                    <div className="text-xs sm:text-sm md:text-base font-bold" style={{ color: brandColors.text.primary }}>
+                    <div className="text-xs sm:text-sm md:text-base font-bold" style={{ '#1f2937' }}>
                       سور محيط
                     </div>
-                    <div className="text-[10px] sm:text-xs md:text-sm" style={{ color: brandColors.text.secondary }}>
+                    <div className="text-[10px] sm:text-xs md:text-sm" style={{ '#6b7280' }}>
                       حماية وأمان
                     </div>
                   </div>
@@ -459,19 +459,19 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
               {farm.has_road && (
                 <div
                   className="flex items-center gap-2.5 sm:gap-3 p-2.5 sm:p-3 md:p-4 rounded-lg sm:rounded-xl transition-all active:scale-95 sm:hover:scale-105 touch-manipulation"
-                  style={{ background: brandColors.neutral.beige }}
+                  style={{ background: rgba(255, 255, 255, 0.5) }}
                 >
                   <div
                     className="w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center flex-shrink-0"
-                    style={{ background: `${brandColors.primary.gold}15` }}
+                    style={{ background: `rgba(5, 150, 105, 0.2)15` }}
                   >
-                    <Navigation className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" style={{ color: brandColors.primary.gold }} />
+                    <Navigation className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" style={{ '#059669' }} />
                   </div>
                   <div>
-                    <div className="text-xs sm:text-sm md:text-base font-bold" style={{ color: brandColors.text.primary }}>
+                    <div className="text-xs sm:text-sm md:text-base font-bold" style={{ '#1f2937' }}>
                       طريق معبد
                     </div>
-                    <div className="text-[10px] sm:text-xs md:text-sm" style={{ color: brandColors.text.secondary }}>
+                    <div className="text-[10px] sm:text-xs md:text-sm" style={{ '#6b7280' }}>
                       سهولة الوصول
                     </div>
                   </div>
@@ -481,19 +481,19 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
               {farm.has_sterilization && (
                 <div
                   className="flex items-center gap-2.5 sm:gap-3 p-2.5 sm:p-3 md:p-4 rounded-lg sm:rounded-xl transition-all active:scale-95 sm:hover:scale-105 touch-manipulation"
-                  style={{ background: brandColors.neutral.beige }}
+                  style={{ background: rgba(255, 255, 255, 0.5) }}
                 >
                   <div
                     className="w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center flex-shrink-0"
-                    style={{ background: `${brandColors.primary.gold}15` }}
+                    style={{ background: `rgba(5, 150, 105, 0.2)15` }}
                   >
-                    <Sprout className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" style={{ color: brandColors.primary.gold }} />
+                    <Sprout className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" style={{ '#059669' }} />
                   </div>
                   <div>
-                    <div className="text-xs sm:text-sm md:text-base font-bold" style={{ color: brandColors.text.primary }}>
+                    <div className="text-xs sm:text-sm md:text-base font-bold" style={{ '#1f2937' }}>
                       معقم ومعالج
                     </div>
-                    <div className="text-[10px] sm:text-xs md:text-sm" style={{ color: brandColors.text.secondary }}>
+                    <div className="text-[10px] sm:text-xs md:text-sm" style={{ '#6b7280' }}>
                       رعاية صحية متكاملة
                     </div>
                   </div>
@@ -509,16 +509,16 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
             className="mb-4 sm:mb-6 md:mb-8 p-3 sm:p-4 md:p-6 lg:p-8 rounded-xl sm:rounded-2xl md:rounded-3xl"
             style={{
               background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 250, 240, 0.9))',
-              boxShadow: `0 15px 40px rgba(212, 175, 55, 0.2)`,
-              border: `2px solid ${brandColors.primary.gold}20`
+              boxShadow: `0 15px 40px rgba(16, 185, 129, 0.2)`,
+              border: `2px solid rgba(5, 150, 105, 0.2)20`
             }}
           >
-            <h3 className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl font-black mb-2 sm:mb-3 md:mb-4" style={{ color: brandColors.primary.gold }}>
+            <h3 className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl font-black mb-2 sm:mb-3 md:mb-4" style={{ '#059669' }}>
               📖 نبذة عن المزرعة
             </h3>
             <p
               className="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl leading-relaxed"
-              style={{ color: brandColors.text.secondary, lineHeight: '1.8' }}
+              style={{ #6b7280, lineHeight: '1.8' }}
             >
               {farm.description_ar}
             </p>
@@ -530,18 +530,18 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
           <div
             className="mb-4 sm:mb-6 md:mb-8 p-3 sm:p-4 md:p-6 lg:p-8 rounded-xl sm:rounded-2xl md:rounded-3xl"
             style={{
-              background: `linear-gradient(135deg, ${brandColors.accent.olive}10, ${brandColors.accent.olive}05)`,
-              boxShadow: `0 15px 40px rgba(139, 165, 116, 0.15)`,
-              border: `2px solid ${brandColors.accent.olive}30`
+              background: `linear-gradient(135deg, rgba(16, 185, 129, 0.3)10, rgba(16, 185, 129, 0.3)05)`,
+              boxShadow: `0 15px 40px rgba(16, 185, 129, 0.15)`,
+              border: `2px solid rgba(16, 185, 129, 0.3)30`
             }}
           >
-            <h3 className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-black mb-2 sm:mb-3 md:mb-4 flex items-center gap-2" style={{ color: brandColors.accent.olive }}>
+            <h3 className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-black mb-2 sm:mb-3 md:mb-4 flex items-center gap-2" style={{ '#10b981' }}>
               <Sprout className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
               ملاحظات فنية
             </h3>
             <p
               className="text-xs sm:text-sm md:text-base lg:text-lg leading-relaxed"
-              style={{ color: brandColors.text.secondary, lineHeight: '1.7' }}
+              style={{ #6b7280, lineHeight: '1.7' }}
             >
               {farm.technical_notes}
             </p>
@@ -637,8 +637,8 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
               <p
                 className="text-sm sm:text-base md:text-lg lg:text-xl font-black animate-pulse tracking-wide"
                 style={{
-                  color: brandColors.primary.gold,
-                  textShadow: '0 2px 4px rgba(212, 175, 55, 0.3)',
+                  #059669,
+                  textShadow: '0 2px 4px rgba(16, 185, 129, 0.3)',
                   letterSpacing: '0.03em'
                 }}
               >
@@ -648,10 +648,10 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
                 <span
                   className="inline-flex items-center gap-1.5 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-[10px] sm:text-xs md:text-sm font-bold"
                   style={{
-                    background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.15), rgba(255, 215, 0, 0.15))',
-                    color: brandColors.primary.goldDark,
-                    border: '1.5px solid rgba(212, 175, 55, 0.3)',
-                    boxShadow: '0 2px 8px rgba(212, 175, 55, 0.2)'
+                    background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(255, 215, 0, 0.15))',
+                    #059669Dark,
+                    border: '1.5px solid rgba(16, 185, 129, 0.3)',
+                    boxShadow: '0 2px 8px rgba(16, 185, 129, 0.2)'
                   }}
                 >
                   🎯 حجز مؤقت لمدة محدودة
@@ -659,10 +659,10 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
                 <span
                   className="inline-flex items-center gap-1.5 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-[10px] sm:text-xs md:text-sm font-bold"
                   style={{
-                    background: 'linear-gradient(135deg, rgba(107, 142, 35, 0.15), rgba(139, 165, 116, 0.15))',
-                    color: brandColors.accent.olive,
-                    border: '1.5px solid rgba(107, 142, 35, 0.3)',
-                    boxShadow: '0 2px 8px rgba(107, 142, 35, 0.2)'
+                    background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(16, 185, 129, 0.15))',
+                    #10b981,
+                    border: '1.5px solid rgba(16, 185, 129, 0.3)',
+                    boxShadow: '0 2px 8px rgba(16, 185, 129, 0.2)'
                   }}
                 >
                   ✓ لا حاجة للدفع الآن
@@ -675,19 +675,19 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
         {/* 🟫 قسم الثقة والتحفيز */}
         <div
           className="text-center py-8 sm:py-12 border-t-2"
-          style={{ borderColor: `${brandColors.primary.gold}20` }}
+          style={{ borderColor: `rgba(5, 150, 105, 0.2)20` }}
         >
-          <p className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4" style={{ color: brandColors.primary.gold }}>
+          <p className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4" style={{ '#059669' }}>
             استثمارك يبدأ من شجرة واحدة...
           </p>
-          <p className="text-lg sm:text-xl" style={{ color: brandColors.text.secondary }}>
+          <p className="text-lg sm:text-xl" style={{ '#6b7280' }}>
             ملكك مدى الحياة 🌿
           </p>
         </div>
       </div>
 
       {/* 🟬 الفوتر */}
-      <div className="py-6 sm:py-8 text-center" style={{ background: brandColors.accent.oliveDark }}>
+      <div className="py-6 sm:py-8 text-center" style={{ '#047857' }}>
         <p className="text-white text-sm sm:text-base opacity-80">
           © 2025 منصة تملك المزارع - جميع الحقوق محفوظة
         </p>
