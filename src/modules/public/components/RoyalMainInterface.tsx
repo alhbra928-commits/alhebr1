@@ -155,75 +155,77 @@ export function RoyalMainInterface({
       <header className="relative bg-gradient-to-r from-amber-700 via-yellow-600 to-amber-700 shadow-2xl">
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JpZCIgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48cGF0aCBkPSJNIDQwIDAgTCAwIDAgMCA0MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLW9wYWNpdHk9IjAuMSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyaWQpIi8+PC9zdmc+')] opacity-20"></div>
 
-        <div className="relative container mx-auto px-6 py-8">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-4">
-              <div className="relative">
-                <Crown className="w-12 h-12 text-yellow-200" strokeWidth={2} />
+        <div className="relative container mx-auto px-4 sm:px-6 py-4 sm:py-6 md:py-8">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-6 mb-4 sm:mb-6">
+            <div className="flex items-center gap-2 sm:gap-3 md:gap-4 flex-1 min-w-0">
+              <div className="relative flex-shrink-0">
+                <Crown className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 text-yellow-200" strokeWidth={2} />
                 <div className="absolute -top-1 -right-1">
-                  <Sparkles className="w-5 h-5 text-yellow-300 animate-pulse" />
+                  <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-yellow-300 animate-pulse" />
                 </div>
               </div>
-              <div>
-                <h1 className="text-3xl md:text-4xl font-bold text-white tracking-wide">
+              <div className="min-w-0 flex-1">
+                <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold text-white tracking-wide break-words leading-tight">
                   منصة الاستثمار الزراعي الملكية
                 </h1>
-                <p className="text-amber-100 mt-1 text-lg">استثمار فاخر في عالم النخيل والزيتون</p>
+                <p className="text-amber-100 mt-0.5 sm:mt-1 text-xs sm:text-sm md:text-base lg:text-lg break-words">استثمار فاخر في عالم النخيل والزيتون</p>
               </div>
             </div>
 
-            <AdminCrownButton
-              onAdminLogin={onAdminLogin}
-              onFarmOwnerLogin={onFarmOwnerLogin}
-            />
+            <div className="flex-shrink-0 self-end sm:self-auto">
+              <AdminCrownButton
+                onAdminLogin={onAdminLogin}
+                onFarmOwnerLogin={onFarmOwnerLogin}
+              />
+            </div>
           </div>
 
           {/* Stats Bar */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-6">
-            <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4 border border-white/30">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-white/30 rounded-lg">
-                  <TreePine className="w-6 h-6 text-white" />
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 md:gap-4 mt-4 sm:mt-6">
+            <div className="bg-white/20 backdrop-blur-sm rounded-lg sm:rounded-xl p-3 sm:p-4 border border-white/30">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <div className="p-1.5 sm:p-2 bg-white/30 rounded-lg flex-shrink-0">
+                  <TreePine className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-white" />
                 </div>
-                <div>
-                  <p className="text-amber-100 text-sm">إجمالي المزارع</p>
-                  <p className="text-white text-2xl font-bold">{farms.length}</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4 border border-white/30">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-white/30 rounded-lg">
-                  <Users className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <p className="text-amber-100 text-sm">المستثمرون</p>
-                  <p className="text-white text-2xl font-bold">500+</p>
+                <div className="min-w-0">
+                  <p className="text-amber-100 text-xs sm:text-sm truncate">إجمالي المزارع</p>
+                  <p className="text-white text-lg sm:text-xl md:text-2xl font-bold">{farms.length}</p>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4 border border-white/30">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-white/30 rounded-lg">
-                  <Shield className="w-6 h-6 text-white" />
+            <div className="bg-white/20 backdrop-blur-sm rounded-lg sm:rounded-xl p-3 sm:p-4 border border-white/30">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <div className="p-1.5 sm:p-2 bg-white/30 rounded-lg flex-shrink-0">
+                  <Users className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-white" />
                 </div>
-                <div>
-                  <p className="text-amber-100 text-sm">نسبة الأمان</p>
-                  <p className="text-white text-2xl font-bold">100%</p>
+                <div className="min-w-0">
+                  <p className="text-amber-100 text-xs sm:text-sm truncate">المستثمرون</p>
+                  <p className="text-white text-lg sm:text-xl md:text-2xl font-bold">500+</p>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4 border border-white/30">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-white/30 rounded-lg">
-                  <Award className="w-6 h-6 text-white" />
+            <div className="bg-white/20 backdrop-blur-sm rounded-lg sm:rounded-xl p-3 sm:p-4 border border-white/30">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <div className="p-1.5 sm:p-2 bg-white/30 rounded-lg flex-shrink-0">
+                  <Shield className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-white" />
                 </div>
-                <div>
-                  <p className="text-amber-100 text-sm">معدل العائد</p>
-                  <p className="text-white text-2xl font-bold">25%</p>
+                <div className="min-w-0">
+                  <p className="text-amber-100 text-xs sm:text-sm truncate">نسبة الأمان</p>
+                  <p className="text-white text-lg sm:text-xl md:text-2xl font-bold">100%</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white/20 backdrop-blur-sm rounded-lg sm:rounded-xl p-3 sm:p-4 border border-white/30">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <div className="p-1.5 sm:p-2 bg-white/30 rounded-lg flex-shrink-0">
+                  <Award className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-white" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-amber-100 text-xs sm:text-sm truncate">معدل العائد</p>
+                  <p className="text-white text-lg sm:text-xl md:text-2xl font-bold">25%</p>
                 </div>
               </div>
             </div>
@@ -232,7 +234,7 @@ export function RoyalMainInterface({
       </header>
 
       {/* Main Content */}
-      <main className="relative container mx-auto px-6 py-12">
+      <main className="relative container mx-auto px-4 sm:px-6 py-6 sm:py-8 md:py-12">
         {loading ? (
           <div className="flex justify-center items-center py-20">
             <SimpleLoader />
@@ -240,21 +242,21 @@ export function RoyalMainInterface({
         ) : (
           <>
             {/* Section Header */}
-            <div className="text-center mb-12">
-              <div className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500 to-yellow-500 text-white px-6 py-2 rounded-full text-sm font-semibold mb-4 shadow-lg">
-                <Crown className="w-4 h-4" />
+            <div className="text-center mb-6 sm:mb-8 md:mb-12">
+              <div className="inline-flex items-center gap-1.5 sm:gap-2 bg-gradient-to-r from-amber-500 to-yellow-500 text-white px-4 py-1.5 sm:px-6 sm:py-2 rounded-full text-xs sm:text-sm font-semibold mb-3 sm:mb-4 shadow-lg">
+                <Crown className="w-3 h-3 sm:w-4 sm:h-4" />
                 <span>المزارع المتاحة للاستثمار</span>
               </div>
-              <h2 className="text-4xl font-bold text-amber-900 mb-3">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-amber-900 mb-2 sm:mb-3 px-4 break-words">
                 اختر مزرعتك الفاخرة
               </h2>
-              <p className="text-amber-700 text-lg max-w-2xl mx-auto">
+              <p className="text-amber-700 text-sm sm:text-base md:text-lg max-w-2xl mx-auto px-4 break-words">
                 استثمر في أرقى المزارع مع ضمان الجودة والعائد المميز
               </p>
             </div>
 
             {/* Farms Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
               {farms.map((farm, index) => (
                 <div
                   key={farm.id}
