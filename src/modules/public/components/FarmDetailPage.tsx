@@ -575,24 +575,25 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
           </div>
         )}
 
-        {/* 🎯 زر الحجز - تصميم أخضر ثلاثي الأبعاد زجاجي */}
-        <div className="w-full flex justify-center items-center py-6 px-4 relative" style={{ zIndex: 10 }}>
+        {/* 🎯 قسم الحجز - تصميم محسّن ومنظم */}
+        <div className="w-full flex flex-col items-center justify-center py-8 px-4 relative" style={{ zIndex: 10 }}>
+          {/* زر امتلك نخلة - في الوسط وبتصميم جميل */}
           <button
             onClick={onStartBooking}
             disabled={reservationPercentage === 100}
-            className="group relative overflow-hidden px-8 py-5 md:px-12 md:py-7 rounded-3xl font-bold text-lg md:text-2xl text-white transition-all duration-500 hover:scale-105 active:scale-95 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:scale-100"
+            className="group relative overflow-hidden px-10 py-6 md:px-16 md:py-8 rounded-3xl font-black text-xl md:text-3xl text-white transition-all duration-500 hover:scale-110 active:scale-95 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:scale-100 shadow-2xl"
             style={{
               zIndex: 10,
               fontFamily: 'Tajawal, sans-serif',
               background: reservationPercentage === 100
                 ? 'linear-gradient(145deg, rgba(75, 85, 99, 0.95), rgba(55, 65, 81, 0.95))'
-                : 'linear-gradient(145deg, rgba(16, 185, 129, 0.95), rgba(5, 150, 105, 0.95))',
+                : 'linear-gradient(145deg, #10b981 0%, #059669 50%, #047857 100%)',
               backdropFilter: 'blur(20px)',
-              border: '2px solid rgba(255, 255, 255, 0.3)',
+              border: '3px solid rgba(255, 255, 255, 0.4)',
               boxShadow: reservationPercentage === 100
-                ? '0 20px 60px rgba(0, 0, 0, 0.3), inset 0 2px 8px rgba(255, 255, 255, 0.15), inset 0 -2px 8px rgba(0, 0, 0, 0.25)'
-                : '0 20px 60px rgba(16, 185, 129, 0.4), 0 10px 30px rgba(16, 185, 129, 0.3), inset 0 2px 8px rgba(255, 255, 255, 0.3), inset 0 -2px 8px rgba(0, 0, 0, 0.15)',
-              transform: 'perspective(1000px) rotateX(5deg)',
+                ? '0 25px 70px rgba(0, 0, 0, 0.4), inset 0 2px 10px rgba(255, 255, 255, 0.2), inset 0 -3px 10px rgba(0, 0, 0, 0.3)'
+                : '0 25px 70px rgba(16, 185, 129, 0.5), 0 15px 40px rgba(16, 185, 129, 0.4), inset 0 3px 12px rgba(255, 255, 255, 0.4), inset 0 -3px 12px rgba(0, 0, 0, 0.2)',
+              transform: 'perspective(1000px) rotateX(3deg)',
               transformStyle: 'preserve-3d'
             }}
           >
@@ -659,41 +660,65 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
             />
           </button>
 
+          {/* النصوص التحفيزية والتوضيحية - منظمة وواضحة */}
           {reservationPercentage < 100 && (
-            <div className="mt-4 sm:mt-5 md:mt-6 space-y-2 sm:space-y-3">
-              <p
-                className="text-sm sm:text-base md:text-lg lg:text-xl font-black animate-pulse tracking-wide"
+            <div className="mt-6 sm:mt-8 space-y-4 sm:space-y-5 text-center max-w-2xl">
+              {/* العنوان الرئيسي - احجز الآن */}
+              <div
+                className="p-4 sm:p-5 rounded-2xl backdrop-blur-xl border-2"
                 style={{
-                  color: '#059669',
-                  textShadow: '0 2px 4px rgba(16, 185, 129, 0.3)',
-                  letterSpacing: '0.03em'
+                  background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(5, 150, 105, 0.1))',
+                  borderColor: 'rgba(16, 185, 129, 0.3)',
+                  boxShadow: '0 8px 25px rgba(16, 185, 129, 0.2)'
                 }}
               >
-                ⚡ احجز الآن واحصل على شهادة ملكية رقمية
-              </p>
-              <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3">
-                <span
-                  className="inline-flex items-center gap-1.5 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-[10px] sm:text-xs md:text-sm font-bold"
+                <p
+                  className="text-base sm:text-lg md:text-xl lg:text-2xl font-black tracking-wide"
                   style={{
-                    background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(255, 215, 0, 0.15))',
                     color: '#047857',
-                    border: '1.5px solid rgba(16, 185, 129, 0.3)',
-                    boxShadow: '0 2px 8px rgba(16, 185, 129, 0.2)'
+                    textShadow: '0 2px 4px rgba(16, 185, 129, 0.2)',
+                    letterSpacing: '0.02em'
                   }}
                 >
-                  🎯 حجز مؤقت لمدة محدودة
-                </span>
-                <span
-                  className="inline-flex items-center gap-1.5 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-[10px] sm:text-xs md:text-sm font-bold"
+                  ⚡ احجز الآن واحصل على شهادة ملكية رقمية
+                </p>
+              </div>
+
+              {/* المميزات - badges منظمة */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                <div
+                  className="flex items-center justify-center gap-2.5 px-5 py-3.5 rounded-xl backdrop-blur-xl border-2 transition-all hover:scale-105"
                   style={{
-                    background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(16, 185, 129, 0.15))',
-                    color: '#10b981',
-                    border: '1.5px solid rgba(16, 185, 129, 0.3)',
-                    boxShadow: '0 2px 8px rgba(16, 185, 129, 0.2)'
+                    background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.15))',
+                    borderColor: 'rgba(16, 185, 129, 0.35)',
+                    boxShadow: '0 4px 15px rgba(16, 185, 129, 0.25)'
                   }}
                 >
-                  ✓ لا حاجة للدفع الآن
-                </span>
+                  <span className="text-2xl">🎯</span>
+                  <span
+                    className="text-sm sm:text-base md:text-lg font-bold"
+                    style={{ color: '#047857' }}
+                  >
+                    حجز مؤقت لمدة محدودة
+                  </span>
+                </div>
+
+                <div
+                  className="flex items-center justify-center gap-2.5 px-5 py-3.5 rounded-xl backdrop-blur-xl border-2 transition-all hover:scale-105"
+                  style={{
+                    background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.15))',
+                    borderColor: 'rgba(16, 185, 129, 0.35)',
+                    boxShadow: '0 4px 15px rgba(16, 185, 129, 0.25)'
+                  }}
+                >
+                  <span className="text-2xl">✓</span>
+                  <span
+                    className="text-sm sm:text-base md:text-lg font-bold"
+                    style={{ color: '#10b981' }}
+                  >
+                    لا حاجة للدفع الآن
+                  </span>
+                </div>
               </div>
             </div>
           )}
