@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>اختبار الشريط المتحرك ثلاثي الأبعاد</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 50%, #bbf7d0 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      text-align: center;
+      color: #065f46;
+      margin-bottom: 30px;
+      font-size: 2.5rem;
+    }
+
+    .info-box {
+      background: white;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+    }
+
+    .info-box h2 {
+      color: #10b981;
+      margin-bottom: 20px;
+      font-size: 1.8rem;
+    }
+
+    .info-box ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .info-box li {
+      padding: 10px 0;
+      border-bottom: 1px solid #e5e7eb;
+      font-size: 1.1rem;
+    }
+
+    .info-box li:last-child {
+      border-bottom: none;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-weight: bold;
+      margin-right: 10px;
+    }
+
+    .status.success {
+      background: #10b981;
+      color: white;
+    }
+
+    .status.info {
+      background: #3b82f6;
+      color: white;
+    }
+
+    .ticker-demo {
+      background: white;
+      padding: 20px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+    }
+
+    .ticker-demo h3 {
+      color: #10b981;
+      margin-bottom: 15px;
+    }
+
+    .steps {
+      background: white;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .steps h2 {
+      color: #10b981;
+      margin-bottom: 20px;
+    }
+
+    .step {
+      background: #f0fdf4;
+      padding: 20px;
+      border-radius: 15px;
+      margin-bottom: 15px;
+      border-right: 5px solid #10b981;
+    }
+
+    .step h4 {
+      color: #065f46;
+      margin-bottom: 10px;
+      font-size: 1.2rem;
+    }
+
+    .step p {
+      color: #047857;
+      line-height: 1.6;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .feature-card {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      padding: 20px;
+      border-radius: 15px;
+      color: white;
+      text-align: center;
+    }
+
+    .feature-card h4 {
+      margin-bottom: 10px;
+      font-size: 1.3rem;
+    }
+
+    .code-box {
+      background: #1e293b;
+      color: #10b981;
+      padding: 20px;
+      border-radius: 10px;
+      margin: 15px 0;
+      overflow-x: auto;
+      font-family: 'Courier New', monospace;
+    }
+
+    .highlight {
+      background: #fef3c7;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎯 اختبار نظام الشريط المتحرك ثلاثي الأبعاد</h1>
+
+    <div class="info-box">
+      <h2>📦 حالة النظام</h2>
+      <ul>
+        <li>
+          <span class="status success">✅</span>
+          <strong>المكون الرئيسي:</strong> Modern3DTicker.tsx
+        </li>
+        <li>
+          <span class="status success">✅</span>
+          <strong>خدمة الإدارة:</strong> modern3DTickerService.ts
+        </li>
+        <li>
+          <span class="status success">✅</span>
+          <strong>واجهة الإدارة:</strong> Modern3DTickerManager.tsx
+        </li>
+        <li>
+          <span class="status success">✅</span>
+          <strong>قاعدة البيانات:</strong> ticker_messages_3d, ticker_settings_3d
+        </li>
+        <li>
+          <span class="status success">✅</span>
+          <strong>التكامل:</strong> ModernRoyalPlatform + SettingsView
+        </li>
+        <li>
+          <span class="status info">📦</span>
+          <strong>Build Version:</strong> v20251030_1761868657833
+        </li>
+      </ul>
+    </div>
+
+    <div class="ticker-demo">
+      <h3>🎨 المميزات الرئيسية:</h3>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <h4>✨ تأثيرات 3D</h4>
+          <p>أيقونات ثلاثية الأبعاد مع طبقات وحركة عائمة</p>
+        </div>
+        <div class="feature-card">
+          <h4>🎯 إدارة متكاملة</h4>
+          <p>لوحة تحكم شاملة في الإعدادات</p>
+        </div>
+        <div class="feature-card">
+          <h4>⚡ تحديثات فورية</h4>
+          <p>Realtime updates عند أي تغيير</p>
+        </div>
+        <div class="feature-card">
+          <h4>🎨 10 أيقونات</h4>
+          <p>اختيار من 10 أيقونات مختلفة</p>
+        </div>
+        <div class="feature-card">
+          <h4>🌈 10 ألوان</h4>
+          <p>تخصيص اللون من 10 خيارات</p>
+        </div>
+        <div class="feature-card">
+          <h4>📱 متجاوب</h4>
+          <p>تصميم يتكيف مع جميع الشاشات</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="steps">
+      <h2>🚀 خطوات الاختبار</h2>
+
+      <div class="step">
+        <h4>1️⃣ افتح المنصة الرئيسية</h4>
+        <p>يجب أن ترى الشريط المتحرك أسفل الـ Header مباشرة</p>
+        <div class="code-box">
+          ✅ 4 رسائل افتراضية<br>
+          ✅ أيقونات ملونة متحركة<br>
+          ✅ حركة سلسة لا نهائية
+        </div>
+      </div>
+
+      <div class="step">
+        <h4>2️⃣ افتح لوحة التحكم</h4>
+        <p>الإدارة → الإعدادات → <span class="highlight">الشريط المتحرك 3D</span></p>
+        <div class="code-box">
+          ✅ معاينة مباشرة للشريط<br>
+          ✅ أزرار إضافة وتعديل وحذف<br>
+          ✅ إعدادات السرعة والارتفاع
+        </div>
+      </div>
+
+      <div class="step">
+        <h4>3️⃣ أضف رسالة جديدة</h4>
+        <p>اضغط "إضافة رسالة جديدة" وجرب الخيارات</p>
+        <div class="code-box">
+          1. أدخل نص بالعربية<br>
+          2. اختر أيقونة من 10 خيارات<br>
+          3. اختر لون من 10 ألوان<br>
+          4. احفظ → تظهر فوراً في المنصة
+        </div>
+      </div>
+
+      <div class="step">
+        <h4>4️⃣ عدّل الإعدادات</h4>
+        <p>اضغط "إعدادات الشريط" وجرب التغييرات</p>
+        <div class="code-box">
+          • السرعة: 10-100 (كلما زاد، أبطأ)<br>
+          • الارتفاع: صغير/متوسط/كبير<br>
+          • التطبيق فوري على المنصة
+        </div>
+      </div>
+
+      <div class="step">
+        <h4>5️⃣ جرب التفعيل/الإيقاف</h4>
+        <p>اضغط زر "إيقاف الشريط" أو "تفعيل الشريط"</p>
+        <div class="code-box">
+          ✅ الشريط يختفي/يظهر فوراً<br>
+          ✅ بدون حاجة لتحديث الصفحة<br>
+          ✅ Realtime Update
+        </div>
+      </div>
+
+      <div class="step">
+        <h4>6️⃣ تفاعل مع الشريط</h4>
+        <p>مرر الماوس على الشريط في المنصة</p>
+        <div class="code-box">
+          ✅ الحركة تتوقف<br>
+          ✅ الأيقونة تدور 360°<br>
+          ✅ النص يتكبر قليلاً<br>
+          ✅ تأثيرات سلسة وجميلة
+        </div>
+      </div>
+    </div>
+
+    <div class="info-box" style="margin-top: 30px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white;">
+      <h2 style="color: white;">✅ النظام جاهز للاستخدام!</h2>
+      <ul style="color: white;">
+        <li>✨ تأثيرات ثلاثية الأبعاد احترافية</li>
+        <li>⚡ تحديثات فورية في الوقت الحقيقي</li>
+        <li>🎯 نظام إدارة متكامل وسهل</li>
+        <li>📱 تصميم متجاوب لجميع الأجهزة</li>
+        <li>🚀 أداء عالي ومحسّن</li>
+        <li>🎨 10 أيقونات × 10 ألوان = 100 تركيبة</li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>

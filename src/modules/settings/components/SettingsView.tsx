@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Settings, Map, Video, Mail, Key, Globe, Bell, Shield, Database, BarChart3, Package, Activity, Type, Crown } from 'lucide-react';
+import { Settings, Map, Video, Mail, Key, Globe, Bell, Shield, Database, BarChart3, Package, Activity, Type, Crown, Sparkles } from 'lucide-react';
 import { Card3D } from '../../../components/ui/Card3D';
 import { BackButton } from '../../../components/common/BackButton';
 import { BackupCenter } from '../../backups/components/BackupCenter';
@@ -7,13 +7,14 @@ import { VersionHistoryPanel } from './VersionHistoryPanel';
 import { AdvancedCacheSystemDiagnostics } from './AdvancedCacheSystemDiagnostics';
 import { PlatformTextsManager } from './PlatformTextsManager';
 import { AdvancedRoyalGatewaySettings } from './AdvancedRoyalGatewaySettings';
+import { Modern3DTickerManager } from './Modern3DTickerManager';
 
 interface SettingsViewProps {
   onBack?: () => void;
 }
 
 export function SettingsView({ onBack }: SettingsViewProps) {
-  const [activeTab, setActiveTab] = useState<'general' | 'backup' | 'versions' | 'diagnostics' | 'texts' | 'gateway'>('general');
+  const [activeTab, setActiveTab] = useState<'general' | 'backup' | 'ticker' | 'versions' | 'diagnostics' | 'texts' | 'gateway'>('general');
   const [settings, setSettings] = useState({
     mapApiKey: 'AIza*********************',
     videoService: 'youtube',
@@ -51,6 +52,17 @@ export function SettingsView({ onBack }: SettingsViewProps) {
           >
             <Settings className="h-5 w-5" />
             الإعدادات العامة
+          </button>
+          <button
+            onClick={() => setActiveTab('ticker')}
+            className={`flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all ${
+              activeTab === 'ticker'
+                ? 'bg-gradient-to-r from-[#10B981] to-[#059669] text-white shadow-lg'
+                : 'bg-white text-[#2C2C2C] hover:bg-[#F4EBDD]'
+            }`}
+          >
+            <Sparkles className="h-5 w-5" />
+            الشريط المتحرك 3D
           </button>
           <button
             onClick={() => setActiveTab('backup')}
@@ -109,7 +121,9 @@ export function SettingsView({ onBack }: SettingsViewProps) {
           </button>
         </div>
 
-        {activeTab === 'backup' ? (
+        {activeTab === 'ticker' ? (
+          <Modern3DTickerManager />
+        ) : activeTab === 'backup' ? (
           <BackupCenter />
         ) : activeTab === 'versions' ? (
           <VersionHistoryPanel />

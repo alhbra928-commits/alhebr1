@@ -14,6 +14,8 @@ import { ConceptIntroductionPage } from './ConceptIntroductionPage';
 import { PublicBottomNavBar } from '../../../components/layout/PublicBottomNavBar';
 import { GreenConceptButton } from './GreenConceptButton';
 import { InnovativeFarmCard } from './InnovativeFarmCard';
+import { Modern3DTicker } from '../../../components/common/Modern3DTicker';
+import { modern3DTickerService, TickerMessage, TickerSettings } from '../../../services/modern3DTickerService';
 
 type ViewMode = 'home' | 'farmDetail' | 'booking' | 'investor' | 'verification' | 'concept';
 
@@ -33,9 +35,31 @@ export function ModernRoyalPlatform({
   const [selectedFarm, setSelectedFarm] = useState<PublicFarm | null>(null);
   const [loading, setLoading] = useState(true);
   const [mousePosition, setMousePosition] = useState({ x: 50, y: 50 });
+  const [tickerMessages, setTickerMessages] = useState<TickerMessage[]>([]);
+  const [tickerSettings, setTickerSettings] = useState<TickerSettings>({
+    id: '1',
+    enabled: true,
+    speed: 40,
+    height: '80px'
+  });
 
   useEffect(() => {
     loadData();
+    loadTickerData();
+
+    // Subscribe to ticker updates
+    const unsubscribeMessages = modern3DTickerService.subscribeToMessages((messages) => {
+      setTickerMessages(messages);
+    });
+
+    const unsubscribeSettings = modern3DTickerService.subscribeToSettings((settings) => {
+      setTickerSettings(settings);
+    });
+
+    return () => {
+      unsubscribeMessages();
+      unsubscribeSettings();
+    };
   }, []);
 
   useEffect(() => {
@@ -58,6 +82,19 @@ export function ModernRoyalPlatform({
       console.error('Error loading farms:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadTickerData = async () => {
+    try {
+      const [messages, settings] = await Promise.all([
+        modern3DTickerService.getActiveMessages(),
+        modern3DTickerService.getSettings()
+      ]);
+      setTickerMessages(messages);
+      setTickerSettings(settings);
+    } catch (error) {
+      console.error('Error loading ticker data:', error);
     }
   };
 
@@ -201,6 +238,14 @@ export function ModernRoyalPlatform({
             </div>
           </div>
         </header>
+
+        {/* Modern 3D Ticker */}
+        <Modern3DTicker
+          messages={tickerMessages}
+          speed={tickerSettings.speed}
+          height={tickerSettings.height}
+          enabled={tickerSettings.enabled}
+        />
 
         {/* Fixed Buttons */}
         <AdminCrownButton
