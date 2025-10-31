@@ -5,7 +5,7 @@ import { BackButton } from '../../../components/common/BackButton';
 import { BackupCenter } from '../../backups/components/BackupCenter';
 import { VersionHistoryPanel } from './VersionHistoryPanel';
 import { AdvancedCacheSystemDiagnostics } from './AdvancedCacheSystemDiagnostics';
-import { PlatformTextsManager } from './PlatformTextsManager';
+import { CompletePlatformTextsManager } from './CompletePlatformTextsManager';
 import { AdvancedRoyalGatewaySettings } from './AdvancedRoyalGatewaySettings';
 import { Modern3DTickerManager } from './Modern3DTickerManager';
 
@@ -130,7 +130,7 @@ export function SettingsView({ onBack }: SettingsViewProps) {
         ) : activeTab === 'diagnostics' ? (
           <AdvancedCacheSystemDiagnostics />
         ) : activeTab === 'texts' ? (
-          <PlatformTextsManager />
+          <CompletePlatformTextsManager />
         ) : activeTab === 'gateway' ? (
           <AdvancedRoyalGatewaySettings />
         ) : (
