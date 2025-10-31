@@ -861,45 +861,92 @@ export function TemporaryBookingPage({
         </div>
       </div>
 
-      {/* زر الحجز العائم - للجوال فقط */}
+      {/* زر الحجز العائم الذكي - للجوال والتابلت */}
       {selections.size > 0 && (
-        <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50" style={{ paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))' }}>
+        <div
+          className="lg:hidden fixed bottom-0 left-0 right-0 z-[9999]"
+          style={{
+            paddingBottom: 'env(safe-area-inset-bottom, 0px)',
+            pointerEvents: 'none'
+          }}
+        >
           <div
-            className="mx-3 mb-3 p-3 rounded-xl backdrop-blur-xl"
+            className="mx-4 mb-4 p-3.5 rounded-2xl shadow-2xl"
             style={{
-              background: 'rgba(255, 255, 255, 0.96)',
-              boxShadow: '0 -8px 32px rgba(0, 0, 0, 0.12), 0 4px 16px rgba(16, 185, 129, 0.2)'
+              background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(255, 255, 255, 0.95))',
+              backdropFilter: 'blur(20px) saturate(180%)',
+              WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+              border: `2px solid ${greenTheme.lighter}`,
+              boxShadow: `
+                0 -10px 40px rgba(0, 0, 0, 0.15),
+                0 10px 60px rgba(16, 185, 129, 0.3),
+                inset 0 2px 4px rgba(255, 255, 255, 0.8)
+              `,
+              pointerEvents: 'auto'
             }}
           >
-            {/* الزر الرئيسي */}
+            {/* الزر الرئيسي الضخم */}
             <button
               onClick={handleSubmit}
               disabled={submitting || !investorName || !investorPhone}
-              className="w-full py-3.5 rounded-lg font-black text-base text-white transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="w-full py-4 rounded-xl font-black text-lg text-white transition-all active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2.5 shadow-lg"
               style={{
-                background: `linear-gradient(135deg, ${greenTheme.light}, ${greenTheme.primary})`,
-                boxShadow: `0 6px 20px rgba(16, 185, 129, 0.4)`,
-                minHeight: '52px'
+                background: submitting
+                  ? `linear-gradient(135deg, ${greenTheme.primary}, ${greenTheme.dark})`
+                  : `linear-gradient(135deg, ${greenTheme.light}, ${greenTheme.primary})`,
+                boxShadow: `
+                  0 8px 32px rgba(16, 185, 129, 0.5),
+                  0 4px 16px rgba(16, 185, 129, 0.4),
+                  inset 0 2px 8px rgba(255, 255, 255, 0.4)
+                `,
+                minHeight: '60px',
+                transform: 'translateZ(0)'
               }}
             >
               {submitting ? (
                 <>
                   <SimpleLoader size="sm" color="#FFFFFF" />
-                  <span>جاري الحجز...</span>
+                  <span className="text-lg">جاري الحجز...</span>
                 </>
               ) : (
                 <>
-                  <CheckCircle2 className="w-5 h-5" />
-                  <span>حجز {calculateTotalTrees()} شجرة • {calculateTotal().toLocaleString()} ريال</span>
+                  <div className="flex items-center gap-2.5">
+                    <div
+                      className="w-10 h-10 rounded-full flex items-center justify-center"
+                      style={{
+                        background: 'rgba(255, 255, 255, 0.3)',
+                        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)'
+                      }}
+                    >
+                      <CheckCircle2 className="w-6 h-6" />
+                    </div>
+                    <div className="flex flex-col items-start">
+                      <span className="text-base font-black leading-tight">تأكيد الحجز الآن</span>
+                      <span className="text-xs opacity-90 font-bold leading-tight">
+                        {calculateTotalTrees()} شجرة • {calculateTotal().toLocaleString()} ريال
+                      </span>
+                    </div>
+                  </div>
                 </>
               )}
             </button>
 
-            {/* تنبيه البيانات */}
+            {/* تنبيه البيانات الناقصة */}
             {(!investorName || !investorPhone) && (
-              <p className="text-center text-xs text-red-600 mt-2 font-bold">
-                يرجى إدخال الاسم ورقم الجوال أولاً
-              </p>
+              <div
+                className="mt-2.5 px-3 py-2 rounded-lg flex items-center justify-center gap-2"
+                style={{
+                  background: 'rgba(239, 68, 68, 0.1)',
+                  border: '1.5px solid rgba(239, 68, 68, 0.3)'
+                }}
+              >
+                <svg className="w-4 h-4 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                </svg>
+                <p className="text-xs text-red-700 font-bold">
+                  يرجى إدخال الاسم ورقم الجوال أعلاه
+                </p>
+              </div>
             )}
           </div>
         </div>
