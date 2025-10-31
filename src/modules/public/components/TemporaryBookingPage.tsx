@@ -726,7 +726,7 @@ export function TemporaryBookingPage({
                     </p>
                   </div>
 
-                  <div className="p-3 sm:p-4 md:p-5 space-y-3 sm:space-y-3 md:space-y-4">
+                  <div className="p-3 sm:p-4 md:p-5 pb-6 sm:pb-6 md:pb-5 space-y-3 sm:space-y-3 md:space-y-4">
                     <div
                       className="p-3 sm:p-3.5 md:p-4 rounded-xl sm:rounded-xl md:rounded-2xl"
                       style={{
@@ -807,23 +807,39 @@ export function TemporaryBookingPage({
                         </div>
                       </div>
 
+                      {/* زر الحجز - محسّن للجوال */}
                       <button
                         onClick={handleSubmit}
                         disabled={submitting || !investorName || !investorPhone}
-                        className="w-full py-3 sm:py-3.5 md:py-4 rounded-lg sm:rounded-xl font-black text-base sm:text-lg text-white transition-all active:scale-95 sm:hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-1.5 sm:gap-2 shadow-2xl mt-3 sm:mt-4 touch-manipulation"
+                        className="w-full py-4 sm:py-4 md:py-4 rounded-2xl sm:rounded-2xl font-black text-base sm:text-lg text-white transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 sm:gap-2 mt-4 sm:mt-5 touch-manipulation relative overflow-hidden group"
                         style={{
-                          background: `linear-gradient(135deg, ${greenTheme.light}, ${greenTheme.primary})`
+                          background: `linear-gradient(135deg, ${greenTheme.light}, ${greenTheme.primary})`,
+                          boxShadow: `
+                            0 10px 40px rgba(16, 185, 129, 0.4),
+                            0 5px 20px rgba(16, 185, 129, 0.3),
+                            inset 0 2px 8px rgba(255, 255, 255, 0.3)
+                          `,
+                          minHeight: '56px'
                         }}
                       >
+                        {/* بريق متحرك */}
+                        <div
+                          className="absolute inset-0 opacity-0 group-active:opacity-100 transition-opacity pointer-events-none"
+                          style={{
+                            background: 'linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.4) 50%, transparent 70%)'
+                          }}
+                        />
+
                         {submitting ? (
                           <>
                             <SimpleLoader size="sm" color="#FFFFFF" />
-                            <span className="mr-1.5 sm:mr-2">جاري التأكيد...</span>
+                            <span className="mr-2 text-base sm:text-lg font-black">جاري التأكيد...</span>
                           </>
                         ) : (
                           <>
-                            <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6" />
-                            تأكيد الحجز الآن
+                            <CheckCircle2 className="h-6 w-6 sm:h-6 sm:w-6 relative z-10" />
+                            <span className="relative z-10 text-base sm:text-lg">تأكيد الحجز الآن</span>
+                            <ArrowRight className="h-5 w-5 sm:h-5 sm:w-5 mr-1 relative z-10 transform rotate-180" />
                           </>
                         )}
                       </button>
@@ -886,6 +902,23 @@ export function TemporaryBookingPage({
         button, .group {
           -webkit-user-select: none;
           user-select: none;
+        }
+
+        /* Ensure submit button is always visible on mobile */
+        @media (max-width: 1024px) {
+          .lg\\:col-span-1 {
+            padding-bottom: env(safe-area-inset-bottom, 0px);
+          }
+        }
+
+        /* Smooth button animations */
+        button:active:not(:disabled) {
+          transform: scale(0.95);
+        }
+
+        /* Better contrast for disabled state */
+        button:disabled {
+          filter: grayscale(30%);
         }
       `}</style>
     </div>
