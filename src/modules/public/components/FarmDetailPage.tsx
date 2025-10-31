@@ -233,13 +233,13 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
       {/* المحتوى الرئيسي */}
       <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 md:py-8 lg:py-12">
 
-        {/* 🟧 بطاقة تعريف المزرعة */}
+        {/* 🟩 بطاقة تعريف المزرعة - أخضر زجاجي */}
         <div
-          className="mb-6 sm:mb-8 p-4 sm:p-6 md:p-8 rounded-2xl sm:rounded-3xl backdrop-blur-sm transform active:scale-[0.99] sm:hover:scale-[1.01] transition-all duration-300"
+          className="mb-6 sm:mb-8 p-4 sm:p-6 md:p-8 rounded-2xl sm:rounded-3xl backdrop-blur-xl transform active:scale-[0.99] sm:hover:scale-[1.01] transition-all duration-300"
           style={{
-            background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 250, 240, 0.9))',
-            boxShadow: `0 20px 60px rgba(16, 185, 129, 0.3)`,
-            border: '2px solid rgba(5, 150, 105, 0.2)'
+            background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(5, 150, 105, 0.12), rgba(240, 253, 244, 0.95))',
+            boxShadow: `0 20px 60px rgba(16, 185, 129, 0.3), 0 10px 30px rgba(16, 185, 129, 0.2)`,
+            border: '2px solid rgba(16, 185, 129, 0.3)'
           }}
         >
           {/* العنوان والموقع */}
