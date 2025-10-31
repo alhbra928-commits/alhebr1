@@ -13,9 +13,13 @@ interface GatewaySettings {
   enabled: boolean;
   auto_enter_enabled: boolean;
   auto_enter_delay: number;
-  welcome_text_ar: string;
-  subtitle_text_ar: string;
-  description_text_ar: string;
+  main_title: string;
+  subtitle: string;
+  button_text: string;
+  enable_repeated_gateway: boolean;
+  gateway_reappear_duration: number;
+  show_logo: boolean;
+  theme_style: string;
 }
 
 export function RevolutionaryGreenGateway({ onEnter, onAdminLogin, onFarmOwnerLogin }: GatewayProps) {
@@ -78,9 +82,13 @@ export function RevolutionaryGreenGateway({ onEnter, onAdminLogin, onFarmOwnerLo
         enabled: true,
         auto_enter_enabled: true,
         auto_enter_delay: 5,
-        welcome_text_ar: 'مرحباً بكم في عالم الاستثمار الأخضر',
-        subtitle_text_ar: 'منصة التطوير الزراعي المتقدمة',
-        description_text_ar: 'تكنولوجيا زراعية حديثة لمستقبل مستدام',
+        main_title: 'مرحباً بكم في عالم الاستثمار الأخضر',
+        subtitle: 'منصة التطوير الزراعي المتقدمة',
+        button_text: 'ادخل إلى المنصة',
+        enable_repeated_gateway: false,
+        gateway_reappear_duration: 1800,
+        show_logo: true,
+        theme_style: 'green',
       });
     } catch (error) {
       console.error('Error loading gateway settings:', error);
@@ -88,9 +96,13 @@ export function RevolutionaryGreenGateway({ onEnter, onAdminLogin, onFarmOwnerLo
         enabled: true,
         auto_enter_enabled: true,
         auto_enter_delay: 5,
-        welcome_text_ar: 'مرحباً بكم في عالم الاستثمار الأخضر',
-        subtitle_text_ar: 'منصة التطوير الزراعي المتقدمة',
-        description_text_ar: 'تكنولوجيا زراعية حديثة لمستقبل مستدام',
+        main_title: 'مرحباً بكم في عالم الاستثمار الأخضر',
+        subtitle: 'منصة التطوير الزراعي المتقدمة',
+        button_text: 'ادخل إلى المنصة',
+        enable_repeated_gateway: false,
+        gateway_reappear_duration: 1800,
+        show_logo: true,
+        theme_style: 'green',
       });
     } finally {
       setLoading(false);
@@ -260,7 +272,7 @@ export function RevolutionaryGreenGateway({ onEnter, onAdminLogin, onFarmOwnerLo
                     textShadow: '0 2px 20px rgba(16, 185, 129, 0.3)'
                   }}
                 >
-                  {settings.welcome_text_ar}
+                  {settings.main_title}
                 </h1>
 
                 <p
@@ -269,7 +281,7 @@ export function RevolutionaryGreenGateway({ onEnter, onAdminLogin, onFarmOwnerLo
                     animation: 'fadeInUp 0.8s ease-out 0.4s both'
                   }}
                 >
-                  {settings.subtitle_text_ar}
+                  {settings.subtitle}
                 </p>
 
                 <p
@@ -278,7 +290,7 @@ export function RevolutionaryGreenGateway({ onEnter, onAdminLogin, onFarmOwnerLo
                     animation: 'fadeInUp 0.8s ease-out 0.6s both'
                   }}
                 >
-                  {settings.description_text_ar}
+                  استثمارك الآمن يبدأ الآن
                 </p>
               </div>
 
@@ -322,7 +334,7 @@ export function RevolutionaryGreenGateway({ onEnter, onAdminLogin, onFarmOwnerLo
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000"></div>
 
                   <div className="relative flex items-center gap-3">
-                    <span>ادخل إلى المنصة</span>
+                    <span>{settings.button_text}</span>
                     <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
                   </div>
                 </button>
