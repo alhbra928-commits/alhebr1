@@ -14,218 +14,26 @@
     <meta name="pragma" content="no-cache" />
     <meta name="last-modified" content="__BUILD_VERSION__" />
     <meta name="version" content="__BUILD_VERSION__" />
-    <meta name="cache-buster" content="v20251101_1761955355131" />
+    <meta name="cache-buster" content="v20251101_1761957272742" />
 
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <title>منصة النخيل والزيتون</title>
 
-    <!-- ⚛️ ATOMIC DEPLOYMENT SYSTEM - ENTERPRISE GRADE -->
-    <!-- This system works with manifest.json and Service Worker for automatic updates -->
+    <!-- ⚛️ SIMPLE VERSION CHECK - NO AUTO RELOAD -->
     <script>
       (function() {
-        console.log('%c⚛️ ATOMIC DEPLOYMENT INITIALIZING', 'color:#4ec9b0;font-size:20px;font-weight:bold');
+        const BUILD_VERSION = '__BUILD_VERSION__';
+        console.log('%c✅ منصة النخيل والزيتون', 'color:#10b981;font-size:18px;font-weight:bold');
+        console.log('Version:', BUILD_VERSION);
 
-        // Legacy version check (for backward compatibility)
-        const DEPLOYED_VERSION = '__BUILD_VERSION__';
-        const lastKnownVersion = localStorage.getItem('last-deployed-version');
-
-        // First-time visit or old system migration
-        if (!lastKnownVersion || lastKnownVersion !== DEPLOYED_VERSION) {
-          console.log('%c🚀 NEW DEPLOYMENT DETECTED (Legacy Check)', 'color:red;font-size:18px;font-weight:bold');
-          console.log('Deployed:', DEPLOYED_VERSION);
-          console.log('Last Known:', lastKnownVersion);
-
-          // Save version
-          localStorage.setItem('last-deployed-version', DEPLOYED_VERSION);
-
-          // Check if we just reloaded
-          const justReloaded = sessionStorage.getItem('just-reloaded');
-          if (!justReloaded) {
-            console.log('%c🔄 FORCING HARD RELOAD TO CLEAR CDN CACHE', 'color:orange;font-size:16px');
-            sessionStorage.setItem('just-reloaded', 'true');
-
-            // Force reload with cache bypass
-            setTimeout(function() {
-              window.location.replace(window.location.href.split('?')[0] + '?v=' + DEPLOYED_VERSION + '&t=' + Date.now());
-            }, 100);
-          } else {
-            console.log('%c✅ RELOAD COMPLETED - CDN CACHE CLEARED', 'color:green;font-size:16px');
-            sessionStorage.removeItem('just-reloaded');
-
-            // Now check for Atomic Manifest
-            console.log('%c⚛️ Checking Atomic Manifest...', 'color:#4ec9b0;font-size:14px');
-          }
-        } else {
-          console.log('%c✅ Version Up-to-Date (Legacy): ' + DEPLOYED_VERSION, 'color:green;font-size:14px');
-
-          // Check Atomic Manifest for real-time updates
-          console.log('%c⚛️ Atomic System Active - Monitoring manifest.json', 'color:#4ec9b0;font-size:14px');
-        }
-
-        // Quick manifest check (non-blocking)
-        setTimeout(function() {
-          fetch('/manifest.json?nocache=' + Date.now(), {
-            cache: 'no-store',
-            headers: { 'Cache-Control': 'no-cache' }
-          })
-          .then(function(response) {
-            if (response.ok) {
-              return response.json();
-            }
-            throw new Error('Manifest not available');
-          })
-          .then(function(manifest) {
-            var atomicVersion = localStorage.getItem('atomic-version');
-
-            if (!atomicVersion) {
-              console.log('%c⚛️ First-time Atomic Setup', 'color:#4ec9b0;font-size:14px');
-              console.log('  Manifest Version:', manifest.version);
-              console.log('  Channel:', manifest.channel);
-              console.log('  Files:', Object.keys(manifest.files).length);
-              console.log('  Strategy:', manifest.deployment.strategy);
-
-              // Save atomic version
-              localStorage.setItem('atomic-version', manifest.version);
-              localStorage.setItem('atomic-timestamp', manifest.timestamp);
-              localStorage.setItem('atomic-channel', manifest.channel);
-
-              console.log('%c⚛️ Atomic System Initialized', 'color:#4ec9b0;font-size:14px;font-weight:bold');
-              console.log('  Auto-updates will work from now on');
-              console.log('  Service Worker will monitor every 30 seconds');
-            } else if (atomicVersion !== manifest.version) {
-              console.log('%c⚛️ NEW ATOMIC VERSION DETECTED!', 'color:#4ec9b0;font-size:16px;font-weight:bold');
-              console.log('  Current:', atomicVersion);
-              console.log('  New:', manifest.version);
-              console.log('  Service Worker will handle the update...');
-            } else {
-              console.log('%c✅ Atomic Version Current: ' + manifest.version, 'color:green;font-size:14px');
-            }
-          })
-          .catch(function(error) {
-            console.log('%c⚠️ Manifest check skipped (will retry via Service Worker)', 'color:orange;font-size:12px');
-          });
-        }, 500);
+        // Just save version, don't reload
+        localStorage.setItem('app-version', BUILD_VERSION);
       })();
     </script>
   </head>
   <body>
     <div id="root"></div>
     
-    <script>
-      // PROFESSIONAL CACHE BUSTING SYSTEM - DARK THEME v3
-      (function() {
-        const BUILD_VERSION = '__BUILD_VERSION__'; // Will be replaced during build
-        const stored = localStorage.getItem('app-version');
-
-        // Disable back-forward cache (bfcache)
-        window.addEventListener('pageshow', function(event) {
-          if (event.persisted) {
-            console.log('%c🔄 BFCache detected - forcing reload', 'color:orange;font-size:16px');
-            window.location.reload();
-          }
-        });
-
-        console.log('%c🔍 PROFESSIONAL CACHE CHECK', 'color:blue;font-size:20px;font-weight:bold');
-        console.log('Build Version:', BUILD_VERSION);
-        console.log('Stored Version:', stored);
-
-        if (stored !== BUILD_VERSION) {
-          console.log('%c🔥 NEW VERSION DETECTED - CLEARING ALL CACHE', 'color:red;font-size:24px;font-weight:bold');
-          console.log('%c⚠️ سيتم حذف كل الـ cache القديم وإعادة التحميل', 'color:orange;font-size:18px');
-
-          // Preserve authentication data
-          const authData = {};
-          const authKeys = [
-            'admin_session_token',
-            'admin_data',
-            'investor_phone',
-            'investor_data',
-            'farm_owner_session',
-            'farm_owner_data'
-          ];
-
-          authKeys.forEach(key => {
-            const value = localStorage.getItem(key);
-            if (value) {
-              authData[key] = value;
-              console.log('%c💾 Preserving: ' + key, 'color:blue;font-size:14px');
-            }
-          });
-
-          // Clear all caches aggressively
-          (async function clearAllCaches() {
-            try {
-              // Clear Cache API
-              if ('caches' in window) {
-                const cacheNames = await caches.keys();
-                console.log('%c🗑️ Deleting ' + cacheNames.length + ' cache(s)...', 'color:red;font-size:16px');
-                await Promise.all(cacheNames.map(name => {
-                  console.log('%c  - Deleting: ' + name, 'color:gray;font-size:12px');
-                  return caches.delete(name);
-                }));
-                console.log('%c✅ All caches deleted', 'color:green;font-size:16px');
-              }
-
-              // Unregister all service workers
-              if ('serviceWorker' in navigator) {
-                const registrations = await navigator.serviceWorker.getRegistrations();
-                console.log('%c🗑️ Unregistering ' + registrations.length + ' service worker(s)...', 'color:red;font-size:16px');
-                await Promise.all(registrations.map(reg => {
-                  console.log('%c  - Unregistering: ' + reg.scope, 'color:gray;font-size:12px');
-                  return reg.unregister();
-                }));
-                console.log('%c✅ All service workers unregistered', 'color:green;font-size:16px');
-              }
-
-              // Clear storage
-              console.log('%c🗑️ Clearing localStorage & sessionStorage...', 'color:red;font-size:16px');
-              localStorage.clear();
-              sessionStorage.clear();
-
-              // Restore authentication data
-              Object.keys(authData).forEach(key => {
-                localStorage.setItem(key, authData[key]);
-                console.log('%c♻️ Restored: ' + key, 'color:green;font-size:14px');
-              });
-
-              // Save new version
-              localStorage.setItem('app-version', BUILD_VERSION);
-              localStorage.setItem('last-cache-clear', new Date().toISOString());
-
-              console.log('%c✅ CACHE CLEARED SUCCESSFULLY', 'color:green;font-size:20px;font-weight:bold');
-              console.log('%c🔄 Reloading with fresh content in 1 second...', 'color:blue;font-size:18px');
-
-              // Hard reload with cache bypass
-              setTimeout(() => {
-                const url = new URL(window.location.href.split('?')[0]);
-                url.searchParams.set('v', BUILD_VERSION);
-                window.location.replace(url.toString());
-              }, 1000);
-
-            } catch (error) {
-              console.error('%c❌ Cache clear error:', 'color:red;font-size:16px', error);
-              // Force reload anyway
-              window.location.reload(true);
-            }
-          })();
-        } else {
-          console.log('%c✅ VERSION UP-TO-DATE', 'color:green;font-size:18px;font-weight:bold');
-          console.log('%c💎 Dark Theme Active', 'color:#10b981;font-size:16px');
-
-          // Still clear old caches in background (cleanup)
-          if ('caches' in window) {
-            caches.keys().then(names => {
-              names.forEach(name => {
-                if (!name.includes(BUILD_VERSION)) {
-                  console.log('%c🧹 Cleaning old cache: ' + name, 'color:gray;font-size:12px');
-                  caches.delete(name);
-                }
-              });
-            });
-          }
-        }
-      })();
-    </script>
     
     <script type="module" src="/src/main.tsx"></script>
   </body>
