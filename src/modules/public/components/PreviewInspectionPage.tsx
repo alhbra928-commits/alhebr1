@@ -92,7 +92,7 @@ export function PreviewInspectionPage({ barcode, onBack, onOwn }: PreviewInspect
 
   return (
     <div
-      className="min-h-screen pb-24"
+      className="min-h-screen pb-32 sm:pb-40"
       dir="rtl"
       style={{ background: brandGradients.beige }}
     >

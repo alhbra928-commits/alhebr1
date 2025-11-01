@@ -234,7 +234,7 @@ export function RoyalMainInterface({
       </header>
 
       {/* Main Content */}
-      <main className="relative container mx-auto px-4 sm:px-6 py-6 sm:py-8 md:py-12">
+      <main className="relative container mx-auto px-4 sm:px-6 py-6 sm:py-8 md:py-12 pb-32 sm:pb-40">
         {loading ? (
           <div className="flex justify-center items-center py-20">
             <SimpleLoader />
