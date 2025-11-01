@@ -36,6 +36,14 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     background: linear-gradient(135deg, #ECFDF5 0%, #F0FDF4 50%, #F0FDFA 100%) !important;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  /* Fix for mobile bottom navigation */
+  @supports (padding: max(0px)) {
+    body {
+      padding-bottom: max(80px, env(safe-area-inset-bottom));
+    }
   }
 
   /* Prevent horizontal scroll */
@@ -237,6 +245,41 @@ div[class*="overflow"]::-webkit-scrollbar {
 
 .animate-shine {
   animation: shine 2s infinite;
+}
+
+/* 📱 MOBILE BOTTOM NAVIGATION FIX - FORCE FIXED POSITION */
+/* This ensures the bottom nav stays fixed on mobile devices */
+@media (max-width: 768px) {
+  /* Force fixed positioning on mobile */
+  [class*="fixed bottom-0"],
+  .fixed.bottom-0 {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    -webkit-transform: translateZ(0) !important;
+    transform: translateZ(0) !important;
+    -webkit-backface-visibility: hidden !important;
+    backface-visibility: hidden !important;
+    will-change: transform !important;
+  }
+
+  /* Prevent iOS Safari address bar issues */
+  @supports (-webkit-touch-callout: none) {
+    [class*="fixed bottom-0"],
+    .fixed.bottom-0 {
+      position: fixed !important;
+      bottom: 0 !important;
+      padding-bottom: env(safe-area-inset-bottom, 0) !important;
+    }
+  }
+
+  /* Add padding to main content area */
+  main,
+  [role="main"],
+  .main-content {
+    padding-bottom: calc(80px + env(safe-area-inset-bottom, 0)) !important;
+  }
 }
 
 /* Slow pulse for settlement ready cards */

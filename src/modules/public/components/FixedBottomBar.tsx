@@ -67,7 +67,19 @@ export function FixedBottomBar({ onIntroClick }: FixedBottomBarProps) {
   }, []);
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 bg-gradient-to-r from-emerald-600 via-green-600 to-emerald-600 border-t-2 border-emerald-400 shadow-2xl">
+    <div
+      className="fixed bottom-0 left-0 right-0 z-50 bg-gradient-to-r from-emerald-600 via-green-600 to-emerald-600 border-t-2 border-emerald-400 shadow-2xl"
+      style={{
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        WebkitBackfaceVisibility: 'hidden',
+        backfaceVisibility: 'hidden',
+        transform: 'translateZ(0)',
+        willChange: 'transform'
+      }}
+    >
       <div className="max-w-7xl mx-auto px-2 sm:px-4 py-2 sm:py-3">
         {/* Desktop Layout */}
         <div className="hidden md:flex items-center justify-between flex-wrap gap-3">

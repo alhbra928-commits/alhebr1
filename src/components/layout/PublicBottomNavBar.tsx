@@ -89,7 +89,20 @@ export const PublicBottomNavBar: React.FC<PublicBottomNavBarProps> = ({
   return (
     <>
       {/* Bottom Navigation Bar */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 pb-safe">
+      <div
+        className="fixed bottom-0 left-0 right-0 z-50"
+        style={{
+          position: 'fixed',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          paddingBottom: 'env(safe-area-inset-bottom)',
+          WebkitBackfaceVisibility: 'hidden',
+          backfaceVisibility: 'hidden',
+          transform: 'translateZ(0)',
+          willChange: 'transform'
+        }}
+      >
         {/* Background with gradient and 3D effect */}
         <div
           className="relative mx-auto max-w-7xl px-4"
