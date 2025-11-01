@@ -27,7 +27,7 @@ export function RevolutionaryGreenGateway({ onEnter, onAdminLogin, onFarmOwnerLo
   const [settings, setSettings] = useState<GatewaySettings>({
     enabled: true,
     auto_enter_enabled: true,
-    auto_enter_delay: 5,
+    auto_enter_delay: 3, // 3 ثواني بدلاً من 5
     main_title: 'مرحباً بكم في عالم الاستثمار الأخضر',
     subtitle: 'منصة التطوير الزراعي المتقدمة',
     button_text: 'ادخل إلى المنصة',
