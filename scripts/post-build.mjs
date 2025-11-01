@@ -24,75 +24,17 @@ if (existsSync(distIndexPath)) {
   content = content.replace(/__BUILD_VERSION__/g, version);
   console.log(`✅ Replaced __BUILD_VERSION__ with ${version}`);
 
-  // Add Service Worker registration first
+  // SIMPLE VERSION CHECK - NO SERVICE WORKER, NO AUTO RELOAD
   const swScript = `
-    <!-- SERVICE WORKER - FORCE UPDATE SYSTEM -->
-    <script src="/register-sw.js?v=${version}"></script>
-
-    <!-- ULTRA AGGRESSIVE CACHE CLEARING - BACKUP SOLUTION -->
+    <!-- SIMPLE VERSION INDICATOR - NO RELOAD -->
     <script>
       (function() {
         const VERSION = '${version}';
-        const STORAGE_KEY = 'app-version-v2';
-        const stored = localStorage.getItem(STORAGE_KEY);
+        console.log('%c✅ منصة النخيل والزيتون', 'color: #10b981; font-size: 16px; font-weight: bold');
+        console.log('Build Version:', VERSION);
 
-        console.log('%c🔍 CACHE CHECK', 'color: blue; font-size: 16px; font-weight: bold');
-        console.log('Current Version:', VERSION);
-        console.log('Stored Version:', stored);
-
-        if (stored !== VERSION) {
-          console.log('%c🔥 NEW VERSION - CLEARING EVERYTHING!', 'color: red; font-size: 20px; font-weight: bold');
-
-          // 1. Clear ALL caches
-          if ('caches' in window) {
-            caches.keys().then(names => {
-              names.forEach(name => {
-                caches.delete(name);
-                console.log('🗑️ Deleted cache:', name);
-              });
-            });
-          }
-
-          // 2. Unregister ALL service workers
-          if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.getRegistrations().then(regs => {
-              regs.forEach(reg => {
-                reg.unregister();
-                console.log('🗑️ Unregistered SW');
-              });
-            });
-          }
-
-          // 3. Clear ALL storage (except auth)
-          const authKeys = ['admin-session', 'investor-session', 'farm-owner-session'];
-          const authData = {};
-          authKeys.forEach(key => {
-            if (localStorage.getItem(key)) {
-              authData[key] = localStorage.getItem(key);
-            }
-          });
-
-          localStorage.clear();
-          sessionStorage.clear();
-
-          // Restore auth
-          Object.keys(authData).forEach(key => {
-            localStorage.setItem(key, authData[key]);
-          });
-
-          // 4. Set new version
-          localStorage.setItem(STORAGE_KEY, VERSION);
-
-          // 5. Force hard reload with cache bypass
-          if (stored) {
-            console.log('%c🔄 FORCING HARD RELOAD...', 'color: orange; font-size: 18px; font-weight: bold');
-            setTimeout(() => {
-              window.location.href = window.location.origin + window.location.pathname + '?v=' + VERSION + '&t=' + Date.now();
-            }, 100);
-          }
-        } else {
-          console.log('%c✅ UP TO DATE', 'color: green; font-size: 16px; font-weight: bold');
-        }
+        // Just log, no reload
+        localStorage.setItem('app-version', VERSION);
 
         // Visual indicator
         const indicator = document.createElement('div');
@@ -200,14 +142,15 @@ try {
   console.error('❌ Manifest generation failed:', error.message);
 }
 
-// 🔥 INJECT AGGRESSIVE CACHE BUSTERS
-try {
-  const { execSync } = await import('child_process');
-  execSync('node scripts/inject-cache-busters.mjs', { stdio: 'inherit' });
-  console.log('✅ Aggressive cache busters injected');
-} catch (error) {
-  console.error('⚠️ Cache busters injection skipped:', error.message);
-}
+// 🔥 DISABLED: No aggressive cache busters (prevents reload loops)
+// try {
+//   const { execSync } = await import('child_process');
+//   execSync('node scripts/inject-cache-busters.mjs', { stdio: 'inherit' });
+//   console.log('✅ Aggressive cache busters injected');
+// } catch (error) {
+//   console.error('⚠️ Cache busters injection skipped:', error.message);
+// }
+console.log('⚠️ Cache busters DISABLED (prevents reload loops)');
 
 // 🔥 FORCE CDN PURGE
 try {

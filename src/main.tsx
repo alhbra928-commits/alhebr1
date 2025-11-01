@@ -18,21 +18,21 @@ try {
   console.error('❌ AdminUsersStorage initialization failed:', error);
 }
 
-// Service Worker for PWA
-if (import.meta.env.PROD) {
-  window.addEventListener('load', () => {
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker
-        .register('/service-worker.js')
-        .then((registration) => {
-          console.log('✅ Service Worker registered');
-        })
-        .catch((error) => {
-          console.warn('⚠️ Service Worker registration failed:', error);
-        });
-    }
-  });
-}
+// Service Worker DISABLED to prevent reload loops
+// if (import.meta.env.PROD) {
+//   window.addEventListener('load', () => {
+//     if ('serviceWorker' in navigator) {
+//       navigator.serviceWorker
+//         .register('/service-worker.js')
+//         .then((registration) => {
+//           console.log('✅ Service Worker registered');
+//         })
+//         .catch((error) => {
+//           console.warn('⚠️ Service Worker registration failed:', error);
+//         });
+//     }
+//   });
+// }
 
 // TEMPORARILY DISABLED FOR DEBUGGING
 // if (import.meta.env.PROD) {

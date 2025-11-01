@@ -20,11 +20,8 @@
   .then(registration => {
     console.log('✅ Service Worker registered:', registration.scope);
 
-    // Check for updates every 30 seconds
-    setInterval(() => {
-      console.log('🔍 Checking for updates...');
-      registration.update();
-    }, 30000);
+    // DISABLED: No automatic updates (prevents reload loop)
+    // Only check on page load, not every 30 seconds
 
     // Listen for updates
     registration.addEventListener('updatefound', () => {
@@ -55,12 +52,8 @@
 
   // Listen for controller change (new SW activated)
   navigator.serviceWorker.addEventListener('controllerchange', () => {
-    console.log('%c🔄 NEW SERVICE WORKER ACTIVATED - RELOADING!', 'color: #f00; font-size: 20px; font-weight: bold');
-
-    // Force hard reload
-    setTimeout(() => {
-      window.location.href = window.location.origin + window.location.pathname + '?v=' + VERSION + '&t=' + Date.now();
-    }, 500);
+    console.log('%c✅ NEW SERVICE WORKER ACTIVATED', 'color: #0f0; font-size: 16px; font-weight: bold');
+    // NO RELOAD - let user continue browsing
   });
 
   // Check version against server
@@ -77,43 +70,14 @@
       console.log('Stored Version:', storedVersion);
 
       if (storedVersion !== serverVersion) {
-        console.log('%c🔥 VERSION MISMATCH - CLEARING EVERYTHING!', 'color: #f00; font-size: 18px; font-weight: bold');
+        console.log('%c✨ NEW VERSION AVAILABLE: ' + serverVersion, 'color: #0ff; font-size: 16px; font-weight: bold');
 
-        // Clear all caches
-        if ('caches' in window) {
-          caches.keys().then(names => {
-            names.forEach(name => {
-              caches.delete(name);
-              console.log('🗑️ Deleted cache:', name);
-            });
-          });
-        }
-
-        // Clear storage (except auth)
-        const authKeys = ['admin-session', 'investor-session', 'farm-owner-session'];
-        const authData = {};
-        authKeys.forEach(key => {
-          const value = localStorage.getItem(key);
-          if (value) authData[key] = value;
-        });
-
-        localStorage.clear();
-        sessionStorage.clear();
-
-        // Restore auth
-        Object.keys(authData).forEach(key => {
-          localStorage.setItem(key, authData[key]);
-        });
-
-        // Set new version
+        // Just update the version - NO CACHE CLEARING, NO RELOAD
         localStorage.setItem('app-version-v3', serverVersion);
 
+        // Show friendly notification (no forced reload)
         if (storedVersion) {
-          console.log('%c🔄 FORCING HARD RELOAD IN 1 SECOND...', 'color: #ff0; font-size: 16px; font-weight: bold');
-
-          setTimeout(() => {
-            window.location.href = window.location.origin + window.location.pathname + '?v=' + serverVersion + '&t=' + Date.now();
-          }, 1000);
+          showUpdateBanner();
         }
       } else {
         console.log('%c✅ UP TO DATE', 'color: #0f0; font-size: 16px; font-weight: bold');
