@@ -90,12 +90,14 @@ export const PublicBottomNavBar: React.FC<PublicBottomNavBarProps> = ({
     <>
       {/* Bottom Navigation Bar */}
       <div
-        className="fixed bottom-0 left-0 right-0 z-50"
+        className="fixed bottom-0 left-0 right-0"
         style={{
           position: 'fixed',
           bottom: 0,
           left: 0,
           right: 0,
+          width: '100%',
+          zIndex: 1000,
           paddingBottom: 'env(safe-area-inset-bottom)',
           WebkitBackfaceVisibility: 'hidden',
           backfaceVisibility: 'hidden',

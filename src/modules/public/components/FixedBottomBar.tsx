@@ -68,12 +68,15 @@ export function FixedBottomBar({ onIntroClick }: FixedBottomBarProps) {
 
   return (
     <div
-      className="fixed bottom-0 left-0 right-0 z-50 bg-gradient-to-r from-emerald-600 via-green-600 to-emerald-600 border-t-2 border-emerald-400 shadow-2xl"
+      className="fixed bottom-0 left-0 right-0 bg-gradient-to-r from-emerald-600 via-green-600 to-emerald-600 border-t-2 border-emerald-400 shadow-2xl"
       style={{
         position: 'fixed',
         bottom: 0,
         left: 0,
         right: 0,
+        width: '100%',
+        zIndex: 999,
+        paddingBottom: 'env(safe-area-inset-bottom)',
         WebkitBackfaceVisibility: 'hidden',
         backfaceVisibility: 'hidden',
         transform: 'translateZ(0)',

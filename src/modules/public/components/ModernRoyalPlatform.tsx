@@ -272,7 +272,7 @@ export function ModernRoyalPlatform({
         <GreenConceptButton onClick={() => setCurrentView('concept')} />
 
         {/* Main Content */}
-        <main className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 md:py-12 pb-24 sm:pb-32">
+        <main className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 md:py-12 pb-32 sm:pb-40">
           {/* Farms Grid */}
           <div>
             <div className="flex items-center justify-between mb-6 sm:mb-8">
