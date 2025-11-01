@@ -23,14 +23,25 @@ interface GatewaySettings {
 }
 
 export function RevolutionaryGreenGateway({ onEnter, onAdminLogin, onFarmOwnerLogin }: GatewayProps) {
-  const [settings, setSettings] = useState<GatewaySettings | null>(null);
-  const [loading, setLoading] = useState(true);
+  // إعدادات افتراضية فورية - لا انتظار
+  const [settings, setSettings] = useState<GatewaySettings>({
+    enabled: true,
+    auto_enter_enabled: true,
+    auto_enter_delay: 5,
+    main_title: 'مرحباً بكم في عالم الاستثمار الأخضر',
+    subtitle: 'منصة التطوير الزراعي المتقدمة',
+    button_text: 'ادخل إلى المنصة',
+    enable_repeated_gateway: false,
+    gateway_reappear_duration: 1800,
+    show_logo: true,
+    theme_style: 'green',
+  });
   const [progress, setProgress] = useState(0);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [particles, setParticles] = useState<Array<{ id: number; x: number; y: number; delay: number }>>([]);
 
   useEffect(() => {
-    loadSettings();
+    loadSettings(); // تحديث الإعدادات في الخلفية
     generateParticles();
   }, []);
 
@@ -76,41 +87,18 @@ export function RevolutionaryGreenGateway({ onEnter, onAdminLogin, onFarmOwnerLo
         .limit(1)
         .maybeSingle();
 
-      if (error) throw error;
-
-      setSettings(data || {
-        enabled: true,
-        auto_enter_enabled: true,
-        auto_enter_delay: 5,
-        main_title: 'مرحباً بكم في عالم الاستثمار الأخضر',
-        subtitle: 'منصة التطوير الزراعي المتقدمة',
-        button_text: 'ادخل إلى المنصة',
-        enable_repeated_gateway: false,
-        gateway_reappear_duration: 1800,
-        show_logo: true,
-        theme_style: 'green',
-      });
+      if (!error && data) {
+        // تحديث الإعدادات فقط إذا وُجدت
+        setSettings(data);
+      }
     } catch (error) {
       console.error('Error loading gateway settings:', error);
-      setSettings({
-        enabled: true,
-        auto_enter_enabled: true,
-        auto_enter_delay: 5,
-        main_title: 'مرحباً بكم في عالم الاستثمار الأخضر',
-        subtitle: 'منصة التطوير الزراعي المتقدمة',
-        button_text: 'ادخل إلى المنصة',
-        enable_repeated_gateway: false,
-        gateway_reappear_duration: 1800,
-        show_logo: true,
-        theme_style: 'green',
-      });
-    } finally {
-      setLoading(false);
+      // الاحتفاظ بالإعدادات الافتراضية
     }
   };
 
   useEffect(() => {
-    if (!settings || loading) return;
+    if (!settings) return;
 
     if (!settings.enabled) {
       onEnter();
@@ -139,64 +127,7 @@ export function RevolutionaryGreenGateway({ onEnter, onAdminLogin, onFarmOwnerLo
       clearInterval(progressInterval);
       if (timer) clearTimeout(timer);
     };
-  }, [settings, loading, onEnter]);
-
-  if (loading) {
-    return (
-      <div className="fixed inset-0 z-[9999] flex items-center justify-center overflow-hidden"
-        style={{
-          background: 'linear-gradient(135deg, #047857 0%, #065f46 50%, #064e3b 100%)'
-        }}
-      >
-        {/* Animated background particles */}
-        <div className="absolute inset-0 overflow-hidden">
-          {Array.from({ length: 20 }).map((_, i) => (
-            <div
-              key={i}
-              className="absolute rounded-full bg-emerald-400/20"
-              style={{
-                width: Math.random() * 100 + 50 + 'px',
-                height: Math.random() * 100 + 50 + 'px',
-                left: Math.random() * 100 + '%',
-                top: Math.random() * 100 + '%',
-                animation: `float ${3 + Math.random() * 2}s ease-in-out infinite`,
-                animationDelay: Math.random() * 2 + 's'
-              }}
-            />
-          ))}
-        </div>
-
-        {/* Logo and text */}
-        <div className="relative z-10 text-center px-6">
-          <div className="text-8xl mb-6 animate-bounce">👑</div>
-          <div
-            className="text-4xl font-black mb-3"
-            style={{
-              background: 'linear-gradient(135deg, #10b981 0%, #34d399 50%, #6ee7b7 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text'
-            }}
-          >
-            منصة النخيل والزيتون
-          </div>
-          <div className="text-emerald-300 text-lg font-semibold mb-8">
-            استثمار راقٍ يثمر خيرًا
-          </div>
-          <div className="flex justify-center">
-            <div className="w-12 h-12 border-4 border-emerald-300 border-t-transparent rounded-full animate-spin"></div>
-          </div>
-        </div>
-
-        <style>{`
-          @keyframes float {
-            0%, 100% { transform: translateY(0) translateX(0); }
-            50% { transform: translateY(-20px) translateX(10px); }
-          }
-        `}</style>
-      </div>
-    );
-  }
+  }, [settings, onEnter]);
 
   if (!settings?.enabled) return null;
 
