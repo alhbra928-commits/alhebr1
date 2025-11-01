@@ -14,94 +14,10 @@
     <meta name="pragma" content="no-cache" />
     <meta name="last-modified" content="__BUILD_VERSION__" />
     <meta name="version" content="__BUILD_VERSION__" />
-    <meta name="cache-buster" content="v20251101_1762026507376" />
+    <meta name="cache-buster" content="v20251101_1762026833109" />
 
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <title>منصة النخيل والزيتون</title>
-
-    <!-- Royal Splash Screen CSS - Inline for instant loading -->
-    <style>
-      #royal-splash {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        width: 100vw;
-        height: 100vh;
-        background: linear-gradient(135deg, #047857 0%, #065f46 50%, #064e3b 100%);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        z-index: 99999;
-        transition: opacity 0.5s ease-out;
-      }
-
-      #royal-splash.fade-out {
-        opacity: 0;
-        pointer-events: none;
-      }
-
-      .splash-logo {
-        font-size: 72px;
-        margin-bottom: 20px;
-        animation: float 3s ease-in-out infinite;
-      }
-
-      .splash-title {
-        font-size: 32px;
-        font-weight: 900;
-        background: linear-gradient(135deg, #10b981 0%, #34d399 50%, #6ee7b7 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        text-align: center;
-        margin-bottom: 10px;
-        font-family: system-ui, -apple-system, sans-serif;
-      }
-
-      .splash-subtitle {
-        font-size: 16px;
-        color: #10b981;
-        text-align: center;
-        font-weight: 600;
-        font-family: system-ui, -apple-system, sans-serif;
-      }
-
-      .splash-loader {
-        width: 50px;
-        height: 50px;
-        border: 4px solid rgba(16, 185, 129, 0.2);
-        border-top-color: #10b981;
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-        margin-top: 30px;
-      }
-
-      @keyframes float {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-20px); }
-      }
-
-      @keyframes spin {
-        to { transform: rotate(360deg); }
-      }
-
-      .splash-glow {
-        position: absolute;
-        width: 300px;
-        height: 300px;
-        background: radial-gradient(circle, rgba(16, 185, 129, 0.3) 0%, transparent 70%);
-        border-radius: 50%;
-        animation: pulse 2s ease-in-out infinite;
-      }
-
-      @keyframes pulse {
-        0%, 100% { transform: scale(1); opacity: 0.5; }
-        50% { transform: scale(1.2); opacity: 0.8; }
-      }
-    </style>
 
     <!-- ⚛️ SIMPLE VERSION CHECK - NO AUTO RELOAD -->
     <script>
@@ -116,45 +32,9 @@
     </script>
   </head>
   <body>
-    <!-- Royal Gateway Splash Screen -->
-    <div id="royal-splash">
-      <div class="splash-glow"></div>
-      <div class="splash-logo">👑</div>
-      <div class="splash-title">منصة النخيل والزيتون</div>
-      <div class="splash-subtitle">استثمار راقٍ يثمر خيرًا</div>
-      <div class="splash-loader"></div>
-    </div>
-
     <div id="root"></div>
     
     
     <script type="module" src="/src/main.tsx"></script>
-
-    <!-- Auto-hide splash screen after content loads -->
-    <script>
-      // Hide splash when DOM is ready
-      window.addEventListener('DOMContentLoaded', function() {
-        setTimeout(function() {
-          const splash = document.getElementById('royal-splash');
-          if (splash) {
-            splash.classList.add('fade-out');
-            setTimeout(function() {
-              splash.remove();
-            }, 500);
-          }
-        }, 1500); // Show for 1.5 seconds minimum
-      });
-
-      // Fallback: hide after 3 seconds max
-      setTimeout(function() {
-        const splash = document.getElementById('royal-splash');
-        if (splash) {
-          splash.classList.add('fade-out');
-          setTimeout(function() {
-            splash.remove();
-          }, 500);
-        }
-      }, 3000);
-    </script>
   </body>
 </html>
