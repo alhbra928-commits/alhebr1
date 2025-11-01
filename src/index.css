@@ -46,9 +46,11 @@ body {
     }
   }
 
-  /* Prevent horizontal scroll */
-  body, html {
+  /* iOS sticky fix - Allow vertical scrolling */
+  html, body {
+    height: auto !important;
     overflow-x: hidden;
+    overflow-y: auto;
     max-width: 100vw;
   }
 

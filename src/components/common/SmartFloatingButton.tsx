@@ -440,14 +440,15 @@ export const SmartFloatingButton: React.FC = () => {
       {/* Floating Button */}
       <button
         onClick={handleOpen}
-        className={`fixed bottom-20 right-4 sm:bottom-24 sm:right-6 z-50 w-14 h-14 sm:w-16 sm:h-16 rounded-full shadow-2xl flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 ${
+        className={`fixed bottom-20 right-4 sm:bottom-24 sm:right-6 w-14 h-14 sm:w-16 sm:h-16 rounded-full shadow-2xl flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 ${
           isPulsing && !isOpen ? 'animate-pulse' : ''
         }`}
         style={{
           background: 'linear-gradient(135deg, #8B7355 0%, #A0916A 100%)',
           boxShadow: hasNewMessage
             ? '0 4px 30px rgba(139, 115, 85, 0.8), 0 0 20px rgba(255, 215, 0, 0.6)'
-            : '0 4px 20px rgba(139, 115, 85, 0.4)'
+            : '0 4px 20px rgba(139, 115, 85, 0.4)',
+          zIndex: 10000
         }}
         title="مركز التواصل الذكي"
       >
