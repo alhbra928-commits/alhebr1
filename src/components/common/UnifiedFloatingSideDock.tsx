@@ -168,9 +168,17 @@ export function UnifiedFloatingSideDock({
         }
 
         .unified-dock-content {
-          pointer-events: auto !important;
+          pointer-events: none !important;
           transform: translateZ(0) !important;
           -webkit-transform: translateZ(0) !important;
+        }
+
+        /* الأيقونات داخل الشريط تعمل */
+        .unified-dock-content button,
+        .unified-dock-content a,
+        .unified-dock-content input,
+        .unified-dock-content textarea {
+          pointer-events: auto !important;
         }
 
         /* Prevent scroll on touch for dock */
