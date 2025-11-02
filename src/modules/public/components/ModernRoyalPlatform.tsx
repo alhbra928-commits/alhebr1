@@ -206,21 +206,23 @@ export function ModernRoyalPlatform({
   // Modern Home View
   return (
     <div
-      className="min-h-screen relative"
       style={{
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        position: 'relative',
         background: `
           radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, rgba(16, 185, 129, 0.08) 0%, transparent 50%),
           linear-gradient(135deg, #f0fdf4 0%, #dcfce7 50%, #bbf7d0 100%)
         `,
-        overflowX: 'hidden',
-        overflowY: 'auto'
+        overflowX: 'hidden'
       }}
     >
       {/* Glass Overlay - Simple and Clean */}
       <div className="fixed inset-0 bg-white/30 backdrop-blur-[2px] pointer-events-none"></div>
 
       {/* Content */}
-      <div className="relative z-10">
+      <div className="relative z-10" style={{ flex: '1 0 auto', paddingBottom: '90px' }}>
         {/* Hero Header */}
         <header className="relative overflow-hidden pt-6 pb-4">
           {/* Glass Background */}

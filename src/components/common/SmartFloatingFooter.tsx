@@ -25,17 +25,19 @@ export const SmartFloatingFooter: React.FC<SmartFloatingFooterProps> = ({
         window.requestAnimationFrame(() => {
           const currentScrollY = window.scrollY;
 
-          // إظهار الفوتر عند:
-          // 1. التمرير للأعلى
-          // 2. الوصول لأعلى الصفحة (أول 100px)
-          if (currentScrollY < lastScrollY || currentScrollY < 100) {
+          // الفوتر يظهر دائماً في أول 150px من الصفحة
+          if (currentScrollY < 150) {
             setIsVisible(true);
           }
-          // إخفاء الفوتر عند التمرير للأسفل بقوة
-          else if (currentScrollY > lastScrollY && currentScrollY > 200) {
+          // عند التمرير للأعلى
+          else if (currentScrollY < lastScrollY) {
+            setIsVisible(true);
+          }
+          // إخفاء فقط عند التمرير السريع للأسفل
+          else if (currentScrollY > lastScrollY && currentScrollY > 300) {
             const scrollDelta = currentScrollY - lastScrollY;
-            // فقط أخفي إذا كان التمرير سريع (أكثر من 5px)
-            if (scrollDelta > 5) {
+            // يجب أن يكون التمرير سريع جداً
+            if (scrollDelta > 8) {
               setIsVisible(false);
             }
           }
@@ -47,18 +49,19 @@ export const SmartFloatingFooter: React.FC<SmartFloatingFooterProps> = ({
         ticking = true;
       }
 
-      // إظهار الفوتر تلقائياً بعد التوقف
+      // إظهار سريع بعد التوقف
       clearTimeout(scrollTimeout);
       scrollTimeout = setTimeout(() => {
         setIsVisible(true);
-      }, 800);
+      }, 500);
     };
 
     const handleTouchEnd = () => {
+      // إظهار فوري عند رفع الإصبع
       clearTimeout(scrollTimeout);
       scrollTimeout = setTimeout(() => {
         setIsVisible(true);
-      }, 300);
+      }, 200);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
