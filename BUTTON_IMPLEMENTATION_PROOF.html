@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎯 إثبات: الأيقونة تُظهر الشريط!</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      min-height: 100vh;
+      color: white;
+      direction: rtl;
+      overflow-x: hidden;
+    }
+
+    .instruction-box {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+      padding: 30px;
+      border-radius: 20px;
+      max-width: 400px;
+      box-shadow: 0 20px 60px rgba(16, 185, 129, 0.4);
+      z-index: 9000;
+      animation: bounce 2s ease-in-out infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .instruction-box h1 {
+      font-size: 24px;
+      margin-bottom: 15px;
+    }
+
+    .instruction-box p {
+      line-height: 1.8;
+      font-size: 16px;
+    }
+
+    .arrow {
+      position: fixed;
+      top: 50%;
+      left: 100px;
+      transform: translateY(-50%);
+      font-size: 60px;
+      animation: pointLeft 1s ease-in-out infinite;
+      z-index: 9000;
+      text-shadow: 0 4px 12px rgba(16, 185, 129, 0.8);
+    }
+
+    @keyframes pointLeft {
+      0%, 100% { left: 100px; }
+      50% { left: 80px; }
+    }
+
+    .status-bar {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      left: 20px;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(10px);
+      padding: 20px;
+      border-radius: 16px;
+      border: 2px solid #10B981;
+      z-index: 9000;
+    }
+
+    .status-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .status-item:last-child {
+      border-bottom: none;
+    }
+
+    .label {
+      color: #94a3b8;
+    }
+
+    .value {
+      color: #10B981;
+      font-weight: bold;
+      font-family: monospace;
+    }
+
+    /* الشريط الجانبي الفعلي */
+    .unified-dock-wrapper {
+      position: fixed;
+      top: 0;
+      left: -52px;
+      width: 72px;
+      height: 100vh;
+      z-index: 10000;
+      transition: left 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .unified-dock-content {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #064e3b 0%, #065f46 100%);
+      box-shadow: 4px 0 24px rgba(0, 0, 0, 0.3);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 8px;
+      gap: 16px;
+    }
+
+    /* الأيقونة الخارجية */
+    .unified-dock-tab {
+      position: fixed;
+      top: 50%;
+      left: 28px;
+      transform: translateY(-50%);
+      z-index: 10001;
+      cursor: pointer;
+      transition: left 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .unified-dock-tab:active {
+      transform: translateY(-50%) scale(0.95);
+    }
+
+    .dock-icon {
+      position: relative;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+      box-shadow:
+        0 4px 20px rgba(16, 185, 129, 0.6),
+        0 0 0 3px rgba(16, 185, 129, 0.2),
+        inset 0 2px 4px rgba(255, 255, 255, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: pulse-icon 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-icon {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+    }
+
+    .glass-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 24px;
+      border-radius: 56px 56px 0 0;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.4) 0%, transparent 100%);
+    }
+
+    .menu-icon {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+    }
+
+    .menu-line {
+      width: 20px;
+      height: 2.5px;
+      background: white;
+      border-radius: 2px;
+      transition: all 0.3s ease;
+    }
+
+    .outer-glow {
+      position: absolute;
+      inset: -8px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(16, 185, 129, 0.4) 0%, transparent 70%);
+      filter: blur(8px);
+      opacity: 0.5;
+      animation: glow-pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes glow-pulse {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 0.8; }
+    }
+
+    /* أيقونات الشريط */
+    .dock-item {
+      width: 48px;
+      height: 48px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 24px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .dock-item:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: scale(1.1);
+    }
+
+    /* رسالة النجاح */
+    .success-message {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+      padding: 40px 60px;
+      border-radius: 24px;
+      font-size: 32px;
+      font-weight: bold;
+      box-shadow: 0 20px 60px rgba(16, 185, 129, 0.6);
+      z-index: 99999;
+      opacity: 0;
+      transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .success-message.show {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 1;
+    }
+
+    .click-count {
+      position: fixed;
+      top: 50%;
+      left: 150px;
+      transform: translateY(-50%);
+      background: rgba(16, 185, 129, 0.2);
+      border: 2px solid #10B981;
+      padding: 20px 30px;
+      border-radius: 16px;
+      font-size: 48px;
+      font-weight: bold;
+      color: #10B981;
+      z-index: 9000;
+      animation: pulse 1s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: translateY(-50%) scale(1); }
+      50% { transform: translateY(-50%) scale(1.1); }
+    }
+  </style>
+</head>
+<body>
+  <!-- تعليمات -->
+  <div class="instruction-box">
+    <h1>🎯 اضغط على الأيقونة!</h1>
+    <p>
+      ✅ الأيقونة الدائرية على اليسار<br>
+      ✅ اضغط عليها لإظهار الشريط<br>
+      ✅ الشريط يظهر لـ 3 ثواني<br>
+      ✅ ثم يختفي تلقائياً
+    </p>
+    <div style="margin-top: 15px; padding: 15px; background: rgba(0,0,0,0.2); border-radius: 12px; text-align: center;">
+      <strong>Build:</strong><br>
+      v20251102_1762124215109
+    </div>
+  </div>
+
+  <!-- سهم مؤشر -->
+  <div class="arrow">👈</div>
+
+  <!-- عداد النقرات -->
+  <div class="click-count" id="clickCount">0</div>
+
+  <!-- شريط الحالة -->
+  <div class="status-bar">
+    <div class="status-item">
+      <span class="label">موضع الشريط:</span>
+      <span class="value" id="dockPos">-52px (مخفي)</span>
+    </div>
+    <div class="status-item">
+      <span class="label">موضع الأيقونة:</span>
+      <span class="value" id="iconPos">28px (جاهزة)</span>
+    </div>
+    <div class="status-item">
+      <span class="label">الحالة:</span>
+      <span class="value" id="status">جاهز للضغط ✋</span>
+    </div>
+  </div>
+
+  <!-- رسالة النجاح -->
+  <div class="success-message" id="successMsg">
+    ✅ ممتاز! الشريط ظهر!
+  </div>
+
+  <!-- الأيقونة الخارجية -->
+  <div class="unified-dock-tab" id="dockTab">
+    <div class="dock-icon">
+      <div class="glass-overlay"></div>
+      <div class="outer-glow"></div>
+      <div class="menu-icon">
+        <div class="menu-line"></div>
+        <div class="menu-line"></div>
+        <div class="menu-line"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- الشريط الجانبي -->
+  <div class="unified-dock-wrapper" id="dockWrapper">
+    <div class="unified-dock-content">
+      <div class="dock-item">🏠</div>
+      <div class="dock-item">👤</div>
+      <div class="dock-item">📄</div>
+      <div class="dock-item">💰</div>
+      <div class="dock-item">📊</div>
+      <div class="dock-item">💬</div>
+      <div class="dock-item">⚙️</div>
+    </div>
+  </div>
+
+  <script>
+    const dockWrapper = document.getElementById('dockWrapper');
+    const dockTab = document.getElementById('dockTab');
+    const dockPos = document.getElementById('dockPos');
+    const iconPos = document.getElementById('iconPos');
+    const status = document.getElementById('status');
+    const successMsg = document.getElementById('successMsg');
+    const clickCount = document.getElementById('clickCount');
+
+    let clicks = 0;
+    let isOpen = false;
+
+    dockTab.addEventListener('click', (e) => {
+      e.stopPropagation();
+
+      clicks++;
+      clickCount.textContent = clicks;
+
+      if (!isOpen) {
+        // إظهار الشريط
+        dockWrapper.style.left = '16px';
+        dockTab.style.left = '96px';
+
+        dockPos.textContent = '16px (ظاهر) ✅';
+        iconPos.textContent = '96px (متحركة) ✅';
+        status.textContent = 'الشريط ظاهر! 🎉';
+        status.style.color = '#10B981';
+
+        // رسالة نجاح
+        successMsg.classList.add('show');
+        setTimeout(() => {
+          successMsg.classList.remove('show');
+        }, 2000);
+
+        isOpen = true;
+
+        // إخفاء بعد 3 ثواني
+        setTimeout(() => {
+          dockWrapper.style.left = '-52px';
+          dockTab.style.left = '28px';
+
+          dockPos.textContent = '-52px (مخفي)';
+          iconPos.textContent = '28px (جاهزة)';
+          status.textContent = 'جاهز للضغط مرة أخرى ✋';
+          status.style.color = '#10B981';
+
+          isOpen = false;
+        }, 3000);
+      }
+    });
+
+    console.log('%c🎯 اضغط على الأيقونة الدائرية!', 'color: #10B981; font-size: 24px; font-weight: bold');
+    console.log('Build: v20251102_1762124215109');
+    console.log('');
+    console.log('📍 المواضع:');
+    console.log('  الأيقونة: left: 28px (خارجية)');
+    console.log('  الشريط: left: -52px (مخفي)');
+    console.log('');
+    console.log('⚡ عند الضغط:');
+    console.log('  الأيقونة → 96px');
+    console.log('  الشريط → 16px (يظهر!)');
+    console.log('');
+    console.log('⏰ بعد 3 ثواني:');
+    console.log('  الأيقونة ← 28px');
+    console.log('  الشريط ← -52px (يختفي)');
+  </script>
+</body>
+</html>
