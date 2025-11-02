@@ -178,84 +178,83 @@ export function UnifiedFloatingSideDock({
         }
       `}</style>
 
-      {/* Dock Wrapper - شبه مخفي يظهر عند التمرير */}
-      <div className="unified-dock-wrapper">
-
-        {/* Pull Tab - أيقونة خارج الشريط ملاصقة له */}
+      {/* Pull Tab - أيقونة خارجية منفصلة عن الشريط تماماً */}
+      <div
+        className="unified-dock-tab fixed top-1/2 -translate-y-1/2 cursor-pointer"
+        style={{
+          left: '28px', // خارج الشريط: -52px (الشريط) + 72px (عرضه) + 8px (مسافة) = 28px
+          touchAction: 'manipulation',
+          WebkitTapHighlightColor: 'transparent',
+          zIndex: 10001,
+          pointerEvents: 'auto',
+          transition: 'left 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+        }}
+        onClick={(e) => {
+          e.stopPropagation();
+          const wrapper = document.querySelector('.unified-dock-wrapper') as HTMLElement;
+          const tab = document.querySelector('.unified-dock-tab') as HTMLElement;
+          if (wrapper && tab) {
+            wrapper.style.left = '16px';
+            tab.style.left = '96px'; // 16 + 72 + 8 (الشريط ظاهر + عرضه + مسافة)
+            setTimeout(() => {
+              wrapper.style.left = '-52px';
+              tab.style.left = '28px'; // -52 + 72 + 8 (يرجع للوضع الأصلي)
+            }, 3000);
+          }
+        }}
+      >
+        {/* أيقونة دائرية أنيقة */}
         <div
-          className="unified-dock-tab fixed top-1/2 -translate-y-1/2 cursor-pointer"
+          className="relative w-14 h-14 rounded-full flex items-center justify-center"
           style={{
-            left: '28px', // خارج الشريط: -52px (الشريط) + 72px (عرضه) + 8px (مسافة) = 28px
-            touchAction: 'manipulation',
-            WebkitTapHighlightColor: 'transparent',
-            zIndex: 10001,
-            pointerEvents: 'auto',
-            transition: 'left 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
-          }}
-          onClick={(e) => {
-            e.stopPropagation();
-            const wrapper = document.querySelector('.unified-dock-wrapper') as HTMLElement;
-            const tab = document.querySelector('.unified-dock-tab') as HTMLElement;
-            if (wrapper && tab) {
-              wrapper.style.left = '16px';
-              tab.style.left = '96px'; // 16 + 72 + 8 (الشريط ظاهر + عرضه + مسافة)
-              setTimeout(() => {
-                wrapper.style.left = '-52px';
-                tab.style.left = '28px'; // -52 + 72 + 8 (يرجع للوضع الأصلي)
-              }, 3000);
-            }
+            background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
+            boxShadow: `
+              0 4px 20px rgba(16, 185, 129, 0.6),
+              0 0 0 3px rgba(16, 185, 129, 0.2),
+              inset 0 2px 4px rgba(255, 255, 255, 0.3)
+            `,
           }}
         >
-          {/* أيقونة دائرية أنيقة */}
+          {/* Glass Overlay */}
           <div
-            className="relative w-14 h-14 rounded-full flex items-center justify-center"
+            className="absolute top-0 left-0 right-0 h-6 rounded-t-full"
             style={{
-              background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
-              boxShadow: `
-                0 4px 20px rgba(16, 185, 129, 0.6),
-                0 0 0 3px rgba(16, 185, 129, 0.2),
-                inset 0 2px 4px rgba(255, 255, 255, 0.3)
-              `,
+              background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.4) 0%, transparent 100%)',
             }}
-          >
-            {/* Glass Overlay */}
-            <div
-              className="absolute top-0 left-0 right-0 h-6 rounded-t-full"
-              style={{
-                background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.4) 0%, transparent 100%)',
-              }}
-            />
+          />
 
-            {/* Menu Icon */}
-            <Menu
-              size={26}
-              className="text-white relative z-10"
-              strokeWidth={2.5}
-              style={{
-                filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3))',
-              }}
-            />
+          {/* Menu Icon */}
+          <Menu
+            size={26}
+            className="text-white relative z-10"
+            strokeWidth={2.5}
+            style={{
+              filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3))',
+            }}
+          />
 
-            {/* Pulsing Ring */}
-            <div
-              className="absolute inset-0 rounded-full animate-pulse"
-              style={{
-                background: 'radial-gradient(circle at center, rgba(16, 185, 129, 0.6) 0%, transparent 70%)',
-                animationDuration: '2s',
-              }}
-            />
+          {/* Pulsing Ring */}
+          <div
+            className="absolute inset-0 rounded-full animate-pulse"
+            style={{
+              background: 'radial-gradient(circle at center, rgba(16, 185, 129, 0.6) 0%, transparent 70%)',
+              animationDuration: '2s',
+            }}
+          />
 
-            {/* Outer Glow Ring */}
-            <div
-              className="absolute -inset-2 rounded-full opacity-50"
-              style={{
-                background: 'radial-gradient(circle, rgba(16, 185, 129, 0.4) 0%, transparent 70%)',
-                filter: 'blur(8px)',
-              }}
-            />
-          </div>
+          {/* Outer Glow Ring */}
+          <div
+            className="absolute -inset-2 rounded-full opacity-50"
+            style={{
+              background: 'radial-gradient(circle, rgba(16, 185, 129, 0.4) 0%, transparent 70%)',
+              filter: 'blur(8px)',
+            }}
+          />
         </div>
+      </div>
 
+      {/* Dock Wrapper - الشريط الجانبي */}
+      <div className="unified-dock-wrapper">
         <div
           className="unified-dock-content"
           style={{
