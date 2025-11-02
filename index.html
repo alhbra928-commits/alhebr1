@@ -14,7 +14,12 @@
     <meta name="pragma" content="no-cache" />
     <meta name="last-modified" content="__BUILD_VERSION__" />
     <meta name="version" content="__BUILD_VERSION__" />
-    <meta name="cache-buster" content="v20251102_1762099493900" />
+    <meta name="cache-buster" content="v20251102_1762099853753" />
+
+    <!-- iPhone/Safari specific headers -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="format-detection" content="telephone=no" />
 
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <title>منصة النخيل والزيتون</title>
@@ -40,15 +45,52 @@
       }
     </style>
 
-    <!-- ⚛️ SIMPLE VERSION CHECK - NO AUTO RELOAD -->
+    <!-- 🔄 AGGRESSIVE CACHE BUSTING FOR IPHONE -->
     <script>
       (function() {
         const BUILD_VERSION = '__BUILD_VERSION__';
+        const FORCE_UPDATE_VERSION = 'v20251102_FOOTER_FIX_2';
+
         console.log('%c✅ منصة النخيل والزيتون', 'color:#10b981;font-size:18px;font-weight:bold');
         console.log('Version:', BUILD_VERSION);
+        console.log('Force Update:', FORCE_UPDATE_VERSION);
 
-        // Just save version, don't reload
-        localStorage.setItem('app-version', BUILD_VERSION);
+        // Check if this is iPhone/iPad
+        const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+        const isSafari = /Safari/i.test(navigator.userAgent) && !/Chrome/i.test(navigator.userAgent);
+
+        if (isIOS || isSafari) {
+          console.log('📱 iPhone/iPad detected - Checking for updates...');
+
+          const lastForceUpdate = localStorage.getItem('force-update-version');
+          const lastAppVersion = localStorage.getItem('app-version');
+
+          // Force reload if versions don't match
+          if (lastForceUpdate !== FORCE_UPDATE_VERSION || lastAppVersion !== BUILD_VERSION) {
+            console.log('🔄 New version detected - Force reloading...');
+
+            // Clear all possible caches
+            if ('caches' in window) {
+              caches.keys().then(names => {
+                names.forEach(name => caches.delete(name));
+              });
+            }
+
+            // Store new versions
+            localStorage.setItem('force-update-version', FORCE_UPDATE_VERSION);
+            localStorage.setItem('app-version', BUILD_VERSION);
+
+            // Force hard reload with cache bypass
+            setTimeout(() => {
+              window.location.reload(true);
+            }, 100);
+          } else {
+            console.log('✅ Already on latest version');
+          }
+        } else {
+          // Non-iOS: just save version
+          localStorage.setItem('app-version', BUILD_VERSION);
+        }
       })();
     </script>
   </head>

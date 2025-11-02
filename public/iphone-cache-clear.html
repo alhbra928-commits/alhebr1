@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>تحديث مهم - منصة مزاد1</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 50%, #bbf7d0 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      border-radius: 24px;
+      padding: 40px 30px;
+      max-width: 500px;
+      box-shadow: 0 20px 60px rgba(34, 197, 94, 0.15);
+      text-align: center;
+    }
+
+    .icon {
+      font-size: 80px;
+      margin-bottom: 20px;
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    h1 {
+      color: #16a34a;
+      font-size: 28px;
+      margin-bottom: 15px;
+      font-weight: 700;
+    }
+
+    .subtitle {
+      color: #059669;
+      font-size: 18px;
+      margin-bottom: 30px;
+      font-weight: 600;
+    }
+
+    .steps {
+      background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+      border-radius: 16px;
+      padding: 30px;
+      margin-bottom: 30px;
+      text-align: right;
+    }
+
+    .step {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 20px;
+      padding: 15px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(34, 197, 94, 0.1);
+    }
+
+    .step:last-child {
+      margin-bottom: 0;
+    }
+
+    .step-number {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: white;
+      border-radius: 50%;
+      font-weight: 700;
+      font-size: 20px;
+      margin-left: 15px;
+      flex-shrink: 0;
+    }
+
+    .step-content {
+      flex: 1;
+    }
+
+    .step-title {
+      color: #16a34a;
+      font-weight: 700;
+      font-size: 16px;
+      margin-bottom: 5px;
+    }
+
+    .step-desc {
+      color: #059669;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .button {
+      display: inline-block;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: white;
+      padding: 18px 40px;
+      border-radius: 16px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 18px;
+      box-shadow: 0 8px 24px rgba(16, 185, 129, 0.3);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border: none;
+      width: 100%;
+    }
+
+    .button:active {
+      transform: scale(0.97);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+
+    .note {
+      margin-top: 20px;
+      padding: 15px;
+      background: rgba(251, 191, 36, 0.1);
+      border-radius: 12px;
+      border: 2px solid rgba(251, 191, 36, 0.3);
+    }
+
+    .note-text {
+      color: #d97706;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.6;
+    }
+
+    .version-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: white;
+      padding: 8px 20px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 700;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="icon">📱</div>
+    <h1>تحديث مهم للمنصة</h1>
+    <div class="subtitle">لمستخدمي iPhone/iPad</div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-number">1</div>
+        <div class="step-content">
+          <div class="step-title">افتح إعدادات Safari</div>
+          <div class="step-desc">اذهب إلى: الإعدادات → Safari</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-number">2</div>
+        <div class="step-content">
+          <div class="step-title">امسح السجل والبيانات</div>
+          <div class="step-desc">اضغط على "مسح السجل وبيانات الموقع"<br>(Clear History and Website Data)</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-number">3</div>
+        <div class="step-content">
+          <div class="step-title">أغلق Safari تماماً</div>
+          <div class="step-desc">اسحب Safari من الأسفل للأعلى وأغلقه من قائمة التطبيقات</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-number">4</div>
+        <div class="step-content">
+          <div class="step-title">افتح المنصة من جديد</div>
+          <div class="step-desc">ستحصل على آخر تحديث مع الفوتر الجديد</div>
+        </div>
+      </div>
+    </div>
+
+    <button class="button" onclick="forceReload()">
+      تم المسح - حدّث الآن
+    </button>
+
+    <div class="note">
+      <div class="note-text">
+        ⚠️ يجب مسح الكاش لرؤية التحديثات الجديدة<br>
+        بما في ذلك الفوتر الذكي العائم
+      </div>
+    </div>
+
+    <div class="version-badge" id="version">
+      جاري التحميل...
+    </div>
+  </div>
+
+  <script>
+    // Show current version
+    fetch('/')
+      .then(r => r.text())
+      .then(html => {
+        const match = html.match(/cache-buster"\s+content="([^"]+)"/);
+        if (match) {
+          document.getElementById('version').textContent = 'الإصدار: ' + match[1];
+        }
+      });
+
+    function forceReload() {
+      // Clear all caches
+      if ('caches' in window) {
+        caches.keys().then(names => {
+          names.forEach(name => caches.delete(name));
+        });
+      }
+
+      // Clear localStorage
+      localStorage.removeItem('force-update-version');
+      localStorage.removeItem('app-version');
+
+      // Clear sessionStorage
+      sessionStorage.clear();
+
+      // Force hard reload with timestamp
+      setTimeout(() => {
+        window.location.href = '/?t=' + Date.now();
+      }, 300);
+    }
+
+    // Auto-detect if already cleared
+    const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+    if (isIOS) {
+      console.log('📱 iPhone/iPad detected');
+      console.log('✅ Clear cache steps displayed');
+    }
+  </script>
+</body>
+</html>
