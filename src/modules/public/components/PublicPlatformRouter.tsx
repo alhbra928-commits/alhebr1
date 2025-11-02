@@ -14,11 +14,12 @@ interface PublicPlatformRouterProps {
 }
 
 export function PublicPlatformRouter({ onAdminLogin, onBackToAdmin, onFarmOwnerLogin }: PublicPlatformRouterProps) {
-  const [currentView, setCurrentView] = useState<View>('gateway');
+  const [currentView, setCurrentView] = useState<View | null>(null);
   const [selectedBarcode, setSelectedBarcode] = useState<string>('');
   const [gatewayEnabled, setGatewayEnabled] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // تحميل إعدادات البوابة
+  // تحميل إعدادات البوابة - مرة واحدة فقط
   useEffect(() => {
     const loadGatewaySettings = async () => {
       try {
@@ -31,12 +32,13 @@ export function PublicPlatformRouter({ onAdminLogin, onBackToAdmin, onFarmOwnerL
         const enabled = data?.enabled ?? true;
         setGatewayEnabled(enabled);
 
-        if (!enabled) {
-          setCurrentView('main');
-        }
+        // تحديد الصفحة الأولى مباشرة - بدون تحميل مزدوج
+        setCurrentView(enabled ? 'gateway' : 'main');
       } catch (error) {
         console.error('Error loading gateway settings:', error);
         setCurrentView('main');
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -75,6 +77,18 @@ export function PublicPlatformRouter({ onAdminLogin, onBackToAdmin, onFarmOwnerL
   const handleEnterPlatform = () => {
     setCurrentView('main');
   };
+
+  // عرض loader بسيط أثناء تحميل الإعدادات
+  if (isLoading || currentView === null) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-emerald-900 via-emerald-800 to-emerald-900 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-emerald-400/30 border-t-emerald-400 rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-emerald-100 text-lg font-arabic">جارٍ التحميل...</p>
+        </div>
+      </div>
+    );
+  }
 
   switch (currentView) {
     case 'gateway':
