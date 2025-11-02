@@ -180,12 +180,24 @@ export function UnifiedFloatingSideDock({
 
       {/* Dock Wrapper - شبه مخفي يظهر عند التمرير */}
       <div className="unified-dock-wrapper">
-        {/* Pull Handle - مقبض للسحب */}
+        {/* Pull Handle - مقبض للسحب - خارج الـ wrapper */}
         <div
-          className="absolute -right-6 top-1/2 -translate-y-1/2 cursor-pointer z-[9999]"
+          className="fixed left-0 top-1/2 -translate-y-1/2 cursor-pointer"
           style={{
             touchAction: 'manipulation',
             WebkitTapHighlightColor: 'transparent',
+            zIndex: 10000,
+            pointerEvents: 'auto',
+          }}
+          onClick={(e) => {
+            e.stopPropagation();
+            const wrapper = document.querySelector('.unified-dock-wrapper') as HTMLElement;
+            if (wrapper) {
+              wrapper.style.left = '16px';
+              setTimeout(() => {
+                wrapper.style.left = '-52px';
+              }, 3000);
+            }
           }}
         >
           <div
