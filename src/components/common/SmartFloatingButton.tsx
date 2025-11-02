@@ -90,76 +90,16 @@ export const SmartFloatingButton: React.FC<SmartFloatingButtonProps> = ({
     }
   };
 
-  // Clean up body styles on unmount or when isOpen changes
+  // Simple - just prevent body scroll on mobile
   useEffect(() => {
-    const preventScroll = (e: Event) => {
-      if (isMobile && isOpen) {
-        e.preventDefault();
-        e.stopPropagation();
-        return false;
-      }
-    };
-
-    const preventTouchMove = (e: TouchEvent) => {
-      if (isMobile && isOpen) {
-        // Allow scroll only inside messages area
-        const target = e.target as HTMLElement;
-        if (!target.closest('.messages-scroll-area')) {
-          e.preventDefault();
-          e.stopPropagation();
-          return false;
-        }
-      }
-    };
-
-    if (isMobile) {
-      if (isOpen) {
-        // Save current scroll position
-        const scrollY = window.scrollY;
-
-        // Add class and styles
-        document.body.classList.add('smart-button-open');
-        document.body.style.overflow = 'hidden';
-        document.body.style.position = 'fixed';
-        document.body.style.width = '100%';
-        document.body.style.top = `-${scrollY}px`;
-
-        // Prevent all scroll events
-        window.addEventListener('scroll', preventScroll, { passive: false });
-        window.addEventListener('wheel', preventScroll, { passive: false });
-        window.addEventListener('touchmove', preventTouchMove, { passive: false });
-        document.addEventListener('touchmove', preventTouchMove, { passive: false });
-      } else {
-        // Restore scroll position
-        const scrollY = document.body.style.top;
-        document.body.classList.remove('smart-button-open');
-        document.body.style.overflow = '';
-        document.body.style.position = '';
-        document.body.style.width = '';
-        document.body.style.top = '';
-
-        if (scrollY) {
-          window.scrollTo(0, parseInt(scrollY || '0') * -1);
-        }
-
-        // Remove event listeners
-        window.removeEventListener('scroll', preventScroll);
-        window.removeEventListener('wheel', preventScroll);
-        window.removeEventListener('touchmove', preventTouchMove);
-        document.removeEventListener('touchmove', preventTouchMove);
-      }
+    if (isMobile && isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
     }
 
     return () => {
-      document.body.classList.remove('smart-button-open');
       document.body.style.overflow = '';
-      document.body.style.position = '';
-      document.body.style.width = '';
-      document.body.style.top = '';
-      window.removeEventListener('scroll', preventScroll);
-      window.removeEventListener('wheel', preventScroll);
-      window.removeEventListener('touchmove', preventTouchMove);
-      document.removeEventListener('touchmove', preventTouchMove);
     };
   }, [isOpen, isMobile]);
 
@@ -586,98 +526,17 @@ export const SmartFloatingButton: React.FC<SmartFloatingButtonProps> = ({
       {/* Chat Popup - Mobile Optimized with Keyboard Support */}
       {isOpen && (
         <>
-          {/* Mobile/iPhone Specific Styles */}
+          {/* Backdrop - like MobileSidebar */}
           {isMobile && (
-            <style>{`
-              /* iPhone Safe Area Support */
-              .smart-button-mobile {
-                position: fixed !important;
-                top: 0 !important;
-                left: 0 !important;
-                right: 0 !important;
-                bottom: 0 !important;
-                width: 100vw !important;
-                height: 100vh !important;
-                height: 100dvh !important;
-                max-height: 100vh !important;
-                max-height: 100dvh !important;
-                z-index: 9999 !important;
-
-                /* CRITICAL: Prevent ANY movement */
-                margin: 0 !important;
-                padding: 0 !important;
-
-                /* iPhone Safari specific fixes */
-                -webkit-overflow-scrolling: touch !important;
-                overscroll-behavior: none !important;
-                touch-action: none !important;
-
-                /* Prevent any transforms or translations */
-                transform: translate3d(0, 0, 0) !important;
-                -webkit-transform: translate3d(0, 0, 0) !important;
-                backface-visibility: hidden !important;
-                -webkit-backface-visibility: hidden !important;
-                will-change: contents !important;
-
-                /* Lock in place */
-                pointer-events: auto !important;
-              }
-
-              /* Inner content area - this can scroll */
-              .smart-button-mobile > * {
-                position: relative !important;
-              }
-
-              /* Safe area padding */
-              .smart-button-header {
-                padding-top: calc(env(safe-area-inset-top, 0px) + 12px) !important;
-              }
-
-              .smart-button-input-area {
-                padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 12px) !important;
-              }
-
-              /* Safe area for input on iPhone */
-              .safe-area-bottom {
-                padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 12px) !important;
-              }
-
-              /* Prevent keyboard zoom on iPhone */
-              @supports (-webkit-touch-callout: none) {
-                input, textarea {
-                  font-size: 16px !important;
+            <div
+              className="fixed inset-0 bg-black/60 z-40"
+              onClick={() => {
+                setIsOpen(false);
+                if (onExternalOpenChange) {
+                  onExternalOpenChange(false);
                 }
-              }
-
-              /* CRITICAL: Prevent body scroll completely */
-              body.smart-button-open {
-                overflow: hidden !important;
-                position: fixed !important;
-                width: 100% !important;
-                height: 100vh !important;
-                height: 100dvh !important;
-                top: 0 !important;
-                left: 0 !important;
-                right: 0 !important;
-                bottom: 0 !important;
-              }
-
-              /* Prevent scrolling on HTML too */
-              html:has(body.smart-button-open) {
-                overflow: hidden !important;
-                position: fixed !important;
-                width: 100% !important;
-                height: 100vh !important;
-                height: 100dvh !important;
-              }
-
-              /* Only the messages area should scroll */
-              .smart-button-mobile .messages-scroll-area {
-                overflow-y: auto !important;
-                -webkit-overflow-scrolling: touch !important;
-                overscroll-behavior: contain !important;
-              }
-            `}</style>
+              }}
+            />
           )}
 
           <div
@@ -694,7 +553,7 @@ export const SmartFloatingButton: React.FC<SmartFloatingButtonProps> = ({
           >
           {/* Header - More compact on mobile */}
           <div
-            className={`px-4 py-3 flex items-center justify-between flex-shrink-0 ${isMobile ? 'smart-button-header' : ''}`}
+            className="px-4 py-3 flex items-center justify-between flex-shrink-0"
             style={{
               background: 'linear-gradient(135deg, #8B7355 0%, #A0916A 100%)'
             }}
@@ -770,10 +629,10 @@ export const SmartFloatingButton: React.FC<SmartFloatingButtonProps> = ({
 
           {/* Messages Area - Flexible height with better mobile support */}
           <div
-            className={`flex-1 overflow-y-auto p-3 space-y-2 bg-gray-800/50 overscroll-contain ${isMobile ? 'messages-scroll-area' : ''}`}
+            className="flex-1 overflow-y-auto p-3 space-y-2 bg-gray-800/50 overscroll-contain"
             style={{
               WebkitOverflowScrolling: 'touch',
-              minHeight: '200px' // Minimum height to prevent collapsing
+              minHeight: '200px'
             }}
           >
             {messages.length === 0 ? (
@@ -851,7 +710,7 @@ export const SmartFloatingButton: React.FC<SmartFloatingButtonProps> = ({
           )}
 
           {/* Input Area - Enhanced for mobile */}
-          <div className={`p-3 sm:p-4 bg-gray-900 border-t border-gray-700 flex-shrink-0 ${isMobile ? 'smart-button-input-area' : 'safe-area-bottom'}`}>
+          <div className="p-3 sm:p-4 bg-gray-900 border-t border-gray-700 flex-shrink-0">
             {/* Main Input Row */}
             <div className="flex items-stretch gap-2">
               {/* WhatsApp Button */}
