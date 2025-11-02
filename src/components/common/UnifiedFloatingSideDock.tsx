@@ -1,362 +1,297 @@
 import React, { useState, useEffect } from 'react';
-import { Crown, Home, Users, FileText, DollarSign, Settings, MessageSquare } from 'lucide-react';
+import { Home, Users, FileText, DollarSign, Settings, MessageSquare, Brain } from 'lucide-react';
 
 interface UnifiedFloatingSideDockProps {
   onNavigate: (section: string) => void;
   currentSection?: string;
   phoneNumber?: string;
   onSmartButtonClick?: () => void;
-  onAdminClick?: () => void;
 }
 
 export function UnifiedFloatingSideDock({
   onNavigate,
   currentSection = 'home',
   phoneNumber = '966500000000',
-  onSmartButtonClick,
-  onAdminClick
+  onSmartButtonClick
 }: UnifiedFloatingSideDockProps) {
   const [mounted, setMounted] = useState(false);
-  const [whatsappExpanded, setWhatsappExpanded] = useState(false);
-  const [message, setMessage] = useState('مرحباً! أود الاستفسار عن المنصة');
-  const [deviceInfo, setDeviceInfo] = useState({
-    isIPhone: false,
-    hasNotch: false,
-    safeAreaBottom: 0,
-    viewportHeight: 0
-  });
+  const [isExpanded, setIsExpanded] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-
-    const updateDeviceInfo = () => {
-      const isIPhone = /iPhone/.test(navigator.userAgent);
-      const hasNotch = isIPhone && window.screen.height >= 812;
-      const safeAreaBottom = hasNotch ? 34 : 16;
-
-      const vh = window.innerHeight * 0.01;
-      document.documentElement.style.setProperty('--vh', `${vh}px`);
-
-      setDeviceInfo({
-        isIPhone,
-        hasNotch,
-        safeAreaBottom,
-        viewportHeight: window.innerHeight
-      });
-    };
-
-    updateDeviceInfo();
-    window.addEventListener('resize', updateDeviceInfo);
-    window.addEventListener('orientationchange', updateDeviceInfo);
-
-    return () => {
-      window.removeEventListener('resize', updateDeviceInfo);
-      window.removeEventListener('orientationchange', updateDeviceInfo);
-    };
   }, []);
 
-  const handleWhatsAppClick = () => {
-    const encodedMessage = encodeURIComponent(message);
-    const url = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
-    window.open(url, '_blank');
-  };
-
   if (!mounted) return null;
+
+  const navItems = [
+    { id: 'home', icon: Home, label: 'الرئيسية' },
+    { id: 'users', icon: Users, label: 'المستخدمين' },
+    { id: 'documentation', icon: FileText, label: 'التوثيق' },
+    { id: 'finance', icon: DollarSign, label: 'المالية' },
+    { id: 'settings', icon: Settings, label: 'الإعدادات' }
+  ];
 
   return (
     <>
       <style>{`
-        @keyframes sparkle {
-          0%, 100% { opacity: 0; transform: scale(0); }
-          50% { opacity: 1; transform: scale(1); }
+        @keyframes float {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-10px); }
         }
 
-        @keyframes pulse-ring {
-          0% { transform: scale(1); opacity: 1; }
-          100% { transform: scale(1.4); opacity: 0; }
+        @keyframes pulse-glow {
+          0%, 100% { opacity: 0.5; }
+          50% { opacity: 1; }
         }
 
-        .unified-dock-wrapper {
+        .dock-container {
           position: fixed;
-          left: 16px;
-          top: 0;
-          height: 100vh;
+          left: 20px;
+          top: 50%;
+          transform: translateY(-50%);
           z-index: 10000;
+          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .dock-wrapper {
+          position: relative;
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+          padding: 16px 12px;
+          background: linear-gradient(135deg,
+            rgba(16, 185, 129, 0.1) 0%,
+            rgba(5, 150, 105, 0.08) 100%
+          );
+          backdrop-filter: blur(24px);
+          -webkit-backdrop-filter: blur(24px);
+          border-radius: 24px;
+          border: 1px solid rgba(255, 255, 255, 0.15);
+          box-shadow:
+            0 8px 32px rgba(0, 0, 0, 0.4),
+            inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .dock-button {
+          position: relative;
+          width: 52px;
+          height: 52px;
           display: flex;
           align-items: center;
-          transform: translateZ(0);
-          -webkit-transform: translateZ(0);
-          will-change: transform;
-          backface-visibility: hidden;
-          -webkit-backface-visibility: hidden;
+          justify-content: center;
+          border-radius: 16px;
+          border: none;
+          cursor: pointer;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          background: transparent;
+          color: rgba(255, 255, 255, 0.7);
         }
 
-        .unified-dock-content {
-          pointer-events: auto !important;
+        .dock-button:hover {
+          transform: scale(1.1);
+          color: rgba(255, 255, 255, 1);
         }
 
-        .unified-dock-content button {
-          pointer-events: auto !important;
+        .dock-button.active {
+          background: linear-gradient(135deg,
+            rgba(16, 185, 129, 0.3) 0%,
+            rgba(5, 150, 105, 0.25) 100%
+          );
+          color: rgb(52, 211, 153);
+          box-shadow: 0 4px 16px rgba(16, 185, 129, 0.4);
         }
 
-        .unified-dock-content * {
-          -webkit-tap-highlight-color: transparent;
-          -webkit-touch-callout: none;
+        .dock-button.active::before {
+          content: '';
+          position: absolute;
+          inset: -2px;
+          border-radius: 18px;
+          padding: 2px;
+          background: linear-gradient(135deg,
+            rgba(52, 211, 153, 0.5),
+            rgba(16, 185, 129, 0.5)
+          );
+          -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+          -webkit-mask-composite: xor;
+          mask-composite: exclude;
         }
 
-        .crown-sparkle {
-          animation: sparkle 2s ease-in-out infinite;
+        .smart-button {
+          position: relative;
+          width: 52px;
+          height: 52px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 16px;
+          border: none;
+          cursor: pointer;
+          background: linear-gradient(135deg,
+            rgba(120, 53, 15, 0.95) 0%,
+            rgba(92, 40, 11, 0.98) 100%
+          );
+          color: white;
+          box-shadow: 0 4px 16px rgba(120, 53, 15, 0.4);
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          animation: float 3s ease-in-out infinite;
         }
 
-        .crown-pulse {
-          animation: pulse-ring 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        .smart-button:hover {
+          transform: scale(1.1);
+          box-shadow: 0 8px 24px rgba(120, 53, 15, 0.6);
+        }
+
+        .smart-button::before {
+          content: '';
+          position: absolute;
+          inset: -3px;
+          border-radius: 18px;
+          background: linear-gradient(135deg,
+            rgba(251, 191, 36, 0.4),
+            rgba(245, 158, 11, 0.4)
+          );
+          filter: blur(8px);
+          animation: pulse-glow 2s ease-in-out infinite;
+          z-index: -1;
+        }
+
+        .whatsapp-button {
+          position: relative;
+          width: 52px;
+          height: 52px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 16px;
+          border: none;
+          cursor: pointer;
+          background: linear-gradient(135deg,
+            rgba(16, 185, 129, 0.2) 0%,
+            rgba(5, 150, 105, 0.15) 100%
+          );
+          color: rgb(52, 211, 153);
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .whatsapp-button:hover {
+          transform: scale(1.1);
+          background: linear-gradient(135deg,
+            rgba(16, 185, 129, 0.3) 0%,
+            rgba(5, 150, 105, 0.25) 100%
+          );
+        }
+
+        .divider {
+          width: 32px;
+          height: 1px;
+          margin: 4px auto;
+          background: linear-gradient(
+            90deg,
+            transparent,
+            rgba(255, 255, 255, 0.2),
+            transparent
+          );
+        }
+
+        .tooltip {
+          position: absolute;
+          left: 72px;
+          top: 50%;
+          transform: translateY(-50%);
+          padding: 8px 16px;
+          background: rgba(0, 0, 0, 0.9);
+          color: white;
+          border-radius: 8px;
+          font-size: 14px;
+          font-weight: 500;
+          white-space: nowrap;
+          pointer-events: none;
+          opacity: 0;
+          transition: opacity 0.2s;
+          z-index: 10001;
+        }
+
+        .dock-button:hover .tooltip,
+        .smart-button:hover .tooltip,
+        .whatsapp-button:hover .tooltip {
+          opacity: 1;
+        }
+
+        @media (max-width: 768px) {
+          .dock-container {
+            left: 12px;
+          }
+
+          .dock-wrapper {
+            padding: 12px 8px;
+          }
+
+          .dock-button,
+          .smart-button,
+          .whatsapp-button {
+            width: 48px;
+            height: 48px;
+          }
         }
       `}</style>
 
-      <div className="unified-dock-wrapper">
-        <div
-          className="unified-dock-content"
-          style={{
-            paddingBottom: `${deviceInfo.safeAreaBottom}px`,
-          }}
-        >
-          <div
-            className="relative rounded-3xl overflow-hidden"
-            style={{
-              background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(5, 150, 105, 0.12) 100%)',
-              backdropFilter: 'blur(20px)',
-              WebkitBackdropFilter: 'blur(20px)',
-              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 2px rgba(255, 255, 255, 0.2)',
-              border: '1px solid rgba(255, 255, 255, 0.15)',
-            }}
-          >
-            <div className="px-3 py-4 space-y-4">
+      <div className="dock-container">
+        <div className="dock-wrapper">
 
-              {/* Admin Crown Button */}
-              {onAdminClick && (
-                <div className="relative">
-                  <button
-                    onClick={onAdminClick}
-                    className="w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-300 relative overflow-hidden group"
-                    style={{
-                      background: 'linear-gradient(135deg, rgba(251, 191, 36, 0.95) 0%, rgba(245, 158, 11, 0.98) 100%)',
-                      boxShadow: '0 4px 12px rgba(251, 191, 36, 0.3)',
-                    }}
-                  >
-                    {/* Glass Shine */}
-                    <div
-                      className="absolute top-0 left-0 right-0 h-6 rounded-t-2xl"
-                      style={{
-                        background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.3) 0%, transparent 100%)',
-                      }}
-                    />
+          {/* Smart Button */}
+          {onSmartButtonClick && (
+            <button
+              className="smart-button"
+              onClick={() => {
+                onSmartButtonClick();
+                if (navigator.vibrate) navigator.vibrate(10);
+              }}
+              aria-label="الزر الذكي"
+            >
+              <Brain size={24} strokeWidth={2} />
+              <span className="tooltip">الزر الذكي</span>
+            </button>
+          )}
 
-                    {/* Crown Icon */}
-                    <Crown
-                      size={24}
-                      className="text-white relative z-10"
-                      strokeWidth={2.5}
-                      style={{
-                        filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3))',
-                      }}
-                    />
+          {onSmartButtonClick && <div className="divider" />}
 
-                    {/* Sparkle Effect */}
-                    <div
-                      className="crown-sparkle absolute top-1 right-1 w-2 h-2 rounded-full bg-white"
-                      style={{ animationDelay: '0s' }}
-                    />
-                    <div
-                      className="crown-sparkle absolute bottom-2 left-2 w-1.5 h-1.5 rounded-full bg-white"
-                      style={{ animationDelay: '0.7s' }}
-                    />
-                    <div
-                      className="crown-sparkle absolute top-3 left-3 w-1 h-1 rounded-full bg-white"
-                      style={{ animationDelay: '1.4s' }}
-                    />
-
-                    {/* Glow Halo */}
-                    <div
-                      className="absolute -inset-1 rounded-2xl opacity-50 group-hover:opacity-75 transition-opacity duration-300"
-                      style={{
-                        background: 'radial-gradient(circle, rgba(251, 191, 36, 0.4) 0%, transparent 70%)',
-                        filter: 'blur(8px)',
-                      }}
-                    />
-                  </button>
-
-                  {/* Pulse Ring */}
-                  <div
-                    className="crown-pulse absolute inset-0 rounded-2xl border-2 border-amber-400/60"
-                    style={{ pointerEvents: 'none' }}
-                  />
-                </div>
-              )}
-
-              {/* Divider */}
-              {onAdminClick && (
-                <div className="h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-              )}
-
-              {/* Home Button */}
+          {/* Navigation Buttons */}
+          {navItems.map((item) => {
+            const Icon = item.icon;
+            return (
               <button
-                onClick={() => onNavigate('home')}
-                className="w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300"
-                style={{
-                  background: currentSection === 'home'
-                    ? 'linear-gradient(135deg, rgba(16, 185, 129, 0.25) 0%, rgba(5, 150, 105, 0.2) 100%)'
-                    : 'transparent',
-                  boxShadow: currentSection === 'home' ? '0 4px 12px rgba(16, 185, 129, 0.3)' : 'none',
-                }}
+                key={item.id}
+                className={`dock-button ${currentSection === item.id ? 'active' : ''}`}
+                onClick={() => onNavigate(item.id)}
+                aria-label={item.label}
               >
-                <Home size={20} className={currentSection === 'home' ? 'text-emerald-400' : 'text-white/70'} />
+                <Icon size={20} strokeWidth={2} />
+                <span className="tooltip">{item.label}</span>
               </button>
+            );
+          })}
 
-              {/* Users Button */}
+          {/* WhatsApp Button */}
+          {phoneNumber && (
+            <>
+              <div className="divider" />
               <button
-                onClick={() => onNavigate('users')}
-                className="w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300"
-                style={{
-                  background: currentSection === 'users'
-                    ? 'linear-gradient(135deg, rgba(16, 185, 129, 0.25) 0%, rgba(5, 150, 105, 0.2) 100%)'
-                    : 'transparent',
+                className="whatsapp-button"
+                onClick={() => {
+                  const message = encodeURIComponent('مرحباً! أود الاستفسار عن المنصة');
+                  window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
+                  if (navigator.vibrate) navigator.vibrate(10);
                 }}
+                aria-label="واتساب"
               >
-                <Users size={20} className={currentSection === 'users' ? 'text-emerald-400' : 'text-white/70'} />
+                <MessageSquare size={20} strokeWidth={2} />
+                <span className="tooltip">واتساب</span>
               </button>
+            </>
+          )}
 
-              {/* Documentation Button */}
-              <button
-                onClick={() => onNavigate('documentation')}
-                className="w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300"
-                style={{
-                  background: currentSection === 'documentation'
-                    ? 'linear-gradient(135deg, rgba(16, 185, 129, 0.25) 0%, rgba(5, 150, 105, 0.2) 100%)'
-                    : 'transparent',
-                }}
-              >
-                <FileText size={20} className={currentSection === 'documentation' ? 'text-emerald-400' : 'text-white/70'} />
-              </button>
-
-              {/* Finance Button */}
-              <button
-                onClick={() => onNavigate('finance')}
-                className="w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300"
-                style={{
-                  background: currentSection === 'finance'
-                    ? 'linear-gradient(135deg, rgba(16, 185, 129, 0.25) 0%, rgba(5, 150, 105, 0.2) 100%)'
-                    : 'transparent',
-                }}
-              >
-                <DollarSign size={20} className={currentSection === 'finance' ? 'text-emerald-400' : 'text-white/70'} />
-              </button>
-
-              {/* Settings Button */}
-              <button
-                onClick={() => onNavigate('settings')}
-                className="w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300"
-                style={{
-                  background: currentSection === 'settings'
-                    ? 'linear-gradient(135deg, rgba(16, 185, 129, 0.25) 0%, rgba(5, 150, 105, 0.2) 100%)'
-                    : 'transparent',
-                }}
-              >
-                <Settings size={20} className={currentSection === 'settings' ? 'text-emerald-400' : 'text-white/70'} />
-              </button>
-
-              {/* Divider */}
-              {(onSmartButtonClick || phoneNumber) && (
-                <div className="h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-              )}
-
-              {/* WhatsApp Button */}
-              {phoneNumber && (
-                <button
-                  onClick={() => {
-                    setWhatsappExpanded(!whatsappExpanded);
-                    if (navigator.vibrate) navigator.vibrate(10);
-                  }}
-                  className="w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300 relative"
-                  style={{
-                    background: whatsappExpanded
-                      ? 'linear-gradient(135deg, rgba(16, 185, 129, 0.25) 0%, rgba(5, 150, 105, 0.2) 100%)'
-                      : 'transparent',
-                  }}
-                >
-                  <MessageSquare size={20} className={whatsappExpanded ? 'text-emerald-400' : 'text-white/70'} />
-                  <div
-                    className="absolute inset-0 rounded-2xl border-2 border-emerald-300/40 animate-ping"
-                    style={{ animationDuration: '2s' }}
-                  />
-                </button>
-              )}
-
-              {/* Smart Button */}
-              {onSmartButtonClick && (
-                <button
-                  onClick={() => {
-                    onSmartButtonClick();
-                    if (navigator.vibrate) navigator.vibrate(10);
-                  }}
-                  className="w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300 relative"
-                  style={{
-                    background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.25) 0%, rgba(5, 150, 105, 0.2) 100%)',
-                    boxShadow: '0 4px 12px rgba(16, 185, 129, 0.3)',
-                  }}
-                >
-                  <MessageSquare size={20} className="text-emerald-400" />
-                  <div
-                    className="absolute inset-0 rounded-2xl border-2 border-emerald-300/40 animate-ping"
-                    style={{ animationDuration: '2s' }}
-                  />
-                </button>
-              )}
-
-            </div>
-          </div>
         </div>
       </div>
-
-      {/* WhatsApp Panel */}
-      {whatsappExpanded && (
-        <div
-          className="fixed"
-          style={{
-            left: '96px',
-            top: '50%',
-            transform: 'translateY(-50%)',
-            zIndex: 9998,
-          }}
-        >
-          <div
-            className="relative rounded-2xl p-4"
-            style={{
-              background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(5, 150, 105, 0.15) 100%)',
-              backdropFilter: 'blur(20px)',
-              WebkitBackdropFilter: 'blur(20px)',
-              border: '1px solid rgba(255, 255, 255, 0.2)',
-              width: '280px',
-            }}
-          >
-            <textarea
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              className="w-full bg-white/10 text-white placeholder-white/50 rounded-xl p-3 mb-3 resize-none"
-              rows={4}
-              placeholder="اكتب رسالتك..."
-            />
-            <button
-              onClick={handleWhatsAppClick}
-              className="w-full py-3 rounded-xl text-white font-semibold"
-              style={{
-                background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
-              }}
-            >
-              إرسال عبر واتساب
-            </button>
-          </div>
-        </div>
-      )}
     </>
   );
 }
