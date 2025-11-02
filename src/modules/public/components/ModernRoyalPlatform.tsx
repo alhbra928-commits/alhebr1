@@ -16,7 +16,7 @@ import { InnovativeFarmCard } from './InnovativeFarmCard';
 import { Modern3DTicker } from '../../../components/common/Modern3DTicker';
 import { modern3DTickerService, TickerMessage, TickerSettings } from '../../../services/modern3DTickerService';
 import { getPlatformTextsBySection } from '../../../services/platformTextsService';
-// Footer removed for redesign
+import { SmartBottomNavBar } from '../../../components/layout/SmartBottomNavBar';
 
 type ViewMode = 'home' | 'farmDetail' | 'booking' | 'investor' | 'verification' | 'concept';
 
@@ -125,13 +125,33 @@ export function ModernRoyalPlatform({
   // Handle other views
   if (currentView === 'concept') {
     return (
-      <ConceptIntroductionPage onClose={handleGoHome} onStartJourney={handleGoHome} />
+      <>
+        <ConceptIntroductionPage onClose={handleGoHome} onStartJourney={handleGoHome} />
+        <SmartBottomNavBar
+          activeTab="home"
+          onNavigate={(tab) => {
+            if (tab === 'home') handleGoHome();
+            else if (tab === 'account') setCurrentView('investor');
+            else if (tab === 'farms') handleGoHome();
+          }}
+        />
+      </>
     );
   }
 
   if (currentView === 'verification') {
     return (
-      <CertificateVerificationPage onBack={handleGoHome} />
+      <>
+        <CertificateVerificationPage onBack={handleGoHome} />
+        <SmartBottomNavBar
+          activeTab="home"
+          onNavigate={(tab) => {
+            if (tab === 'home') handleGoHome();
+            else if (tab === 'account') setCurrentView('investor');
+            else if (tab === 'farms') handleGoHome();
+          }}
+        />
+      </>
     );
   }
 
@@ -141,25 +161,45 @@ export function ModernRoyalPlatform({
 
   if (currentView === 'farmDetail' && selectedFarm) {
     return (
-      <FarmDetailPage
-        farmId={selectedFarm.id}
-        onBack={handleGoHome}
-        onStartBooking={() => setCurrentView('booking')}
-      />
+      <>
+        <FarmDetailPage
+          farmId={selectedFarm.id}
+          onBack={handleGoHome}
+          onStartBooking={() => setCurrentView('booking')}
+        />
+        <SmartBottomNavBar
+          activeTab="farms"
+          onNavigate={(tab) => {
+            if (tab === 'home') handleGoHome();
+            else if (tab === 'account') setCurrentView('investor');
+            else if (tab === 'farms') handleGoHome();
+          }}
+        />
+      </>
     );
   }
 
   if (currentView === 'booking' && selectedFarm) {
     return (
-      <TemporaryBookingPage
-        farmId={selectedFarm.id}
-        farmName={selectedFarm.farm_name}
-        farmType={selectedFarm.tree_type === 'نخيل' ? 'palm' : 'olive'}
-        onBack={() => setCurrentView('farmDetail')}
-        onSuccess={handleGoHome}
-        onGoHome={handleGoHome}
-        onGoToInvestor={() => setCurrentView('investor')}
-      />
+      <>
+        <TemporaryBookingPage
+          farmId={selectedFarm.id}
+          farmName={selectedFarm.farm_name}
+          farmType={selectedFarm.tree_type === 'نخيل' ? 'palm' : 'olive'}
+          onBack={() => setCurrentView('farmDetail')}
+          onSuccess={handleGoHome}
+          onGoHome={handleGoHome}
+          onGoToInvestor={() => setCurrentView('investor')}
+        />
+        <SmartBottomNavBar
+          activeTab="farms"
+          onNavigate={(tab) => {
+            if (tab === 'home') handleGoHome();
+            else if (tab === 'account') setCurrentView('investor');
+            else if (tab === 'farms') handleGoHome();
+          }}
+        />
+      </>
     );
   }
 
@@ -276,7 +316,19 @@ export function ModernRoyalPlatform({
 
       </div>
 
-      {/* Footer removed for redesign */}
+      {/* Smart Bottom Navigation Bar */}
+      <SmartBottomNavBar
+        activeTab="home"
+        onNavigate={(tab) => {
+          if (tab === 'home') {
+            handleGoHome();
+          } else if (tab === 'account') {
+            setCurrentView('investor');
+          } else if (tab === 'farms') {
+            // Already on home with farms visible
+          }
+        }}
+      />
     </div>
   );
 }
