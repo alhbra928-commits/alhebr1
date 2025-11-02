@@ -16,6 +16,7 @@ import { InnovativeFarmCard } from './InnovativeFarmCard';
 import { Modern3DTicker } from '../../../components/common/Modern3DTicker';
 import { modern3DTickerService, TickerMessage, TickerSettings } from '../../../services/modern3DTickerService';
 import { getPlatformTextsBySection } from '../../../services/platformTextsService';
+import { GlassGreenFooter } from './GlassGreenFooter';
 
 type ViewMode = 'home' | 'farmDetail' | 'booking' | 'investor' | 'verification' | 'concept';
 
@@ -126,6 +127,13 @@ export function ModernRoyalPlatform({
     return (
       <>
         <ConceptIntroductionPage onClose={handleGoHome} onStartJourney={handleGoHome} />
+        <GlassGreenFooter
+          activeTab="concept"
+          onTabChange={(tabId) => {
+            if (tabId === 'home') handleGoHome();
+            else if (tabId === 'login') setCurrentView('investor');
+          }}
+        />
       </>
     );
   }
@@ -134,6 +142,13 @@ export function ModernRoyalPlatform({
     return (
       <>
         <CertificateVerificationPage onBack={handleGoHome} />
+        <GlassGreenFooter
+          activeTab="home"
+          onTabChange={(tabId) => {
+            if (tabId === 'home') handleGoHome();
+            else if (tabId === 'login') setCurrentView('investor');
+          }}
+        />
       </>
     );
   }
@@ -149,6 +164,13 @@ export function ModernRoyalPlatform({
           farmId={selectedFarm.id}
           onBack={handleGoHome}
           onStartBooking={() => setCurrentView('booking')}
+        />
+        <GlassGreenFooter
+          activeTab="farms"
+          onTabChange={(tabId) => {
+            if (tabId === 'home') handleGoHome();
+            else if (tabId === 'login') setCurrentView('investor');
+          }}
         />
       </>
     );
@@ -277,7 +299,25 @@ export function ModernRoyalPlatform({
           </div>
         </main>
 
-        {/* Bottom Navigation */}
+        {/* Glass Green Footer */}
+        <GlassGreenFooter
+          activeTab={currentView}
+          onTabChange={(tabId) => {
+            if (tabId === 'home') {
+              handleGoHome();
+            } else if (tabId === 'farms') {
+              const farmsSection = document.getElementById('farms-section');
+              if (farmsSection) {
+                farmsSection.scrollIntoView({ behavior: 'smooth' });
+              }
+            } else if (tabId === 'login') {
+              setCurrentView('investor');
+            }
+          }}
+          onWhatsAppClick={() => {
+            window.open('https://wa.me/966500000000', '_blank');
+          }}
+        />
       </div>
 
     </div>
