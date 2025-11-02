@@ -6,7 +6,6 @@ import { FarmDetailService } from '../services/farmDetailService';
 import { PremiumHeader } from './PremiumHeader';
 import { FarmCard3D } from './FarmCard3D';
 import { ModernMobileFarmCard } from './ModernMobileFarmCard';
-import { FixedBottomBar } from './FixedBottomBar';
 import { ConceptIntroModal } from './ConceptIntroModal';
 import { FarmDetailPage } from './FarmDetailPage';
 import { TemporaryBookingPage } from './TemporaryBookingPage';
@@ -285,7 +284,6 @@ export function MainPlatformInterface({
         </div>
       </div>
 
-      <FixedBottomBar onIntroClick={() => setShowConceptModal(true)} />
 
       <AdminCrownButton
         onAdminLogin={onAdminLogin}

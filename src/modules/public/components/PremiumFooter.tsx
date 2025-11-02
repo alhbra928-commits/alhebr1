@@ -65,7 +65,6 @@ export function PremiumFooter() {
       style={{
         background: 'linear-gradient(180deg, #047857 0%, #065f46 100%)',
         borderTop: '3px solid rgba(16, 185, 129, 0.3)',
-        marginBottom: '80px', // Space for FixedBottomBar
       }}
     >
       <div

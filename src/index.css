@@ -243,18 +243,7 @@ div[class*="overflow"]::-webkit-scrollbar {
   animation: shine 2s infinite;
 }
 
-/* 🔒 FOOTER ABSOLUTE POSITIONING - NO EXCEPTIONS */
-footer {
-  position: fixed !important;
-  bottom: 0 !important;
-  left: 0 !important;
-  right: 0 !important;
-  z-index: 9999 !important;
-  transform: translate3d(0, 0, 0) !important;
-  -webkit-transform: translate3d(0, 0, 0) !important;
-  backface-visibility: hidden !important;
-  -webkit-backface-visibility: hidden !important;
-}
+/* Footer styles removed - will be redesigned later */
 
 /* Slow pulse for settlement ready cards */
 @keyframes pulse-slow {
