@@ -243,34 +243,37 @@ div[class*="overflow"]::-webkit-scrollbar {
   animation: shine 2s infinite;
 }
 
-/* 📱 MOBILE BOTTOM NAVIGATION FIX - FORCE FIXED POSITION */
-/* This ensures the bottom nav stays fixed on mobile devices */
-@media (max-width: 768px) {
-  /* Force fixed positioning on mobile */
-  [class*="fixed bottom-0"],
-  .fixed.bottom-0 {
+/* 📱 UNIVERSAL BOTTOM BAR FIX - FORCE FIXED POSITION ON ALL DEVICES */
+/* This ensures the bottom bar stays fixed on ALL devices - mobile, tablet, desktop */
+
+/* Global fixed bottom positioning - applies to ALL screen sizes */
+div[style*="position: fixed"][style*="bottom: 0"],
+[data-fixed-bottom] {
+  position: fixed !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  -webkit-transform: translateZ(0) !important;
+  transform: translateZ(0) !important;
+  -webkit-backface-visibility: hidden !important;
+  backface-visibility: hidden !important;
+  will-change: transform !important;
+  -webkit-perspective: 1000 !important;
+  perspective: 1000 !important;
+}
+
+/* Prevent iOS Safari address bar issues */
+@supports (-webkit-touch-callout: none) {
+  div[style*="position: fixed"][style*="bottom: 0"],
+  [data-fixed-bottom] {
     position: fixed !important;
     bottom: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    -webkit-transform: translateZ(0) !important;
-    transform: translateZ(0) !important;
-    -webkit-backface-visibility: hidden !important;
-    backface-visibility: hidden !important;
-    will-change: transform !important;
+    padding-bottom: env(safe-area-inset-bottom, 0) !important;
   }
+}
 
-  /* Prevent iOS Safari address bar issues */
-  @supports (-webkit-touch-callout: none) {
-    [class*="fixed bottom-0"],
-    .fixed.bottom-0 {
-      position: fixed !important;
-      bottom: 0 !important;
-      padding-bottom: env(safe-area-inset-bottom, 0) !important;
-    }
-  }
-
-  /* Add padding to main content area */
+/* Add padding to main content area on mobile */
+@media (max-width: 768px) {
   main,
   [role="main"],
   .main-content {
