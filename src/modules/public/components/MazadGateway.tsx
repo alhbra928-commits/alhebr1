@@ -18,6 +18,12 @@ interface GatewaySettings {
   show_progress_bar: boolean;
   background_pattern_enabled: boolean;
   title_animation_enabled: boolean;
+  title_line1: string;
+  title_line2: string;
+  subtitle: string;
+  button_text: string;
+  show_title: boolean;
+  show_subtitle: boolean;
 }
 
 export function MazadGateway({ onEnter }: MazadGatewayProps) {
@@ -34,6 +40,12 @@ export function MazadGateway({ onEnter }: MazadGatewayProps) {
     show_progress_bar: true,
     background_pattern_enabled: true,
     title_animation_enabled: true,
+    title_line1: 'بوابة',
+    title_line2: 'مزاد',
+    subtitle: 'منصة استثمار زراعي متطورة',
+    button_text: 'ادخل إلى المنصة',
+    show_title: true,
+    show_subtitle: true,
   });
   const [progress, setProgress] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
@@ -64,6 +76,12 @@ export function MazadGateway({ onEnter }: MazadGatewayProps) {
             show_progress_bar: data.show_progress_bar ?? true,
             background_pattern_enabled: data.background_pattern_enabled ?? true,
             title_animation_enabled: data.title_animation_enabled ?? true,
+            title_line1: data.title_line1 || 'بوابة',
+            title_line2: data.title_line2 || 'مزاد',
+            subtitle: data.subtitle || 'منصة استثمار زراعي متطورة',
+            button_text: data.button_text || 'ادخل إلى المنصة',
+            show_title: data.show_title ?? true,
+            show_subtitle: data.show_subtitle ?? true,
           });
         }
         setSettingsLoaded(true);
@@ -164,24 +182,34 @@ export function MazadGateway({ onEnter }: MazadGatewayProps) {
         )}
 
         {/* Title */}
-        <h1 className={`text-5xl md:text-6xl font-black text-center mb-4 leading-tight
-                       ${settings.title_animation_enabled ? 'animate-fade-in-up' : ''}`}>
-          <span className="bg-gradient-to-r from-emerald-600 via-green-600 to-emerald-700
-                         bg-clip-text text-transparent drop-shadow-sm">
-            بوابة
-          </span>
-          <br />
-          <span className="bg-gradient-to-r from-green-700 via-emerald-800 to-green-900
-                         bg-clip-text text-transparent drop-shadow-sm">
-            مزاد
-          </span>
-        </h1>
+        {settings.show_title && (settings.title_line1 || settings.title_line2) && (
+          <h1 className={`text-5xl md:text-6xl font-black text-center mb-4 leading-tight
+                         ${settings.title_animation_enabled ? 'animate-fade-in-up' : ''}`}>
+            {settings.title_line1 && (
+              <>
+                <span className="bg-gradient-to-r from-emerald-600 via-green-600 to-emerald-700
+                               bg-clip-text text-transparent drop-shadow-sm">
+                  {settings.title_line1}
+                </span>
+                {settings.title_line2 && <br />}
+              </>
+            )}
+            {settings.title_line2 && (
+              <span className="bg-gradient-to-r from-green-700 via-emerald-800 to-green-900
+                             bg-clip-text text-transparent drop-shadow-sm">
+                {settings.title_line2}
+              </span>
+            )}
+          </h1>
+        )}
 
         {/* Subtitle */}
-        <p className={`text-emerald-700/80 text-lg md:text-xl text-center mb-12 font-medium
-                      ${settings.title_animation_enabled ? 'animate-fade-in' : ''}`}>
-          منصة استثمار زراعي متطورة
-        </p>
+        {settings.show_subtitle && settings.subtitle && (
+          <p className={`text-emerald-700/80 text-lg md:text-xl text-center mb-12 font-medium
+                        ${settings.title_animation_enabled ? 'animate-fade-in' : ''}`}>
+            {settings.subtitle}
+          </p>
+        )}
 
         {/* Enter Button */}
         <button
@@ -197,7 +225,7 @@ export function MazadGateway({ onEnter }: MazadGatewayProps) {
                           opacity-0 group-hover:opacity-50 blur-xl transition-opacity duration-300" />
           )}
 
-          <span className="relative z-10">ادخل إلى المنصة</span>
+          <span className="relative z-10">{settings.button_text}</span>
 
           {/* Progress Bar */}
           {settings.auto_enter_enabled && settings.show_progress_bar && (

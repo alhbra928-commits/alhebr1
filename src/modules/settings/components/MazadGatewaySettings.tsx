@@ -67,30 +67,41 @@ export function MazadGatewaySettings() {
     try {
       setSaving(true);
 
-      if (settings.id) {
+      // نحصل على جميع السجلات أولاً
+      const { data: existingData } = await supabase
+        .from('mazad_gateway_settings')
+        .select('id')
+        .limit(1)
+        .maybeSingle();
+
+      const updateData = {
+        enabled: settings.enabled,
+        auto_enter_enabled: settings.auto_enter_enabled,
+        auto_enter_delay: settings.auto_enter_delay,
+        show_logo: settings.show_logo,
+        fade_duration: settings.fade_duration,
+        animation_speed: settings.animation_speed,
+        show_sparkles: settings.show_sparkles,
+        show_particles: settings.show_particles,
+        button_glow_enabled: settings.button_glow_enabled,
+        show_progress_bar: settings.show_progress_bar,
+        background_pattern_enabled: settings.background_pattern_enabled,
+        title_animation_enabled: settings.title_animation_enabled,
+      };
+
+      if (existingData?.id) {
+        // تحديث السجل الموجود
         const { error } = await supabase
           .from('mazad_gateway_settings')
-          .update({
-            enabled: settings.enabled,
-            auto_enter_enabled: settings.auto_enter_enabled,
-            auto_enter_delay: settings.auto_enter_delay,
-            show_logo: settings.show_logo,
-            fade_duration: settings.fade_duration,
-            animation_speed: settings.animation_speed,
-            show_sparkles: settings.show_sparkles,
-            show_particles: settings.show_particles,
-            button_glow_enabled: settings.button_glow_enabled,
-            show_progress_bar: settings.show_progress_bar,
-            background_pattern_enabled: settings.background_pattern_enabled,
-            title_animation_enabled: settings.title_animation_enabled,
-          })
-          .eq('id', settings.id);
+          .update(updateData)
+          .eq('id', existingData.id);
 
         if (error) throw error;
       } else {
+        // إنشاء سجل جديد
         const { error } = await supabase
           .from('mazad_gateway_settings')
-          .insert([settings]);
+          .insert([updateData]);
 
         if (error) throw error;
       }
