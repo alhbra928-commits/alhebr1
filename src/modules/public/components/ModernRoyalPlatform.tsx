@@ -11,7 +11,6 @@ import { CertificateVerificationPage } from './CertificateVerificationPage';
 import { ConceptIntroductionPage } from './ConceptIntroductionPage';
 import { GreenConceptButton } from './GreenConceptButton';
 import { UnifiedFloatingSideDock } from '../../../components/common/UnifiedFloatingSideDock';
-import { MobileBottomNav } from '../../../components/common/MobileBottomNav';
 import { InnovativeFarmCard } from './InnovativeFarmCard';
 import { Modern3DTicker } from '../../../components/common/Modern3DTicker';
 import { modern3DTickerService, TickerMessage, TickerSettings } from '../../../services/modern3DTickerService';
@@ -220,7 +219,7 @@ export function ModernRoyalPlatform({
           enabled={tickerSettings.enabled}
         />
 
-        {/* Unified Floating Side Dock - Desktop Only */}
+        {/* Unified Floating Side Dock - شبه مخفي */}
         <UnifiedFloatingSideDock
           onAdminLogin={onAdminLogin}
           onNavigate={(section) => {
@@ -229,17 +228,6 @@ export function ModernRoyalPlatform({
             else if (section === 'account') setCurrentView('investor');
           }}
           currentSection={currentView === 'home' ? 'home' : currentView === 'investor' ? 'account' : 'farms'}
-          phoneNumber="966500000000"
-        />
-
-        {/* Mobile Bottom Navigation - Mobile Only */}
-        <MobileBottomNav
-          onNavigate={(section) => {
-            if (section === 'home') setCurrentView('home');
-            else if (section === 'account') setCurrentView('investor');
-            else if (section === 'docs') setCurrentView('verification');
-          }}
-          currentSection={currentView === 'home' ? 'home' : currentView === 'investor' ? 'account' : 'docs'}
           phoneNumber="966500000000"
         />
 

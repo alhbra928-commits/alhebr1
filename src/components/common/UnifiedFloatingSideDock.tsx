@@ -130,10 +130,10 @@ export function UnifiedFloatingSideDock({
           -webkit-overflow-scrolling: touch;
         }
 
-        /* Ultimate fixed positioning for dock */
+        /* Ultimate fixed positioning for dock - شبه مخفي */
         .unified-dock-wrapper {
           position: fixed !important;
-          left: 16px !important;
+          left: -52px !important;
           top: 0 !important;
           height: 100vh !important;
           height: calc(var(--vh, 1vh) * 100) !important;
@@ -141,11 +141,12 @@ export function UnifiedFloatingSideDock({
           align-items: center !important;
           pointer-events: none !important;
           z-index: 9999 !important;
+          transition: left 0.3s ease !important;
 
           /* Force GPU layer */
           transform: translateZ(0) !important;
           -webkit-transform: translateZ(0) !important;
-          will-change: transform !important;
+          will-change: transform, left !important;
           backface-visibility: hidden !important;
           -webkit-backface-visibility: hidden !important;
 
@@ -156,6 +157,10 @@ export function UnifiedFloatingSideDock({
           /* Ensure isolation */
           isolation: isolate !important;
           contain: layout style paint !important;
+        }
+
+        .unified-dock-wrapper:hover {
+          left: 16px !important;
         }
 
         .unified-dock-content {
@@ -171,8 +176,16 @@ export function UnifiedFloatingSideDock({
         }
       `}</style>
 
-      {/* Dock Wrapper - Desktop Only (hidden on mobile) */}
-      <div className="unified-dock-wrapper hidden lg:block">
+      {/* Dock Wrapper - شبه مخفي يظهر عند التمرير */}
+      <div className="unified-dock-wrapper">
+        {/* Edge Indicator - مؤشر على حافة الشاشة */}
+        <div
+          className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-20 bg-gradient-to-r from-emerald-500/40 to-transparent rounded-r-full animate-pulse pointer-events-none"
+          style={{
+            animation: 'pulse 3s ease-in-out infinite',
+          }}
+        />
+
         <div
           className="unified-dock-content"
           style={{
