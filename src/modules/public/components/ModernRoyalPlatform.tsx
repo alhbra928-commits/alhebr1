@@ -17,6 +17,7 @@ import { InnovativeFarmCard } from './InnovativeFarmCard';
 import { Modern3DTicker } from '../../../components/common/Modern3DTicker';
 import { modern3DTickerService, TickerMessage, TickerSettings } from '../../../services/modern3DTickerService';
 import { getPlatformTextsBySection } from '../../../services/platformTextsService';
+import { MazadGateway } from './MazadGateway';
 
 type ViewMode = 'home' | 'farmDetail' | 'booking' | 'investor' | 'verification' | 'concept';
 
@@ -122,6 +123,11 @@ export function ModernRoyalPlatform({
     setCurrentView('home');
     setSelectedFarm(null);
   };
+
+  // عرض بوابة المزاد أثناء تحميل المزارع
+  if (loading) {
+    return <MazadGateway onEnter={() => {}} />;
+  }
 
   // Handle other views
   if (currentView === 'concept') {

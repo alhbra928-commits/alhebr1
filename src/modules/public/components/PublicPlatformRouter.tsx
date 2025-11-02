@@ -14,32 +14,8 @@ interface PublicPlatformRouterProps {
 }
 
 export function PublicPlatformRouter({ onAdminLogin, onBackToAdmin, onFarmOwnerLogin }: PublicPlatformRouterProps) {
-  const [currentView, setCurrentView] = useState<View>('gateway');
+  const [currentView, setCurrentView] = useState<View>('main');
   const [selectedBarcode, setSelectedBarcode] = useState<string>('');
-
-  // تحميل إعدادات البوابة مرة واحدة
-  useEffect(() => {
-    const loadGatewaySettings = async () => {
-      try {
-        const { data } = await supabase
-          .from('mazad_gateway_settings')
-          .select('enabled')
-          .limit(1)
-          .maybeSingle();
-
-        const enabled = data?.enabled ?? true;
-
-        // إذا البوابة معطلة، انتقل للصفحة الرئيسية
-        if (!enabled) {
-          setCurrentView('main');
-        }
-      } catch (error) {
-        console.error('Error loading gateway settings:', error);
-      }
-    };
-
-    loadGatewaySettings();
-  }, []);
 
   // تهيئة السكربتات التحليلية عند التحميل الأول
   useEffect(() => {
