@@ -10,6 +10,7 @@ import { InvestorRouter } from '../../investor/components/InvestorRouter';
 import { CertificateVerificationPage } from './CertificateVerificationPage';
 import { ConceptIntroductionPage } from './ConceptIntroductionPage';
 import { GreenConceptButton } from './GreenConceptButton';
+import { AdminCrownButton } from './AdminCrownButton';
 import { UnifiedFloatingSideDock } from '../../../components/common/UnifiedFloatingSideDock';
 import { InnovativeFarmCard } from './InnovativeFarmCard';
 import { Modern3DTicker } from '../../../components/common/Modern3DTicker';
@@ -278,6 +279,12 @@ export function ModernRoyalPlatform({
         </main>
 
       </div>
+
+      {/* Admin Crown Button - Green */}
+      <AdminCrownButton
+        onAdminLogin={onAdminLogin}
+        onFarmOwnerLogin={onFarmOwnerLogin}
+      />
 
     </div>
   );
