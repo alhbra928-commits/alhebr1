@@ -188,13 +188,13 @@ export function MazadGateway({ onEnter }: MazadGatewayProps) {
             {/* Glow Effect */}
             <div className="absolute inset-0 blur-3xl bg-emerald-500/30 rounded-full scale-150" />
 
-            {/* Crown Container - حجم متجاوب */}
+            {/* Crown Container - حجم أكبر */}
             <div className="relative">
-              <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-32 md:h-32 rounded-full
+              <div className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 lg:w-56 lg:h-56 rounded-full
                             bg-gradient-to-br from-emerald-400 via-green-500 to-emerald-600
                             flex items-center justify-center shadow-2xl border-4 border-white/20
                             transform hover:scale-110 transition-transform duration-300">
-                <Crown className="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 text-white" strokeWidth={2.5} />
+                <Crown className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 text-white" strokeWidth={2.5} />
               </div>
 
               {/* Sparkles - أصغر على الموبايل */}
