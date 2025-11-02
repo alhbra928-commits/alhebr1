@@ -4,7 +4,7 @@ import { Bell, LogOut, FileText, DollarSign, Home, HelpCircle, Phone, ArrowLeft,
 import { FarmOwnerWelcome } from './FarmOwnerWelcome';
 import { AdvancedFinanceTab } from './AdvancedFinanceTab';
 import { ModernHomeTab } from './ModernHomeTab';
-import { BottomNavBar } from '../../../components/layout/BottomNavBar';
+// BottomNavBar removed - ready for new development
 
 interface FarmOwnerDashboardProps {
   profileId: string;
@@ -732,26 +732,7 @@ const FAQTab: React.FC = () => {
         </p>
       </div>
 
-      {/* Bottom Navigation Bar for Mobile */}
-      <BottomNavBar
-        userType="owner"
-        activeTab={activeTab === 'home' ? 'farms' : activeTab === 'finance' ? 'settlements' : activeTab === 'notifications' ? 'notifications' : 'more'}
-        onTabChange={(tabId) => {
-          if (tabId === 'farms') setActiveTab('home');
-          else if (tabId === 'settlements') setActiveTab('finance');
-          else if (tabId === 'reports') setActiveTab('finance'); // Can be customized
-          else if (tabId === 'notifications') setActiveTab('notifications');
-          else if (tabId === 'more') {
-            // Show more menu
-            setActiveTab('support');
-          }
-        }}
-        onActionClick={() => {
-          // Open form to add new farm
-          setActiveTab('form');
-        }}
-        notificationsCount={unreadCount}
-      />
+      {/* Bottom Navigation Bar removed - ready for new development */}
     </div>
   );
 };
