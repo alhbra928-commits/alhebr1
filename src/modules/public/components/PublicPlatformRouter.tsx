@@ -14,12 +14,11 @@ interface PublicPlatformRouterProps {
 }
 
 export function PublicPlatformRouter({ onAdminLogin, onBackToAdmin, onFarmOwnerLogin }: PublicPlatformRouterProps) {
-  const [currentView, setCurrentView] = useState<View | null>(null);
+  const [currentView, setCurrentView] = useState<View>('main');
   const [selectedBarcode, setSelectedBarcode] = useState<string>('');
-  const [gatewayEnabled, setGatewayEnabled] = useState(true);
-  const [isLoading, setIsLoading] = useState(true);
+  const [initialCheckDone, setInitialCheckDone] = useState(false);
 
-  // تحميل إعدادات البوابة - مرة واحدة فقط
+  // تحميل إعدادات البوابة بدون تأثير على UI
   useEffect(() => {
     const loadGatewaySettings = async () => {
       try {
@@ -30,15 +29,15 @@ export function PublicPlatformRouter({ onAdminLogin, onBackToAdmin, onFarmOwnerL
           .maybeSingle();
 
         const enabled = data?.enabled ?? true;
-        setGatewayEnabled(enabled);
 
-        // تحديد الصفحة الأولى مباشرة - بدون تحميل مزدوج
-        setCurrentView(enabled ? 'gateway' : 'main');
+        // فقط إذا كانت البوابة مُفعّلة وهذا أول تحميل
+        if (enabled && !initialCheckDone) {
+          setCurrentView('gateway');
+        }
+        setInitialCheckDone(true);
       } catch (error) {
         console.error('Error loading gateway settings:', error);
-        setCurrentView('main');
-      } finally {
-        setIsLoading(false);
+        setInitialCheckDone(true);
       }
     };
 
@@ -78,23 +77,9 @@ export function PublicPlatformRouter({ onAdminLogin, onBackToAdmin, onFarmOwnerL
     setCurrentView('main');
   };
 
-  // عرض loader بسيط أثناء تحميل الإعدادات
-  if (isLoading || currentView === null) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-emerald-900 via-emerald-800 to-emerald-900 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-emerald-400/30 border-t-emerald-400 rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-emerald-100 text-lg font-arabic">جارٍ التحميل...</p>
-        </div>
-      </div>
-    );
-  }
-
   switch (currentView) {
     case 'gateway':
-      return gatewayEnabled ? (
-        <MazadGateway onEnter={handleEnterPlatform} />
-      ) : null;
+      return <MazadGateway onEnter={handleEnterPlatform} />;
 
     case 'preview':
       return (
