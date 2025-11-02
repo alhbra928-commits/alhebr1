@@ -24,17 +24,41 @@ if (existsSync(distIndexPath)) {
   content = content.replace(/__BUILD_VERSION__/g, version);
   console.log(`✅ Replaced __BUILD_VERSION__ with ${version}`);
 
-  // SIMPLE VERSION CHECK - NO SERVICE WORKER, NO AUTO RELOAD
+  // AUTO RELOAD SYSTEM - FORCES UPDATE
   const swScript = `
-    <!-- SIMPLE VERSION INDICATOR - NO RELOAD -->
+    <!-- AUTO RELOAD ON NEW VERSION -->
     <script>
       (function() {
         const VERSION = '${version}';
         console.log('%c✅ منصة النخيل والزيتون', 'color: #10b981; font-size: 16px; font-weight: bold');
         console.log('Build Version:', VERSION);
 
-        // Just log, no reload
-        localStorage.setItem('app-version', VERSION);
+        const oldVersion = localStorage.getItem('app-version');
+
+        if (oldVersion && oldVersion !== VERSION) {
+          console.log('%c🔄 NEW VERSION DETECTED - RELOADING...', 'color: orange; font-weight: bold');
+          localStorage.setItem('app-version', VERSION);
+
+          // Clear all caches
+          if ('caches' in window) {
+            caches.keys().then(names => {
+              names.forEach(name => caches.delete(name));
+            });
+          }
+
+          // Show update message
+          const msg = document.createElement('div');
+          msg.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#10b981;color:white;padding:20px 40px;border-radius:12px;font-size:18px;font-weight:bold;z-index:999999;box-shadow:0 8px 32px rgba(0,0,0,0.3);text-align:center;';
+          msg.innerHTML = '🔄<br>تحديث جديد<br>جارٍ التحديث...';
+          document.body.appendChild(msg);
+
+          setTimeout(() => {
+            window.location.reload(true);
+          }, 1500);
+
+        } else {
+          localStorage.setItem('app-version', VERSION);
+        }
 
         // Visual indicator
         const indicator = document.createElement('div');
