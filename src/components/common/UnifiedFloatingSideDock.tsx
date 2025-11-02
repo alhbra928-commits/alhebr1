@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { Crown, Home, User, FileText, MessageCircle, X, Send } from 'lucide-react';
 
 interface UnifiedFloatingSideDockProps {
@@ -9,14 +10,13 @@ interface UnifiedFloatingSideDockProps {
 }
 
 /**
- * 🎯 Unified Floating Side Dock
+ * 🎯 Unified Floating Side Dock - iPhone Safari Fixed
  *
- * شريط جانبي موحد ثابت يتضمن:
- * - زر التاج الإداري (أعلى)
- * - أزرار التنقل الرئيسية (وسط)
- * - الزر الذكي للواتساب (أسفل)
- *
- * مصمم بشكل زجاجي ثلاثي الأبعاد مع Safe Area Support
+ * شريط جانبي موحد ثابت 100% على جميع الأجهزة بما فيها iPhone
+ * - استخدام React Portal للحقن في body
+ * - GPU layer مستقل (translateZ)
+ * - إصلاحات Safari الخاصة
+ * - معالجة keyboard على iPhone
  */
 export function UnifiedFloatingSideDock({
   onAdminLogin,
@@ -39,6 +39,7 @@ export function UnifiedFloatingSideDock({
     // Detect device
     const ua = navigator.userAgent;
     const isIOS = /iPhone|iPad|iPod/.test(ua);
+    const isIPhone = isIOS && /iPhone/.test(ua);
     const hasNotch = isIOS && window.screen.height >= 812;
 
     // Get safe area
@@ -46,10 +47,30 @@ export function UnifiedFloatingSideDock({
     const safeBottom = parseInt(style.getPropertyValue('padding-bottom')) || (hasNotch ? 34 : 0);
 
     setDeviceInfo({
-      isIPhone: isIOS && /iPhone/.test(ua),
+      isIPhone,
       hasNotch,
       safeAreaBottom: safeBottom
     });
+
+    // iPhone keyboard handling - prevent dock from being pushed
+    if (isIPhone) {
+      const preventKeyboardScroll = () => {
+        // Lock viewport when keyboard appears
+        const viewport = document.querySelector('meta[name="viewport"]');
+        if (viewport) {
+          viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+        }
+      };
+
+      // Listen for keyboard events
+      window.visualViewport?.addEventListener('resize', preventKeyboardScroll);
+      window.addEventListener('focusin', preventKeyboardScroll);
+
+      return () => {
+        window.visualViewport?.removeEventListener('resize', preventKeyboardScroll);
+        window.removeEventListener('focusin', preventKeyboardScroll);
+      };
+    }
   }, []);
 
   const handleWhatsAppSend = () => {
@@ -59,22 +80,39 @@ export function UnifiedFloatingSideDock({
     setWhatsappExpanded(false);
   };
 
-  if (!mounted) return null;
-
   const navigationButtons = [
     { id: 'home', icon: Home, label: 'الرئيسية', color: 'emerald' },
     { id: 'farms', icon: FileText, label: 'المزارع', color: 'emerald' },
     { id: 'account', icon: User, label: 'حسابي', color: 'emerald' },
   ];
 
-  return (
+  // Don't render until mounted
+  if (!mounted) return null;
+
+  const dockContent = (
     <>
-      {/* Unified Floating Side Dock */}
+      {/* Unified Floating Side Dock - Portal to body */}
       <div
-        className="fixed left-4 transition-all duration-300 ease-out z-[9999]"
+        className="floating-side-dock"
         style={{
+          // Critical: Fixed position with GPU layer
+          position: 'fixed',
+          left: '16px',
           top: '50%',
-          transform: 'translateY(-50%)',
+          transform: 'translateY(-50%) translateZ(0)', // GPU layer
+          zIndex: 9999,
+
+          // Safari iOS fixes
+          WebkitTransform: 'translateY(-50%) translateZ(0)',
+          willChange: 'transform',
+          backfaceVisibility: 'hidden',
+          WebkitBackfaceVisibility: 'hidden',
+          WebkitOverflowScrolling: 'touch',
+
+          // Ensure it stays on top
+          isolation: 'isolate',
+
+          // Padding for safe area
           paddingBottom: `${deviceInfo.safeAreaBottom}px`,
         }}
       >
@@ -91,6 +129,10 @@ export function UnifiedFloatingSideDock({
               0 0 0 1px rgba(16, 185, 129, 0.15)
             `,
             width: '72px',
+
+            // Additional Safari fixes
+            transform: 'translateZ(0)',
+            WebkitTransform: 'translateZ(0)',
           }}
         >
           {/* Glass Reflection */}
@@ -111,6 +153,8 @@ export function UnifiedFloatingSideDock({
                 className="group relative w-14 h-14 rounded-2xl transition-all duration-300 active:scale-90"
                 style={{
                   background: 'linear-gradient(135deg, rgba(251, 191, 36, 0.2) 0%, rgba(245, 158, 11, 0.15) 100%)',
+                  touchAction: 'manipulation', // Better touch on iOS
+                  WebkitTapHighlightColor: 'transparent',
                 }}
               >
                 {/* Glow on hover */}
@@ -119,7 +163,7 @@ export function UnifiedFloatingSideDock({
                   style={{
                     background: 'radial-gradient(circle, rgba(251, 191, 36, 0.3) 0%, transparent 70%)',
                     filter: 'blur(8px)',
-                    transform: 'scale(1.2)',
+                    transform: 'scale(1.2) translateZ(0)',
                   }}
                 />
 
@@ -177,6 +221,8 @@ export function UnifiedFloatingSideDock({
                     background: currentSection === btn.id
                       ? 'linear-gradient(135deg, rgba(16, 185, 129, 0.25) 0%, rgba(5, 150, 105, 0.2) 100%)'
                       : 'linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(5, 150, 105, 0.08) 100%)',
+                    touchAction: 'manipulation',
+                    WebkitTapHighlightColor: 'transparent',
                   }}
                   aria-label={btn.label}
                 >
@@ -187,7 +233,7 @@ export function UnifiedFloatingSideDock({
                       style={{
                         background: 'radial-gradient(circle, rgba(16, 185, 129, 0.3) 0%, transparent 70%)',
                         filter: 'blur(8px)',
-                        transform: 'scale(1.2)',
+                        transform: 'scale(1.2) translateZ(0)',
                       }}
                     />
                   )}
@@ -230,6 +276,8 @@ export function UnifiedFloatingSideDock({
                 className="group relative w-14 h-14 rounded-2xl transition-all duration-300 active:scale-90"
                 style={{
                   background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(5, 150, 105, 0.15) 100%)',
+                  touchAction: 'manipulation',
+                  WebkitTapHighlightColor: 'transparent',
                 }}
               >
                 {/* Glow */}
@@ -238,7 +286,7 @@ export function UnifiedFloatingSideDock({
                   style={{
                     background: 'radial-gradient(circle, rgba(16, 185, 129, 0.4) 0%, transparent 70%)',
                     filter: 'blur(8px)',
-                    transform: 'scale(1.2)',
+                    transform: 'scale(1.2) translateZ(0)',
                   }}
                 />
 
@@ -289,14 +337,21 @@ export function UnifiedFloatingSideDock({
         </div>
       </div>
 
-      {/* WhatsApp Expanded Panel */}
+      {/* WhatsApp Expanded Panel - Also portal'd */}
       {whatsappExpanded && (
         <div
-          className="fixed left-24 transition-all duration-300 ease-out z-[9998]"
+          className="fixed left-24 transition-all duration-300 ease-out"
           style={{
             top: '50%',
-            transform: 'translateY(-50%)',
+            transform: 'translateY(-50%) translateZ(0)',
             width: 'min(360px, calc(100vw - 120px))',
+            zIndex: 9998,
+
+            // Safari fixes
+            WebkitTransform: 'translateY(-50%) translateZ(0)',
+            willChange: 'transform',
+            backfaceVisibility: 'hidden',
+            WebkitBackfaceVisibility: 'hidden',
           }}
         >
           {/* Glass Panel */}
@@ -308,6 +363,7 @@ export function UnifiedFloatingSideDock({
               WebkitBackdropFilter: 'blur(20px)',
               boxShadow: '0 12px 40px rgba(16, 185, 129, 0.25)',
               border: '1px solid rgba(16, 185, 129, 0.2)',
+              transform: 'translateZ(0)',
             }}
           >
             {/* Header */}
@@ -348,6 +404,7 @@ export function UnifiedFloatingSideDock({
                   color: '#059669',
                   fontSize: '14px',
                   lineHeight: '1.5',
+                  touchAction: 'manipulation',
                 }}
                 onFocus={(e) => {
                   e.target.style.borderColor = 'rgba(16, 185, 129, 0.5)';
@@ -371,6 +428,8 @@ export function UnifiedFloatingSideDock({
                   boxShadow: message.trim()
                     ? '0 4px 12px rgba(16, 185, 129, 0.3)'
                     : 'none',
+                  touchAction: 'manipulation',
+                  WebkitTapHighlightColor: 'transparent',
                 }}
               >
                 <div className="flex items-center justify-center gap-2">
@@ -396,6 +455,8 @@ export function UnifiedFloatingSideDock({
                     style={{
                       background: 'rgba(16, 185, 129, 0.1)',
                       border: '1px solid rgba(16, 185, 129, 0.2)',
+                      touchAction: 'manipulation',
+                      WebkitTapHighlightColor: 'transparent',
                     }}
                   >
                     {quickMsg}
@@ -406,6 +467,35 @@ export function UnifiedFloatingSideDock({
           </div>
         </div>
       )}
+
+      {/* Global CSS for floating-side-dock */}
+      <style>{`
+        .floating-side-dock {
+          position: fixed !important;
+          left: 16px !important;
+          top: 50% !important;
+          transform: translateY(-50%) translateZ(0) !important;
+          -webkit-transform: translateY(-50%) translateZ(0) !important;
+          will-change: transform !important;
+          backface-visibility: hidden !important;
+          -webkit-backface-visibility: hidden !important;
+          -webkit-overflow-scrolling: touch !important;
+          isolation: isolate !important;
+          z-index: 9999 !important;
+        }
+
+        /* Prevent any parent from affecting the dock */
+        .floating-side-dock,
+        .floating-side-dock * {
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+        }
+      `}</style>
     </>
   );
+
+  // Use Portal to inject into body (outside app container)
+  return typeof document !== 'undefined'
+    ? createPortal(dockContent, document.body)
+    : null;
 }
