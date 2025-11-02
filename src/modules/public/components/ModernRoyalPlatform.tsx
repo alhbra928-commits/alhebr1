@@ -16,7 +16,7 @@ import { InnovativeFarmCard } from './InnovativeFarmCard';
 import { Modern3DTicker } from '../../../components/common/Modern3DTicker';
 import { modern3DTickerService, TickerMessage, TickerSettings } from '../../../services/modern3DTickerService';
 import { getPlatformTextsBySection } from '../../../services/platformTextsService';
-import { GlassGreenFooter } from './GlassGreenFooter';
+import { PortalFooter } from './PortalFooter';
 
 type ViewMode = 'home' | 'farmDetail' | 'booking' | 'investor' | 'verification' | 'concept';
 
@@ -127,7 +127,7 @@ export function ModernRoyalPlatform({
     return (
       <>
         <ConceptIntroductionPage onClose={handleGoHome} onStartJourney={handleGoHome} />
-        <GlassGreenFooter
+        <PortalFooter
           activeTab="concept"
           onTabChange={(tabId) => {
             if (tabId === 'home') handleGoHome();
@@ -142,7 +142,7 @@ export function ModernRoyalPlatform({
     return (
       <>
         <CertificateVerificationPage onBack={handleGoHome} />
-        <GlassGreenFooter
+        <PortalFooter
           activeTab="home"
           onTabChange={(tabId) => {
             if (tabId === 'home') handleGoHome();
@@ -165,7 +165,7 @@ export function ModernRoyalPlatform({
           onBack={handleGoHome}
           onStartBooking={() => setCurrentView('booking')}
         />
-        <GlassGreenFooter
+        <PortalFooter
           activeTab="farms"
           onTabChange={(tabId) => {
             if (tabId === 'home') handleGoHome();
@@ -302,7 +302,7 @@ export function ModernRoyalPlatform({
         </main>
 
         {/* Glass Green Footer */}
-        <GlassGreenFooter
+        <PortalFooter
           activeTab={currentView}
           onTabChange={(tabId) => {
             if (tabId === 'home') {

@@ -14,10 +14,29 @@
     <meta name="pragma" content="no-cache" />
     <meta name="last-modified" content="__BUILD_VERSION__" />
     <meta name="version" content="__BUILD_VERSION__" />
-    <meta name="cache-buster" content="v20251102_1762096181607" />
+    <meta name="cache-buster" content="v20251102_1762096442606" />
 
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <title>منصة النخيل والزيتون</title>
+
+    <!-- CRITICAL: Force footer to be fixed -->
+    <style>
+      #footer-portal {
+        position: fixed !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        width: 100% !important;
+        z-index: 999999 !important;
+        pointer-events: auto !important;
+        transform: translate3d(0, 0, 0) !important;
+        -webkit-transform: translate3d(0, 0, 0) !important;
+      }
+
+      body {
+        padding-bottom: max(80px, calc(80px + env(safe-area-inset-bottom))) !important;
+      }
+    </style>
 
     <!-- ⚛️ SIMPLE VERSION CHECK - NO AUTO RELOAD -->
     <script>
