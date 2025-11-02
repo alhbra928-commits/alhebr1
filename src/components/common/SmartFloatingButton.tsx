@@ -548,32 +548,31 @@ export const SmartFloatingButton: React.FC<SmartFloatingButtonProps> = ({
             }`}
             dir="rtl"
           >
-          {/* Header - More compact on mobile */}
+          {/* Header - Compact */}
           <div
-            className="px-4 py-3 flex items-center justify-between flex-shrink-0"
+            className="px-3 py-2 flex items-center justify-between flex-shrink-0"
             style={{
               background: 'linear-gradient(135deg, #8B7355 0%, #A0916A 100%)'
             }}
           >
             <div className="flex items-center gap-2 min-w-0">
-              <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0">
-                <MessageCircle className="w-5 h-5 text-white" />
+              <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0">
+                <MessageCircle className="w-4 h-4 text-white" />
               </div>
               <div className="min-w-0">
-                <h3 className="text-white font-bold text-sm sm:text-base truncate">مركز التواصل الذكي 🌿</h3>
-                <p className="text-white/80 text-xs truncate">نحن هنا لمساعدتك</p>
+                <h3 className="text-white font-bold text-sm truncate">مركز التواصل الذكي 🌿</h3>
               </div>
             </div>
-            <div className="flex items-center gap-1.5 flex-shrink-0">
+            <div className="flex items-center gap-1 flex-shrink-0">
               <button
                 onClick={toggleSound}
-                className="w-9 h-9 rounded-full bg-white/20 hover:bg-white/30 active:scale-95 flex items-center justify-center transition-all"
+                className="w-7 h-7 rounded-full bg-white/20 hover:bg-white/30 active:scale-95 flex items-center justify-center transition-all"
                 title={soundEnabled ? 'إيقاف الصوت' : 'تشغيل الصوت'}
               >
                 {soundEnabled ? (
-                  <Bell className="w-4 h-4 text-white" />
+                  <Bell className="w-3.5 h-3.5 text-white" />
                 ) : (
-                  <BellOff className="w-4 h-4 text-white" />
+                  <BellOff className="w-3.5 h-3.5 text-white" />
                 )}
               </button>
               <button
@@ -583,53 +582,31 @@ export const SmartFloatingButton: React.FC<SmartFloatingButtonProps> = ({
                     onExternalOpenChange(false);
                   }
                 }}
-                className="w-9 h-9 rounded-full bg-white/20 hover:bg-white/30 active:scale-95 flex items-center justify-center transition-all"
+                className="w-7 h-7 rounded-full bg-white/20 hover:bg-white/30 active:scale-95 flex items-center justify-center transition-all"
               >
-                <X className="w-4 h-4 text-white" />
+                <X className="w-3.5 h-3.5 text-white" />
               </button>
             </div>
           </div>
 
-          {/* User Type Badge - More compact */}
-          <div className="px-3 py-2 bg-gray-800 border-b border-gray-700 flex-shrink-0">
-            <div className="flex items-center justify-between">
-              <span className="text-xs text-gray-400 truncate">
-                متصل كـ: <span className="text-[#A0916A] font-semibold">{getUserTypeLabel()}</span>
+          {/* User Type Badge - Compact */}
+          <div className="px-3 py-1.5 bg-gray-800 border-b border-gray-700 flex-shrink-0">
+            <div className="flex items-center justify-between text-xs">
+              <span className="text-gray-400 truncate">
+                <span className="text-[#A0916A] font-semibold">{getUserTypeLabel()}</span>
               </span>
-              <div className="flex items-center gap-2 flex-shrink-0">
-                {messages.length > 0 && (
-                  <span className="text-xs text-gray-500">
-                    {messages.length}
-                  </span>
-                )}
-                {messageCount > 0 && (
-                  <button
-                    onClick={() => setShowAiInfo(!showAiInfo)}
-                    className="text-xs px-2 py-1 bg-blue-500/20 text-blue-300 rounded-lg hover:bg-blue-500/30 transition-colors"
-                    title="معلومات الذكاء الاصطناعي"
-                  >
-                    🤖
-                  </button>
-                )}
-              </div>
+              {messages.length > 0 && (
+                <span className="text-gray-500">{messages.length}</span>
+              )}
             </div>
-            {showAiInfo && currentIntent && (
-              <div className="mt-2 p-2 bg-gray-700/50 rounded-lg">
-                <div className="flex items-center justify-between text-xs flex-wrap gap-1">
-                  <span className="text-gray-400">النية: <span className="text-blue-300">{getIntentLabel()}</span></span>
-                  <span className="text-gray-400">المشاعر: <span className="text-yellow-300">{getSentimentEmoji()}</span></span>
-                </div>
-                <div className="text-xs text-gray-500 mt-1">رسائل: {messageCount}</div>
-              </div>
-            )}
           </div>
 
-          {/* Messages Area - Flexible height with better mobile support */}
+          {/* Messages Area */}
           <div
-            className="flex-1 overflow-y-auto p-3 space-y-2 bg-gray-800/50 overscroll-contain"
+            className="flex-1 overflow-y-auto p-2 space-y-1.5 bg-gray-800/50 overscroll-contain"
             style={{
               WebkitOverflowScrolling: 'touch',
-              minHeight: '200px'
+              minHeight: '150px'
             }}
           >
             {messages.length === 0 ? (
@@ -652,26 +629,26 @@ export const SmartFloatingButton: React.FC<SmartFloatingButtonProps> = ({
                   className={`flex ${message.direction === 'inbound' ? 'justify-end' : 'justify-start'}`}
                 >
                   <div
-                    className={`max-w-[85%] sm:max-w-[80%] rounded-2xl px-4 py-3 shadow-lg ${
+                    className={`max-w-[85%] rounded-xl px-3 py-2 shadow-lg ${
                       message.direction === 'inbound'
-                        ? 'bg-gradient-to-br from-emerald-600 to-teal-700 text-white font-medium'
+                        ? 'bg-gradient-to-br from-emerald-600 to-teal-700 text-white'
                         : message.isAutoResponse
-                        ? 'bg-gradient-to-br from-blue-600 to-indigo-700 text-white font-medium border-2 border-blue-400/30'
+                        ? 'bg-gradient-to-br from-blue-600 to-indigo-700 text-white border border-blue-400/30'
                         : message.isAdminResponse
-                        ? 'bg-gradient-to-br from-amber-600 to-orange-700 text-white font-medium border-2 border-amber-400/30'
-                        : 'bg-gradient-to-br from-slate-700 to-slate-800 text-white font-medium'
+                        ? 'bg-gradient-to-br from-amber-600 to-orange-700 text-white border border-amber-400/30'
+                        : 'bg-gradient-to-br from-slate-700 to-slate-800 text-white'
                     }`}
                   >
                     {message.direction === 'outbound' && (
-                      <p className="text-xs font-bold opacity-90 mb-1.5 flex items-center gap-1.5">
+                      <p className="text-[10px] font-bold opacity-90 mb-1 flex items-center gap-1">
                         {message.isAutoResponse && <span>🤖</span>}
                         {message.isAdminResponse && <span>👤</span>}
-                        <span className="drop-shadow-sm">{getMessageSenderLabel(message)}</span>
+                        <span>{getMessageSenderLabel(message)}</span>
                       </p>
                     )}
-                    <p className="text-sm sm:text-[15px] leading-relaxed whitespace-pre-wrap break-words drop-shadow-sm">{message.content}</p>
+                    <p className="text-xs leading-snug whitespace-pre-wrap break-words">{message.content}</p>
 
-                    <p className="text-xs opacity-80 mt-2 font-medium">
+                    <p className="text-[10px] opacity-70 mt-1">
                       {new Date(message.timestamp).toLocaleTimeString('ar-SA', {
                         hour: '2-digit',
                         minute: '2-digit'
@@ -706,51 +683,41 @@ export const SmartFloatingButton: React.FC<SmartFloatingButtonProps> = ({
             </div>
           )}
 
-          {/* Input Area - Enhanced for mobile */}
-          <div className="p-3 sm:p-4 bg-gray-900 border-t border-gray-700 flex-shrink-0">
-            {/* Main Input Row */}
-            <div className="flex items-stretch gap-2">
+          {/* Input Area */}
+          <div className="p-2 bg-gray-900 border-t border-gray-700 flex-shrink-0">
+            <div className="flex items-stretch gap-1.5">
               {/* WhatsApp Button */}
               <a
                 href="https://wa.me/966569335257"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex-shrink-0 w-12 h-12 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 flex items-center justify-center transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg hover:shadow-green-500/50"
-                title="تواصل عبر واتساب"
+                className="flex-shrink-0 w-9 h-9 rounded-lg bg-gradient-to-br from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 flex items-center justify-center transition-all hover:scale-105 active:scale-95 shadow-lg"
+                title="واتساب"
               >
-                <svg className="w-6 h-6 sm:w-5 sm:h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.890-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
                 </svg>
               </a>
 
-              {/* Input Field - Enhanced for Mobile Keyboard */}
+              {/* Input Field */}
               <input
                 ref={inputRef}
                 type="text"
                 value={inputMessage}
                 onChange={(e) => setInputMessage(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                onFocus={() => {
-                  // Ensure input is visible when keyboard appears
-                  setTimeout(() => {
-                    inputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'nearest' });
-                  }, 100);
-                }}
-                placeholder="اكتب رسالتك..."
+                placeholder="رسالتك..."
                 disabled={sending}
-                className="flex-1 min-w-0 px-3 py-3 sm:py-2.5 bg-gray-800 border border-gray-700 rounded-xl text-white text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#A0916A] disabled:opacity-50"
-                style={{ fontSize: '16px' }}
+                className="flex-1 min-w-0 px-2 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white text-xs placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-[#A0916A] disabled:opacity-50"
+                style={{ fontSize: '14px' }}
                 autoComplete="off"
-                autoCorrect="off"
-                autoCapitalize="off"
-                spellCheck="false"
               />
 
-              {/* Send Button - Larger on mobile */}
+              {/* Send Button */}
               <button
                 onClick={handleSendMessage}
                 disabled={!inputMessage.trim() || sending}
-                className="flex-shrink-0 w-14 h-12 sm:w-11 sm:h-11 rounded-xl flex items-center justify-center transition-all disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 shadow-lg"
+                className="flex-shrink-0 w-9 h-9 rounded-lg flex items-center justify-center transition-all disabled:opacity-50 disabled:cursor-not-allowed active:scale-95"
                 style={{
                   background: inputMessage.trim() && !sending
                     ? 'linear-gradient(135deg, #8B7355 0%, #A0916A 100%)'
@@ -761,9 +728,9 @@ export const SmartFloatingButton: React.FC<SmartFloatingButtonProps> = ({
                 }}
               >
                 {sending ? (
-                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                 ) : (
-                  <Send className="w-6 h-6 sm:w-5 sm:h-5 text-white" />
+                  <Send className="w-4 h-4 text-white" />
                 )}
               </button>
             </div>
