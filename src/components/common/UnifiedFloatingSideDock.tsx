@@ -181,11 +181,11 @@ export function UnifiedFloatingSideDock({
       {/* Dock Wrapper - شبه مخفي يظهر عند التمرير */}
       <div className="unified-dock-wrapper">
 
-        {/* Pull Tab - لسان بارز أطول من الشريط */}
+        {/* Pull Tab - أيقونة خارج الشريط ملاصقة له */}
         <div
           className="unified-dock-tab fixed top-1/2 -translate-y-1/2 cursor-pointer"
           style={{
-            left: '20px', // يخرج من حافة الشريط اليمنى (الشريط -52px + عرضه 72px = 20px)
+            left: '28px', // خارج الشريط: -52px (الشريط) + 72px (عرضه) + 8px (مسافة) = 28px
             touchAction: 'manipulation',
             WebkitTapHighlightColor: 'transparent',
             zIndex: 10001,
@@ -198,10 +198,10 @@ export function UnifiedFloatingSideDock({
             const tab = document.querySelector('.unified-dock-tab') as HTMLElement;
             if (wrapper && tab) {
               wrapper.style.left = '16px';
-              tab.style.left = '88px'; // 16 + 72 (عرض الشريط)
+              tab.style.left = '96px'; // 16 + 72 + 8 (الشريط ظاهر + عرضه + مسافة)
               setTimeout(() => {
                 wrapper.style.left = '-52px';
-                tab.style.left = '20px'; // -52 + 72
+                tab.style.left = '28px'; // -52 + 72 + 8 (يرجع للوضع الأصلي)
               }, 3000);
             }
           }}
@@ -251,19 +251,6 @@ export function UnifiedFloatingSideDock({
               style={{
                 background: 'radial-gradient(circle, rgba(16, 185, 129, 0.4) 0%, transparent 70%)',
                 filter: 'blur(8px)',
-              }}
-            />
-
-            {/* Arrow Pointer */}
-            <div
-              className="absolute -right-2 top-1/2 -translate-y-1/2"
-              style={{
-                width: 0,
-                height: 0,
-                borderLeft: '8px solid #10B981',
-                borderTop: '6px solid transparent',
-                borderBottom: '6px solid transparent',
-                filter: 'drop-shadow(2px 0 4px rgba(16, 185, 129, 0.6))',
               }}
             />
           </div>
