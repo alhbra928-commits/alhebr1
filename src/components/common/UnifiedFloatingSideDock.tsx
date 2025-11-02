@@ -142,9 +142,10 @@ export function UnifiedFloatingSideDock({
           height: calc(var(--vh, 1vh) * 100) !important;
           display: flex !important;
           align-items: center !important;
-          pointer-events: none !important;
+          pointer-events: auto !important;
           z-index: 9999 !important;
-          transition: left 0.3s ease !important;
+          transition: left 0.5s cubic-bezier(0.4, 0, 0.2, 1) !important;
+          touch-action: manipulation !important;
 
           /* Force GPU layer */
           transform: translateZ(0) !important;
@@ -259,6 +260,17 @@ export function UnifiedFloatingSideDock({
         className="unified-dock-wrapper"
         style={{
           left: isDockVisible ? '16px' : '-52px',
+        }}
+        onTouchStart={(e) => {
+          // عند لمس الشريط نفسه
+          e.stopPropagation();
+          setIsIconPressed(true);
+          if (navigator.vibrate) navigator.vibrate(10);
+          setIsDockVisible(true);
+          setTimeout(() => {
+            setIsIconPressed(false);
+            setTimeout(() => setIsDockVisible(false), 3000);
+          }, 150);
         }}
       >
         <div

@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>✅ الأيقونة والشريط - كتلة واحدة</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: -apple-system, sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      min-height: 100vh;
+      color: white;
+      direction: rtl;
+      overflow: hidden;
+    }
+
+    .title {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(16, 185, 129, 0.2);
+      padding: 20px;
+      border-radius: 12px;
+      border: 2px solid #10B981;
+    }
+
+    /* الأيقونة */
+    .icon {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      left: 28px;
+      width: 56px;
+      height: 56px;
+      background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 10001;
+      transition: left 0.5s cubic-bezier(0.4, 0, 0.2, 1), transform 0.15s;
+      box-shadow: 0 4px 20px rgba(16, 185, 129, 0.6);
+      touch-action: manipulation;
+    }
+
+    .icon.visible {
+      left: 96px;
+    }
+
+    .icon.pressed {
+      transform: translateY(-50%) scale(0.9);
+    }
+
+    .icon svg {
+      width: 26px;
+      height: 26px;
+      color: white;
+    }
+
+    /* الشريط */
+    .dock {
+      position: fixed;
+      top: 0;
+      left: -52px;
+      height: 100vh;
+      width: 72px;
+      background: linear-gradient(135deg, #064e3b 0%, #065f46 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 8px;
+      gap: 16px;
+      z-index: 9999;
+      transition: left 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 4px 0 24px rgba(0, 0, 0, 0.3);
+      touch-action: manipulation;
+      cursor: pointer;
+    }
+
+    .dock.visible {
+      left: 16px;
+    }
+
+    .dock-item {
+      width: 48px;
+      height: 48px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+
+    /* الإحصائيات */
+    .stats {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      left: 20px;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(10px);
+      padding: 20px;
+      border-radius: 16px;
+      border: 2px solid #10B981;
+    }
+
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .stat-row:last-child {
+      border-bottom: none;
+    }
+
+    .stat-value {
+      color: #10B981;
+      font-weight: bold;
+    }
+
+    .success {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+      padding: 30px 50px;
+      border-radius: 20px;
+      font-size: 32px;
+      font-weight: bold;
+      opacity: 0;
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      z-index: 99999;
+      box-shadow: 0 20px 60px rgba(16, 185, 129, 0.6);
+    }
+
+    .success.show {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="title">
+    <h2 style="margin-bottom: 10px;">✅ كتلة واحدة!</h2>
+    <p>جرّب لمس الأيقونة أو الشريط</p>
+    <div style="margin-top: 10px; padding: 10px; background: rgba(0,0,0,0.2); border-radius: 8px; text-align: center; font-size: 12px;">
+      <strong>Build:</strong> v20251102_1762125451517
+    </div>
+  </div>
+
+  <!-- الأيقونة -->
+  <div class="icon" id="icon">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h16"/>
+    </svg>
+  </div>
+
+  <!-- الشريط -->
+  <div class="dock" id="dock">
+    <div class="dock-item">🏠</div>
+    <div class="dock-item">👤</div>
+    <div class="dock-item">📄</div>
+    <div class="dock-item">💰</div>
+    <div class="dock-item">📊</div>
+  </div>
+
+  <!-- رسالة نجاح -->
+  <div class="success" id="success">✅ معاً!</div>
+
+  <!-- الإحصائيات -->
+  <div class="stats">
+    <div class="stat-row">
+      <span>لمسات الأيقونة:</span>
+      <span class="stat-value" id="iconTouches">0</span>
+    </div>
+    <div class="stat-row">
+      <span>لمسات الشريط:</span>
+      <span class="stat-value" id="dockTouches">0</span>
+    </div>
+    <div class="stat-row">
+      <span>حالة:</span>
+      <span class="stat-value" id="status">مخفي</span>
+    </div>
+  </div>
+
+  <script>
+    const icon = document.getElementById('icon');
+    const dock = document.getElementById('dock');
+    const success = document.getElementById('success');
+    const iconTouches = document.getElementById('iconTouches');
+    const dockTouches = document.getElementById('dockTouches');
+    const status = document.getElementById('status');
+
+    let iconCount = 0;
+    let dockCount = 0;
+    let isVisible = false;
+
+    function show() {
+      isVisible = true;
+      icon.classList.add('visible');
+      dock.classList.add('visible');
+      status.textContent = 'ظاهر ✅';
+      status.style.color = '#10B981';
+
+      // رسالة نجاح
+      success.classList.add('show');
+      setTimeout(() => success.classList.remove('show'), 1000);
+
+      // إخفاء بعد 3s
+      setTimeout(() => {
+        isVisible = false;
+        icon.classList.remove('visible');
+        dock.classList.remove('visible');
+        status.textContent = 'مخفي';
+        status.style.color = '#94a3b8';
+      }, 3000);
+    }
+
+    // لمس الأيقونة
+    icon.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      iconCount++;
+      iconTouches.textContent = iconCount;
+      
+      icon.classList.add('pressed');
+      if (navigator.vibrate) navigator.vibrate(10);
+      
+      setTimeout(() => icon.classList.remove('pressed'), 150);
+      
+      if (!isVisible) show();
+    });
+
+    // لمس الشريط
+    dock.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      dockCount++;
+      dockTouches.textContent = dockCount;
+      
+      icon.classList.add('pressed');
+      if (navigator.vibrate) navigator.vibrate(10);
+      
+      setTimeout(() => icon.classList.remove('pressed'), 150);
+      
+      if (!isVisible) show();
+    });
+
+    // Fallback للـ Desktop
+    icon.addEventListener('click', () => {
+      iconCount++;
+      iconTouches.textContent = iconCount;
+      if (!isVisible) show();
+    });
+
+    dock.addEventListener('click', () => {
+      dockCount++;
+      dockTouches.textContent = dockCount;
+      if (!isVisible) show();
+    });
+
+    console.log('%c✅ الأيقونة والشريط - كتلة واحدة!', 'color: #10B981; font-size: 24px; font-weight: bold');
+    console.log('Build: v20251102_1762125451517');
+    console.log('');
+    console.log('✅ لمس الأيقونة → الشريط يخرج معها');
+    console.log('✅ لمس الشريط → الأيقونة تخرج معه');
+    console.log('✅ يتحركان معاً دائماً!');
+  </script>
+</body>
+</html>
