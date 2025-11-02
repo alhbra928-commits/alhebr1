@@ -180,38 +180,44 @@ export function UnifiedFloatingSideDock({
 
       {/* Dock Wrapper - شبه مخفي يظهر عند التمرير */}
       <div className="unified-dock-wrapper">
-        {/* Pull Handle - مقبض للسحب - خارج الـ wrapper */}
+
+        {/* Pull Tab - لسان بارز من الشريط */}
         <div
-          className="fixed left-0 top-1/2 -translate-y-1/2 cursor-pointer"
+          className="unified-dock-tab fixed top-1/2 -translate-y-1/2 cursor-pointer"
           style={{
+            left: '20px', // يخرج من حافة الشريط اليمنى (الشريط -52px + عرضه 72px = 20px)
             touchAction: 'manipulation',
             WebkitTapHighlightColor: 'transparent',
-            zIndex: 10000,
+            zIndex: 10001,
             pointerEvents: 'auto',
+            transition: 'left 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
           }}
           onClick={(e) => {
             e.stopPropagation();
             const wrapper = document.querySelector('.unified-dock-wrapper') as HTMLElement;
-            if (wrapper) {
+            const tab = document.querySelector('.unified-dock-tab') as HTMLElement;
+            if (wrapper && tab) {
               wrapper.style.left = '16px';
+              tab.style.left = '88px'; // 16 + 72
               setTimeout(() => {
                 wrapper.style.left = '-52px';
+                tab.style.left = '20px'; // -52 + 72
               }, 3000);
             }
           }}
         >
           <div
-            className="relative w-6 h-32 rounded-r-2xl flex items-center justify-center"
+            className="relative w-8 h-24 rounded-r-2xl flex items-center justify-center"
             style={{
               background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
-              boxShadow: '2px 0 12px rgba(16, 185, 129, 0.4), inset -1px 0 2px rgba(255, 255, 255, 0.3)',
+              boxShadow: '3px 0 16px rgba(16, 185, 129, 0.5), inset -1px 0 2px rgba(255, 255, 255, 0.3)',
             }}
           >
             {/* Three Lines Icon - عمودية تشير للشاشة */}
             <div className="flex flex-row gap-1">
-              <div className="w-0.5 h-4 bg-white/90 rounded-full"></div>
-              <div className="w-0.5 h-4 bg-white/90 rounded-full"></div>
-              <div className="w-0.5 h-4 bg-white/90 rounded-full"></div>
+              <div className="w-0.5 h-5 bg-white/90 rounded-full"></div>
+              <div className="w-0.5 h-5 bg-white/90 rounded-full"></div>
+              <div className="w-0.5 h-5 bg-white/90 rounded-full"></div>
             </div>
 
             {/* Pulsing Effect */}
