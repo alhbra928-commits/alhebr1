@@ -11,7 +11,6 @@ import { CertificateVerificationPage } from './CertificateVerificationPage';
 import { ConceptIntroductionPage } from './ConceptIntroductionPage';
 import { GreenConceptButton } from './GreenConceptButton';
 import { AdminCrownButton } from './AdminCrownButton';
-import { SmartFloatingButton } from '../../../components/common/SmartFloatingButton';
 import { UnifiedFloatingSideDock } from '../../../components/common/UnifiedFloatingSideDock';
 import { InnovativeFarmCard } from './InnovativeFarmCard';
 import { Modern3DTicker } from '../../../components/common/Modern3DTicker';
@@ -233,12 +232,6 @@ export function ModernRoyalPlatform({
           currentSection={currentView === 'home' ? 'home' : currentView === 'investor' ? 'account' : 'farms'}
           phoneNumber="966500000000"
           onSmartButtonClick={() => setSmartButtonOpen(true)}
-        />
-
-        {/* Smart Floating Button - الزر الذكي المربوط بالـ AI */}
-        <SmartFloatingButton
-          externalOpen={smartButtonOpen}
-          onExternalOpenChange={setSmartButtonOpen}
         />
 
         {/* Concept Button */}

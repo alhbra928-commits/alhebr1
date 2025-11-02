@@ -8,9 +8,11 @@ interface AdminCrownButtonProps {
 
 export function AdminCrownButton({ onAdminLogin, onFarmOwnerLogin }: AdminCrownButtonProps) {
   const [showMenu, setShowMenu] = useState(false);
+  const [expanded, setExpanded] = useState(false);
 
   const handleAdminClick = () => {
     setShowMenu(false);
+    setExpanded(false);
     if (onAdminLogin) {
       onAdminLogin();
     }
@@ -18,32 +20,51 @@ export function AdminCrownButton({ onAdminLogin, onFarmOwnerLogin }: AdminCrownB
 
   const handleFarmOwnerClick = () => {
     setShowMenu(false);
+    setExpanded(false);
     if (onFarmOwnerLogin) {
       onFarmOwnerLogin();
     }
   };
 
+  const handleDotClick = () => {
+    if (!expanded) {
+      setExpanded(true);
+    } else {
+      setShowMenu(!showMenu);
+    }
+  };
+
   return (
     <>
-      {/* Crown Button - Left Side - Green */}
+      {/* Hidden Dot Button - Bottom Left */}
       <button
-        onClick={() => setShowMenu(!showMenu)}
-        className="fixed bottom-24 left-6 w-14 h-14 bg-gradient-to-br from-emerald-600 via-green-600 to-emerald-700 rounded-full shadow-2xl hover:shadow-emerald-500/50 hover:scale-110 transition-all duration-300 flex items-center justify-center group"
+        onClick={handleDotClick}
+        className={`fixed bottom-24 left-6 bg-gradient-to-br from-emerald-600 via-green-600 to-emerald-700 rounded-full shadow-lg transition-all duration-300 flex items-center justify-center ${
+          expanded
+            ? 'w-14 h-14 hover:shadow-emerald-500/50 hover:scale-110'
+            : 'w-3 h-3 opacity-60 hover:opacity-100 hover:scale-150'
+        }`}
         style={{
           zIndex: 10001,
           backdropFilter: 'blur(10px)',
-          border: '2px solid rgba(16,185,129,0.3)',
+          border: expanded ? '2px solid rgba(16,185,129,0.3)' : 'none',
         }}
+        title="تسجيل الدخول"
       >
-        <Crown className="w-7 h-7 text-white group-hover:rotate-12 transition-transform" />
+        {expanded && (
+          <Crown className="w-7 h-7 text-white group-hover:rotate-12 transition-transform" />
+        )}
       </button>
 
       {/* Menu */}
-      {showMenu && (
+      {showMenu && expanded && (
         <>
           {/* Backdrop */}
           <div
-            onClick={() => setShowMenu(false)}
+            onClick={() => {
+              setShowMenu(false);
+              setExpanded(false);
+            }}
             className="fixed inset-0 bg-black/20 backdrop-blur-sm"
             style={{ zIndex: 10000 }}
           />
