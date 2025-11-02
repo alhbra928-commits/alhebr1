@@ -14,11 +14,10 @@ interface PublicPlatformRouterProps {
 }
 
 export function PublicPlatformRouter({ onAdminLogin, onBackToAdmin, onFarmOwnerLogin }: PublicPlatformRouterProps) {
-  const [currentView, setCurrentView] = useState<View>('main');
+  const [currentView, setCurrentView] = useState<View>('gateway');
   const [selectedBarcode, setSelectedBarcode] = useState<string>('');
-  const [initialCheckDone, setInitialCheckDone] = useState(false);
 
-  // تحميل إعدادات البوابة بدون تأثير على UI
+  // تحميل إعدادات البوابة مرة واحدة
   useEffect(() => {
     const loadGatewaySettings = async () => {
       try {
@@ -30,14 +29,12 @@ export function PublicPlatformRouter({ onAdminLogin, onBackToAdmin, onFarmOwnerL
 
         const enabled = data?.enabled ?? true;
 
-        // فقط إذا كانت البوابة مُفعّلة وهذا أول تحميل
-        if (enabled && !initialCheckDone) {
-          setCurrentView('gateway');
+        // إذا البوابة معطلة، انتقل للصفحة الرئيسية
+        if (!enabled) {
+          setCurrentView('main');
         }
-        setInitialCheckDone(true);
       } catch (error) {
         console.error('Error loading gateway settings:', error);
-        setInitialCheckDone(true);
       }
     };
 
