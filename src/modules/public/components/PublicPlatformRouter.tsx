@@ -16,8 +16,6 @@ interface PublicPlatformRouterProps {
 export function PublicPlatformRouter({ onAdminLogin, onBackToAdmin, onFarmOwnerLogin }: PublicPlatformRouterProps) {
   const [currentView, setCurrentView] = useState<View>('gateway');
   const [selectedBarcode, setSelectedBarcode] = useState<string>('');
-  const [isPreloading, setIsPreloading] = useState(false);
-  const [preloadComplete, setPreloadComplete] = useState(false);
 
   // تحميل إعدادات البوابة مرة واحدة
   useEffect(() => {
@@ -73,32 +71,8 @@ export function PublicPlatformRouter({ onAdminLogin, onBackToAdmin, onFarmOwnerL
   };
 
   const handleEnterPlatform = () => {
-    // بدء التحميل المسبق - البوابة تبقى ظاهرة
-    setIsPreloading(true);
-  };
-
-  const handlePlatformReady = () => {
-    // المنصة جاهزة - الآن يمكن إخفاء البوابة
-    setPreloadComplete(true);
     setCurrentView('main');
   };
-
-  // إذا في مرحلة التحميل المسبق، اعرض البوابة مع المنصة مخفية في الخلفية
-  if (isPreloading && !preloadComplete) {
-    return (
-      <>
-        <MazadGateway onEnter={handleEnterPlatform} />
-        <div style={{ position: 'absolute', left: '-9999px', top: '-9999px' }}>
-          <ModernRoyalPlatform
-            onAdminLogin={onAdminLogin}
-            onBackToAdmin={onBackToAdmin}
-            onFarmOwnerLogin={onFarmOwnerLogin}
-            onReady={handlePlatformReady}
-          />
-        </div>
-      </>
-    );
-  }
 
   switch (currentView) {
     case 'gateway':

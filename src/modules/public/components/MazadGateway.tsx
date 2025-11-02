@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Crown } from 'lucide-react';
+import { PublicFarmService } from '../services/publicFarmService';
 
 interface MazadGatewayProps {
   onEnter: () => void;
@@ -50,6 +51,21 @@ export function MazadGateway({ onEnter }: MazadGatewayProps) {
   const [progress, setProgress] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
   const [settingsLoaded, setSettingsLoaded] = useState(false);
+  const [farmsPreloaded, setFarmsPreloaded] = useState(false);
+
+  // تحميل المزارع مسبقاً في الخلفية
+  useEffect(() => {
+    const preloadFarms = async () => {
+      try {
+        await PublicFarmService.getAllFarms();
+        setFarmsPreloaded(true);
+      } catch (error) {
+        console.error('Error preloading farms:', error);
+        setFarmsPreloaded(true); // استمر حتى لو فشل
+      }
+    };
+    preloadFarms();
+  }, []);
 
   // تحميل الإعدادات من قاعدة البيانات
   useEffect(() => {
@@ -117,6 +133,10 @@ export function MazadGateway({ onEnter }: MazadGatewayProps) {
   }, [settingsLoaded, settings.auto_enter_enabled, settings.auto_enter_delay]);
 
   const handleEnter = () => {
+    // انتظر حتى تنتهي المزارع من التحميل
+    if (!farmsPreloaded) {
+      return; // لا تدخل حتى يكتمل التحميل
+    }
     setIsVisible(false);
     setTimeout(() => onEnter(), settings.fade_duration);
   };

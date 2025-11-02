@@ -24,14 +24,12 @@ interface ModernRoyalPlatformProps {
   onAdminLogin?: () => void;
   onBackToAdmin?: () => void;
   onFarmOwnerLogin?: () => void;
-  onReady?: () => void;
 }
 
 export function ModernRoyalPlatform({
   onAdminLogin,
   onBackToAdmin,
   onFarmOwnerLogin,
-  onReady,
 }: ModernRoyalPlatformProps) {
   const [farms, setFarms] = useState<PublicFarm[]>([]);
   const [currentView, setCurrentView] = useState<ViewMode>('home');
@@ -88,10 +86,6 @@ export function ModernRoyalPlatform({
       console.error('Error loading farms:', error);
     } finally {
       setLoading(false);
-      // إشعار الـ Router أن المنصة جاهزة
-      if (onReady) {
-        onReady();
-      }
     }
   };
 
