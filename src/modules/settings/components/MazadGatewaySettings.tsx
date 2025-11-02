@@ -67,13 +67,6 @@ export function MazadGatewaySettings() {
     try {
       setSaving(true);
 
-      // نحصل على جميع السجلات أولاً
-      const { data: existingData } = await supabase
-        .from('mazad_gateway_settings')
-        .select('id')
-        .limit(1)
-        .maybeSingle();
-
       const updateData = {
         enabled: settings.enabled,
         auto_enter_enabled: settings.auto_enter_enabled,
@@ -89,28 +82,31 @@ export function MazadGatewaySettings() {
         title_animation_enabled: settings.title_animation_enabled,
       };
 
-      if (existingData?.id) {
-        // تحديث السجل الموجود
-        const { error } = await supabase
-          .from('mazad_gateway_settings')
-          .update(updateData)
-          .eq('id', existingData.id);
+      // محاولة التحديث أولاً
+      const { data: updated, error: updateError } = await supabase
+        .from('mazad_gateway_settings')
+        .update(updateData)
+        .eq('id', settings.id || 'd06bd962-d0a4-411a-a510-7deedb987839')
+        .select()
+        .maybeSingle();
 
-        if (error) throw error;
-      } else {
-        // إنشاء سجل جديد
-        const { error } = await supabase
+      if (updateError) {
+        console.error('Update error:', updateError);
+        // إذا فشل التحديث، حاول الإنشاء
+        const { error: insertError } = await supabase
           .from('mazad_gateway_settings')
           .insert([updateData]);
 
-        if (error) throw error;
+        if (insertError) throw insertError;
       }
 
-      showMessage('success', '✅ تم حفظ الإعدادات بنجاح - سيتم تطبيقها في الزيارة القادمة');
+      showMessage('success', '✅ تم حفظ الإعدادات بنجاح!');
+
+      // تحديث الحالة المحلية
       await loadSettings();
     } catch (error) {
       console.error('Error saving settings:', error);
-      showMessage('error', 'فشل حفظ الإعدادات');
+      showMessage('error', 'فشل حفظ الإعدادات: ' + (error as Error).message);
     } finally {
       setSaving(false);
     }
