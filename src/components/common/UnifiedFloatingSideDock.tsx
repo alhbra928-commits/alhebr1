@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { Home, Users, FileText, DollarSign, Settings, MessageSquare } from 'lucide-react';
+import { Crown, Home, Users, FileText, DollarSign, Settings, MessageSquare } from 'lucide-react';
 
 interface UnifiedFloatingSideDockProps {
   onNavigate: (section: string) => void;
   currentSection?: string;
   phoneNumber?: string;
   onSmartButtonClick?: () => void;
+  onAdminClick?: () => void;
 }
 
 export function UnifiedFloatingSideDock({
   onNavigate,
   currentSection = 'home',
   phoneNumber = '966500000000',
-  onSmartButtonClick
+  onSmartButtonClick,
+  onAdminClick
 }: UnifiedFloatingSideDockProps) {
   const [mounted, setMounted] = useState(false);
   const [whatsappExpanded, setWhatsappExpanded] = useState(false);
@@ -64,6 +66,16 @@ export function UnifiedFloatingSideDock({
   return (
     <>
       <style>{`
+        @keyframes sparkle {
+          0%, 100% { opacity: 0; transform: scale(0); }
+          50% { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes pulse-ring {
+          0% { transform: scale(1); opacity: 1; }
+          100% { transform: scale(1.4); opacity: 0; }
+        }
+
         .unified-dock-wrapper {
           position: fixed;
           left: 16px;
@@ -91,9 +103,16 @@ export function UnifiedFloatingSideDock({
           -webkit-tap-highlight-color: transparent;
           -webkit-touch-callout: none;
         }
+
+        .crown-sparkle {
+          animation: sparkle 2s ease-in-out infinite;
+        }
+
+        .crown-pulse {
+          animation: pulse-ring 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
       `}</style>
 
-      {/* الشريط الجانبي فقط */}
       <div className="unified-dock-wrapper">
         <div
           className="unified-dock-content"
@@ -112,6 +131,73 @@ export function UnifiedFloatingSideDock({
             }}
           >
             <div className="px-3 py-4 space-y-4">
+
+              {/* Admin Crown Button */}
+              {onAdminClick && (
+                <div className="relative">
+                  <button
+                    onClick={onAdminClick}
+                    className="w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-300 relative overflow-hidden group"
+                    style={{
+                      background: 'linear-gradient(135deg, rgba(251, 191, 36, 0.95) 0%, rgba(245, 158, 11, 0.98) 100%)',
+                      boxShadow: '0 4px 12px rgba(251, 191, 36, 0.3)',
+                    }}
+                  >
+                    {/* Glass Shine */}
+                    <div
+                      className="absolute top-0 left-0 right-0 h-6 rounded-t-2xl"
+                      style={{
+                        background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.3) 0%, transparent 100%)',
+                      }}
+                    />
+
+                    {/* Crown Icon */}
+                    <Crown
+                      size={24}
+                      className="text-white relative z-10"
+                      strokeWidth={2.5}
+                      style={{
+                        filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3))',
+                      }}
+                    />
+
+                    {/* Sparkle Effect */}
+                    <div
+                      className="crown-sparkle absolute top-1 right-1 w-2 h-2 rounded-full bg-white"
+                      style={{ animationDelay: '0s' }}
+                    />
+                    <div
+                      className="crown-sparkle absolute bottom-2 left-2 w-1.5 h-1.5 rounded-full bg-white"
+                      style={{ animationDelay: '0.7s' }}
+                    />
+                    <div
+                      className="crown-sparkle absolute top-3 left-3 w-1 h-1 rounded-full bg-white"
+                      style={{ animationDelay: '1.4s' }}
+                    />
+
+                    {/* Glow Halo */}
+                    <div
+                      className="absolute -inset-1 rounded-2xl opacity-50 group-hover:opacity-75 transition-opacity duration-300"
+                      style={{
+                        background: 'radial-gradient(circle, rgba(251, 191, 36, 0.4) 0%, transparent 70%)',
+                        filter: 'blur(8px)',
+                      }}
+                    />
+                  </button>
+
+                  {/* Pulse Ring */}
+                  <div
+                    className="crown-pulse absolute inset-0 rounded-2xl border-2 border-amber-400/60"
+                    style={{ pointerEvents: 'none' }}
+                  />
+                </div>
+              )}
+
+              {/* Divider */}
+              {onAdminClick && (
+                <div className="h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+              )}
+
               {/* Home Button */}
               <button
                 onClick={() => onNavigate('home')}
@@ -126,7 +212,7 @@ export function UnifiedFloatingSideDock({
                 <Home size={20} className={currentSection === 'home' ? 'text-emerald-400' : 'text-white/70'} />
               </button>
 
-              {/* User Button */}
+              {/* Users Button */}
               <button
                 onClick={() => onNavigate('users')}
                 className="w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300"
@@ -178,27 +264,32 @@ export function UnifiedFloatingSideDock({
                 <Settings size={20} className={currentSection === 'settings' ? 'text-emerald-400' : 'text-white/70'} />
               </button>
 
+              {/* Divider */}
+              {(onSmartButtonClick || phoneNumber) && (
+                <div className="h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+              )}
+
               {/* WhatsApp Button */}
-              <button
-                onClick={() => {
-                  setWhatsappExpanded(!whatsappExpanded);
-                  if (navigator.vibrate) navigator.vibrate(10);
-                }}
-                className="w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300 relative"
-                style={{
-                  background: whatsappExpanded
-                    ? 'linear-gradient(135deg, rgba(16, 185, 129, 0.25) 0%, rgba(5, 150, 105, 0.2) 100%)'
-                    : 'transparent',
-                }}
-              >
-                <MessageSquare size={20} className={whatsappExpanded ? 'text-emerald-400' : 'text-white/70'} />
-                {phoneNumber && (
+              {phoneNumber && (
+                <button
+                  onClick={() => {
+                    setWhatsappExpanded(!whatsappExpanded);
+                    if (navigator.vibrate) navigator.vibrate(10);
+                  }}
+                  className="w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300 relative"
+                  style={{
+                    background: whatsappExpanded
+                      ? 'linear-gradient(135deg, rgba(16, 185, 129, 0.25) 0%, rgba(5, 150, 105, 0.2) 100%)'
+                      : 'transparent',
+                  }}
+                >
+                  <MessageSquare size={20} className={whatsappExpanded ? 'text-emerald-400' : 'text-white/70'} />
                   <div
                     className="absolute inset-0 rounded-2xl border-2 border-emerald-300/40 animate-ping"
                     style={{ animationDuration: '2s' }}
                   />
-                )}
-              </button>
+                </button>
+              )}
 
               {/* Smart Button */}
               {onSmartButtonClick && (
@@ -214,12 +305,10 @@ export function UnifiedFloatingSideDock({
                   }}
                 >
                   <MessageSquare size={20} className="text-emerald-400" />
-                  {phoneNumber && (
-                    <div
-                      className="absolute inset-0 rounded-2xl border-2 border-emerald-300/40 animate-ping"
-                      style={{ animationDuration: '2s' }}
-                    />
-                  )}
+                  <div
+                    className="absolute inset-0 rounded-2xl border-2 border-emerald-300/40 animate-ping"
+                    style={{ animationDuration: '2s' }}
+                  />
                 </button>
               )}
 
