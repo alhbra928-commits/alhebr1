@@ -68,7 +68,7 @@ export function FixedBottomBar({ onIntroClick }: FixedBottomBarProps) {
 
   return (
     <div
-      data-fixed-bottom="true"
+      id="fixed-bottom-bar"
       className="bg-gradient-to-r from-emerald-600 via-green-600 to-emerald-600 border-t-2 border-emerald-400 shadow-2xl"
       style={{
         position: 'fixed',
@@ -77,17 +77,9 @@ export function FixedBottomBar({ onIntroClick }: FixedBottomBarProps) {
         right: 0,
         width: '100%',
         zIndex: 9999,
-        paddingBottom: 'max(env(safe-area-inset-bottom), 0px)',
+        paddingBottom: 'env(safe-area-inset-bottom)',
         backdropFilter: 'blur(10px)',
-        WebkitBackdropFilter: 'blur(10px)',
-        WebkitTransform: 'translateZ(0)',
-        transform: 'translateZ(0)',
-        WebkitBackfaceVisibility: 'hidden',
-        backfaceVisibility: 'hidden',
-        minHeight: 'calc(60px + env(safe-area-inset-bottom))',
-        WebkitOverflowScrolling: 'touch',
-        WebkitPerspective: 1000,
-        perspective: 1000
+        WebkitBackdropFilter: 'blur(10px)'
       }}
     >
       <div className="max-w-7xl mx-auto px-2 sm:px-4 py-2 sm:py-3">
