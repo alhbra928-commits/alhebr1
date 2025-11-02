@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Home, Users, FileText, DollarSign, Settings, MessageSquare, Menu } from 'lucide-react';
+import { Home, Users, FileText, DollarSign, Settings, MessageSquare } from 'lucide-react';
 
 interface UnifiedFloatingSideDockProps {
   onNavigate: (section: string) => void;
@@ -17,8 +17,6 @@ export function UnifiedFloatingSideDock({
   const [mounted, setMounted] = useState(false);
   const [whatsappExpanded, setWhatsappExpanded] = useState(false);
   const [message, setMessage] = useState('مرحباً! أود الاستفسار عن المنصة');
-  const [isDockVisible, setIsDockVisible] = useState(false);
-  const [isIconPressed, setIsIconPressed] = useState(false);
   const [deviceInfo, setDeviceInfo] = useState({
     isIPhone: false,
     hasNotch: false,
@@ -66,20 +64,22 @@ export function UnifiedFloatingSideDock({
   return (
     <>
       <style>{`
-        .unified-main-container {
+        .unified-dock-wrapper {
+          position: fixed;
+          left: 16px;
+          top: 0;
+          height: 100vh;
+          z-index: 10000;
+          display: flex;
+          align-items: center;
           transform: translateZ(0);
           -webkit-transform: translateZ(0);
-          will-change: transform, left;
+          will-change: transform;
           backface-visibility: hidden;
           -webkit-backface-visibility: hidden;
-          pointer-events: none !important;
         }
 
         .unified-dock-content {
-          pointer-events: auto !important;
-        }
-
-        .unified-dock-tab {
           pointer-events: auto !important;
         }
 
@@ -93,20 +93,8 @@ export function UnifiedFloatingSideDock({
         }
       `}</style>
 
-      {/* Container واحد - الأيقونة والشريط معاً */}
-      <div
-        className="unified-main-container fixed"
-        style={{
-          left: isDockVisible ? '16px' : '-52px',
-          top: 0,
-          height: '100vh',
-          zIndex: 10000,
-          transition: 'left 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
-          display: 'flex',
-          alignItems: 'center',
-        }}
-      >
-        {/* الشريط على اليسار */}
+      {/* الشريط الجانبي فقط */}
+      <div className="unified-dock-wrapper">
         <div
           className="unified-dock-content"
           style={{
@@ -124,20 +112,23 @@ export function UnifiedFloatingSideDock({
             }}
           >
             <div className="px-3 py-4 space-y-4">
+              {/* Home Button */}
               <button
-                onClick={(e) => { e.stopPropagation(); onNavigate('home'); }}
+                onClick={() => onNavigate('home')}
                 className="w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300"
                 style={{
                   background: currentSection === 'home'
                     ? 'linear-gradient(135deg, rgba(16, 185, 129, 0.25) 0%, rgba(5, 150, 105, 0.2) 100%)'
                     : 'transparent',
+                  boxShadow: currentSection === 'home' ? '0 4px 12px rgba(16, 185, 129, 0.3)' : 'none',
                 }}
               >
                 <Home size={20} className={currentSection === 'home' ? 'text-emerald-400' : 'text-white/70'} />
               </button>
 
+              {/* User Button */}
               <button
-                onClick={(e) => { e.stopPropagation(); onNavigate('users'); }}
+                onClick={() => onNavigate('users')}
                 className="w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300"
                 style={{
                   background: currentSection === 'users'
@@ -148,8 +139,9 @@ export function UnifiedFloatingSideDock({
                 <Users size={20} className={currentSection === 'users' ? 'text-emerald-400' : 'text-white/70'} />
               </button>
 
+              {/* Documentation Button */}
               <button
-                onClick={(e) => { e.stopPropagation(); onNavigate('documentation'); }}
+                onClick={() => onNavigate('documentation')}
                 className="w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300"
                 style={{
                   background: currentSection === 'documentation'
@@ -160,8 +152,9 @@ export function UnifiedFloatingSideDock({
                 <FileText size={20} className={currentSection === 'documentation' ? 'text-emerald-400' : 'text-white/70'} />
               </button>
 
+              {/* Finance Button */}
               <button
-                onClick={(e) => { e.stopPropagation(); onNavigate('finance'); }}
+                onClick={() => onNavigate('finance')}
                 className="w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300"
                 style={{
                   background: currentSection === 'finance'
@@ -172,8 +165,9 @@ export function UnifiedFloatingSideDock({
                 <DollarSign size={20} className={currentSection === 'finance' ? 'text-emerald-400' : 'text-white/70'} />
               </button>
 
+              {/* Settings Button */}
               <button
-                onClick={(e) => { e.stopPropagation(); onNavigate('settings'); }}
+                onClick={() => onNavigate('settings')}
                 className="w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300"
                 style={{
                   background: currentSection === 'settings'
@@ -184,9 +178,9 @@ export function UnifiedFloatingSideDock({
                 <Settings size={20} className={currentSection === 'settings' ? 'text-emerald-400' : 'text-white/70'} />
               </button>
 
+              {/* WhatsApp Button */}
               <button
-                onClick={(e) => {
-                  e.stopPropagation();
+                onClick={() => {
                   setWhatsappExpanded(!whatsappExpanded);
                   if (navigator.vibrate) navigator.vibrate(10);
                 }}
@@ -198,95 +192,38 @@ export function UnifiedFloatingSideDock({
                 }}
               >
                 <MessageSquare size={20} className={whatsappExpanded ? 'text-emerald-400' : 'text-white/70'} />
+                {phoneNumber && (
+                  <div
+                    className="absolute inset-0 rounded-2xl border-2 border-emerald-300/40 animate-ping"
+                    style={{ animationDuration: '2s' }}
+                  />
+                )}
               </button>
 
+              {/* Smart Button */}
               {onSmartButtonClick && (
                 <button
-                  onClick={(e) => {
-                    e.stopPropagation();
+                  onClick={() => {
                     onSmartButtonClick();
                     if (navigator.vibrate) navigator.vibrate(10);
                   }}
                   className="w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300 relative"
                   style={{
                     background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.25) 0%, rgba(5, 150, 105, 0.2) 100%)',
+                    boxShadow: '0 4px 12px rgba(16, 185, 129, 0.3)',
                   }}
                 >
                   <MessageSquare size={20} className="text-emerald-400" />
+                  {phoneNumber && (
+                    <div
+                      className="absolute inset-0 rounded-2xl border-2 border-emerald-300/40 animate-ping"
+                      style={{ animationDuration: '2s' }}
+                    />
+                  )}
                 </button>
               )}
+
             </div>
-          </div>
-        </div>
-
-        {/* الأيقونة على اليمين */}
-        <div
-          className="unified-dock-tab cursor-pointer"
-          style={{
-            position: 'absolute',
-            right: '-80px',
-            top: '50%',
-            transform: 'translateY(-50%)',
-            touchAction: 'manipulation',
-            WebkitTapHighlightColor: 'transparent',
-            padding: '16px',
-            margin: '-16px',
-          }}
-          onTouchStart={(e) => {
-            e.preventDefault();
-            setIsIconPressed(true);
-            if (navigator.vibrate) navigator.vibrate(10);
-            setIsDockVisible(true);
-            setTimeout(() => {
-              setIsIconPressed(false);
-              setTimeout(() => setIsDockVisible(false), 3000);
-            }, 150);
-          }}
-        >
-          <div
-            className="relative w-14 h-14 rounded-full flex items-center justify-center"
-            style={{
-              background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
-              boxShadow: `
-                0 4px 20px rgba(16, 185, 129, 0.6),
-                0 0 0 3px rgba(16, 185, 129, 0.2),
-                inset 0 2px 4px rgba(255, 255, 255, 0.3)
-              `,
-              transform: isIconPressed ? 'scale(0.9)' : 'scale(1)',
-              transition: 'transform 0.15s cubic-bezier(0.4, 0, 0.2, 1)',
-            }}
-          >
-            <div
-              className="absolute top-0 left-0 right-0 h-6 rounded-t-full"
-              style={{
-                background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.4) 0%, transparent 100%)',
-              }}
-            />
-
-            <Menu
-              size={26}
-              className="text-white relative z-10"
-              strokeWidth={2.5}
-              style={{
-                filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3))',
-              }}
-            />
-
-            <div
-              className="absolute inset-0 rounded-full animate-pulse"
-              style={{
-                background: 'radial-gradient(circle at center, rgba(16, 185, 129, 0.6) 0%, transparent 70%)',
-                animationDuration: '2s',
-              }}
-            />
-
-            <div
-              className="absolute -inset-2 rounded-full opacity-50"
-              style={{
-                background: 'radial-gradient(circle, rgba(16, 185, 129, 0.4) 0%, transparent 70%)',
-                filter: 'blur(8px)',
-              }}
-            />
           </div>
         </div>
       </div>
