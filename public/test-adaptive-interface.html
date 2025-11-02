@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>🤖 اختبار الواجهة الذكية المتكيفة</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 50%, #a7f3d0 100%);
+      padding: 20px;
+      padding-bottom: max(150px, env(safe-area-inset-bottom));
+      min-height: 100vh;
+    }
+
+    .header {
+      background: white;
+      border-radius: 24px;
+      padding: 30px;
+      margin-bottom: 20px;
+      box-shadow: 0 8px 24px rgba(16, 185, 129, 0.15);
+      text-align: center;
+    }
+
+    h1 {
+      color: #059669;
+      font-size: 28px;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+
+    .badge {
+      display: inline-block;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: white;
+      padding: 8px 20px;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 14px;
+      margin-top: 10px;
+    }
+
+    .section {
+      background: white;
+      border-radius: 20px;
+      padding: 25px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.1);
+    }
+
+    .section h2 {
+      color: #059669;
+      font-size: 20px;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .feature {
+      display: flex;
+      align-items: flex-start;
+      gap: 15px;
+      padding: 15px;
+      background: #f0fdf4;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      border: 2px solid #d1fae5;
+    }
+
+    .feature-icon {
+      flex-shrink: 0;
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-center;
+      color: white;
+      font-weight: 700;
+      font-size: 20px;
+    }
+
+    .feature-content h3 {
+      color: #059669;
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+
+    .feature-content p {
+      color: #10b981;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .instruction-box {
+      background: linear-gradient(135deg, rgba(251, 191, 36, 0.1) 0%, rgba(245, 158, 11, 0.1) 100%);
+      border: 2px solid rgba(251, 191, 36, 0.3);
+      border-radius: 16px;
+      padding: 20px;
+      margin: 20px 0;
+    }
+
+    .instruction-box h3 {
+      color: #d97706;
+      font-size: 18px;
+      margin-bottom: 15px;
+      font-weight: 600;
+    }
+
+    .instruction-list {
+      list-style: none;
+      counter-reset: step;
+    }
+
+    .instruction-list li {
+      counter-increment: step;
+      position: relative;
+      padding-right: 40px;
+      margin-bottom: 15px;
+      color: #d97706;
+      line-height: 1.6;
+    }
+
+    .instruction-list li::before {
+      content: counter(step);
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 28px;
+      height: 28px;
+      background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .content-area {
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.1);
+      min-height: 600px;
+    }
+
+    .highlight-box {
+      background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+      border-right: 4px solid #10b981;
+      padding: 20px;
+      border-radius: 12px;
+      margin: 20px 0;
+    }
+
+    .device-info {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.05) 100%);
+      border-radius: 12px;
+      padding: 20px;
+      margin: 20px 0;
+    }
+
+    .device-info h4 {
+      color: #059669;
+      font-size: 16px;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    .device-info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .device-info-item {
+      background: white;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #d1fae5;
+    }
+
+    .device-info-item strong {
+      color: #059669;
+      font-size: 12px;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .device-info-item span {
+      color: #10b981;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 15px;
+      border: 2px solid #d1fae5;
+      border-radius: 12px;
+      font-size: 16px;
+      margin-bottom: 15px;
+      font-family: inherit;
+    }
+
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: #10b981;
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+    }
+
+    .demo-button {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      width: 100%;
+    }
+
+    .demo-button:active {
+      transform: scale(0.95);
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 24px;
+      }
+
+      .section h2 {
+        font-size: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>🤖 الواجهة الذكية المتكيفة</h1>
+    <div class="badge">AI Adaptive Interface Layer</div>
+  </div>
+
+  <div class="section">
+    <h2>✨ النظام الموحد</h2>
+
+    <div class="feature">
+      <div class="feature-icon">🤖</div>
+      <div class="feature-content">
+        <h3>AI Context Manager</h3>
+        <p>محرك ذكي ينسق بين جميع العناصر التفاعلية ويمنع التعارضات</p>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon">💬</div>
+      <div class="feature-content">
+        <h3>Smart WhatsApp Button</h3>
+        <p>زر ذكي للتواصل عبر واتساب مع ردود جاهزة ورسائل سريعة</p>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon">👑</div>
+      <div class="feature-content">
+        <h3>Admin Access Button</h3>
+        <p>زر الدخول الإداري - يظهر فقط للمستخدمين المصرح لهم</p>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon">📱</div>
+      <div class="feature-content">
+        <h3>Device Detection</h3>
+        <p>اكتشاف تلقائي للجهاز (iPhone/Android/Desktop) وتكييف العرض</p>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon">🎯</div>
+      <div class="feature-content">
+        <h3>Smart Positioning</h3>
+        <p>تموضع ذكي يتجنب التعارض مع الفوتر ولوحة المفاتيح</p>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon">✨</div>
+      <div class="feature-content">
+        <h3>Glass Design</h3>
+        <p>تصميم زجاجي أخضر متألق مع تأثيرات 3D وانتقالات سلسة</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="device-info">
+    <h4>📊 معلومات الجهاز الحالي:</h4>
+    <div class="device-info-grid">
+      <div class="device-info-item">
+        <strong>نوع الجهاز:</strong>
+        <span id="device-type">جاري الكشف...</span>
+      </div>
+      <div class="device-info-item">
+        <strong>الدقة:</strong>
+        <span id="viewport-size">-</span>
+      </div>
+      <div class="device-info-item">
+        <strong>الاتجاه:</strong>
+        <span id="orientation">-</span>
+      </div>
+      <div class="device-info-item">
+        <strong>Safe Area Bottom:</strong>
+        <span id="safe-area">-</span>
+      </div>
+      <div class="device-info-item">
+        <strong>Has Notch:</strong>
+        <span id="has-notch">-</span>
+      </div>
+      <div class="device-info-item">
+        <strong>Visual Height:</strong>
+        <span id="visual-height">-</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="instruction-box">
+    <h3>📋 خطوات الاختبار:</h3>
+    <ul class="instruction-list">
+      <li>افتح المنصة الرئيسية: <strong>https://mzad1.com/</strong></li>
+      <li>لاحظ الزر الأخضر السفلي الأيمن (Smart WhatsApp Button)</li>
+      <li>لاحظ الزر الذهبي السفلي الأيسر (Admin Button) - يظهر عند تسجيل الدخول</li>
+      <li>اضغط على الزر الأخضر لفتح لوحة الرسائل</li>
+      <li>جرب الرسائل السريعة والإرسال</li>
+      <li>مرّر الصفحة - الأزرار تبقى ثابتة</li>
+      <li>افتح حقل الإدخال - الأزرار تتكيف مع لوحة المفاتيح</li>
+      <li>دوّر الجهاز - الأزرار تتكيف تلقائياً</li>
+    </ul>
+  </div>
+
+  <div class="content-area">
+    <h2 style="color: #059669; margin-bottom: 20px;">🧪 منطقة الاختبار</h2>
+
+    <div class="highlight-box">
+      <strong style="color: #059669;">✅ الحل الكامل:</strong><br>
+      النظام الجديد يجمع الزر الذكي وزر الإدارة في منظومة واحدة متكيفة تعمل بانسجام على جميع الأجهزة بدون أي تعارضات.
+    </div>
+
+    <h3 style="color: #059669; margin-top: 30px; margin-bottom: 15px;">اختبر لوحة المفاتيح:</h3>
+    <input type="text" placeholder="اكتب هنا وراقب الأزرار...">
+    <textarea rows="4" placeholder="نص طويل... راقب كيف تتكيف الأزرار مع لوحة المفاتيح"></textarea>
+
+    <button class="demo-button">زر تجريبي</button>
+
+    <div style="height: 400px; background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border-radius: 16px; margin: 30px 0; display: flex; align-items: center; justify-center; color: #059669; font-size: 18px; font-weight: 600;">
+      مساحة إضافية للتمرير
+    </div>
+
+    <p style="color: #10b981; text-align: center; font-weight: 600;">
+      وصلت لنهاية المحتوى! الأزرار يجب أن تكون دائماً ظاهرة في الأسفل ✅
+    </p>
+  </div>
+
+  <div class="section">
+    <h2>🎯 الميزات التقنية</h2>
+
+    <div class="feature">
+      <div class="feature-icon">⚡</div>
+      <div class="feature-content">
+        <h3>Visual Viewport API</h3>
+        <p>استخدام API متقدم للتكيف مع لوحة المفاتيح على iOS</p>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon">🎨</div>
+      <div class="feature-content">
+        <h3>Glassmorphism Design</h3>
+        <p>تصميم زجاجي عصري مع backdrop-filter وتدرجات شفافة</p>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon">🔄</div>
+      <div class="feature-content">
+        <h3>Real-time Adaptation</h3>
+        <p>تكيف لحظي مع التمرير، الدوران، الكيبورد، والمس</p>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon">🛡️</div>
+      <div class="feature-content">
+        <h3>Z-Index Management</h3>
+        <p>إدارة ذكية للطبقات لمنع التعارضات</p>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon">⚙️</div>
+      <div class="feature-content">
+        <h3>Observer Pattern</h3>
+        <p>نظام اشتراكات للتحديثات الفورية</p>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon">🚀</div>
+      <div class="feature-content">
+        <h3>Performance Optimized</h3>
+        <p>Throttling وتحسينات للأداء السلس</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    console.log('🤖 AI Adaptive Interface Test Page Loaded');
+    console.log('Build Version: v20251102_1762104015885');
+
+    // Detect device info
+    function detectDevice() {
+      const ua = navigator.userAgent;
+      const isIOS = /iPhone|iPad|iPod/.test(ua);
+      const isAndroid = /Android/.test(ua);
+      const isMobile = /Mobile/.test(ua) || isIOS || isAndroid;
+
+      let deviceType = 'Desktop';
+      if (isIOS) deviceType = 'iPhone/iPad';
+      else if (isAndroid) deviceType = 'Android';
+      else if (isMobile) deviceType = 'Mobile';
+
+      document.getElementById('device-type').textContent = deviceType;
+    }
+
+    function updateViewportInfo() {
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      const visualHeight = window.visualViewport?.height || height;
+      const orientation = width > height ? 'Landscape' : 'Portrait';
+
+      document.getElementById('viewport-size').textContent = `${width} x ${height}`;
+      document.getElementById('orientation').textContent = orientation;
+      document.getElementById('visual-height').textContent = `${visualHeight}px`;
+
+      // Safe area
+      const style = getComputedStyle(document.documentElement);
+      const safeBottom = style.getPropertyValue('padding-bottom') || 'Not detected';
+      document.getElementById('safe-area').textContent = safeBottom;
+
+      // Has notch detection
+      const hasNotch = height >= 812 && /iPhone/.test(navigator.userAgent);
+      document.getElementById('has-notch').textContent = hasNotch ? 'نعم ✅' : 'لا';
+    }
+
+    // Initialize
+    detectDevice();
+    updateViewportInfo();
+
+    // Update on resize/orientation change
+    window.addEventListener('resize', updateViewportInfo);
+    window.addEventListener('orientationchange', () => {
+      setTimeout(updateViewportInfo, 100);
+    });
+
+    // Visual viewport monitoring
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', updateViewportInfo);
+      console.log('✅ Visual Viewport API supported');
+    } else {
+      console.log('⚠️ Visual Viewport API not supported');
+    }
+
+    // Monitor scroll
+    let lastScroll = 0;
+    window.addEventListener('scroll', () => {
+      const currentScroll = window.scrollY;
+      console.log(`📜 Scroll: ${currentScroll}px (Δ ${currentScroll - lastScroll}px)`);
+      lastScroll = currentScroll;
+    }, { passive: true });
+
+    // Monitor focus (keyboard)
+    document.addEventListener('focusin', (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+        console.log('⌨️ Keyboard opened');
+        setTimeout(() => {
+          updateViewportInfo();
+        }, 300);
+      }
+    });
+
+    document.addEventListener('focusout', (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+        console.log('⌨️ Keyboard closed');
+        setTimeout(() => {
+          updateViewportInfo();
+        }, 300);
+      }
+    });
+  </script>
+</body>
+</html>

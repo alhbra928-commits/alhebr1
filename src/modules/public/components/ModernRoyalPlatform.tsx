@@ -16,7 +16,8 @@ import { InnovativeFarmCard } from './InnovativeFarmCard';
 import { Modern3DTicker } from '../../../components/common/Modern3DTicker';
 import { modern3DTickerService, TickerMessage, TickerSettings } from '../../../services/modern3DTickerService';
 import { getPlatformTextsBySection } from '../../../services/platformTextsService';
-// Footer removed - ready for new development
+import { AdaptiveSmartButton } from '../../../components/common/AdaptiveSmartButton';
+import { AdaptiveAdminButton } from '../../../components/common/AdaptiveAdminButton';
 
 type ViewMode = 'home' | 'farmDetail' | 'booking' | 'investor' | 'verification' | 'concept';
 
@@ -276,7 +277,23 @@ export function ModernRoyalPlatform({
 
       </div>
 
-      {/* Footer removed - ready for new development */}
+      {/* AI Adaptive Interface Layer - Smart Buttons */}
+      <AdaptiveSmartButton
+        phoneNumber="966500000000"
+        defaultMessage="مرحباً! أود الاستفسار عن منصة مزاد1"
+      />
+
+      <AdaptiveAdminButton
+        mode="login"
+        onAdminLogin={onAdminLogin}
+      />
+
+      {onBackToAdmin && (
+        <AdaptiveAdminButton
+          mode="back"
+          onBackToAdmin={onBackToAdmin}
+        />
+      )}
     </div>
   );
 }
