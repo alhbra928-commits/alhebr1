@@ -10,6 +10,14 @@ interface GatewaySettings {
   auto_enter_enabled: boolean;
   auto_enter_delay: number;
   show_logo: boolean;
+  fade_duration: number;
+  animation_speed: 'slow' | 'normal' | 'fast';
+  show_sparkles: boolean;
+  show_particles: boolean;
+  button_glow_enabled: boolean;
+  show_progress_bar: boolean;
+  background_pattern_enabled: boolean;
+  title_animation_enabled: boolean;
 }
 
 export function MazadGateway({ onEnter }: MazadGatewayProps) {
@@ -18,9 +26,18 @@ export function MazadGateway({ onEnter }: MazadGatewayProps) {
     auto_enter_enabled: true,
     auto_enter_delay: 3,
     show_logo: true,
+    fade_duration: 400,
+    animation_speed: 'normal',
+    show_sparkles: true,
+    show_particles: true,
+    button_glow_enabled: true,
+    show_progress_bar: true,
+    background_pattern_enabled: true,
+    title_animation_enabled: true,
   });
   const [progress, setProgress] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
+  const [settingsLoaded, setSettingsLoaded] = useState(false);
 
   // تحميل الإعدادات من قاعدة البيانات
   useEffect(() => {
@@ -39,19 +56,29 @@ export function MazadGateway({ onEnter }: MazadGatewayProps) {
             auto_enter_enabled: data.auto_enter_enabled ?? true,
             auto_enter_delay: data.auto_enter_delay ?? 3,
             show_logo: data.show_logo ?? true,
+            fade_duration: data.fade_duration ?? 400,
+            animation_speed: data.animation_speed ?? 'normal',
+            show_sparkles: data.show_sparkles ?? true,
+            show_particles: data.show_particles ?? true,
+            button_glow_enabled: data.button_glow_enabled ?? true,
+            show_progress_bar: data.show_progress_bar ?? true,
+            background_pattern_enabled: data.background_pattern_enabled ?? true,
+            title_animation_enabled: data.title_animation_enabled ?? true,
           });
         }
+        setSettingsLoaded(true);
       } catch (error) {
         console.error('Error loading gateway settings:', error);
+        setSettingsLoaded(true);
       }
     };
 
     loadSettings();
   }, []);
 
-  // العد التنازلي التلقائي
+  // العد التنازلي التلقائي - يبدأ فقط بعد تحميل الإعدادات
   useEffect(() => {
-    if (!settings.auto_enter_enabled) return;
+    if (!settingsLoaded || !settings.auto_enter_enabled) return;
 
     const duration = settings.auto_enter_delay * 1000;
     const interval = 50;
@@ -69,11 +96,11 @@ export function MazadGateway({ onEnter }: MazadGatewayProps) {
     }, interval);
 
     return () => clearInterval(timer);
-  }, [settings.auto_enter_enabled, settings.auto_enter_delay]);
+  }, [settingsLoaded, settings.auto_enter_enabled, settings.auto_enter_delay]);
 
   const handleEnter = () => {
     setIsVisible(false);
-    setTimeout(() => onEnter(), 400);
+    setTimeout(() => onEnter(), settings.fade_duration);
   };
 
   if (!settings.enabled) {
@@ -81,27 +108,39 @@ export function MazadGateway({ onEnter }: MazadGatewayProps) {
     return null;
   }
 
+  // حساب سرعة الأنيميشن
+  const getAnimationDuration = () => {
+    switch (settings.animation_speed) {
+      case 'slow': return '4s';
+      case 'fast': return '2s';
+      default: return '3s';
+    }
+  };
+
   return (
     <div
       className={`fixed inset-0 z-[9999] bg-gradient-to-br from-emerald-50 via-white to-green-50
-                  flex flex-col items-center justify-center transition-opacity duration-400
+                  flex flex-col items-center justify-center transition-opacity
                   ${isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+      style={{ transitionDuration: `${settings.fade_duration}ms` }}
     >
       {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute inset-0"
-             style={{
-               backgroundImage: `radial-gradient(circle at 2px 2px, #059669 1px, transparent 0)`,
-               backgroundSize: '40px 40px'
-             }}
-        />
-      </div>
+      {settings.background_pattern_enabled && (
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute inset-0"
+               style={{
+                 backgroundImage: `radial-gradient(circle at 2px 2px, #059669 1px, transparent 0)`,
+                 backgroundSize: '40px 40px'
+               }}
+          />
+        </div>
+      )}
 
       {/* Main Content */}
       <div className="relative z-10 flex flex-col items-center max-w-md mx-auto px-6">
         {/* Crown Logo */}
         {settings.show_logo && (
-          <div className="relative mb-8 animate-float">
+          <div className="relative mb-8" style={{ animation: `float ${getAnimationDuration()} ease-in-out infinite` }}>
             {/* Glow Effect */}
             <div className="absolute inset-0 blur-3xl bg-emerald-500/30 rounded-full scale-150" />
 
@@ -114,14 +153,19 @@ export function MazadGateway({ onEnter }: MazadGatewayProps) {
               </div>
 
               {/* Sparkles */}
-              <div className="absolute -top-2 -right-2 w-6 h-6 bg-yellow-400 rounded-full animate-ping opacity-75" />
-              <div className="absolute -bottom-1 -left-1 w-4 h-4 bg-emerald-300 rounded-full animate-pulse" />
+              {settings.show_sparkles && (
+                <>
+                  <div className="absolute -top-2 -right-2 w-6 h-6 bg-yellow-400 rounded-full animate-ping opacity-75" />
+                  <div className="absolute -bottom-1 -left-1 w-4 h-4 bg-emerald-300 rounded-full animate-pulse" />
+                </>
+              )}
             </div>
           </div>
         )}
 
         {/* Title */}
-        <h1 className="text-5xl md:text-6xl font-black text-center mb-4 leading-tight">
+        <h1 className={`text-5xl md:text-6xl font-black text-center mb-4 leading-tight
+                       ${settings.title_animation_enabled ? 'animate-fade-in-up' : ''}`}>
           <span className="bg-gradient-to-r from-emerald-600 via-green-600 to-emerald-700
                          bg-clip-text text-transparent drop-shadow-sm">
             بوابة
@@ -134,7 +178,8 @@ export function MazadGateway({ onEnter }: MazadGatewayProps) {
         </h1>
 
         {/* Subtitle */}
-        <p className="text-emerald-700/80 text-lg md:text-xl text-center mb-12 font-medium">
+        <p className={`text-emerald-700/80 text-lg md:text-xl text-center mb-12 font-medium
+                      ${settings.title_animation_enabled ? 'animate-fade-in' : ''}`}>
           منصة استثمار زراعي متطورة
         </p>
 
@@ -147,13 +192,15 @@ export function MazadGateway({ onEnter }: MazadGatewayProps) {
                    active:scale-95"
         >
           {/* Button Glow */}
-          <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-emerald-400 to-green-400
-                        opacity-0 group-hover:opacity-50 blur-xl transition-opacity duration-300" />
+          {settings.button_glow_enabled && (
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-emerald-400 to-green-400
+                          opacity-0 group-hover:opacity-50 blur-xl transition-opacity duration-300" />
+          )}
 
           <span className="relative z-10">ادخل إلى المنصة</span>
 
           {/* Progress Bar */}
-          {settings.auto_enter_enabled && (
+          {settings.auto_enter_enabled && settings.show_progress_bar && (
             <div className="absolute bottom-0 left-0 h-1 bg-white/30 rounded-full overflow-hidden w-full">
               <div
                 className="h-full bg-white/80 transition-all duration-50 ease-linear"
@@ -171,20 +218,39 @@ export function MazadGateway({ onEnter }: MazadGatewayProps) {
         )}
       </div>
 
-      {/* Decorative Elements */}
-      <div className="absolute top-20 left-10 w-20 h-20 bg-emerald-200/30 rounded-full blur-2xl animate-pulse" />
-      <div className="absolute bottom-20 right-10 w-32 h-32 bg-green-200/30 rounded-full blur-3xl animate-pulse delay-1000" />
+      {/* Decorative Particles */}
+      {settings.show_particles && (
+        <>
+          <div className="absolute top-20 left-10 w-20 h-20 bg-emerald-200/30 rounded-full blur-2xl animate-pulse" />
+          <div className="absolute bottom-20 right-10 w-32 h-32 bg-green-200/30 rounded-full blur-3xl animate-pulse"
+               style={{ animationDelay: '1s' }} />
+        </>
+      )}
 
       <style>{`
         @keyframes float {
           0%, 100% { transform: translateY(0px); }
           50% { transform: translateY(-10px); }
         }
-        .animate-float {
-          animation: float 3s ease-in-out infinite;
+        @keyframes fade-in-up {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
         }
-        .delay-1000 {
-          animation-delay: 1s;
+        @keyframes fade-in {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        .animate-fade-in-up {
+          animation: fade-in-up 0.8s ease-out;
+        }
+        .animate-fade-in {
+          animation: fade-in 1s ease-out 0.3s both;
         }
       `}</style>
     </div>
