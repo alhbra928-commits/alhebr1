@@ -181,7 +181,7 @@ export function UnifiedFloatingSideDock({
       {/* Dock Wrapper - شبه مخفي يظهر عند التمرير */}
       <div className="unified-dock-wrapper">
 
-        {/* Pull Tab - لسان بارز من الشريط */}
+        {/* Pull Tab - لسان بارز أطول من الشريط */}
         <div
           className="unified-dock-tab fixed top-1/2 -translate-y-1/2 cursor-pointer"
           style={{
@@ -198,7 +198,7 @@ export function UnifiedFloatingSideDock({
             const tab = document.querySelector('.unified-dock-tab') as HTMLElement;
             if (wrapper && tab) {
               wrapper.style.left = '16px';
-              tab.style.left = '88px'; // 16 + 72
+              tab.style.left = '88px'; // 16 + 72 (عرض الشريط)
               setTimeout(() => {
                 wrapper.style.left = '-52px';
                 tab.style.left = '20px'; // -52 + 72
@@ -207,24 +207,37 @@ export function UnifiedFloatingSideDock({
           }}
         >
           <div
-            className="relative w-8 h-24 rounded-r-2xl flex items-center justify-center"
+            className="relative w-12 h-32 rounded-r-3xl flex items-center justify-center"
             style={{
               background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
-              boxShadow: '3px 0 16px rgba(16, 185, 129, 0.5), inset -1px 0 2px rgba(255, 255, 255, 0.3)',
+              boxShadow: '4px 0 20px rgba(16, 185, 129, 0.6), inset -1px 0 2px rgba(255, 255, 255, 0.4)',
             }}
           >
-            {/* Three Lines Icon - عمودية تشير للشاشة */}
-            <div className="flex flex-row gap-1">
-              <div className="w-0.5 h-5 bg-white/90 rounded-full"></div>
-              <div className="w-0.5 h-5 bg-white/90 rounded-full"></div>
-              <div className="w-0.5 h-5 bg-white/90 rounded-full"></div>
+            {/* Three Lines Icon - أكبر وأوضح */}
+            <div className="flex flex-row gap-1.5">
+              <div className="w-0.5 h-6 bg-white/95 rounded-full"></div>
+              <div className="w-0.5 h-6 bg-white/95 rounded-full"></div>
+              <div className="w-0.5 h-6 bg-white/95 rounded-full"></div>
             </div>
 
             {/* Pulsing Effect */}
             <div
-              className="absolute inset-0 rounded-r-2xl animate-pulse"
+              className="absolute inset-0 rounded-r-3xl animate-pulse"
               style={{
-                background: 'radial-gradient(circle at center, rgba(16, 185, 129, 0.4) 0%, transparent 70%)',
+                background: 'radial-gradient(circle at center, rgba(16, 185, 129, 0.5) 0%, transparent 70%)',
+                animationDuration: '1.5s',
+              }}
+            />
+
+            {/* Arrow Hint - سهم صغير يشير لليمين */}
+            <div
+              className="absolute -right-1 top-1/2 -translate-y-1/2"
+              style={{
+                width: 0,
+                height: 0,
+                borderLeft: '6px solid rgba(16, 185, 129, 0.8)',
+                borderTop: '4px solid transparent',
+                borderBottom: '4px solid transparent',
               }}
             />
           </div>
