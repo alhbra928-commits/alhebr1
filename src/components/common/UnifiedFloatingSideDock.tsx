@@ -27,69 +27,12 @@ export function UnifiedFloatingSideDock({
   const [message, setMessage] = useState('مرحباً! أود الاستفسار عن المنصة');
   const [isDockVisible, setIsDockVisible] = useState(false);
   const [isIconPressed, setIsIconPressed] = useState(false);
-  const [isDragging, setIsDragging] = useState(false);
-  const [dragStartX, setDragStartX] = useState(0);
-  const [currentDockPosition, setCurrentDockPosition] = useState(-52);
   const [deviceInfo, setDeviceInfo] = useState({
     isIPhone: false,
     hasNotch: false,
     safeAreaBottom: 0,
     viewportHeight: 0
   });
-
-  // Handle drag/touch for unified dock + icon
-  const handleTouchStart = (e: React.TouchEvent) => {
-    const touch = e.touches[0];
-    setIsDragging(true);
-    setDragStartX(touch.clientX);
-    setIsIconPressed(true);
-
-    // Haptic feedback
-    if (navigator.vibrate) {
-      navigator.vibrate(10);
-    }
-  };
-
-  const handleTouchMove = (e: React.TouchEvent) => {
-    if (!isDragging) return;
-
-    const touch = e.touches[0];
-    const deltaX = touch.clientX - dragStartX;
-
-    // Calculate new position (limited between -52 and 16)
-    let newPosition = currentDockPosition + deltaX;
-    newPosition = Math.max(-52, Math.min(16, newPosition));
-
-    setCurrentDockPosition(newPosition);
-    setDragStartX(touch.clientX);
-
-    // Auto open if dragged beyond threshold
-    if (newPosition > -20) {
-      setIsDockVisible(true);
-    }
-  };
-
-  const handleTouchEnd = () => {
-    setIsDragging(false);
-    setIsIconPressed(false);
-
-    // Snap to open or closed
-    if (currentDockPosition > -20) {
-      // Snap open
-      setCurrentDockPosition(16);
-      setIsDockVisible(true);
-
-      // Auto close after 3s
-      setTimeout(() => {
-        setCurrentDockPosition(-52);
-        setIsDockVisible(false);
-      }, 3000);
-    } else {
-      // Snap closed
-      setCurrentDockPosition(-52);
-      setIsDockVisible(false);
-    }
-  };
 
   useEffect(() => {
     setMounted(true);
@@ -236,45 +179,43 @@ export function UnifiedFloatingSideDock({
         }
       `}</style>
 
-      {/* Unified Container - الشريط والأيقونة كتلة واحدة */}
+      {/* الأيقونة الخارجية - بسيطة وسريعة */}
       <div
-        className="unified-dock-container fixed"
+        className="unified-dock-tab fixed top-1/2 -translate-y-1/2 cursor-pointer"
         style={{
-          left: `${currentDockPosition}px`,
-          top: 0,
-          height: '100vh',
-          zIndex: 10000,
+          left: isDockVisible ? '96px' : '28px',
+          touchAction: 'manipulation',
+          WebkitTapHighlightColor: 'transparent',
+          zIndex: 10001,
           pointerEvents: 'auto',
-          transition: isDragging ? 'none' : 'left 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
-          touchAction: 'none',
-          userSelect: 'none',
+          transition: 'left 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+          padding: '16px',
+          margin: '-16px',
         }}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
+        onTouchStart={(e) => {
+          e.preventDefault();
+          setIsIconPressed(true);
+          if (navigator.vibrate) navigator.vibrate(10);
+          setIsDockVisible(true);
+          setTimeout(() => {
+            setIsIconPressed(false);
+            setTimeout(() => setIsDockVisible(false), 3000);
+          }, 150);
+        }}
       >
-        {/* الأيقونة على اليمين - تساعد في السحب */}
         <div
-          className="absolute top-1/2 -translate-y-1/2 cursor-pointer"
+          className="relative w-14 h-14 rounded-full flex items-center justify-center"
           style={{
-            right: '-64px', // خارج الشريط على اليمين
-            padding: '16px',
-            margin: '-16px',
+            background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
+            boxShadow: `
+              0 4px 20px rgba(16, 185, 129, 0.6),
+              0 0 0 3px rgba(16, 185, 129, 0.2),
+              inset 0 2px 4px rgba(255, 255, 255, 0.3)
+            `,
+            transform: isIconPressed ? 'scale(0.9)' : 'scale(1)',
+            transition: 'transform 0.15s cubic-bezier(0.4, 0, 0.2, 1)',
           }}
         >
-          <div
-            className="relative w-14 h-14 rounded-full flex items-center justify-center"
-            style={{
-              background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
-              boxShadow: `
-                0 4px 20px rgba(16, 185, 129, 0.6),
-                0 0 0 3px rgba(16, 185, 129, 0.2),
-                inset 0 2px 4px rgba(255, 255, 255, 0.3)
-              `,
-              transform: isIconPressed ? 'scale(0.9)' : 'scale(1)',
-              transition: 'transform 0.15s cubic-bezier(0.4, 0, 0.2, 1)',
-            }}
-          >
           {/* Glass Overlay */}
           <div
             className="absolute top-0 left-0 right-0 h-6 rounded-t-full"
@@ -310,10 +251,16 @@ export function UnifiedFloatingSideDock({
               filter: 'blur(8px)',
             }}
           />
-          </div>
         </div>
+      </div>
 
-        {/* الشريط الجانبي - داخل نفس الـ container */}
+      {/* الشريط الجانبي - منفصل وبسيط */}
+      <div
+        className="unified-dock-wrapper"
+        style={{
+          left: isDockVisible ? '16px' : '-52px',
+        }}
+      >
         <div
           className="unified-dock-content"
           style={{
@@ -531,7 +478,7 @@ export function UnifiedFloatingSideDock({
             </div>
           </div>
         </div>
-      </div> {/* end unified-dock-container */}
+      </div> {/* end unified-dock-wrapper */}
 
       {/* WhatsApp Panel */}
       {whatsappExpanded && (
