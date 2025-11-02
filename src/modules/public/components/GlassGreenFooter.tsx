@@ -61,12 +61,24 @@ export const GlassGreenFooter: React.FC<GlassGreenFooterProps> = ({
         bottom: 0,
         left: 0,
         right: 0,
+        width: '100%',
         zIndex: 9999,
         paddingBottom: 'max(12px, env(safe-area-inset-bottom))',
-        transform: 'translateZ(0)',
+
+        // Critical for mobile fixed positioning
+        transform: 'translate3d(0, 0, 0)',
+        WebkitTransform: 'translate3d(0, 0, 0)',
+
         willChange: 'transform',
         WebkitBackfaceVisibility: 'hidden',
-        backfaceVisibility: 'hidden'
+        backfaceVisibility: 'hidden',
+
+        // iOS Safari fix
+        WebkitOverflowScrolling: 'touch' as any,
+
+        // Force GPU acceleration
+        perspective: 1000,
+        WebkitPerspective: 1000
       }}
     >
       {/* Glass Green Background with 3D Depth */}
