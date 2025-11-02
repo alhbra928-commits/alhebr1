@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { Crown, Home, User, FileText, MessageCircle, X, Send } from 'lucide-react';
+import { Crown, Home, User, FileText, MessageCircle, X, Send, ChevronRight, Menu } from 'lucide-react';
 
 interface UnifiedFloatingSideDockProps {
   onAdminLogin?: () => void;
@@ -206,38 +206,64 @@ export function UnifiedFloatingSideDock({
             }
           }}
         >
+          {/* أيقونة دائرية أنيقة */}
           <div
-            className="relative w-12 h-32 rounded-r-3xl flex items-center justify-center"
+            className="relative w-14 h-14 rounded-full flex items-center justify-center"
             style={{
               background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
-              boxShadow: '4px 0 20px rgba(16, 185, 129, 0.6), inset -1px 0 2px rgba(255, 255, 255, 0.4)',
+              boxShadow: `
+                0 4px 20px rgba(16, 185, 129, 0.6),
+                0 0 0 3px rgba(16, 185, 129, 0.2),
+                inset 0 2px 4px rgba(255, 255, 255, 0.3)
+              `,
             }}
           >
-            {/* Three Lines Icon - أكبر وأوضح */}
-            <div className="flex flex-row gap-1.5">
-              <div className="w-0.5 h-6 bg-white/95 rounded-full"></div>
-              <div className="w-0.5 h-6 bg-white/95 rounded-full"></div>
-              <div className="w-0.5 h-6 bg-white/95 rounded-full"></div>
-            </div>
-
-            {/* Pulsing Effect */}
+            {/* Glass Overlay */}
             <div
-              className="absolute inset-0 rounded-r-3xl animate-pulse"
+              className="absolute top-0 left-0 right-0 h-6 rounded-t-full"
               style={{
-                background: 'radial-gradient(circle at center, rgba(16, 185, 129, 0.5) 0%, transparent 70%)',
-                animationDuration: '1.5s',
+                background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.4) 0%, transparent 100%)',
               }}
             />
 
-            {/* Arrow Hint - سهم صغير يشير لليمين */}
+            {/* Menu Icon */}
+            <Menu
+              size={26}
+              className="text-white relative z-10"
+              strokeWidth={2.5}
+              style={{
+                filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3))',
+              }}
+            />
+
+            {/* Pulsing Ring */}
             <div
-              className="absolute -right-1 top-1/2 -translate-y-1/2"
+              className="absolute inset-0 rounded-full animate-pulse"
+              style={{
+                background: 'radial-gradient(circle at center, rgba(16, 185, 129, 0.6) 0%, transparent 70%)',
+                animationDuration: '2s',
+              }}
+            />
+
+            {/* Outer Glow Ring */}
+            <div
+              className="absolute -inset-2 rounded-full opacity-50"
+              style={{
+                background: 'radial-gradient(circle, rgba(16, 185, 129, 0.4) 0%, transparent 70%)',
+                filter: 'blur(8px)',
+              }}
+            />
+
+            {/* Arrow Pointer */}
+            <div
+              className="absolute -right-2 top-1/2 -translate-y-1/2"
               style={{
                 width: 0,
                 height: 0,
-                borderLeft: '6px solid rgba(16, 185, 129, 0.8)',
-                borderTop: '4px solid transparent',
-                borderBottom: '4px solid transparent',
+                borderLeft: '8px solid #10B981',
+                borderTop: '6px solid transparent',
+                borderBottom: '6px solid transparent',
+                filter: 'drop-shadow(2px 0 4px rgba(16, 185, 129, 0.6))',
               }}
             />
           </div>
