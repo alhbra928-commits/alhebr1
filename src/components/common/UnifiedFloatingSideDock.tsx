@@ -25,6 +25,7 @@ export function UnifiedFloatingSideDock({
   const [mounted, setMounted] = useState(false);
   const [whatsappExpanded, setWhatsappExpanded] = useState(false);
   const [message, setMessage] = useState('مرحباً! أود الاستفسار عن المنصة');
+  const [isDockVisible, setIsDockVisible] = useState(false);
   const [deviceInfo, setDeviceInfo] = useState({
     isIPhone: false,
     hasNotch: false,
@@ -135,7 +136,6 @@ export function UnifiedFloatingSideDock({
         /* Ultimate fixed positioning for dock - شبه مخفي */
         .unified-dock-wrapper {
           position: fixed !important;
-          left: -52px !important;
           top: 0 !important;
           height: 100vh !important;
           height: calc(var(--vh, 1vh) * 100) !important;
@@ -182,7 +182,7 @@ export function UnifiedFloatingSideDock({
       <div
         className="unified-dock-tab fixed top-1/2 -translate-y-1/2 cursor-pointer"
         style={{
-          left: '28px', // خارج الشريط: -52px (الشريط) + 72px (عرضه) + 8px (مسافة) = 28px
+          left: isDockVisible ? '96px' : '28px', // تتحرك مع الشريط
           touchAction: 'manipulation',
           WebkitTapHighlightColor: 'transparent',
           zIndex: 10001,
@@ -191,16 +191,13 @@ export function UnifiedFloatingSideDock({
         }}
         onClick={(e) => {
           e.stopPropagation();
-          const wrapper = document.querySelector('.unified-dock-wrapper') as HTMLElement;
-          const tab = document.querySelector('.unified-dock-tab') as HTMLElement;
-          if (wrapper && tab) {
-            wrapper.style.left = '16px';
-            tab.style.left = '96px'; // 16 + 72 + 8 (الشريط ظاهر + عرضه + مسافة)
-            setTimeout(() => {
-              wrapper.style.left = '-52px';
-              tab.style.left = '28px'; // -52 + 72 + 8 (يرجع للوضع الأصلي)
-            }, 3000);
-          }
+          // إظهار الشريط
+          setIsDockVisible(true);
+
+          // إخفاء بعد 3 ثواني
+          setTimeout(() => {
+            setIsDockVisible(false);
+          }, 3000);
         }}
       >
         {/* أيقونة دائرية أنيقة */}
@@ -254,7 +251,12 @@ export function UnifiedFloatingSideDock({
       </div>
 
       {/* Dock Wrapper - الشريط الجانبي */}
-      <div className="unified-dock-wrapper">
+      <div
+        className="unified-dock-wrapper"
+        style={{
+          left: isDockVisible ? '16px' : '-52px', // يظهر عند الضغط
+        }}
+      >
         <div
           className="unified-dock-content"
           style={{
