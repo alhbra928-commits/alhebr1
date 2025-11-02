@@ -16,7 +16,7 @@ import { InnovativeFarmCard } from './InnovativeFarmCard';
 import { Modern3DTicker } from '../../../components/common/Modern3DTicker';
 import { modern3DTickerService, TickerMessage, TickerSettings } from '../../../services/modern3DTickerService';
 import { getPlatformTextsBySection } from '../../../services/platformTextsService';
-import { UnifiedSmartFooter } from '../../../components/common/UnifiedSmartFooter';
+// Footer removed for redesign
 
 type ViewMode = 'home' | 'farmDetail' | 'booking' | 'investor' | 'verification' | 'concept';
 
@@ -125,33 +125,13 @@ export function ModernRoyalPlatform({
   // Handle other views
   if (currentView === 'concept') {
     return (
-      <>
-        <ConceptIntroductionPage onClose={handleGoHome} onStartJourney={handleGoHome} />
-        <UnifiedSmartFooter
-          activeTab="concept"
-          onTabChange={(tabId) => {
-            if (tabId === 'home') handleGoHome();
-            else if (tabId === 'login') setCurrentView('investor');
-            else if (tabId === 'farms') setCurrentView('home');
-          }}
-        />
-      </>
+      <ConceptIntroductionPage onClose={handleGoHome} onStartJourney={handleGoHome} />
     );
   }
 
   if (currentView === 'verification') {
     return (
-      <>
-        <CertificateVerificationPage onBack={handleGoHome} />
-        <UnifiedSmartFooter
-          activeTab="home"
-          onTabChange={(tabId) => {
-            if (tabId === 'home') handleGoHome();
-            else if (tabId === 'login') setCurrentView('investor');
-            else if (tabId === 'farms') setCurrentView('home');
-          }}
-        />
-      </>
+      <CertificateVerificationPage onBack={handleGoHome} />
     );
   }
 
@@ -161,45 +141,25 @@ export function ModernRoyalPlatform({
 
   if (currentView === 'farmDetail' && selectedFarm) {
     return (
-      <>
-        <FarmDetailPage
-          farmId={selectedFarm.id}
-          onBack={handleGoHome}
-          onStartBooking={() => setCurrentView('booking')}
-        />
-        <UnifiedSmartFooter
-          activeTab="farms"
-          onTabChange={(tabId) => {
-            if (tabId === 'home') handleGoHome();
-            else if (tabId === 'login') setCurrentView('investor');
-            else if (tabId === 'farms') handleGoHome();
-          }}
-        />
-      </>
+      <FarmDetailPage
+        farmId={selectedFarm.id}
+        onBack={handleGoHome}
+        onStartBooking={() => setCurrentView('booking')}
+      />
     );
   }
 
   if (currentView === 'booking' && selectedFarm) {
     return (
-      <>
-        <TemporaryBookingPage
-          farmId={selectedFarm.id}
-          farmName={selectedFarm.farm_name}
-          farmType={selectedFarm.tree_type === 'نخيل' ? 'palm' : 'olive'}
-          onBack={() => setCurrentView('farmDetail')}
-          onSuccess={handleGoHome}
-          onGoHome={handleGoHome}
-          onGoToInvestor={() => setCurrentView('investor')}
-        />
-        <UnifiedSmartFooter
-          activeTab="farms"
-          onTabChange={(tabId) => {
-            if (tabId === 'home') handleGoHome();
-            else if (tabId === 'login') setCurrentView('investor');
-            else if (tabId === 'farms') handleGoHome();
-          }}
-        />
-      </>
+      <TemporaryBookingPage
+        farmId={selectedFarm.id}
+        farmName={selectedFarm.farm_name}
+        farmType={selectedFarm.tree_type === 'نخيل' ? 'palm' : 'olive'}
+        onBack={() => setCurrentView('farmDetail')}
+        onSuccess={handleGoHome}
+        onGoHome={handleGoHome}
+        onGoToInvestor={() => setCurrentView('investor')}
+      />
     );
   }
 
@@ -316,19 +276,7 @@ export function ModernRoyalPlatform({
 
       </div>
 
-      {/* Smart Floating Footer */}
-      <UnifiedSmartFooter
-        activeTab="home"
-        onTabChange={(tabId) => {
-          if (tabId === 'home') {
-            handleGoHome();
-          } else if (tabId === 'login') {
-            setCurrentView('investor');
-          } else if (tabId === 'farms') {
-            // Already on home with farms visible
-          }
-        }}
-      />
+      {/* Footer removed for redesign */}
     </div>
   );
 }
