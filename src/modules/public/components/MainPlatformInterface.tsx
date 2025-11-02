@@ -16,7 +16,6 @@ import { AdminCrownButton } from './AdminCrownButton';
 import { GlowingConceptButton } from './GlowingConceptButton';
 import { ConceptIntroductionPage } from './ConceptIntroductionPage';
 import { IdeaOverviewSection } from './IdeaOverviewSection';
-import { PublicBottomNavBar } from '../../../components/layout/PublicBottomNavBar';
 
 type ViewMode = 'home' | 'farmDetail' | 'booking' | 'investor' | 'verification' | 'concept';
 
@@ -102,25 +101,6 @@ export function MainPlatformInterface({
           onStartJourney={handleGoHome}
         />
 
-        <PublicBottomNavBar
-          activeTab="concept"
-          onTabChange={(tabId) => {
-            if (tabId === 'home') {
-              handleGoHome();
-            } else if (tabId === 'login') {
-              setCurrentView('investor');
-            } else if (tabId === 'concept') {
-              // Already here
-            }
-          }}
-          onBookNow={() => {
-            if (farms.length > 0) {
-              handleGoHome();
-              setTimeout(() => handleFarmClick(farms[0]), 100);
-            }
-          }}
-          onBackToAdmin={onBackToAdmin}
-        />
       </>
     );
   }
@@ -130,23 +110,6 @@ export function MainPlatformInterface({
       <>
         <CertificateVerificationPage onBack={handleGoHome} />
 
-        <PublicBottomNavBar
-          activeTab="home"
-          onTabChange={(tabId) => {
-            if (tabId === 'home') {
-              handleGoHome();
-            } else if (tabId === 'login') {
-              setCurrentView('investor');
-            }
-          }}
-          onBookNow={() => {
-            if (farms.length > 0) {
-              handleGoHome();
-              setTimeout(() => handleFarmClick(farms[0]), 100);
-            }
-          }}
-          onBackToAdmin={onBackToAdmin}
-        />
       </>
     );
   }
@@ -169,20 +132,6 @@ export function MainPlatformInterface({
           onStartBooking={handleStartBooking}
         />
 
-        <PublicBottomNavBar
-          activeTab="farms"
-          onTabChange={(tabId) => {
-            if (tabId === 'home') {
-              handleGoHome();
-            } else if (tabId === 'login') {
-              setCurrentView('investor');
-            } else if (tabId === 'concept') {
-              setShowConceptModal(true);
-            }
-          }}
-          onBookNow={() => handleStartBooking()}
-          onBackToAdmin={onBackToAdmin}
-        />
       </>
     );
   }
@@ -200,22 +149,6 @@ export function MainPlatformInterface({
           onGoToInvestor={handleGoToInvestorPanel}
         />
 
-        <PublicBottomNavBar
-          activeTab="farms"
-          onTabChange={(tabId) => {
-            if (tabId === 'home') {
-              handleGoHome();
-            } else if (tabId === 'login') {
-              setCurrentView('investor');
-            } else if (tabId === 'concept') {
-              setShowConceptModal(true);
-            }
-          }}
-          onBookNow={() => {
-            // Already in booking
-          }}
-          onBackToAdmin={onBackToAdmin}
-        />
       </>
     );
   }
@@ -321,36 +254,6 @@ export function MainPlatformInterface({
       )}
 
       {/* Bottom Navigation Bar for Public - Always Show */}
-      <PublicBottomNavBar
-        activeTab={activeBottomTab}
-        onTabChange={(tabId) => {
-          setActiveBottomTab(tabId);
-          if (tabId === 'concept') {
-            setShowConceptModal(true);
-          } else if (tabId === 'login') {
-            setCurrentView('investor');
-          } else if (tabId === 'home') {
-            setCurrentView('home');
-            setTimeout(() => {
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }, 100);
-          } else if (tabId === 'farms') {
-            setCurrentView('home');
-            setTimeout(() => {
-              const farmsSection = document.getElementById('farms-section');
-              if (farmsSection) {
-                farmsSection.scrollIntoView({ behavior: 'smooth' });
-              }
-            }, 100);
-          }
-        }}
-        onBookNow={() => {
-          if (farms.length > 0) {
-            handleFarmClick(farms[0]);
-          }
-        }}
-        onBackToAdmin={onBackToAdmin}
-      />
     </div>
   );
 }

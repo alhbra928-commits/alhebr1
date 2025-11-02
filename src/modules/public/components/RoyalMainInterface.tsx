@@ -9,7 +9,6 @@ import { CertificateVerificationPage } from './CertificateVerificationPage';
 import { SimpleLoader } from '../../../components/common/SimpleLoader';
 import { AdminCrownButton } from './AdminCrownButton';
 import { ConceptIntroductionPage } from './ConceptIntroductionPage';
-import { PublicBottomNavBar } from '../../../components/layout/PublicBottomNavBar';
 
 type ViewMode = 'home' | 'farmDetail' | 'booking' | 'investor' | 'verification' | 'concept';
 
@@ -60,15 +59,6 @@ export function RoyalMainInterface({
     return (
       <>
         <ConceptIntroductionPage onClose={handleGoHome} onStartJourney={handleGoHome} />
-        <PublicBottomNavBar
-          activeTab="concept"
-          onTabChange={(tabId) => {
-            if (tabId === 'home') handleGoHome();
-            else if (tabId === 'login') setCurrentView('investor');
-          }}
-          onBookNow={() => farms.length > 0 && handleFarmClick(farms[0])}
-          onBackToAdmin={onBackToAdmin}
-        />
       </>
     );
   }
@@ -77,15 +67,6 @@ export function RoyalMainInterface({
     return (
       <>
         <CertificateVerificationPage onBack={handleGoHome} />
-        <PublicBottomNavBar
-          activeTab="home"
-          onTabChange={(tabId) => {
-            if (tabId === 'home') handleGoHome();
-            else if (tabId === 'login') setCurrentView('investor');
-          }}
-          onBookNow={() => farms.length > 0 && handleFarmClick(farms[0])}
-          onBackToAdmin={onBackToAdmin}
-        />
       </>
     );
   }
@@ -102,15 +83,6 @@ export function RoyalMainInterface({
           onBack={handleGoHome}
           onStartBooking={() => setCurrentView('booking')}
         />
-        <PublicBottomNavBar
-          activeTab="home"
-          onTabChange={(tabId) => {
-            if (tabId === 'home') handleGoHome();
-            else if (tabId === 'login') setCurrentView('investor');
-          }}
-          onBookNow={() => setCurrentView('booking')}
-          onBackToAdmin={onBackToAdmin}
-        />
       </>
     );
   }
@@ -126,15 +98,6 @@ export function RoyalMainInterface({
           onSuccess={handleGoHome}
           onGoHome={handleGoHome}
           onGoToInvestor={() => setCurrentView('investor')}
-        />
-        <PublicBottomNavBar
-          activeTab="home"
-          onTabChange={(tabId) => {
-            if (tabId === 'home') handleGoHome();
-            else if (tabId === 'login') setCurrentView('investor');
-          }}
-          onBookNow={() => {}}
-          onBackToAdmin={onBackToAdmin}
         />
       </>
     );
@@ -363,17 +326,6 @@ export function RoyalMainInterface({
       </main>
 
       {/* Bottom Navigation */}
-      <PublicBottomNavBar
-        activeTab="home"
-        onTabChange={(tabId) => {
-          if (tabId === 'home') handleGoHome();
-          else if (tabId === 'login') setCurrentView('investor');
-          else if (tabId === 'concept') setCurrentView('concept');
-          else if (tabId === 'verify') setCurrentView('verification');
-        }}
-        onBookNow={() => farms.length > 0 && handleFarmClick(farms[0])}
-        onBackToAdmin={onBackToAdmin}
-      />
     </div>
   );
 }

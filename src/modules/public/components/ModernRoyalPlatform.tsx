@@ -11,7 +11,6 @@ import { CertificateVerificationPage } from './CertificateVerificationPage';
 import { BackToAdminButton } from './BackToAdminButton';
 import { AdminCrownButton } from './AdminCrownButton';
 import { ConceptIntroductionPage } from './ConceptIntroductionPage';
-import { PublicBottomNavBar } from '../../../components/layout/PublicBottomNavBar';
 import { GreenConceptButton } from './GreenConceptButton';
 import { InnovativeFarmCard } from './InnovativeFarmCard';
 import { Modern3DTicker } from '../../../components/common/Modern3DTicker';
@@ -127,15 +126,6 @@ export function ModernRoyalPlatform({
     return (
       <>
         <ConceptIntroductionPage onClose={handleGoHome} onStartJourney={handleGoHome} />
-        <PublicBottomNavBar
-          activeTab="concept"
-          onTabChange={(tabId) => {
-            if (tabId === 'home') handleGoHome();
-            else if (tabId === 'login') setCurrentView('investor');
-          }}
-          onBookNow={() => farms.length > 0 && handleFarmClick(farms[0])}
-          onBackToAdmin={onBackToAdmin}
-        />
       </>
     );
   }
@@ -144,15 +134,6 @@ export function ModernRoyalPlatform({
     return (
       <>
         <CertificateVerificationPage onBack={handleGoHome} />
-        <PublicBottomNavBar
-          activeTab="home"
-          onTabChange={(tabId) => {
-            if (tabId === 'home') handleGoHome();
-            else if (tabId === 'login') setCurrentView('investor');
-          }}
-          onBookNow={() => farms.length > 0 && handleFarmClick(farms[0])}
-          onBackToAdmin={onBackToAdmin}
-        />
       </>
     );
   }
@@ -169,15 +150,6 @@ export function ModernRoyalPlatform({
           onBack={handleGoHome}
           onStartBooking={() => setCurrentView('booking')}
         />
-        <PublicBottomNavBar
-          activeTab="home"
-          onTabChange={(tabId) => {
-            if (tabId === 'home') handleGoHome();
-            else if (tabId === 'login') setCurrentView('investor');
-          }}
-          onBookNow={() => setCurrentView('booking')}
-          onBackToAdmin={onBackToAdmin}
-        />
       </>
     );
   }
@@ -193,15 +165,6 @@ export function ModernRoyalPlatform({
           onSuccess={handleGoHome}
           onGoHome={handleGoHome}
           onGoToInvestor={() => setCurrentView('investor')}
-        />
-        <PublicBottomNavBar
-          activeTab="home"
-          onTabChange={(tabId) => {
-            if (tabId === 'home') handleGoHome();
-            else if (tabId === 'login') setCurrentView('investor');
-          }}
-          onBookNow={() => {}}
-          onBackToAdmin={onBackToAdmin}
         />
       </>
     );
@@ -315,17 +278,6 @@ export function ModernRoyalPlatform({
         </main>
 
         {/* Bottom Navigation */}
-        <PublicBottomNavBar
-          activeTab="home"
-          onTabChange={(tabId) => {
-            if (tabId === 'home') handleGoHome();
-            else if (tabId === 'login') setCurrentView('investor');
-            else if (tabId === 'concept') setCurrentView('concept');
-            else if (tabId === 'verification') setCurrentView('verification');
-          }}
-          onBookNow={() => farms.length > 0 && handleFarmClick(farms[0])}
-          onBackToAdmin={onBackToAdmin}
-        />
       </div>
 
     </div>
