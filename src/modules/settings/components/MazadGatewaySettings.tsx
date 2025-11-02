@@ -67,6 +67,8 @@ export function MazadGatewaySettings() {
     try {
       setSaving(true);
 
+      console.log('🔵 بدء حفظ الإعدادات:', settings);
+
       const updateData = {
         enabled: settings.enabled,
         auto_enter_enabled: settings.auto_enter_enabled,
@@ -82,30 +84,28 @@ export function MazadGatewaySettings() {
         title_animation_enabled: settings.title_animation_enabled,
       };
 
-      // محاولة التحديث أولاً
+      console.log('📤 البيانات للتحديث:', updateData);
+
+      // التحديث المباشر
       const { data: updated, error: updateError } = await supabase
         .from('mazad_gateway_settings')
         .update(updateData)
-        .eq('id', settings.id || 'd06bd962-d0a4-411a-a510-7deedb987839')
-        .select()
-        .maybeSingle();
+        .eq('id', 'd06bd962-d0a4-411a-a510-7deedb987839')
+        .select();
 
       if (updateError) {
-        console.error('Update error:', updateError);
-        // إذا فشل التحديث، حاول الإنشاء
-        const { error: insertError } = await supabase
-          .from('mazad_gateway_settings')
-          .insert([updateData]);
-
-        if (insertError) throw insertError;
+        console.error('❌ خطأ في التحديث:', updateError);
+        throw updateError;
       }
+
+      console.log('✅ تم التحديث بنجاح:', updated);
 
       showMessage('success', '✅ تم حفظ الإعدادات بنجاح!');
 
       // تحديث الحالة المحلية
       await loadSettings();
     } catch (error) {
-      console.error('Error saving settings:', error);
+      console.error('❌ فشل الحفظ:', error);
       showMessage('error', 'فشل حفظ الإعدادات: ' + (error as Error).message);
     } finally {
       setSaving(false);

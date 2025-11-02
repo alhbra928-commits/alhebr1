@@ -63,39 +63,39 @@ export function MazadGatewayTexts() {
     try {
       setSaving(true);
 
+      console.log('🔵 بدء حفظ النصوص:', texts);
+
       const updateData = {
-        title_line1: texts.title_line1,
-        title_line2: texts.title_line2,
-        subtitle: texts.subtitle,
-        button_text: texts.button_text,
+        title_line1: texts.title_line1 || '',
+        title_line2: texts.title_line2 || '',
+        subtitle: texts.subtitle || '',
+        button_text: texts.button_text || '',
         show_title: texts.show_title,
         show_subtitle: texts.show_subtitle,
       };
 
-      // محاولة التحديث أولاً
+      console.log('📤 البيانات للتحديث:', updateData);
+
+      // التحديث المباشر
       const { data: updated, error: updateError } = await supabase
         .from('mazad_gateway_settings')
         .update(updateData)
-        .eq('id', texts.id || 'd06bd962-d0a4-411a-a510-7deedb987839')
-        .select()
-        .maybeSingle();
+        .eq('id', 'd06bd962-d0a4-411a-a510-7deedb987839')
+        .select();
 
       if (updateError) {
-        console.error('Update error:', updateError);
-        // إذا فشل التحديث، حاول الإنشاء
-        const { error: insertError } = await supabase
-          .from('mazad_gateway_settings')
-          .insert([updateData]);
-
-        if (insertError) throw insertError;
+        console.error('❌ خطأ في التحديث:', updateError);
+        throw updateError;
       }
+
+      console.log('✅ تم التحديث بنجاح:', updated);
 
       showMessage('success', '✅ تم حفظ النصوص بنجاح!');
 
       // تحديث الحالة المحلية
       await loadTexts();
     } catch (error) {
-      console.error('Error saving texts:', error);
+      console.error('❌ فشل الحفظ:', error);
       showMessage('error', 'فشل حفظ النصوص: ' + (error as Error).message);
     } finally {
       setSaving(false);
