@@ -243,18 +243,12 @@ div[class*="overflow"]::-webkit-scrollbar {
   animation: shine 2s infinite;
 }
 
-/* 🌿 Glass Green Footer - Fixed at bottom with safe area support */
-html {
-  overflow-x: hidden;
-}
-
+/* 🌿 Glass Green Footer - Fixed at bottom */
 body {
   padding-bottom: max(80px, calc(80px + env(safe-area-inset-bottom)));
-  overflow-x: hidden;
-  position: relative;
 }
 
-/* Ensure footer stays at bottom on all devices - INCLUDING MOBILE */
+/* CRITICAL: Footer must ALWAYS be fixed */
 footer {
   position: fixed !important;
   bottom: 0 !important;
@@ -263,35 +257,12 @@ footer {
   width: 100% !important;
   z-index: 9999 !important;
 
-  /* GPU Acceleration for smooth fixed positioning */
-  transform: translateZ(0) !important;
-  -webkit-transform: translateZ(0) !important;
-  -webkit-transform: translate3d(0, 0, 0) !important;
+  /* GPU acceleration for mobile */
   transform: translate3d(0, 0, 0) !important;
+  -webkit-transform: translate3d(0, 0, 0) !important;
 
-  /* Performance optimization */
-  will-change: transform !important;
   backface-visibility: hidden !important;
   -webkit-backface-visibility: hidden !important;
-
-  /* Critical for iOS Safari fixed positioning */
-  -webkit-overflow-scrolling: touch !important;
-
-  /* Prevent any movement on scroll */
-  position: -webkit-sticky !important;
-  position: sticky !important;
-  top: auto !important;
-  bottom: 0 !important;
-}
-
-/* iOS Safari specific fix */
-@supports (-webkit-touch-callout: none) {
-  footer {
-    position: fixed !important;
-    bottom: 0 !important;
-    transform: translate3d(0, 0, 0) !important;
-    -webkit-transform: translate3d(0, 0, 0) !important;
-  }
 }
 
 /* Slow pulse for settlement ready cards */
