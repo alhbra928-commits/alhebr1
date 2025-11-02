@@ -11,13 +11,6 @@ html, body {
   overflow-y: auto !important;
 }
 
-/* Root container must allow scrolling */
-#root {
-  position: relative !important;
-  overflow: visible !important;
-  min-height: 100vh !important;
-}
-
 /* Override any dark backgrounds */
 .bg-gradient-to-br.from-emerald-950,
 .bg-emerald-950,
