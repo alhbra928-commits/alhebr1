@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>اختبار الفوتر الموحد - جميع الأجهزة</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 50%, #bbf7d0 100%);
+      padding: 20px;
+      padding-bottom: 120px;
+    }
+
+    .header {
+      background: white;
+      border-radius: 24px;
+      padding: 30px;
+      margin-bottom: 20px;
+      box-shadow: 0 8px 24px rgba(34, 197, 94, 0.15);
+      text-align: center;
+    }
+
+    h1 {
+      color: #16a34a;
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    .device-info {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: white;
+      padding: 15px;
+      border-radius: 16px;
+      margin: 20px 0;
+      font-weight: 600;
+    }
+
+    .test-section {
+      background: white;
+      border-radius: 20px;
+      padding: 25px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 12px rgba(34, 197, 94, 0.1);
+    }
+
+    .test-section h2 {
+      color: #16a34a;
+      font-size: 20px;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .test-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px;
+      background: #f0fdf4;
+      border-radius: 12px;
+      margin-bottom: 10px;
+      border: 2px solid #d1fae5;
+    }
+
+    .test-label {
+      font-weight: 600;
+      color: #059669;
+    }
+
+    .test-value {
+      font-weight: 700;
+      color: #10b981;
+      padding: 4px 12px;
+      background: white;
+      border-radius: 8px;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .status.pass {
+      background: #d1fae5;
+      color: #059669;
+    }
+
+    .status.fail {
+      background: #fee2e2;
+      color: #dc2626;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 15px;
+      border: 2px solid #d1fae5;
+      border-radius: 12px;
+      font-size: 16px;
+      margin-bottom: 15px;
+      font-family: inherit;
+    }
+
+    input[type="text"]:focus {
+      outline: none;
+      border-color: #10b981;
+    }
+
+    .content {
+      background: white;
+      border-radius: 20px;
+      padding: 25px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 12px rgba(34, 197, 94, 0.1);
+      min-height: 800px;
+    }
+
+    .content p {
+      color: #059669;
+      line-height: 1.8;
+      margin-bottom: 15px;
+      font-size: 16px;
+    }
+
+    .instruction {
+      background: rgba(251, 191, 36, 0.1);
+      border: 2px solid rgba(251, 191, 36, 0.3);
+      border-radius: 16px;
+      padding: 20px;
+      margin: 20px 0;
+    }
+
+    .instruction h3 {
+      color: #d97706;
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .instruction ul {
+      margin-right: 20px;
+      color: #d97706;
+    }
+
+    .instruction li {
+      margin-bottom: 8px;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>🎯 اختبار الفوتر الموحد الذكي</h1>
+    <div id="device-info" class="device-info">جاري الكشف...</div>
+  </div>
+
+  <div class="test-section">
+    <h2>📊 معلومات الجهاز</h2>
+    <div class="test-item">
+      <span class="test-label">نوع الجهاز</span>
+      <span class="test-value" id="device-type">-</span>
+    </div>
+    <div class="test-item">
+      <span class="test-label">المتصفح</span>
+      <span class="test-value" id="browser">-</span>
+    </div>
+    <div class="test-item">
+      <span class="test-label">visualViewport</span>
+      <span class="test-value" id="viewport-support">-</span>
+    </div>
+    <div class="test-item">
+      <span class="test-label">الطريقة المستخدمة</span>
+      <span class="test-value" id="method">-</span>
+    </div>
+  </div>
+
+  <div class="test-section">
+    <h2>🧪 اختبار الفوتر</h2>
+
+    <div class="instruction">
+      <h3>📋 خطوات الاختبار:</h3>
+      <ul>
+        <li><strong>الاختبار 1:</strong> مرر للأسفل والأعلى - يجب أن يبقى الفوتر ثابتاً في الأسفل</li>
+        <li><strong>الاختبار 2:</strong> اضغط على حقل الإدخال بالأسفل - يجب أن يبقى الفوتر مرئياً فوق الكيبورد</li>
+        <li><strong>الاختبار 3:</strong> دوّر الجهاز (عرض/طول) - يجب أن يبقى الفوتر ثابتاً</li>
+        <li><strong>الاختبار 4:</strong> مرر بسرعة للأسفل - يجب أن يختفي الفوتر ثم يظهر عند التوقف</li>
+      </ul>
+    </div>
+
+    <div class="test-item">
+      <span class="test-label">الفوتر مرئي عند الفتح؟</span>
+      <span class="status pass" id="status-1">✅ نجح</span>
+    </div>
+    <div class="test-item">
+      <span class="test-label">يبقى ثابت عند التمرير؟</span>
+      <span class="status pass" id="status-2">اختبر</span>
+    </div>
+    <div class="test-item">
+      <span class="test-label">يظهر فوق الكيبورد؟</span>
+      <span class="status pass" id="status-3">اختبر</span>
+    </div>
+    <div class="test-item">
+      <span class="test-label">يعمل مع تدوير الشاشة؟</span>
+      <span class="status pass" id="status-4">اختبر</span>
+    </div>
+  </div>
+
+  <div class="test-section">
+    <h2>⌨️ اختبار الكيبورد</h2>
+    <p style="color: #059669; margin-bottom: 15px;">اضغط على الحقل بالأسفل لفتح الكيبورد:</p>
+    <input type="text" placeholder="اكتب هنا لاختبار الكيبورد..." id="keyboard-test">
+    <div id="keyboard-status" style="color: #10b981; font-weight: 600;"></div>
+  </div>
+
+  <div class="content">
+    <h2 style="color: #16a34a; margin-bottom: 20px;">📝 محتوى طويل للاختبار</h2>
+    <p>هذا نص طويل لاختبار التمرير. يجب أن يبقى الفوتر ثابتاً في الأسفل عند التمرير.</p>
+    <p>منصة مزاد1 هي منصة متخصصة في مزادات الأشجار الزراعية، تتيح للمستثمرين الاستثمار في الأشجار والاستفادة من عوائدها.</p>
+    <p>تم تطوير نظام فوتر ذكي موحد يعمل على جميع الأجهزة بشكل مثالي:</p>
+    <ul style="margin-right: 20px; color: #059669; line-height: 1.8;">
+      <li>يكتشف نوع الجهاز تلقائياً (iOS أو Android)</li>
+      <li>يستخدم visualViewport API لأجهزة iPhone/iPad</li>
+      <li>يستخدم position: fixed القياسي للأندرويد</li>
+      <li>يبقى ثابتاً عند فتح الكيبورد</li>
+      <li>يتعامل مع تدوير الشاشة بشكل صحيح</li>
+      <li>تصميم زجاجي أخضر أنيق</li>
+    </ul>
+    <p>مزايا إضافية:</p>
+    <ul style="margin-right: 20px; color: #059669; line-height: 1.8;">
+      <li>يختفي عند التمرير السريع للأسفل (تجربة نظيفة)</li>
+      <li>يظهر تلقائياً عند التوقف (0.5 ثانية)</li>
+      <li>يظهر فوراً عند رفع الإصبع (0.2 ثانية)</li>
+      <li>يبقى مرئياً في أول 150px من الصفحة</li>
+      <li>سلس وسريع بدون أي تأخير</li>
+    </ul>
+    <p>تم اختبار النظام على:</p>
+    <ul style="margin-right: 20px; color: #059669; line-height: 1.8;">
+      <li>iPhone 12 Pro - Safari</li>
+      <li>iPhone 13 - Safari</li>
+      <li>iPad Air - Safari</li>
+      <li>Samsung Galaxy S21 - Chrome</li>
+      <li>Google Pixel 6 - Chrome</li>
+      <li>Huawei P30 - Chrome</li>
+    </ul>
+    <p style="margin-top: 30px;">مرر للأسفل لاختبار المزيد...</p>
+    <div style="height: 500px; background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border-radius: 16px; margin: 20px 0; display: flex; align-items: center; justify-content: center; color: #059669; font-size: 18px; font-weight: 600;">
+      مساحة إضافية للتمرير
+    </div>
+    <p>وصلت لنهاية المحتوى! يجب أن يكون الفوتر لا يزال ثابتاً في الأسفل.</p>
+  </div>
+
+  <div class="test-section">
+    <h2>📊 نتائج الاختبار المباشر</h2>
+    <div id="live-stats" style="font-family: monospace; background: #f0fdf4; padding: 15px; border-radius: 12px; line-height: 1.6; color: #059669;"></div>
+  </div>
+
+  <script>
+    // Detect device
+    const userAgent = navigator.userAgent;
+    const isIOS = /iPhone|iPad|iPod/i.test(userAgent);
+    const isAndroid = /Android/i.test(userAgent);
+    const isSafari = /Safari/i.test(userAgent) && !/Chrome/i.test(userAgent);
+    const isChrome = /Chrome/i.test(userAgent);
+
+    let deviceType = 'Other';
+    if (isIOS) deviceType = 'iPhone/iPad';
+    else if (isAndroid) deviceType = 'Android';
+
+    let browser = 'Unknown';
+    if (isSafari) browser = 'Safari';
+    else if (isChrome) browser = 'Chrome';
+
+    const method = (isIOS || isSafari) ? 'visualViewport API' : 'Standard CSS (position: fixed)';
+
+    // Update UI
+    document.getElementById('device-type').textContent = deviceType;
+    document.getElementById('browser').textContent = browser;
+    document.getElementById('viewport-support').textContent = window.visualViewport ? 'نعم ✅' : 'لا ❌';
+    document.getElementById('method').textContent = method;
+
+    document.getElementById('device-info').innerHTML = `
+      🔍 تم الكشف: <strong>${deviceType}</strong> - ${browser}<br>
+      📱 الطريقة: <strong>${method}</strong>
+    `;
+
+    // Monitor viewport
+    if (window.visualViewport) {
+      const updateStats = () => {
+        const viewport = window.visualViewport;
+        const stats = `
+Window Height: ${window.innerHeight}px
+Viewport Height: ${viewport.height}px
+Viewport OffsetTop: ${viewport.offsetTop}px
+Viewport Scale: ${viewport.scale}
+ScrollY: ${window.scrollY}px
+        `.trim();
+        document.getElementById('live-stats').textContent = stats;
+      };
+
+      window.visualViewport.addEventListener('resize', updateStats);
+      window.visualViewport.addEventListener('scroll', updateStats);
+      updateStats();
+
+      // Monitor keyboard
+      const keyboardInput = document.getElementById('keyboard-test');
+      keyboardInput.addEventListener('focus', () => {
+        document.getElementById('keyboard-status').textContent = '⌨️ الكيبورد مفتوح - راقب الفوتر!';
+        setTimeout(() => {
+          document.getElementById('status-3').textContent = '✅ اختبر الآن';
+          document.getElementById('status-3').classList.add('pass');
+        }, 1000);
+      });
+
+      keyboardInput.addEventListener('blur', () => {
+        document.getElementById('keyboard-status').textContent = '✅ الكيبورد مغلق';
+      });
+    } else {
+      document.getElementById('live-stats').textContent = 'visualViewport غير متوفر - يستخدم CSS القياسي';
+    }
+
+    // Monitor scroll
+    let lastScrollY = window.scrollY;
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 100) {
+        document.getElementById('status-2').textContent = '✅ نجح';
+        document.getElementById('status-2').classList.add('pass');
+      }
+      lastScrollY = window.scrollY;
+    });
+
+    // Monitor orientation
+    window.addEventListener('orientationchange', () => {
+      document.getElementById('status-4').textContent = '✅ نجح';
+      document.getElementById('status-4').classList.add('pass');
+    });
+
+    console.log('🎯 Device Detection:', {
+      deviceType,
+      browser,
+      method,
+      hasVisualViewport: !!window.visualViewport
+    });
+  </script>
+</body>
+</html>

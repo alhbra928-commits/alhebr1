@@ -16,7 +16,7 @@ import { InnovativeFarmCard } from './InnovativeFarmCard';
 import { Modern3DTicker } from '../../../components/common/Modern3DTicker';
 import { modern3DTickerService, TickerMessage, TickerSettings } from '../../../services/modern3DTickerService';
 import { getPlatformTextsBySection } from '../../../services/platformTextsService';
-import { SmartFloatingFooter } from '../../../components/common/SmartFloatingFooter';
+import { UnifiedSmartFooter } from '../../../components/common/UnifiedSmartFooter';
 
 type ViewMode = 'home' | 'farmDetail' | 'booking' | 'investor' | 'verification' | 'concept';
 
@@ -127,7 +127,7 @@ export function ModernRoyalPlatform({
     return (
       <>
         <ConceptIntroductionPage onClose={handleGoHome} onStartJourney={handleGoHome} />
-        <SmartFloatingFooter
+        <UnifiedSmartFooter
           activeTab="concept"
           onTabChange={(tabId) => {
             if (tabId === 'home') handleGoHome();
@@ -143,7 +143,7 @@ export function ModernRoyalPlatform({
     return (
       <>
         <CertificateVerificationPage onBack={handleGoHome} />
-        <SmartFloatingFooter
+        <UnifiedSmartFooter
           activeTab="home"
           onTabChange={(tabId) => {
             if (tabId === 'home') handleGoHome();
@@ -167,7 +167,7 @@ export function ModernRoyalPlatform({
           onBack={handleGoHome}
           onStartBooking={() => setCurrentView('booking')}
         />
-        <SmartFloatingFooter
+        <UnifiedSmartFooter
           activeTab="farms"
           onTabChange={(tabId) => {
             if (tabId === 'home') handleGoHome();
@@ -191,7 +191,7 @@ export function ModernRoyalPlatform({
           onGoHome={handleGoHome}
           onGoToInvestor={() => setCurrentView('investor')}
         />
-        <SmartFloatingFooter
+        <UnifiedSmartFooter
           activeTab="farms"
           onTabChange={(tabId) => {
             if (tabId === 'home') handleGoHome();
@@ -317,7 +317,7 @@ export function ModernRoyalPlatform({
       </div>
 
       {/* Smart Floating Footer */}
-      <SmartFloatingFooter
+      <UnifiedSmartFooter
         activeTab="home"
         onTabChange={(tabId) => {
           if (tabId === 'home') {
