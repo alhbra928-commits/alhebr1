@@ -48,6 +48,8 @@ export const SmartFloatingButton: React.FC<SmartFloatingButtonProps> = ({
   const [messageCount, setMessageCount] = useState(0);
   const [currentIntent, setCurrentIntent] = useState<string | null>(null);
   const [currentSentiment, setCurrentSentiment] = useState<string | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+  const [isIPhone, setIsIPhone] = useState(false);
   const conversationEndRef = useRef<HTMLDivElement>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -57,6 +59,7 @@ export const SmartFloatingButton: React.FC<SmartFloatingButtonProps> = ({
     initializeSession();
     detectUserType();
     loadSoundPreference();
+    detectDevice();
 
     // Pulse animation every 5 seconds
     const pulseInterval = setInterval(() => {
@@ -66,6 +69,50 @@ export const SmartFloatingButton: React.FC<SmartFloatingButtonProps> = ({
 
     return () => clearInterval(pulseInterval);
   }, []);
+
+  const detectDevice = () => {
+    const ua = navigator.userAgent.toLowerCase();
+    const isIOS = /iphone|ipad|ipod/.test(ua);
+    const isMobileDevice = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(ua);
+
+    setIsIPhone(isIOS);
+    setIsMobile(isMobileDevice);
+
+    // Prevent body scroll on mobile when modal is open
+    if (isMobileDevice && isOpen) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.width = '100%';
+    } else {
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+    }
+  };
+
+  // Clean up body styles on unmount or when isOpen changes
+  useEffect(() => {
+    if (isMobile) {
+      if (isOpen) {
+        document.body.classList.add('smart-button-open');
+        document.body.style.overflow = 'hidden';
+        document.body.style.position = 'fixed';
+        document.body.style.width = '100%';
+      } else {
+        document.body.classList.remove('smart-button-open');
+        document.body.style.overflow = '';
+        document.body.style.position = '';
+        document.body.style.width = '';
+      }
+    }
+
+    return () => {
+      document.body.classList.remove('smart-button-open');
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+    };
+  }, [isOpen, isMobile]);
 
   useEffect(() => {
     if (isOpen && sessionToken) {
@@ -489,15 +536,81 @@ export const SmartFloatingButton: React.FC<SmartFloatingButtonProps> = ({
 
       {/* Chat Popup - Mobile Optimized with Keyboard Support */}
       {isOpen && (
-        <div
-          ref={chatContainerRef}
-          className="fixed inset-0 sm:inset-auto sm:bottom-24 sm:right-6 sm:w-[420px] sm:max-h-[650px] z-50 bg-gray-900 sm:rounded-2xl shadow-2xl flex flex-col overflow-hidden"
-          style={{
-            height: '100dvh', // Dynamic viewport height for mobile browsers
-            maxHeight: '100dvh'
-          }}
-          dir="rtl"
-        >
+        <>
+          {/* Mobile/iPhone Specific Styles */}
+          {isMobile && (
+            <style>{`
+              /* iPhone Safe Area Support */
+              .smart-button-mobile {
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                right: 0 !important;
+                bottom: 0 !important;
+                width: 100vw !important;
+                height: 100vh !important;
+                height: 100dvh !important;
+                max-height: 100vh !important;
+                max-height: 100dvh !important;
+                z-index: 9999 !important;
+
+                /* iPhone Safari specific fixes */
+                -webkit-overflow-scrolling: touch !important;
+                overscroll-behavior: contain !important;
+                touch-action: pan-y !important;
+
+                /* Prevent any transforms */
+                transform: translateZ(0) !important;
+                -webkit-transform: translateZ(0) !important;
+                backface-visibility: hidden !important;
+                -webkit-backface-visibility: hidden !important;
+
+                /* Safe area padding - critical for iPhone */
+                padding-top: env(safe-area-inset-top, 0) !important;
+                padding-bottom: env(safe-area-inset-bottom, 20px) !important;
+              }
+
+              /* Safe area for input on iPhone */
+              .safe-area-bottom {
+                padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 12px) !important;
+              }
+
+              /* Prevent keyboard zoom on iPhone */
+              @supports (-webkit-touch-callout: none) {
+                input, textarea {
+                  font-size: 16px !important;
+                }
+              }
+
+              /* Prevent body scroll on iPhone */
+              body.smart-button-open {
+                overflow: hidden !important;
+                position: fixed !important;
+                width: 100% !important;
+                height: 100vh !important;
+                height: 100dvh !important;
+              }
+            `}</style>
+          )}
+
+          <div
+            ref={chatContainerRef}
+            className={`fixed z-50 bg-gray-900 shadow-2xl flex flex-col overflow-hidden ${
+              isMobile
+                ? 'smart-button-mobile inset-0'
+                : 'inset-auto bottom-24 right-6 w-[420px] max-h-[650px] rounded-2xl'
+            }`}
+            style={{
+              ...(isMobile ? {
+                height: '100dvh',
+                maxHeight: '100dvh',
+                borderRadius: 0
+              } : {
+                height: 'auto'
+              })
+            }}
+            dir="rtl"
+          >
           {/* Header - More compact on mobile */}
           <div
             className="px-4 py-3 flex items-center justify-between flex-shrink-0"
@@ -724,6 +837,7 @@ export const SmartFloatingButton: React.FC<SmartFloatingButtonProps> = ({
             </p>
           </div>
         </div>
+        </>
       )}
     </>
   );
