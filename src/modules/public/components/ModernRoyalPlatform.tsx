@@ -237,7 +237,7 @@ export function ModernRoyalPlatform({
           }}
           currentSection={currentView === 'home' ? 'home' : currentView === 'investor' ? 'account' : 'home'}
           onSmartButtonClick={() => setSmartButtonOpen(true)}
-          phoneNumber="966500000000"
+          phoneNumber="966569335257"
         />
 
         {/* Smart Floating Button - يُفتح من الشريط الجانبي فقط */}

@@ -12,7 +12,7 @@ export function InnovativeSideDock({
   onNavigate,
   currentSection = 'home',
   onSmartButtonClick,
-  phoneNumber = '966500000000'
+  phoneNumber = '966569335257'
 }: InnovativeSideDockProps) {
   const [mounted, setMounted] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -24,8 +24,7 @@ export function InnovativeSideDock({
   if (!mounted) return null;
 
   const handleContact = () => {
-    const message = encodeURIComponent('مرحباً! أود الاستفسار عن المنصة');
-    window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
+    window.open(`tel:${phoneNumber}`);
     if (navigator.vibrate) navigator.vibrate(10);
   };
 
@@ -64,7 +63,10 @@ export function InnovativeSideDock({
           top: 50%;
           transform: translateY(-50%);
           z-index: 10000;
-          animation: slideInFromLeft 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .innovative-dock-container.hidden {
+          left: -60%;
         }
 
         .dock-main-wrapper {
@@ -94,6 +96,7 @@ export function InnovativeSideDock({
             0 8px 32px rgba(0, 0, 0, 0.5),
             inset 0 1px 0 rgba(255, 255, 255, 0.1),
             0 0 40px rgba(16, 185, 129, 0.2);
+          transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         /* اللسان البارز */
@@ -351,7 +354,7 @@ export function InnovativeSideDock({
         }
       `}</style>
 
-      <div className="innovative-dock-container">
+      <div className={`innovative-dock-container ${!isExpanded ? 'hidden' : ''}`}>
         <div className="dock-main-wrapper">
 
           {/* الشريط الرئيسي */}
