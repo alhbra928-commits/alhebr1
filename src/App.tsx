@@ -361,11 +361,14 @@ function App() {
       {!adminSession && (
         <button
           onClick={() => setShowAdminLogin(true)}
-          className="fixed bottom-4 right-4 w-16 h-16 rounded-full shadow-2xl flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 z-[60]"
+          className="fixed w-16 h-16 rounded-full shadow-2xl flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95"
           style={{
+            bottom: '16px',
+            right: '16px',
+            zIndex: 99999,
             background: 'linear-gradient(135deg, rgba(251, 191, 36, 0.95) 0%, rgba(245, 158, 11, 0.98) 100%)',
             boxShadow: '0 8px 24px rgba(251, 191, 36, 0.4), inset 0 2px 2px rgba(255, 255, 255, 0.3)',
-            bottom: 'max(16px, env(safe-area-inset-bottom, 16px))',
+            position: 'fixed',
           }}
         >
           <Crown
