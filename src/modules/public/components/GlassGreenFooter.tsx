@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Home, TreePine, MessageCircle, User } from 'lucide-react';
 
 interface GlassGreenFooterProps {
@@ -12,6 +12,50 @@ export const GlassGreenFooter: React.FC<GlassGreenFooterProps> = ({
   onTabChange,
   onWhatsAppClick
 }) => {
+  const footerRef = useRef<HTMLElement>(null);
+
+  // Force fixed position on mount and prevent any changes
+  useEffect(() => {
+    if (footerRef.current) {
+      const footer = footerRef.current;
+      
+      // Force styles immediately
+      const forceFixedPosition = () => {
+        footer.style.setProperty('position', 'fixed', 'important');
+        footer.style.setProperty('bottom', '0', 'important');
+        footer.style.setProperty('left', '0', 'important');
+        footer.style.setProperty('right', '0', 'important');
+        footer.style.setProperty('width', '100%', 'important');
+        footer.style.setProperty('z-index', '9999', 'important');
+        footer.style.setProperty('transform', 'translate3d(0, 0, 0)', 'important');
+      };
+
+      forceFixedPosition();
+
+      // Prevent any style modifications
+      const observer = new MutationObserver(() => {
+        forceFixedPosition();
+      });
+
+      observer.observe(footer, {
+        attributes: true,
+        attributeFilter: ['style', 'class']
+      });
+
+      // Also force on scroll
+      const handleScroll = () => {
+        forceFixedPosition();
+      };
+
+      window.addEventListener('scroll', handleScroll, { passive: true });
+      
+      return () => {
+        observer.disconnect();
+        window.removeEventListener('scroll', handleScroll);
+      };
+    }
+  }, []);
+
   const navItems = [
     {
       id: 'home',
@@ -56,6 +100,8 @@ export const GlassGreenFooter: React.FC<GlassGreenFooterProps> = ({
 
   return (
     <footer
+      ref={footerRef}
+      className="glass-green-footer-fixed"
       style={{
         position: 'fixed',
         bottom: 0,
