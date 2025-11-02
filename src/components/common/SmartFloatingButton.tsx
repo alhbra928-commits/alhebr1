@@ -488,41 +488,6 @@ export const SmartFloatingButton: React.FC<SmartFloatingButtonProps> = ({
 
   return (
     <>
-      {/* Floating Notification */}
-      {notification && !isOpen && (
-        <div
-          className="fixed bottom-32 right-6 z-50 bg-gradient-to-r from-[#8B7355] to-[#A0916A] text-white px-6 py-3 rounded-xl shadow-2xl animate-bounce"
-          style={{ minWidth: '200px' }}
-        >
-          <p className="text-sm font-semibold text-center">{notification}</p>
-        </div>
-      )}
-
-      {/* Floating Button */}
-      <button
-        onClick={handleOpen}
-        className={`fixed bottom-20 right-4 sm:bottom-24 sm:right-6 w-14 h-14 sm:w-16 sm:h-16 rounded-full shadow-2xl flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 ${
-          isPulsing && !isOpen ? 'animate-pulse' : ''
-        }`}
-        style={{
-          background: 'linear-gradient(135deg, #8B7355 0%, #A0916A 100%)',
-          boxShadow: hasNewMessage
-            ? '0 4px 30px rgba(139, 115, 85, 0.8), 0 0 20px rgba(255, 215, 0, 0.6)'
-            : '0 4px 20px rgba(139, 115, 85, 0.4)',
-          zIndex: 10000
-        }}
-        title="مركز التواصل الذكي"
-      >
-        <MessageCircle className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
-
-        {/* Notification badge */}
-        {hasNewMessage && (
-          <div className="absolute -top-1 -right-1 w-5 h-5 sm:w-6 sm:h-6 bg-red-500 rounded-full flex items-center justify-center animate-ping">
-            <div className="absolute w-5 h-5 sm:w-6 sm:h-6 bg-red-500 rounded-full"></div>
-          </div>
-        )}
-      </button>
-
       {/* Chat Popup - Mobile Optimized with Keyboard Support */}
       {isOpen && (
         <>
