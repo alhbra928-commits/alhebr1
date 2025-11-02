@@ -12,6 +12,7 @@ import { ConceptIntroductionPage } from './ConceptIntroductionPage';
 import { GreenConceptButton } from './GreenConceptButton';
 import { AdminCrownButton } from './AdminCrownButton';
 import { SmartFloatingButton } from '../../../components/common/SmartFloatingButton';
+import { InnovativeSideDock } from '../../../components/common/InnovativeSideDock';
 import { InnovativeFarmCard } from './InnovativeFarmCard';
 import { Modern3DTicker } from '../../../components/common/Modern3DTicker';
 import { modern3DTickerService, TickerMessage, TickerSettings } from '../../../services/modern3DTickerService';
@@ -227,6 +228,17 @@ export function ModernRoyalPlatform({
           enabled={tickerSettings.enabled}
         />
 
+
+        {/* Innovative Side Dock - الشريط الجانبي المبتكر */}
+        <InnovativeSideDock
+          onNavigate={(section) => {
+            if (section === 'home') setCurrentView('home');
+            else if (section === 'account') setCurrentView('investor');
+          }}
+          currentSection={currentView === 'home' ? 'home' : currentView === 'investor' ? 'account' : 'home'}
+          onSmartButtonClick={() => setSmartButtonOpen(true)}
+          phoneNumber="966500000000"
+        />
 
         {/* Smart Floating Button - يُفتح من الشريط الجانبي فقط */}
         <SmartFloatingButton
