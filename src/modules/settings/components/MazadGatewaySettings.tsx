@@ -44,19 +44,28 @@ export function MazadGatewaySettings() {
   const loadSettings = async () => {
     try {
       setLoading(true);
+
+      console.log('🔵 بدء تحميل الإعدادات...');
+
       const { data, error } = await supabase
         .from('mazad_gateway_settings')
         .select('*')
-        .limit(1)
-        .maybeSingle();
+        .eq('id', 'd06bd962-d0a4-411a-a510-7deedb987839')
+        .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('❌ خطأ في تحميل الإعدادات:', error);
+        throw error;
+      }
+
+      console.log('✅ تم تحميل الإعدادات:', data);
 
       if (data) {
         setSettings(data);
+        console.log('✅ تم تطبيق الإعدادات على الحالة');
       }
     } catch (error) {
-      console.error('Error loading settings:', error);
+      console.error('❌ فشل تحميل الإعدادات:', error);
       showMessage('error', 'فشل تحميل الإعدادات');
     } finally {
       setLoading(false);

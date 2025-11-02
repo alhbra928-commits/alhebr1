@@ -32,27 +32,36 @@ export function MazadGatewayTexts() {
   const loadTexts = async () => {
     try {
       setLoading(true);
+
+      console.log('🔵 بدء تحميل النصوص...');
+
       const { data, error } = await supabase
         .from('mazad_gateway_settings')
         .select('id, title_line1, title_line2, subtitle, button_text, show_title, show_subtitle')
-        .limit(1)
-        .maybeSingle();
+        .eq('id', 'd06bd962-d0a4-411a-a510-7deedb987839')
+        .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('❌ خطأ في تحميل النصوص:', error);
+        throw error;
+      }
+
+      console.log('✅ تم تحميل النصوص:', data);
 
       if (data) {
         setTexts({
           id: data.id,
-          title_line1: data.title_line1 || 'بوابة',
-          title_line2: data.title_line2 || 'مزاد',
-          subtitle: data.subtitle || 'منصة استثمار زراعي متطورة',
-          button_text: data.button_text || 'ادخل إلى المنصة',
-          show_title: data.show_title ?? true,
-          show_subtitle: data.show_subtitle ?? true,
+          title_line1: data.title_line1,
+          title_line2: data.title_line2,
+          subtitle: data.subtitle,
+          button_text: data.button_text,
+          show_title: data.show_title,
+          show_subtitle: data.show_subtitle,
         });
+        console.log('✅ تم تطبيق النصوص على الحالة');
       }
     } catch (error) {
-      console.error('Error loading texts:', error);
+      console.error('❌ فشل تحميل النصوص:', error);
       showMessage('error', 'فشل تحميل النصوص');
     } finally {
       setLoading(false);
