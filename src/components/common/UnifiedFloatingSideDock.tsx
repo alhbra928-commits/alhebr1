@@ -207,11 +207,11 @@ export function UnifiedFloatingSideDock({
               boxShadow: '2px 0 12px rgba(16, 185, 129, 0.4), inset -1px 0 2px rgba(255, 255, 255, 0.3)',
             }}
           >
-            {/* Three Lines Icon */}
-            <div className="flex flex-col gap-1.5">
-              <div className="w-3 h-0.5 bg-white/80 rounded-full"></div>
-              <div className="w-3 h-0.5 bg-white/80 rounded-full"></div>
-              <div className="w-3 h-0.5 bg-white/80 rounded-full"></div>
+            {/* Three Lines Icon - عمودية تشير للشاشة */}
+            <div className="flex flex-row gap-1">
+              <div className="w-0.5 h-4 bg-white/90 rounded-full"></div>
+              <div className="w-0.5 h-4 bg-white/90 rounded-full"></div>
+              <div className="w-0.5 h-4 bg-white/90 rounded-full"></div>
             </div>
 
             {/* Pulsing Effect */}
