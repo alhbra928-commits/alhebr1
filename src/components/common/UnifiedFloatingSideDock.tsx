@@ -72,6 +72,15 @@ export function UnifiedFloatingSideDock({
           will-change: transform, left;
           backface-visibility: hidden;
           -webkit-backface-visibility: hidden;
+          pointer-events: none !important;
+        }
+
+        .unified-dock-content {
+          pointer-events: auto !important;
+        }
+
+        .unified-dock-tab {
+          pointer-events: auto !important;
         }
 
         .unified-dock-content button {
@@ -93,19 +102,8 @@ export function UnifiedFloatingSideDock({
           height: '100vh',
           zIndex: 10000,
           transition: 'left 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
-          pointerEvents: 'auto',
           display: 'flex',
           alignItems: 'center',
-        }}
-        onTouchStart={(e) => {
-          e.preventDefault();
-          setIsIconPressed(true);
-          if (navigator.vibrate) navigator.vibrate(10);
-          setIsDockVisible(true);
-          setTimeout(() => {
-            setIsIconPressed(false);
-            setTimeout(() => setIsDockVisible(false), 3000);
-          }, 150);
         }}
       >
         {/* الشريط على اليسار */}
@@ -233,6 +231,16 @@ export function UnifiedFloatingSideDock({
             WebkitTapHighlightColor: 'transparent',
             padding: '16px',
             margin: '-16px',
+          }}
+          onTouchStart={(e) => {
+            e.preventDefault();
+            setIsIconPressed(true);
+            if (navigator.vibrate) navigator.vibrate(10);
+            setIsDockVisible(true);
+            setTimeout(() => {
+              setIsIconPressed(false);
+              setTimeout(() => setIsDockVisible(false), 3000);
+            }, 150);
           }}
         >
           <div
