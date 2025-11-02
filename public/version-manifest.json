@@ -1,23 +1,17 @@
 {
-  "version": "dev-mode",
-  "timestamp": "0",
-  "buildNumber": 0,
-  "channel": "development",
-  "files": {
-    "index.html": {
-      "hash": "dev",
-      "size": 0,
-      "path": "/index.html"
-    }
+  "version": "v20251102_1762112911",
+  "buildTime": "2025-11-02T19:48:31+00:00",
+  "features": [
+    "Smart AI Button Integrated",
+    "Old WhatsApp Button Removed",
+    "Sidebar Smart Button Connected",
+    "AI Intelligence System Active"
+  ],
+  "changes": {
+    "smartButton": "integrated",
+    "oldWhatsApp": "removed",
+    "aiSystem": "active"
   },
-  "integrity": {
-    "algorithm": "sha256",
-    "verified": true
-  },
-  "deployment": {
-    "strategy": "atomic",
-    "rollbackEnabled": true,
-    "cdnPurgeRequired": false
-  },
-  "manifestHash": "dev-mode-hash"
+  "cacheBreaker": "1762112911",
+  "forceUpdate": true
 }

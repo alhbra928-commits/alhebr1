@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🔄 تحديث الزر الذكي</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      margin: 0;
+      padding: 20px;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .container {
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      max-width: 600px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    h1 {
+      color: #667eea;
+      margin: 0 0 10px 0;
+      font-size: 28px;
+    }
+    .version {
+      color: #666;
+      font-size: 14px;
+      margin-bottom: 30px;
+    }
+    .status {
+      padding: 15px;
+      border-radius: 10px;
+      margin: 15px 0;
+      font-weight: bold;
+    }
+    .success {
+      background: #d4edda;
+      color: #155724;
+      border: 2px solid #c3e6cb;
+    }
+    .warning {
+      background: #fff3cd;
+      color: #856404;
+      border: 2px solid #ffeaa7;
+    }
+    .info {
+      background: #d1ecf1;
+      color: #0c5460;
+      border: 2px solid #bee5eb;
+    }
+    button {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      width: 100%;
+      margin: 10px 0;
+      transition: transform 0.2s;
+    }
+    button:hover {
+      transform: scale(1.05);
+    }
+    button:active {
+      transform: scale(0.95);
+    }
+    .progress {
+      width: 100%;
+      height: 8px;
+      background: #f0f0f0;
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 20px 0;
+    }
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #667eea, #764ba2);
+      width: 0%;
+      transition: width 0.3s;
+    }
+    .step {
+      padding: 10px;
+      margin: 10px 0;
+      border-right: 3px solid #667eea;
+      background: #f8f9fa;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔄 تحديث الزر الذكي</h1>
+    <div class="version">Build: v20251102_1762112787298</div>
+
+    <div id="status" class="status info">
+      ⏳ جاري فحص النظام...
+    </div>
+
+    <div class="progress">
+      <div id="progressBar" class="progress-bar"></div>
+    </div>
+
+    <div id="steps"></div>
+
+    <button onclick="clearEverything()">🧹 مسح الكاش الكامل</button>
+    <button onclick="forceReload()">🔄 إعادة تحميل</button>
+    <button onclick="window.location.href='/'">✅ العودة للمنصة</button>
+  </div>
+
+  <script>
+    const steps = [
+      'مسح localStorage',
+      'مسح sessionStorage', 
+      'مسح Service Workers',
+      'مسح Cache Storage',
+      'مسح IndexedDB',
+      'إلغاء تسجيل Service Workers'
+    ];
+
+    let currentStep = 0;
+
+    function updateProgress() {
+      const progress = ((currentStep) / steps.length) * 100;
+      document.getElementById('progressBar').style.width = progress + '%';
+    }
+
+    function addStep(text, success = true) {
+      const stepDiv = document.createElement('div');
+      stepDiv.className = 'step';
+      stepDiv.innerHTML = `${success ? '✅' : '⚠️'} ${text}`;
+      document.getElementById('steps').appendChild(stepDiv);
+      currentStep++;
+      updateProgress();
+    }
+
+    async function clearEverything() {
+      document.getElementById('status').className = 'status warning';
+      document.getElementById('status').textContent = '🔄 جاري مسح الكاش...';
+      document.getElementById('steps').innerHTML = '';
+      currentStep = 0;
+      updateProgress();
+
+      try {
+        // 1. Clear localStorage
+        localStorage.clear();
+        addStep('تم مسح localStorage');
+
+        // 2. Clear sessionStorage
+        sessionStorage.clear();
+        addStep('تم مسح sessionStorage');
+
+        // 3. Unregister all service workers
+        if ('serviceWorker' in navigator) {
+          const registrations = await navigator.serviceWorker.getRegistrations();
+          for (let registration of registrations) {
+            await registration.unregister();
+          }
+          addStep(`تم إلغاء ${registrations.length} service workers`);
+        }
+
+        // 4. Clear all caches
+        if ('caches' in window) {
+          const cacheNames = await caches.keys();
+          for (let name of cacheNames) {
+            await caches.delete(name);
+          }
+          addStep(`تم مسح ${cacheNames.length} caches`);
+        }
+
+        // 5. Clear IndexedDB
+        if ('indexedDB' in window) {
+          const dbs = await indexedDB.databases();
+          for (let db of dbs) {
+            indexedDB.deleteDatabase(db.name);
+          }
+          addStep(`تم مسح ${dbs.length} قواعد بيانات`);
+        }
+
+        // 6. Final check
+        addStep('اكتمل التنظيف بنجاح!');
+
+        document.getElementById('status').className = 'status success';
+        document.getElementById('status').textContent = '✅ تم مسح الكاش بنجاح!';
+
+        setTimeout(() => {
+          document.getElementById('status').textContent = '🔄 سيتم إعادة تحميل الصفحة...';
+          setTimeout(() => location.reload(true), 1000);
+        }, 2000);
+
+      } catch (error) {
+        addStep('حدث خطأ: ' + error.message, false);
+        document.getElementById('status').className = 'status warning';
+        document.getElementById('status').textContent = '⚠️ حدث خطأ في المسح';
+      }
+    }
+
+    function forceReload() {
+      // Force reload from server
+      window.location.href = window.location.href.split('?')[0] + '?t=' + Date.now();
+    }
+
+    // Auto-run on load
+    setTimeout(() => {
+      clearEverything();
+    }, 1000);
+  </script>
+</body>
+</html>
