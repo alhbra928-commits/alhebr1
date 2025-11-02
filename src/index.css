@@ -3,8 +3,18 @@
 @tailwind utilities;
 
 /* 🌿 ROYAL GREEN THEME - ALWAYS ACTIVE */
-body {
+html, body {
   background: linear-gradient(135deg, #ECFDF5 0%, #F0FDF4 50%, #F0FDFA 100%) !important;
+  min-height: 100vh !important;
+  position: relative !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+}
+
+/* Root container must allow scrolling */
+#root {
+  position: relative !important;
+  overflow: visible !important;
   min-height: 100vh !important;
 }
 

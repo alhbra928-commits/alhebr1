@@ -284,7 +284,15 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen royal-green-bg" dir="rtl">
+    <div
+      className="min-h-screen royal-green-bg"
+      dir="rtl"
+      style={{
+        position: 'relative',
+        overflow: 'visible',
+        minHeight: '100vh'
+      }}
+    >
       {showAdminLogin && (
         <SmartAdminLoginPage
           onLoginSuccess={handleAdminLogin}

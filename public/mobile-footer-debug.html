@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Footer Debug</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 50%, #bbf7d0 100%);
+            min-height: 200vh;
+            padding-bottom: 100px;
+        }
+        
+        .content {
+            padding: 20px;
+            height: 2000px;
+        }
+        
+        .debug-info {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.9);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 12px;
+            z-index: 99999;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        /* FOOTER - METHOD 1: Simple Fixed */
+        .footer-method-1 {
+            position: fixed !important;
+            bottom: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            width: 100% !important;
+            z-index: 9999 !important;
+            background: linear-gradient(180deg, rgba(209, 250, 229, 0.95) 0%, rgba(134, 239, 172, 0.95) 100%);
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 -4px 20px rgba(34, 197, 94, 0.3);
+            transform: translate3d(0, 0, 0);
+            -webkit-transform: translate3d(0, 0, 0);
+        }
+    </style>
+</head>
+<body>
+    <div class="debug-info" id="debugInfo">
+        🔍 Checking footer...
+    </div>
+    
+    <div class="content">
+        <h1 style="text-align: center; color: #059669; margin-top: 250px;">اختبار الفوتر الثابت</h1>
+        <p style="text-align: center; font-size: 18px;">scroll للأسفل ولاحظ الفوتر</p>
+        <div style="height: 100px; background: rgba(34, 197, 94, 0.1); margin: 20px; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+            محتوى اختبار 1
+        </div>
+        <div style="height: 100px; background: rgba(34, 197, 94, 0.1); margin: 20px; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+            محتوى اختبار 2
+        </div>
+        <div style="height: 100px; background: rgba(34, 197, 94, 0.1); margin: 20px; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+            محتوى اختبار 3
+        </div>
+        <div style="height: 100px; background: rgba(34, 197, 94, 0.1); margin: 20px; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+            محتوى اختبار 4
+        </div>
+    </div>
+    
+    <footer class="footer-method-1" id="testFooter">
+        <div style="font-weight: bold; font-size: 16px; color: #059669;">
+            🌿 الفوتر الثابت
+        </div>
+        <div style="font-size: 12px; color: #047857; margin-top: 5px;">
+            لو الفوتر يتحرك = المشكلة موجودة
+        </div>
+    </footer>
+    
+    <script>
+        const footer = document.getElementById('testFooter');
+        const debugInfo = document.getElementById('debugInfo');
+        
+        function updateDebugInfo() {
+            const styles = window.getComputedStyle(footer);
+            const bodyStyles = window.getComputedStyle(document.body);
+            const parentStyles = window.getComputedStyle(footer.parentElement);
+            
+            debugInfo.innerHTML = `
+                <div><strong>🔍 FOOTER DEBUG:</strong></div>
+                <div>Position: <strong>${styles.position}</strong></div>
+                <div>Bottom: <strong>${styles.bottom}</strong></div>
+                <div>Transform: <strong>${styles.transform}</strong></div>
+                <div>Z-index: <strong>${styles.zIndex}</strong></div>
+                <div>─────────────</div>
+                <div><strong>BODY:</strong></div>
+                <div>Overflow: <strong>${bodyStyles.overflow}</strong></div>
+                <div>Position: <strong>${bodyStyles.position}</strong></div>
+                <div>─────────────</div>
+                <div><strong>PARENT:</strong></div>
+                <div>Overflow: <strong>${parentStyles.overflow}</strong></div>
+                <div>Position: <strong>${parentStyles.position}</strong></div>
+                <div>─────────────</div>
+                <div>Scroll Y: <strong>${window.scrollY}px</strong></div>
+                <div>Viewport Height: <strong>${window.innerHeight}px</strong></div>
+            `;
+        }
+        
+        // Update on load
+        updateDebugInfo();
+        
+        // Update on scroll
+        let scrollTimeout;
+        window.addEventListener('scroll', () => {
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(updateDebugInfo, 100);
+        });
+        
+        // Force position every 500ms
+        setInterval(() => {
+            footer.style.setProperty('position', 'fixed', 'important');
+            footer.style.setProperty('bottom', '0', 'important');
+        }, 500);
+        
+        // Log to console
+        console.log('Footer element:', footer);
+        console.log('Computed styles:', window.getComputedStyle(footer));
+    </script>
+</body>
+</html>
