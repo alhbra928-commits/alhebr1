@@ -543,9 +543,14 @@ export const SmartFloatingButton: React.FC<SmartFloatingButtonProps> = ({
             ref={chatContainerRef}
             className={`fixed bg-gray-900 shadow-2xl flex flex-col rounded-2xl ${
               isMobile
-                ? 'top-4 left-4 right-4 bottom-4 z-50 overflow-y-auto'
+                ? 'left-4 right-4 z-50 overflow-hidden'
                 : 'bottom-24 right-6 w-[420px] max-h-[650px] z-[9999] overflow-hidden'
             }`}
+            style={isMobile ? {
+              top: '1rem',
+              bottom: '1rem',
+              maxHeight: '70vh'
+            } : undefined}
             dir="rtl"
           >
           {/* Header - Compact */}
