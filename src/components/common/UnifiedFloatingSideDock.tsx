@@ -26,6 +26,7 @@ export function UnifiedFloatingSideDock({
   const [whatsappExpanded, setWhatsappExpanded] = useState(false);
   const [message, setMessage] = useState('مرحباً! أود الاستفسار عن المنصة');
   const [isDockVisible, setIsDockVisible] = useState(false);
+  const [isIconPressed, setIsIconPressed] = useState(false);
   const [deviceInfo, setDeviceInfo] = useState({
     isIPhone: false,
     hasNotch: false,
@@ -188,10 +189,49 @@ export function UnifiedFloatingSideDock({
           zIndex: 10001,
           pointerEvents: 'auto',
           transition: 'left 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+          // منطقة لمس أكبر من الأيقونة نفسها
+          padding: '16px',
+          margin: '-16px',
+        }}
+        onTouchStart={(e) => {
+          e.stopPropagation();
+          e.preventDefault();
+
+          // تأثير بصري فوري
+          setIsIconPressed(true);
+
+          // اهتزاز خفيف للموبايل (haptic feedback)
+          if (navigator.vibrate) {
+            navigator.vibrate(10);
+          }
+
+          // إظهار الشريط فوراً عند اللمس
+          setIsDockVisible(true);
+
+          // إخفاء بعد 3 ثواني
+          setTimeout(() => {
+            setIsDockVisible(false);
+          }, 3000);
+
+          // إزالة التأثير البصري
+          setTimeout(() => {
+            setIsIconPressed(false);
+          }, 200);
+        }}
+        onTouchEnd={(e) => {
+          e.preventDefault();
+          setIsIconPressed(false);
         }}
         onClick={(e) => {
           e.stopPropagation();
-          // إظهار الشريط
+
+          // تأثير بصري
+          setIsIconPressed(true);
+          setTimeout(() => {
+            setIsIconPressed(false);
+          }, 200);
+
+          // إظهار الشريط (للمتصفحات العادية Desktop)
           setIsDockVisible(true);
 
           // إخفاء بعد 3 ثواني
@@ -210,6 +250,8 @@ export function UnifiedFloatingSideDock({
               0 0 0 3px rgba(16, 185, 129, 0.2),
               inset 0 2px 4px rgba(255, 255, 255, 0.3)
             `,
+            transform: isIconPressed ? 'scale(0.9)' : 'scale(1)',
+            transition: 'transform 0.15s cubic-bezier(0.4, 0, 0.2, 1)',
           }}
         >
           {/* Glass Overlay */}

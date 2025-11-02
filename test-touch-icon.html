@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>📱 اختبار اللمس - الأيقونة المحسّنة</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      min-height: 100vh;
+      color: white;
+      direction: rtl;
+      overflow: hidden;
+    }
+
+    .instruction {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+      padding: 25px;
+      border-radius: 16px;
+      max-width: 350px;
+      box-shadow: 0 20px 60px rgba(16, 185, 129, 0.4);
+      animation: pulse-box 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-box {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.02); }
+    }
+
+    .instruction h2 {
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+
+    .instruction p {
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    /* الأيقونة */
+    .touch-icon {
+      position: fixed;
+      top: 50%;
+      left: 28px;
+      transform: translateY(-50%);
+      cursor: pointer;
+      z-index: 10001;
+      /* منطقة لمس أكبر */
+      padding: 16px;
+      margin: -16px;
+      touch-action: manipulation;
+    }
+
+    .icon-circle {
+      position: relative;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+      box-shadow:
+        0 4px 20px rgba(16, 185, 129, 0.6),
+        0 0 0 3px rgba(16, 185, 129, 0.2),
+        inset 0 2px 4px rgba(255, 255, 255, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .icon-circle.pressed {
+      transform: scale(0.9);
+    }
+
+    .menu-icon {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .menu-line {
+      width: 20px;
+      height: 2.5px;
+      background: white;
+      border-radius: 2px;
+    }
+
+    /* الشريط */
+    .dock {
+      position: fixed;
+      top: 0;
+      left: -52px;
+      width: 72px;
+      height: 100vh;
+      background: linear-gradient(135deg, #064e3b 0%, #065f46 100%);
+      box-shadow: 4px 0 24px rgba(0, 0, 0, 0.3);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 8px;
+      gap: 16px;
+      transition: left 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .dock.visible {
+      left: 16px;
+    }
+
+    .dock-item {
+      width: 48px;
+      height: 48px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+
+    /* إحصائيات */
+    .stats {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      left: 20px;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(10px);
+      padding: 20px;
+      border-radius: 16px;
+      border: 2px solid #10B981;
+    }
+
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .stat-row:last-child {
+      border-bottom: none;
+    }
+
+    .stat-label {
+      color: #94a3b8;
+    }
+
+    .stat-value {
+      color: #10B981;
+      font-weight: bold;
+    }
+
+    .success-msg {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+      padding: 30px 50px;
+      border-radius: 20px;
+      font-size: 28px;
+      font-weight: bold;
+      box-shadow: 0 20px 60px rgba(16, 185, 129, 0.6);
+      opacity: 0;
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      z-index: 99999;
+    }
+
+    .success-msg.show {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 1;
+    }
+
+    .touch-area {
+      position: fixed;
+      top: 50%;
+      left: 28px;
+      transform: translateY(-50%);
+      width: 88px;
+      height: 88px;
+      border: 2px dashed rgba(16, 185, 129, 0.5);
+      border-radius: 50%;
+      pointer-events: none;
+      animation: pulse-area 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-area {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 0.7; }
+    }
+  </style>
+</head>
+<body>
+  <div class="instruction">
+    <h2>📱 اختبر اللمس!</h2>
+    <p>
+      ✅ المس الأيقونة الخضراء<br>
+      ✅ ستشعر باهتزاز خفيف<br>
+      ✅ الأيقونة تصغر بصرياً<br>
+      ✅ الشريط يظهر فوراً<br>
+      ✅ منطقة لمس أكبر (88×88)
+    </p>
+    <div style="margin-top: 10px; padding: 10px; background: rgba(0,0,0,0.2); border-radius: 8px; text-align: center; font-size: 12px;">
+      <strong>Build:</strong> v20251102_1762124615077
+    </div>
+  </div>
+
+  <!-- منطقة اللمس -->
+  <div class="touch-area"></div>
+
+  <!-- الأيقونة -->
+  <div class="touch-icon" id="touchIcon">
+    <div class="icon-circle" id="iconCircle">
+      <div class="menu-icon">
+        <div class="menu-line"></div>
+        <div class="menu-line"></div>
+        <div class="menu-line"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- الشريط -->
+  <div class="dock" id="dock">
+    <div class="dock-item">🏠</div>
+    <div class="dock-item">👤</div>
+    <div class="dock-item">📄</div>
+    <div class="dock-item">💰</div>
+    <div class="dock-item">📊</div>
+  </div>
+
+  <!-- رسالة نجاح -->
+  <div class="success-msg" id="successMsg">
+    ✅ ممتاز!
+  </div>
+
+  <!-- إحصائيات -->
+  <div class="stats">
+    <div class="stat-row">
+      <span class="stat-label">عدد اللمسات:</span>
+      <span class="stat-value" id="touchCount">0</span>
+    </div>
+    <div class="stat-row">
+      <span class="stat-label">الاهتزاز:</span>
+      <span class="stat-value" id="vibrateStatus">معطّل</span>
+    </div>
+    <div class="stat-row">
+      <span class="stat-label">حالة الشريط:</span>
+      <span class="stat-value" id="dockStatus">مخفي</span>
+    </div>
+    <div class="stat-row">
+      <span class="stat-label">منطقة اللمس:</span>
+      <span class="stat-value">88×88 بكسل</span>
+    </div>
+  </div>
+
+  <script>
+    const touchIcon = document.getElementById('touchIcon');
+    const iconCircle = document.getElementById('iconCircle');
+    const dock = document.getElementById('dock');
+    const successMsg = document.getElementById('successMsg');
+    const touchCount = document.getElementById('touchCount');
+    const vibrateStatus = document.getElementById('vibrateStatus');
+    const dockStatus = document.getElementById('dockStatus');
+
+    let touches = 0;
+    let isOpen = false;
+
+    // التحقق من دعم الاهتزاز
+    if (navigator.vibrate) {
+      vibrateStatus.textContent = 'مدعوم ✅';
+      vibrateStatus.style.color = '#10B981';
+    } else {
+      vibrateStatus.textContent = 'غير مدعوم ❌';
+      vibrateStatus.style.color = '#ef4444';
+    }
+
+    // Touch handler
+    const handleTouch = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      touches++;
+      touchCount.textContent = touches;
+
+      // تأثير بصري
+      iconCircle.classList.add('pressed');
+      setTimeout(() => {
+        iconCircle.classList.remove('pressed');
+      }, 200);
+
+      // اهتزاز
+      if (navigator.vibrate) {
+        navigator.vibrate(10);
+      }
+
+      if (!isOpen) {
+        // إظهار الشريط
+        dock.classList.add('visible');
+        touchIcon.style.left = '96px';
+        dockStatus.textContent = 'ظاهر ✅';
+        dockStatus.style.color = '#10B981';
+
+        // رسالة نجاح
+        successMsg.classList.add('show');
+        setTimeout(() => {
+          successMsg.classList.remove('show');
+        }, 1500);
+
+        isOpen = true;
+
+        // إخفاء بعد 3 ثواني
+        setTimeout(() => {
+          dock.classList.remove('visible');
+          touchIcon.style.left = '28px';
+          dockStatus.textContent = 'مخفي';
+          dockStatus.style.color = '#94a3b8';
+          isOpen = false;
+        }, 3000);
+      }
+    };
+
+    // Touch events
+    touchIcon.addEventListener('touchstart', handleTouch);
+    
+    // Fallback للمتصفحات العادية
+    touchIcon.addEventListener('click', handleTouch);
+
+    console.log('%c📱 الأيقونة محسّنة للمس!', 'color: #10B981; font-size: 24px; font-weight: bold');
+    console.log('Build: v20251102_1762124615077');
+    console.log('');
+    console.log('✅ onTouchStart: فوري');
+    console.log('✅ Visual Feedback: scale(0.9)');
+    console.log('✅ Haptic: vibrate(10ms)');
+    console.log('✅ Touch Area: 88×88 بدلاً من 56×56');
+  </script>
+</body>
+</html>
