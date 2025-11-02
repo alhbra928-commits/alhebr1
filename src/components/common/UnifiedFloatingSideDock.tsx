@@ -7,6 +7,7 @@ interface UnifiedFloatingSideDockProps {
   onNavigate?: (section: string) => void;
   currentSection?: string;
   phoneNumber?: string;
+  onSmartButtonClick?: () => void;
 }
 
 /**
@@ -18,7 +19,8 @@ export function UnifiedFloatingSideDock({
   onAdminLogin,
   onNavigate,
   currentSection = 'home',
-  phoneNumber = '966500000000'
+  phoneNumber = '966500000000',
+  onSmartButtonClick
 }: UnifiedFloatingSideDockProps) {
   const [mounted, setMounted] = useState(false);
   const [whatsappExpanded, setWhatsappExpanded] = useState(false);
@@ -222,10 +224,13 @@ export function UnifiedFloatingSideDock({
 
               {/* 💬 Smart WhatsApp Button - في الأعلى */}
               <div className="w-full flex flex-col items-center pb-3 border-b border-emerald-200/30">
-                <a
-                  href="https://wa.me/966500000000?text=مرحباً!%20أود%20الاستفسار%20عن%20المنصة"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    if (onSmartButtonClick) {
+                      onSmartButtonClick();
+                    }
+                  }}
                   className="group relative w-14 h-14 rounded-2xl transition-all duration-300 active:scale-90 hover:scale-110"
                   style={{
                     background: 'linear-gradient(135deg, rgba(139, 115, 85, 0.2) 0%, rgba(160, 145, 106, 0.15) 100%)',
@@ -275,7 +280,7 @@ export function UnifiedFloatingSideDock({
                     className="absolute inset-0 rounded-2xl border-2 border-amber-400/30 animate-pulse"
                     style={{ animationDuration: '2s' }}
                   />
-                </a>
+                </button>
               </div>
 
               {/* 🧭 Navigation Buttons */}

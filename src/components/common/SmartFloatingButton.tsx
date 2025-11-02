@@ -23,7 +23,15 @@ interface SmartSuggestion {
   action_data: any;
 }
 
-export const SmartFloatingButton: React.FC = () => {
+interface SmartFloatingButtonProps {
+  externalOpen?: boolean;
+  onExternalOpenChange?: (open: boolean) => void;
+}
+
+export const SmartFloatingButton: React.FC<SmartFloatingButtonProps> = ({
+  externalOpen,
+  onExternalOpenChange
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState('');
@@ -224,19 +232,36 @@ export const SmartFloatingButton: React.FC = () => {
     };
   };
 
+  // Sync with external control
+  useEffect(() => {
+    if (externalOpen !== undefined) {
+      setIsOpen(externalOpen);
+      if (externalOpen) {
+        setHasNewMessage(false);
+        setNotification(null);
+      }
+    }
+  }, [externalOpen]);
+
   const handleOpen = async () => {
-    setIsOpen(true);
+    const newState = !isOpen;
+    setIsOpen(newState);
+    if (onExternalOpenChange) {
+      onExternalOpenChange(newState);
+    }
     setHasNewMessage(false);
     setNotification(null);
 
     // Track button click
-    try {
-      await supabase.rpc('track_smart_button_click', {
-        p_session_token: sessionToken,
-        p_user_type: userType
-      });
-    } catch (err) {
-      console.error('Failed to track click:', err);
+    if (newState) {
+      try {
+        await supabase.rpc('track_smart_button_click', {
+          p_session_token: sessionToken,
+          p_user_type: userType
+        });
+      } catch (err) {
+        console.error('Failed to track click:', err);
+      }
     }
   };
 
@@ -502,7 +527,12 @@ export const SmartFloatingButton: React.FC = () => {
                 )}
               </button>
               <button
-                onClick={() => setIsOpen(false)}
+                onClick={() => {
+                  setIsOpen(false);
+                  if (onExternalOpenChange) {
+                    onExternalOpenChange(false);
+                  }
+                }}
                 className="w-9 h-9 rounded-full bg-white/20 hover:bg-white/30 active:scale-95 flex items-center justify-center transition-all"
               >
                 <X className="w-4 h-4 text-white" />
