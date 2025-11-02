@@ -223,7 +223,16 @@ export function MainPlatformInterface({
 
   // الصفحة الرئيسية
   return (
-    <div className="min-h-screen relative" dir="rtl" style={{ background: brandGradients.beige }}>
+    <div
+      className="min-h-screen relative"
+      dir="rtl"
+      style={{
+        background: brandGradients.beige,
+        paddingBottom: 'calc(80px + env(safe-area-inset-bottom))',
+        minHeight: '100vh',
+        minHeight: '-webkit-fill-available'
+      }}
+    >
       {isTransitioning && (
         <div className="fixed inset-0 z-50 flex items-center justify-center" style={{ background: 'rgba(0, 0, 0, 0.4)', backdropFilter: 'blur(4px)' }}>
           <div className="text-center">
@@ -244,7 +253,7 @@ export function MainPlatformInterface({
       </div>
 
       {/* قسم المزارع المتاحة */}
-      <div className="max-w-[1400px] mx-auto px-3 sm:px-6 pt-2 sm:pt-4 pb-32">
+      <div className="max-w-[1400px] mx-auto px-3 sm:px-6 pt-2 sm:pt-4" style={{ paddingBottom: 'calc(80px + env(safe-area-inset-bottom))' }}>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
           {farms.length === 0 ? (
             <div className="col-span-full text-center py-12">
