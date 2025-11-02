@@ -16,7 +16,7 @@ import { InnovativeFarmCard } from './InnovativeFarmCard';
 import { Modern3DTicker } from '../../../components/common/Modern3DTicker';
 import { modern3DTickerService, TickerMessage, TickerSettings } from '../../../services/modern3DTickerService';
 import { getPlatformTextsBySection } from '../../../services/platformTextsService';
-// Footer removed for redesign
+import { SmartFloatingFooter } from '../../../components/common/SmartFloatingFooter';
 
 type ViewMode = 'home' | 'farmDetail' | 'booking' | 'investor' | 'verification' | 'concept';
 
@@ -127,6 +127,14 @@ export function ModernRoyalPlatform({
     return (
       <>
         <ConceptIntroductionPage onClose={handleGoHome} onStartJourney={handleGoHome} />
+        <SmartFloatingFooter
+          activeTab="concept"
+          onTabChange={(tabId) => {
+            if (tabId === 'home') handleGoHome();
+            else if (tabId === 'login') setCurrentView('investor');
+            else if (tabId === 'farms') setCurrentView('home');
+          }}
+        />
       </>
     );
   }
@@ -135,6 +143,14 @@ export function ModernRoyalPlatform({
     return (
       <>
         <CertificateVerificationPage onBack={handleGoHome} />
+        <SmartFloatingFooter
+          activeTab="home"
+          onTabChange={(tabId) => {
+            if (tabId === 'home') handleGoHome();
+            else if (tabId === 'login') setCurrentView('investor');
+            else if (tabId === 'farms') setCurrentView('home');
+          }}
+        />
       </>
     );
   }
@@ -151,6 +167,14 @@ export function ModernRoyalPlatform({
           onBack={handleGoHome}
           onStartBooking={() => setCurrentView('booking')}
         />
+        <SmartFloatingFooter
+          activeTab="farms"
+          onTabChange={(tabId) => {
+            if (tabId === 'home') handleGoHome();
+            else if (tabId === 'login') setCurrentView('investor');
+            else if (tabId === 'farms') handleGoHome();
+          }}
+        />
       </>
     );
   }
@@ -166,6 +190,14 @@ export function ModernRoyalPlatform({
           onSuccess={handleGoHome}
           onGoHome={handleGoHome}
           onGoToInvestor={() => setCurrentView('investor')}
+        />
+        <SmartFloatingFooter
+          activeTab="farms"
+          onTabChange={(tabId) => {
+            if (tabId === 'home') handleGoHome();
+            else if (tabId === 'login') setCurrentView('investor');
+            else if (tabId === 'farms') handleGoHome();
+          }}
         />
       </>
     );
@@ -280,9 +312,21 @@ export function ModernRoyalPlatform({
           </div>
         </main>
 
-        {/* Glass Green Footer */}
       </div>
 
+      {/* Smart Floating Footer */}
+      <SmartFloatingFooter
+        activeTab="home"
+        onTabChange={(tabId) => {
+          if (tabId === 'home') {
+            handleGoHome();
+          } else if (tabId === 'login') {
+            setCurrentView('investor');
+          } else if (tabId === 'farms') {
+            // Already on home with farms visible
+          }
+        }}
+      />
     </div>
   );
 }
