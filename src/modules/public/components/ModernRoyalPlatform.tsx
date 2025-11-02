@@ -8,16 +8,13 @@ import { FarmDetailPage } from './FarmDetailPage';
 import { TemporaryBookingPage } from './TemporaryBookingPage';
 import { InvestorRouter } from '../../investor/components/InvestorRouter';
 import { CertificateVerificationPage } from './CertificateVerificationPage';
-import { BackToAdminButton } from './BackToAdminButton';
-import { AdminCrownButton } from './AdminCrownButton';
 import { ConceptIntroductionPage } from './ConceptIntroductionPage';
 import { GreenConceptButton } from './GreenConceptButton';
+import { UnifiedFloatingSideDock } from '../../../components/common/UnifiedFloatingSideDock';
 import { InnovativeFarmCard } from './InnovativeFarmCard';
 import { Modern3DTicker } from '../../../components/common/Modern3DTicker';
 import { modern3DTickerService, TickerMessage, TickerSettings } from '../../../services/modern3DTickerService';
 import { getPlatformTextsBySection } from '../../../services/platformTextsService';
-import { AdaptiveSmartButton } from '../../../components/common/AdaptiveSmartButton';
-import { AdaptiveAdminButton } from '../../../components/common/AdaptiveAdminButton';
 
 type ViewMode = 'home' | 'farmDetail' | 'booking' | 'investor' | 'verification' | 'concept';
 
@@ -222,12 +219,17 @@ export function ModernRoyalPlatform({
           enabled={tickerSettings.enabled}
         />
 
-        {/* Fixed Buttons */}
-        <AdminCrownButton
+        {/* Unified Floating Side Dock */}
+        <UnifiedFloatingSideDock
           onAdminLogin={onAdminLogin}
-          onFarmOwnerLogin={onFarmOwnerLogin}
+          onNavigate={(section) => {
+            if (section === 'home') setCurrentView('home');
+            else if (section === 'farms') setCurrentView('home');
+            else if (section === 'account') setCurrentView('investor');
+          }}
+          currentSection={currentView === 'home' ? 'home' : currentView === 'investor' ? 'account' : 'farms'}
+          phoneNumber="966500000000"
         />
-
 
         {/* Concept Button */}
         <GreenConceptButton onClick={() => setCurrentView('concept')} />
@@ -277,23 +279,6 @@ export function ModernRoyalPlatform({
 
       </div>
 
-      {/* AI Adaptive Interface Layer - Smart Buttons */}
-      <AdaptiveSmartButton
-        phoneNumber="966500000000"
-        defaultMessage="مرحباً! أود الاستفسار عن منصة مزاد1"
-      />
-
-      <AdaptiveAdminButton
-        mode="login"
-        onAdminLogin={onAdminLogin}
-      />
-
-      {onBackToAdmin && (
-        <AdaptiveAdminButton
-          mode="back"
-          onBackToAdmin={onBackToAdmin}
-        />
-      )}
     </div>
   );
 }

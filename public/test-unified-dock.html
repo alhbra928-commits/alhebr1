@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>🎯 اختبار الشريط الجانبي الموحد</title>
+  <style>
+    :root {
+      --sat: env(safe-area-inset-top);
+      --sab: env(safe-area-inset-bottom);
+      --sal: env(safe-area-inset-left);
+      --sar: env(safe-area-inset-right);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
+      background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 50%, #a7f3d0 100%);
+      min-height: 100vh;
+      padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+      overflow-x: hidden;
+    }
+
+    .header {
+      background: white;
+      border-radius: 24px;
+      padding: 30px;
+      margin: 20px;
+      margin-left: 120px; /* Space for dock */
+      box-shadow: 0 8px 24px rgba(16, 185, 129, 0.15);
+      text-align: center;
+    }
+
+    h1 {
+      color: #059669;
+      font-size: 32px;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+
+    .badge {
+      display: inline-block;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: white;
+      padding: 10px 24px;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 16px;
+      margin-top: 12px;
+    }
+
+    .section {
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      margin: 20px;
+      margin-left: 120px; /* Space for dock */
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.1);
+    }
+
+    .section h2 {
+      color: #059669;
+      font-size: 24px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .feature {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 20px;
+      background: #f0fdf4;
+      border-radius: 16px;
+      margin-bottom: 16px;
+      border: 2px solid #d1fae5;
+      transition: all 0.3s ease;
+    }
+
+    .feature:hover {
+      transform: translateX(-4px);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
+    }
+
+    .feature-icon {
+      flex-shrink: 0;
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-center;
+      color: white;
+      font-weight: 700;
+      font-size: 24px;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+
+    .feature-content h3 {
+      color: #059669;
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .feature-content p {
+      color: #10b981;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .instruction-box {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(5, 150, 105, 0.05) 100%);
+      border: 2px solid rgba(16, 185, 129, 0.2);
+      border-radius: 20px;
+      padding: 30px;
+      margin: 30px 20px;
+      margin-left: 120px;
+    }
+
+    .instruction-box h3 {
+      color: #059669;
+      font-size: 22px;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+
+    .instruction-list {
+      list-style: none;
+      counter-reset: step;
+    }
+
+    .instruction-list li {
+      counter-increment: step;
+      position: relative;
+      padding-right: 50px;
+      margin-bottom: 20px;
+      color: #10b981;
+      line-height: 1.8;
+      font-size: 16px;
+    }
+
+    .instruction-list li::before {
+      content: counter(step);
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 16px;
+      box-shadow: 0 4px 8px rgba(16, 185, 129, 0.3);
+    }
+
+    .demo-area {
+      min-height: 600px;
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      margin: 20px;
+      margin-left: 120px;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.1);
+    }
+
+    .demo-content {
+      max-width: 800px;
+    }
+
+    .demo-content h2 {
+      color: #059669;
+      font-size: 28px;
+      margin-bottom: 20px;
+    }
+
+    .demo-content p {
+      color: #10b981;
+      font-size: 16px;
+      line-height: 1.8;
+      margin-bottom: 20px;
+    }
+
+    .highlight-box {
+      background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+      border-right: 4px solid #10b981;
+      padding: 24px;
+      border-radius: 12px;
+      margin: 30px 0;
+    }
+
+    .highlight-box strong {
+      color: #059669;
+      font-size: 18px;
+      display: block;
+      margin-bottom: 12px;
+    }
+
+    .device-info {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.05) 100%);
+      border-radius: 16px;
+      padding: 24px;
+      margin: 30px 0;
+    }
+
+    .device-info h4 {
+      color: #059669;
+      font-size: 18px;
+      margin-bottom: 16px;
+      font-weight: 600;
+    }
+
+    .device-info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .device-info-item {
+      background: white;
+      padding: 16px;
+      border-radius: 12px;
+      border: 1px solid #d1fae5;
+    }
+
+    .device-info-item strong {
+      color: #059669;
+      font-size: 13px;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .device-info-item span {
+      color: #10b981;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .spacer {
+      height: 400px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #10b981;
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 16px;
+      border: 2px solid #d1fae5;
+      border-radius: 12px;
+      font-size: 16px;
+      margin-bottom: 16px;
+      font-family: inherit;
+      transition: all 0.3s ease;
+    }
+
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: #10b981;
+      box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+    }
+
+    @media (max-width: 768px) {
+      .header, .section, .instruction-box, .demo-area {
+        margin-left: 100px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      .section h2 {
+        font-size: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>🎯 الشريط الجانبي الموحد</h1>
+    <div class="badge">Unified Floating Side Dock</div>
+  </div>
+
+  <div class="device-info" style="margin: 20px; margin-left: 120px;">
+    <h4>📊 معلومات الجهاز الحالي:</h4>
+    <div class="device-info-grid">
+      <div class="device-info-item">
+        <strong>نوع الجهاز:</strong>
+        <span id="device-type">جاري الكشف...</span>
+      </div>
+      <div class="device-info-item">
+        <strong>الدقة:</strong>
+        <span id="viewport-size">-</span>
+      </div>
+      <div class="device-info-item">
+        <strong>الاتجاه:</strong>
+        <span id="orientation">-</span>
+      </div>
+      <div class="device-info-item">
+        <strong>Safe Area Bottom:</strong>
+        <span id="safe-area">-</span>
+      </div>
+      <div class="device-info-item">
+        <strong>Has Notch:</strong>
+        <span id="has-notch">-</span>
+      </div>
+      <div class="device-info-item">
+        <strong>User Agent:</strong>
+        <span id="user-agent" style="font-size: 11px; word-break: break-all;">-</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>✨ المكونات الثلاثة</h2>
+
+    <div class="feature">
+      <div class="feature-icon">👑</div>
+      <div class="feature-content">
+        <h3>القسم العلوي - زر التاج الإداري</h3>
+        <p>زر ذهبي لامع للدخول إلى لوحة الإدارة مع تأثيرات sparkle و pulse</p>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon">🧭</div>
+      <div class="feature-content">
+        <h3>القسم الأوسط - أزرار التنقل</h3>
+        <p>ثلاثة أزرار للتنقل بين الأقسام (الرئيسية، المزارع، حسابي) مع حالة نشطة</p>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon">💬</div>
+      <div class="feature-content">
+        <h3>القسم السفلي - الزر الذكي</h3>
+        <p>زر واتساب ذكي مع لوحة موسعة ورسائل سريعة</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="instruction-box">
+    <h3>📋 خطوات الاختبار الشامل:</h3>
+    <ul class="instruction-list">
+      <li>لاحظ الشريط الجانبي الثابت على اليسار (3 أقسام)</li>
+      <li>اضغط على زر التاج الذهبي (أعلى) - تأثير sparkle</li>
+      <li>اضغط على أزرار التنقل (وسط) - تغيير الحالة النشطة</li>
+      <li>اضغط على الزر الأخضر (أسفل) - فتح لوحة واتساب</li>
+      <li>جرب الرسائل السريعة والإرسال</li>
+      <li>مرّر الصفحة للأسفل - الشريط يبقى ثابتاً</li>
+      <li>افتح حقل الإدخال - الشريط لا يتأثر بالكيبورد</li>
+      <li>دوّر الجهاز - الشريط يتكيف تلقائياً</li>
+      <li>اختبر على iPhone - Safe area محسوبة صحيح</li>
+      <li>اختبر على Android - يعمل بسلاسة</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>🎨 المميزات التقنية</h2>
+
+    <div class="feature">
+      <div class="feature-icon">💎</div>
+      <div class="feature-content">
+        <h3>تصميم زجاجي متدرج</h3>
+        <p>backdrop-filter مع تدرجات أخضر فاتح وغامق شفاف</p>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon">✨</div>
+      <div class="feature-content">
+        <h3>تأثيرات 3D تفاعلية</h3>
+        <p>box-shadow متعدد الطبقات، glass shine، و glow effects</p>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon">📱</div>
+      <div class="feature-content">
+        <h3>دعم Safe Area</h3>
+        <p>حساب تلقائي لـ safe-area-inset-bottom لأجهزة iPhone</p>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon">🎯</div>
+      <div class="feature-content">
+        <h3>تموضع مركزي عمودي</h3>
+        <p>يستخدم transform: translateY(-50%) للتوسيط المثالي</p>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon">⚡</div>
+      <div class="feature-content">
+        <h3>transitions سلسة</h3>
+        <p>انتقالات 300ms مع active:scale-90 للتفاعل</p>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon">🎭</div>
+      <div class="feature-content">
+        <h3>pulse و sparkle animations</h3>
+        <p>حلقات متحركة وتأثيرات تألق عند hover</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="demo-area">
+    <div class="demo-content">
+      <h2>🧪 منطقة الاختبار</h2>
+
+      <div class="highlight-box">
+        <strong>✅ النظام الموحد:</strong>
+        جميع الأزرار والتنقل في شريط جانبي واحد ثابت، مع تصميم زجاجي فاخر وتأثيرات تفاعلية ثلاثية الأبعاد.
+      </div>
+
+      <p>
+        هذا الشريط الجانبي يجمع كل التفاعلات الأساسية في مكان واحد:
+        الدخول الإداري، التنقل بين الأقسام، والتواصل عبر واتساب.
+      </p>
+
+      <h3 style="color: #059669; margin: 30px 0 16px;">اختبر تفاعل الكيبورد:</h3>
+      <input type="text" placeholder="اكتب هنا وراقب ثبات الشريط...">
+      <textarea rows="4" placeholder="نص طويل... الشريط يجب أن يبقى ثابتاً"></textarea>
+
+      <div class="spacer" style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border-radius: 16px;">
+        مساحة للتمرير - الشريط يبقى ثابتاً! ✅
+      </div>
+
+      <div class="spacer" style="background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); border-radius: 16px;">
+        استمر في التمرير... 📜
+      </div>
+
+      <div class="highlight-box">
+        <strong>🎉 وصلت للنهاية!</strong>
+        الشريط الجانبي يجب أن يكون ظاهراً دائماً على اليسار بغض النظر عن مكان التمرير.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    console.log('🎯 Unified Floating Side Dock Test Page Loaded');
+    console.log('Build Version: v20251102_1762106746748');
+
+    // Device detection
+    function detectDevice() {
+      const ua = navigator.userAgent;
+      const isIOS = /iPhone|iPad|iPod/.test(ua);
+      const isAndroid = /Android/.test(ua);
+
+      let deviceType = 'Desktop';
+      if (isIOS) deviceType = 'iPhone/iPad';
+      else if (isAndroid) deviceType = 'Android';
+
+      document.getElementById('device-type').textContent = deviceType;
+      document.getElementById('user-agent').textContent = ua.substring(0, 50) + '...';
+    }
+
+    function updateViewportInfo() {
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      const orientation = width > height ? 'Landscape' : 'Portrait';
+
+      document.getElementById('viewport-size').textContent = `${width} x ${height}`;
+      document.getElementById('orientation').textContent = orientation;
+
+      // Safe area
+      const style = getComputedStyle(document.documentElement);
+      const safeBottom = style.getPropertyValue('--sab') || 'Not detected';
+      document.getElementById('safe-area').textContent = safeBottom;
+
+      // Notch detection
+      const hasNotch = height >= 812 && /iPhone/.test(navigator.userAgent);
+      document.getElementById('has-notch').textContent = hasNotch ? 'نعم ✅' : 'لا';
+    }
+
+    // Initialize
+    detectDevice();
+    updateViewportInfo();
+
+    // Update on events
+    window.addEventListener('resize', updateViewportInfo);
+    window.addEventListener('orientationchange', () => {
+      setTimeout(updateViewportInfo, 100);
+    });
+
+    // Scroll monitoring
+    let lastScroll = 0;
+    window.addEventListener('scroll', () => {
+      const currentScroll = window.scrollY;
+      if (currentScroll - lastScroll > 50) {
+        console.log(`📜 Scrolled: ${currentScroll}px`);
+        lastScroll = currentScroll;
+      }
+    }, { passive: true });
+
+    // Keyboard monitoring
+    document.addEventListener('focusin', (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+        console.log('⌨️ Keyboard opened - Dock should remain stable');
+      }
+    });
+
+    document.addEventListener('focusout', (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+        console.log('⌨️ Keyboard closed');
+      }
+    });
+  </script>
+</body>
+</html>
