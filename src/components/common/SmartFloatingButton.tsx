@@ -682,19 +682,13 @@ export const SmartFloatingButton: React.FC<SmartFloatingButtonProps> = ({
 
           <div
             ref={chatContainerRef}
-            className={`fixed z-50 bg-gray-900 shadow-2xl flex flex-col overflow-hidden ${
+            className={`fixed z-[9999] bg-gray-900 shadow-2xl flex flex-col ${
               isMobile
-                ? 'smart-button-mobile inset-0'
-                : 'inset-auto bottom-24 right-6 w-[420px] max-h-[650px] rounded-2xl'
+                ? 'top-0 left-0 right-0 bottom-0 h-screen w-screen'
+                : 'bottom-24 right-6 w-[420px] max-h-[650px] rounded-2xl'
             }`}
             style={{
-              ...(isMobile ? {
-                height: '100dvh',
-                maxHeight: '100dvh',
-                borderRadius: 0
-              } : {
-                height: 'auto'
-              })
+              overflow: 'hidden'
             }}
             dir="rtl"
           >
