@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { ModernRoyalPlatform } from './ModernRoyalPlatform';
 import { PreviewInspectionPage } from './PreviewInspectionPage';
-import { RevolutionaryGreenGateway } from './RevolutionaryGreenGateway';
 import { marketingAnalyticsService } from '../../../services/marketingAnalyticsService';
-import { supabase } from '../../../lib/supabase';
 
-type View = 'gateway' | 'main' | 'preview';
+type View = 'main' | 'preview';
 
 interface PublicPlatformRouterProps {
   onAdminLogin?: () => void;
@@ -14,77 +12,9 @@ interface PublicPlatformRouterProps {
 }
 
 export function PublicPlatformRouter({ onAdminLogin, onBackToAdmin, onFarmOwnerLogin }: PublicPlatformRouterProps) {
-  const [currentView, setCurrentView] = useState<View>('gateway'); // سيتم تحديثها بعد تحميل الإعدادات
+  // مباشرة للمنصة - بدون بوابات
+  const [currentView, setCurrentView] = useState<View>('main');
   const [selectedBarcode, setSelectedBarcode] = useState<string>('');
-  const [gatewayDuration, setGatewayDuration] = useState<number>(3600); // القيمة الافتراضية: ساعة واحدة
-
-  // تحميل إعدادات البوابة والتحقق من المدة
-  useEffect(() => {
-    const loadGatewaySettings = async () => {
-      try {
-        const { data, error } = await supabase
-          .from('royal_gateway_settings')
-          .select('gateway_reappear_duration, enable_repeated_gateway')
-          .limit(1)
-          .maybeSingle();
-
-        if (!error && data) {
-          const duration = data.gateway_reappear_duration ?? 3600; // القيمة الافتراضية: ساعة واحدة
-          const enableRepeated = data.enable_repeated_gateway ?? false;
-          setGatewayDuration(duration);
-
-          // التحقق من آخر مرة تم عرض البوابة فيها
-          const lastGatewayView = localStorage.getItem('last_gateway_view');
-
-          // إذا كان الظهور المتكرر مفعّل أو المدة 0، ظهور متكرر دائماً
-          if (enableRepeated || duration === 0) {
-            console.log('🔄 Repeated Gateway Mode: Always show gateway (enabled:', enableRepeated, 'duration:', duration, ')');
-            setCurrentView('gateway');
-            return;
-          }
-
-          if (!lastGatewayView) {
-            // أول زيارة - عرض البوابة
-            console.log('🎯 First visit: Show gateway');
-            setCurrentView('gateway');
-            return;
-          }
-
-          const lastViewTime = parseInt(lastGatewayView, 10);
-          const currentTime = Date.now();
-          const timeDiff = currentTime - lastViewTime;
-          const requiredDuration = duration * 1000; // تحويل من ثواني إلى ميلي ثانية
-
-          console.log('⏰ Gateway timing check:', {
-            duration: `${duration} seconds`,
-            timeDiff: `${Math.floor(timeDiff / 1000)} seconds`,
-            required: `${duration} seconds`,
-            shouldShow: timeDiff >= requiredDuration
-          });
-
-          // إذا مر الوقت المطلوب، عرض البوابة
-          if (timeDiff >= requiredDuration) {
-            console.log('✅ Time passed: Show gateway');
-            setCurrentView('gateway');
-          } else {
-            // لم يمر الوقت بعد - الذهاب للمنصة مباشرة
-            const remaining = Math.ceil((requiredDuration - timeDiff) / 1000);
-            console.log(`⏳ Time remaining: ${remaining} seconds - Skip gateway`);
-            setCurrentView('main');
-          }
-        } else {
-          // في حالة خطأ، استخدام القيمة الافتراضية
-          console.log('⚠️ Error loading settings: Show gateway by default');
-          setCurrentView('gateway');
-        }
-      } catch (error) {
-        console.error('❌ Error loading gateway settings:', error);
-        setCurrentView('gateway');
-      }
-    };
-
-    loadGatewaySettings();
-  }, []);
 
   // تهيئة السكربتات التحليلية عند التحميل الأول
   useEffect(() => {
@@ -100,17 +30,6 @@ export function PublicPlatformRouter({ onAdminLogin, onBackToAdmin, onFarmOwnerL
     marketingAnalyticsService.trackCurrentPage();
   }, [currentView]);
 
-  const handleEnterPlatform = () => {
-    // حفظ وقت عرض البوابة (إلا في حالة الظهور المتكرر - القيمة 0)
-    if (gatewayDuration !== 0) {
-      const timestamp = Date.now().toString();
-      localStorage.setItem('last_gateway_view', timestamp);
-      console.log('💾 Gateway view timestamp saved:', timestamp);
-    } else {
-      console.log('🔄 Repeated gateway mode: Not saving timestamp');
-    }
-    setCurrentView('main');
-  };
 
   const handlePreviewSelect = (barcode: string) => {
     setSelectedBarcode(barcode);
@@ -127,15 +46,6 @@ export function PublicPlatformRouter({ onAdminLogin, onBackToAdmin, onFarmOwnerL
   };
 
   switch (currentView) {
-    case 'gateway':
-      return (
-        <RevolutionaryGreenGateway
-          onEnter={handleEnterPlatform}
-          onAdminLogin={onAdminLogin}
-          onFarmOwnerLogin={onFarmOwnerLogin}
-        />
-      );
-
     case 'preview':
       return (
         <PreviewInspectionPage
