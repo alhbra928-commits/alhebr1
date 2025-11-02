@@ -138,9 +138,12 @@ export function MazadGateway({ onEnter }: MazadGatewayProps) {
   return (
     <div
       className={`fixed inset-0 z-[9999] bg-gradient-to-br from-emerald-50 via-white to-green-50
-                  flex flex-col items-center justify-center transition-opacity
+                  flex items-center justify-center transition-opacity overflow-hidden
                   ${isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
-      style={{ transitionDuration: `${settings.fade_duration}ms` }}
+      style={{
+        transitionDuration: `${settings.fade_duration}ms`,
+        minHeight: '-webkit-fill-available' // iOS Safari fix
+      }}
     >
       {/* Background Pattern */}
       {settings.background_pattern_enabled && (
@@ -154,36 +157,40 @@ export function MazadGateway({ onEnter }: MazadGatewayProps) {
         </div>
       )}
 
-      {/* Main Content */}
-      <div className="relative z-10 flex flex-col items-center max-w-md mx-auto px-6">
-        {/* Crown Logo */}
+      {/* Main Content - متجاوب مع الشاشات الصغيرة */}
+      <div className="relative z-10 flex flex-col items-center justify-center w-full max-w-md mx-auto px-6 py-8 sm:py-12">
+        {/* Crown Logo - أصغر على الموبايل */}
         {settings.show_logo && (
-          <div className="relative mb-8" style={{ animation: `float ${getAnimationDuration()} ease-in-out infinite` }}>
+          <div
+            className="relative mb-4 sm:mb-6 md:mb-8"
+            style={{ animation: `float ${getAnimationDuration()} ease-in-out infinite` }}
+          >
             {/* Glow Effect */}
             <div className="absolute inset-0 blur-3xl bg-emerald-500/30 rounded-full scale-150" />
 
-            {/* Crown Container */}
+            {/* Crown Container - حجم متجاوب */}
             <div className="relative">
-              <div className="w-32 h-32 rounded-full bg-gradient-to-br from-emerald-400 via-green-500 to-emerald-600
+              <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-32 md:h-32 rounded-full
+                            bg-gradient-to-br from-emerald-400 via-green-500 to-emerald-600
                             flex items-center justify-center shadow-2xl border-4 border-white/20
                             transform hover:scale-110 transition-transform duration-300">
-                <Crown className="w-16 h-16 text-white" strokeWidth={2.5} />
+                <Crown className="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 text-white" strokeWidth={2.5} />
               </div>
 
-              {/* Sparkles */}
+              {/* Sparkles - أصغر على الموبايل */}
               {settings.show_sparkles && (
                 <>
-                  <div className="absolute -top-2 -right-2 w-6 h-6 bg-yellow-400 rounded-full animate-ping opacity-75" />
-                  <div className="absolute -bottom-1 -left-1 w-4 h-4 bg-emerald-300 rounded-full animate-pulse" />
+                  <div className="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 w-4 h-4 sm:w-6 sm:h-6 bg-yellow-400 rounded-full animate-ping opacity-75" />
+                  <div className="absolute -bottom-1 -left-1 w-3 h-3 sm:w-4 sm:h-4 bg-emerald-300 rounded-full animate-pulse" />
                 </>
               )}
             </div>
           </div>
         )}
 
-        {/* Title */}
+        {/* Title - خط متجاوب */}
         {settings.show_title && (settings.title_line1 || settings.title_line2) && (
-          <h1 className={`text-5xl md:text-6xl font-black text-center mb-4 leading-tight
+          <h1 className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-center mb-2 sm:mb-3 md:mb-4 leading-tight
                          ${settings.title_animation_enabled ? 'animate-fade-in-up' : ''}`}>
             {settings.title_line1 && (
               <>
@@ -203,21 +210,22 @@ export function MazadGateway({ onEnter }: MazadGatewayProps) {
           </h1>
         )}
 
-        {/* Subtitle */}
+        {/* Subtitle - خط متجاوب */}
         {settings.show_subtitle && settings.subtitle && (
-          <p className={`text-emerald-700/80 text-lg md:text-xl text-center mb-12 font-medium
+          <p className={`text-emerald-700/80 text-base sm:text-lg md:text-xl text-center mb-6 sm:mb-8 md:mb-12 font-medium px-4
                         ${settings.title_animation_enabled ? 'animate-fade-in' : ''}`}>
             {settings.subtitle}
           </p>
         )}
 
-        {/* Enter Button */}
+        {/* Enter Button - حجم متجاوب */}
         <button
           onClick={handleEnter}
-          className="group relative px-12 py-4 bg-gradient-to-r from-emerald-600 to-green-600
-                   text-white rounded-2xl font-bold text-lg shadow-xl
+          className="group relative px-8 sm:px-10 md:px-12 py-3 sm:py-3.5 md:py-4
+                   bg-gradient-to-r from-emerald-600 to-green-600
+                   text-white rounded-2xl font-bold text-base sm:text-lg shadow-xl
                    hover:shadow-2xl hover:scale-105 transition-all duration-300
-                   active:scale-95"
+                   active:scale-95 w-full max-w-xs"
         >
           {/* Button Glow */}
           {settings.button_glow_enabled && (
@@ -238,9 +246,9 @@ export function MazadGateway({ onEnter }: MazadGatewayProps) {
           )}
         </button>
 
-        {/* Auto Enter Text */}
+        {/* Auto Enter Text - خط متجاوب */}
         {settings.auto_enter_enabled && (
-          <p className="text-emerald-600/60 text-sm mt-4 animate-pulse">
+          <p className="text-emerald-600/60 text-xs sm:text-sm mt-3 sm:mt-4 animate-pulse">
             الدخول التلقائي بعد {settings.auto_enter_delay} ثواني...
           </p>
         )}
