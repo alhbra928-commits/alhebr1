@@ -180,13 +180,37 @@ export function UnifiedFloatingSideDock({
 
       {/* Dock Wrapper - شبه مخفي يظهر عند التمرير */}
       <div className="unified-dock-wrapper">
-        {/* Edge Indicator - مؤشر على حافة الشاشة */}
+        {/* Pull Handle - مقبض للسحب */}
         <div
-          className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-20 bg-gradient-to-r from-emerald-500/40 to-transparent rounded-r-full animate-pulse pointer-events-none"
+          className="absolute -right-6 top-1/2 -translate-y-1/2 cursor-pointer z-[9999]"
           style={{
-            animation: 'pulse 3s ease-in-out infinite',
+            touchAction: 'manipulation',
+            WebkitTapHighlightColor: 'transparent',
           }}
-        />
+        >
+          <div
+            className="relative w-6 h-32 rounded-r-2xl flex items-center justify-center"
+            style={{
+              background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
+              boxShadow: '2px 0 12px rgba(16, 185, 129, 0.4), inset -1px 0 2px rgba(255, 255, 255, 0.3)',
+            }}
+          >
+            {/* Three Lines Icon */}
+            <div className="flex flex-col gap-1.5">
+              <div className="w-3 h-0.5 bg-white/80 rounded-full"></div>
+              <div className="w-3 h-0.5 bg-white/80 rounded-full"></div>
+              <div className="w-3 h-0.5 bg-white/80 rounded-full"></div>
+            </div>
+
+            {/* Pulsing Effect */}
+            <div
+              className="absolute inset-0 rounded-r-2xl animate-pulse"
+              style={{
+                background: 'radial-gradient(circle at center, rgba(16, 185, 129, 0.4) 0%, transparent 70%)',
+              }}
+            />
+          </div>
+        </div>
 
         <div
           className="unified-dock-content"
