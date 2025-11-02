@@ -11,7 +11,7 @@ import { CertificateVerificationPage } from './CertificateVerificationPage';
 import { ConceptIntroductionPage } from './ConceptIntroductionPage';
 import { GreenConceptButton } from './GreenConceptButton';
 import { AdminCrownButton } from './AdminCrownButton';
-import { UnifiedFloatingSideDock } from '../../../components/common/UnifiedFloatingSideDock';
+import { SmartFloatingButton } from '../../../components/common/SmartFloatingButton';
 import { InnovativeFarmCard } from './InnovativeFarmCard';
 import { Modern3DTicker } from '../../../components/common/Modern3DTicker';
 import { modern3DTickerService, TickerMessage, TickerSettings } from '../../../services/modern3DTickerService';
@@ -220,17 +220,8 @@ export function ModernRoyalPlatform({
           enabled={tickerSettings.enabled}
         />
 
-        {/* Unified Floating Side Dock - شبه مخفي */}
-        <UnifiedFloatingSideDock
-          onAdminLogin={onAdminLogin}
-          onNavigate={(section) => {
-            if (section === 'home') setCurrentView('home');
-            else if (section === 'farms') setCurrentView('home');
-            else if (section === 'account') setCurrentView('investor');
-          }}
-          currentSection={currentView === 'home' ? 'home' : currentView === 'investor' ? 'account' : 'farms'}
-          phoneNumber="966500000000"
-        />
+        {/* Smart Floating Button - الزر الذكي المربوط بالـ AI */}
+        <SmartFloatingButton />
 
         {/* Concept Button */}
         <GreenConceptButton onClick={() => setCurrentView('concept')} />
