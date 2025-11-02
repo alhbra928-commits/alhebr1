@@ -18,6 +18,7 @@ export const SmartFloatingFooter: React.FC<SmartFloatingFooterProps> = ({
 
   useEffect(() => {
     let ticking = false;
+    let scrollTimeout: NodeJS.Timeout;
 
     const handleScroll = () => {
       if (!ticking) {
@@ -26,14 +27,17 @@ export const SmartFloatingFooter: React.FC<SmartFloatingFooterProps> = ({
 
           // إظهار الفوتر عند:
           // 1. التمرير للأعلى
-          // 2. الوصول لأعلى الصفحة
-          // 3. التوقف عن التمرير
-          if (currentScrollY < lastScrollY || currentScrollY < 50) {
+          // 2. الوصول لأعلى الصفحة (أول 100px)
+          if (currentScrollY < lastScrollY || currentScrollY < 100) {
             setIsVisible(true);
           }
-          // إخفاء الفوتر عند التمرير للأسفل
-          else if (currentScrollY > lastScrollY && currentScrollY > 100) {
-            setIsVisible(false);
+          // إخفاء الفوتر عند التمرير للأسفل بقوة
+          else if (currentScrollY > lastScrollY && currentScrollY > 200) {
+            const scrollDelta = currentScrollY - lastScrollY;
+            // فقط أخفي إذا كان التمرير سريع (أكثر من 5px)
+            if (scrollDelta > 5) {
+              setIsVisible(false);
+            }
           }
 
           setLastScrollY(currentScrollY);
@@ -42,25 +46,27 @@ export const SmartFloatingFooter: React.FC<SmartFloatingFooterProps> = ({
 
         ticking = true;
       }
-    };
 
-    // إظهار الفوتر عند التوقف عن التمرير
-    let scrollTimeout: NodeJS.Timeout;
-    const handleScrollEnd = () => {
+      // إظهار الفوتر تلقائياً بعد التوقف
       clearTimeout(scrollTimeout);
       scrollTimeout = setTimeout(() => {
         setIsVisible(true);
-      }, 150);
+      }, 800);
+    };
+
+    const handleTouchEnd = () => {
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        setIsVisible(true);
+      }, 300);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    window.addEventListener('scroll', handleScrollEnd, { passive: true });
-    window.addEventListener('touchend', () => setIsVisible(true), { passive: true });
+    window.addEventListener('touchend', handleTouchEnd, { passive: true });
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('scroll', handleScrollEnd);
-      window.removeEventListener('touchend', () => setIsVisible(true));
+      window.removeEventListener('touchend', handleTouchEnd);
       clearTimeout(scrollTimeout);
     };
   }, [lastScrollY]);
