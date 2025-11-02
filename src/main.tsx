@@ -61,6 +61,12 @@ try {
 
   console.log('✅ Root element found, creating React root...');
 
+  // Force body styles for mobile footer fix
+  document.body.style.position = 'relative';
+  document.body.style.overflow = 'visible';
+  document.body.style.height = 'auto';
+  document.body.style.minHeight = '100vh';
+
   createRoot(rootElement).render(
     <StrictMode>
       <App />

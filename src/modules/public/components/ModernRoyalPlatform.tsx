@@ -195,12 +195,14 @@ export function ModernRoyalPlatform({
   // Modern Home View
   return (
     <div
-      className="min-h-screen overflow-hidden relative"
+      className="min-h-screen relative"
       style={{
         background: `
           radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, rgba(16, 185, 129, 0.08) 0%, transparent 50%),
           linear-gradient(135deg, #f0fdf4 0%, #dcfce7 50%, #bbf7d0 100%)
-        `
+        `,
+        overflowX: 'hidden',
+        overflowY: 'auto'
       }}
     >
       {/* Glass Overlay - Simple and Clean */}
