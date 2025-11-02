@@ -171,8 +171,8 @@ export function UnifiedFloatingSideDock({
         }
       `}</style>
 
-      {/* Dock Wrapper - Uses full viewport height */}
-      <div className="unified-dock-wrapper">
+      {/* Dock Wrapper - Desktop Only (hidden on mobile) */}
+      <div className="unified-dock-wrapper hidden lg:block">
         <div
           className="unified-dock-content"
           style={{
