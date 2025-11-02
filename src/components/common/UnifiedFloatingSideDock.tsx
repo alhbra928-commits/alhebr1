@@ -207,13 +207,15 @@ export function UnifiedFloatingSideDock({
             {/* Content */}
             <div className="relative flex flex-col items-center py-4 gap-3">
 
-              {/* 👑 Admin Crown Button */}
+              {/* 💬 Smart WhatsApp Button - في الأعلى */}
               <div className="w-full flex flex-col items-center pb-3 border-b border-emerald-200/30">
-                <button
-                  onClick={onAdminLogin}
-                  className="group relative w-14 h-14 rounded-2xl transition-all duration-300 active:scale-90"
+                <a
+                  href="https://wa.me/966500000000?text=مرحباً!%20أود%20الاستفسار%20عن%20المنصة"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group relative w-14 h-14 rounded-2xl transition-all duration-300 active:scale-90 hover:scale-110"
                   style={{
-                    background: 'linear-gradient(135deg, rgba(251, 191, 36, 0.2) 0%, rgba(245, 158, 11, 0.15) 100%)',
+                    background: 'linear-gradient(135deg, rgba(139, 115, 85, 0.2) 0%, rgba(160, 145, 106, 0.15) 100%)',
                     touchAction: 'manipulation',
                     WebkitTapHighlightColor: 'transparent',
                   }}
@@ -221,7 +223,7 @@ export function UnifiedFloatingSideDock({
                   <div
                     className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                     style={{
-                      background: 'radial-gradient(circle, rgba(251, 191, 36, 0.3) 0%, transparent 70%)',
+                      background: 'radial-gradient(circle, rgba(139, 115, 85, 0.3) 0%, transparent 70%)',
                       filter: 'blur(8px)',
                       transform: 'scale(1.2) translateZ(0)',
                     }}
@@ -230,18 +232,18 @@ export function UnifiedFloatingSideDock({
                   <div
                     className="relative w-full h-full rounded-2xl flex items-center justify-center overflow-hidden"
                     style={{
-                      background: 'linear-gradient(135deg, rgba(251, 191, 36, 0.95) 0%, rgba(245, 158, 11, 0.98) 100%)',
-                      boxShadow: '0 4px 12px rgba(251, 191, 36, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.3)',
+                      background: 'linear-gradient(135deg, #8B7355 0%, #A0916A 100%)',
+                      boxShadow: '0 4px 12px rgba(139, 115, 85, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.2)',
                     }}
                   >
                     <div
                       className="absolute top-0 left-0 right-0 h-6"
                       style={{
-                        background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.4) 0%, transparent 100%)'
+                        background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.25) 0%, transparent 100%)'
                       }}
                     />
 
-                    <Crown
+                    <MessageCircle
                       size={24}
                       className="text-white relative z-10"
                       strokeWidth={2.5}
@@ -251,16 +253,16 @@ export function UnifiedFloatingSideDock({
                     <div
                       className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
                       style={{
-                        background: 'radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.6) 0%, transparent 50%)',
+                        background: 'radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.4) 0%, transparent 50%)',
                       }}
                     />
                   </div>
 
                   <div
-                    className="absolute inset-0 rounded-2xl border-2 border-amber-300/40 animate-ping"
-                    style={{ animationDuration: '3s' }}
+                    className="absolute inset-0 rounded-2xl border-2 border-amber-400/30 animate-pulse"
+                    style={{ animationDuration: '2s' }}
                   />
-                </button>
+                </a>
               </div>
 
               {/* 🧭 Navigation Buttons */}

@@ -6,7 +6,7 @@ import { LoginNotification } from './modules/admin/components/LoginNotification'
 import { AdminSessionService } from './modules/admin/services/adminSessionService';
 import { PermissionsProvider } from './contexts/PermissionsContext';
 // import { UpdateNotificationBanner } from './components/common/UpdateNotificationBanner';
-import { SmartFloatingButton } from './components/common/SmartFloatingButton';
+import { Crown } from 'lucide-react';
 import { MobileHeader } from './components/layout/MobileHeader';
 import { MobileSidebar } from './components/layout/MobileSidebar';
 
@@ -357,8 +357,28 @@ function App() {
         </Suspense>
       </PermissionsProvider>
 
-      {/* Smart Floating WhatsApp Button - Shows on all pages */}
-      <SmartFloatingButton />
+      {/* Admin Crown Button - Fixed at bottom right */}
+      {!adminSession && (
+        <button
+          onClick={() => setShowAdminLogin(true)}
+          className="fixed bottom-20 right-4 sm:bottom-24 sm:right-6 w-14 h-14 sm:w-16 sm:h-16 rounded-full shadow-2xl flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 z-50"
+          style={{
+            background: 'linear-gradient(135deg, rgba(251, 191, 36, 0.95) 0%, rgba(245, 158, 11, 0.98) 100%)',
+            boxShadow: '0 8px 24px rgba(251, 191, 36, 0.4), inset 0 2px 2px rgba(255, 255, 255, 0.3)',
+          }}
+        >
+          <Crown
+            size={24}
+            className="text-white"
+            strokeWidth={2.5}
+            style={{ filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2))' }}
+          />
+          <div
+            className="absolute inset-0 rounded-full border-2 border-amber-300/40 animate-ping"
+            style={{ animationDuration: '3s' }}
+          />
+        </button>
+      )}
     </div>
   );
 }
