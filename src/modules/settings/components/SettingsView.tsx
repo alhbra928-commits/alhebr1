@@ -8,13 +8,14 @@ import { AdvancedCacheSystemDiagnostics } from './AdvancedCacheSystemDiagnostics
 import { CompletePlatformTextsManager } from './CompletePlatformTextsManager';
 import { AdvancedRoyalGatewaySettings } from './AdvancedRoyalGatewaySettings';
 import { Modern3DTickerManager } from './Modern3DTickerManager';
+import { MazadGatewaySettings } from './MazadGatewaySettings';
 
 interface SettingsViewProps {
   onBack?: () => void;
 }
 
 export function SettingsView({ onBack }: SettingsViewProps) {
-  const [activeTab, setActiveTab] = useState<'general' | 'backup' | 'ticker' | 'versions' | 'diagnostics' | 'texts' | 'gateway'>('general');
+  const [activeTab, setActiveTab] = useState<'general' | 'backup' | 'ticker' | 'versions' | 'diagnostics' | 'texts' | 'gateway' | 'mazad'>('general');
   const [settings, setSettings] = useState({
     mapApiKey: 'AIza*********************',
     videoService: 'youtube',
@@ -109,15 +110,15 @@ export function SettingsView({ onBack }: SettingsViewProps) {
             إدارة النصوص
           </button>
           <button
-            onClick={() => setActiveTab('gateway')}
+            onClick={() => setActiveTab('mazad')}
             className={`flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all ${
-              activeTab === 'gateway'
-                ? 'bg-gradient-to-r from-emerald-500 via-green-500 to-teal-500 text-white shadow-lg'
+              activeTab === 'mazad'
+                ? 'bg-gradient-to-r from-emerald-500 via-green-500 to-emerald-600 text-white shadow-lg'
                 : 'bg-white text-[#2C2C2C] hover:bg-[#F4EBDD]'
             }`}
           >
             <Crown className="h-5 w-5" />
-            البوابة الملكية الخضراء
+            بوابة مزاد
           </button>
         </div>
 
@@ -131,8 +132,8 @@ export function SettingsView({ onBack }: SettingsViewProps) {
           <AdvancedCacheSystemDiagnostics />
         ) : activeTab === 'texts' ? (
           <CompletePlatformTextsManager />
-        ) : activeTab === 'gateway' ? (
-          <AdvancedRoyalGatewaySettings />
+        ) : activeTab === 'mazad' ? (
+          <MazadGatewaySettings />
         ) : (
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

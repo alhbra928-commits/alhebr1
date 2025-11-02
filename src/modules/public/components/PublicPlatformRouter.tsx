@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { ModernRoyalPlatform } from './ModernRoyalPlatform';
 import { PreviewInspectionPage } from './PreviewInspectionPage';
+import { MazadGateway } from './MazadGateway';
 import { marketingAnalyticsService } from '../../../services/marketingAnalyticsService';
+import { supabase } from '../../../lib/supabase';
 
-type View = 'main' | 'preview';
+type View = 'gateway' | 'main' | 'preview';
 
 interface PublicPlatformRouterProps {
   onAdminLogin?: () => void;
@@ -12,9 +14,34 @@ interface PublicPlatformRouterProps {
 }
 
 export function PublicPlatformRouter({ onAdminLogin, onBackToAdmin, onFarmOwnerLogin }: PublicPlatformRouterProps) {
-  // مباشرة للمنصة - بدون بوابات
-  const [currentView, setCurrentView] = useState<View>('main');
+  const [currentView, setCurrentView] = useState<View>('gateway');
   const [selectedBarcode, setSelectedBarcode] = useState<string>('');
+  const [gatewayEnabled, setGatewayEnabled] = useState(true);
+
+  // تحميل إعدادات البوابة
+  useEffect(() => {
+    const loadGatewaySettings = async () => {
+      try {
+        const { data } = await supabase
+          .from('mazad_gateway_settings')
+          .select('enabled')
+          .limit(1)
+          .maybeSingle();
+
+        const enabled = data?.enabled ?? true;
+        setGatewayEnabled(enabled);
+
+        if (!enabled) {
+          setCurrentView('main');
+        }
+      } catch (error) {
+        console.error('Error loading gateway settings:', error);
+        setCurrentView('main');
+      }
+    };
+
+    loadGatewaySettings();
+  }, []);
 
   // تهيئة السكربتات التحليلية عند التحميل الأول
   useEffect(() => {
@@ -45,7 +72,16 @@ export function PublicPlatformRouter({ onAdminLogin, onBackToAdmin, onFarmOwnerL
     setSelectedBarcode('');
   };
 
+  const handleEnterPlatform = () => {
+    setCurrentView('main');
+  };
+
   switch (currentView) {
+    case 'gateway':
+      return gatewayEnabled ? (
+        <MazadGateway onEnter={handleEnterPlatform} />
+      ) : null;
+
     case 'preview':
       return (
         <PreviewInspectionPage
