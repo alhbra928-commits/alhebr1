@@ -39,15 +39,18 @@ export function AdminCrownButton({ onAdminLogin, onFarmOwnerLogin }: AdminCrownB
       {/* Hidden Dot Button - Bottom Left */}
       <button
         onClick={handleDotClick}
-        className={`fixed bottom-24 left-6 bg-gradient-to-br from-emerald-600 via-green-600 to-emerald-700 rounded-full shadow-lg transition-all duration-300 flex items-center justify-center ${
+        className={`fixed bottom-24 left-6 rounded-full shadow-lg transition-all duration-300 flex items-center justify-center ${
           expanded
-            ? 'w-14 h-14 hover:shadow-emerald-500/50 hover:scale-110'
-            : 'w-3 h-3 opacity-60 hover:opacity-100 hover:scale-150'
+            ? 'w-14 h-14 bg-gradient-to-br from-emerald-600 via-green-600 to-emerald-700 hover:shadow-emerald-500/50 hover:scale-110'
+            : 'w-3 h-3 bg-gradient-to-br from-red-600 via-red-500 to-red-600 opacity-80 hover:opacity-100 hover:scale-150 animate-pulse'
         }`}
         style={{
           zIndex: 10001,
           backdropFilter: 'blur(10px)',
           border: expanded ? '2px solid rgba(16,185,129,0.3)' : 'none',
+          boxShadow: expanded
+            ? '0 10px 25px rgba(16,185,129,0.4)'
+            : '0 0 15px rgba(239, 68, 68, 0.6), 0 0 30px rgba(239, 68, 68, 0.4)',
         }}
         title="تسجيل الدخول"
       >
