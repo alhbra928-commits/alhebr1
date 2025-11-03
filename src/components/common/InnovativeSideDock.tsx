@@ -15,7 +15,7 @@ export function InnovativeSideDock({
   phoneNumber = '966569335257'
 }: InnovativeSideDockProps) {
   const [mounted, setMounted] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(true);
   const [touchStartX, setTouchStartX] = useState(0);
 
   useEffect(() => {
@@ -57,11 +57,11 @@ export function InnovativeSideDock({
           display: flex;
           align-items: center;
           transition: transform 0.3s ease;
-          transform: translateX(-50%);
+          transform: translateX(0);
         }
 
-        .dock-container.expanded {
-          transform: translateX(0);
+        .dock-container.hidden {
+          transform: translateX(-100%);
         }
 
         .dock-bar {
@@ -163,6 +163,7 @@ export function InnovativeSideDock({
       {!isExpanded && (
         <div
           className="swipe-area"
+          onClick={() => setIsExpanded(true)}
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
         >
@@ -175,7 +176,7 @@ export function InnovativeSideDock({
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
-        <div className={`dock-container ${isExpanded ? 'expanded' : ''}`}>
+        <div className={`dock-container ${!isExpanded ? 'hidden' : ''}`}>
           <div className="dock-bar">
             {onSmartButtonClick && (
               <>
