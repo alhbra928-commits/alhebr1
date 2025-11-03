@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Settings, Map, Video, Mail, Key, Globe, Bell, Shield, Database, BarChart3, Package, Activity, Type, Crown, Sparkles } from 'lucide-react';
+import { Settings, Map, Video, Mail, Key, Globe, Bell, Shield, Database, BarChart3, Package, Activity, Type, Crown, Sparkles, PanelLeftClose } from 'lucide-react';
 import { Card3D } from '../../../components/ui/Card3D';
 import { BackButton } from '../../../components/common/BackButton';
 import { BackupCenter } from '../../backups/components/BackupCenter';
@@ -10,13 +10,14 @@ import { AdvancedRoyalGatewaySettings } from './AdvancedRoyalGatewaySettings';
 import { Modern3DTickerManager } from './Modern3DTickerManager';
 import { MazadGatewaySettings } from './MazadGatewaySettings';
 import { MazadGatewayTexts } from './MazadGatewayTexts';
+import { SideDockSettings } from './SideDockSettings';
 
 interface SettingsViewProps {
   onBack?: () => void;
 }
 
 export function SettingsView({ onBack }: SettingsViewProps) {
-  const [activeTab, setActiveTab] = useState<'general' | 'backup' | 'ticker' | 'versions' | 'diagnostics' | 'texts' | 'gateway' | 'mazad' | 'mazad-texts'>('general');
+  const [activeTab, setActiveTab] = useState<'general' | 'backup' | 'ticker' | 'versions' | 'diagnostics' | 'texts' | 'gateway' | 'mazad' | 'mazad-texts' | 'side-dock'>('general');
   const [settings, setSettings] = useState({
     mapApiKey: 'AIza*********************',
     videoService: 'youtube',
@@ -132,6 +133,17 @@ export function SettingsView({ onBack }: SettingsViewProps) {
             <Type className="h-5 w-5" />
             خطوط البوابة
           </button>
+          <button
+            onClick={() => setActiveTab('side-dock')}
+            className={`flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all ${
+              activeTab === 'side-dock'
+                ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-lg'
+                : 'bg-white text-[#2C2C2C] hover:bg-[#F4EBDD]'
+            }`}
+          >
+            <PanelLeftClose className="h-5 w-5" />
+            الشريط الجانبي
+          </button>
         </div>
 
         {activeTab === 'ticker' ? (
@@ -144,6 +156,8 @@ export function SettingsView({ onBack }: SettingsViewProps) {
           <AdvancedCacheSystemDiagnostics />
         ) : activeTab === 'texts' ? (
           <CompletePlatformTextsManager />
+        ) : activeTab === 'side-dock' ? (
+          <SideDockSettings />
         ) : activeTab === 'mazad' ? (
           <MazadGatewaySettings />
         ) : activeTab === 'mazad-texts' ? (

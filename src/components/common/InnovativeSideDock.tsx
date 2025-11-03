@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Home, User, Phone, Brain, ChevronRight, ChevronLeft } from 'lucide-react';
+import { supabase } from '../../lib/supabase';
 
 interface InnovativeSideDockProps {
   onNavigate?: (section: string) => void;
@@ -8,18 +9,76 @@ interface InnovativeSideDockProps {
   phoneNumber?: string;
 }
 
+interface SideDockTexts {
+  homeButton: string;
+  accountButton: string;
+  phoneButton: string;
+  smartButton: string;
+  showTooltip: string;
+  hideTooltip: string;
+  homeTooltip: string;
+  accountTooltip: string;
+  phoneTooltip: string;
+  smartTooltip: string;
+  phoneNumber: string;
+  defaultState: string;
+}
+
 export function InnovativeSideDock({
   onNavigate,
   currentSection = 'home',
   onSmartButtonClick,
-  phoneNumber = '966569335257'
+  phoneNumber: customPhoneNumber
 }: InnovativeSideDockProps) {
   const [mounted, setMounted] = useState(false);
+  const [texts, setTexts] = useState<SideDockTexts>({
+    homeButton: 'الرئيسية',
+    accountButton: 'الحساب',
+    phoneButton: 'اتصل بنا',
+    smartButton: 'المساعد الذكي',
+    showTooltip: 'إظهار الشريط',
+    hideTooltip: 'إخفاء الشريط',
+    homeTooltip: 'الانتقال للصفحة الرئيسية',
+    accountTooltip: 'صفحة الحساب',
+    phoneTooltip: 'اتصل بنا الآن',
+    smartTooltip: 'افتح المساعد الذكي',
+    phoneNumber: '966569335257',
+    defaultState: 'visible'
+  });
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
     setMounted(true);
+    loadTexts();
   }, []);
+
+  const loadTexts = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('platform_texts')
+        .select('key, text_ar')
+        .eq('section', 'side_dock');
+
+      if (error) throw error;
+
+      if (data) {
+        const textsMap: any = {};
+        data.forEach(item => {
+          const camelKey = item.key.replace(/_([a-z])/g, (g) => g[1].toUpperCase());
+          textsMap[camelKey] = item.text_ar;
+        });
+
+        setTexts(prev => ({ ...prev, ...textsMap }));
+
+        // تطبيق الحالة الافتراضية
+        if (textsMap.defaultState) {
+          setIsVisible(textsMap.defaultState === 'visible' || textsMap.defaultState === 'مرئي');
+        }
+      }
+    } catch (error) {
+      console.error('Error loading side dock texts:', error);
+    }
+  };
 
   if (!mounted) return null;
 
@@ -273,6 +332,7 @@ export function InnovativeSideDock({
                 <button
                   className="side-dock-button side-dock-smart-button"
                   onClick={onSmartButtonClick}
+                  title={texts.smartTooltip}
                 >
                   <Brain size={24} />
                 </button>
@@ -283,6 +343,7 @@ export function InnovativeSideDock({
             <button
               className={`side-dock-button ${currentSection === 'home' ? 'active' : ''}`}
               onClick={() => onNavigate?.('home')}
+              title={texts.homeTooltip}
             >
               <Home size={22} />
             </button>
@@ -290,6 +351,7 @@ export function InnovativeSideDock({
             <button
               className={`side-dock-button ${currentSection === 'account' ? 'active' : ''}`}
               onClick={() => onNavigate?.('account')}
+              title={texts.accountTooltip}
             >
               <User size={22} />
             </button>
@@ -298,7 +360,8 @@ export function InnovativeSideDock({
 
             <button
               className="side-dock-button"
-              onClick={() => window.open(`tel:${phoneNumber}`)}
+              onClick={() => window.open(`tel:${customPhoneNumber || texts.phoneNumber}`)}
+              title={texts.phoneTooltip}
             >
               <Phone size={22} />
             </button>
@@ -309,7 +372,7 @@ export function InnovativeSideDock({
       <button
         className="side-dock-toggle-button"
         onClick={handleToggle}
-        title={isVisible ? 'إخفاء الشريط' : 'إظهار الشريط'}
+        title={isVisible ? texts.hideTooltip : texts.showTooltip}
       >
         {isVisible ? <ChevronLeft size={28} /> : <ChevronRight size={28} />}
       </button>
