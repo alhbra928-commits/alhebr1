@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Home, User, Phone, Brain } from 'lucide-react';
+import { Home, User, Phone, Brain, ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface InnovativeSideDockProps {
   onNavigate?: (section: string) => void;
@@ -16,6 +16,10 @@ export function InnovativeSideDock({
 }: InnovativeSideDockProps) {
   const [mounted, setMounted] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+
+  const minSwipeDistance = 50;
 
   useEffect(() => {
     setMounted(true);
@@ -26,6 +30,33 @@ export function InnovativeSideDock({
   const handleContact = () => {
     window.open(`tel:${phoneNumber}`);
     if (navigator.vibrate) navigator.vibrate(10);
+  };
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+
+    if (isLeftSwipe && isExpanded) {
+      setIsExpanded(false);
+      if (navigator.vibrate) navigator.vibrate(10);
+    }
+
+    if (isRightSwipe && !isExpanded) {
+      setIsExpanded(true);
+      if (navigator.vibrate) navigator.vibrate(10);
+    }
   };
 
   return (
@@ -63,6 +94,9 @@ export function InnovativeSideDock({
           top: 50%;
           transform: translateY(-50%);
           z-index: 10000;
+          touch-action: pan-x;
+          user-select: none;
+          -webkit-user-select: none;
         }
 
         .innovative-dock-container {
@@ -103,68 +137,6 @@ export function InnovativeSideDock({
             inset 0 1px 0 rgba(255, 255, 255, 0.1),
             0 0 40px rgba(16, 185, 129, 0.2);
           transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        /* اللسان البارز - دائم الظهور */
-        .dock-tongue-always-visible {
-          position: absolute;
-          left: 0;
-          top: 50%;
-          transform: translateY(-50%);
-          width: 32px;
-          height: 80px;
-          background: linear-gradient(90deg,
-            rgba(0, 0, 0, 0.7) 0%,
-            rgba(16, 185, 129, 0.2) 100%
-          );
-          backdrop-filter: blur(10px);
-          -webkit-backdrop-filter: blur(10px);
-          border-radius: 0 16px 16px 0;
-          border: 2px solid rgba(16, 185, 129, 0.3);
-          border-left: none;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
-          transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-          box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
-          z-index: 10001;
-        }
-
-        .dock-tongue-always-visible:hover {
-          left: 4px;
-          width: 36px;
-          background: linear-gradient(90deg,
-            rgba(0, 0, 0, 0.8) 0%,
-            rgba(16, 185, 129, 0.3) 100%
-          );
-        }
-
-        /* النقاط على اللسان */
-        .tongue-dots {
-          display: flex;
-          flex-direction: column;
-          gap: 6px;
-        }
-
-        .tongue-dot {
-          width: 6px;
-          height: 6px;
-          border-radius: 50%;
-          background: linear-gradient(135deg,
-            rgba(52, 211, 153, 0.8),
-            rgba(16, 185, 129, 0.8)
-          );
-          box-shadow: 0 0 10px rgba(52, 211, 153, 0.6);
-          animation: glow 2s ease-in-out infinite;
-        }
-
-        .tongue-dot:nth-child(2) {
-          animation-delay: 0.3s;
-        }
-
-        .tongue-dot:nth-child(3) {
-          animation-delay: 0.6s;
         }
 
         /* زر الذكاء الاصطناعي - البني */
@@ -361,7 +333,12 @@ export function InnovativeSideDock({
         }
       `}</style>
 
-      <div className="innovative-dock-wrapper">
+      <div
+        className="innovative-dock-wrapper"
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
+      >
         <div className={`innovative-dock-container ${isExpanded ? 'expanded' : ''}`}>
           <div className="dock-main-wrapper">
 
@@ -417,22 +394,42 @@ export function InnovativeSideDock({
                 <span className="dock-tooltip">اتصل بنا</span>
               </button>
 
+              <div className="dock-divider" />
+
+              {/* زر الإخفاء/الإظهار */}
+              <button
+                className="nav-button"
+                onClick={() => setIsExpanded(!isExpanded)}
+                aria-label={isExpanded ? 'إخفاء' : 'إظهار'}
+              >
+                {isExpanded ? <ChevronLeft size={22} strokeWidth={2} /> : <ChevronRight size={22} strokeWidth={2} />}
+                <span className="dock-tooltip">{isExpanded ? 'إخفاء' : 'إظهار'}</span>
+              </button>
+
             </div>
 
           </div>
         </div>
 
-        {/* اللسان البارز - خارج الـ container */}
-        <div
-          className="dock-tongue-always-visible"
-          onClick={() => setIsExpanded(!isExpanded)}
-        >
-          <div className="tongue-dots">
-            <div className="tongue-dot" />
-            <div className="tongue-dot" />
-            <div className="tongue-dot" />
-          </div>
-        </div>
+        {/* منطقة السحب على حافة الشاشة - ظاهرة فقط عند الإغلاق */}
+        {!isExpanded && (
+          <div
+            className="swipe-edge-zone"
+            onTouchStart={onTouchStart}
+            onTouchMove={onTouchMove}
+            onTouchEnd={onTouchEnd}
+            style={{
+              position: 'fixed',
+              left: 0,
+              top: 0,
+              width: '30px',
+              height: '100vh',
+              zIndex: 9999,
+              touchAction: 'pan-x',
+              pointerEvents: 'auto'
+            }}
+          />
+        )}
       </div>
     </>
   );
