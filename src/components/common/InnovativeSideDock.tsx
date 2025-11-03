@@ -109,7 +109,8 @@ export function InnovativeSideDock({
         .dock-tongue-always-visible {
           position: absolute;
           left: 0;
-          top: 0;
+          top: 50%;
+          transform: translateY(-50%);
           width: 32px;
           height: 80px;
           background: linear-gradient(90deg,
