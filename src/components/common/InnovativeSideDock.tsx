@@ -97,6 +97,50 @@ export function InnovativeSideDock({
           touch-action: pan-x;
           user-select: none;
           -webkit-user-select: none;
+          -webkit-touch-callout: none;
+        }
+
+        .swipe-edge-zone {
+          position: fixed;
+          left: 0;
+          top: 0;
+          width: 40px;
+          height: 100vh;
+          z-index: 9999;
+          touch-action: pan-x;
+          pointer-events: auto;
+          cursor: pointer;
+          background: linear-gradient(90deg, rgba(16, 185, 129, 0.05) 0%, transparent 100%);
+        }
+
+        .swipe-indicator {
+          position: absolute;
+          right: 0;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 4px;
+          height: 60px;
+          background: linear-gradient(180deg,
+            rgba(16, 185, 129, 0.3),
+            rgba(16, 185, 129, 0.7),
+            rgba(16, 185, 129, 0.3)
+          );
+          border-radius: 0 4px 4px 0;
+          box-shadow: 0 0 15px rgba(16, 185, 129, 0.5);
+          animation: pulse 2s ease-in-out infinite;
+        }
+
+        @media (max-width: 768px) {
+          .swipe-edge-zone {
+            width: 50px;
+            background: linear-gradient(90deg, rgba(16, 185, 129, 0.08) 0%, transparent 100%);
+          }
+
+          .swipe-indicator {
+            width: 5px;
+            height: 70px;
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.6);
+          }
         }
 
         .innovative-dock-container {
@@ -418,17 +462,9 @@ export function InnovativeSideDock({
             onTouchStart={onTouchStart}
             onTouchMove={onTouchMove}
             onTouchEnd={onTouchEnd}
-            style={{
-              position: 'fixed',
-              left: 0,
-              top: 0,
-              width: '30px',
-              height: '100vh',
-              zIndex: 9999,
-              touchAction: 'pan-x',
-              pointerEvents: 'auto'
-            }}
-          />
+          >
+            <div className="swipe-indicator" />
+          </div>
         )}
       </div>
     </>
