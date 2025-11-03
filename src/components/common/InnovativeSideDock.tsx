@@ -132,6 +132,36 @@ export function InnovativeSideDock({
           box-shadow: 0 0 30px rgba(16, 185, 129, 0.6);
         }
 
+        .floating-toggle-button {
+          position: absolute;
+          right: -60px;
+          bottom: 0;
+          width: 56px;
+          height: 56px;
+          border-radius: 16px;
+          border: 2px solid rgba(16, 185, 129, 0.5);
+          background: rgba(0, 0, 0, 0.95);
+          backdrop-filter: blur(20px);
+          color: white;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          transition: all 0.3s;
+          box-shadow: 0 0 30px rgba(16, 185, 129, 0.6);
+          z-index: 10001;
+        }
+
+        .floating-toggle-button:hover {
+          background: rgba(16, 185, 129, 0.2);
+          transform: scale(1.1);
+          box-shadow: 0 0 40px rgba(16, 185, 129, 0.8);
+        }
+
+        .floating-toggle-button:active {
+          transform: scale(0.95);
+        }
+
         .swipe-area {
           position: fixed;
           left: 0;
@@ -228,11 +258,25 @@ export function InnovativeSideDock({
 
             <button
               className="dock-button toggle-button"
-              onClick={() => setIsExpanded(!isExpanded)}
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsExpanded(!isExpanded);
+              }}
             >
               <ChevronRight size={22} style={{ transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.3s' }} />
             </button>
           </div>
+
+          <button
+            className="floating-toggle-button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsExpanded(true);
+            }}
+            style={{ opacity: isExpanded ? 0 : 1, pointerEvents: isExpanded ? 'none' : 'auto' }}
+          >
+            <ChevronRight size={20} />
+          </button>
         </div>
       </div>
     </>
