@@ -61,7 +61,7 @@ export function InnovativeSideDock({
         }
 
         .dock-container.hidden {
-          transform: translateX(-100%);
+          transform: translateX(calc(-100% + 80px));
         }
 
         .dock-bar {
@@ -119,6 +119,17 @@ export function InnovativeSideDock({
           height: 2px;
           background: rgba(16, 185, 129, 0.2);
           margin: 4px auto;
+        }
+
+        .toggle-button {
+          position: relative;
+          background: rgba(16, 185, 129, 0.2) !important;
+          box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+        }
+
+        .toggle-button:hover {
+          background: rgba(16, 185, 129, 0.3) !important;
+          box-shadow: 0 0 30px rgba(16, 185, 129, 0.6);
         }
 
         .swipe-area {
@@ -216,7 +227,7 @@ export function InnovativeSideDock({
             <div className="dock-divider" />
 
             <button
-              className="dock-button"
+              className="dock-button toggle-button"
               onClick={() => setIsExpanded(!isExpanded)}
             >
               <ChevronRight size={22} style={{ transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.3s' }} />
