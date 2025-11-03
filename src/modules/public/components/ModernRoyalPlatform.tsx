@@ -4,7 +4,7 @@ import {
 } from 'lucide-react';
 import { PublicFarm } from '../types/farm.types';
 import { PublicFarmService } from '../services/publicFarmService';
-import { FarmDetailPage } from './FarmDetailPage';
+import { InnovativeFarmDetailPage } from './InnovativeFarmDetailPage';
 import { TemporaryBookingPage } from './TemporaryBookingPage';
 import { InvestorRouter } from '../../investor/components/InvestorRouter';
 import { CertificateVerificationPage } from './CertificateVerificationPage';
@@ -148,7 +148,7 @@ export function ModernRoyalPlatform({
 
   if (currentView === 'farmDetail' && selectedFarm) {
     return (
-      <FarmDetailPage
+      <InnovativeFarmDetailPage
         farmId={selectedFarm.id}
         onBack={handleGoHome}
         onStartBooking={() => setCurrentView('booking')}
