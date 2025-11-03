@@ -23,7 +23,7 @@ import {
 } from 'lucide-react';
 import { brandColors, brandGradients } from '../../finance/styles/brandColors';
 import { FarmDetailService, FarmVariety, CreateReservationData } from '../services/farmDetailService';
-import { FarmLoader } from '../../../components/common/FarmLoader';
+import { MazadCrownLoader } from '../../../components/common/MazadCrownLoader';
 import { SimpleLoader } from '../../../components/common/SimpleLoader';
 
 interface TemporaryBookingPageProps {
@@ -192,9 +192,9 @@ export function TemporaryBookingPage({
 
   if (loading) {
     return (
-      <FarmLoader
-        farmType={isPalm ? 'palm' : 'olive'}
+      <MazadCrownLoader
         message={isPalm ? 'جاري تحميل أصناف النخيل...' : 'جاري تحميل أصناف الزيتون...'}
+        subtitle="مزادات"
       />
     );
   }

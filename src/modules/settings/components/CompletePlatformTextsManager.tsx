@@ -35,6 +35,7 @@ const SECTION_NAMES: Record<string, { name: string; icon: string; description: s
   'stats': { name: 'الإحصائيات', icon: '📊', description: 'نصوص الإحصائيات' },
   'contact_bar': { name: 'شريط التواصل', icon: '📞', description: 'معلومات التواصل' },
   'side_dock': { name: 'الشريط الجانبي', icon: '🎛️', description: 'أدوات التنقل الجانبي السريع' },
+  'loader': { name: 'شاشة التحميل', icon: '👑', description: 'تاج مزادات وشاشة الانتظار' },
   'cta': { name: 'دعوات الإجراء', icon: '🎬', description: 'نصوص دعوات الإجراء' },
   'about': { name: 'من نحن', icon: 'ℹ️', description: 'نصوص صفحة من نحن' },
   'contact': { name: 'اتصل بنا', icon: '📧', description: 'نصوص صفحة اتصل بنا' }

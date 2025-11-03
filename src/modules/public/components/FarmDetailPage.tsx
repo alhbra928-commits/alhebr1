@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { ArrowRight, MapPin, Trees, TrendingUp, CheckCircle2, Droplets, Zap, Shield, Navigation, Sprout } from 'lucide-react';
 // Colors removed - using emerald green theme only
 import { FarmDetailService, FarmDetail } from '../services/farmDetailService';
-import { FarmLoader } from '../../../components/common/FarmLoader';
+import { MazadCrownLoader } from '../../../components/common/MazadCrownLoader';
 import { getPlatformTextsBySection } from '../../../services/platformTextsService';
 
 interface FarmDetailPageProps {
@@ -106,7 +106,7 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
   const reservationPercentage = farm ? Math.round((reservedTrees / farm.total_trees) * 100) : 0;
 
   if (loading) {
-    return <FarmLoader farmType={farmType} message="جاري تحميل تفاصيل المزرعة..." />;
+    return <MazadCrownLoader message="جاري تحميل تفاصيل المزرعة..." subtitle="مزادات" />;
   }
 
   if (!farm) {
