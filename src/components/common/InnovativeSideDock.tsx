@@ -57,7 +57,7 @@ export function InnovativeSideDock({
           50% { opacity: 1; }
         }
 
-        .innovative-dock-container {
+        .innovative-dock-wrapper {
           position: fixed;
           left: 0;
           top: 50%;
@@ -65,8 +65,13 @@ export function InnovativeSideDock({
           z-index: 10000;
         }
 
+        .innovative-dock-container {
+          position: relative;
+          transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
         .innovative-dock-container.hidden {
-          left: -60%;
+          transform: translateX(-100%);
         }
 
         .dock-main-wrapper {
@@ -99,12 +104,11 @@ export function InnovativeSideDock({
           transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
-        /* اللسان البارز */
-        .dock-tongue {
+        /* اللسان البارز - دائم الظهور */
+        .dock-tongue-always-visible {
           position: absolute;
-          right: -32px;
-          top: 50%;
-          transform: translateY(-50%);
+          left: 0;
+          top: 0;
           width: 32px;
           height: 80px;
           background: linear-gradient(90deg,
@@ -122,10 +126,11 @@ export function InnovativeSideDock({
           cursor: pointer;
           transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
           box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
+          z-index: 10001;
         }
 
-        .dock-tongue:hover {
-          right: -36px;
+        .dock-tongue-always-visible:hover {
+          left: 4px;
           width: 36px;
           background: linear-gradient(90deg,
             rgba(0, 0, 0, 0.8) 0%,
@@ -354,75 +359,77 @@ export function InnovativeSideDock({
         }
       `}</style>
 
-      <div className={`innovative-dock-container ${!isExpanded ? 'hidden' : ''}`}>
-        <div className="dock-main-wrapper">
+      <div className="innovative-dock-wrapper">
+        <div className={`innovative-dock-container ${isExpanded ? '' : 'hidden'}`}>
+          <div className="dock-main-wrapper">
 
-          {/* الشريط الرئيسي */}
-          <div className="dock-bar">
+            {/* الشريط الرئيسي */}
+            <div className="dock-bar">
 
-            {/* الزر الذكي - البني مع AI */}
-            {onSmartButtonClick && (
+              {/* الزر الذكي - البني مع AI */}
+              {onSmartButtonClick && (
+                <button
+                  className="smart-ai-button"
+                  onClick={() => {
+                    onSmartButtonClick();
+                    if (navigator.vibrate) navigator.vibrate(10);
+                  }}
+                  aria-label="الذكاء الاصطناعي"
+                >
+                  <Brain size={26} strokeWidth={2.5} />
+                  <span className="dock-tooltip">الذكاء الاصطناعي</span>
+                </button>
+              )}
+
+              {onSmartButtonClick && <div className="dock-divider" />}
+
+              {/* زر الرئيسية */}
               <button
-                className="smart-ai-button"
-                onClick={() => {
-                  onSmartButtonClick();
-                  if (navigator.vibrate) navigator.vibrate(10);
-                }}
-                aria-label="الذكاء الاصطناعي"
+                className={`nav-button ${currentSection === 'home' ? 'active' : ''}`}
+                onClick={() => onNavigate?.('home')}
+                aria-label="الرئيسية"
               >
-                <Brain size={26} strokeWidth={2.5} />
-                <span className="dock-tooltip">الذكاء الاصطناعي</span>
+                <Home size={22} strokeWidth={2} />
+                <span className="dock-tooltip">الرئيسية</span>
               </button>
-            )}
 
-            {onSmartButtonClick && <div className="dock-divider" />}
+              {/* زر الحساب */}
+              <button
+                className={`nav-button ${currentSection === 'account' ? 'active' : ''}`}
+                onClick={() => onNavigate?.('account')}
+                aria-label="الحساب"
+              >
+                <User size={22} strokeWidth={2} />
+                <span className="dock-tooltip">الحساب</span>
+              </button>
 
-            {/* زر الرئيسية */}
-            <button
-              className={`nav-button ${currentSection === 'home' ? 'active' : ''}`}
-              onClick={() => onNavigate?.('home')}
-              aria-label="الرئيسية"
-            >
-              <Home size={22} strokeWidth={2} />
-              <span className="dock-tooltip">الرئيسية</span>
-            </button>
+              <div className="dock-divider" />
 
-            {/* زر الحساب */}
-            <button
-              className={`nav-button ${currentSection === 'account' ? 'active' : ''}`}
-              onClick={() => onNavigate?.('account')}
-              aria-label="الحساب"
-            >
-              <User size={22} strokeWidth={2} />
-              <span className="dock-tooltip">الحساب</span>
-            </button>
+              {/* زر الاتصال */}
+              <button
+                className="nav-button"
+                onClick={handleContact}
+                aria-label="اتصل بنا"
+              >
+                <Phone size={22} strokeWidth={2} />
+                <span className="dock-tooltip">اتصل بنا</span>
+              </button>
 
-            <div className="dock-divider" />
-
-            {/* زر الاتصال */}
-            <button
-              className="nav-button"
-              onClick={handleContact}
-              aria-label="اتصل بنا"
-            >
-              <Phone size={22} strokeWidth={2} />
-              <span className="dock-tooltip">اتصل بنا</span>
-            </button>
-
-          </div>
-
-          {/* اللسان البارز */}
-          <div
-            className="dock-tongue"
-            onClick={() => setIsExpanded(!isExpanded)}
-          >
-            <div className="tongue-dots">
-              <div className="tongue-dot" />
-              <div className="tongue-dot" />
-              <div className="tongue-dot" />
             </div>
-          </div>
 
+          </div>
+        </div>
+
+        {/* اللسان البارز - خارج الـ container */}
+        <div
+          className="dock-tongue-always-visible"
+          onClick={() => setIsExpanded(!isExpanded)}
+        >
+          <div className="tongue-dots">
+            <div className="tongue-dot" />
+            <div className="tongue-dot" />
+            <div className="tongue-dot" />
+          </div>
         </div>
       </div>
     </>
