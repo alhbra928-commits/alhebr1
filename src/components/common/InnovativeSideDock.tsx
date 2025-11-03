@@ -108,9 +108,10 @@ export function InnovativeSideDock({
         }
 
         .side-dock-toggle {
-          position: absolute;
-          left: 100%;
-          bottom: 0;
+          position: fixed;
+          left: 0;
+          top: 50%;
+          transform: translateY(-50%);
           width: 64px;
           height: 64px;
           border-radius: 0 20px 20px 0;
@@ -123,28 +124,27 @@ export function InnovativeSideDock({
           align-items: center;
           justify-content: center;
           cursor: pointer;
-          transition: all 0.3s;
+          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
           box-shadow: 0 0 30px rgba(16, 185, 129, 0.5);
-          z-index: 10002;
-          margin-left: -2px;
+          z-index: 10003;
         }
 
         .side-dock-toggle:hover {
           background: rgba(16, 185, 129, 0.2);
-          transform: translateX(5px) scale(1.05);
+          transform: translateY(-50%) translateX(5px) scale(1.05);
           box-shadow: 0 0 40px rgba(16, 185, 129, 0.8);
         }
 
         .side-dock-toggle:active {
-          transform: translateX(5px) scale(0.95);
+          transform: translateY(-50%) scale(0.95);
         }
 
-        .side-dock-wrapper.hidden .side-dock-toggle {
-          transform: translateX(100%);
+        .side-dock-wrapper.hidden ~ .side-dock-toggle-button {
+          left: 0;
         }
 
-        .side-dock-wrapper.hidden .side-dock-toggle:hover {
-          transform: translateX(105%) scale(1.05);
+        .side-dock-wrapper:not(.hidden) ~ .side-dock-toggle-button {
+          left: 80px;
         }
 
         @keyframes glow {
@@ -152,8 +152,44 @@ export function InnovativeSideDock({
           50% { box-shadow: 0 0 50px rgba(16, 185, 129, 0.8); }
         }
 
-        .side-dock-wrapper.hidden .side-dock-toggle {
+        .side-dock-toggle-button {
+          position: fixed;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 64px;
+          height: 64px;
+          border-radius: 0 20px 20px 0;
+          border: 3px solid rgba(16, 185, 129, 0.6);
+          border-left: none;
+          background: rgba(0, 0, 0, 0.95);
+          backdrop-filter: blur(20px);
+          color: #10b981;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+          box-shadow: 0 0 30px rgba(16, 185, 129, 0.5);
+          z-index: 10003;
+        }
+
+        .side-dock-toggle-button:hover {
+          background: rgba(16, 185, 129, 0.2);
+          transform: translateY(-50%) translateX(5px) scale(1.05);
+          box-shadow: 0 0 40px rgba(16, 185, 129, 0.8);
+        }
+
+        .side-dock-toggle-button:active {
+          transform: translateY(-50%) scale(0.95);
+        }
+
+        .side-dock-wrapper.hidden ~ .side-dock-toggle-button {
+          left: 0;
           animation: glow 2s infinite;
+        }
+
+        .side-dock-wrapper:not(.hidden) ~ .side-dock-toggle-button {
+          left: 80px;
         }
 
         @media (max-width: 768px) {
@@ -207,16 +243,16 @@ export function InnovativeSideDock({
               <Phone size={22} />
             </button>
           </div>
-
-          <button
-            className="side-dock-toggle"
-            onClick={handleToggle}
-            title={isVisible ? 'إخفاء الشريط' : 'إظهار الشريط'}
-          >
-            {isVisible ? <ChevronLeft size={28} /> : <ChevronRight size={28} />}
-          </button>
         </div>
       </div>
+
+      <button
+        className="side-dock-toggle-button"
+        onClick={handleToggle}
+        title={isVisible ? 'إخفاء الشريط' : 'إظهار الشريط'}
+      >
+        {isVisible ? <ChevronLeft size={28} /> : <ChevronRight size={28} />}
+      </button>
     </>
   );
 }
