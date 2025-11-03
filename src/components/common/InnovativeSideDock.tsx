@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Home, User, Phone, Brain, ChevronRight } from 'lucide-react';
+import { Home, User, Phone, Brain, ChevronRight, ChevronLeft } from 'lucide-react';
 
 interface InnovativeSideDockProps {
   onNavigate?: (section: string) => void;
@@ -15,8 +15,7 @@ export function InnovativeSideDock({
   phoneNumber = '966569335257'
 }: InnovativeSideDockProps) {
   const [mounted, setMounted] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(true);
-  const [touchStartX, setTouchStartX] = useState(0);
+  const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
     setMounted(true);
@@ -24,47 +23,34 @@ export function InnovativeSideDock({
 
   if (!mounted) return null;
 
-  const handleTouchStart = (e: React.TouchEvent) => {
-    setTouchStartX(e.touches[0].clientX);
-  };
-
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    const touchEndX = e.changedTouches[0].clientX;
-    const diff = touchEndX - touchStartX;
-
-    if (Math.abs(diff) > 50) {
-      if (diff > 0 && !isExpanded) {
-        setIsExpanded(true);
-      } else if (diff < 0 && isExpanded) {
-        setIsExpanded(false);
-      }
-    }
+  const handleToggle = () => {
+    setIsVisible(!isVisible);
   };
 
   return (
     <>
       <style>{`
-        .dock-wrapper {
+        .side-dock-wrapper {
           position: fixed;
           left: 0;
           top: 50%;
           transform: translateY(-50%);
           z-index: 10000;
+          transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .dock-container {
+        .side-dock-wrapper.hidden {
+          transform: translateY(-50%) translateX(-100%);
+        }
+
+        .side-dock-content {
           position: relative;
           display: flex;
-          align-items: center;
-          transition: transform 0.3s ease;
-          transform: translateX(0);
+          align-items: flex-end;
+          gap: 8px;
         }
 
-        .dock-container.hidden {
-          transform: translateX(calc(-100% + 80px));
-        }
-
-        .dock-bar {
+        .side-dock-bar {
           background: rgba(0, 0, 0, 0.95);
           backdrop-filter: blur(20px);
           border-radius: 0 24px 24px 0;
@@ -76,7 +62,7 @@ export function InnovativeSideDock({
           box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
 
-        .dock-button {
+        .side-dock-button {
           width: 56px;
           height: 56px;
           border-radius: 16px;
@@ -91,191 +77,143 @@ export function InnovativeSideDock({
           position: relative;
         }
 
-        .dock-button:hover {
+        .side-dock-button:hover {
           background: rgba(16, 185, 129, 0.2);
           transform: scale(1.05);
         }
 
-        .dock-button:active {
+        .side-dock-button:active {
           transform: scale(0.95);
         }
 
-        .dock-button.active {
+        .side-dock-button.active {
           background: rgba(16, 185, 129, 0.3);
           box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
         }
 
-        .smart-button {
+        .side-dock-smart-button {
           background: linear-gradient(135deg, #8B4513, #A0522D);
           box-shadow: 0 0 20px rgba(139, 69, 19, 0.5);
         }
 
-        .smart-button:hover {
+        .side-dock-smart-button:hover {
           background: linear-gradient(135deg, #A0522D, #CD853F);
         }
 
-        .dock-divider {
+        .side-dock-divider {
           width: 40px;
           height: 2px;
           background: rgba(16, 185, 129, 0.2);
           margin: 4px auto;
         }
 
-        .toggle-button {
-          position: relative;
-          background: rgba(16, 185, 129, 0.2) !important;
-          box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
-        }
-
-        .toggle-button:hover {
-          background: rgba(16, 185, 129, 0.3) !important;
-          box-shadow: 0 0 30px rgba(16, 185, 129, 0.6);
-        }
-
-        .floating-toggle-button {
+        .side-dock-toggle {
           position: absolute;
-          right: -60px;
+          left: 100%;
           bottom: 0;
-          width: 56px;
-          height: 56px;
-          border-radius: 16px;
-          border: 2px solid rgba(16, 185, 129, 0.5);
+          width: 64px;
+          height: 64px;
+          border-radius: 0 20px 20px 0;
+          border: 3px solid rgba(16, 185, 129, 0.6);
+          border-left: none;
           background: rgba(0, 0, 0, 0.95);
           backdrop-filter: blur(20px);
-          color: white;
+          color: #10b981;
           display: flex;
           align-items: center;
           justify-content: center;
           cursor: pointer;
           transition: all 0.3s;
-          box-shadow: 0 0 30px rgba(16, 185, 129, 0.6);
-          z-index: 10001;
+          box-shadow: 0 0 30px rgba(16, 185, 129, 0.5);
+          z-index: 10002;
+          margin-left: -2px;
         }
 
-        .floating-toggle-button:hover {
+        .side-dock-toggle:hover {
           background: rgba(16, 185, 129, 0.2);
-          transform: scale(1.1);
+          transform: translateX(5px) scale(1.05);
           box-shadow: 0 0 40px rgba(16, 185, 129, 0.8);
         }
 
-        .floating-toggle-button:active {
-          transform: scale(0.95);
+        .side-dock-toggle:active {
+          transform: translateX(5px) scale(0.95);
         }
 
-        .swipe-area {
-          position: fixed;
-          left: 0;
-          top: 0;
-          width: 50px;
-          height: 100vh;
-          z-index: 9999;
-          background: linear-gradient(90deg, rgba(16, 185, 129, 0.1), transparent);
+        .side-dock-wrapper.hidden .side-dock-toggle {
+          transform: translateX(100%);
         }
 
-        .swipe-indicator {
-          position: absolute;
-          right: 0;
-          top: 50%;
-          transform: translateY(-50%);
-          width: 4px;
-          height: 60px;
-          background: linear-gradient(180deg, transparent, #10b981, transparent);
-          border-radius: 0 4px 4px 0;
-          animation: pulse 2s infinite;
+        .side-dock-wrapper.hidden .side-dock-toggle:hover {
+          transform: translateX(105%) scale(1.05);
         }
 
-        @keyframes pulse {
-          0%, 100% { opacity: 0.3; }
-          50% { opacity: 1; }
+        @keyframes glow {
+          0%, 100% { box-shadow: 0 0 30px rgba(16, 185, 129, 0.5); }
+          50% { box-shadow: 0 0 50px rgba(16, 185, 129, 0.8); }
+        }
+
+        .side-dock-wrapper.hidden .side-dock-toggle {
+          animation: glow 2s infinite;
         }
 
         @media (max-width: 768px) {
-          .swipe-area {
-            width: 60px;
+          .side-dock-button {
+            width: 52px;
+            height: 52px;
           }
 
-          .swipe-indicator {
-            width: 5px;
-            height: 80px;
+          .side-dock-toggle {
+            width: 60px;
+            height: 60px;
           }
         }
       `}</style>
 
-      {!isExpanded && (
-        <div
-          className="swipe-area"
-          onClick={() => setIsExpanded(true)}
-          onTouchStart={handleTouchStart}
-          onTouchEnd={handleTouchEnd}
-        >
-          <div className="swipe-indicator" />
-        </div>
-      )}
-
-      <div
-        className="dock-wrapper"
-        onTouchStart={handleTouchStart}
-        onTouchEnd={handleTouchEnd}
-      >
-        <div className={`dock-container ${!isExpanded ? 'hidden' : ''}`}>
-          <div className="dock-bar">
+      <div className={`side-dock-wrapper ${!isVisible ? 'hidden' : ''}`}>
+        <div className="side-dock-content">
+          <div className="side-dock-bar">
             {onSmartButtonClick && (
               <>
                 <button
-                  className="dock-button smart-button"
+                  className="side-dock-button side-dock-smart-button"
                   onClick={onSmartButtonClick}
                 >
                   <Brain size={24} />
                 </button>
-                <div className="dock-divider" />
+                <div className="side-dock-divider" />
               </>
             )}
 
             <button
-              className={`dock-button ${currentSection === 'home' ? 'active' : ''}`}
+              className={`side-dock-button ${currentSection === 'home' ? 'active' : ''}`}
               onClick={() => onNavigate?.('home')}
             >
               <Home size={22} />
             </button>
 
             <button
-              className={`dock-button ${currentSection === 'account' ? 'active' : ''}`}
+              className={`side-dock-button ${currentSection === 'account' ? 'active' : ''}`}
               onClick={() => onNavigate?.('account')}
             >
               <User size={22} />
             </button>
 
-            <div className="dock-divider" />
+            <div className="side-dock-divider" />
 
             <button
-              className="dock-button"
+              className="side-dock-button"
               onClick={() => window.open(`tel:${phoneNumber}`)}
             >
               <Phone size={22} />
             </button>
-
-            <div className="dock-divider" />
-
-            <button
-              className="dock-button toggle-button"
-              onClick={(e) => {
-                e.stopPropagation();
-                setIsExpanded(!isExpanded);
-              }}
-            >
-              <ChevronRight size={22} style={{ transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.3s' }} />
-            </button>
           </div>
 
           <button
-            className="floating-toggle-button"
-            onClick={(e) => {
-              e.stopPropagation();
-              setIsExpanded(true);
-            }}
-            style={{ opacity: isExpanded ? 0 : 1, pointerEvents: isExpanded ? 'none' : 'auto' }}
+            className="side-dock-toggle"
+            onClick={handleToggle}
+            title={isVisible ? 'إخفاء الشريط' : 'إظهار الشريط'}
           >
-            <ChevronRight size={20} />
+            {isVisible ? <ChevronLeft size={28} /> : <ChevronRight size={28} />}
           </button>
         </div>
       </div>
