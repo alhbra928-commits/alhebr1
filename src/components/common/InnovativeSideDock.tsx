@@ -43,6 +43,18 @@ export function InnovativeSideDock({
           transform: translateY(-50%) translateX(-100%);
         }
 
+        /* iPhone specific fixes */
+        @supports (-webkit-touch-callout: none) {
+          .side-dock-wrapper,
+          .side-dock-toggle-button {
+            position: fixed;
+            -webkit-transform: translate3d(0, 0, 0);
+            transform: translate3d(0, 0, 0);
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+          }
+        }
+
         .side-dock-content {
           position: relative;
           display: flex;
@@ -193,6 +205,28 @@ export function InnovativeSideDock({
         }
 
         @media (max-width: 768px) {
+          .side-dock-wrapper {
+            top: 80px;
+            transform: translateY(0);
+          }
+
+          .side-dock-wrapper.hidden {
+            transform: translateY(0) translateX(-100%);
+          }
+
+          .side-dock-toggle-button {
+            top: 80px;
+            transform: translateY(0);
+          }
+
+          .side-dock-toggle-button:hover {
+            transform: translateY(0) translateX(5px) scale(1.05);
+          }
+
+          .side-dock-toggle-button:active {
+            transform: translateY(0) scale(0.95);
+          }
+
           .side-dock-button {
             width: 52px;
             height: 52px;
@@ -201,6 +235,32 @@ export function InnovativeSideDock({
           .side-dock-toggle {
             width: 60px;
             height: 60px;
+            top: 80px;
+            transform: translateY(0);
+          }
+
+          .side-dock-toggle:hover {
+            transform: translateY(0) translateX(5px) scale(1.05);
+          }
+
+          .side-dock-toggle:active {
+            transform: translateY(0) scale(0.95);
+          }
+        }
+
+        /* Additional iPhone Safari fixes */
+        @media only screen
+          and (max-width: 768px)
+          and (-webkit-min-device-pixel-ratio: 2) {
+          .side-dock-wrapper,
+          .side-dock-toggle-button {
+            position: fixed;
+            will-change: transform;
+            -webkit-overflow-scrolling: touch;
+          }
+
+          body {
+            -webkit-overflow-scrolling: touch;
           }
         }
       `}</style>
