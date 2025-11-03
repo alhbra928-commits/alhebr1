@@ -52,9 +52,9 @@ export function MazadCrownLoader({
   const displayMessage = message || texts.defaultMessage;
   const displaySubtitle = subtitle || texts.mainTitle;
   return (
-    <div className="fixed inset-0 z-[9999] bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 flex items-center justify-center overflow-hidden">
+    <div className="fixed inset-0 z-[9999] bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 flex items-center justify-center overflow-hidden p-4">
       {/* خلفية متحركة */}
-      <div className="absolute inset-0 opacity-10">
+      <div className="absolute inset-0 opacity-10 pointer-events-none">
         {[...Array(15)].map((_, i) => (
           <div
             key={i}
@@ -72,9 +72,9 @@ export function MazadCrownLoader({
       </div>
 
       {/* المحتوى الرئيسي */}
-      <div className="relative z-10 flex flex-col items-center justify-center px-4">
+      <div className="relative z-10 flex flex-col items-center justify-center px-4 w-full max-w-lg mx-auto">
         {/* دوائر متوهجة */}
-        <div className="relative mb-8">
+        <div className="relative mb-4 sm:mb-8 w-full flex items-center justify-center">
           {/* الدائرة الخارجية */}
           <div
             className="absolute inset-0 flex items-center justify-center"
@@ -83,7 +83,7 @@ export function MazadCrownLoader({
             }}
           >
             <div
-              className="w-64 h-64 rounded-full"
+              className="w-48 h-48 sm:w-56 sm:h-56 md:w-64 md:h-64 rounded-full"
               style={{
                 background: 'radial-gradient(circle, rgba(16, 185, 129, 0.3) 0%, rgba(16, 185, 129, 0.1) 50%, transparent 100%)',
               }}
@@ -99,7 +99,7 @@ export function MazadCrownLoader({
             }}
           >
             <div
-              className="w-48 h-48 rounded-full"
+              className="w-36 h-36 sm:w-44 sm:h-44 md:w-48 md:h-48 rounded-full"
               style={{
                 background: 'radial-gradient(circle, rgba(16, 185, 129, 0.4) 0%, transparent 70%)',
               }}
@@ -109,14 +109,14 @@ export function MazadCrownLoader({
           {/* التاج الرئيسي */}
           <div className="relative flex items-center justify-center">
             <div
-              className="w-40 h-40 sm:w-48 sm:h-48 md:w-56 md:h-56 rounded-full bg-gradient-to-br from-emerald-500 via-green-500 to-emerald-600 shadow-2xl flex items-center justify-center"
+              className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 rounded-full bg-gradient-to-br from-emerald-500 via-green-500 to-emerald-600 shadow-2xl flex items-center justify-center"
               style={{
                 animation: 'crown-pulse 2s ease-in-out infinite',
-                boxShadow: '0 0 60px rgba(16, 185, 129, 0.5), 0 0 100px rgba(16, 185, 129, 0.3)',
+                boxShadow: '0 0 40px rgba(16, 185, 129, 0.5), 0 0 80px rgba(16, 185, 129, 0.3)',
               }}
             >
               <Crown
-                className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 text-white"
+                className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 text-white"
                 strokeWidth={1.5}
                 style={{
                   filter: 'drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3))',
@@ -133,11 +133,11 @@ export function MazadCrownLoader({
               />
             </div>
 
-            {/* شرارات متحركة حول التاج */}
+            {/* شرارات متحركة حول التاج - مخفية على الجوال */}
             {[0, 45, 90, 135, 180, 225, 270, 315].map((angle, i) => (
               <div
                 key={i}
-                className="absolute top-1/2 left-1/2"
+                className="absolute top-1/2 left-1/2 hidden sm:block"
                 style={{
                   animation: `sparkle-orbit ${3 + (i * 0.1)}s linear infinite`,
                   animationDelay: `${i * 0.2}s`,
@@ -145,9 +145,9 @@ export function MazadCrownLoader({
                 }}
               >
                 <Sparkles
-                  className="w-6 h-6 text-yellow-400"
+                  className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-yellow-400"
                   style={{
-                    transform: `rotate(${angle}deg) translateX(120px)`,
+                    transform: `rotate(${angle}deg) translateX(${80 + (i % 2) * 20}px)`,
                   }}
                 />
               </div>
@@ -156,10 +156,10 @@ export function MazadCrownLoader({
         </div>
 
         {/* النصوص */}
-        <div className="mt-12 text-center space-y-6">
+        <div className="mt-4 sm:mt-8 text-center space-y-4 sm:space-y-6 w-full">
           {/* كلمة مزادات */}
           <div
-            className="text-6xl sm:text-7xl md:text-8xl font-black leading-none mb-4"
+            className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black leading-none mb-2 sm:mb-4"
             style={{
               background: 'linear-gradient(135deg, #059669 0%, #10b981 25%, #34d399 50%, #10b981 75%, #059669 100%)',
               WebkitBackgroundClip: 'text',
@@ -177,7 +177,7 @@ export function MazadCrownLoader({
 
           {/* رسالة التحميل */}
           <div
-            className="inline-flex items-center gap-3 bg-white/90 backdrop-blur-sm px-8 py-4 sm:px-10 sm:py-5 rounded-2xl shadow-2xl border-2 border-emerald-200 relative overflow-hidden"
+            className="inline-flex items-center gap-2 sm:gap-3 bg-white/90 backdrop-blur-sm px-4 py-3 sm:px-8 sm:py-4 rounded-xl sm:rounded-2xl shadow-2xl border-2 border-emerald-200 relative overflow-hidden max-w-full"
             style={{
               boxShadow: '0 8px 32px rgba(16, 185, 129, 0.3), inset 0 2px 4px rgba(255, 255, 255, 0.5)'
             }}
@@ -192,16 +192,16 @@ export function MazadCrownLoader({
               }}
             />
 
-            <div className="relative z-10 flex items-center gap-3">
+            <div className="relative z-10 flex items-center gap-2 sm:gap-3">
               {/* نقاط متحركة */}
               <div className="flex gap-1">
-                <div className="w-2.5 h-2.5 bg-emerald-600 rounded-full animate-bounce" style={{ animationDelay: '0s' }} />
-                <div className="w-2.5 h-2.5 bg-green-600 rounded-full animate-bounce" style={{ animationDelay: '0.15s' }} />
-                <div className="w-2.5 h-2.5 bg-teal-600 rounded-full animate-bounce" style={{ animationDelay: '0.3s' }} />
+                <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 bg-emerald-600 rounded-full animate-bounce" style={{ animationDelay: '0s' }} />
+                <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 bg-green-600 rounded-full animate-bounce" style={{ animationDelay: '0.15s' }} />
+                <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 bg-teal-600 rounded-full animate-bounce" style={{ animationDelay: '0.3s' }} />
               </div>
 
               <p
-                className="text-emerald-800 font-bold text-lg sm:text-xl md:text-2xl"
+                className="text-emerald-800 font-bold text-base sm:text-lg md:text-xl lg:text-2xl break-words"
                 style={{
                   textShadow: '0 1px 2px rgba(16, 185, 129, 0.2)'
                 }}
@@ -212,11 +212,11 @@ export function MazadCrownLoader({
           </div>
 
           {/* نقاط التقدم */}
-          <div className="flex items-center justify-center gap-2 pt-4">
+          <div className="flex items-center justify-center gap-1.5 sm:gap-2 pt-2 sm:pt-4">
             {[0, 1, 2, 3, 4, 5].map((i) => (
               <div
                 key={i}
-                className="w-3 h-3 rounded-full bg-emerald-600"
+                className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-emerald-600"
                 style={{
                   animation: 'pulse-dot 1.4s ease-in-out infinite',
                   animationDelay: `${i * 0.15}s`,
