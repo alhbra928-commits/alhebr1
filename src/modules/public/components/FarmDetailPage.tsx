@@ -136,57 +136,27 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
 
   return (
     <div
-      className="min-h-screen overflow-hidden relative"
-      style={{
-        background: `
-          radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, rgba(16, 185, 129, 0.08) 0%, transparent 50%),
-          linear-gradient(135deg, #f0fdf4 0%, #dcfce7 50%, #bbf7d0 100%)
-        `
-      }}
+      className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-green-50"
       dir="rtl"
     >
-      {/* Glass Overlay */}
-      <div className="fixed inset-0 bg-white/30 backdrop-blur-[2px] pointer-events-none"></div>
-
       {/* Content */}
-      <div className="relative z-10">
-      {/* 🟩 الهيدر العلوي - أخضر زجاجي */}
-      <div
-        className="sticky top-0 z-50 backdrop-blur-xl border-b"
-        style={{
-          background: 'linear-gradient(180deg, rgba(240, 253, 244, 0.98) 0%, rgba(236, 253, 245, 0.95) 100%)',
-          borderColor: 'rgba(16, 185, 129, 0.3)',
-          boxShadow: '0 4px 15px rgba(16, 185, 129, 0.15)'
-        }}
-      >
-        <div className="max-w-7xl mx-auto px-3 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
+      <div className="relative">
+      {/* Header مبسط وثابت */}
+      <div className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-emerald-100 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
           <button
             onClick={onBack}
-            className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-xl font-bold transition-all active:scale-95 sm:hover:scale-105 touch-manipulation"
-            style={{
-              background: 'white',
-              color: '#059669',
-              boxShadow: '0 4px 12px rgba(16, 185, 129, 0.2)'
-            }}
+            className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-md active:scale-95 transition-transform"
           >
-            <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
-            <span className="text-sm sm:text-base">العودة</span>
+            <ArrowRight className="w-5 h-5 text-emerald-600" />
           </button>
-
-          <div className="flex items-center gap-1.5 sm:gap-2">
-            <div
-              className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full animate-pulse"
-              style={{ background: 'linear-gradient(135deg, #10b981, #059669)' }}
-            />
-            <span className="font-bold text-xs sm:text-sm md:text-base">
-              {platformName}
-            </span>
-          </div>
+          <span className="text-sm font-bold text-gray-800">{platformName}</span>
+          <div className="w-10 h-10" />
         </div>
       </div>
 
-      {/* 🟨 الصورة الرئيسية - صورة بانورامية مع تأثير حركة بطيئة */}
-      <div className="relative w-full min-h-[250px] h-[40vh] sm:h-[45vh] md:h-[55vh] lg:h-[60vh] max-h-[400px] sm:max-h-[500px] md:max-h-[600px] overflow-hidden">
+      {/* صورة Hero محسنة للجوال */}
+      <div className="relative w-full h-[60vh] min-h-[400px] max-h-[600px] overflow-hidden">
         {typeof heroImage === 'string' && heroImage.startsWith('linear-gradient') ? (
           <div
             className="absolute inset-0"
@@ -211,21 +181,25 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
           />
         )}
 
-        {/* Overlay نصي */}
+        {/* Gradient + معلومات المزرعة */}
         <div
-          className="absolute inset-0 flex items-end"
+          className="absolute inset-0 flex flex-col justify-end"
           style={{
-            background: 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 50%, transparent 100%)'
+            background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 60%, transparent 100%)'
           }}
         >
-          <div className="w-full p-3 sm:p-4 md:p-6 lg:p-8 pb-4 sm:pb-6 md:pb-8 lg:pb-10 text-white">
-            <div className="max-w-7xl mx-auto">
-              <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-black mb-1.5 sm:mb-2 md:mb-3 lg:mb-4 leading-tight drop-shadow-lg">
-                امتلك جزءًا من الطبيعة...
-              </h1>
-              <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl opacity-95 drop-shadow-md">
-                حيث تبدأ قصتك مع {getTreeName(farm.farm_type)} تحمل اسمك
-              </p>
+          <div className="p-4 pb-6 text-white">
+            <div className="flex items-center gap-2 mb-3">
+              <div className="px-3 py-1 bg-emerald-500 rounded-full text-xs font-bold">
+                متاح الآن
+              </div>
+            </div>
+            <h1 className="text-3xl font-black mb-2 leading-tight">
+              {farm.name_ar}
+            </h1>
+            <div className="flex items-center gap-2 text-white/90">
+              <MapPin className="w-4 h-4" />
+              <span className="text-sm">{farm.city}, {farm.region}</span>
             </div>
           </div>
         </div>
