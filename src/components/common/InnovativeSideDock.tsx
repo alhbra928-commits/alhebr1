@@ -68,10 +68,11 @@ export function InnovativeSideDock({
         .innovative-dock-container {
           position: relative;
           transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+          transform: translateX(-50%);
         }
 
-        .innovative-dock-container.hidden {
-          transform: translateX(-100%);
+        .innovative-dock-container.expanded {
+          transform: translateX(0);
         }
 
         .dock-main-wrapper {
@@ -360,7 +361,7 @@ export function InnovativeSideDock({
       `}</style>
 
       <div className="innovative-dock-wrapper">
-        <div className={`innovative-dock-container ${isExpanded ? '' : 'hidden'}`}>
+        <div className={`innovative-dock-container ${isExpanded ? 'expanded' : ''}`}>
           <div className="dock-main-wrapper">
 
             {/* الشريط الرئيسي */}
