@@ -232,7 +232,7 @@ export const ModernHomeTab: React.FC<ModernHomeTabProps> = ({ profile, farmStatu
   const setupSteps = [
     { label: 'إنشاء الحساب', completed: true },
     { label: 'رفع بيانات المزرعة', completed: hasSubmittedData },
-    { label: 'المراجعة والاعتماد', completed: profile?.status === 'approved' },
+    { label: 'المراجعة والاعتماد', completed: profile?.approval_status === 'approved' },
     { label: 'استقبال الحجوزات', completed: (farmStatus?.total_investors || 0) > 0 }
   ];
 

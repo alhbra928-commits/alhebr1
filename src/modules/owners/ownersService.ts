@@ -373,4 +373,21 @@ export class OwnersService {
     };
     return map[status] || status;
   }
+
+  static async getPendingApprovals(): Promise<any[]> {
+    try {
+      const { data, error } = await supabase
+        .from('farm_owners')
+        .select('*')
+        .eq('approval_status', 'pending')
+        .is('deleted_at', null)
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      return data || [];
+    } catch (error) {
+      console.error('Error loading pending approvals:', error);
+      throw error;
+    }
+  }
 }

@@ -33,6 +33,7 @@ import { FarmsService } from '../../farms/farmsService';
 import { OwnerFormModal } from './OwnerFormModal';
 import { AdvancedOwnerCard3D } from './AdvancedOwnerCard3D';
 import { SubmittedDataModal } from './SubmittedDataModal';
+import { FarmOwnerApprovalCard } from './FarmOwnerApprovalCard';
 import { usePermissions } from '../../../contexts/PermissionsContext';
 
 interface OwnersViewProps {
@@ -42,6 +43,7 @@ interface OwnersViewProps {
 export function OwnersView({ onBack }: OwnersViewProps) {
   const [owners, setOwners] = useState<FarmOwner[]>([]);
   const [pendingSubmissions, setPendingSubmissions] = useState<any[]>([]);
+  const [pendingApprovals, setPendingApprovals] = useState<any[]>([]);
   const [filteredOwners, setFilteredOwners] = useState<FarmOwner[]>([]);
   const [stats, setStats] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -89,10 +91,15 @@ export function OwnersView({ onBack }: OwnersViewProps) {
         OwnersService.getPendingSubmissions().catch(err => {
           console.error('Error loading pending submissions:', err);
           return [];
+        }),
+        OwnersService.getPendingApprovals().catch(err => {
+          console.error('Error loading pending approvals:', err);
+          return [];
         })
-      ]).then(([statsData, pendingData]) => {
+      ]).then(([statsData, pendingData, approvalsData]) => {
         setStats(statsData);
         setPendingSubmissions(pendingData);
+        setPendingApprovals(approvalsData);
       });
     } catch (err) {
       console.error('Error loading data:', err);
@@ -378,6 +385,31 @@ export function OwnersView({ onBack }: OwnersViewProps) {
             </div>
           </Card3D>
         </div>
+
+        {/* Farm Owner Approval Cards */}
+        {pendingApprovals.length > 0 && (
+          <div className="mb-8">
+            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-2xl p-6 mb-6">
+              <h2 className="text-2xl font-black flex items-center gap-3">
+                <Clock className="w-7 h-7" />
+                بطاقات أصحاب المزارع في انتظار الاعتماد ({pendingApprovals.length})
+              </h2>
+              <p className="text-blue-100 mt-2">
+                راجع واعتمد بطاقات أصحاب المزارع الجديدة
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {pendingApprovals.map((owner: any) => (
+                <FarmOwnerApprovalCard
+                  key={owner.id}
+                  owner={owner}
+                  onUpdate={loadData}
+                />
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Simple Pending Submissions Display */}
         {pendingSubmissions.length > 0 && (
