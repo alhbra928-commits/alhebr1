@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Save, MapPin, TreePine, DollarSign, Hash, FileText, CheckCircle, AlertCircle, Upload } from 'lucide-react';
-import { farmOwnerService } from '../services/farmOwnerService';
+import { supabase } from '../../../lib/supabase';
 
 interface FarmDataSubmissionFormProps {
   profileId: string;
@@ -94,7 +94,7 @@ export const FarmDataSubmissionForm: React.FC<FarmDataSubmissionFormProps> = ({ 
       };
 
       // حفظ البيانات في farm_owners
-      const { error } = await farmOwnerService.supabase
+      const { error } = await supabase
         .from('farm_owners')
         .update(formData)
         .eq('id', profileId);
