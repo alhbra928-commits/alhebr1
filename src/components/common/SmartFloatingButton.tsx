@@ -571,13 +571,14 @@ export const SmartFloatingButton: React.FC<SmartFloatingButtonProps> = ({
                 )}
               </div>
             </div>
-            <div className="flex items-center gap-2 flex-shrink-0">
+            <div className="flex items-center gap-2 flex-shrink-0" style={{ position: 'relative', zIndex: 10001 }}>
               <button
                 onClick={toggleSound}
                 className={`rounded-full bg-white/20 hover:bg-white/30 active:scale-95 flex items-center justify-center transition-all ${
                   isMobile ? 'w-10 h-10' : 'w-7 h-7'
                 }`}
                 title={soundEnabled ? 'إيقاف الصوت' : 'تشغيل الصوت'}
+                style={{ zIndex: 10002 }}
               >
                 {soundEnabled ? (
                   <Bell className={isMobile ? 'w-5 h-5' : 'w-3.5 h-3.5'} style={{ color: 'white' }} />
@@ -587,6 +588,7 @@ export const SmartFloatingButton: React.FC<SmartFloatingButtonProps> = ({
               </button>
               <button
                 onClick={() => {
+                  console.log('🔴 Close button clicked!');
                   setIsOpen(false);
                   if (onExternalOpenChange) {
                     onExternalOpenChange(false);
@@ -594,14 +596,21 @@ export const SmartFloatingButton: React.FC<SmartFloatingButtonProps> = ({
                 }}
                 className={`rounded-full active:scale-95 flex items-center justify-center transition-all font-bold ${
                   isMobile
-                    ? 'w-12 h-12 bg-red-500/90 hover:bg-red-600 shadow-lg'
+                    ? 'w-14 h-14 bg-red-500 hover:bg-red-600 shadow-2xl border-2 border-white/50'
                     : 'w-7 h-7 bg-white/20 hover:bg-white/30'
                 }`}
                 title="إغلاق"
+                style={{
+                  zIndex: 10003,
+                  minWidth: isMobile ? '56px' : 'auto',
+                  minHeight: isMobile ? '56px' : 'auto',
+                  cursor: 'pointer',
+                  touchAction: 'manipulation'
+                }}
               >
-                <X className={isMobile ? 'w-6 h-6' : 'w-3.5 h-3.5'} style={{
+                <X className={isMobile ? 'w-7 h-7' : 'w-3.5 h-3.5'} style={{
                   color: 'white',
-                  strokeWidth: isMobile ? 3 : 2
+                  strokeWidth: isMobile ? 4 : 2
                 }} />
               </button>
             </div>

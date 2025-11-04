@@ -149,9 +149,13 @@ export function ModernRoyalPlatform({
     setSelectedFarm(null);
   };
 
-  // عرض بوابة المزاد أثناء تحميل المزارع
+  // عرض loader بسيط أثناء تحميل المزارع
   if (loading) {
-    return <MazadGateway onEnter={() => {}} />;
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-50 via-green-50 to-emerald-100">
+        <SimpleLoader size="lg" color="#10b981" />
+      </div>
+    );
   }
 
   // Handle other views with Suspense
