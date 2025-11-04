@@ -1,14 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import {
   Star, Crown, Sparkles, TreePine
 } from 'lucide-react';
 import { PublicFarm } from '../types/farm.types';
 import { PublicFarmService } from '../services/publicFarmService';
-import { InnovativeFarmDetailPage } from './InnovativeFarmDetailPage';
-import { TemporaryBookingPage } from './TemporaryBookingPage';
-import { InvestorRouter } from '../../investor/components/InvestorRouter';
-import { CertificateVerificationPage } from './CertificateVerificationPage';
-import { ConceptIntroductionPage } from './ConceptIntroductionPage';
 import { GreenConceptButton } from './GreenConceptButton';
 import { AdminCrownButton } from './AdminCrownButton';
 import { SmartFloatingButton } from '../../../components/common/SmartFloatingButton';
@@ -17,7 +12,15 @@ import { InnovativeFarmCard } from './InnovativeFarmCard';
 import { Modern3DTicker } from '../../../components/common/Modern3DTicker';
 import { modern3DTickerService, TickerMessage, TickerSettings } from '../../../services/modern3DTickerService';
 import { getPlatformTextsBySection } from '../../../services/platformTextsService';
-import { MazadGateway } from './MazadGateway';
+import { SimpleLoader } from '../../../components/common/SimpleLoader';
+
+// Lazy load heavy components
+const InnovativeFarmDetailPage = lazy(() => import('./InnovativeFarmDetailPage').then(m => ({ default: m.InnovativeFarmDetailPage })));
+const TemporaryBookingPage = lazy(() => import('./TemporaryBookingPage').then(m => ({ default: m.TemporaryBookingPage })));
+const InvestorRouter = lazy(() => import('../../investor/components/InvestorRouter').then(m => ({ default: m.InvestorRouter })));
+const CertificateVerificationPage = lazy(() => import('./CertificateVerificationPage').then(m => ({ default: m.CertificateVerificationPage })));
+const ConceptIntroductionPage = lazy(() => import('./ConceptIntroductionPage').then(m => ({ default: m.ConceptIntroductionPage })));
+const MazadGateway = lazy(() => import('./MazadGateway').then(m => ({ default: m.MazadGateway })));
 
 type ViewMode = 'home' | 'farmDetail' | 'booking' | 'investor' | 'verification' | 'concept';
 
@@ -151,44 +154,56 @@ export function ModernRoyalPlatform({
     return <MazadGateway onEnter={() => {}} />;
   }
 
-  // Handle other views
+  // Handle other views with Suspense
   if (currentView === 'concept') {
     return (
-      <ConceptIntroductionPage onClose={handleGoHome} onStartJourney={handleGoHome} />
+      <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-50 to-green-50"><SimpleLoader size="lg" color="#10b981" /></div>}>
+        <ConceptIntroductionPage onClose={handleGoHome} onStartJourney={handleGoHome} />
+      </Suspense>
     );
   }
 
   if (currentView === 'verification') {
     return (
-      <CertificateVerificationPage onBack={handleGoHome} />
+      <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-50 to-green-50"><SimpleLoader size="lg" color="#10b981" /></div>}>
+        <CertificateVerificationPage onBack={handleGoHome} />
+      </Suspense>
     );
   }
 
   if (currentView === 'investor') {
-    return <InvestorRouter onBack={handleGoHome} />;
+    return (
+      <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-50 to-green-50"><SimpleLoader size="lg" color="#10b981" /></div>}>
+        <InvestorRouter onBack={handleGoHome} />
+      </Suspense>
+    );
   }
 
   if (currentView === 'farmDetail' && selectedFarm) {
     return (
-      <InnovativeFarmDetailPage
-        farmId={selectedFarm.id}
-        onBack={handleGoHome}
-        onStartBooking={() => setCurrentView('booking')}
-      />
+      <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-50 to-green-50"><SimpleLoader size="lg" color="#10b981" /></div>}>
+        <InnovativeFarmDetailPage
+          farmId={selectedFarm.id}
+          onBack={handleGoHome}
+          onStartBooking={() => setCurrentView('booking')}
+        />
+      </Suspense>
     );
   }
 
   if (currentView === 'booking' && selectedFarm) {
     return (
-      <TemporaryBookingPage
-        farmId={selectedFarm.id}
-        farmName={selectedFarm.farm_name}
-        farmType={selectedFarm.tree_type === 'نخيل' ? 'palm' : 'olive'}
-        onBack={() => setCurrentView('farmDetail')}
-        onSuccess={handleGoHome}
-        onGoHome={handleGoHome}
-        onGoToInvestor={() => setCurrentView('investor')}
-      />
+      <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-50 to-green-50"><SimpleLoader size="lg" color="#10b981" /></div>}>
+        <TemporaryBookingPage
+          farmId={selectedFarm.id}
+          farmName={selectedFarm.farm_name}
+          farmType={selectedFarm.tree_type === 'نخيل' ? 'palm' : 'olive'}
+          onBack={() => setCurrentView('farmDetail')}
+          onSuccess={handleGoHome}
+          onGoHome={handleGoHome}
+          onGoToInvestor={() => setCurrentView('investor')}
+        />
+      </Suspense>
     );
   }
 

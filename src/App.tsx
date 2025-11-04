@@ -1,13 +1,14 @@
 import { useState, lazy, Suspense, useEffect } from 'react';
 import { SimpleLoader } from './components/common/SimpleLoader';
-import { SmartAdminLoginPage } from './modules/admin/components/SmartAdminLoginPage';
-import { IdleSessionWarning } from './modules/admin/components/IdleSessionWarning';
-import { LoginNotification } from './modules/admin/components/LoginNotification';
 import { AdminSessionService } from './modules/admin/services/adminSessionService';
 import { PermissionsProvider } from './contexts/PermissionsContext';
-// import { UpdateNotificationBanner } from './components/common/UpdateNotificationBanner';
-import { MobileHeader } from './components/layout/MobileHeader';
-import { MobileSidebar } from './components/layout/MobileSidebar';
+
+// Lazy load EVERYTHING - including admin components
+const SmartAdminLoginPage = lazy(() => import('./modules/admin/components/SmartAdminLoginPage').then(m => ({ default: m.SmartAdminLoginPage })));
+const IdleSessionWarning = lazy(() => import('./modules/admin/components/IdleSessionWarning').then(m => ({ default: m.IdleSessionWarning })));
+const LoginNotification = lazy(() => import('./modules/admin/components/LoginNotification').then(m => ({ default: m.LoginNotification })));
+const MobileHeader = lazy(() => import('./components/layout/MobileHeader').then(m => ({ default: m.MobileHeader })));
+const MobileSidebar = lazy(() => import('./components/layout/MobileSidebar').then(m => ({ default: m.MobileSidebar })));
 
 const PublicPlatformRouter = lazy(() => import('./modules/public/components/PublicPlatformRouter').then(m => ({ default: m.PublicPlatformRouter })));
 const FarmOwnerRouter = lazy(() => import('./modules/farm-owner/components/FarmOwnerRouter').then(m => ({ default: m.FarmOwnerRouter })));
