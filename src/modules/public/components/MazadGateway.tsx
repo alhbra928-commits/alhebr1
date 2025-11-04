@@ -90,6 +90,8 @@ export function MazadGateway({ onEnter }: MazadGatewayProps) {
           .limit(1)
           .maybeSingle();
 
+        console.log('[Gateway] Settings loaded from DB:', data);
+
         if (data) {
           setSettings({
             enabled: data.enabled ?? true,
@@ -111,10 +113,13 @@ export function MazadGateway({ onEnter }: MazadGatewayProps) {
             show_title: data.show_title ?? true,
             show_subtitle: data.show_subtitle ?? true,
           });
+          console.log('[Gateway] auto_enter_enabled:', data.auto_enter_enabled);
+        } else {
+          console.log('[Gateway] ⚠️ No settings in DB, using defaults');
         }
         setSettingsLoaded(true);
       } catch (error) {
-        console.error('Error loading gateway settings:', error);
+        console.error('[Gateway] ❌ Error loading settings:', error);
         setSettingsLoaded(true);
       }
     };
@@ -124,7 +129,16 @@ export function MazadGateway({ onEnter }: MazadGatewayProps) {
 
   // العد التنازلي التلقائي - يبدأ فقط بعد إخفاء الـ loader
   useEffect(() => {
+    console.log('[Gateway] Auto-enter check:', {
+      settingsLoaded,
+      auto_enter_enabled: settings.auto_enter_enabled,
+      isInitializing,
+      should_start: settingsLoaded && settings.auto_enter_enabled && !isInitializing
+    });
+
     if (!settingsLoaded || !settings.auto_enter_enabled || isInitializing) return;
+
+    console.log('[Gateway] ✅ Starting auto-enter countdown:', settings.auto_enter_delay, 'seconds');
 
     const duration = settings.auto_enter_delay * 1000;
     const interval = 50;
@@ -137,6 +151,7 @@ export function MazadGateway({ onEnter }: MazadGatewayProps) {
 
       if (currentStep >= steps) {
         clearInterval(timer);
+        console.log('[Gateway] ⏱️ Countdown finished, entering platform...');
         handleEnter();
       }
     }, interval);
