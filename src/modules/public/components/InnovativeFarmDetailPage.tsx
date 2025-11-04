@@ -6,7 +6,6 @@ import {
   Droplets,
   Zap,
   Shield,
-  Phone,
   Share2,
   Heart,
   Sparkles,
@@ -469,12 +468,6 @@ export const InnovativeFarmDetailPage: React.FC<InnovativeFarmDetailPageProps> =
 
               <ArrowRight className="w-6 h-6" />
             </div>
-          </button>
-
-          {/* زر الاتصال */}
-          <button className="w-full mt-3 py-4 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-2xl font-bold flex items-center justify-center gap-2 hover:shadow-lg transition-all active:scale-[0.98]">
-            <Phone className="w-5 h-5" />
-            <span>اتصل بنا للاستفسار</span>
           </button>
         </div>
       </div>
