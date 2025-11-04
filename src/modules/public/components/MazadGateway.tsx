@@ -91,9 +91,12 @@ export function MazadGateway({ onEnter }: MazadGatewayProps) {
           .maybeSingle();
 
         console.log('[MazadGateway] 🔵 Settings loaded from DB:', data);
+        console.log('[MazadGateway] 📝 Title Line 1:', data?.title_line1);
+        console.log('[MazadGateway] 📝 Title Line 2:', data?.title_line2);
+        console.log('[MazadGateway] 📝 Button Text:', data?.button_text);
 
         if (data) {
-          setSettings({
+          const newSettings = {
             enabled: data.enabled ?? true,
             auto_enter_enabled: data.auto_enter_enabled ?? true,
             auto_enter_delay: data.auto_enter_delay ?? 3,
@@ -112,7 +115,10 @@ export function MazadGateway({ onEnter }: MazadGatewayProps) {
             button_text: data.button_text || 'ادخل إلى المنصة',
             show_title: data.show_title ?? true,
             show_subtitle: data.show_subtitle ?? true,
-          });
+          };
+
+          console.log('[MazadGateway] ✅ Settings applied:', newSettings);
+          setSettings(newSettings);
           console.log('[Gateway] auto_enter_enabled:', data.auto_enter_enabled);
         } else {
           console.log('[Gateway] ⚠️ No settings in DB, using defaults');
@@ -311,6 +317,7 @@ export function MazadGateway({ onEnter }: MazadGatewayProps) {
         {settings.show_title && (settings.title_line1 || settings.title_line2) && (
           <h1 className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-center mb-2 sm:mb-3 md:mb-4 leading-tight
                          ${settings.title_animation_enabled ? 'animate-fade-in-up' : ''}`}>
+            {console.log('[MazadGateway] 🎨 Rendering title_line1:', settings.title_line1)}
             {settings.title_line1 && (
               <>
                 <span className="bg-gradient-to-r from-emerald-600 via-green-600 to-emerald-700
