@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { ModernRoyalPlatform } from './ModernRoyalPlatform';
 import { PreviewInspectionPage } from './PreviewInspectionPage';
+import { InnovativeLoaderGateway } from './InnovativeLoaderGateway';
 import { marketingAnalyticsService } from '../../../services/marketingAnalyticsService';
 
-type View = 'main' | 'preview';
+type View = 'loader' | 'main' | 'preview';
 
 interface PublicPlatformRouterProps {
   onAdminLogin?: () => void;
@@ -12,7 +13,7 @@ interface PublicPlatformRouterProps {
 }
 
 export function PublicPlatformRouter({ onAdminLogin, onBackToAdmin, onFarmOwnerLogin }: PublicPlatformRouterProps) {
-  const [currentView, setCurrentView] = useState<View>('main');
+  const [currentView, setCurrentView] = useState<View>('loader');
   const [selectedBarcode, setSelectedBarcode] = useState<string>('');
 
   // تهيئة السكربتات التحليلية عند التحميل الأول - فقط مرة واحدة
@@ -40,6 +41,10 @@ export function PublicPlatformRouter({ onAdminLogin, onBackToAdmin, onFarmOwnerL
   }, [currentView]);
 
 
+  const handleLoaderComplete = () => {
+    setCurrentView('main');
+  };
+
   const handlePreviewSelect = (barcode: string) => {
     setSelectedBarcode(barcode);
     setCurrentView('preview');
@@ -55,6 +60,9 @@ export function PublicPlatformRouter({ onAdminLogin, onBackToAdmin, onFarmOwnerL
   };
 
   switch (currentView) {
+    case 'loader':
+      return <InnovativeLoaderGateway onComplete={handleLoaderComplete} />;
+
     case 'preview':
       return (
         <PreviewInspectionPage
