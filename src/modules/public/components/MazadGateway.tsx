@@ -68,13 +68,16 @@ export function MazadGateway({ onEnter }: MazadGatewayProps) {
     preloadFarms();
   }, []);
 
-  // إزالة الشاشة البيضاء بعد 100ms
+  // إزالة الشاشة البيضاء بعد تحميل الإعدادات
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsInitializing(false);
-    }, 100);
-    return () => clearTimeout(timer);
-  }, []);
+    if (settingsLoaded) {
+      // انتظر 200ms إضافية للتأكد من رسم البوابة
+      const timer = setTimeout(() => {
+        setIsInitializing(false);
+      }, 200);
+      return () => clearTimeout(timer);
+    }
+  }, [settingsLoaded]);
 
   // تحميل الإعدادات من قاعدة البيانات
   useEffect(() => {
@@ -119,9 +122,9 @@ export function MazadGateway({ onEnter }: MazadGatewayProps) {
     loadSettings();
   }, []);
 
-  // العد التنازلي التلقائي - يبدأ فقط بعد تحميل الإعدادات
+  // العد التنازلي التلقائي - يبدأ فقط بعد إخفاء الـ loader
   useEffect(() => {
-    if (!settingsLoaded || !settings.auto_enter_enabled) return;
+    if (!settingsLoaded || !settings.auto_enter_enabled || isInitializing) return;
 
     const duration = settings.auto_enter_delay * 1000;
     const interval = 50;
@@ -139,7 +142,7 @@ export function MazadGateway({ onEnter }: MazadGatewayProps) {
     }, interval);
 
     return () => clearInterval(timer);
-  }, [settingsLoaded, settings.auto_enter_enabled, settings.auto_enter_delay]);
+  }, [settingsLoaded, settings.auto_enter_enabled, settings.auto_enter_delay, isInitializing]);
 
   const handleEnter = () => {
     // انتظر حتى تنتهي المزارع من التحميل
