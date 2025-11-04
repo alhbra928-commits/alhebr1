@@ -19,26 +19,46 @@ interface SectionData {
   isExpanded: boolean;
 }
 
-// أسماء الأقسام بالعربية
+// أسماء الأقسام بالعربية - محدّثة وشاملة
 const SECTION_NAMES: Record<string, { name: string; icon: string; description: string }> = {
+  // الأقسام الرئيسية
   'hero': { name: 'البطل الرئيسي', icon: '🎯', description: 'القسم الرئيسي في أعلى الصفحة' },
-  'header': { name: 'الرأس العلوي', icon: '📋', description: 'شريط التنقل العلوي' },
-  'footer': { name: 'التذييل السفلي', icon: '📄', description: 'القسم السفلي من الصفحة' },
-  'home': { name: 'الصفحة الرئيسية', icon: '🏠', description: 'نصوص الصفحة الرئيسية' },
-  'buttons': { name: 'الأزرار', icon: '🔘', description: 'نصوص جميع الأزرار' },
+  'features': { name: 'المميزات', icon: '✨', description: 'مميزات المنصة والخدمات' },
+  'benefits': { name: 'الفوائد', icon: '⭐', description: 'فوائد الاستثمار مع المنصة' },
+  'steps': { name: 'الخطوات', icon: '📝', description: 'خطوات العمل والإجراءات' },
+  'stats': { name: 'الإحصائيات', icon: '📊', description: 'أرقام وإحصائيات المنصة' },
+
+  // بطاقات وعرض المحتوى
   'farm_cards': { name: 'بطاقات المزارع', icon: '🌾', description: 'نصوص بطاقات عرض المزارع' },
+
+  // عناصر التفاعل
+  'buttons': { name: 'الأزرار', icon: '🔘', description: 'نصوص جميع الأزرار' },
+  'messages': { name: 'الرسائل', icon: '💬', description: 'رسائل النظام والتنبيهات' },
+
+  // التنقل والهيكل
   'navigation': { name: 'التنقل', icon: '🧭', description: 'قوائم التنقل والروابط' },
-  'steps': { name: 'الخطوات', icon: '📝', description: 'خطوات العملية والإجراءات' },
-  'benefits': { name: 'الفوائد والمميزات', icon: '⭐', description: 'مميزات وفوائد المنصة' },
-  'messages': { name: 'الرسائل', icon: '💬', description: 'رسائل النظام والإشعارات' },
-  'features': { name: 'الميزات', icon: '✨', description: 'ميزات المنصة' },
-  'stats': { name: 'الإحصائيات', icon: '📊', description: 'نصوص الإحصائيات' },
-  'contact_bar': { name: 'شريط التواصل', icon: '📞', description: 'معلومات التواصل' },
-  'side_dock': { name: 'الشريط الجانبي', icon: '🎛️', description: 'أدوات التنقل الجانبي السريع' },
-  'loader': { name: 'شاشة التحميل', icon: '👑', description: 'تاج مزادات وشاشة الانتظار' },
-  'cta': { name: 'دعوات الإجراء', icon: '🎬', description: 'نصوص دعوات الإجراء' },
-  'about': { name: 'من نحن', icon: 'ℹ️', description: 'نصوص صفحة من نحن' },
-  'contact': { name: 'اتصل بنا', icon: '📧', description: 'نصوص صفحة اتصل بنا' }
+  'header': { name: 'الرأس', icon: '📋', description: 'شريط التنقل العلوي' },
+  'footer': { name: 'التذييل', icon: '📄', description: 'القسم السفلي من الصفحة' },
+
+  // الحجز والنماذج
+  'booking': { name: 'الحجز', icon: '📅', description: 'نصوص صفحة الحجز' },
+  'forms': { name: 'النماذج', icon: '📋', description: 'رسائل النماذج والتحقق' },
+
+  // البحث والتصفية
+  'filters': { name: 'الفلاتر', icon: '🔍', description: 'خيارات التصفية والترتيب' },
+  'search': { name: 'البحث', icon: '🔎', description: 'نصوص البحث' },
+
+  // الحالات
+  'errors': { name: 'الأخطاء', icon: '❌', description: 'رسائل الأخطاء' },
+  'success': { name: 'النجاح', icon: '✅', description: 'رسائل النجاح' },
+
+  // تحسين محركات البحث
+  'seo': { name: 'SEO', icon: '🌐', description: 'نصوص تحسين محركات البحث' },
+
+  // الإدارات الخاصة (لا تُحذف)
+  'contact_bar': { name: 'شريط التواصل', icon: '📞', description: '⚙️ إدارة خاصة - من تبويب شريط التواصل' },
+  'side_dock': { name: 'الشريط الجانبي', icon: '🎛️', description: '⚙️ إدارة خاصة - من تبويب الشريط الجانبي' },
+  'loader': { name: 'شاشة التحميل', icon: '👑', description: '⚙️ إدارة خاصة - من تبويب شاشة التحميل' }
 };
 
 export function CompletePlatformTextsManager() {
