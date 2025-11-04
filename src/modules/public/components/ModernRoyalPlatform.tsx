@@ -38,6 +38,8 @@ export function ModernRoyalPlatform({
   const [currentView, setCurrentView] = useState<ViewMode>('home');
   const [smartButtonOpen, setSmartButtonOpen] = useState(false);
   const [selectedFarm, setSelectedFarm] = useState<PublicFarm | null>(null);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
+  const [loadingProgress, setLoadingProgress] = useState(0);
   const [mousePosition, setMousePosition] = useState({ x: 50, y: 50 });
   const [tickerMessages, setTickerMessages] = useState<TickerMessage[]>([]);
   const [tickerSettings, setTickerSettings] = useState<TickerSettings>({
@@ -48,19 +50,54 @@ export function ModernRoyalPlatform({
   });
   const [platformName, setPlatformName] = useState('منصة الحبر');
 
+  // شاشة التحميل المبتكرة مع شريط التقدم
   useEffect(() => {
-    // تحميل المزارع أولاً (الأهم)
-    loadData();
+    const loadEverything = async () => {
+      // محاكاة تقدم التحميل بشكل سلس
+      const progressInterval = setInterval(() => {
+        setLoadingProgress((prev) => {
+          if (prev >= 90) {
+            clearInterval(progressInterval);
+            return prev;
+          }
+          return prev + Math.random() * 15;
+        });
+      }, 150);
 
-    // تأخير التحميلات الأخرى
-    const timer1 = setTimeout(() => loadPlatformTexts(), 500);
-    const timer2 = setTimeout(() => loadTickerData(), 1000);
+      try {
+        // تحميل المزارع أولاً
+        await loadData();
+        setLoadingProgress(95);
 
-    // Subscribe to ticker updates - بعد تأخير
+        // تحميل باقي البيانات
+        await Promise.all([
+          loadPlatformTexts(),
+          loadTickerData()
+        ]);
+
+        setLoadingProgress(100);
+
+        // انتظار قصير لإظهار 100%
+        setTimeout(() => {
+          setIsInitialLoading(false);
+        }, 300);
+
+      } catch (error) {
+        console.error('Loading error:', error);
+        setLoadingProgress(100);
+        setTimeout(() => setIsInitialLoading(false), 300);
+      } finally {
+        clearInterval(progressInterval);
+      }
+    };
+
+    loadEverything();
+
+    // Subscribe to ticker updates - بعد التحميل
     let unsubscribeMessages: (() => void) | null = null;
     let unsubscribeSettings: (() => void) | null = null;
 
-    const timer3 = setTimeout(() => {
+    const timer = setTimeout(() => {
       unsubscribeMessages = modern3DTickerService.subscribeToMessages((messages) => {
         setTickerMessages(messages);
       });
@@ -71,9 +108,7 @@ export function ModernRoyalPlatform({
     }, 1500);
 
     return () => {
-      clearTimeout(timer1);
-      clearTimeout(timer2);
-      clearTimeout(timer3);
+      clearTimeout(timer);
       if (unsubscribeMessages) unsubscribeMessages();
       if (unsubscribeSettings) unsubscribeSettings();
     };
@@ -145,7 +180,88 @@ export function ModernRoyalPlatform({
     setSelectedFarm(null);
   };
 
-  // تم إزالة شاشة التحميل - المنصة تفتح مباشرة
+  // شاشة تحميل مبتكرة ورسمية
+  if (isInitialLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-emerald-100 flex items-center justify-center relative overflow-hidden">
+        {/* خلفية متحركة */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-0 left-0 w-96 h-96 bg-emerald-400 rounded-full blur-3xl animate-pulse" />
+          <div className="absolute bottom-0 right-0 w-96 h-96 bg-green-400 rounded-full blur-3xl animate-pulse delay-700" />
+        </div>
+
+        {/* المحتوى الرئيسي */}
+        <div className="relative z-10 text-center px-4 max-w-md w-full">
+          {/* شعار مبتكر */}
+          <div className="mb-8 relative">
+            <div className="inline-flex items-center justify-center w-24 h-24 rounded-3xl bg-gradient-to-br from-emerald-500 to-green-600 shadow-2xl shadow-emerald-500/50 mb-4 relative overflow-hidden">
+              <div className="absolute inset-0 bg-white/20 animate-pulse" />
+              <TreePine className="w-12 h-12 text-white relative z-10" strokeWidth={2.5} />
+              <Sparkles className="w-6 h-6 text-yellow-300 absolute top-2 right-2 animate-bounce" />
+            </div>
+
+            {/* اسم المنصة */}
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-emerald-700 via-green-600 to-emerald-700 bg-clip-text text-transparent mb-2 animate-fade-in">
+              {platformName}
+            </h1>
+            <p className="text-emerald-600 font-medium text-lg animate-fade-in delay-150">
+              منصة استثمار زراعي متطورة
+            </p>
+          </div>
+
+          {/* شريط التقدم المتطور */}
+          <div className="space-y-4">
+            {/* النسبة المئوية */}
+            <div className="flex items-center justify-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-white shadow-lg flex items-center justify-center">
+                <span className="text-emerald-600 font-bold text-sm">
+                  {Math.round(loadingProgress)}%
+                </span>
+              </div>
+            </div>
+
+            {/* شريط التقدم الأنيق */}
+            <div className="relative">
+              <div className="h-2 bg-white/60 backdrop-blur-sm rounded-full overflow-hidden shadow-inner">
+                <div
+                  className="h-full bg-gradient-to-r from-emerald-500 via-green-500 to-emerald-600 rounded-full transition-all duration-300 ease-out relative overflow-hidden"
+                  style={{ width: `${loadingProgress}%` }}
+                >
+                  {/* تأثير اللمعان */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer" />
+                </div>
+              </div>
+
+              {/* خط مضيء */}
+              <div
+                className="absolute top-0 h-2 w-20 bg-gradient-to-r from-transparent via-white/80 to-transparent blur-sm transition-all duration-300"
+                style={{ left: `${loadingProgress}%`, transform: 'translateX(-50%)' }}
+              />
+            </div>
+
+            {/* نص التحميل */}
+            <p className="text-emerald-600 text-sm font-medium animate-pulse">
+              {loadingProgress < 30 && "جاري تحضير المنصة..."}
+              {loadingProgress >= 30 && loadingProgress < 60 && "تحميل المزارع المتاحة..."}
+              {loadingProgress >= 60 && loadingProgress < 90 && "تجهيز البيانات..."}
+              {loadingProgress >= 90 && loadingProgress < 100 && "اللمسات الأخيرة..."}
+              {loadingProgress >= 100 && "جاهز!"}
+            </p>
+          </div>
+
+          {/* نقاط متحركة */}
+          <div className="mt-8 flex justify-center gap-2">
+            <div className="w-2 h-2 bg-emerald-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+            <div className="w-2 h-2 bg-green-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+            <div className="w-2 h-2 bg-emerald-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+          </div>
+        </div>
+
+        {/* تأثيرات إضافية */}
+        <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-500 via-green-500 to-emerald-500 animate-pulse" />
+      </div>
+    );
+  }
 
   // Handle other views with Suspense
   if (currentView === 'concept') {

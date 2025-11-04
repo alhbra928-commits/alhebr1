@@ -2121,3 +2121,34 @@ body.royal-green-theme {
   outline: 2px solid var(--emerald-500);
   outline-offset: 2px;
 }
+
+/* ============================================
+   ADVANCED LOADING SCREEN ANIMATIONS
+   شاشة التحميل المبتكرة
+   ============================================ */
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite;
+}
+
+/* Delay utilities for staggered animations */
+.delay-150 {
+  animation-delay: 150ms;
+}
+
+.delay-300 {
+  animation-delay: 300ms;
+}
+
+.delay-700 {
+  animation-delay: 700ms;
+}
