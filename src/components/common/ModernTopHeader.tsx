@@ -375,6 +375,16 @@ export function ModernTopHeader({
           margin: 8px 0;
         }
 
+        /* Mobile Smart Button - Always Visible */
+        .header-smart-btn-mobile {
+          display: none;
+        }
+
+        /* Mobile Actions Group */
+        .mobile-actions-group {
+          display: none;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
           .header-container {
@@ -391,6 +401,51 @@ export function ModernTopHeader({
 
           .header-nav-desktop {
             display: none;
+          }
+
+          /* Show mobile actions group */
+          .mobile-actions-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+          }
+
+          /* Show mobile smart button */
+          .header-smart-btn-mobile {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            border: none;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow:
+              0 4px 20px rgba(16, 185, 129, 0.5),
+              inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            flex-shrink: 0;
+          }
+
+          .header-smart-btn-mobile::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transform: translateX(-100%);
+            animation: shimmer-smart 3s infinite;
+          }
+
+          .header-smart-btn-mobile:active {
+            transform: scale(0.95);
+          }
+
+          .header-smart-btn-mobile .robot-icon {
+            font-size: 28px;
           }
 
           .mobile-menu-btn {
@@ -467,16 +522,30 @@ export function ModernTopHeader({
             <span>{texts.phoneButton}</span>
           </button>
 
-          {/* Mobile Menu Button */}
-          <button
-            className="mobile-menu-btn"
-            onClick={() => {
-              setMobileMenuOpen(!mobileMenuOpen);
-              document.body.classList.toggle('menu-open', !mobileMenuOpen);
-            }}
-          >
-            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+          {/* Mobile Actions Group */}
+          <div className="mobile-actions-group">
+            {/* Mobile Smart Button - Always Visible */}
+            {onSmartButtonClick && (
+              <button
+                className="header-smart-btn-mobile"
+                onClick={onSmartButtonClick}
+                title={texts.smartTooltip}
+              >
+                <span className="robot-icon">🤖</span>
+              </button>
+            )}
+
+            {/* Mobile Menu Button */}
+            <button
+              className="mobile-menu-btn"
+              onClick={() => {
+                setMobileMenuOpen(!mobileMenuOpen);
+                document.body.classList.toggle('menu-open', !mobileMenuOpen);
+              }}
+            >
+              {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
         </div>
 
         {/* Mobile Menu Overlay */}
@@ -491,24 +560,6 @@ export function ModernTopHeader({
         {/* Mobile Menu */}
         <div className={`mobile-menu ${mobileMenuOpen ? 'open' : ''}`}>
           <div className="mobile-menu-content">
-            {/* Smart Assistant */}
-            {onSmartButtonClick && (
-              <>
-                <div
-                  className="mobile-menu-item smart"
-                  onClick={() => {
-                    onSmartButtonClick();
-                    setMobileMenuOpen(false);
-                    document.body.classList.remove('menu-open');
-                  }}
-                >
-                  <span style={{ fontSize: '24px' }}>🤖</span>
-                  <span>{texts.smartButton}</span>
-                </div>
-                <div className="mobile-menu-divider" />
-              </>
-            )}
-
             {/* Home */}
             <div
               className={`mobile-menu-item ${currentSection === 'home' ? 'active' : ''}`}
