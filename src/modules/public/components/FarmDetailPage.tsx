@@ -128,18 +128,15 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
     );
   }
 
-  // استخدام الصور الفعلية فقط - لا صور تجريبية
-  const heroImage = farm.aerial_map_url ||
-    (farm.images && farm.images.length > 0 ? farm.images[0] : null);
+  // استخدام نفس المنطق في البطاقة - aerial_image
+  const heroImage = farm.aerial_image;
 
   // Debug: تسجيل معلومات الصور
   console.log('[FarmDetailPage] Image Debug:', {
     farmName: farm.name_ar,
-    hasAerialMapUrl: !!farm.aerial_map_url,
-    aerialMapUrlLength: farm.aerial_map_url?.length,
-    hasImages: !!farm.images,
-    imagesCount: farm.images?.length || 0,
-    firstImageLength: farm.images?.[0]?.length,
+    hasAerialImage: !!farm.aerial_image,
+    aerialImageLength: farm.aerial_image?.length,
+    aerialImagePreview: farm.aerial_image?.substring(0, 50),
     heroImage: heroImage ? `${heroImage.substring(0, 50)}... (${heroImage.length} chars)` : null
   });
 

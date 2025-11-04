@@ -29,6 +29,7 @@ export interface FarmDetail {
   description_ar?: string;
   description_en?: string;
   aerial_map_url?: string;
+  aerial_image?: string;  // نفس اسم PublicFarm
   google_map_link?: string;
   latitude?: number;
   longitude?: number;
@@ -138,6 +139,9 @@ export class FarmDetailService {
         normalized: normalizedTreeType
       });
 
+      // تحويل البيانات بنفس طريقة publicFarmService
+      const aerialImage = farm.aerial_map_url || (farm.images && farm.images[0]) || '';
+
       // Debug: تسجيل معلومات الصور من قاعدة البيانات
       console.log('[FarmDetailService] Images Debug:', {
         farmName: farm.name_ar,
@@ -146,7 +150,8 @@ export class FarmDetailService {
         aerial_map_url_preview: farm.aerial_map_url?.substring(0, 50),
         images_raw: farm.images,
         images_is_array: Array.isArray(farm.images),
-        images_length: Array.isArray(farm.images) ? farm.images.length : 0
+        images_length: Array.isArray(farm.images) ? farm.images.length : 0,
+        aerialImage_final: aerialImage ? aerialImage.substring(0, 50) + '...' : 'EMPTY'
       });
 
       return {
@@ -164,6 +169,7 @@ export class FarmDetailService {
         description_ar: farm.description_ar,
         description_en: farm.description_en,
         aerial_map_url: farm.aerial_map_url,
+        aerial_image: aerialImage,  // نفس اسم PublicFarm
         google_map_link: farm.google_map_link,
         latitude: farm.latitude,
         longitude: farm.longitude,
