@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Check, X, Clock, User, Phone, MapPin, FileText, Calendar, AlertCircle, CheckCircle2, XCircle } from 'lucide-react';
+import { Check, X, Clock, User, Phone, MapPin, FileText, Calendar, AlertCircle, CheckCircle2, XCircle, TreePine, DollarSign } from 'lucide-react';
 import { supabase } from '../../../lib/supabase';
 
 interface FarmOwner {
@@ -199,31 +199,93 @@ export function FarmOwnerApprovalCard({ owner, onApprove, onReject, onUpdate }: 
 
         {/* Farm Info */}
         {owner.farm_type && (
-          <div className="bg-gray-50 rounded-xl p-4 space-y-2">
-            <h4 className="font-bold text-gray-900 text-sm">معلومات المزرعة:</h4>
-            <div className="grid grid-cols-2 gap-2 text-sm">
-              <div>
-                <span className="text-gray-600">النوع:</span>
-                <span className="font-medium text-gray-900 mr-2">{owner.farm_type}</span>
+          <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-4 space-y-3 border-2 border-green-200">
+            <h4 className="font-bold text-green-900 text-sm flex items-center gap-2">
+              <TreePine className="w-4 h-4" />
+              معلومات المزرعة التفصيلية:
+            </h4>
+            <div className="grid grid-cols-2 gap-3 text-sm">
+              <div className="bg-white rounded-lg p-2">
+                <span className="text-gray-600 text-xs">النوع:</span>
+                <p className="font-bold text-gray-900">{owner.farm_type}</p>
               </div>
               {owner.farm_area && (
-                <div>
-                  <span className="text-gray-600">المساحة:</span>
-                  <span className="font-medium text-gray-900 mr-2">
+                <div className="bg-white rounded-lg p-2">
+                  <span className="text-gray-600 text-xs">المساحة:</span>
+                  <p className="font-bold text-gray-900">
                     {owner.farm_area} {owner.farm_area_unit || 'دونم'}
-                  </span>
+                  </p>
+                </div>
+              )}
+              {(owner as any).total_palm_trees > 0 && (
+                <div className="bg-white rounded-lg p-2">
+                  <span className="text-gray-600 text-xs">أشجار النخيل:</span>
+                  <p className="font-bold text-green-700">
+                    {(owner as any).total_palm_trees} شجرة
+                  </p>
+                  {(owner as any).palm_tree_price && (
+                    <p className="text-xs text-gray-600">
+                      {(owner as any).palm_tree_price} ر.س/شجرة
+                    </p>
+                  )}
+                </div>
+              )}
+              {(owner as any).total_olive_trees > 0 && (
+                <div className="bg-white rounded-lg p-2">
+                  <span className="text-gray-600 text-xs">أشجار الزيتون:</span>
+                  <p className="font-bold text-green-700">
+                    {(owner as any).total_olive_trees} شجرة
+                  </p>
+                  {(owner as any).olive_tree_price && (
+                    <p className="text-xs text-gray-600">
+                      {(owner as any).olive_tree_price} ر.س/شجرة
+                    </p>
+                  )}
+                </div>
+              )}
+              {(owner as any).expected_annual_return && (
+                <div className="bg-white rounded-lg p-2">
+                  <span className="text-gray-600 text-xs">العائد المتوقع:</span>
+                  <p className="font-bold text-blue-700">
+                    {(owner as any).expected_annual_return}% سنوياً
+                  </p>
                 </div>
               )}
               {owner.farm_location_city && (
-                <div className="col-span-2">
-                  <span className="text-gray-600">موقع المزرعة:</span>
-                  <span className="font-medium text-gray-900 mr-2">
+                <div className="col-span-2 bg-white rounded-lg p-2">
+                  <span className="text-gray-600 text-xs">الموقع:</span>
+                  <p className="font-medium text-gray-900">
                     {owner.farm_location_city}
                     {owner.farm_location_region && ` - ${owner.farm_location_region}`}
-                  </span>
+                  </p>
+                  {(owner as any).farm_address && (
+                    <p className="text-xs text-gray-600 mt-1">{(owner as any).farm_address}</p>
+                  )}
+                </div>
+              )}
+              {(owner as any).farm_description && (
+                <div className="col-span-2 bg-white rounded-lg p-2">
+                  <span className="text-gray-600 text-xs">الوصف:</span>
+                  <p className="text-xs text-gray-800 mt-1">{(owner as any).farm_description}</p>
                 </div>
               )}
             </div>
+
+            {/* Total Value Calculation */}
+            {((owner as any).total_palm_trees > 0 || (owner as any).total_olive_trees > 0) && (
+              <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg p-3 mt-3">
+                <div className="flex items-center gap-2 text-xs mb-1">
+                  <DollarSign className="w-4 h-4" />
+                  <span>القيمة الإجمالية المتوقعة:</span>
+                </div>
+                <div className="text-2xl font-black">
+                  {(
+                    ((owner as any).total_palm_trees || 0) * ((owner as any).palm_tree_price || 0) +
+                    ((owner as any).total_olive_trees || 0) * ((owner as any).olive_tree_price || 0)
+                  ).toLocaleString('ar-SA')} ر.س
+                </div>
+              </div>
+            )}
           </div>
         )}
 
