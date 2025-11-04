@@ -138,6 +138,17 @@ export class FarmDetailService {
         normalized: normalizedTreeType
       });
 
+      // Debug: تسجيل معلومات الصور من قاعدة البيانات
+      console.log('[FarmDetailService] Images Debug:', {
+        farmName: farm.name_ar,
+        aerial_map_url_exists: !!farm.aerial_map_url,
+        aerial_map_url_length: farm.aerial_map_url?.length,
+        aerial_map_url_preview: farm.aerial_map_url?.substring(0, 50),
+        images_raw: farm.images,
+        images_is_array: Array.isArray(farm.images),
+        images_length: Array.isArray(farm.images) ? farm.images.length : 0
+      });
+
       return {
         id: farm.id,
         farm_code: farm.farm_code || `FARM-${farm.id.slice(0, 8)}`,

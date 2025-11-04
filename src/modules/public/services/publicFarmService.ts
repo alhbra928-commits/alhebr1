@@ -133,6 +133,17 @@ export class PublicFarmService {
     const status = farm.sales_status === 'closed' ? 'full' : bookingPercentage >= 80 ? 'almost_full' : 'open';
     const aerialImage = farm.aerial_map_url || (farm.images && farm.images[0]) || '';
 
+    // Debug: تسجيل معلومات الصور في البطاقة
+    console.log('[PublicFarmService] Images Debug for Card:', {
+      farmName: farm.name_ar,
+      aerial_map_url_exists: !!farm.aerial_map_url,
+      aerial_map_url_length: farm.aerial_map_url?.length,
+      aerial_map_url_preview: farm.aerial_map_url?.substring(0, 50),
+      images_exists: !!farm.images,
+      images_length: farm.images?.length,
+      aerialImage_final: aerialImage ? aerialImage.substring(0, 50) + '...' : 'EMPTY'
+    });
+
     const treeType = farm.tree_type === 'نخيل' ? 'palm' : farm.tree_type === 'زيتون' ? 'olive' : 'palm';
 
     return {
