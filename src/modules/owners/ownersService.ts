@@ -247,17 +247,34 @@ export class OwnersService {
   }
 
   static async deleteOwnerPermanently(id: string, deletionReason?: string) {
-    const { data, error } = await supabase.rpc('delete_owner_permanently', {
-      p_owner_id: id,
-      p_deletion_reason: deletionReason || 'حذف إداري'
-    });
+    try {
+      console.log('🗑️ جاري حذف المالك:', id);
 
-    if (error) return { data: [], count: 0 };
+      const { data, error } = await supabase.rpc('delete_owner_permanently', {
+        p_owner_id: id,
+        p_deletion_reason: deletionReason || 'حذف إداري'
+      });
 
-    // مسح الـ cache بعد الحذف
-    this.clearCache();
+      if (error) {
+        console.error('❌ خطأ في استدعاء دالة الحذف:', error);
+        throw error;
+      }
 
-    return data;
+      // التحقق من النتيجة
+      if (data && !data.success) {
+        throw new Error(data.error || 'فشل في حذف المالك');
+      }
+
+      console.log('✅ تم حذف المالك بنجاح:', data);
+
+      // مسح الـ cache بعد الحذف
+      this.clearCache();
+
+      return data;
+    } catch (error: any) {
+      console.error('❌ خطأ في حذف المالك:', error);
+      throw error;
+    }
   }
 
   /**

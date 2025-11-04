@@ -228,12 +228,19 @@ export function OwnersView({ onBack }: OwnersViewProps) {
 
     try {
       console.log('🗑️ حذف المالك:', owner.full_name, owner.id);
-      await OwnersService.deleteOwnerPermanently(owner.id, 'حذف نهائي من لوحة التحكم');
-      console.log('✅ تم حذف المالك نهائياً\n\n✓ تم حفظ نسخة احتياطية JSON\n✓ تم تحديث قاعدة البيانات');
-      await loadData();
+
+      const result = await OwnersService.deleteOwnerPermanently(owner.id, 'حذف نهائي من لوحة التحكم');
+
+      if (result && result.success) {
+        console.log('✅ تم حذف المالك نهائياً:', result);
+        alert(`✅ تم حذف المالك بنجاح!\n\n✓ تم حفظ نسخة احتياطية\n✓ تم تحديث قاعدة البيانات`);
+        await loadData();
+      } else {
+        throw new Error(result?.error || 'فشل في حذف المالك');
+      }
     } catch (err: any) {
       console.error('❌ خطأ في الحذف:', err);
-      console.log('❌ حدث خطأ في الحذف:\n\n' + err.message);
+      alert(`❌ حدث خطأ في الحذف:\n\n${err.message || 'خطأ غير متوقع'}`);
     }
   };
 

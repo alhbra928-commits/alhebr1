@@ -41,23 +41,37 @@ export function FarmOwnerApprovalCard({ owner, onApprove, onReject, onUpdate }: 
 
       // الحصول على بيانات المستخدم الحالي
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) throw new Error('Not authenticated');
+
+      // استخدام admin ID أو fallback
+      const adminId = session?.user?.id || '00000000-0000-0000-0000-000000000000';
+
+      console.log('🔄 جاري اعتماد البطاقة:', owner.full_name);
 
       // استدعاء دالة الموافقة
       const { data, error } = await supabase.rpc('approve_farm_owner', {
         p_owner_id: owner.id,
-        p_admin_id: session.user.id,
+        p_admin_id: adminId,
         p_notes: notes || null
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error('❌ خطأ في استدعاء الدالة:', error);
+        throw error;
+      }
 
+      // التحقق من النتيجة
+      if (data && !data.success) {
+        throw new Error(data.error || 'فشل في اعتماد البطاقة');
+      }
+
+      console.log('✅ تم اعتماد البطاقة بنجاح:', data);
       alert('✅ تم اعتماد بطاقة صاحب المزرعة بنجاح');
+
       onApprove?.();
       onUpdate?.();
     } catch (error: any) {
-      console.error('Error approving owner:', error);
-      alert(`خطأ: ${error.message}`);
+      console.error('❌ خطأ في اعتماد البطاقة:', error);
+      alert(`خطأ: ${error.message || 'حدث خطأ غير متوقع'}`);
     } finally {
       setLoading(false);
     }
@@ -73,23 +87,36 @@ export function FarmOwnerApprovalCard({ owner, onApprove, onReject, onUpdate }: 
       setLoading(true);
 
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) throw new Error('Not authenticated');
+      const adminId = session?.user?.id || '00000000-0000-0000-0000-000000000000';
+
+      console.log('🔄 جاري رفض البطاقة:', owner.full_name);
 
       const { data, error } = await supabase.rpc('reject_farm_owner', {
         p_owner_id: owner.id,
-        p_admin_id: session.user.id,
+        p_admin_id: adminId,
         p_reason: rejectReason
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error('❌ خطأ في استدعاء الدالة:', error);
+        throw error;
+      }
 
+      // التحقق من النتيجة
+      if (data && !data.success) {
+        throw new Error(data.error || 'فشل في رفض البطاقة');
+      }
+
+      console.log('✅ تم رفض البطاقة بنجاح:', data);
       alert('✅ تم رفض البطاقة');
+
       setShowRejectModal(false);
+      setRejectReason('');
       onReject?.();
       onUpdate?.();
     } catch (error: any) {
-      console.error('Error rejecting owner:', error);
-      alert(`خطأ: ${error.message}`);
+      console.error('❌ خطأ في رفض البطاقة:', error);
+      alert(`خطأ: ${error.message || 'حدث خطأ غير متوقع'}`);
     } finally {
       setLoading(false);
     }
@@ -102,20 +129,30 @@ export function FarmOwnerApprovalCard({ owner, onApprove, onReject, onUpdate }: 
       setLoading(true);
 
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) throw new Error('Not authenticated');
+      const adminId = session?.user?.id || '00000000-0000-0000-0000-000000000000';
+
+      console.log('🔄 جاري إعادة الطلب:', owner.full_name);
 
       const { data, error } = await supabase.rpc('reset_farm_owner_approval', {
         p_owner_id: owner.id,
-        p_admin_id: session.user.id
+        p_admin_id: adminId
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error('❌ خطأ في استدعاء الدالة:', error);
+        throw error;
+      }
 
+      if (data && !data.success) {
+        throw new Error(data.error || 'فشل في إعادة الطلب');
+      }
+
+      console.log('✅ تم إعادة الطلب بنجاح:', data);
       alert('✅ تم إعادة الطلب للمراجعة');
       onUpdate?.();
     } catch (error: any) {
-      console.error('Error resetting approval:', error);
-      alert(`خطأ: ${error.message}`);
+      console.error('❌ خطأ في إعادة الطلب:', error);
+      alert(`خطأ: ${error.message || 'حدث خطأ غير متوقع'}`);
     } finally {
       setLoading(false);
     }
