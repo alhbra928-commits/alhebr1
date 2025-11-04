@@ -224,14 +224,14 @@ export const SmartFloatingButton: React.FC<SmartFloatingButtonProps> = ({
           event: 'INSERT',
           schema: 'public',
           table: 'whatsapp_messages',
-          filter: `source_type=eq.smart_button`
+          filter: `source_type=eq.smart_button,session_token=eq.${sessionToken}`
         },
         (payload) => {
           const newMessage = payload.new as any;
           const metadata = newMessage.metadata || {};
 
-          // Check if this message is for this session
-          if (metadata.thread_id || newMessage.direction === 'outbound') {
+          // This message is for this session only
+          if (true) {
             const msg: Message = {
               id: newMessage.id,
               content: newMessage.content,
@@ -307,6 +307,7 @@ export const SmartFloatingButton: React.FC<SmartFloatingButtonProps> = ({
         .from('whatsapp_messages')
         .select('*')
         .eq('source_type', 'smart_button')
+        .eq('session_token', sessionToken)
         .order('created_at', { ascending: false })
         .limit(20);
 
