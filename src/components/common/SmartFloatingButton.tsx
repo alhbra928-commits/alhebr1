@@ -512,15 +512,25 @@ export const SmartFloatingButton: React.FC<SmartFloatingButtonProps> = ({
                 ? 'inset-0 z-50 rounded-none'
                 : 'bottom-24 right-6 w-[420px] max-h-[650px] z-[9999] rounded-2xl overflow-hidden'
             }`}
+            style={isMobile ? {
+              paddingTop: 'env(safe-area-inset-top)',
+              paddingBottom: 'env(safe-area-inset-bottom)',
+              paddingLeft: 'env(safe-area-inset-left)',
+              paddingRight: 'env(safe-area-inset-right)'
+            } : undefined}
             dir="rtl"
           >
           {/* Header - Compact */}
           <div
             className={`flex items-center justify-between flex-shrink-0 ${
-              isMobile ? 'px-4 py-4' : 'px-3 py-2'
+              isMobile ? 'px-4 py-4 pt-safe' : 'px-3 py-2'
             }`}
             style={{
-              background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)'
+              background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+              ...(isMobile ? {
+                paddingTop: 'max(1rem, env(safe-area-inset-top))',
+                minHeight: '64px'
+              } : {})
             }}
           >
             <div className="flex items-center gap-3 min-w-0">

@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>اختبار إصلاح هيدر المساعد الذكي</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #064e3b 0%, #065f46 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .test-container {
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      max-width: 600px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+
+    h1 {
+      color: #10b981;
+      font-size: 24px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .issue {
+      background: #fee;
+      border: 2px solid #f00;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .issue h2 {
+      color: #c00;
+      font-size: 18px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .solution {
+      background: #efe;
+      border: 2px solid #0a0;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .solution h2 {
+      color: #0a0;
+      font-size: 18px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .demo {
+      background: #f0f9ff;
+      border: 2px solid #0ea5e9;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .demo h2 {
+      color: #0369a1;
+      font-size: 18px;
+      margin-bottom: 15px;
+    }
+
+    .phone-mockup {
+      background: #000;
+      border-radius: 30px;
+      padding: 10px;
+      margin: 20px auto;
+      width: 280px;
+      height: 560px;
+      position: relative;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    }
+
+    .notch {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 150px;
+      height: 30px;
+      background: #000;
+      border-radius: 0 0 20px 20px;
+      z-index: 10;
+    }
+
+    .screen {
+      width: 100%;
+      height: 100%;
+      background: #111827;
+      border-radius: 25px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .chat-header-wrong {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 56px;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      color: white;
+    }
+
+    .chat-header-wrong .close-btn {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      width: 40px;
+      height: 40px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      color: white;
+    }
+
+    .chat-header-fixed {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      min-height: 64px;
+      padding-top: max(16px, env(safe-area-inset-top));
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-left: 16px;
+      padding-right: 16px;
+      padding-bottom: 16px;
+      color: white;
+    }
+
+    .chat-header-fixed .close-btn {
+      width: 40px;
+      height: 40px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    .robot-icon {
+      width: 40px;
+      height: 40px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+
+    .title-section {
+      flex: 1;
+      padding: 0 12px;
+      min-width: 0;
+    }
+
+    .title-section h3 {
+      font-size: 18px;
+      margin: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .title-section p {
+      font-size: 12px;
+      opacity: 0.7;
+      margin: 0;
+    }
+
+    code {
+      background: #f3f4f6;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 14px;
+      color: #1f2937;
+    }
+
+    .code-block {
+      background: #1f2937;
+      color: #10b981;
+      padding: 15px;
+      border-radius: 8px;
+      margin: 10px 0;
+      font-family: monospace;
+      font-size: 13px;
+      overflow-x: auto;
+      direction: ltr;
+      text-align: left;
+    }
+
+    ul {
+      margin: 10px 0;
+      padding-right: 20px;
+    }
+
+    li {
+      margin: 8px 0;
+      line-height: 1.6;
+    }
+
+    .button {
+      background: #10b981;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 10px;
+      transition: all 0.3s;
+    }
+
+    .button:hover {
+      background: #059669;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+    }
+
+    .status {
+      text-align: center;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+
+    .status.ready {
+      background: #d1fae5;
+      color: #065f46;
+      border: 2px solid #10b981;
+    }
+
+    @media (max-width: 640px) {
+      .phone-mockup {
+        width: 240px;
+        height: 480px;
+      }
+      
+      .test-container {
+        padding: 20px;
+      }
+      
+      h1 {
+        font-size: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="test-container">
+    <h1>🔧 إصلاح هيدر المساعد الذكي على الموبايل</h1>
+
+    <!-- المشكلة -->
+    <div class="issue">
+      <h2>❌ المشكلة</h2>
+      <p><strong>زر الإغلاق مخفي</strong> لأن الهيدر يبدأ من أعلى الشاشة مباشرة ويختفي تحت الـ notch أو status bar:</p>
+      <ul>
+        <li>الهيدر يبدأ من <code>top: 0</code></li>
+        <li>لا يوجد <code>padding-top</code> للـ safe area</li>
+        <li>زر الإغلاق والأزرار مخفية</li>
+      </ul>
+
+      <div class="phone-mockup">
+        <div class="notch"></div>
+        <div class="screen">
+          <div class="chat-header-wrong">
+            <div class="close-btn">×</div>
+            <div class="robot-icon">🤖</div>
+            <div class="title-section">
+              <h3>المساعد الذكي</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p style="text-align: center; color: #c00; font-weight: bold;">
+        ⬆️ الأزرار مخفية تحت الـ notch!
+      </p>
+    </div>
+
+    <!-- الحل -->
+    <div class="solution">
+      <h2>✅ الحل</h2>
+      <p>إضافة <code>padding-top</code> ديناميكي باستخدام <code>safe-area-inset-top</code>:</p>
+
+      <div class="code-block">
+style={{
+  paddingTop: 'max(1rem, env(safe-area-inset-top))',
+  minHeight: '64px'
+}}
+      </div>
+
+      <ul>
+        <li>✅ يضيف مسافة تلقائياً حسب الجهاز</li>
+        <li>✅ يعمل على iPhone بالـ notch</li>
+        <li>✅ يعمل على الأجهزة العادية</li>
+        <li>✅ كل الأزرار تكون ظاهرة</li>
+      </ul>
+
+      <div class="phone-mockup">
+        <div class="notch"></div>
+        <div class="screen">
+          <div class="chat-header-fixed">
+            <div class="robot-icon">🤖</div>
+            <div class="title-section">
+              <h3>المساعد الذكي</h3>
+              <p>متصل الآن</p>
+            </div>
+            <div class="close-btn">×</div>
+          </div>
+        </div>
+      </div>
+      <p style="text-align: center; color: #0a0; font-weight: bold;">
+        ⬆️ كل الأزرار ظاهرة ويمكن الضغط عليها!
+      </p>
+    </div>
+
+    <!-- التطبيق -->
+    <div class="demo">
+      <h2>📱 التطبيق في الكود</h2>
+      
+      <h3 style="margin-top: 20px; color: #0369a1;">1. الـ Container:</h3>
+      <div class="code-block">
+style={isMobile ? {
+  paddingTop: 'env(safe-area-inset-top)',
+  paddingBottom: 'env(safe-area-inset-bottom)',
+  paddingLeft: 'env(safe-area-inset-left)',
+  paddingRight: 'env(safe-area-inset-right)'
+} : undefined}
+      </div>
+
+      <h3 style="margin-top: 20px; color: #0369a1;">2. الـ Header:</h3>
+      <div class="code-block">
+style={{
+  background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+  ...(isMobile ? {
+    paddingTop: 'max(1rem, env(safe-area-inset-top))',
+    minHeight: '64px'
+  } : {})
+}}
+      </div>
+
+      <h3 style="margin-top: 20px; color: #0369a1;">3. الـ Viewport Meta:</h3>
+      <div class="code-block">
+&lt;meta name="viewport" 
+  content="width=device-width, initial-scale=1.0, 
+  viewport-fit=cover" /&gt;
+      </div>
+
+      <p style="margin-top: 15px;">
+        <strong>ملاحظة:</strong> <code>viewport-fit=cover</code> مطلوب حتى يعمل <code>env(safe-area-inset-*)</code>
+      </p>
+    </div>
+
+    <!-- الحالة -->
+    <div class="status ready">
+      ✅ التحديث جاهز للنشر - الإصدار: v20251104_1762264339599
+    </div>
+
+    <button class="button" onclick="window.location.reload()">
+      🔄 إعادة تحميل الصفحة
+    </button>
+  </div>
+</body>
+</html>
