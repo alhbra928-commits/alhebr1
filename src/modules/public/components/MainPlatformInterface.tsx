@@ -6,6 +6,7 @@ import { PremiumHeader } from './PremiumHeader';
 import { FarmCard3D } from './FarmCard3D';
 import { ModernMobileFarmCard } from './ModernMobileFarmCard';
 import { ConceptIntroModal } from './ConceptIntroModal';
+import { InnovativeFarmDetailPage } from './InnovativeFarmDetailPage';
 import { TemporaryBookingPage } from './TemporaryBookingPage';
 import { InvestorRouter } from '../../investor/components/InvestorRouter';
 import { CertificateVerificationPage } from './CertificateVerificationPage';
@@ -15,7 +16,7 @@ import { GlowingConceptButton } from './GlowingConceptButton';
 import { ConceptIntroductionPage } from './ConceptIntroductionPage';
 import { IdeaOverviewSection } from './IdeaOverviewSection';
 
-type ViewMode = 'home' | 'booking' | 'investor' | 'verification' | 'concept';
+type ViewMode = 'home' | 'farmDetail' | 'booking' | 'investor' | 'verification' | 'concept';
 
 interface MainPlatformInterfaceProps {
   onFarmSelect?: (barcode: string) => void;
@@ -69,7 +70,7 @@ export function MainPlatformInterface({
     setIsTransitioning(true);
     setSelectedFarm(farm);
     setTimeout(() => {
-      setCurrentView('booking');
+      setCurrentView('farmDetail');
       setIsTransitioning(false);
     }, 50);
   };
@@ -116,6 +117,18 @@ export function MainPlatformInterface({
     return <InvestorRouter onBack={handleGoHome} />;
   }
 
+  if (currentView === 'farmDetail' && selectedFarm) {
+    return (
+      <>
+        <InnovativeFarmDetailPage
+          farmId={selectedFarm.id}
+          onBack={handleGoHome}
+          onStartBooking={handleStartBooking}
+        />
+      </>
+    );
+  }
+
   if (currentView === 'booking' && selectedFarm) {
     return (
       <>
@@ -123,7 +136,7 @@ export function MainPlatformInterface({
           farmId={selectedFarm.id}
           farmName={selectedFarm.farm_name || selectedFarm.barcode}
           farmType={selectedFarm.tree_type}
-          onBack={handleGoHome}
+          onBack={() => setCurrentView('farmDetail')}
           onSuccess={handleBookingSuccess}
           onGoHome={handleGoHome}
           onGoToInvestor={handleGoToInvestorPanel}

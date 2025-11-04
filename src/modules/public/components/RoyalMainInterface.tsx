@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Crown, Sparkles, ArrowRight, TreePine, Users, Shield, Award } from 'lucide-react';
 import { PublicFarm } from '../types/farm.types';
 import { PublicFarmService } from '../services/publicFarmService';
+import { InnovativeFarmDetailPage } from './InnovativeFarmDetailPage';
 import { TemporaryBookingPage } from './TemporaryBookingPage';
 import { InvestorRouter } from '../../investor/components/InvestorRouter';
 import { CertificateVerificationPage } from './CertificateVerificationPage';
@@ -9,7 +10,7 @@ import { SimpleLoader } from '../../../components/common/SimpleLoader';
 import { AdminCrownButton } from './AdminCrownButton';
 import { ConceptIntroductionPage } from './ConceptIntroductionPage';
 
-type ViewMode = 'home' | 'booking' | 'investor' | 'verification' | 'concept';
+type ViewMode = 'home' | 'farmDetail' | 'booking' | 'investor' | 'verification' | 'concept';
 
 interface RoyalMainInterfaceProps {
   onAdminLogin?: () => void;
@@ -46,7 +47,7 @@ export function RoyalMainInterface({
   const handleFarmClick = (farm: PublicFarm) => {
     console.log('[RoyalMainInterface] Farm clicked:', farm.id, farm.farm_name);
     setSelectedFarm(farm);
-    setCurrentView('booking');
+    setCurrentView('farmDetail');
   };
 
   const handleGoHome = () => {
@@ -74,6 +75,18 @@ export function RoyalMainInterface({
     return <InvestorRouter onBack={handleGoHome} />;
   }
 
+  if (currentView === 'farmDetail' && selectedFarm) {
+    return (
+      <>
+        <InnovativeFarmDetailPage
+          farmId={selectedFarm.id}
+          onBack={handleGoHome}
+          onStartBooking={() => setCurrentView('booking')}
+        />
+      </>
+    );
+  }
+
   if (currentView === 'booking' && selectedFarm) {
     return (
       <>
@@ -81,7 +94,7 @@ export function RoyalMainInterface({
           farmId={selectedFarm.id}
           farmName={selectedFarm.farm_name}
           farmType={selectedFarm.tree_type === 'نخيل' ? 'palm' : 'olive'}
-          onBack={handleGoHome}
+          onBack={() => setCurrentView('farmDetail')}
           onSuccess={handleGoHome}
           onGoHome={handleGoHome}
           onGoToInvestor={() => setCurrentView('investor')}
