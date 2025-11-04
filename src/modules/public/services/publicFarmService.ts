@@ -2,18 +2,33 @@ import { supabase } from '../../../lib/supabase';
 import { PublicFarm, FarmSuggestion } from '../types/farm.types';
 
 export class PublicFarmService {
-  static async getAllFarms(limit: number = 20): Promise<PublicFarm[]> {
-    const { data: farms, error: farmsError } = await supabase
-      .from('farms')
-      .select('id, farm_barcode, farm_code, name_ar, name_en, tree_type, city, region, total_trees, price_per_tree, marketing_price, actual_price, images, aerial_map_url, google_map_link, description_ar, description_en, latitude, longitude, sales_status, created_at')
-      .is('deleted_at', null)
-      .eq('status', 'active')
-      .order('sales_status', { ascending: false })
-      .order('created_at', { ascending: false })
-      .limit(limit);
+  private static farmsCache: { data: PublicFarm[]; timestamp: number } | null = null;
+  private static CACHE_DURATION = 30000; // 30 seconds
 
-    if (farmsError) {
-      throw farmsError;
+  static async getAllFarms(limit: number = 20): Promise<PublicFarm[]> {
+    // Check cache
+    if (this.farmsCache && Date.now() - this.farmsCache.timestamp < this.CACHE_DURATION) {
+      console.log('[PublicFarmService] Returning cached farms');
+      return this.farmsCache.data;
+    }
+
+    try {
+      const { data: farms, error: farmsError } = await supabase
+        .from('farms')
+        .select('id, farm_barcode, farm_code, name_ar, name_en, tree_type, city, region, total_trees, price_per_tree, marketing_price, actual_price, images, aerial_map_url, google_map_link, description_ar, description_en, latitude, longitude, sales_status, created_at')
+        .is('deleted_at', null)
+        .eq('status', 'active')
+        .order('sales_status', { ascending: false })
+        .order('created_at', { ascending: false })
+        .limit(limit);
+
+      if (farmsError) {
+        console.error('[PublicFarmService] Farms fetch error:', farmsError);
+        throw farmsError;
+      }
+    } catch (error) {
+      console.error('[PublicFarmService] Request failed:', error);
+      return this.farmsCache?.data || [];
     }
 
     if (!farms || farms.length === 0) {
@@ -55,7 +70,15 @@ export class PublicFarmService {
       };
     });
 
-    return farmsWithCalculations.map((farm: any) => this.mapToPublicFarm(farm));
+    const result = farmsWithCalculations.map((farm: any) => this.mapToPublicFarm(farm));
+
+    // Cache the result
+    this.farmsCache = {
+      data: result,
+      timestamp: Date.now()
+    };
+
+    return result;
   }
 
   static async getFarmByBarcode(barcode: string): Promise<PublicFarm | null> {

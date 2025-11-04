@@ -19,26 +19,52 @@ export interface CreateReservationData {
 }
 
 export class FarmDetailService {
+  private static cache: Map<string, { data: any; timestamp: number }> = new Map();
+  private static CACHE_DURATION = 60000; // 1 minute
+
   static async getFarmById(farmId: string) {
-    const { data: farm, error: farmError } = await supabase
-      .from('farms')
-      .select('*')
-      .eq('id', farmId)
-      .is('deleted_at', null)
-      .single();
+    // Check cache first
+    const cached = this.cache.get(farmId);
+    if (cached && Date.now() - cached.timestamp < this.CACHE_DURATION) {
+      console.log('[FarmDetailService] Returning cached data for:', farmId);
+      return cached.data;
+    }
 
-    if (farmError || !farm) return null;
+    try {
+      const { data: farm, error: farmError } = await supabase
+        .from('farms')
+        .select('*')
+        .eq('id', farmId)
+        .is('deleted_at', null)
+        .single();
 
-    const { data: varieties } = await supabase
-      .from('farm_tree_varieties')
-      .select('*')
-      .eq('farm_id', farmId)
-      .is('deleted_at', null);
+      if (farmError || !farm) {
+        console.error('[FarmDetailService] Farm fetch error:', farmError);
+        return null;
+      }
 
-    return {
-      ...farm,
-      varieties: varieties || []
-    };
+      const { data: varieties } = await supabase
+        .from('farm_tree_varieties')
+        .select('*')
+        .eq('farm_id', farmId)
+        .is('deleted_at', null);
+
+      const result = {
+        ...farm,
+        varieties: varieties || []
+      };
+
+      // Cache the result
+      this.cache.set(farmId, {
+        data: result,
+        timestamp: Date.now()
+      });
+
+      return result;
+    } catch (error) {
+      console.error('[FarmDetailService] Unexpected error:', error);
+      return null;
+    }
   }
 
   static async createReservation(data: CreateReservationData) {

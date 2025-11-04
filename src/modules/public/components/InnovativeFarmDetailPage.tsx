@@ -42,11 +42,25 @@ export const InnovativeFarmDetailPage: React.FC<InnovativeFarmDetailPageProps> =
   const loadFarm = async () => {
     try {
       setLoading(true);
-      const data = await FarmDetailService.getFarmById(farmId);
-      console.log('Farm data loaded:', data);
-      setFarm(data);
+
+      // Add timeout to prevent hanging
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Request timeout')), 10000)
+      );
+
+      const dataPromise = FarmDetailService.getFarmById(farmId);
+
+      const data = await Promise.race([dataPromise, timeoutPromise]) as any;
+
+      if (data) {
+        console.log('[FarmDetail] Farm data loaded successfully');
+        setFarm(data);
+      } else {
+        console.error('[FarmDetail] No data received');
+      }
     } catch (error) {
-      console.error('Error loading farm:', error);
+      console.error('[FarmDetail] Error loading farm:', error);
+      // Don't block UI, show what we have
     } finally {
       setLoading(false);
     }
