@@ -579,33 +579,49 @@ export const SmartFloatingButton: React.FC<SmartFloatingButtonProps> = ({
           </div>
 
           {/* User Type Badge - Compact */}
-          <div className="px-3 py-1.5 bg-gray-800 border-b border-gray-700 flex-shrink-0">
-            <div className="flex items-center justify-between text-xs">
+          <div className={`bg-gray-800 border-b border-gray-700 flex-shrink-0 ${
+            isMobile ? 'px-4 py-2' : 'px-3 py-1.5'
+          }`}>
+            <div className={`flex items-center justify-between ${
+              isMobile ? 'text-sm' : 'text-xs'
+            }`}>
               <span className="text-gray-400 truncate">
-                <span className="text-[#A0916A] font-semibold">{getUserTypeLabel()}</span>
+                <span className="text-emerald-400 font-semibold">{getUserTypeLabel()}</span>
               </span>
               {messages.length > 0 && (
-                <span className="text-gray-500">{messages.length}</span>
+                <span className="text-gray-500">{messages.length} رسالة</span>
               )}
             </div>
           </div>
 
           {/* Messages Area */}
           <div
-            className="flex-1 overflow-y-auto p-2 space-y-1.5 bg-gray-800/50 overscroll-contain"
+            className={`flex-1 overflow-y-auto bg-gray-800/50 overscroll-contain ${
+              isMobile ? 'p-4 space-y-2' : 'p-2 space-y-1.5'
+            }`}
             style={{
               WebkitOverflowScrolling: 'touch',
-              minHeight: '150px'
+              minHeight: isMobile ? '200px' : '150px'
             }}
           >
             {messages.length === 0 ? (
-              <div className="text-center py-12">
-                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-emerald-500/20 to-teal-500/20 flex items-center justify-center mx-auto mb-4 backdrop-blur-sm border-2 border-emerald-500/30">
-                  <MessageCircle className="w-10 h-10 text-emerald-400" />
+              <div className={`text-center ${
+                isMobile ? 'py-20' : 'py-12'
+              }`}>
+                <div className={`rounded-full bg-gradient-to-br from-emerald-500/20 to-teal-500/20 flex items-center justify-center mx-auto mb-6 backdrop-blur-sm border-2 border-emerald-500/30 ${
+                  isMobile ? 'w-24 h-24' : 'w-20 h-20'
+                }`}>
+                  <span className={isMobile ? 'text-5xl' : 'text-4xl'}>🤖</span>
                 </div>
-                <p className="text-white text-base font-bold mb-2">ابدأ محادثة جديدة</p>
-                <p className="text-gray-400 text-sm">نحن هنا للإجابة على استفساراتك 🌿</p>
-                <div className="mt-4 flex items-center justify-center gap-2 text-xs text-emerald-400">
+                <p className={`text-white font-bold mb-3 ${
+                  isMobile ? 'text-xl' : 'text-base'
+                }`}>ابدأ محادثة جديدة</p>
+                <p className={`text-gray-400 ${
+                  isMobile ? 'text-base' : 'text-sm'
+                }`}>نحن هنا للإجابة على استفساراتك</p>
+                <div className={`mt-6 flex items-center justify-center gap-2 text-emerald-400 ${
+                  isMobile ? 'text-sm' : 'text-xs'
+                }`}>
                   <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
                   <span>متصل الآن</span>
                 </div>
@@ -618,7 +634,9 @@ export const SmartFloatingButton: React.FC<SmartFloatingButtonProps> = ({
                   className={`flex ${message.direction === 'inbound' ? 'justify-end' : 'justify-start'}`}
                 >
                   <div
-                    className={`max-w-[85%] rounded-xl px-3 py-2 shadow-lg ${
+                    className={`rounded-xl shadow-lg ${
+                      isMobile ? 'max-w-[80%] px-4 py-3' : 'max-w-[85%] px-3 py-2'
+                    } ${
                       message.direction === 'inbound'
                         ? 'bg-gradient-to-br from-emerald-600 to-teal-700 text-white'
                         : message.isAutoResponse
@@ -629,15 +647,21 @@ export const SmartFloatingButton: React.FC<SmartFloatingButtonProps> = ({
                     }`}
                   >
                     {message.direction === 'outbound' && (
-                      <p className="text-[10px] font-bold opacity-90 mb-1 flex items-center gap-1">
+                      <p className={`font-bold opacity-90 mb-1 flex items-center gap-1 ${
+                        isMobile ? 'text-xs' : 'text-[10px]'
+                      }`}>
                         {message.isAutoResponse && <span>🤖</span>}
                         {message.isAdminResponse && <span>👤</span>}
                         <span>{getMessageSenderLabel(message)}</span>
                       </p>
                     )}
-                    <p className="text-xs leading-snug whitespace-pre-wrap break-words">{message.content}</p>
+                    <p className={`leading-relaxed whitespace-pre-wrap break-words ${
+                      isMobile ? 'text-sm' : 'text-xs'
+                    }`}>{message.content}</p>
 
-                    <p className="text-[10px] opacity-70 mt-1">
+                    <p className={`opacity-70 mt-1.5 ${
+                      isMobile ? 'text-xs' : 'text-[10px]'
+                    }`}>
                       {new Date(message.timestamp).toLocaleTimeString('ar-SA', {
                         hour: '2-digit',
                         minute: '2-digit'
@@ -673,17 +697,25 @@ export const SmartFloatingButton: React.FC<SmartFloatingButtonProps> = ({
           )}
 
           {/* Input Area */}
-          <div className="p-2 bg-gray-900 border-t border-gray-700 flex-shrink-0">
-            <div className="flex items-stretch gap-1.5">
+          <div className={`bg-gray-900 border-t border-gray-700 flex-shrink-0 ${
+            isMobile ? 'p-4' : 'p-2'
+          }`}>
+            <div className={`flex items-stretch ${
+              isMobile ? 'gap-3' : 'gap-1.5'
+            }`}>
               {/* WhatsApp Button */}
               <a
                 href="https://wa.me/966569335257"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex-shrink-0 w-9 h-9 rounded-lg bg-gradient-to-br from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 flex items-center justify-center transition-all hover:scale-105 active:scale-95 shadow-lg"
+                className={`flex-shrink-0 rounded-xl bg-gradient-to-br from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 flex items-center justify-center transition-all hover:scale-105 active:scale-95 shadow-lg ${
+                  isMobile ? 'w-12 h-12' : 'w-9 h-9'
+                }`}
                 title="واتساب"
               >
-                <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+                <svg className={`text-white ${
+                  isMobile ? 'w-6 h-6' : 'w-4 h-4'
+                }`} fill="currentColor" viewBox="0 0 24 24">
                   <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.890-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
                 </svg>
               </a>
@@ -695,10 +727,11 @@ export const SmartFloatingButton: React.FC<SmartFloatingButtonProps> = ({
                 value={inputMessage}
                 onChange={(e) => setInputMessage(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                placeholder="رسالتك..."
+                placeholder="اكتب رسالتك..."
                 disabled={sending}
-                className="flex-1 min-w-0 px-2 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white text-xs placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-[#A0916A] disabled:opacity-50"
-                style={{ fontSize: '14px' }}
+                className={`flex-1 min-w-0 bg-gray-800 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 disabled:opacity-50 ${
+                  isMobile ? 'px-4 py-3 text-base' : 'px-2 py-2 text-xs'
+                }`}
                 autoComplete="off"
               />
 
@@ -706,20 +739,26 @@ export const SmartFloatingButton: React.FC<SmartFloatingButtonProps> = ({
               <button
                 onClick={handleSendMessage}
                 disabled={!inputMessage.trim() || sending}
-                className="flex-shrink-0 w-9 h-9 rounded-lg flex items-center justify-center transition-all disabled:opacity-50 disabled:cursor-not-allowed active:scale-95"
+                className={`flex-shrink-0 rounded-xl flex items-center justify-center transition-all disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 ${
+                  isMobile ? 'w-12 h-12' : 'w-9 h-9'
+                }`}
                 style={{
                   background: inputMessage.trim() && !sending
-                    ? 'linear-gradient(135deg, #8B7355 0%, #A0916A 100%)'
+                    ? 'linear-gradient(135deg, #10b981 0%, #059669 100%)'
                     : '#374151',
                   boxShadow: inputMessage.trim() && !sending
-                    ? '0 4px 12px rgba(139, 115, 85, 0.4)'
+                    ? '0 4px 16px rgba(16, 185, 129, 0.5)'
                     : '0 2px 6px rgba(0, 0, 0, 0.2)'
                 }}
               >
                 {sending ? (
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  <div className={`border-2 border-white border-t-transparent rounded-full animate-spin ${
+                    isMobile ? 'w-6 h-6' : 'w-4 h-4'
+                  }`} />
                 ) : (
-                  <Send className="w-4 h-4 text-white" />
+                  <Send className={`text-white ${
+                    isMobile ? 'w-6 h-6' : 'w-4 h-4'
+                  }`} />
                 )}
               </button>
             </div>
