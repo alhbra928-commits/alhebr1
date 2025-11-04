@@ -15,14 +15,13 @@ import { getPlatformTextsBySection } from '../../../services/platformTextsServic
 import { SimpleLoader } from '../../../components/common/SimpleLoader';
 
 // Lazy load heavy components
-const InnovativeFarmDetailPage = lazy(() => import('./InnovativeFarmDetailPage').then(m => ({ default: m.InnovativeFarmDetailPage })));
 const TemporaryBookingPage = lazy(() => import('./TemporaryBookingPage').then(m => ({ default: m.TemporaryBookingPage })));
 const InvestorRouter = lazy(() => import('../../investor/components/InvestorRouter').then(m => ({ default: m.InvestorRouter })));
 const CertificateVerificationPage = lazy(() => import('./CertificateVerificationPage').then(m => ({ default: m.CertificateVerificationPage })));
 const ConceptIntroductionPage = lazy(() => import('./ConceptIntroductionPage').then(m => ({ default: m.ConceptIntroductionPage })));
 const MazadGateway = lazy(() => import('./MazadGateway').then(m => ({ default: m.MazadGateway })));
 
-type ViewMode = 'home' | 'farmDetail' | 'booking' | 'investor' | 'verification' | 'concept';
+type ViewMode = 'home' | 'booking' | 'investor' | 'verification' | 'concept';
 
 interface ModernRoyalPlatformProps {
   onAdminLogin?: () => void;
@@ -141,7 +140,7 @@ export function ModernRoyalPlatform({
 
   const handleFarmClick = (farm: PublicFarm) => {
     setSelectedFarm(farm);
-    setCurrentView('farmDetail');
+    setCurrentView('booking');
   };
 
   const handleGoHome = () => {
@@ -183,18 +182,6 @@ export function ModernRoyalPlatform({
     );
   }
 
-  if (currentView === 'farmDetail' && selectedFarm) {
-    return (
-      <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-50 to-green-50"><SimpleLoader size="lg" color="#10b981" /></div>}>
-        <InnovativeFarmDetailPage
-          farmId={selectedFarm.id}
-          onBack={handleGoHome}
-          onStartBooking={() => setCurrentView('booking')}
-        />
-      </Suspense>
-    );
-  }
-
   if (currentView === 'booking' && selectedFarm) {
     return (
       <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-50 to-green-50"><SimpleLoader size="lg" color="#10b981" /></div>}>
@@ -202,7 +189,7 @@ export function ModernRoyalPlatform({
           farmId={selectedFarm.id}
           farmName={selectedFarm.farm_name}
           farmType={selectedFarm.tree_type === 'نخيل' ? 'palm' : 'olive'}
-          onBack={() => setCurrentView('farmDetail')}
+          onBack={handleGoHome}
           onSuccess={handleGoHome}
           onGoHome={handleGoHome}
           onGoToInvestor={() => setCurrentView('investor')}

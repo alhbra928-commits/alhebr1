@@ -2,12 +2,10 @@ import { useState, useEffect } from 'react';
 import { brandColors, brandGradients } from '../../finance/styles/brandColors';
 import { PublicFarm } from '../types/farm.types';
 import { PublicFarmService } from '../services/publicFarmService';
-import { FarmDetailService } from '../services/farmDetailService';
 import { PremiumHeader } from './PremiumHeader';
 import { FarmCard3D } from './FarmCard3D';
 import { ModernMobileFarmCard } from './ModernMobileFarmCard';
 import { ConceptIntroModal } from './ConceptIntroModal';
-import { FarmDetailPage } from './FarmDetailPage';
 import { TemporaryBookingPage } from './TemporaryBookingPage';
 import { InvestorRouter } from '../../investor/components/InvestorRouter';
 import { CertificateVerificationPage } from './CertificateVerificationPage';
@@ -17,7 +15,7 @@ import { GlowingConceptButton } from './GlowingConceptButton';
 import { ConceptIntroductionPage } from './ConceptIntroductionPage';
 import { IdeaOverviewSection } from './IdeaOverviewSection';
 
-type ViewMode = 'home' | 'farmDetail' | 'booking' | 'investor' | 'verification' | 'concept';
+type ViewMode = 'home' | 'booking' | 'investor' | 'verification' | 'concept';
 
 interface MainPlatformInterfaceProps {
   onFarmSelect?: (barcode: string) => void;
@@ -71,7 +69,7 @@ export function MainPlatformInterface({
     setIsTransitioning(true);
     setSelectedFarm(farm);
     setTimeout(() => {
-      setCurrentView('farmDetail');
+      setCurrentView('booking');
       setIsTransitioning(false);
     }, 50);
   };
@@ -118,24 +116,6 @@ export function MainPlatformInterface({
     return <InvestorRouter onBack={handleGoHome} />;
   }
 
-  if (currentView === 'farmDetail' && selectedFarm) {
-    console.log('[MainPlatform] Rendering FarmDetailPage with:', {
-      farmId: selectedFarm.id,
-      farmName: selectedFarm.farm_name,
-      tree_type: selectedFarm.tree_type
-    });
-    return (
-      <>
-        <FarmDetailPage
-          farmId={selectedFarm.id}
-          onBack={handleGoHome}
-          onStartBooking={handleStartBooking}
-        />
-
-      </>
-    );
-  }
-
   if (currentView === 'booking' && selectedFarm) {
     return (
       <>
@@ -143,7 +123,7 @@ export function MainPlatformInterface({
           farmId={selectedFarm.id}
           farmName={selectedFarm.farm_name || selectedFarm.barcode}
           farmType={selectedFarm.tree_type}
-          onBack={() => setCurrentView('farmDetail')}
+          onBack={handleGoHome}
           onSuccess={handleBookingSuccess}
           onGoHome={handleGoHome}
           onGoToInvestor={handleGoToInvestorPanel}
