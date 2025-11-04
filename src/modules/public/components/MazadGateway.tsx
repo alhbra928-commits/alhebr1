@@ -87,10 +87,10 @@ export function MazadGateway({ onEnter }: MazadGatewayProps) {
         const { data } = await supabase
           .from('mazad_gateway_settings')
           .select('*')
-          .limit(1)
+          .eq('id', 'd06bd962-d0a4-411a-a510-7deedb987839')
           .maybeSingle();
 
-        console.log('[Gateway] Settings loaded from DB:', data);
+        console.log('[MazadGateway] 🔵 Settings loaded from DB:', data);
 
         if (data) {
           setSettings({
@@ -125,6 +125,61 @@ export function MazadGateway({ onEnter }: MazadGatewayProps) {
     };
 
     loadSettings();
+
+    // الاشتراك في التحديثات المباشرة
+    const setupRealtimeSubscription = async () => {
+      try {
+        const { supabase } = await import('../../../lib/supabase');
+
+        const channel = supabase
+          .channel('mazad_gateway_settings_changes')
+          .on(
+            'postgres_changes',
+            {
+              event: 'UPDATE',
+              schema: 'public',
+              table: 'mazad_gateway_settings',
+              filter: `id=eq.d06bd962-d0a4-411a-a510-7deedb987839`
+            },
+            (payload) => {
+              console.log('[MazadGateway] 🔴 Realtime update received:', payload.new);
+              const data = payload.new as any;
+
+              setSettings({
+                enabled: data.enabled ?? true,
+                auto_enter_enabled: data.auto_enter_enabled ?? true,
+                auto_enter_delay: data.auto_enter_delay ?? 3,
+                show_logo: data.show_logo ?? true,
+                fade_duration: data.fade_duration ?? 400,
+                animation_speed: data.animation_speed ?? 'normal',
+                show_sparkles: data.show_sparkles ?? true,
+                show_particles: data.show_particles ?? true,
+                button_glow_enabled: data.button_glow_enabled ?? true,
+                show_progress_bar: data.show_progress_bar ?? true,
+                background_pattern_enabled: data.background_pattern_enabled ?? true,
+                title_animation_enabled: data.title_animation_enabled ?? true,
+                title_line1: data.title_line1 || 'بوابة',
+                title_line2: data.title_line2 || 'مزاد',
+                subtitle: data.subtitle || 'منصة استثمار زراعي متطورة',
+                button_text: data.button_text || 'ادخل إلى المنصة',
+                show_title: data.show_title ?? true,
+                show_subtitle: data.show_subtitle ?? true,
+              });
+
+              console.log('[MazadGateway] ✅ Settings updated in realtime!');
+            }
+          )
+          .subscribe();
+
+        return () => {
+          channel.unsubscribe();
+        };
+      } catch (error) {
+        console.error('[MazadGateway] ❌ Realtime subscription error:', error);
+      }
+    };
+
+    setupRealtimeSubscription();
   }, []);
 
   // العد التنازلي التلقائي - يبدأ فقط بعد إخفاء الـ loader
