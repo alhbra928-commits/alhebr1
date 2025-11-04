@@ -6,6 +6,7 @@ import { PublicFarm } from '../types/farm.types';
 import { PublicFarmService } from '../services/publicFarmService';
 import { GreenConceptButton } from './GreenConceptButton';
 import { AdminCrownButton } from './AdminCrownButton';
+import { BackToAdminButton } from './BackToAdminButton';
 import { SmartFloatingButton } from '../../../components/common/SmartFloatingButton';
 import { ModernTopHeader } from '../../../components/common/ModernTopHeader';
 import { InnovativeFarmCard } from './InnovativeFarmCard';
@@ -441,6 +442,11 @@ export function ModernRoyalPlatform({
         onAdminLogin={onAdminLogin}
         onFarmOwnerLogin={onFarmOwnerLogin}
       />
+
+      {/* Back to Admin Button - Shows when logged in */}
+      {onBackToAdmin && (
+        <BackToAdminButton onBackToAdmin={onBackToAdmin} />
+      )}
 
     </div>
   );

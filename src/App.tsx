@@ -219,7 +219,7 @@ function App() {
           return (
             <PublicPlatformRouter
               onAdminLogin={() => setShowAdminLogin(true)}
-              onBackToAdmin={() => setActiveModule('dashboard')}
+              onBackToAdmin={() => handleSmartNavigation('back')}
               onFarmOwnerLogin={() => setActiveModule('farm-owner')}
             />
           );
