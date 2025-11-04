@@ -52,6 +52,7 @@ export function MazadGateway({ onEnter }: MazadGatewayProps) {
   const [isVisible, setIsVisible] = useState(true);
   const [settingsLoaded, setSettingsLoaded] = useState(false);
   const [farmsPreloaded, setFarmsPreloaded] = useState(false);
+  const [isInitializing, setIsInitializing] = useState(true);
 
   // تحميل المزارع مسبقاً في الخلفية
   useEffect(() => {
@@ -65,6 +66,14 @@ export function MazadGateway({ onEnter }: MazadGatewayProps) {
       }
     };
     preloadFarms();
+  }, []);
+
+  // إزالة الشاشة البيضاء بعد 100ms
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsInitializing(false);
+    }, 100);
+    return () => clearTimeout(timer);
   }, []);
 
   // تحميل الإعدادات من قاعدة البيانات
@@ -154,6 +163,23 @@ export function MazadGateway({ onEnter }: MazadGatewayProps) {
       default: return '3s';
     }
   };
+
+  // إظهار loader أثناء التحميل الأولي
+  if (isInitializing) {
+    return (
+      <div className="fixed inset-0 z-[9999] bg-gradient-to-br from-emerald-50 via-white to-green-50 flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <div className="relative">
+            <Crown className="w-16 h-16 text-emerald-600 animate-pulse" />
+            <div className="absolute inset-0 bg-emerald-400/20 blur-xl rounded-full animate-pulse" />
+          </div>
+          <div className="text-emerald-600 font-bold text-lg animate-pulse">
+            جاري التحميل...
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
