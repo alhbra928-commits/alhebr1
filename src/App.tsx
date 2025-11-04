@@ -1,5 +1,4 @@
 import { useState, lazy, Suspense, useEffect } from 'react';
-import { SimpleLoader } from './components/common/SimpleLoader';
 import { AdminSessionService } from './modules/admin/services/adminSessionService';
 import { PermissionsProvider } from './contexts/PermissionsContext';
 
@@ -340,16 +339,7 @@ function App() {
           />
         )}
 
-        <Suspense fallback={
-          <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-950 via-teal-950 to-emerald-950">
-            <div className="text-center">
-              <div className="flex justify-center mb-4">
-                <SimpleLoader size="lg" color="#10b981" />
-              </div>
-              <p className="text-xl font-bold text-gray-100">جاري التحميل...</p>
-            </div>
-          </div>
-        }>
+        <Suspense fallback={<div className="min-h-screen bg-gradient-to-br from-emerald-50 to-green-50" />}>
           {/* Add padding-top for mobile header */}
           <div className={adminSession && activeModule !== 'public' && activeModule !== 'farm-owner' ? 'pt-14 lg:pt-0' : ''}>
             {renderModule()}
