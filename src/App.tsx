@@ -39,6 +39,14 @@ function App() {
   const [lastActivity, setLastActivity] = useState(Date.now());
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
+  // حفظ آخر صفحة في لوحة التحكم
+  useEffect(() => {
+    if (activeModule !== 'public' && activeModule !== 'farm-owner') {
+      sessionStorage.setItem('last_admin_module', activeModule);
+      sessionStorage.setItem('current_admin_module', activeModule);
+    }
+  }, [activeModule]);
+
   useEffect(() => {
     // التحقق من الجلسة المحفوظة عند بداية التطبيق
     const savedToken = localStorage.getItem('admin_session_token');
@@ -127,6 +135,17 @@ function App() {
       await AdminSessionService.createSession(adminData);
     } catch (error) {
       // تجاهل أخطاء Database
+    }
+  };
+
+  // دالة الانتقال الذكية
+  const handleSmartNavigation = (destination: 'public' | 'admin') => {
+    if (destination === 'public') {
+      setActiveModule('public');
+    } else {
+      // العودة لآخر صفحة في لوحة التحكم
+      const savedModule = sessionStorage.getItem('last_admin_module') || 'dashboard';
+      setActiveModule(savedModule);
     }
   };
 

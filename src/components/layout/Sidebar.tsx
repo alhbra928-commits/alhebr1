@@ -13,13 +13,15 @@ import {
   TrendingUp,
   Sprout,
   MessageCircle,
-  Activity
+  Activity,
+  Globe
 } from 'lucide-react';
 import { usePermissions } from '../../contexts/PermissionsContext';
 
 interface SidebarProps {
   activeModule: string;
   onModuleChange: (module: string) => void;
+  onGoToPublic?: () => void;
 }
 
 interface MenuItem {
@@ -46,7 +48,7 @@ const menuItems: MenuItem[] = [
   { id: 'settings', label: 'الإعدادات', icon: Settings, color: 'text-gray-600' },
 ];
 
-export function Sidebar({ activeModule, onModuleChange }: SidebarProps) {
+export function Sidebar({ activeModule, onModuleChange, onGoToPublic }: SidebarProps) {
   const { canAccessModule, isAdmin, loading, permissions, currentAdminPhone } = usePermissions();
 
   console.log('🔍🔍🔍 [Sidebar] Rendering...');
@@ -185,6 +187,46 @@ export function Sidebar({ activeModule, onModuleChange }: SidebarProps) {
           })}
         </nav>
       </div>
+
+      {/* زر الاستكشاف الذكي */}
+      {onGoToPublic && (
+        <div className="absolute bottom-24 right-0 left-0 px-4">
+          <button
+            onClick={onGoToPublic}
+            className="w-full group relative overflow-hidden"
+          >
+            {/* الخلفية الزجاجية الخضراء */}
+            <div
+              className="absolute inset-0 bg-gradient-to-br from-emerald-600/20 to-green-600/20
+                       backdrop-blur-lg border border-emerald-400/30 rounded-2xl
+                       transition-all duration-500 group-hover:from-emerald-500/30 group-hover:to-green-500/30
+                       group-hover:border-emerald-400/50 group-hover:shadow-lg group-hover:shadow-emerald-500/20"
+            />
+
+            {/* التوهج الأخضر */}
+            <div
+              className="absolute inset-0 bg-gradient-to-r from-transparent via-emerald-400/20 to-transparent
+                       translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000"
+            />
+
+            {/* المحتوى */}
+            <div className="relative flex items-center justify-center gap-3 px-6 py-4">
+              <Globe className="w-5 h-5 text-emerald-400 group-hover:text-emerald-300 transition-colors" />
+              <span className="font-bold text-white text-base group-hover:scale-105 transition-transform">
+                🌍 استكشاف المنصة
+              </span>
+            </div>
+
+            {/* الحافة المتوهجة */}
+            <div
+              className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+              style={{
+                boxShadow: '0 0 20px rgba(16, 185, 129, 0.4), inset 0 0 20px rgba(16, 185, 129, 0.1)',
+              }}
+            />
+          </button>
+        </div>
+      )}
 
       <div className="absolute bottom-0 right-0 left-0 p-6 bg-emerald-950/80 backdrop-blur-xl border-t border-emerald-800/30">
         <div className="flex items-center gap-3">
