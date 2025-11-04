@@ -85,8 +85,11 @@ export const InnovativeFarmDetailPage: React.FC<InnovativeFarmDetailPageProps> =
 
   const bookedPercentage = 100 - availablePercentage;
 
-  // جلب الصورة من حقل images (jsonb array)
-  const farmImage = farm.images && farm.images.length > 0 ? farm.images[0] : '';
+  // جلب الصورة من المصدر الصحيح: aerial_map_url (حيث تحفظ إدارة المزارع)
+  // ثم images كخيار بديل
+  const farmImage = farm.aerial_map_url ||
+                   (farm.images && farm.images.length > 0 ? farm.images[0] : '') ||
+                   (farm.ground_images && farm.ground_images.length > 0 ? farm.ground_images[0] : '');
 
   const features = [
     {

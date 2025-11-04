@@ -10,7 +10,9 @@ export interface PublicFarm {
   location_region: string;
   description?: string;
   aerial_image?: string;
+  aerial_map_url?: string;  // الصورة من قاعدة البيانات (المصدر الأساسي)
   ground_images?: string[];
+  images?: string[];  // حقل jsonb في قاعدة البيانات
   video_url?: string;
   google_map_link?: string;
   status: 'open' | 'almost_full' | 'full';
