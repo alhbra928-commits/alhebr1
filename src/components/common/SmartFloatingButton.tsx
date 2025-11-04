@@ -586,46 +586,58 @@ export const SmartFloatingButton: React.FC<SmartFloatingButtonProps> = ({
                   <BellOff className={isMobile ? 'w-5 h-5' : 'w-3.5 h-3.5'} style={{ color: 'white' }} />
                 )}
               </button>
-              <button
-                onClick={() => {
-                  console.log('🔴 Close button clicked!');
-                  setIsOpen(false);
-                  if (onExternalOpenChange) {
-                    onExternalOpenChange(false);
-                  }
-                }}
-                className={`rounded-full active:scale-95 flex items-center justify-center transition-all font-bold ${
-                  isMobile
-                    ? 'w-14 h-14 bg-red-500 hover:bg-red-600 shadow-2xl border-2 border-white/50'
-                    : 'w-7 h-7 bg-white/20 hover:bg-white/30'
-                }`}
-                title="إغلاق"
-                style={{
-                  zIndex: 10003,
-                  minWidth: isMobile ? '56px' : 'auto',
-                  minHeight: isMobile ? '56px' : 'auto',
-                  cursor: 'pointer',
-                  touchAction: 'manipulation'
-                }}
-              >
-                <X className={isMobile ? 'w-7 h-7' : 'w-3.5 h-3.5'} style={{
-                  color: 'white',
-                  strokeWidth: isMobile ? 4 : 2
-                }} />
-              </button>
+              {!isMobile && (
+                <button
+                  onClick={() => {
+                    setIsOpen(false);
+                    if (onExternalOpenChange) {
+                      onExternalOpenChange(false);
+                    }
+                  }}
+                  className="w-7 h-7 rounded-full bg-white/20 hover:bg-white/30 active:scale-95 flex items-center justify-center transition-all"
+                  title="إغلاق"
+                >
+                  <X className="w-3.5 h-3.5" style={{ color: 'white', strokeWidth: 2 }} />
+                </button>
+              )}
             </div>
           </div>
 
-          {/* User Type Badge - Compact */}
+          {/* User Type Badge - Compact with Close Button */}
           <div className={`bg-gray-800 border-b border-gray-700 flex-shrink-0 ${
             isMobile ? 'px-4 py-2' : 'px-3 py-1.5'
           }`}>
-            <div className={`flex items-center justify-between ${
+            <div className={`flex items-center justify-between gap-2 ${
               isMobile ? 'text-sm' : 'text-xs'
             }`}>
-              <span className="text-gray-400 truncate">
-                <span className="text-emerald-400 font-semibold">{getUserTypeLabel()}</span>
-              </span>
+              <div className="flex items-center gap-2">
+                <span className="text-gray-400 truncate">
+                  <span className="text-emerald-400 font-semibold">{getUserTypeLabel()}</span>
+                </span>
+                {isMobile && (
+                  <button
+                    onClick={() => {
+                      console.log('🔴 Close button clicked!');
+                      setIsOpen(false);
+                      if (onExternalOpenChange) {
+                        onExternalOpenChange(false);
+                      }
+                    }}
+                    className="w-8 h-8 rounded-full bg-red-500 hover:bg-red-600 active:scale-95 flex items-center justify-center transition-all shadow-lg"
+                    title="إغلاق"
+                    style={{
+                      zIndex: 10003,
+                      cursor: 'pointer',
+                      touchAction: 'manipulation'
+                    }}
+                  >
+                    <X className="w-4 h-4" style={{
+                      color: 'white',
+                      strokeWidth: 3
+                    }} />
+                  </button>
+                )}
+              </div>
               {messages.length > 0 && (
                 <span className="text-gray-500">{messages.length} رسالة</span>
               )}
