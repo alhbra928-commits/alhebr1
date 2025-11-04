@@ -230,7 +230,6 @@ export function MazadGateway({ onEnter }: MazadGatewayProps) {
       settingsLoaded,
       auto_enter_enabled: settings.auto_enter_enabled,
       isInitializing,
-      farmsPreloaded,
       autoEnterStarted,
       should_start: settingsLoaded && settings.auto_enter_enabled && !isInitializing && !autoEnterStarted
     });
@@ -264,30 +263,14 @@ export function MazadGateway({ onEnter }: MazadGatewayProps) {
       if (currentStep >= steps) {
         clearInterval(timer);
         console.log('[Gateway] 🎯 100% REACHED! Entering platform NOW...');
+        console.log('[Gateway] ✅ Farms ready, entering immediately!');
 
-        // دخول فوري
-        if (farmsPreloaded) {
-          console.log('[Gateway] ✅ Farms ready, entering immediately!');
-          setIsVisible(false);
-          setTimeout(() => {
-            console.log('[Gateway] 🚀 Calling onEnter()...');
-            onEnter();
-          }, settings.fade_duration);
-        } else {
-          console.log('[Gateway] ⏳ Waiting for farms to load...');
-          // انتظر المزارع ثم ادخل
-          const waitForFarms = setInterval(() => {
-            if (farmsPreloaded) {
-              clearInterval(waitForFarms);
-              console.log('[Gateway] ✅ Farms loaded, entering now!');
-              setIsVisible(false);
-              setTimeout(() => {
-                console.log('[Gateway] 🚀 Calling onEnter()...');
-                onEnter();
-              }, settings.fade_duration);
-            }
-          }, 100);
-        }
+        // دخول فوري بدون انتظار
+        setIsVisible(false);
+        setTimeout(() => {
+          console.log('[Gateway] 🚀 Calling onEnter()...');
+          onEnter();
+        }, settings.fade_duration);
       }
     }, interval);
 
@@ -295,7 +278,7 @@ export function MazadGateway({ onEnter }: MazadGatewayProps) {
       console.log('[Gateway] 🧹 Cleaning up timer');
       clearInterval(timer);
     };
-  }, [settingsLoaded, settings.auto_enter_enabled, settings.auto_enter_delay, settings.fade_duration, isInitializing, autoEnterStarted, farmsPreloaded, onEnter]);
+  }, [settingsLoaded, settings.auto_enter_enabled, settings.auto_enter_delay, settings.fade_duration, isInitializing, autoEnterStarted, onEnter]);
 
   // دالة الدخول اليدوي (عند الضغط على الزر)
   const handleManualEnter = () => {
