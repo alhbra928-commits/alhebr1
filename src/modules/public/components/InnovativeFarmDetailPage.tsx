@@ -85,8 +85,8 @@ export const InnovativeFarmDetailPage: React.FC<InnovativeFarmDetailPageProps> =
 
   const bookedPercentage = 100 - availablePercentage;
 
-  // استخدام الأسماء الصحيحة من قاعدة البيانات
-  const farmImage = farm.image_url || farm.farm_image || farm.aerial_image || '';
+  // جلب الصورة من حقل images (jsonb array)
+  const farmImage = farm.images && farm.images.length > 0 ? farm.images[0] : '';
 
   const features = [
     {
