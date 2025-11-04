@@ -17,7 +17,7 @@ export const FarmOwnerDashboard: React.FC<FarmOwnerDashboardProps> = ({ profileI
   const [farmStatus, setFarmStatus] = useState<FarmStatus | null>(null);
   const [notifications, setNotifications] = useState<FarmOwnerNotification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
-  const [activeTab, setActiveTab] = useState<'home' | 'form' | 'finance' | 'notifications' | 'support' | 'faq'>('home');
+  const [activeTab, setActiveTab] = useState<'home' | 'form' | 'farmdata' | 'finance' | 'notifications' | 'support' | 'faq'>('home');
   const [loading, setLoading] = useState(true);
   const [showWelcome, setShowWelcome] = useState(false);
 
@@ -297,6 +297,7 @@ export const FarmOwnerDashboard: React.FC<FarmOwnerDashboardProps> = ({ profileI
             {[
               { id: 'home', label: 'الرئيسية', icon: Home, color: '#10B981', gradient: 'from-emerald-500 to-green-600' },
               { id: 'form', label: 'بياناتي', icon: FileText, color: '#3B82F6', gradient: 'from-blue-500 to-cyan-600' },
+              { id: 'farmdata', label: 'بيانات المزرعة', icon: Layers, color: '#059669', gradient: 'from-green-600 to-emerald-700' },
               { id: 'finance', label: 'المالية', icon: DollarSign, color: '#D4AF37', gradient: 'from-yellow-500 to-amber-600' },
               { id: 'notifications', label: 'الإشعارات', icon: Bell, badge: unreadCount, color: '#F59E0B', gradient: 'from-orange-500 to-amber-600' },
               { id: 'support', label: 'تواصل', icon: Phone, color: '#8B5CF6', gradient: 'from-purple-500 to-indigo-600' },
@@ -432,11 +433,14 @@ export const FarmOwnerDashboard: React.FC<FarmOwnerDashboardProps> = ({ profileI
           <ModernHomeTab
             profile={profile}
             farmStatus={farmStatus}
-            onNavigateToData={() => setActiveTab('form')}
+            onNavigateToData={() => setActiveTab('farmdata')}
           />
         )}
         {activeTab === 'form' && (
           <FormTab profile={profile} profileId={profileId} onUpdate={loadData} />
+        )}
+        {activeTab === 'farmdata' && (
+          <FarmDataTab profileId={profileId} onUpdate={loadData} />
         )}
         {activeTab === 'finance' && profile && (
           <AdvancedFinanceTab ownerId={profileId} farmId={farmStatus?.id || null} />
@@ -733,6 +737,42 @@ const FAQTab: React.FC = () => {
       </div>
 
       {/* Bottom Navigation Bar removed - ready for new development */}
+    </div>
+  );
+};
+
+// تبويب بيانات المزرعة
+const FarmDataTab: React.FC<{ profileId: string; onUpdate: () => void }> = ({ profileId, onUpdate }) => {
+  const [FarmDataSubmissionForm, setFarmDataSubmissionForm] = React.useState<any>(null);
+
+  React.useEffect(() => {
+    import('./FarmDataSubmissionForm').then((module) => {
+      setFarmDataSubmissionForm(() => module.FarmDataSubmissionForm);
+    });
+  }, []);
+
+  if (!FarmDataSubmissionForm) {
+    return (
+      <div className="bg-white rounded-3xl p-8 border-2 border-gray-200 text-center">
+        <div className="inline-block w-12 h-12 border-4 border-t-transparent rounded-full animate-spin"
+             style={{ borderColor: '#059669', borderTopColor: 'transparent' }} />
+        <p className="mt-4 text-gray-600">جاري تحميل النموذج...</p>
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <div className="mb-6">
+        <h2 className="text-2xl font-black mb-2" style={{ color: '#059669' }}>
+          🌳 بيانات المزرعة
+        </h2>
+        <p className="text-gray-600">
+          أدخل معلومات مزرعتك الكاملة: الموقع، المساحة، الأشجار، والأسعار
+        </p>
+      </div>
+
+      <FarmDataSubmissionForm profileId={profileId} onSuccess={onUpdate} />
     </div>
   );
 };
