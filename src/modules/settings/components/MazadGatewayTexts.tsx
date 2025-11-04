@@ -81,6 +81,7 @@ export function MazadGatewayTexts() {
         button_text: texts.button_text || '',
         show_title: texts.show_title,
         show_subtitle: texts.show_subtitle,
+        updated_at: new Date().toISOString(),
       };
 
       console.log('📤 البيانات للتحديث:', updateData);

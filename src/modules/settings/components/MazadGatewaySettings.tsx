@@ -16,6 +16,12 @@ interface MazadGatewaySettings {
   show_progress_bar: boolean;
   background_pattern_enabled: boolean;
   title_animation_enabled: boolean;
+  title_line1?: string;
+  title_line2?: string;
+  subtitle?: string;
+  button_text?: string;
+  show_title?: boolean;
+  show_subtitle?: boolean;
 }
 
 export function MazadGatewaySettings() {
@@ -32,6 +38,12 @@ export function MazadGatewaySettings() {
     show_progress_bar: true,
     background_pattern_enabled: true,
     title_animation_enabled: true,
+    title_line1: 'بوابة مزاد',
+    title_line2: '',
+    subtitle: '',
+    button_text: 'مزاد تملك النخيل و اشجار الزيتون',
+    show_title: true,
+    show_subtitle: true,
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -91,6 +103,13 @@ export function MazadGatewaySettings() {
         show_progress_bar: settings.show_progress_bar,
         background_pattern_enabled: settings.background_pattern_enabled,
         title_animation_enabled: settings.title_animation_enabled,
+        title_line1: settings.title_line1 || '',
+        title_line2: settings.title_line2 || '',
+        subtitle: settings.subtitle || '',
+        button_text: settings.button_text || '',
+        show_title: settings.show_title !== undefined ? settings.show_title : true,
+        show_subtitle: settings.show_subtitle !== undefined ? settings.show_subtitle : true,
+        updated_at: new Date().toISOString(),
       };
 
       console.log('📤 البيانات للتحديث:', updateData);
