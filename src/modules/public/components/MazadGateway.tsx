@@ -83,17 +83,27 @@ export function MazadGateway({ onEnter }: MazadGatewayProps) {
   useEffect(() => {
     const loadSettings = async () => {
       try {
+        // إضافة timestamp لكسر أي cache
+        const timestamp = Date.now();
+        console.log('[MazadGateway] 🔄 Force loading settings with timestamp:', timestamp);
+
         const { supabase } = await import('../../../lib/supabase');
-        const { data } = await supabase
+        const { data, error } = await supabase
           .from('mazad_gateway_settings')
           .select('*')
           .eq('id', 'd06bd962-d0a4-411a-a510-7deedb987839')
           .maybeSingle();
 
+        if (error) {
+          console.error('[MazadGateway] ❌ Database error:', error);
+          throw error;
+        }
+
         console.log('[MazadGateway] 🔵 Settings loaded from DB:', data);
         console.log('[MazadGateway] 📝 Title Line 1:', data?.title_line1);
         console.log('[MazadGateway] 📝 Title Line 2:', data?.title_line2);
         console.log('[MazadGateway] 📝 Button Text:', data?.button_text);
+        console.log('[MazadGateway] ⏰ Updated At:', data?.updated_at);
 
         if (data) {
           const newSettings = {
@@ -137,6 +147,8 @@ export function MazadGateway({ onEnter }: MazadGatewayProps) {
       try {
         const { supabase } = await import('../../../lib/supabase');
 
+        console.log('[MazadGateway] 🔌 Setting up Realtime subscription...');
+
         const channel = supabase
           .channel('mazad_gateway_settings_changes')
           .on(
@@ -148,8 +160,15 @@ export function MazadGateway({ onEnter }: MazadGatewayProps) {
               filter: `id=eq.d06bd962-d0a4-411a-a510-7deedb987839`
             },
             (payload) => {
-              console.log('[MazadGateway] 🔴 Realtime update received:', payload.new);
+              console.log('[MazadGateway] 🔴🔴🔴 REALTIME UPDATE RECEIVED! 🔴🔴🔴');
+              console.log('[MazadGateway] 📦 Payload:', payload);
+              console.log('[MazadGateway] 📝 New Data:', payload.new);
               const data = payload.new as any;
+
+              console.log('[MazadGateway] 🔄 Applying new settings...');
+              console.log('[MazadGateway] 📝 New Title Line 1:', data.title_line1);
+              console.log('[MazadGateway] 📝 New Title Line 2:', data.title_line2);
+              console.log('[MazadGateway] 📝 New Button Text:', data.button_text);
 
               setSettings({
                 enabled: data.enabled ?? true,
@@ -172,12 +191,20 @@ export function MazadGateway({ onEnter }: MazadGatewayProps) {
                 show_subtitle: data.show_subtitle ?? true,
               });
 
-              console.log('[MazadGateway] ✅ Settings updated in realtime!');
+              console.log('[MazadGateway] ✅✅✅ Settings updated successfully in realtime! ✅✅✅');
             }
           )
-          .subscribe();
+          .subscribe((status) => {
+            console.log('[MazadGateway] 📡 Subscription status:', status);
+            if (status === 'SUBSCRIBED') {
+              console.log('[MazadGateway] ✅ Realtime subscription ACTIVE and READY!');
+            }
+          });
+
+        console.log('[MazadGateway] ✅ Realtime subscription setup complete!');
 
         return () => {
+          console.log('[MazadGateway] 🔌 Unsubscribing from Realtime...');
           channel.unsubscribe();
         };
       } catch (error) {
@@ -187,6 +214,14 @@ export function MazadGateway({ onEnter }: MazadGatewayProps) {
 
     setupRealtimeSubscription();
   }, []);
+
+  // تتبع أي تغييرات في settings
+  useEffect(() => {
+    console.log('[MazadGateway] 🔄 Settings state changed!');
+    console.log('[MazadGateway] 📝 Current title_line1:', settings.title_line1);
+    console.log('[MazadGateway] 📝 Current title_line2:', settings.title_line2);
+    console.log('[MazadGateway] 📝 Current button_text:', settings.button_text);
+  }, [settings]);
 
   // العد التنازلي التلقائي - يبدأ فقط بعد إخفاء الـ loader
   useEffect(() => {
