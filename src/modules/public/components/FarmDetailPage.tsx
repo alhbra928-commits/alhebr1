@@ -128,17 +128,25 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
     );
   }
 
-  // استخدام نفس المنطق في البطاقة - aerial_image
-  const heroImage = farm.aerial_image;
+  // ✅ FIX v20251104: استخدام نفس المنطق في البطاقة - aerial_image
+  const heroImage = farm.aerial_image || '';
 
-  // Debug: تسجيل معلومات الصور
-  console.log('[FarmDetailPage] Image Debug:', {
+  // Debug: تسجيل معلومات الصور - FORCED LOG
+  console.log('🔍🔍🔍 [FarmDetailPage] Image Debug v20251104:', {
     farmName: farm.name_ar,
+    farmId: farm.id,
     hasAerialImage: !!farm.aerial_image,
     aerialImageLength: farm.aerial_image?.length,
     aerialImagePreview: farm.aerial_image?.substring(0, 50),
-    heroImage: heroImage ? `${heroImage.substring(0, 50)}... (${heroImage.length} chars)` : null
+    aerialImageType: farm.aerial_image?.startsWith('data:image') ? 'Base64' : 'URL',
+    heroImageFinal: heroImage ? `${heroImage.substring(0, 50)}... (${heroImage.length} chars)` : 'EMPTY',
+    timestamp: new Date().toISOString()
   });
+
+  // إجبار تحديث الصورة
+  if (!heroImage) {
+    console.error('❌❌❌ [FarmDetailPage] NO IMAGE FOUND!', farm);
+  }
 
   return (
     <div
@@ -177,7 +185,19 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
             <img
               src={heroImage}
               alt={farm.name_ar}
-              onLoad={() => setImageLoaded(true)}
+              onLoad={() => {
+                console.log('✅ [FarmDetailPage] Image loaded successfully!', {
+                  src: heroImage.substring(0, 50),
+                  length: heroImage.length
+                });
+                setImageLoaded(true);
+              }}
+              onError={(e) => {
+                console.error('❌ [FarmDetailPage] Image load FAILED!', {
+                  src: heroImage.substring(0, 50),
+                  error: e
+                });
+              }}
               className={`absolute inset-0 w-full h-full transition-transform duration-[20000ms] ease-linear ${
                 imageLoaded ? 'scale-110' : 'scale-100'
               }`}
