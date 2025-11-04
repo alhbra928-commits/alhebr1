@@ -585,11 +585,17 @@ export const SmartFloatingButton: React.FC<SmartFloatingButtonProps> = ({
                     onExternalOpenChange(false);
                   }
                 }}
-                className={`rounded-full bg-white/20 hover:bg-white/30 active:scale-95 flex items-center justify-center transition-all ${
-                  isMobile ? 'w-10 h-10' : 'w-7 h-7'
+                className={`rounded-full active:scale-95 flex items-center justify-center transition-all font-bold ${
+                  isMobile
+                    ? 'w-12 h-12 bg-red-500/90 hover:bg-red-600 shadow-lg'
+                    : 'w-7 h-7 bg-white/20 hover:bg-white/30'
                 }`}
+                title="إغلاق"
               >
-                <X className={isMobile ? 'w-5 h-5' : 'w-3.5 h-3.5'} style={{ color: 'white' }} />
+                <X className={isMobile ? 'w-6 h-6' : 'w-3.5 h-3.5'} style={{
+                  color: 'white',
+                  strokeWidth: isMobile ? 3 : 2
+                }} />
               </button>
             </div>
           </div>

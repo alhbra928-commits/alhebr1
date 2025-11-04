@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>زر الإغلاق الواضح</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #064e3b 0%, #065f46 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .container {
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      max-width: 900px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    h1 {
+      color: #ef4444;
+      font-size: 32px;
+      margin-bottom: 30px;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+    }
+    .comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      margin: 30px 0;
+    }
+    .before, .after {
+      padding: 30px;
+      border-radius: 16px;
+      border: 3px solid;
+    }
+    .before {
+      background: #fee;
+      border-color: #ef4444;
+    }
+    .after {
+      background: #d1fae5;
+      border-color: #10b981;
+    }
+    .before h2 {
+      color: #dc2626;
+      font-size: 22px;
+      margin-bottom: 20px;
+    }
+    .after h2 {
+      color: #059669;
+      font-size: 22px;
+      margin-bottom: 20px;
+    }
+    .header-demo {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      padding: 20px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 20px 0;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: white;
+    }
+    .robot {
+      width: 48px;
+      height: 48px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+    }
+    .title h3 {
+      font-size: 20px;
+      margin: 0;
+    }
+    .title p {
+      font-size: 13px;
+      opacity: 0.8;
+      margin: 0;
+    }
+    .actions {
+      display: flex;
+      gap: 12px;
+    }
+    .btn-sound {
+      width: 48px;
+      height: 48px;
+      background: rgba(255,255,255,0.2);
+      border: none;
+      border-radius: 50%;
+      color: white;
+      font-size: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .btn-close-old {
+      width: 40px;
+      height: 40px;
+      background: rgba(255,255,255,0.2);
+      border: none;
+      border-radius: 50%;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .btn-close-new {
+      width: 48px;
+      height: 48px;
+      background: rgba(239, 68, 68, 0.9);
+      border: none;
+      border-radius: 50%;
+      color: white;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+      transition: all 0.2s;
+    }
+    .btn-close-new:hover {
+      background: #dc2626;
+      transform: scale(1.05);
+    }
+    .btn-close-new:active {
+      transform: scale(0.95);
+    }
+    ul {
+      margin: 15px 0;
+      padding-right: 25px;
+    }
+    li {
+      margin: 10px 0;
+      line-height: 1.6;
+    }
+    .specs {
+      background: #f3f4f6;
+      padding: 20px;
+      border-radius: 12px;
+      margin: 20px 0;
+    }
+    .specs h3 {
+      color: #374151;
+      margin-bottom: 15px;
+      font-size: 18px;
+    }
+    .spec-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px;
+      background: white;
+      margin: 8px 0;
+      border-radius: 8px;
+      border-right: 4px solid #10b981;
+    }
+    .spec-label {
+      font-weight: bold;
+      color: #059669;
+    }
+    .final {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      border: 3px solid #f59e0b;
+      border-radius: 16px;
+      padding: 30px;
+      margin-top: 30px;
+      text-align: center;
+    }
+    .final h2 {
+      color: #92400e;
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+    @media (max-width: 768px) {
+      .comparison {
+        grid-template-columns: 1fr;
+      }
+      .container {
+        padding: 20px;
+      }
+      h1 {
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>
+      <span style="font-size: 48px;">×</span>
+      زر الإغلاق الواضح والمميز
+    </h1>
+
+    <div class="comparison">
+      <!-- Before -->
+      <div class="before">
+        <h2>❌ قبل التعديل</h2>
+        
+        <div class="header-demo">
+          <div class="logo">
+            <div class="robot">🤖</div>
+            <div class="title">
+              <h3>المساعد الذكي</h3>
+              <p>متصل الآن</p>
+            </div>
+          </div>
+          <div class="actions">
+            <button class="btn-sound">🔔</button>
+            <button class="btn-close-old">×</button>
+          </div>
+        </div>
+
+        <h3 style="color: #dc2626; margin: 20px 0 10px;">المشاكل:</h3>
+        <ul>
+          <li>❌ نفس لون الأزرار الأخرى</li>
+          <li>❌ حجم صغير (40x40)</li>
+          <li>❌ غير واضح أنه للإغلاق</li>
+          <li>❌ شفافية عالية</li>
+          <li>❌ سهل تجاهله</li>
+        </ul>
+
+        <div class="specs">
+          <h3>المواصفات:</h3>
+          <div class="spec-item">
+            <span class="spec-label">الحجم:</span>
+            <span>40×40 بكسل</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">الخلفية:</span>
+            <span>rgba(255,255,255,0.2)</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">السُمك:</span>
+            <span>عادي (2px)</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">الظل:</span>
+            <span>لا يوجد</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- After -->
+      <div class="after">
+        <h2>✅ بعد التعديل</h2>
+        
+        <div class="header-demo">
+          <div class="logo">
+            <div class="robot">🤖</div>
+            <div class="title">
+              <h3>المساعد الذكي</h3>
+              <p>متصل الآن</p>
+            </div>
+          </div>
+          <div class="actions">
+            <button class="btn-sound">🔔</button>
+            <button class="btn-close-new">×</button>
+          </div>
+        </div>
+
+        <h3 style="color: #059669; margin: 20px 0 10px;">التحسينات:</h3>
+        <ul>
+          <li>✅ لون أحمر واضح ومميز</li>
+          <li>✅ حجم أكبر (48x48)</li>
+          <li>✅ واضح تماماً أنه للإغلاق</li>
+          <li>✅ ظل قوي</li>
+          <li>✅ يلفت الانتباه</li>
+        </ul>
+
+        <div class="specs">
+          <h3>المواصفات:</h3>
+          <div class="spec-item">
+            <span class="spec-label">الحجم:</span>
+            <span>48×48 بكسل (+20%)</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">الخلفية:</span>
+            <span>rgba(239,68,68,0.9)</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">السُمك:</span>
+            <span>سميك (3px)</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">الظل:</span>
+            <span>shadow-lg (أحمر)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="final">
+      <h2>🎯 النتيجة النهائية</h2>
+      <p style="font-size: 18px; line-height: 1.8; margin: 20px 0;">
+        الآن زر الإغلاق <strong>واضح جداً</strong> للمستخدم!<br>
+        لون أحمر + حجم أكبر + ظل = <strong>سهل الرؤية والضغط</strong>
+      </p>
+      <div style="display: flex; justify-content: center; gap: 30px; margin-top: 30px; flex-wrap: wrap;">
+        <div style="text-align: center;">
+          <div style="font-size: 48px; margin-bottom: 10px;">✅</div>
+          <div style="font-weight: bold; color: #059669;">واضح</div>
+        </div>
+        <div style="text-align: center;">
+          <div style="font-size: 48px; margin-bottom: 10px;">✅</div>
+          <div style="font-weight: bold; color: #059669;">مميز</div>
+        </div>
+        <div style="text-align: center;">
+          <div style="font-size: 48px; margin-bottom: 10px;">✅</div>
+          <div style="font-weight: bold; color: #059669;">سهل</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 30px; padding: 25px; background: #f3f4f6; border-radius: 12px;">
+      <p style="font-size: 18px; color: #374151; font-weight: bold;">
+        📦 الإصدار: v20251104_1762265721829
+      </p>
+      <p style="color: #6b7280; margin-top: 10px;">
+        ✅ زر الإغلاق الآن واضح ومميز على الموبايل
+      </p>
+    </div>
+  </div>
+</body>
+</html>
