@@ -128,11 +128,20 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
     );
   }
 
+  // استخدام الصور الفعلية فقط - لا صور تجريبية
   const heroImage = farm.aerial_map_url ||
-    (farm.images && farm.images.length > 0 ? farm.images[0] : null) ||
-    (farm.tree_type === 'نخيل' || farm.tree_type === 'palm'
-      ? 'https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?w=1920&q=80'
-      : 'https://images.unsplash.com/photo-1474440692490-2e83ae13ba29?w=1920&q=80');
+    (farm.images && farm.images.length > 0 ? farm.images[0] : null);
+
+  // Debug: تسجيل معلومات الصور
+  console.log('[FarmDetailPage] Image Debug:', {
+    farmName: farm.name_ar,
+    hasAerialMapUrl: !!farm.aerial_map_url,
+    aerialMapUrlLength: farm.aerial_map_url?.length,
+    hasImages: !!farm.images,
+    imagesCount: farm.images?.length || 0,
+    firstImageLength: farm.images?.[0]?.length,
+    heroImage: heroImage ? `${heroImage.substring(0, 50)}... (${heroImage.length} chars)` : null
+  });
 
   return (
     <div
@@ -157,28 +166,38 @@ export function FarmDetailPage({ farmId, onBack, onStartBooking }: FarmDetailPag
 
       {/* صورة Hero محسنة للجوال */}
       <div className="relative w-full h-[60vh] min-h-[400px] max-h-[600px] overflow-hidden">
-        {typeof heroImage === 'string' && heroImage.startsWith('linear-gradient') ? (
-          <div
-            className="absolute inset-0"
-            style={{
-              background: heroImage,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center'
-            }}
-          />
+        {heroImage ? (
+          typeof heroImage === 'string' && heroImage.startsWith('linear-gradient') ? (
+            <div
+              className="absolute inset-0"
+              style={{
+                background: heroImage,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center'
+              }}
+            />
+          ) : (
+            <img
+              src={heroImage}
+              alt={farm.name_ar}
+              onLoad={() => setImageLoaded(true)}
+              className={`absolute inset-0 w-full h-full transition-transform duration-[20000ms] ease-linear ${
+                imageLoaded ? 'scale-110' : 'scale-100'
+              }`}
+              style={{
+                objectFit: 'cover',
+                objectPosition: 'center 40%'
+              }}
+            />
+          )
         ) : (
-          <img
-            src={heroImage}
-            alt={farm.name_ar}
-            onLoad={() => setImageLoaded(true)}
-            className={`absolute inset-0 w-full h-full transition-transform duration-[20000ms] ease-linear ${
-              imageLoaded ? 'scale-110' : 'scale-100'
-            }`}
-            style={{
-              objectFit: 'cover',
-              objectPosition: 'center 40%'
-            }}
-          />
+          // عرض خلفية خضراء مع أيقونة عندما لا توجد صور
+          <div className="absolute inset-0 bg-gradient-to-br from-emerald-500 via-green-600 to-emerald-700 flex items-center justify-center">
+            <div className="text-center text-white">
+              <div className="text-8xl mb-4">{getTreeEmoji(farm.tree_type)}</div>
+              <p className="text-xl font-bold">لا توجد صورة متاحة</p>
+            </div>
+          </div>
         )}
 
         {/* Gradient + معلومات المزرعة */}
