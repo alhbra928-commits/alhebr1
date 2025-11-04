@@ -22,9 +22,9 @@ export const FarmDataSubmissionForm: React.FC<FarmDataSubmissionFormProps> = ({ 
 
   // الأشجار والأسعار
   const [totalPalmTrees, setTotalPalmTrees] = useState('');
-  const [palmTreePrice, setPalmTreePrice] = useState('');
+  const [palmTotalPrice, setPalmTotalPrice] = useState('');
   const [totalOliveTrees, setTotalOliveTrees] = useState('');
-  const [oliveTreePrice, setOliveTreePrice] = useState('');
+  const [oliveTotalPrice, setOliveTotalPrice] = useState('');
 
   // معلومات إضافية
   const [expectedReturn, setExpectedReturn] = useState('');
@@ -54,8 +54,8 @@ export const FarmDataSubmissionForm: React.FC<FarmDataSubmissionFormProps> = ({ 
         setMessage({ type: 'error', text: 'يرجى إدخال عدد أشجار النخيل' });
         return;
       }
-      if (!palmTreePrice || parseFloat(palmTreePrice) <= 0) {
-        setMessage({ type: 'error', text: 'يرجى إدخال سعر شجرة النخيل' });
+      if (!palmTotalPrice || parseFloat(palmTotalPrice) <= 0) {
+        setMessage({ type: 'error', text: 'يرجى إدخال السعر الإجمالي لأشجار النخيل' });
         return;
       }
     }
@@ -65,8 +65,8 @@ export const FarmDataSubmissionForm: React.FC<FarmDataSubmissionFormProps> = ({ 
         setMessage({ type: 'error', text: 'يرجى إدخال عدد أشجار الزيتون' });
         return;
       }
-      if (!oliveTreePrice || parseFloat(oliveTreePrice) <= 0) {
-        setMessage({ type: 'error', text: 'يرجى إدخال سعر شجرة الزيتون' });
+      if (!oliveTotalPrice || parseFloat(oliveTotalPrice) <= 0) {
+        setMessage({ type: 'error', text: 'يرجى إدخال السعر الإجمالي لأشجار الزيتون' });
         return;
       }
     }
@@ -86,10 +86,10 @@ export const FarmDataSubmissionForm: React.FC<FarmDataSubmissionFormProps> = ({ 
         farm_description: farmDescription || null,
         total_palm_trees: farmType !== 'زيتون' ? parseInt(totalPalmTrees) : 0,
         available_palm_trees: farmType !== 'زيتون' ? parseInt(totalPalmTrees) : 0,
-        palm_tree_price: farmType !== 'زيتون' ? parseFloat(palmTreePrice) : null,
+        palm_tree_price: farmType !== 'زيتون' ? parseFloat(palmTotalPrice) / parseInt(totalPalmTrees) : null,
         total_olive_trees: farmType !== 'نخيل' ? parseInt(totalOliveTrees) : 0,
         available_olive_trees: farmType !== 'نخيل' ? parseInt(totalOliveTrees) : 0,
-        olive_tree_price: farmType !== 'نخيل' ? parseFloat(oliveTreePrice) : null,
+        olive_tree_price: farmType !== 'نخيل' ? parseFloat(oliveTotalPrice) / parseInt(totalOliveTrees) : null,
         expected_annual_return: expectedReturn ? parseFloat(expectedReturn) : null
       };
 
@@ -114,11 +114,11 @@ export const FarmDataSubmissionForm: React.FC<FarmDataSubmissionFormProps> = ({ 
   };
 
   const calculateTotalValue = () => {
-    const palmValue = (farmType !== 'زيتون' && totalPalmTrees && palmTreePrice)
-      ? parseInt(totalPalmTrees) * parseFloat(palmTreePrice)
+    const palmValue = (farmType !== 'زيتون' && palmTotalPrice)
+      ? parseFloat(palmTotalPrice)
       : 0;
-    const oliveValue = (farmType !== 'نخيل' && totalOliveTrees && oliveTreePrice)
-      ? parseInt(totalOliveTrees) * parseFloat(oliveTreePrice)
+    const oliveValue = (farmType !== 'نخيل' && oliveTotalPrice)
+      ? parseFloat(oliveTotalPrice)
       : 0;
     return palmValue + oliveValue;
   };
@@ -287,25 +287,25 @@ export const FarmDataSubmissionForm: React.FC<FarmDataSubmissionFormProps> = ({ 
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                سعر الشجرة (ر.س) <span className="text-red-500">*</span>
+                السعر الإجمالي (ر.س) <span className="text-red-500">*</span>
               </label>
               <input
                 type="number"
-                value={palmTreePrice}
-                onChange={(e) => setPalmTreePrice(e.target.value)}
+                value={palmTotalPrice}
+                onChange={(e) => setPalmTotalPrice(e.target.value)}
                 className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-amber-500 focus:ring-2 focus:ring-amber-200"
-                placeholder="مثال: 1500"
+                placeholder="مثال: 300000"
                 required
                 step="0.01"
                 min="0"
               />
             </div>
           </div>
-          {totalPalmTrees && palmTreePrice && (
+          {totalPalmTrees && palmTotalPrice && (
             <div className="mt-3 p-3 bg-white rounded-lg">
-              <p className="text-sm text-gray-600">القيمة الإجمالية للنخيل:</p>
+              <p className="text-sm text-gray-600">السعر للشجرة الواحدة:</p>
               <p className="text-xl font-black text-amber-700">
-                {(parseInt(totalPalmTrees) * parseFloat(palmTreePrice)).toLocaleString('ar-SA')} ر.س
+                {(parseFloat(palmTotalPrice) / parseInt(totalPalmTrees)).toLocaleString('ar-SA', {minimumFractionDigits: 2, maximumFractionDigits: 2})} ر.س
               </p>
             </div>
           )}
@@ -336,25 +336,25 @@ export const FarmDataSubmissionForm: React.FC<FarmDataSubmissionFormProps> = ({ 
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                سعر الشجرة (ر.س) <span className="text-red-500">*</span>
+                السعر الإجمالي (ر.س) <span className="text-red-500">*</span>
               </label>
               <input
                 type="number"
-                value={oliveTreePrice}
-                onChange={(e) => setOliveTreePrice(e.target.value)}
+                value={oliveTotalPrice}
+                onChange={(e) => setOliveTotalPrice(e.target.value)}
                 className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring-2 focus:ring-green-200"
-                placeholder="مثال: 1200"
+                placeholder="مثال: 180000"
                 required
                 step="0.01"
                 min="0"
               />
             </div>
           </div>
-          {totalOliveTrees && oliveTreePrice && (
+          {totalOliveTrees && oliveTotalPrice && (
             <div className="mt-3 p-3 bg-white rounded-lg">
-              <p className="text-sm text-gray-600">القيمة الإجمالية للزيتون:</p>
+              <p className="text-sm text-gray-600">السعر للشجرة الواحدة:</p>
               <p className="text-xl font-black text-green-700">
-                {(parseInt(totalOliveTrees) * parseFloat(oliveTreePrice)).toLocaleString('ar-SA')} ر.س
+                {(parseFloat(oliveTotalPrice) / parseInt(totalOliveTrees)).toLocaleString('ar-SA', {minimumFractionDigits: 2, maximumFractionDigits: 2})} ر.س
               </p>
             </div>
           )}
