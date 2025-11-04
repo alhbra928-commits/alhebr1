@@ -507,43 +507,49 @@ export const SmartFloatingButton: React.FC<SmartFloatingButtonProps> = ({
 
           <div
             ref={chatContainerRef}
-            className={`fixed bg-gray-900 shadow-2xl flex flex-col rounded-2xl ${
+            className={`fixed bg-gray-900 shadow-2xl flex flex-col ${
               isMobile
-                ? 'left-4 right-4 z-50 overflow-hidden'
-                : 'bottom-24 right-6 w-[420px] max-h-[650px] z-[9999] overflow-hidden'
+                ? 'inset-0 z-50 rounded-none'
+                : 'bottom-24 right-6 w-[420px] max-h-[650px] z-[9999] rounded-2xl overflow-hidden'
             }`}
-            style={isMobile ? {
-              top: '1rem',
-              bottom: '1rem',
-              maxHeight: '70vh'
-            } : undefined}
             dir="rtl"
           >
           {/* Header - Compact */}
           <div
-            className="px-3 py-2 flex items-center justify-between flex-shrink-0"
+            className={`flex items-center justify-between flex-shrink-0 ${
+              isMobile ? 'px-4 py-4' : 'px-3 py-2'
+            }`}
             style={{
-              background: 'linear-gradient(135deg, #8B7355 0%, #A0916A 100%)'
+              background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)'
             }}
           >
-            <div className="flex items-center gap-2 min-w-0">
-              <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0">
-                <MessageCircle className="w-4 h-4 text-white" />
+            <div className="flex items-center gap-3 min-w-0">
+              <div className={`rounded-full bg-white/20 flex items-center justify-center flex-shrink-0 ${
+                isMobile ? 'w-10 h-10' : 'w-8 h-8'
+              }`}>
+                <span className={isMobile ? 'text-2xl' : 'text-xl'}>🤖</span>
               </div>
               <div className="min-w-0">
-                <h3 className="text-white font-bold text-sm truncate">مركز التواصل الذكي 🌿</h3>
+                <h3 className={`text-white font-bold truncate ${
+                  isMobile ? 'text-lg' : 'text-sm'
+                }`}>المساعد الذكي</h3>
+                {isMobile && (
+                  <p className="text-white/70 text-xs">متصل الآن</p>
+                )}
               </div>
             </div>
-            <div className="flex items-center gap-1 flex-shrink-0">
+            <div className="flex items-center gap-2 flex-shrink-0">
               <button
                 onClick={toggleSound}
-                className="w-7 h-7 rounded-full bg-white/20 hover:bg-white/30 active:scale-95 flex items-center justify-center transition-all"
+                className={`rounded-full bg-white/20 hover:bg-white/30 active:scale-95 flex items-center justify-center transition-all ${
+                  isMobile ? 'w-10 h-10' : 'w-7 h-7'
+                }`}
                 title={soundEnabled ? 'إيقاف الصوت' : 'تشغيل الصوت'}
               >
                 {soundEnabled ? (
-                  <Bell className="w-3.5 h-3.5 text-white" />
+                  <Bell className={isMobile ? 'w-5 h-5' : 'w-3.5 h-3.5'} style={{ color: 'white' }} />
                 ) : (
-                  <BellOff className="w-3.5 h-3.5 text-white" />
+                  <BellOff className={isMobile ? 'w-5 h-5' : 'w-3.5 h-3.5'} style={{ color: 'white' }} />
                 )}
               </button>
               <button
@@ -553,9 +559,11 @@ export const SmartFloatingButton: React.FC<SmartFloatingButtonProps> = ({
                     onExternalOpenChange(false);
                   }
                 }}
-                className="w-7 h-7 rounded-full bg-white/20 hover:bg-white/30 active:scale-95 flex items-center justify-center transition-all"
+                className={`rounded-full bg-white/20 hover:bg-white/30 active:scale-95 flex items-center justify-center transition-all ${
+                  isMobile ? 'w-10 h-10' : 'w-7 h-7'
+                }`}
               >
-                <X className="w-3.5 h-3.5 text-white" />
+                <X className={isMobile ? 'w-5 h-5' : 'w-3.5 h-3.5'} style={{ color: 'white' }} />
               </button>
             </div>
           </div>
