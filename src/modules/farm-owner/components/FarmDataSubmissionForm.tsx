@@ -301,14 +301,6 @@ export const FarmDataSubmissionForm: React.FC<FarmDataSubmissionFormProps> = ({ 
               />
             </div>
           </div>
-          {totalPalmTrees && palmTotalPrice && (
-            <div className="mt-3 p-3 bg-white rounded-lg">
-              <p className="text-sm text-gray-600">السعر للشجرة الواحدة:</p>
-              <p className="text-xl font-black text-amber-700">
-                {(parseFloat(palmTotalPrice) / parseInt(totalPalmTrees)).toLocaleString('ar-SA', {minimumFractionDigits: 2, maximumFractionDigits: 2})} ر.س
-              </p>
-            </div>
-          )}
         </div>
       )}
 
@@ -350,14 +342,6 @@ export const FarmDataSubmissionForm: React.FC<FarmDataSubmissionFormProps> = ({ 
               />
             </div>
           </div>
-          {totalOliveTrees && oliveTotalPrice && (
-            <div className="mt-3 p-3 bg-white rounded-lg">
-              <p className="text-sm text-gray-600">السعر للشجرة الواحدة:</p>
-              <p className="text-xl font-black text-green-700">
-                {(parseFloat(oliveTotalPrice) / parseInt(totalOliveTrees)).toLocaleString('ar-SA', {minimumFractionDigits: 2, maximumFractionDigits: 2})} ر.س
-              </p>
-            </div>
-          )}
         </div>
       )}
 
@@ -397,21 +381,6 @@ export const FarmDataSubmissionForm: React.FC<FarmDataSubmissionFormProps> = ({ 
           </div>
         </div>
       </div>
-
-      {/* إجمالي القيمة */}
-      {calculateTotalValue() > 0 && (
-        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-2xl p-6 shadow-xl">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm opacity-90">القيمة الإجمالية المتوقعة للمزرعة:</p>
-              <p className="text-4xl font-black mt-2">
-                {calculateTotalValue().toLocaleString('ar-SA')} ر.س
-              </p>
-            </div>
-            <DollarSign className="w-16 h-16 opacity-30" />
-          </div>
-        </div>
-      )}
 
       {/* زر الإرسال */}
       <button
