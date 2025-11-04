@@ -17,18 +17,25 @@ export function PublicPlatformRouter({ onAdminLogin, onBackToAdmin, onFarmOwnerL
   const [currentView, setCurrentView] = useState<View>('main');
   const [selectedBarcode, setSelectedBarcode] = useState<string>('');
 
-  // تهيئة السكربتات التحليلية عند التحميل الأول
+  // تهيئة السكربتات التحليلية عند التحميل الأول - فقط مرة واحدة
   useEffect(() => {
-    const initAnalytics = async () => {
-      await marketingAnalyticsService.initializePixels();
-      console.log('📊 Analytics pixels initialized');
-    };
-    initAnalytics();
+    // تأخير التحميل لتحسين الأداء
+    const timer = setTimeout(() => {
+      marketingAnalyticsService.initializePixels()
+        .catch(err => console.warn('Analytics init failed:', err));
+    }, 2000); // تأخير 2 ثانية
+
+    return () => clearTimeout(timer);
   }, []);
 
-  // التتبع التلقائي للزوار عند تغيير الصفحة
+  // التتبع التلقائي للزوار - تأخير أيضاً
   useEffect(() => {
-    marketingAnalyticsService.trackCurrentPage();
+    const timer = setTimeout(() => {
+      marketingAnalyticsService.trackCurrentPage()
+        .catch(err => console.warn('Tracking failed:', err));
+    }, 1000);
+
+    return () => clearTimeout(timer);
   }, [currentView]);
 
 

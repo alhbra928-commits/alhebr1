@@ -48,27 +48,46 @@ export function ModernRoyalPlatform({
   const [platformName, setPlatformName] = useState('منصة الحبر');
 
   useEffect(() => {
+    // تحميل المزارع أولاً (الأهم)
     loadData();
-    loadTickerData();
-    loadPlatformTexts();
 
-    // Subscribe to ticker updates
-    const unsubscribeMessages = modern3DTickerService.subscribeToMessages((messages) => {
-      setTickerMessages(messages);
-    });
+    // تأخير التحميلات الأخرى
+    const timer1 = setTimeout(() => loadPlatformTexts(), 500);
+    const timer2 = setTimeout(() => loadTickerData(), 1000);
 
-    const unsubscribeSettings = modern3DTickerService.subscribeToSettings((settings) => {
-      setTickerSettings(settings);
-    });
+    // Subscribe to ticker updates - بعد تأخير
+    let unsubscribeMessages: (() => void) | null = null;
+    let unsubscribeSettings: (() => void) | null = null;
+
+    const timer3 = setTimeout(() => {
+      unsubscribeMessages = modern3DTickerService.subscribeToMessages((messages) => {
+        setTickerMessages(messages);
+      });
+
+      unsubscribeSettings = modern3DTickerService.subscribeToSettings((settings) => {
+        setTickerSettings(settings);
+      });
+    }, 1500);
 
     return () => {
-      unsubscribeMessages();
-      unsubscribeSettings();
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+      clearTimeout(timer3);
+      if (unsubscribeMessages) unsubscribeMessages();
+      if (unsubscribeSettings) unsubscribeSettings();
     };
   }, []);
 
+  // Mouse move - تأخير التفعيل
   useEffect(() => {
+    let isActive = false;
+
+    const timer = setTimeout(() => {
+      isActive = true;
+    }, 1000); // تأخير ثانية
+
     const handleMouseMove = (e: MouseEvent) => {
+      if (!isActive) return;
       setMousePosition({
         x: (e.clientX / window.innerWidth) * 100,
         y: (e.clientY / window.innerHeight) * 100,
@@ -76,7 +95,10 @@ export function ModernRoyalPlatform({
     };
 
     window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('mousemove', handleMouseMove);
+    };
   }, []);
 
   const loadData = async () => {
