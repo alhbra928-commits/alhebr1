@@ -75,11 +75,15 @@ export const SmartFloatingButton: React.FC<SmartFloatingButtonProps> = ({
     const isIOS = /iphone|ipad|ipod/.test(ua);
     const isMobileDevice = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(ua);
 
+    // IMPORTANT: Also check window width for dev tools responsive mode
+    const isMobileWidth = window.innerWidth <= 768;
+    const isMobileMode = isMobileDevice || isMobileWidth;
+
     setIsIPhone(isIOS);
-    setIsMobile(isMobileDevice);
+    setIsMobile(isMobileMode);
 
     // Prevent body scroll on mobile when modal is open
-    if (isMobileDevice && isOpen) {
+    if (isMobileMode && isOpen) {
       document.body.style.overflow = 'hidden';
       document.body.style.position = 'fixed';
       document.body.style.width = '100%';
@@ -115,11 +119,23 @@ export const SmartFloatingButton: React.FC<SmartFloatingButtonProps> = ({
     scrollToBottom();
   }, [messages]);
 
+  // Detect mobile on mount and window resize
+  useEffect(() => {
+    detectDevice();
+
+    const handleResize = () => {
+      detectDevice();
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [isOpen]);
+
   // Handle keyboard appearance on mobile
   useEffect(() => {
     if (!isOpen) return;
 
-    const handleResize = () => {
+    const handleKeyboardResize = () => {
       // When keyboard appears, scroll input into view
       if (inputRef.current && document.activeElement === inputRef.current) {
         setTimeout(() => {
@@ -139,11 +155,11 @@ export const SmartFloatingButton: React.FC<SmartFloatingButtonProps> = ({
       }, 300);
     };
 
-    window.addEventListener('resize', handleResize);
+    window.addEventListener('resize', handleKeyboardResize);
     inputRef.current?.addEventListener('focus', handleFocus);
 
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('resize', handleKeyboardResize);
       inputRef.current?.removeEventListener('focus', handleFocus);
     };
   }, [isOpen]);

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>اختبار المساعد الذكي - Responsive</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #064e3b 0%, #065f46 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .container {
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      max-width: 800px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    h1 {
+      color: #10b981;
+      font-size: 28px;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+    .fix {
+      background: #d1fae5;
+      border: 2px solid #10b981;
+      border-radius: 16px;
+      padding: 30px;
+      margin-bottom: 30px;
+    }
+    .fix h2 {
+      color: #065f46;
+      font-size: 22px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .code {
+      background: #1f2937;
+      color: #10b981;
+      padding: 20px;
+      border-radius: 12px;
+      margin: 15px 0;
+      font-family: monospace;
+      font-size: 14px;
+      direction: ltr;
+      text-align: left;
+      overflow-x: auto;
+    }
+    ul {
+      margin: 15px 0;
+      padding-right: 25px;
+    }
+    li {
+      margin: 12px 0;
+      line-height: 1.8;
+      font-size: 16px;
+    }
+    .highlight {
+      background: #fef3c7;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: bold;
+      color: #92400e;
+    }
+    .test {
+      background: #f0f9ff;
+      border: 2px solid #0ea5e9;
+      border-radius: 16px;
+      padding: 30px;
+      margin-top: 30px;
+    }
+    .test h2 {
+      color: #0369a1;
+      font-size: 22px;
+      margin-bottom: 20px;
+    }
+    .steps {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 20px;
+    }
+    .step {
+      padding: 15px;
+      border-right: 4px solid #10b981;
+      margin: 15px 0;
+      background: #f9fafb;
+      border-radius: 8px;
+    }
+    .step strong {
+      color: #10b981;
+      font-size: 18px;
+      display: block;
+      margin-bottom: 8px;
+    }
+    @media (max-width: 640px) {
+      .container { padding: 20px; }
+      h1 { font-size: 22px; }
+      .fix h2, .test h2 { font-size: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>✅ الإصلاح النهائي - المساعد الذكي متجاوب</h1>
+
+    <div class="fix">
+      <h2>🔧 ما تم إصلاحه:</h2>
+      
+      <p style="font-size: 18px; margin-bottom: 20px; font-weight: bold;">
+        المشكلة: <span class="highlight">أدوات المطورين لا تكتشف الموبايل!</span>
+      </p>
+
+      <h3 style="color: #065f46; margin: 20px 0 10px;">الحل:</h3>
+      <div class="code">
+const detectDevice = () => {
+  // Check user agent
+  const isMobileDevice = /android|iphone|ipad/i.test(navigator.userAgent);
+  
+  // ✅ NEW: Also check window width (for dev tools)
+  const isMobileWidth = window.innerWidth <= 768;
+  
+  // Use either one
+  const isMobileMode = isMobileDevice || isMobileWidth;
+  
+  setIsMobile(isMobileMode);
+};
+
+// ✅ Listen to window resize
+useEffect(() => {
+  detectDevice();
+  
+  window.addEventListener('resize', detectDevice);
+  return () => window.removeEventListener('resize', detectDevice);
+}, [isOpen]);
+      </div>
+
+      <h3 style="color: #065f46; margin: 20px 0 10px;">التحسينات:</h3>
+      <ul>
+        <li>✅ <strong>يعمل في أدوات المطورين:</strong> يكتشف العرض ≤ 768px</li>
+        <li>✅ <strong>يعمل على الأجهزة الحقيقية:</strong> يكتشف user agent</li>
+        <li>✅ <strong>Dynamic:</strong> يتحدث عند تغيير حجم النافذة</li>
+        <li>✅ <strong>Fullscreen:</strong> عند العرض ≤ 768px</li>
+        <li>✅ <strong>Safe area:</strong> زر الإغلاق ظاهر</li>
+      </ul>
+    </div>
+
+    <div class="test">
+      <h2>🧪 كيف تختبر الآن:</h2>
+      
+      <div class="steps">
+        <div class="step">
+          <strong>1. افتح أدوات المطورين</strong>
+          <p>اضغط F12 أو Cmd+Option+I</p>
+        </div>
+
+        <div class="step">
+          <strong>2. فعّل وضع الأجهزة</strong>
+          <p>اضغط Cmd+Shift+M (Mac) أو Ctrl+Shift+M (Windows)</p>
+        </div>
+
+        <div class="step">
+          <strong>3. اختر جهاز موبايل</strong>
+          <p>مثل: iPhone 12 Pro، Pixel 5، أو Responsive</p>
+        </div>
+
+        <div class="step">
+          <strong>4. اضغط على الروبوت 🤖</strong>
+          <p>يجب أن تفتح نافذة <span class="highlight">fullscreen</span></p>
+        </div>
+
+        <div class="step">
+          <strong>5. تحقق:</strong>
+          <ul style="margin-top: 10px;">
+            <li>✓ النافذة تملأ الشاشة بالكامل</li>
+            <li>✓ Header أخضر في الأعلى</li>
+            <li>✓ زر الإغلاق (×) ظاهر وواضح</li>
+            <li>✓ كل العناصر كبيرة ووضحة</li>
+            <li>✓ Input واسع ومريح</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 30px; padding: 20px; background: #d1fae5; border-radius: 12px;">
+      <p style="font-size: 18px; color: #065f46; font-weight: bold;">
+        📦 الإصدار: v20251104_1762265381115
+      </p>
+      <p style="color: #059669; margin-top: 10px;">
+        ✅ جاهز للاختبار في أدوات المطورين والأجهزة الحقيقية
+      </p>
+    </div>
+  </div>
+</body>
+</html>
