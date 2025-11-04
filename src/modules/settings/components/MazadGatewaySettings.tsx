@@ -264,21 +264,21 @@ export function MazadGatewaySettings() {
                   </div>
                   <div>
                     <h4 className="font-bold text-gray-900">الدخول التلقائي</h4>
-                    <p className="text-sm text-gray-600">الانتقال للمنصة تلقائياً</p>
+                    <p className="text-sm text-gray-600">الانتقال للمنصة تلقائياً بعد انتهاء العد</p>
                   </div>
                 </div>
-                <label className="relative inline-flex items-center cursor-not-allowed opacity-50">
+                <label className="relative inline-flex items-center cursor-pointer">
                   <input
                     type="checkbox"
                     checked={settings.auto_enter_enabled}
-                    disabled
+                    onChange={(e) => setSettings({ ...settings, auto_enter_enabled: e.target.checked })}
                     className="sr-only peer"
                   />
-                  <div className="w-14 h-7 bg-gray-300 peer-focus:outline-none rounded-full peer
+                  <div className="w-14 h-7 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-300 rounded-full peer
                               peer-checked:after:translate-x-full peer-checked:after:border-white
                               after:content-[''] after:absolute after:top-0.5 after:right-[4px]
                               after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all
-                              peer-checked:bg-gray-400"></div>
+                              peer-checked:bg-emerald-600"></div>
                 </label>
               </div>
             </div>
