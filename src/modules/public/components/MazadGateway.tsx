@@ -53,6 +53,7 @@ export function MazadGateway({ onEnter }: MazadGatewayProps) {
   const [settingsLoaded, setSettingsLoaded] = useState(false);
   const [farmsPreloaded, setFarmsPreloaded] = useState(false);
   const [isInitializing, setIsInitializing] = useState(true);
+  const [autoEnterStarted, setAutoEnterStarted] = useState(false);
 
   // تحميل المزارع مسبقاً في الخلفية
   useEffect(() => {
@@ -225,16 +226,26 @@ export function MazadGateway({ onEnter }: MazadGatewayProps) {
 
   // العد التنازلي التلقائي - يبدأ فقط بعد إخفاء الـ loader
   useEffect(() => {
-    console.log('[Gateway] Auto-enter check:', {
+    console.log('[Gateway] 🔍 Auto-enter check:', {
       settingsLoaded,
       auto_enter_enabled: settings.auto_enter_enabled,
       isInitializing,
-      should_start: settingsLoaded && settings.auto_enter_enabled && !isInitializing
+      farmsPreloaded,
+      autoEnterStarted,
+      should_start: settingsLoaded && settings.auto_enter_enabled && !isInitializing && !autoEnterStarted
     });
 
-    if (!settingsLoaded || !settings.auto_enter_enabled || isInitializing) return;
+    // تحقق من الشروط
+    if (!settingsLoaded || !settings.auto_enter_enabled || isInitializing || autoEnterStarted) {
+      if (!settingsLoaded) console.log('[Gateway] ⏸️ Waiting for settings to load...');
+      if (!settings.auto_enter_enabled) console.log('[Gateway] ⏸️ Auto-enter is disabled');
+      if (isInitializing) console.log('[Gateway] ⏸️ Still initializing...');
+      if (autoEnterStarted) console.log('[Gateway] ⏸️ Auto-enter already started');
+      return;
+    }
 
     console.log('[Gateway] ✅ Starting auto-enter countdown:', settings.auto_enter_delay, 'seconds');
+    setAutoEnterStarted(true);
 
     const duration = settings.auto_enter_delay * 1000;
     const interval = 50;
@@ -243,26 +254,65 @@ export function MazadGateway({ onEnter }: MazadGatewayProps) {
 
     const timer = setInterval(() => {
       currentStep++;
-      setProgress((currentStep / steps) * 100);
+      const newProgress = (currentStep / steps) * 100;
+      setProgress(newProgress);
+
+      if (currentStep % 20 === 0) { // Log every second
+        console.log('[Gateway] ⏱️ Progress:', Math.round(newProgress) + '%');
+      }
 
       if (currentStep >= steps) {
         clearInterval(timer);
-        console.log('[Gateway] ⏱️ Countdown finished, entering platform...');
-        handleEnter();
+        console.log('[Gateway] 🎯 100% REACHED! Entering platform NOW...');
+
+        // دخول فوري
+        if (farmsPreloaded) {
+          console.log('[Gateway] ✅ Farms ready, entering immediately!');
+          setIsVisible(false);
+          setTimeout(() => {
+            console.log('[Gateway] 🚀 Calling onEnter()...');
+            onEnter();
+          }, settings.fade_duration);
+        } else {
+          console.log('[Gateway] ⏳ Waiting for farms to load...');
+          // انتظر المزارع ثم ادخل
+          const waitForFarms = setInterval(() => {
+            if (farmsPreloaded) {
+              clearInterval(waitForFarms);
+              console.log('[Gateway] ✅ Farms loaded, entering now!');
+              setIsVisible(false);
+              setTimeout(() => {
+                console.log('[Gateway] 🚀 Calling onEnter()...');
+                onEnter();
+              }, settings.fade_duration);
+            }
+          }, 100);
+        }
       }
     }, interval);
 
-    return () => clearInterval(timer);
-  }, [settingsLoaded, settings.auto_enter_enabled, settings.auto_enter_delay, isInitializing]);
+    return () => {
+      console.log('[Gateway] 🧹 Cleaning up timer');
+      clearInterval(timer);
+    };
+  }, [settingsLoaded, settings.auto_enter_enabled, settings.auto_enter_delay, settings.fade_duration, isInitializing, autoEnterStarted, farmsPreloaded, onEnter]);
 
-  const handleEnter = () => {
-    // انتظر حتى تنتهي المزارع من التحميل
+  // دالة الدخول اليدوي (عند الضغط على الزر)
+  const handleManualEnter = () => {
+    console.log('[Gateway] 👆 Manual enter clicked');
     if (!farmsPreloaded) {
       console.log('[Gateway] ⏳ Waiting for farms to preload...');
-      setTimeout(handleEnter, 100); // حاول مرة أخرى بعد 100ms
+      const waitForFarms = setInterval(() => {
+        if (farmsPreloaded) {
+          clearInterval(waitForFarms);
+          console.log('[Gateway] ✅ Farms loaded, entering now!');
+          setIsVisible(false);
+          setTimeout(() => onEnter(), settings.fade_duration);
+        }
+      }, 100);
       return;
     }
-    console.log('[Gateway] ✅ Farms preloaded, entering platform now!');
+    console.log('[Gateway] ✅ Farms ready, entering immediately!');
     setIsVisible(false);
     setTimeout(() => onEnter(), settings.fade_duration);
   };
@@ -384,7 +434,7 @@ export function MazadGateway({ onEnter }: MazadGatewayProps) {
 
         {/* Enter Button - حجم متجاوب */}
         <button
-          onClick={handleEnter}
+          onClick={handleManualEnter}
           className="group relative px-8 sm:px-10 md:px-12 py-3 sm:py-3.5 md:py-4
                    bg-gradient-to-r from-emerald-600 to-green-600
                    text-white rounded-2xl font-bold text-base sm:text-lg shadow-xl
