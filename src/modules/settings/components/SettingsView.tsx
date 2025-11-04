@@ -8,14 +8,14 @@ import { AdvancedCacheSystemDiagnostics } from './AdvancedCacheSystemDiagnostics
 import { CompletePlatformTextsManager } from './CompletePlatformTextsManager';
 import { Modern3DTickerManager } from './Modern3DTickerManager';
 import { SideDockSettings } from './SideDockSettings';
-import { LoaderSettings } from './LoaderSettings';
+import { InnovativeGatewayLoader } from './InnovativeGatewayLoader';
 
 interface SettingsViewProps {
   onBack?: () => void;
 }
 
 export function SettingsView({ onBack }: SettingsViewProps) {
-  const [activeTab, setActiveTab] = useState<'general' | 'backup' | 'ticker' | 'versions' | 'diagnostics' | 'texts' | 'loader' | 'side-dock'>('general');
+  const [activeTab, setActiveTab] = useState<'general' | 'backup' | 'ticker' | 'versions' | 'diagnostics' | 'texts' | 'gateway-loader' | 'side-dock'>('general');
   const [settings, setSettings] = useState({
     mapApiKey: 'AIza*********************',
     videoService: 'youtube',
@@ -110,15 +110,15 @@ export function SettingsView({ onBack }: SettingsViewProps) {
             إدارة النصوص
           </button>
           <button
-            onClick={() => setActiveTab('loader')}
+            onClick={() => setActiveTab('gateway-loader')}
             className={`flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all ${
-              activeTab === 'loader'
+              activeTab === 'gateway-loader'
                 ? 'bg-gradient-to-r from-emerald-600 to-green-600 text-white shadow-lg'
                 : 'bg-white text-[#2C2C2C] hover:bg-[#F4EBDD]'
             }`}
           >
             <Loader2 className="h-5 w-5" />
-            شاشة التحميل
+            🎨 إعدادات بوابة التحميل
           </button>
           <button
             onClick={() => setActiveTab('side-dock')}
@@ -143,8 +143,8 @@ export function SettingsView({ onBack }: SettingsViewProps) {
           <AdvancedCacheSystemDiagnostics />
         ) : activeTab === 'texts' ? (
           <CompletePlatformTextsManager />
-        ) : activeTab === 'loader' ? (
-          <LoaderSettings />
+        ) : activeTab === 'gateway-loader' ? (
+          <InnovativeGatewayLoader />
         ) : activeTab === 'side-dock' ? (
           <SideDockSettings />
         ) : (
