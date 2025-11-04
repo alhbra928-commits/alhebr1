@@ -511,7 +511,7 @@ export const SmartFloatingButton: React.FC<SmartFloatingButtonProps> = ({
           {/* Backdrop - like MobileSidebar */}
           {isMobile && (
             <div
-              className="fixed inset-0 bg-black/60 z-40"
+              className="fixed inset-0 bg-black/60 z-[9998]"
               onClick={() => {
                 setIsOpen(false);
                 if (onExternalOpenChange) {
@@ -525,7 +525,7 @@ export const SmartFloatingButton: React.FC<SmartFloatingButtonProps> = ({
             ref={chatContainerRef}
             className={`fixed bg-gray-900 shadow-2xl flex flex-col ${
               isMobile
-                ? 'inset-0 z-50 rounded-none'
+                ? 'inset-0 z-[9999] rounded-none'
                 : 'bottom-24 right-6 w-[420px] max-h-[650px] z-[9999] rounded-2xl overflow-hidden'
             }`}
             style={isMobile ? {
