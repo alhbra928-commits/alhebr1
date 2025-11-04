@@ -31,8 +31,11 @@ export function PublicPlatformRouter({ onAdminLogin, onBackToAdmin, onFarmOwnerL
   // التتبع التلقائي للزوار - تأخير أيضاً
   useEffect(() => {
     const timer = setTimeout(() => {
-      marketingAnalyticsService.trackCurrentPage()
-        .catch(err => console.warn('Tracking failed:', err));
+      try {
+        marketingAnalyticsService.trackCurrentPage();
+      } catch (err) {
+        console.warn('Tracking failed:', err);
+      }
     }, 1000);
 
     return () => clearTimeout(timer);
