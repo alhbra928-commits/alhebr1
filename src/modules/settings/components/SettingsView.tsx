@@ -1,23 +1,21 @@
 import React, { useState } from 'react';
-import { Settings, Map, Video, Mail, Key, Globe, Bell, Shield, Database, BarChart3, Package, Activity, Type, Crown, Sparkles, PanelLeftClose } from 'lucide-react';
+import { Settings, Map, Video, Mail, Key, Globe, Bell, Shield, Database, BarChart3, Package, Activity, Type, Loader2, Sparkles, PanelLeftClose } from 'lucide-react';
 import { Card3D } from '../../../components/ui/Card3D';
 import { BackButton } from '../../../components/common/BackButton';
 import { BackupCenter } from '../../backups/components/BackupCenter';
 import { VersionHistoryPanel } from './VersionHistoryPanel';
 import { AdvancedCacheSystemDiagnostics } from './AdvancedCacheSystemDiagnostics';
 import { CompletePlatformTextsManager } from './CompletePlatformTextsManager';
-import { AdvancedRoyalGatewaySettings } from './AdvancedRoyalGatewaySettings';
 import { Modern3DTickerManager } from './Modern3DTickerManager';
-import { MazadGatewaySettings } from './MazadGatewaySettings';
-import { MazadGatewayTexts } from './MazadGatewayTexts';
 import { SideDockSettings } from './SideDockSettings';
+import { LoaderSettings } from './LoaderSettings';
 
 interface SettingsViewProps {
   onBack?: () => void;
 }
 
 export function SettingsView({ onBack }: SettingsViewProps) {
-  const [activeTab, setActiveTab] = useState<'general' | 'backup' | 'ticker' | 'versions' | 'diagnostics' | 'texts' | 'gateway' | 'mazad' | 'mazad-texts' | 'side-dock'>('general');
+  const [activeTab, setActiveTab] = useState<'general' | 'backup' | 'ticker' | 'versions' | 'diagnostics' | 'texts' | 'loader' | 'side-dock'>('general');
   const [settings, setSettings] = useState({
     mapApiKey: 'AIza*********************',
     videoService: 'youtube',
@@ -112,26 +110,15 @@ export function SettingsView({ onBack }: SettingsViewProps) {
             إدارة النصوص
           </button>
           <button
-            onClick={() => setActiveTab('mazad')}
+            onClick={() => setActiveTab('loader')}
             className={`flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all ${
-              activeTab === 'mazad'
-                ? 'bg-gradient-to-r from-emerald-500 via-green-500 to-emerald-600 text-white shadow-lg'
+              activeTab === 'loader'
+                ? 'bg-gradient-to-r from-emerald-600 to-green-600 text-white shadow-lg'
                 : 'bg-white text-[#2C2C2C] hover:bg-[#F4EBDD]'
             }`}
           >
-            <Crown className="h-5 w-5" />
-            بوابة مزاد
-          </button>
-          <button
-            onClick={() => setActiveTab('mazad-texts')}
-            className={`flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all ${
-              activeTab === 'mazad-texts'
-                ? 'bg-gradient-to-r from-purple-500 via-pink-500 to-purple-600 text-white shadow-lg'
-                : 'bg-white text-[#2C2C2C] hover:bg-[#F4EBDD]'
-            }`}
-          >
-            <Type className="h-5 w-5" />
-            خطوط البوابة
+            <Loader2 className="h-5 w-5" />
+            شاشة التحميل
           </button>
           <button
             onClick={() => setActiveTab('side-dock')}
@@ -156,12 +143,10 @@ export function SettingsView({ onBack }: SettingsViewProps) {
           <AdvancedCacheSystemDiagnostics />
         ) : activeTab === 'texts' ? (
           <CompletePlatformTextsManager />
+        ) : activeTab === 'loader' ? (
+          <LoaderSettings />
         ) : activeTab === 'side-dock' ? (
           <SideDockSettings />
-        ) : activeTab === 'mazad' ? (
-          <MazadGatewaySettings />
-        ) : activeTab === 'mazad-texts' ? (
-          <MazadGatewayTexts />
         ) : (
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
