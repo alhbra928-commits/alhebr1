@@ -155,13 +155,40 @@ export function MazadGatewaySettings() {
 
   return (
     <div className="max-w-6xl mx-auto space-y-6" dir="rtl">
+      {/* إشعار: البوابة تم استبدالها */}
+      <div className="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl p-6 text-white shadow-xl border-2 border-blue-300">
+        <div className="flex items-start gap-4">
+          <div className="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center flex-shrink-0">
+            <Info className="w-6 h-6 text-white" />
+          </div>
+          <div className="flex-1">
+            <h3 className="text-xl font-black mb-2">تم تحديث نظام التحميل</h3>
+            <p className="text-white/90 text-base leading-relaxed mb-3">
+              تم استبدال البوابة القديمة بـ <strong>شاشة تحميل مبتكرة ورسمية</strong> تظهر تلقائياً عند فتح المنصة.
+            </p>
+            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3 text-sm">
+              <p className="text-white/90 mb-1">✨ <strong>الشاشة الجديدة تتضمن:</strong></p>
+              <ul className="text-white/80 space-y-1 mr-6">
+                <li>• شعار ديناميكي مع sparkles متحركة</li>
+                <li>• شريط تقدم متطور يعرض النسبة المئوية</li>
+                <li>• نصوص توضيحية تتغير حسب مرحلة التحميل</li>
+                <li>• تصميم احترافي مع animations سلسة</li>
+              </ul>
+            </div>
+            <p className="text-white/70 text-xs mt-3">
+              💡 هذه الإعدادات القديمة متاحة للمراجعة فقط ولن تؤثر على شاشة التحميل الجديدة
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* Header */}
-      <div className="bg-gradient-to-r from-emerald-500 to-green-600 rounded-2xl p-8 text-white">
+      <div className="bg-gradient-to-r from-gray-500 to-gray-600 rounded-2xl p-8 text-white opacity-60">
         <div className="flex items-center gap-4 mb-2">
           <Crown className="w-10 h-10" />
-          <h2 className="text-3xl font-black">إعدادات بوابة مزاد المتقدمة</h2>
+          <h2 className="text-3xl font-black">إعدادات بوابة مزاد المتقدمة (قديمة)</h2>
         </div>
-        <p className="text-white/80 text-lg">تحكم كامل في توقيت البوابة والمؤثرات والأنيميشن</p>
+        <p className="text-white/80 text-lg">تم استبدالها بشاشة تحميل مبتكرة</p>
       </div>
 
       {/* Success/Error Message */}
@@ -196,18 +223,18 @@ export function MazadGatewaySettings() {
                     <p className="text-sm text-gray-600">عرض البوابة عند فتح المنصة</p>
                   </div>
                 </div>
-                <label className="relative inline-flex items-center cursor-pointer">
+                <label className="relative inline-flex items-center cursor-not-allowed opacity-50">
                   <input
                     type="checkbox"
                     checked={settings.enabled}
-                    onChange={(e) => setSettings({ ...settings, enabled: e.target.checked })}
+                    disabled
                     className="sr-only peer"
                   />
                   <div className="w-14 h-7 bg-gray-300 peer-focus:outline-none rounded-full peer
                               peer-checked:after:translate-x-full peer-checked:after:border-white
                               after:content-[''] after:absolute after:top-0.5 after:right-[4px]
                               after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all
-                              peer-checked:bg-emerald-600"></div>
+                              peer-checked:bg-gray-400"></div>
                 </label>
               </div>
 
@@ -221,18 +248,18 @@ export function MazadGatewaySettings() {
                     <p className="text-sm text-gray-600">الانتقال للمنصة تلقائياً</p>
                   </div>
                 </div>
-                <label className="relative inline-flex items-center cursor-pointer">
+                <label className="relative inline-flex items-center cursor-not-allowed opacity-50">
                   <input
                     type="checkbox"
                     checked={settings.auto_enter_enabled}
-                    onChange={(e) => setSettings({ ...settings, auto_enter_enabled: e.target.checked })}
+                    disabled
                     className="sr-only peer"
                   />
                   <div className="w-14 h-7 bg-gray-300 peer-focus:outline-none rounded-full peer
                               peer-checked:after:translate-x-full peer-checked:after:border-white
                               after:content-[''] after:absolute after:top-0.5 after:right-[4px]
                               after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all
-                              peer-checked:bg-blue-600"></div>
+                              peer-checked:bg-gray-400"></div>
                 </label>
               </div>
             </div>
@@ -551,34 +578,31 @@ export function MazadGatewaySettings() {
       {/* Action Buttons */}
       <div className="flex gap-4">
         <button
-          onClick={saveSettings}
-          disabled={saving}
+          disabled
           className="flex-1 flex items-center justify-center gap-2 px-6 py-4
-                   bg-gradient-to-r from-emerald-600 to-green-600 text-white
-                   rounded-xl font-bold text-lg hover:shadow-lg transition-all
-                   disabled:opacity-50 disabled:cursor-not-allowed"
+                   bg-gray-400 text-white
+                   rounded-xl font-bold text-lg
+                   opacity-50 cursor-not-allowed"
         >
-          {saving ? (
-            <>
-              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-              جاري الحفظ...
-            </>
-          ) : (
-            <>
-              <Save className="w-5 h-5" />
-              حفظ جميع الإعدادات
-            </>
-          )}
+          <Save className="w-5 h-5" />
+          حفظ جميع الإعدادات (معطل)
         </button>
 
         <button
-          onClick={resetToDefaults}
-          className="px-6 py-4 bg-gray-200 text-gray-700 rounded-xl font-bold
-                   hover:bg-gray-300 transition-all flex items-center gap-2"
+          disabled
+          className="px-6 py-4 bg-gray-300 text-gray-600 rounded-xl font-bold
+                   opacity-50 cursor-not-allowed flex items-center gap-2"
         >
           <RotateCcw className="w-5 h-5" />
-          استعادة الافتراضي
+          استعادة الافتراضي (معطل)
         </button>
+      </div>
+
+      {/* ملاحظة نهائية */}
+      <div className="bg-yellow-50 border-2 border-yellow-200 rounded-xl p-4 text-center">
+        <p className="text-yellow-800 font-bold text-sm">
+          ⚠️ هذه الإعدادات القديمة للمراجعة فقط - شاشة التحميل الجديدة نشطة تلقائياً
+        </p>
       </div>
     </div>
   );
