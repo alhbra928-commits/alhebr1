@@ -223,6 +223,29 @@ export function InnovativeSideDock({
           50% { box-shadow: 0 0 50px rgba(16, 185, 129, 0.8); }
         }
 
+        @keyframes shimmer-slow {
+          0% { transform: translateX(-100%); }
+          100% { transform: translateX(100%); }
+        }
+
+        .animate-shimmer-slow {
+          animation: shimmer-slow 3s infinite;
+        }
+
+        .side-dock-smart-button {
+          box-shadow: 0 4px 20px rgba(16, 185, 129, 0.5);
+          transform-origin: center;
+        }
+
+        .side-dock-smart-button:hover {
+          transform: scale(1.1);
+          box-shadow: 0 6px 30px rgba(16, 185, 129, 0.7);
+        }
+
+        .side-dock-smart-button:active {
+          transform: scale(0.95);
+        }
+
         .side-dock-toggle-button {
           position: fixed;
           top: 50%;
@@ -333,8 +356,16 @@ export function InnovativeSideDock({
                   className="side-dock-button side-dock-smart-button"
                   onClick={onSmartButtonClick}
                   title={texts.smartTooltip}
+                  style={{
+                    background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                    position: 'relative',
+                    overflow: 'hidden'
+                  }}
                 >
-                  <Brain size={24} />
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer-slow" />
+                  <div className="relative text-2xl">
+                    🤖
+                  </div>
                 </button>
                 <div className="side-dock-divider" />
               </>
