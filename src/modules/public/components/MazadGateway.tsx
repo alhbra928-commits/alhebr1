@@ -258,8 +258,11 @@ export function MazadGateway({ onEnter }: MazadGatewayProps) {
   const handleEnter = () => {
     // انتظر حتى تنتهي المزارع من التحميل
     if (!farmsPreloaded) {
-      return; // لا تدخل حتى يكتمل التحميل
+      console.log('[Gateway] ⏳ Waiting for farms to preload...');
+      setTimeout(handleEnter, 100); // حاول مرة أخرى بعد 100ms
+      return;
     }
+    console.log('[Gateway] ✅ Farms preloaded, entering platform now!');
     setIsVisible(false);
     setTimeout(() => onEnter(), settings.fade_duration);
   };
