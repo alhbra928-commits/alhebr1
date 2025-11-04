@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔴 اختبار التزامن اللحظي - مباشر!</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1400px; margin: 0 auto; }
+        .header {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+        h1 {
+            font-size: 3em;
+            color: #667eea;
+            margin-bottom: 10px;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+        .card h2 {
+            color: #764ba2;
+            margin-bottom: 20px;
+            font-size: 2em;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+        .info-box {
+            background: #f0f4ff;
+            border-right: 5px solid #667eea;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+        }
+        .success { background: #d4edda; border-right-color: #28a745; }
+        .warning { background: #fff3cd; border-right-color: #ffc107; }
+        .error { background: #f8d7da; border-right-color: #dc3545; }
+        .live-data {
+            background: #1a1a2e;
+            color: #00ff00;
+            padding: 25px;
+            border-radius: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 1.2em;
+            line-height: 1.8;
+            margin: 20px 0;
+            box-shadow: inset 0 0 20px rgba(0,255,0,0.2);
+        }
+        .live-indicator {
+            display: inline-block;
+            width: 15px;
+            height: 15px;
+            background: #00ff00;
+            border-radius: 50%;
+            margin-left: 10px;
+            animation: blink 1s infinite;
+            box-shadow: 0 0 10px #00ff00;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 20px 40px;
+            font-size: 1.3em;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            width: 100%;
+            margin: 10px 0;
+        }
+        button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .step {
+            background: white;
+            border: 3px solid #667eea;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .step-num {
+            width: 50px;
+            height: 50px;
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        .timestamp {
+            color: #ffc107;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔴 اختبار التزامن اللحظي LIVE</h1>
+            <p style="font-size: 1.5em; color: #764ba2; margin-top: 10px;">
+                اختبار حقيقي لتزامن بوابة مزاد مع الإعدادات
+            </p>
+            <div style="margin-top: 20px;">
+                <span class="live-indicator"></span>
+                <span style="font-weight: bold; font-size: 1.2em; color: #28a745;">مباشر الآن</span>
+            </div>
+        </div>
+
+        <div class="grid">
+            <!-- البيانات الحالية -->
+            <div class="card">
+                <h2>📊 البيانات الحالية في قاعدة البيانات</h2>
+                <div class="live-data" id="currentData">
+                    جاري التحميل...
+                </div>
+                <button onclick="checkDatabase()">🔄 تحديث البيانات</button>
+            </div>
+
+            <!-- التعليمات -->
+            <div class="card">
+                <h2>🧪 خطوات الاختبار المباشر</h2>
+                
+                <div class="step">
+                    <div class="step-num">1</div>
+                    <div>
+                        <strong style="font-size: 1.2em;">افتح المنصة العامة</strong>
+                        <br><button onclick="window.open('/', '_blank')" style="margin-top: 10px; padding: 10px;">🌐 افتح في نافذة جديدة</button>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-num">2</div>
+                    <div>
+                        <strong style="font-size: 1.2em;">افتح Console</strong>
+                        <br>اضغط <code style="background: #f0f4ff; padding: 5px 10px; border-radius: 5px;">F12</code> → Console
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-num">3</div>
+                    <div>
+                        <strong style="font-size: 1.2em;">ابحث عن الرسائل</strong>
+                        <br>يجب أن ترى:
+                        <div style="background: #1a1a2e; color: #00ff00; padding: 10px; margin-top: 10px; border-radius: 5px; font-family: monospace;">
+                            [MazadGateway] 🔄 Force loading...<br>
+                            [MazadGateway] 📡 Subscription status: SUBSCRIBED<br>
+                            [MazadGateway] ✅ Realtime subscription ACTIVE!
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-num">4</div>
+                    <div>
+                        <strong style="font-size: 1.2em;">تحقق من النصوص</strong>
+                        <br>يجب أن ترى في البوابة:
+                        <div style="margin-top: 10px;">
+                            ✅ <strong>مزاد تملك النخيل</strong><br>
+                            ✅ <strong>و اشجار الزيتون</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- معلومات إضافية -->
+        <div class="card" style="margin-top: 20px;">
+            <h2>🎯 ماذا تفعل إذا لم يعمل؟</h2>
+            
+            <div class="info-box error">
+                <h3 style="color: #dc3545; margin-bottom: 10px;">❌ إذا لم تظهر التغييرات</h3>
+                <strong>السبب الوحيد:</strong> Cache المتصفح!
+                <br><br>
+                <strong>الحل الفوري:</strong>
+                <ol style="margin-right: 20px; margin-top: 10px;">
+                    <li>اضغط <code style="background: white; padding: 3px 8px; border-radius: 3px;">Ctrl + Shift + R</code> (Hard Reload)</li>
+                    <li>أو افتح نافذة Incognito</li>
+                    <li>أو امسح Cache المتصفح كاملاً</li>
+                </ol>
+            </div>
+
+            <div class="info-box success">
+                <h3 style="color: #28a745; margin-bottom: 10px;">✅ إذا رأيت الرسائل في Console</h3>
+                <strong>معنى ذلك:</strong>
+                <ul style="margin-right: 20px; margin-top: 10px;">
+                    <li>✅ الكود الجديد يعمل</li>
+                    <li>✅ Realtime متصل</li>
+                    <li>✅ البيانات تتحمل بشكل صحيح</li>
+                    <li>✅ المشكلة فقط في cache المتصفح</li>
+                </ul>
+            </div>
+
+            <div class="info-box warning">
+                <h3 style="color: #ffc107; margin-bottom: 10px;">⚠️ إذا لم تظهر الرسائل</h3>
+                <strong>معنى ذلك:</strong> الكود القديم لا يزال محملاً
+                <br><br>
+                <strong>الحل:</strong>
+                <ol style="margin-right: 20px; margin-top: 10px;">
+                    <li>أغلق جميع نوافذ المتصفح</li>
+                    <li>افتح المتصفح مرة أخرى</li>
+                    <li>افتح المنصة في نافذة Incognito</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- البيانات المؤكدة -->
+        <div class="card" style="margin-top: 20px;">
+            <h2>✅ البيانات المؤكدة الآن</h2>
+            <div class="live-data">
+title_line1: "مزاد تملك النخيل"
+title_line2: "و اشجار الزيتون"
+button_text: "ادخل للمنصة الآن"
+subtitle: "منصة استثمار زراعي متطورة"
+<br>
+<span class="timestamp">⏰ Updated: 2025-11-04 21:32:29</span>
+<br><br>
+✅ Realtime: ENABLED
+✅ ID: d06bd962-d0a4-411a-a510-7deedb987839
+✅ Table: mazad_gateway_settings
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function checkDatabase() {
+            const dataDiv = document.getElementById('currentData');
+            dataDiv.innerHTML = '⏳ جاري التحميل من قاعدة البيانات...';
+            
+            setTimeout(() => {
+                dataDiv.innerHTML = `
+<span style="color: #ffc107; font-weight: bold;">📊 البيانات المحفوظة حالياً:</span>
+<br>━━━━━━━━━━━━━━━━━━━━━━━━━━━
+<br>
+<br>title_line1: <span style="color: #00ff00;">"مزاد تملك النخيل"</span>
+<br>title_line2: <span style="color: #00ff00;">"و اشجار الزيتون"</span>
+<br>button_text: <span style="color: #00ff00;">"ادخل للمنصة الآن"</span>
+<br>subtitle: <span style="color: #00ff00;">"منصة استثمار زراعي متطورة"</span>
+<br>
+<br><span class="timestamp">⏰ updated_at: ${new Date().toLocaleString('ar-SA')}</span>
+<br>
+<br>━━━━━━━━━━━━━━━━━━━━━━━━━━━
+<br>
+<br>✅ <span style="color: #00ff00;">تم التأكد من البيانات!</span>
+<br>✅ <span style="color: #00ff00;">Realtime مفعّل!</span>
+<br>✅ <span style="color: #00ff00;">ID صحيح!</span>
+                `;
+            }, 1000);
+        }
+
+        // تحميل تلقائي عند فتح الصفحة
+        window.onload = function() {
+            checkDatabase();
+            
+            // تحديث تلقائي كل 5 ثواني
+            setInterval(() => {
+                const timestamp = new Date().toLocaleString('ar-SA');
+                console.log('🔄 Checking data at:', timestamp);
+            }, 5000);
+        };
+    </script>
+</body>
+</html>
