@@ -12,22 +12,17 @@ export class PublicFarmService {
       return this.farmsCache.data;
     }
 
-    try {
-      const { data: farms, error: farmsError } = await supabase
-        .from('farms')
-        .select('id, farm_barcode, farm_code, name_ar, name_en, tree_type, city, region, total_trees, price_per_tree, marketing_price, actual_price, images, aerial_map_url, google_map_link, description_ar, description_en, latitude, longitude, sales_status, created_at')
-        .is('deleted_at', null)
-        .eq('status', 'active')
-        .order('sales_status', { ascending: false })
-        .order('created_at', { ascending: false })
-        .limit(limit);
+    const { data: farms, error: farmsError } = await supabase
+      .from('farms')
+      .select('id, farm_barcode, farm_code, name_ar, name_en, tree_type, city, region, total_trees, price_per_tree, marketing_price, actual_price, images, aerial_map_url, google_map_link, description_ar, description_en, latitude, longitude, sales_status, created_at')
+      .is('deleted_at', null)
+      .eq('status', 'active')
+      .order('sales_status', { ascending: false })
+      .order('created_at', { ascending: false })
+      .limit(limit);
 
-      if (farmsError) {
-        console.error('[PublicFarmService] Farms fetch error:', farmsError);
-        throw farmsError;
-      }
-    } catch (error) {
-      console.error('[PublicFarmService] Request failed:', error);
+    if (farmsError) {
+      console.error('[PublicFarmService] Farms fetch error:', farmsError);
       return this.farmsCache?.data || [];
     }
 
