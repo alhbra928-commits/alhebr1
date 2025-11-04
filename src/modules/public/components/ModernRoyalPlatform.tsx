@@ -12,7 +12,6 @@ import { InnovativeFarmCard } from './InnovativeFarmCard';
 import { Modern3DTicker } from '../../../components/common/Modern3DTicker';
 import { modern3DTickerService, TickerMessage, TickerSettings } from '../../../services/modern3DTickerService';
 import { getPlatformTextsBySection } from '../../../services/platformTextsService';
-import { SimpleLoader } from '../../../components/common/SimpleLoader';
 
 // Lazy load heavy components
 const InnovativeFarmDetailPage = lazy(() => import('./InnovativeFarmDetailPage').then(m => ({ default: m.InnovativeFarmDetailPage })));
@@ -39,7 +38,6 @@ export function ModernRoyalPlatform({
   const [currentView, setCurrentView] = useState<ViewMode>('home');
   const [smartButtonOpen, setSmartButtonOpen] = useState(false);
   const [selectedFarm, setSelectedFarm] = useState<PublicFarm | null>(null);
-  const [loading, setLoading] = useState(true);
   const [mousePosition, setMousePosition] = useState({ x: 50, y: 50 });
   const [tickerMessages, setTickerMessages] = useState<TickerMessage[]>([]);
   const [tickerSettings, setTickerSettings] = useState<TickerSettings>({
@@ -110,8 +108,6 @@ export function ModernRoyalPlatform({
       setFarms(farmsData);
     } catch (error) {
       console.error('Error loading farms:', error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -149,19 +145,12 @@ export function ModernRoyalPlatform({
     setSelectedFarm(null);
   };
 
-  // عرض loader بسيط أثناء تحميل المزارع
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-50 via-green-50 to-emerald-100">
-        <SimpleLoader size="lg" color="#10b981" />
-      </div>
-    );
-  }
+  // تم إزالة شاشة التحميل - المنصة تفتح مباشرة
 
   // Handle other views with Suspense
   if (currentView === 'concept') {
     return (
-      <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-50 to-green-50"><SimpleLoader size="lg" color="#10b981" /></div>}>
+      <Suspense fallback={<div className="min-h-screen bg-gradient-to-br from-emerald-50 to-green-50" />}>
         <ConceptIntroductionPage onClose={handleGoHome} onStartJourney={handleGoHome} />
       </Suspense>
     );
@@ -169,7 +158,7 @@ export function ModernRoyalPlatform({
 
   if (currentView === 'verification') {
     return (
-      <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-50 to-green-50"><SimpleLoader size="lg" color="#10b981" /></div>}>
+      <Suspense fallback={<div className="min-h-screen bg-gradient-to-br from-emerald-50 to-green-50" />}>
         <CertificateVerificationPage onBack={handleGoHome} />
       </Suspense>
     );
@@ -177,7 +166,7 @@ export function ModernRoyalPlatform({
 
   if (currentView === 'investor') {
     return (
-      <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-50 to-green-50"><SimpleLoader size="lg" color="#10b981" /></div>}>
+      <Suspense fallback={<div className="min-h-screen bg-gradient-to-br from-emerald-50 to-green-50" />}>
         <InvestorRouter onBack={handleGoHome} />
       </Suspense>
     );
@@ -185,7 +174,7 @@ export function ModernRoyalPlatform({
 
   if (currentView === 'farmDetail' && selectedFarm) {
     return (
-      <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-50 to-green-50"><SimpleLoader size="lg" color="#10b981" /></div>}>
+      <Suspense fallback={<div className="min-h-screen bg-gradient-to-br from-emerald-50 to-green-50" />}>
         <InnovativeFarmDetailPage
           farmId={selectedFarm.id}
           onBack={handleGoHome}
@@ -197,7 +186,7 @@ export function ModernRoyalPlatform({
 
   if (currentView === 'booking' && selectedFarm) {
     return (
-      <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-50 to-green-50"><SimpleLoader size="lg" color="#10b981" /></div>}>
+      <Suspense fallback={<div className="min-h-screen bg-gradient-to-br from-emerald-50 to-green-50" />}>
         <TemporaryBookingPage
           farmId={selectedFarm.id}
           farmName={selectedFarm.farm_name}
