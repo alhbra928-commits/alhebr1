@@ -16,11 +16,15 @@ export function BackToAdminButton({ onBackToAdmin }: BackToAdminButtonProps) {
   }, []);
 
   const checkSession = () => {
-    const hasSession = AdminSessionService.hasActiveSession();
-    setIsVisible(hasSession);
+    const hasAdminSession = AdminSessionService.hasActiveSession();
+    const hasInvestorSession = sessionStorage.getItem('last_user_type') === 'investor';
+    const hasFarmOwnerSession = sessionStorage.getItem('last_user_type') === 'farm-owner';
+    setIsVisible(hasAdminSession || hasInvestorSession || hasFarmOwnerSession);
   };
 
   const handleClick = () => {
+    // حفظ نوع المستخدم
+    const userType = sessionStorage.getItem('last_user_type');
     if (onBackToAdmin) {
       onBackToAdmin();
     }

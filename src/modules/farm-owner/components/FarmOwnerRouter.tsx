@@ -2,8 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { FarmOwnerLoginPage } from './FarmOwnerLoginPage';
 import { FarmOwnerDashboard } from './FarmOwnerDashboard';
 import { farmOwnerService } from '../services/farmOwnerService';
+import { FloatingNavigationButton } from '../../../components/common/FloatingNavigationButton';
 
-export const FarmOwnerRouter: React.FC = () => {
+interface FarmOwnerRouterProps {
+  onGoToPublic?: () => void;
+}
+
+export const FarmOwnerRouter: React.FC<FarmOwnerRouterProps> = ({ onGoToPublic }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [profileId, setProfileId] = useState<string | null>(null);
   const [status, setStatus] = useState<string>('');
@@ -130,10 +135,18 @@ export const FarmOwnerRouter: React.FC = () => {
   }
 
   return (
-    <FarmOwnerDashboard
-      profileId={profileId}
-      onLogout={handleLogout}
-      onBackToPublic={handleBackToPublic}
-    />
+    <>
+      <FarmOwnerDashboard
+        profileId={profileId}
+        onLogout={handleLogout}
+        onBackToPublic={handleBackToPublic}
+      />
+      {onGoToPublic && (
+        <FloatingNavigationButton
+          onNavigate={onGoToPublic}
+          userType="farm-owner"
+        />
+      )}
+    </>
   );
 };

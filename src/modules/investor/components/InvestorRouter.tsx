@@ -5,14 +5,16 @@ import { InvestorService } from '../services/investorService';
 import { SessionManager } from '../services/sessionManager';
 import { Loader } from 'lucide-react';
 import { brandColors, brandGradients } from '../../finance/styles/brandColors';
+import { FloatingNavigationButton } from '../../../components/common/FloatingNavigationButton';
 
 interface InvestorRouterProps {
   onBack: () => void;
+  onGoToPublic?: () => void;
   autoLoginPhone?: string;
   autoLoginName?: string;
 }
 
-export function InvestorRouter({ onBack, autoLoginPhone, autoLoginName }: InvestorRouterProps) {
+export function InvestorRouter({ onBack, onGoToPublic, autoLoginPhone, autoLoginName }: InvestorRouterProps) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [investorPhone, setInvestorPhone] = useState('');
   const [sessionToken, setSessionToken] = useState('');
@@ -139,10 +141,18 @@ export function InvestorRouter({ onBack, autoLoginPhone, autoLoginName }: Invest
   }
 
   return (
-    <InvestorDashboard
-      phone={investorPhone}
-      onLogout={handleLogout}
-      isFirstTimeLogin={isFirstTimeLogin}
-    />
+    <>
+      <InvestorDashboard
+        phone={investorPhone}
+        onLogout={handleLogout}
+        isFirstTimeLogin={isFirstTimeLogin}
+      />
+      {onGoToPublic && (
+        <FloatingNavigationButton
+          onNavigate={onGoToPublic}
+          userType="investor"
+        />
+      )}
+    </>
   );
 }

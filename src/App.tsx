@@ -45,6 +45,12 @@ function App() {
       sessionStorage.setItem('last_admin_module', activeModule);
       sessionStorage.setItem('current_admin_module', activeModule);
     }
+    // حفظ نوع المستخدم الحالي
+    if (activeModule === 'farm-owner') {
+      sessionStorage.setItem('last_user_type', 'farm-owner');
+    } else if (activeModule !== 'public') {
+      sessionStorage.setItem('last_user_type', 'admin');
+    }
   }, [activeModule]);
 
   useEffect(() => {
@@ -138,14 +144,22 @@ function App() {
     }
   };
 
-  // دالة الانتقال الذكية
-  const handleSmartNavigation = (destination: 'public' | 'admin') => {
+  // دالة الانتقال الذكية الموحدة
+  const handleSmartNavigation = (destination: 'public' | 'back') => {
     if (destination === 'public') {
       setActiveModule('public');
     } else {
-      // العودة لآخر صفحة في لوحة التحكم
-      const savedModule = sessionStorage.getItem('last_admin_module') || 'dashboard';
-      setActiveModule(savedModule);
+      // العودة الذكية حسب نوع المستخدم
+      const userType = sessionStorage.getItem('last_user_type');
+      if (userType === 'farm-owner') {
+        setActiveModule('farm-owner');
+      } else if (userType === 'admin') {
+        const savedModule = sessionStorage.getItem('last_admin_module') || 'dashboard';
+        setActiveModule(savedModule);
+      } else {
+        // Default: admin dashboard
+        setActiveModule('dashboard');
+      }
     }
   };
 
@@ -210,7 +224,7 @@ function App() {
             />
           );
       case 'farm-owner':
-        return <FarmOwnerRouter />;
+        return <FarmOwnerRouter onGoToPublic={() => setActiveModule('public')} />;
       case 'dashboard':
         return (
           <EnhancedDashboard

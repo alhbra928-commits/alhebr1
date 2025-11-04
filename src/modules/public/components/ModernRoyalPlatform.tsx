@@ -283,7 +283,10 @@ export function ModernRoyalPlatform({
   if (currentView === 'investor') {
     return (
       <Suspense fallback={<div className="min-h-screen bg-gradient-to-br from-emerald-50 to-green-50" />}>
-        <InvestorRouter onBack={handleGoHome} />
+        <InvestorRouter
+          onBack={handleGoHome}
+          onGoToPublic={handleGoHome}
+        />
       </Suspense>
     );
   }
