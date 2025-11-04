@@ -20,7 +20,6 @@ const TemporaryBookingPage = lazy(() => import('./TemporaryBookingPage').then(m 
 const InvestorRouter = lazy(() => import('../../investor/components/InvestorRouter').then(m => ({ default: m.InvestorRouter })));
 const CertificateVerificationPage = lazy(() => import('./CertificateVerificationPage').then(m => ({ default: m.CertificateVerificationPage })));
 const ConceptIntroductionPage = lazy(() => import('./ConceptIntroductionPage').then(m => ({ default: m.ConceptIntroductionPage })));
-const MazadGateway = lazy(() => import('./MazadGateway').then(m => ({ default: m.MazadGateway })));
 
 type ViewMode = 'home' | 'farmDetail' | 'booking' | 'investor' | 'verification' | 'concept';
 
@@ -39,8 +38,8 @@ export function ModernRoyalPlatform({
   const [currentView, setCurrentView] = useState<ViewMode>('home');
   const [smartButtonOpen, setSmartButtonOpen] = useState(false);
   const [selectedFarm, setSelectedFarm] = useState<PublicFarm | null>(null);
-  const [isInitialLoading, setIsInitialLoading] = useState(true);
-  const [loadingProgress, setLoadingProgress] = useState(0);
+  const [isInitialLoading, setIsInitialLoading] = useState(false);
+  const [loadingProgress, setLoadingProgress] = useState(100);
   const [mousePosition, setMousePosition] = useState({ x: 50, y: 50 });
   const [tickerMessages, setTickerMessages] = useState<TickerMessage[]>([]);
   const [tickerSettings, setTickerSettings] = useState<TickerSettings>({

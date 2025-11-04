@@ -8,7 +8,8 @@ import { AdvancedCacheSystemDiagnostics } from './AdvancedCacheSystemDiagnostics
 import { CompletePlatformTextsManager } from './CompletePlatformTextsManager';
 import { Modern3DTickerManager } from './Modern3DTickerManager';
 import { SideDockSettings } from './SideDockSettings';
-import { InnovativeGatewayLoader } from './InnovativeGatewayLoader';
+import { MazadGatewaySettings } from './MazadGatewaySettings';
+import { MazadGatewayTexts } from './MazadGatewayTexts';
 
 interface SettingsViewProps {
   onBack?: () => void;
@@ -118,7 +119,7 @@ export function SettingsView({ onBack }: SettingsViewProps) {
             }`}
           >
             <Loader2 className="h-5 w-5" />
-            🎨 إعدادات بوابة التحميل
+            🎨 إعدادات بوابة مزاد
           </button>
           <button
             onClick={() => setActiveTab('side-dock')}
@@ -144,7 +145,10 @@ export function SettingsView({ onBack }: SettingsViewProps) {
         ) : activeTab === 'texts' ? (
           <CompletePlatformTextsManager />
         ) : activeTab === 'gateway-loader' ? (
-          <InnovativeGatewayLoader />
+          <div className="space-y-8">
+            <MazadGatewaySettings />
+            <MazadGatewayTexts />
+          </div>
         ) : activeTab === 'side-dock' ? (
           <SideDockSettings />
         ) : (
