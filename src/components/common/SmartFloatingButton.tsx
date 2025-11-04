@@ -525,27 +525,34 @@ export const SmartFloatingButton: React.FC<SmartFloatingButtonProps> = ({
             ref={chatContainerRef}
             className={`fixed bg-gray-900 shadow-2xl flex flex-col ${
               isMobile
-                ? 'inset-0 z-[9999] rounded-none'
+                ? 'inset-0 top-0 left-0 right-0 bottom-0 z-[9999] rounded-none w-full h-full'
                 : 'bottom-24 right-6 w-[420px] max-h-[650px] z-[9999] rounded-2xl overflow-hidden'
             }`}
             style={isMobile ? {
-              paddingTop: 'env(safe-area-inset-top)',
-              paddingBottom: 'env(safe-area-inset-bottom)',
-              paddingLeft: 'env(safe-area-inset-left)',
-              paddingRight: 'env(safe-area-inset-right)'
+              position: 'fixed',
+              zIndex: 9999,
+              width: '100vw',
+              height: '100vh',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0
             } : undefined}
             dir="rtl"
           >
           {/* Header - Compact */}
           <div
             className={`flex items-center justify-between flex-shrink-0 ${
-              isMobile ? 'px-4 py-4 pt-safe' : 'px-3 py-2'
+              isMobile ? 'px-4 py-4 pt-safe sticky top-0 z-[10000]' : 'px-3 py-2'
             }`}
             style={{
               background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
               ...(isMobile ? {
                 paddingTop: 'max(1rem, env(safe-area-inset-top))',
-                minHeight: '64px'
+                minHeight: '64px',
+                position: 'sticky',
+                top: 0,
+                zIndex: 10000
               } : {})
             }}
           >
