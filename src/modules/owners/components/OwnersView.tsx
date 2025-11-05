@@ -120,6 +120,37 @@ export function OwnersView({ onBack }: OwnersViewProps) {
     }
   };
 
+  const handleApproveOwner = async (owner: FarmOwnerData) => {
+    if (!confirm(`هل أنت متأكد من اعتماد المزرعة "${owner.farm_name || owner.owner_full_name}"؟\n\nسيتم:\n- تغيير الحالة إلى "معتمد"\n- إنشاء بطاقة مالية للمزرعة\n- إشعار المالك بالاعتماد`)) {
+      return;
+    }
+
+    try {
+      await OwnersService.approveOwner(owner.id!);
+      alert('✅ تم اعتماد المزرعة بنجاح!');
+      await loadData();
+    } catch (error: any) {
+      alert('حدث خطأ أثناء الاعتماد: ' + error.message);
+    }
+  };
+
+  const handleRejectOwner = async (owner: FarmOwnerData) => {
+    const reason = prompt(`يرجى كتابة سبب رفض المزرعة "${owner.farm_name || owner.owner_full_name}":\n\n(سيتم إرسال السبب للمالك)`);
+
+    if (!reason || reason.trim() === '') {
+      alert('يجب كتابة سبب الرفض!');
+      return;
+    }
+
+    try {
+      await OwnersService.rejectOwner(owner.id!, reason.trim());
+      alert('✅ تم رفض المزرعة وإرسال الإشعار للمالك!');
+      await loadData();
+    } catch (error: any) {
+      alert('حدث خطأ أثناء الرفض: ' + error.message);
+    }
+  };
+
   const handleViewFinancials = (owner: FarmOwnerData) => {
     console.log('View financials for:', owner);
     alert(`عرض البيانات المالية لـ ${owner.owner_full_name}\n\nهذه الميزة قيد التطوير...`);
@@ -273,6 +304,8 @@ export function OwnersView({ onBack }: OwnersViewProps) {
                 onDelete={() => hasDeletePermission && handleDeleteOwner(owner)}
                 onViewFinancials={() => handleViewFinancials(owner)}
                 onOpenDashboard={() => handleOpenDashboard(owner)}
+                onApprove={owner.approval_status === 'pending' ? () => handleApproveOwner(owner) : undefined}
+                onReject={owner.approval_status === 'pending' ? () => handleRejectOwner(owner) : undefined}
               />
             ))}
           </div>
