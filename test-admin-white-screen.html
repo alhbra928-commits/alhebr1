@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔍 تشخيص الشاشة البيضاء</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-red-50 to-rose-50 p-8" dir="rtl">
+    <div class="max-w-4xl mx-auto">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 mb-8">
+            <h1 class="text-4xl font-black text-red-600 mb-4 text-center">
+                🔍 تشخيص الشاشة البيضاء
+            </h1>
+            <p class="text-gray-600 text-center mb-2">
+                دليل تشخيص وحل مشكلة الشاشة البيضاء في لوحة الإدارة
+            </p>
+        </div>
+
+        <!-- الخطوات -->
+        <div class="bg-white rounded-2xl shadow-xl p-6 mb-6">
+            <h2 class="text-2xl font-black text-gray-900 mb-4">
+                📋 خطوات التشخيص:
+            </h2>
+
+            <div class="space-y-4">
+                <div class="p-4 bg-red-50 border-2 border-red-200 rounded-xl">
+                    <h3 class="font-bold text-red-900 mb-2">1️⃣ افتح أدوات المطور</h3>
+                    <p class="text-sm text-gray-700 mb-2">اضغط F12 أو:</p>
+                    <ul class="text-sm text-gray-600 space-y-1 mr-4">
+                        <li>• Chrome/Edge: Ctrl+Shift+I</li>
+                        <li>• Firefox: Ctrl+Shift+K</li>
+                        <li>• Safari: Cmd+Option+C</li>
+                    </ul>
+                </div>
+
+                <div class="p-4 bg-orange-50 border-2 border-orange-200 rounded-xl">
+                    <h3 class="font-bold text-orange-900 mb-2">2️⃣ انتقل إلى تبويب Console</h3>
+                    <p class="text-sm text-gray-700">
+                        ابحث عن أي رسائل خطأ باللون الأحمر
+                    </p>
+                </div>
+
+                <div class="p-4 bg-amber-50 border-2 border-amber-200 rounded-xl">
+                    <h3 class="font-bold text-amber-900 mb-2">3️⃣ ابحث عن هذه الأخطاء الشائعة:</h3>
+                    <ul class="text-sm text-gray-600 space-y-1 mr-4">
+                        <li class="font-mono bg-white p-2 rounded">• Uncaught Error: ...</li>
+                        <li class="font-mono bg-white p-2 rounded">• Cannot read property '...' of undefined</li>
+                        <li class="font-mono bg-white p-2 rounded">• ... is not a function</li>
+                        <li class="font-mono bg-white p-2 rounded">• Failed to fetch</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- الأسباب المحتملة -->
+        <div class="bg-white rounded-2xl shadow-xl p-6 mb-6">
+            <h2 class="text-2xl font-black text-gray-900 mb-4">
+                🐛 الأسباب المحتملة للشاشة البيضاء:
+            </h2>
+
+            <div class="space-y-3">
+                <div class="p-4 bg-gray-50 border border-gray-200 rounded-xl">
+                    <h4 class="font-bold text-gray-900 mb-2">❌ السبب 1: خطأ في استيراد المكونات</h4>
+                    <p class="text-sm text-gray-600 mb-2">الملفات المشتبه بها:</p>
+                    <code class="text-xs bg-gray-800 text-white p-2 rounded block">
+                        src/modules/owners/components/OwnersView.tsx<br>
+                        src/modules/owners/components/FarmOwner3DCard.tsx
+                    </code>
+                </div>
+
+                <div class="p-4 bg-gray-50 border border-gray-200 rounded-xl">
+                    <h4 class="font-bold text-gray-900 mb-2">❌ السبب 2: دالة غير موجودة</h4>
+                    <p class="text-sm text-gray-600 mb-2">تحقق من وجود:</p>
+                    <code class="text-xs bg-gray-800 text-white p-2 rounded block">
+                        OwnersService.approveOwner()<br>
+                        OwnersService.rejectOwner()
+                    </code>
+                </div>
+
+                <div class="p-4 bg-gray-50 border border-gray-200 rounded-xl">
+                    <h4 class="font-bold text-gray-900 mb-2">❌ السبب 3: كاش قديم</h4>
+                    <p class="text-sm text-gray-600">المتصفح يستخدم نسخة قديمة من الملفات</p>
+                </div>
+
+                <div class="p-4 bg-gray-50 border border-gray-200 rounded-xl">
+                    <h4 class="font-bold text-gray-900 mb-2">❌ السبب 4: خطأ في البناء</h4>
+                    <p class="text-sm text-gray-600">الملفات المبنية بها أخطاء</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- الحلول السريعة -->
+        <div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl shadow-xl p-6 mb-6 border-2 border-green-200">
+            <h2 class="text-2xl font-black text-green-900 mb-4">
+                ✅ حلول سريعة (جرّبها بالترتيب):
+            </h2>
+
+            <div class="space-y-4">
+                <div class="p-4 bg-white rounded-xl border border-green-300">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="flex-shrink-0 w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center font-bold">1</span>
+                        <h3 class="font-bold text-green-900">مسح الكاش وإعادة التحميل</h3>
+                    </div>
+                    <div class="mr-11">
+                        <p class="text-sm text-gray-700 mb-2">اضغط:</p>
+                        <code class="text-sm bg-gray-800 text-green-400 p-2 rounded block">
+                            Ctrl + Shift + R  (Windows/Linux)<br>
+                            Cmd + Shift + R   (Mac)
+                        </code>
+                    </div>
+                </div>
+
+                <div class="p-4 bg-white rounded-xl border border-green-300">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="flex-shrink-0 w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center font-bold">2</span>
+                        <h3 class="font-bold text-green-900">مسح بيانات الموقع كاملة</h3>
+                    </div>
+                    <div class="mr-11">
+                        <ol class="text-sm text-gray-700 space-y-1">
+                            <li>1. اضغط F12</li>
+                            <li>2. اذهب إلى Application (أو Storage)</li>
+                            <li>3. اضغط "Clear storage"</li>
+                            <li>4. اضغط "Clear site data"</li>
+                            <li>5. أعد تحميل الصفحة</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="p-4 bg-white rounded-xl border border-green-300">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="flex-shrink-0 w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center font-bold">3</span>
+                        <h3 class="font-bold text-green-900">جرّب متصفح آخر</h3>
+                    </div>
+                    <div class="mr-11">
+                        <p class="text-sm text-gray-700">
+                            افتح الموقع في متصفح آخر (Chrome/Firefox/Edge)
+                        </p>
+                    </div>
+                </div>
+
+                <div class="p-4 bg-white rounded-xl border border-green-300">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="flex-shrink-0 w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center font-bold">4</span>
+                        <h3 class="font-bold text-green-900">التصفح الخفي (Incognito)</h3>
+                    </div>
+                    <div class="mr-11">
+                        <p class="text-sm text-gray-700 mb-2">افتح نافذة تصفح خفي:</p>
+                        <code class="text-sm bg-gray-800 text-white p-2 rounded block">
+                            Ctrl + Shift + N  (Chrome/Edge)<br>
+                            Ctrl + Shift + P  (Firefox)
+                        </code>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- إذا استمرت المشكلة -->
+        <div class="bg-blue-50 rounded-2xl shadow-xl p-6 border-2 border-blue-200">
+            <h2 class="text-2xl font-black text-blue-900 mb-4">
+                🔧 إذا استمرت المشكلة:
+            </h2>
+
+            <div class="space-y-3 text-sm text-gray-700">
+                <p class="font-bold text-blue-900">أرسل معلومات الخطأ:</p>
+
+                <div class="p-3 bg-white rounded border border-blue-200">
+                    <p class="font-bold mb-1">1. رسالة الخطأ من Console (F12)</p>
+                    <p class="text-xs text-gray-500">انسخ كل النص الأحمر</p>
+                </div>
+
+                <div class="p-3 bg-white rounded border border-blue-200">
+                    <p class="font-bold mb-1">2. متى حدثت المشكلة؟</p>
+                    <p class="text-xs text-gray-500">بعد أي إجراء بالضبط</p>
+                </div>
+
+                <div class="p-3 bg-white rounded border border-blue-200">
+                    <p class="font-bold mb-1">3. لقطة شاشة من Console</p>
+                    <p class="text-xs text-gray-500">صورة توضح الأخطاء</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- معلومات البناء -->
+        <div class="mt-6 text-center text-sm text-gray-500 space-y-1">
+            <p>📦 Build Version: v20251105_1762306967422</p>
+            <p>🔧 Last Modified: OwnersView.tsx, FarmOwner3DCard.tsx</p>
+            <p>⚠️ If white screen persists, check browser console (F12)</p>
+        </div>
+
+        <!-- زر اختبار -->
+        <div class="mt-6 text-center">
+            <button
+                onclick="testConsole()"
+                class="px-8 py-4 bg-gradient-to-r from-blue-500 to-cyan-600 text-white rounded-xl font-bold shadow-xl hover:shadow-2xl transition-all transform hover:scale-105"
+            >
+                🧪 اختبار Console الآن
+            </button>
+        </div>
+    </div>
+
+    <script>
+        function testConsole() {
+            console.clear();
+            console.log('='.repeat(50));
+            console.log('🧪 CONSOLE TEST STARTED');
+            console.log('='.repeat(50));
+
+            console.log('✅ Console is working');
+            console.log('📍 Current URL:', window.location.href);
+            console.log('🕐 Time:', new Date().toLocaleString('ar-SA'));
+
+            // Test error detection
+            console.log('\n🔍 Testing error detection:');
+            try {
+                throw new Error('This is a test error - ignore it');
+            } catch (e) {
+                console.error('✅ Error detection working:', e.message);
+            }
+
+            console.log('\n📋 Next steps:');
+            console.log('1. Navigate to the admin panel');
+            console.log('2. Watch for any RED error messages');
+            console.log('3. Copy the error message and share it');
+
+            console.log('='.repeat(50));
+
+            alert('✅ Console test completed!\n\nCheck the Console tab (F12) for details.\n\nNow navigate to the admin panel and watch for errors.');
+        }
+
+        // Auto-detect errors
+        window.addEventListener('error', function(e) {
+            console.error('🚨 ERROR DETECTED:', e.message);
+            console.error('📍 File:', e.filename);
+            console.error('📍 Line:', e.lineno);
+        });
+
+        console.log('🔍 Error detector active');
+        console.log('💡 Press F12 to open console and see errors');
+    </script>
+</body>
+</html>
