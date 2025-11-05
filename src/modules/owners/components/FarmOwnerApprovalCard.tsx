@@ -39,11 +39,9 @@ export function FarmOwnerApprovalCard({ owner, onApprove, onReject, onUpdate }: 
     try {
       setLoading(true);
 
-      // الحصول على بيانات المستخدم الحالي
-      const { data: { session } } = await supabase.auth.getSession();
-
-      // استخدام admin ID أو fallback
-      const adminId = session?.user?.id || '00000000-0000-0000-0000-000000000000';
+      // الحصول على بيانات المستخدم الحالي من localStorage
+      const adminData = localStorage.getItem('admin_user');
+      const adminId = adminData ? JSON.parse(adminData).id : null;
 
       console.log('🔄 جاري اعتماد البطاقة:', owner.full_name);
 
@@ -86,8 +84,9 @@ export function FarmOwnerApprovalCard({ owner, onApprove, onReject, onUpdate }: 
     try {
       setLoading(true);
 
-      const { data: { session } } = await supabase.auth.getSession();
-      const adminId = session?.user?.id || '00000000-0000-0000-0000-000000000000';
+      // الحصول على بيانات المستخدم الحالي من localStorage
+      const adminData = localStorage.getItem('admin_user');
+      const adminId = adminData ? JSON.parse(adminData).id : null;
 
       console.log('🔄 جاري رفض البطاقة:', owner.full_name);
 
@@ -128,8 +127,9 @@ export function FarmOwnerApprovalCard({ owner, onApprove, onReject, onUpdate }: 
     try {
       setLoading(true);
 
-      const { data: { session } } = await supabase.auth.getSession();
-      const adminId = session?.user?.id || '00000000-0000-0000-0000-000000000000';
+      // الحصول على بيانات المستخدم الحالي من localStorage
+      const adminData = localStorage.getItem('admin_user');
+      const adminId = adminData ? JSON.parse(adminData).id : null;
 
       console.log('🔄 جاري إعادة الطلب:', owner.full_name);
 
