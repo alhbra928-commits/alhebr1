@@ -5,6 +5,7 @@ import {
 import { PublicFarm } from '../types/farm.types';
 import { PublicFarmService } from '../services/publicFarmService';
 import { GreenConceptButton } from './GreenConceptButton';
+import { EnhancedConceptCard } from './EnhancedConceptCard';
 import { AdminCrownButton } from './AdminCrownButton';
 import { BackToAdminButton } from './BackToAdminButton';
 import { SmartFloatingButton } from '../../../components/common/SmartFloatingButton';
@@ -395,8 +396,8 @@ export function ModernRoyalPlatform({
           onExternalOpenChange={setSmartButtonOpen}
         />
 
-        {/* Concept Button */}
-        <GreenConceptButton onClick={() => setCurrentView('concept')} />
+        {/* Enhanced Concept Card */}
+        <EnhancedConceptCard onStartOwnership={() => setCurrentView('concept')} />
 
         {/* Main Content */}
         <main className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 md:py-12 pb-32 sm:pb-40">
