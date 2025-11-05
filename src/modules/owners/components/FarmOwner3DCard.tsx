@@ -240,6 +240,42 @@ export function FarmOwner3DCard({
               onClick={onDelete}
               className="flex items-center justify-center gap-2 px-4 py-3 bg-red-500/90 hover:bg-red-600 text-white rounded-xl font-bold transition-all shadow-lg hover:shadow-xl"
             >
+        {/* Approval Actions - Always Visible for Pending Status */}
+        {owner.approval_status === 'pending' && (onApprove || onReject) && (
+          <div className="mb-4 p-4 bg-amber-50 border-2 border-amber-200 rounded-xl animate-pulse">
+            <p className="text-sm font-bold text-amber-900 mb-3 text-center flex items-center justify-center gap-2">
+              <AlertCircle className="h-5 w-5" />
+              يتطلب اتخاذ قرار
+            </p>
+            <div className="grid grid-cols-2 gap-3">
+              {onApprove && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onApprove();
+                  }}
+                  className="flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white rounded-xl font-bold transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
+                >
+                  <CheckCircle className="h-5 w-5" />
+                  ✓ اعتماد
+                </button>
+              )}
+              {onReject && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onReject();
+                  }}
+                  className="flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700 text-white rounded-xl font-bold transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
+                >
+                  <XCircle className="h-5 w-5" />
+                  ✗ رفض
+                </button>
+              )}
+            </div>
+          </div>
+        )}
+
               <Trash2 className="h-4 w-4" />
               حذف
             </button>

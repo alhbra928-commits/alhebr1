@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✅ اختبار أزرار الاعتماد والرفض</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .8; }
+        }
+        .animate-pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-emerald-50 to-teal-50 p-8" dir="rtl">
+    <div class="max-w-4xl mx-auto">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 mb-8">
+            <h1 class="text-4xl font-black text-gray-900 mb-4 text-center">
+                ✅ اختبار أزرار الاعتماد والرفض
+            </h1>
+            <p class="text-gray-600 text-center mb-2">
+                تحقق من ظهور أزرار "اعتماد" و "رفض" في البطاقات ذات الحالة "قيد المراجعة"
+            </p>
+            <p class="text-sm text-amber-600 font-bold text-center">
+                📍 المسار: إدارة أصحاب المزارع → البطاقات ذات حالة "pending"
+            </p>
+        </div>
+
+        <!-- نموذج بطاقة قيد المراجعة -->
+        <div class="bg-gradient-to-br from-white via-emerald-50/30 to-green-50/30 rounded-3xl p-6 border-2 border-emerald-200/50 shadow-xl mb-6">
+            <!-- Status Badge -->
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center gap-2 px-4 py-2 rounded-full bg-amber-500/20 border-2 border-amber-500/30 text-amber-700 font-bold text-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                    🕒 قيد المراجعة
+                </div>
+                <div class="px-3 py-1 rounded-full bg-blue-500/20 border-2 border-blue-500/30 text-blue-700 text-xs font-bold">
+                    تسجيل يدوي
+                </div>
+            </div>
+
+            <!-- Owner Info -->
+            <div class="space-y-3 mb-4">
+                <div class="flex items-center gap-2">
+                    <div class="w-12 h-12 bg-gradient-to-br from-emerald-500 to-green-600 rounded-xl flex items-center justify-center text-white font-black text-xl">
+                        أ
+                    </div>
+                    <div>
+                        <p class="font-bold text-gray-900 text-lg">أحمد محمد السعيد</p>
+                        <p class="text-sm text-gray-600">📞 0501234567</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Details Grid -->
+            <div class="grid grid-cols-2 gap-3 mb-4">
+                <div class="bg-white/60 rounded-xl p-3">
+                    <p class="text-xs text-gray-600 mb-1">📍 الموقع</p>
+                    <p class="font-bold text-gray-900">الرياض</p>
+                </div>
+                <div class="bg-white/60 rounded-xl p-3">
+                    <p class="text-xs text-gray-600 mb-1">📏 المساحة</p>
+                    <p class="font-bold text-gray-900">5000 متر²</p>
+                </div>
+                <div class="bg-white/60 rounded-xl p-3">
+                    <p class="text-xs text-gray-600 mb-1">🌴 النوع</p>
+                    <p class="font-bold text-gray-900">نخيل</p>
+                </div>
+                <div class="bg-gradient-to-r from-emerald-500/10 to-green-500/10 rounded-xl p-3 border border-emerald-300">
+                    <p class="text-xs text-gray-600 mb-1">💰 السعر</p>
+                    <p class="font-bold text-emerald-700 text-lg">500,000 ريال</p>
+                </div>
+            </div>
+
+            <!-- 🔥 منطقة الأزرار الجديدة - يجب أن تظهر هنا! -->
+            <div class="mb-4 p-4 bg-amber-50 border-2 border-amber-200 rounded-xl animate-pulse">
+                <p class="text-sm font-bold text-amber-900 mb-3 text-center flex items-center justify-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                    يتطلب اتخاذ قرار
+                </p>
+                <div class="grid grid-cols-2 gap-3">
+                    <!-- زر الاعتماد -->
+                    <button
+                        onclick="alert('✅ تم الضغط على زر الاعتماد!\n\nفي النظام الحقيقي:\n- سيتم تحديث حالة المزرعة إلى approved\n- سيتم إنشاء بطاقة مالية\n- سيرى المالك الحالة معتمدة فوراً')"
+                        class="flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white rounded-xl font-bold transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                        </svg>
+                        ✓ اعتماد
+                    </button>
+
+                    <!-- زر الرفض -->
+                    <button
+                        onclick="const reason = prompt('يرجى كتابة سبب الرفض:'); if (reason) alert('✗ تم الضغط على زر الرفض!\n\nالسبب: ' + reason + '\n\nفي النظام الحقيقي:\n- سيتم تحديث الحالة إلى rejected\n- سيرى المالك سبب الرفض فوراً')"
+                        class="flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700 text-white rounded-xl font-bold transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="15" y1="9" x2="9" y2="15"></line>
+                            <line x1="9" y1="9" x2="15" y2="15"></line>
+                        </svg>
+                        ✗ رفض
+                    </button>
+                </div>
+            </div>
+
+            <!-- باقي الأزرار (تعديل، حذف، إلخ) -->
+            <div class="grid grid-cols-2 gap-2 opacity-50 hover:opacity-100 transition-opacity">
+                <button class="flex items-center justify-center gap-2 px-4 py-3 bg-blue-500/90 text-white rounded-xl font-bold text-sm">
+                    تعديل
+                </button>
+                <button class="flex items-center justify-center gap-2 px-4 py-3 bg-red-500/90 text-white rounded-xl font-bold text-sm">
+                    حذف
+                </button>
+                <button class="flex items-center justify-center gap-2 px-4 py-3 bg-emerald-500/90 text-white rounded-xl font-bold text-sm">
+                    المالية
+                </button>
+                <button class="flex items-center justify-center gap-2 px-4 py-3 bg-purple-500/90 text-white rounded-xl font-bold text-sm">
+                    فتح اللوحة
+                </button>
+            </div>
+        </div>
+
+        <!-- تعليمات التحقق -->
+        <div class="bg-white rounded-2xl shadow-xl p-6">
+            <h2 class="text-2xl font-black text-gray-900 mb-4">
+                📋 خطوات التحقق في النظام الفعلي:
+            </h2>
+
+            <div class="space-y-4">
+                <div class="flex gap-3">
+                    <div class="flex-shrink-0 w-8 h-8 bg-emerald-500 text-white rounded-full flex items-center justify-center font-bold">
+                        1
+                    </div>
+                    <div>
+                        <p class="font-bold text-gray-900">افتح لوحة الإدارة</p>
+                        <p class="text-sm text-gray-600">انتقل إلى: إدارة أصحاب المزارع</p>
+                    </div>
+                </div>
+
+                <div class="flex gap-3">
+                    <div class="flex-shrink-0 w-8 h-8 bg-emerald-500 text-white rounded-full flex items-center justify-center font-bold">
+                        2
+                    </div>
+                    <div>
+                        <p class="font-bold text-gray-900">ابحث عن بطاقة "قيد المراجعة"</p>
+                        <p class="text-sm text-gray-600">Badge برتقالي مكتوب عليه "🕒 قيد المراجعة"</p>
+                    </div>
+                </div>
+
+                <div class="flex gap-3">
+                    <div class="flex-shrink-0 w-8 h-8 bg-emerald-500 text-white rounded-full flex items-center justify-center font-bold">
+                        3
+                    </div>
+                    <div>
+                        <p class="font-bold text-gray-900">تحقق من وجود المربع البرتقالي</p>
+                        <p class="text-sm text-gray-600">يجب أن يظهر مربع بخلفية برتقالية مكتوب فيه "⚠️ يتطلب اتخاذ قرار"</p>
+                    </div>
+                </div>
+
+                <div class="flex gap-3">
+                    <div class="flex-shrink-0 w-8 h-8 bg-emerald-500 text-white rounded-full flex items-center justify-center font-bold">
+                        4
+                    </div>
+                    <div>
+                        <p class="font-bold text-gray-900">اضغط على "✓ اعتماد" أو "✗ رفض"</p>
+                        <p class="text-sm text-gray-600">
+                            • الاعتماد: سيطلب تأكيد → سيتم الاعتماد<br>
+                            • الرفض: سيطلب كتابة السبب → سيتم الرفض
+                        </p>
+                    </div>
+                </div>
+
+                <div class="flex gap-3">
+                    <div class="flex-shrink-0 w-8 h-8 bg-emerald-500 text-white rounded-full flex items-center justify-center font-bold">
+                        5
+                    </div>
+                    <div>
+                        <p class="font-bold text-gray-900">تحقق من التحديث الفوري</p>
+                        <p class="text-sm text-gray-600">
+                            • في الإدارة: البطاقة تتحول إلى "معتمد" أو "مرفوض"<br>
+                            • في لوحة المالك: يرى الحالة الجديدة فوراً (Realtime)
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ملاحظات مهمة -->
+        <div class="mt-6 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-2xl p-6 border-2 border-blue-200">
+            <h3 class="text-xl font-black text-blue-900 mb-3">
+                💡 ملاحظات مهمة:
+            </h3>
+            <ul class="space-y-2 text-sm text-blue-800">
+                <li class="flex items-start gap-2">
+                    <span class="text-blue-500 font-bold">•</span>
+                    <span>الأزرار تظهر <strong>فقط</strong> للبطاقات ذات الحالة "pending" (قيد المراجعة)</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="text-blue-500 font-bold">•</span>
+                    <span>الأزرار <strong>دائمة الظهور</strong> (لا تحتاج hover) - موجودة فوق أزرار التعديل/الحذف</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="text-blue-500 font-bold">•</span>
+                    <span>المربع البرتقالي له <strong>تأثير نبض</strong> (animate-pulse) لجذب الانتباه</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="text-blue-500 font-bold">•</span>
+                    <span>بعد الاعتماد/الرفض، الأزرار <strong>تختفي تلقائياً</strong> لأن الحالة تتغير</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="text-blue-500 font-bold">•</span>
+                    <span>إذا لم تظهر الأزرار، تأكد من <strong>تحديث الصفحة</strong> (Ctrl+Shift+R)</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Build Info -->
+        <div class="mt-6 text-center text-sm text-gray-500">
+            <p>📦 Build Version: v20251105_1762306967422</p>
+            <p>✅ Approval Buttons: Active</p>
+            <p>🔄 Realtime Sync: Enabled</p>
+        </div>
+    </div>
+
+    <script>
+        console.log('✅ Approval buttons test page loaded');
+        console.log('📍 Check: src/modules/owners/components/FarmOwner3DCard.tsx');
+        console.log('📍 Check: src/modules/owners/components/OwnersView.tsx');
+        console.log('🎯 Feature: Approve/Reject buttons for pending farm owners');
+    </script>
+</body>
+</html>
