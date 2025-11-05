@@ -177,13 +177,13 @@ export function FarmOwner3DCard({
         {/* Owner Name */}
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 bg-gradient-to-br from-emerald-600 to-teal-600 rounded-xl flex items-center justify-center text-white font-black text-lg shadow-lg">
-            {owner.owner_full_name.charAt(0)}
+            {owner.owner_full_name?.charAt(0) || '👤'}
           </div>
           <div className="flex-1">
-            <h3 className="text-xl font-black text-gray-900">{owner.owner_full_name}</h3>
+            <h3 className="text-xl font-black text-gray-900">{owner.owner_full_name || 'غير محدد'}</h3>
             <div className="flex items-center gap-2 text-sm text-gray-600">
               <Phone className="h-3 w-3" />
-              <span dir="ltr">{owner.owner_phone}</span>
+              <span dir="ltr">{owner.owner_phone || 'غير محدد'}</span>
             </div>
           </div>
         </div>
@@ -196,7 +196,7 @@ export function FarmOwner3DCard({
               <MapPin className="h-4 w-4" />
               <span className="text-xs font-bold">الموقع</span>
             </div>
-            <p className="text-sm font-bold text-gray-900 truncate">{owner.farm_location}</p>
+            <p className="text-sm font-bold text-gray-900 truncate">{owner.farm_location || 'غير محدد'}</p>
           </div>
 
           {/* Area */}
@@ -206,7 +206,7 @@ export function FarmOwner3DCard({
               <span className="text-xs font-bold">المساحة</span>
             </div>
             <p className="text-sm font-bold text-gray-900">
-              {owner.farm_area} {owner.farm_area_unit}
+              {owner.farm_area || 0} {owner.farm_area_unit || 'هكتار'}
             </p>
           </div>
 
@@ -216,7 +216,7 @@ export function FarmOwner3DCard({
               <DollarSign className="h-4 w-4" />
               <span className="text-xs font-bold">السعر</span>
             </div>
-            <p className="text-sm font-bold text-gray-900">{formatPrice(owner.farm_price)}</p>
+            <p className="text-sm font-bold text-gray-900">{formatPrice(owner.farm_price || 0)}</p>
           </div>
 
           {/* Duration */}
@@ -225,7 +225,7 @@ export function FarmOwner3DCard({
               <Calendar className="h-4 w-4" />
               <span className="text-xs font-bold">مدة السداد</span>
             </div>
-            <p className="text-sm font-bold text-gray-900">{owner.payment_duration_days} يوم</p>
+            <p className="text-sm font-bold text-gray-900">{owner.payment_duration_days || 0} يوم</p>
           </div>
         </div>
 
@@ -236,7 +236,7 @@ export function FarmOwner3DCard({
             <span className="text-xs font-bold">رقم الآيبان</span>
           </div>
           <p className="text-sm font-mono font-bold text-gray-900" dir="ltr">
-            {owner.bank_iban}
+            {owner.bank_iban || 'غير محدد'}
           </p>
         </div>
 
@@ -280,7 +280,7 @@ export function FarmOwner3DCard({
 
         {/* Created At */}
         <div className="text-xs text-gray-500 text-center pt-2 border-t border-emerald-200/30">
-          تاريخ الإضافة: {new Date(owner.created_at).toLocaleDateString('ar-SA')}
+          تاريخ الإضافة: {owner.created_at ? new Date(owner.created_at).toLocaleDateString('ar-SA') : 'غير محدد'}
         </div>
       </div>
 
