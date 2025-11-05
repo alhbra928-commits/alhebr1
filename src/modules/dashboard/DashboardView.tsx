@@ -105,10 +105,11 @@ export function DashboardView() {
               </h1>
               <p className="text-gray-600">منصة تملك النخيل والزيتون</p>
             </div>
-          <CompactLiveStatusIndicator
-            isConnected={isLiveConnected}
-            lastUpdate={lastLiveUpdate}
-          />
+            <CompactLiveStatusIndicator
+              isConnected={isLiveConnected}
+              lastUpdate={lastLiveUpdate}
+            />
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
