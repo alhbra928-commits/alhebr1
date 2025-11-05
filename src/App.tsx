@@ -13,7 +13,6 @@ const PublicPlatformRouter = lazy(() => import('./modules/public/components/Publ
 const FarmOwnerRouter = lazy(() => import('./modules/farm-owner/components/FarmOwnerRouter').then(m => ({ default: m.FarmOwnerRouter })));
 const EnhancedDashboard = lazy(() => import('./modules/dashboard/EnhancedDashboard').then(m => ({ default: m.EnhancedDashboard })));
 const OperationsDashboard = lazy(() => import('./modules/operations/components/OperationsDashboard').then(m => ({ default: m.OperationsDashboard })));
-const OwnersView = lazy(() => import('./modules/owners/components/OwnersView').then(m => ({ default: m.OwnersView })));
 const FarmsView = lazy(() => import('./modules/farms/components/FarmsView').then(m => ({ default: m.FarmsView })));
 const ModernBookingsInterface = lazy(() => import('./modules/reservations/components/ModernBookingsInterface').then(m => ({ default: m.ModernBookingsInterface })));
 const AdvancedInvestorsView = lazy(() => import('./modules/investors/components/AdvancedInvestorsView').then(m => ({ default: m.AdvancedInvestorsView })));
@@ -194,7 +193,6 @@ function App() {
   const getModuleTitle = (module: string): string => {
     const titles: Record<string, string> = {
       'dashboard': 'لوحة التحكم',
-      'owners': 'أصحاب المزارع',
       'farms': 'المزارع',
       'reservations': 'الحجوزات',
       'investors': 'المستثمرون',
@@ -237,8 +235,6 @@ function App() {
         );
       case 'operations':
         return <OperationsDashboard />;
-      case 'owners':
-        return <OwnersView onBack={() => setActiveModule('dashboard')} />;
       case 'farms':
         return <FarmsView onBack={() => setActiveModule('dashboard')} />;
       case 'reservations':

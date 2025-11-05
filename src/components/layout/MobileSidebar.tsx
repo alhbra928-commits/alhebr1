@@ -32,7 +32,6 @@ interface MenuItem {
 
 const menuItems: MenuItem[] = [
   { id: 'dashboard', label: 'لوحة التحكم', icon: LayoutDashboard, color: 'text-blue-600' },
-  { id: 'owners', label: 'أصحاب المزارع', icon: Building, color: 'text-amber-600' },
   { id: 'farms', label: 'المزارع', icon: MapPin, color: 'text-green-600' },
   { id: 'reservations', label: 'الحجوزات', icon: Calendar, color: 'text-orange-600' },
   { id: 'investors', label: 'المستثمرون', icon: Users, color: 'text-purple-600' },

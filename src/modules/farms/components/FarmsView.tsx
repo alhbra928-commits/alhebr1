@@ -21,7 +21,6 @@ import { Card3D } from '../../../components/ui/Card3D';
 import { BackButton } from '../../../components/common/BackButton';
 import { SmartPriceDisplay } from '../../../components/common/SmartPriceDisplay';
 import { FarmsService, Farm } from '../farmsService';
-import { OwnersService } from '../../owners/ownersService';
 import { FarmFormModal } from './FarmFormModal';
 import { useRealtimeTables } from '../../../lib/realtimeSync';
 import { usePermissions } from '../../../contexts/PermissionsContext';
@@ -54,16 +53,14 @@ export function FarmsView({ onBack }: FarmsViewProps) {
       setLoading(true);
       const results = await Promise.allSettled([
         FarmsService.getAll(100, 0),
-        OwnersService.getOwnersList(),
         FarmsService.getStatistics()
       ]);
 
       const farmsResult = results[0].status === 'fulfilled' ? results[0].value : { data: [] };
-      const ownersData = results[1].status === 'fulfilled' ? results[1].value : [];
-      const statsData = results[2].status === 'fulfilled' ? results[2].value : {};
+      const statsData = results[1].status === 'fulfilled' ? results[1].value : {};
 
       setFarms(farmsResult?.data || []);
-      setOwners(ownersData || []);
+      setOwners([]);
       setStats(statsData || {
         total: 0,
         active: 0,
