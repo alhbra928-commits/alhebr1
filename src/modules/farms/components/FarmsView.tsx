@@ -53,14 +53,16 @@ export function FarmsView({ onBack }: FarmsViewProps) {
       setLoading(true);
       const results = await Promise.allSettled([
         FarmsService.getAll(100, 0),
-        FarmsService.getStatistics()
+        FarmsService.getStatistics(),
+        FarmsService.getAllOwners() // تحميل أصحاب المزارع
       ]);
 
       const farmsResult = results[0].status === 'fulfilled' ? results[0].value : { data: [] };
       const statsData = results[1].status === 'fulfilled' ? results[1].value : {};
+      const ownersData = results[2].status === 'fulfilled' ? results[2].value : [];
 
       setFarms(farmsResult?.data || []);
-      setOwners([]);
+      setOwners(ownersData || []);
       setStats(statsData || {
         total: 0,
         active: 0,

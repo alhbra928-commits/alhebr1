@@ -587,4 +587,35 @@ export class FarmsService {
 
     return data;
   }
+
+  /**
+   * الحصول على جميع أصحاب المزارع المعتمدين
+   */
+  static async getAllOwners() {
+    try {
+      const { data, error } = await supabase
+        .from('farm_owners')
+        .select('id, full_name, owner_full_name, mobile_number, owner_phone, approval_status')
+        .eq('approval_status', 'approved')
+        .is('deleted_at', null)
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('Error fetching owners:', error);
+        return [];
+      }
+
+      // تحويل البيانات للتوافق مع النظامين
+      return (data || []).map(owner => ({
+        ...owner,
+        // استخدام owner_full_name إذا كان موجوداً، وإلا full_name
+        full_name: owner.owner_full_name || owner.full_name,
+        // استخدام owner_phone إذا كان موجوداً، وإلا mobile_number
+        mobile_number: owner.owner_phone || owner.mobile_number
+      }));
+    } catch (error) {
+      console.error('❌ Failed to fetch owners:', error);
+      return [];
+    }
+  }
 }
