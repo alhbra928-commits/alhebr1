@@ -1,23 +1,5 @@
 import React, { useState } from 'react';
-import {
-  User,
-  Phone,
-  MapPin,
-  Ruler,
-  DollarSign,
-  CreditCard,
-  Calendar,
-  Edit,
-  Trash2,
-  Wallet,
-  ExternalLink,
-  TreePine,
-  Droplets,
-  Clock,
-  CheckCircle,
-  XCircle,
-  AlertCircle
-} from 'lucide-react';
+import { User, Phone, MapPin, Ruler, DollarSign, CreditCard, Calendar, CreditCard as Edit, Trash2, Wallet, ExternalLink, TreePine, Droplets, Clock, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
 
 interface FarmOwnerData {
   id: string;
