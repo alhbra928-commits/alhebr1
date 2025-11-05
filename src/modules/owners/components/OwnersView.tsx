@@ -112,13 +112,10 @@ export function OwnersView({ onBack }: OwnersViewProps) {
       loadData();
     }, 100);
     return () => clearTimeout(timer);
-  }, [loadData]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // تحميل البيانات مرة واحدة فقط عند تحميل الصفحة
 
-  useEffect(() => {
-    applyFilters();
-  }, [owners, searchTerm, filterStatus, filterRegion]);
-
-  const applyFilters = () => {
+  const applyFilters = React.useCallback(() => {
     if (!Array.isArray(owners)) {
       setFilteredOwners([]);
       return;
@@ -142,7 +139,11 @@ export function OwnersView({ onBack }: OwnersViewProps) {
     }
 
     setFilteredOwners(filtered);
-  };
+  }, [owners, searchTerm, filterStatus, filterRegion]);
+
+  useEffect(() => {
+    applyFilters();
+  }, [applyFilters]);
 
   const getUniqueRegions = () => {
     const regions = owners.map(o => o.region).filter(Boolean);
@@ -192,8 +193,12 @@ export function OwnersView({ onBack }: OwnersViewProps) {
         await OwnersService.updateOwner(selectedOwner.id, data);
         console.log('تم تحديث بيانات المالك بنجاح!');
       }
-      await loadData();
       setShowModal(false);
+
+      // تحديث البيانات مرة واحدة فقط بعد إغلاق المودال
+      setTimeout(() => {
+        loadData();
+      }, 300);
     } catch (err: any) {
       throw new Error(err.message || 'حدث خطأ');
     }
