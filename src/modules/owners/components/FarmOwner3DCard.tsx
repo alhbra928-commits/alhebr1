@@ -222,24 +222,6 @@ export function FarmOwner3DCard({
           </p>
         </div>
 
-        {/* Actions - Show on Hover */}
-        <div
-          className={`transition-all duration-300 ${
-            isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-          }`}
-        >
-          <div className="grid grid-cols-2 gap-2">
-            <button
-              onClick={onEdit}
-              className="flex items-center justify-center gap-2 px-4 py-3 bg-blue-500/90 hover:bg-blue-600 text-white rounded-xl font-bold transition-all shadow-lg hover:shadow-xl"
-            >
-              <Edit className="h-4 w-4" />
-              تعديل
-            </button>
-            <button
-              onClick={onDelete}
-              className="flex items-center justify-center gap-2 px-4 py-3 bg-red-500/90 hover:bg-red-600 text-white rounded-xl font-bold transition-all shadow-lg hover:shadow-xl"
-            >
         {/* Approval Actions - Always Visible for Pending Status */}
         {owner.approval_status === 'pending' && (onApprove || onReject) && (
           <div className="mb-4 p-4 bg-amber-50 border-2 border-amber-200 rounded-xl animate-pulse">
@@ -276,6 +258,24 @@ export function FarmOwner3DCard({
           </div>
         )}
 
+        {/* Actions - Show on Hover */}
+        <div
+          className={`transition-all duration-300 ${
+            isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+          }`}
+        >
+          <div className="grid grid-cols-2 gap-2">
+            <button
+              onClick={onEdit}
+              className="flex items-center justify-center gap-2 px-4 py-3 bg-blue-500/90 hover:bg-blue-600 text-white rounded-xl font-bold transition-all shadow-lg hover:shadow-xl"
+            >
+              <Edit className="h-4 w-4" />
+              تعديل
+            </button>
+            <button
+              onClick={onDelete}
+              className="flex items-center justify-center gap-2 px-4 py-3 bg-red-500/90 hover:bg-red-600 text-white rounded-xl font-bold transition-all shadow-lg hover:shadow-xl"
+            >
               <Trash2 className="h-4 w-4" />
               حذف
             </button>
