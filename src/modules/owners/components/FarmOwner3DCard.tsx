@@ -26,6 +26,8 @@ interface FarmOwner3DCardProps {
   onDelete: () => void;
   onViewFinancials: () => void;
   onOpenDashboard: () => void;
+  onApprove?: () => void;
+  onReject?: () => void;
 }
 
 export function FarmOwner3DCard({
@@ -33,7 +35,9 @@ export function FarmOwner3DCard({
   onEdit,
   onDelete,
   onViewFinancials,
-  onOpenDashboard
+  onOpenDashboard,
+  onApprove,
+  onReject
 }: FarmOwner3DCardProps) {
   const [isHovered, setIsHovered] = useState(false);
 
