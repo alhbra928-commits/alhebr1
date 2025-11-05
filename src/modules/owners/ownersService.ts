@@ -26,13 +26,47 @@ export class OwnersService {
    */
   static async createOwner(data: Omit<FarmOwnerData, 'id' | 'created_at' | 'updated_at'>): Promise<FarmOwnerData> {
     try {
+      // تحويل البيانات للتوافق مع الجدول (full_name و mobile_number)
+      const dbData = {
+        // الحقول الإلزامية للنظام القديم
+        full_name: data.owner_full_name,
+        mobile_number: data.owner_phone,
+        region: 'السعودية', // قيمة افتراضية
+        city: data.farm_location || 'غير محدد',
+        farm_area: data.farm_area,
+        farm_area_unit: data.farm_area_unit,
+        farm_type: data.farm_type,
+        actual_price: data.farm_price,
+        deed_number: 'AUTO-' + Date.now(), // رقم صك تلقائي
+        farm_location_region: 'السعودية',
+        farm_location_city: data.farm_location || 'غير محدد',
+        payment_grace_period: data.payment_duration_days,
+
+        // الحقول الجديدة
+        owner_full_name: data.owner_full_name,
+        owner_phone: data.owner_phone,
+        farm_location: data.farm_location,
+        farm_price: data.farm_price,
+        payment_duration_days: data.payment_duration_days,
+        farm_image_url: data.farm_image_url,
+        manual_entry: data.manual_entry,
+        farm_type_other: data.farm_type_other,
+
+        // البنك
+        bank_iban: data.bank_iban,
+
+        // الحالة
+        approval_status: data.approval_status,
+        status: data.status,
+
+        // التواريخ
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      };
+
       const { data: owner, error } = await supabase
         .from('farm_owners')
-        .insert([{
-          ...data,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        }])
+        .insert([dbData])
         .select()
         .single();
 
@@ -125,12 +159,46 @@ export class OwnersService {
    */
   static async updateOwner(id: string, data: Partial<FarmOwnerData>): Promise<FarmOwnerData> {
     try {
+      // تحويل البيانات للتوافق مع الجدول
+      const dbData: any = {
+        updated_at: new Date().toISOString()
+      };
+
+      // مزامنة الحقول الجديدة مع القديمة
+      if (data.owner_full_name) {
+        dbData.full_name = data.owner_full_name;
+        dbData.owner_full_name = data.owner_full_name;
+      }
+      if (data.owner_phone) {
+        dbData.mobile_number = data.owner_phone;
+        dbData.owner_phone = data.owner_phone;
+      }
+      if (data.farm_location) {
+        dbData.city = data.farm_location;
+        dbData.farm_location = data.farm_location;
+      }
+      if (data.farm_price !== undefined) {
+        dbData.actual_price = data.farm_price;
+        dbData.farm_price = data.farm_price;
+      }
+      if (data.payment_duration_days !== undefined) {
+        dbData.payment_grace_period = data.payment_duration_days;
+        dbData.payment_duration_days = data.payment_duration_days;
+      }
+
+      // باقي الحقول
+      if (data.farm_area !== undefined) dbData.farm_area = data.farm_area;
+      if (data.farm_area_unit) dbData.farm_area_unit = data.farm_area_unit;
+      if (data.farm_type) dbData.farm_type = data.farm_type;
+      if (data.farm_type_other) dbData.farm_type_other = data.farm_type_other;
+      if (data.bank_iban) dbData.bank_iban = data.bank_iban;
+      if (data.farm_image_url) dbData.farm_image_url = data.farm_image_url;
+      if (data.approval_status) dbData.approval_status = data.approval_status;
+      if (data.status) dbData.status = data.status;
+
       const { data: owner, error } = await supabase
         .from('farm_owners')
-        .update({
-          ...data,
-          updated_at: new Date().toISOString()
-        })
+        .update(dbData)
         .eq('id', id)
         .select()
         .single();
