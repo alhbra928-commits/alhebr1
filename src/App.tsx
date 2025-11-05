@@ -175,6 +175,9 @@ function App() {
       setAdminSession(null);
       setActiveModule('public');
 
+      // إطلاق حدث الخروج لإعادة تشغيل البوابة
+      window.dispatchEvent(new Event('logout'));
+
       // إعادة تحميل الصفحة للتأكد من الخروج الكامل
       setTimeout(() => {
         window.location.reload();
@@ -185,6 +188,10 @@ function App() {
       AdminSessionService.clearSession();
       setAdminSession(null);
       setActiveModule('public');
+
+      // إطلاق حدث الخروج
+      window.dispatchEvent(new Event('logout'));
+
       setTimeout(() => {
         window.location.reload();
       }, 100);

@@ -13,7 +13,19 @@ interface PublicPlatformRouterProps {
 }
 
 export function PublicPlatformRouter({ onAdminLogin, onBackToAdmin, onFarmOwnerLogin }: PublicPlatformRouterProps) {
-  const [currentView, setCurrentView] = useState<View>('loader');
+  // التحقق من حالة الجلسة - إذا كان هناك جلسة نشطة، نتخطى البوابة
+  const hasActiveSession = () => {
+    const adminToken = localStorage.getItem('admin_session_token');
+    const farmOwnerToken = sessionStorage.getItem('farm_owner_logged_in');
+    const investorToken = sessionStorage.getItem('investor_logged_in');
+
+    return !!(adminToken || farmOwnerToken || investorToken);
+  };
+
+  const [currentView, setCurrentView] = useState<View>(() => {
+    // إذا كانت هناك جلسة نشطة، نبدأ مباشرة في main
+    return hasActiveSession() ? 'main' : 'loader';
+  });
   const [selectedBarcode, setSelectedBarcode] = useState<string>('');
 
   // تهيئة السكربتات التحليلية عند التحميل الأول - فقط مرة واحدة
@@ -26,6 +38,26 @@ export function PublicPlatformRouter({ onAdminLogin, onBackToAdmin, onFarmOwnerL
 
     return () => clearTimeout(timer);
   }, []);
+
+  // مراقبة تغيير حالة الجلسات
+  useEffect(() => {
+    const handleSessionChange = () => {
+      if (!hasActiveSession() && currentView === 'main') {
+        // إذا تم تسجيل الخروج، نعيد تشغيل البوابة
+        console.log('🔄 تم تسجيل الخروج - إعادة تشغيل البوابة...');
+        setCurrentView('loader');
+      }
+    };
+
+    // الاستماع لحدث تغيير الجلسة
+    window.addEventListener('storage', handleSessionChange);
+    window.addEventListener('logout', handleSessionChange);
+
+    return () => {
+      window.removeEventListener('storage', handleSessionChange);
+      window.removeEventListener('logout', handleSessionChange);
+    };
+  }, [currentView]);
 
   // التتبع التلقائي للزوار - تأخير أيضاً
   useEffect(() => {

@@ -5,6 +5,12 @@
 
 import { supabase } from '../../../lib/supabase';
 
+// دالة مساعدة لحفظ الجلسة مع flag البوابة
+function saveSessionWithFlag(sessionData: any) {
+  localStorage.setItem('farm_owner_session', JSON.stringify(sessionData));
+  sessionStorage.setItem('farm_owner_logged_in', 'true');
+}
+
 export interface FarmOwnerProfile {
   id: string;
   mobile_number: string;
@@ -171,12 +177,12 @@ class FarmOwnerService {
 
       if (data?.success) {
         // حفظ بيانات الجلسة
-        localStorage.setItem('farm_owner_session', JSON.stringify({
+        saveSessionWithFlag({
           profile_id: data.profile_id,
           session_token: data.session_token,
           mobile_number: mobileNumber,
           status: data.status
-        }));
+        });
 
         return {
           success: true,
@@ -212,12 +218,12 @@ class FarmOwnerService {
       if (error) throw error;
 
       if (data?.success) {
-        localStorage.setItem('farm_owner_session', JSON.stringify({
+        saveSessionWithFlag({
           profile_id: data.profile_id,
           session_token: data.session_token,
           mobile_number: mobileNumber,
           status: data.status
-        }));
+        });
 
         return {
           success: true,
@@ -263,12 +269,12 @@ class FarmOwnerService {
           console.error('خطأ في تحديث الاسم:', updateError);
         }
 
-        localStorage.setItem('farm_owner_session', JSON.stringify({
+        saveSessionWithFlag({
           profile_id: data.profile_id,
           session_token: data.session_token,
           mobile_number: mobileNumber,
           status: data.status
-        }));
+        });
 
         return {
           success: true,
@@ -321,12 +327,12 @@ class FarmOwnerService {
 
       // حفظ بيانات الجلسة
       const sessionToken = Math.random().toString(36).substring(2);
-      localStorage.setItem('farm_owner_session', JSON.stringify({
+      saveSessionWithFlag({
         profile_id: profile.id,
         session_token: sessionToken,
         mobile_number: mobileNumber,
         status: profile.status
-      }));
+      });
 
       console.log('✅ تم حفظ الجلسة بنجاح');
 
@@ -406,12 +412,12 @@ class FarmOwnerService {
 
       // حفظ بيانات الجلسة
       const sessionToken = Math.random().toString(36).substring(2);
-      localStorage.setItem('farm_owner_session', JSON.stringify({
+      saveSessionWithFlag({
         profile_id: profile.id,
         session_token: sessionToken,
         mobile_number: mobileNumber,
         status: profile.status
-      }));
+      });
 
       console.log('✅ تم تسجيل الدخول بنجاح');
 
@@ -434,6 +440,10 @@ class FarmOwnerService {
    */
   logout() {
     localStorage.removeItem('farm_owner_session');
+    sessionStorage.removeItem('farm_owner_logged_in');
+
+    // إطلاق حدث الخروج لإعادة تشغيل البوابة
+    window.dispatchEvent(new Event('logout'));
   }
 
   /**

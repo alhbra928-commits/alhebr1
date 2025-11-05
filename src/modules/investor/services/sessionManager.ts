@@ -36,6 +36,9 @@ export class SessionManager {
       const encrypted = this.encryptData(JSON.stringify(sessionData));
       localStorage.setItem(SESSION_STORAGE_KEY, encrypted);
 
+      // إضافة flag بسيط للتعرف على وجود جلسة مستثمر
+      sessionStorage.setItem('investor_logged_in', 'true');
+
       this.syncSessionWithDatabase(sessionData);
     } catch (error) {
       console.error('Error saving session:', error);
@@ -88,6 +91,10 @@ export class SessionManager {
       }
 
       localStorage.removeItem(SESSION_STORAGE_KEY);
+      sessionStorage.removeItem('investor_logged_in');
+
+      // إطلاق حدث الخروج لإعادة تشغيل البوابة
+      window.dispatchEvent(new Event('logout'));
     } catch (error) {
       console.error('Error clearing session:', error);
     }
