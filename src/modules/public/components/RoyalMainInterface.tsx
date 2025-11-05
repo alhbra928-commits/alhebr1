@@ -9,6 +9,7 @@ import { CertificateVerificationPage } from './CertificateVerificationPage';
 import { SimpleLoader } from '../../../components/common/SimpleLoader';
 import { AdminCrownButton } from './AdminCrownButton';
 import { ConceptIntroductionPage } from './ConceptIntroductionPage';
+import { EnhancedConceptCard } from './EnhancedConceptCard';
 
 type ViewMode = 'home' | 'farmDetail' | 'booking' | 'investor' | 'verification' | 'concept';
 
@@ -204,8 +205,11 @@ export function RoyalMainInterface({
           </div>
         ) : (
           <>
+            {/* Enhanced Concept Card */}
+            <EnhancedConceptCard onStartOwnership={() => setCurrentView('concept')} />
+
             {/* Section Header */}
-            <div className="text-center mb-6 sm:mb-8 md:mb-12">
+            <div className="text-center mb-6 sm:mb-8 md:mb-12 mt-8 sm:mt-12">
               <div className="inline-flex items-center gap-1.5 sm:gap-2 bg-gradient-to-r from-amber-500 to-yellow-500 text-white px-4 py-1.5 sm:px-6 sm:py-2 rounded-full text-xs sm:text-sm font-semibold mb-3 sm:mb-4 shadow-lg">
                 <Crown className="w-3 h-3 sm:w-4 sm:h-4" />
                 <span>المزارع المتاحة للاستثمار</span>
