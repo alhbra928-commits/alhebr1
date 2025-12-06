@@ -35,10 +35,26 @@ html, body {
   }
 
   body {
+    overscroll-behavior: none;
     overscroll-behavior-y: none;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     background: linear-gradient(135deg, #ECFDF5 0%, #F0FDF4 50%, #F0FDFA 100%) !important;
+  }
+
+  /* iOS Safari Header Lock - Prevent any movement */
+  @supports (-webkit-touch-callout: none) {
+    html {
+      height: 100%;
+      height: -webkit-fill-available;
+    }
+
+    body {
+      min-height: 100vh;
+      min-height: -webkit-fill-available;
+      overscroll-behavior: none;
+      -webkit-overflow-scrolling: touch;
+    }
   }
 
   /* Remove padding from body - let components handle it */

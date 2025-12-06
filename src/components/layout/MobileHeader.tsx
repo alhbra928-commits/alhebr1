@@ -8,32 +8,56 @@ interface MobileHeaderProps {
 
 export function MobileHeader({ onMenuClick, title = 'لوحة التحكم' }: MobileHeaderProps) {
   useEffect(() => {
-    // iOS Safari Header Fix - JavaScript Solution
+    // ULTIMATE iOS Safari Header Fix - Continuous Monitoring
     const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
     if (isIOS) {
-      let headerElement: HTMLElement | null = null;
+      console.log('🍎 iOS detected - Applying ULTIMATE mobile header fix');
 
-      const fixHeader = () => {
+      let headerElement: HTMLElement | null = null;
+      let animationFrameId: number;
+      let isRunning = true;
+
+      // Prevent body overscroll
+      document.body.style.overscrollBehavior = 'none';
+      document.documentElement.style.overscrollBehavior = 'none';
+
+      // Lock header position using requestAnimationFrame
+      const lockHeader = () => {
+        if (!isRunning) return;
+
         if (!headerElement) {
           headerElement = document.querySelector('.ios-fixed-header');
         }
 
         if (headerElement) {
-          // Force header to stay at top
-          headerElement.style.transform = 'translate3d(0, 0, 0)';
-          headerElement.style.webkitTransform = 'translate3d(0, 0, 0)';
-          headerElement.style.position = 'fixed';
-          headerElement.style.top = '0px';
+          const rect = headerElement.getBoundingClientRect();
+
+          // If header moved even 1px, force it back
+          if (rect.top !== 0) {
+            headerElement.style.position = 'fixed';
+            headerElement.style.top = '0px';
+            headerElement.style.left = '0px';
+            headerElement.style.right = '0px';
+            headerElement.style.transform = 'translate3d(0, 0, 0)';
+            headerElement.style.webkitTransform = 'translate3d(0, 0, 0)';
+          }
         }
+
+        // Continue monitoring
+        animationFrameId = requestAnimationFrame(lockHeader);
       };
 
-      window.addEventListener('scroll', fixHeader, { passive: true });
-      window.addEventListener('resize', fixHeader, { passive: true });
-      fixHeader();
+      // Start continuous monitoring
+      lockHeader();
 
+      // Cleanup
       return () => {
-        window.removeEventListener('scroll', fixHeader);
-        window.removeEventListener('resize', fixHeader);
+        isRunning = false;
+        if (animationFrameId) {
+          cancelAnimationFrame(animationFrameId);
+        }
+        document.body.style.overscrollBehavior = '';
+        document.documentElement.style.overscrollBehavior = '';
       };
     }
   }, []);
