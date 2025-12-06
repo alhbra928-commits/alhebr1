@@ -3,7 +3,7 @@ import { MessageCircle, Send, Inbox, FileText, Settings, BarChart3, Link2, Link 
 import { WhatsAppProvidersHub } from './WhatsAppProvidersHub';
 import { TemplateStudio } from './TemplateStudio';
 import { EventConnector } from './EventConnector';
-import { SmartInboxPage } from './SmartInboxPage';
+import { EnhancedSmartInboxPage } from './EnhancedSmartInboxPage';
 import { SimpleSmartButtonManagement } from './SimpleSmartButtonManagement';
 import { AnalyticsReports } from './AnalyticsReports';
 import { ExternalIntegration } from './ExternalIntegration';
@@ -198,7 +198,7 @@ export const WhatsAppDashboard: React.FC<WhatsAppDashboardProps> = ({ onBack }) 
         return <AnalyticsReports />;
 
       case 'inbox':
-        return <SmartInboxPage />;
+        return <EnhancedSmartInboxPage />;
 
       case 'smart-button':
         return <SimpleSmartButtonManagement />;

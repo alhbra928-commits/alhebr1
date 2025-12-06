@@ -11,6 +11,10 @@ export interface InboxThread {
   status: 'open' | 'closed' | 'archived';
   assigned_to?: string;
   tags?: string[];
+  has_staff_reply?: boolean;
+  last_staff_reply_at?: string;
+  awaiting_staff_reply?: boolean;
+  staff_reply_count?: number;
   created_at: string;
   updated_at: string;
 }
