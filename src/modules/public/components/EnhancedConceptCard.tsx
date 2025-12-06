@@ -49,18 +49,26 @@ export const EnhancedConceptCard: React.FC<EnhancedConceptCardProps> = ({ isOpen
     }
   ];
 
+  // Reset animation when modal opens
   useEffect(() => {
-    setIsVisible(true);
-  }, []);
+    if (isOpen) {
+      setIsVisible(false);
+      setCurrentIndex(0);
+      // Small delay to trigger animation
+      setTimeout(() => {
+        setIsVisible(true);
+      }, 50);
+    }
+  }, [isOpen]);
 
   useEffect(() => {
-    if (currentIndex < conceptPoints.length) {
+    if (isOpen && currentIndex < conceptPoints.length) {
       const timer = setTimeout(() => {
         setCurrentIndex(prev => prev + 1);
       }, 2500);
       return () => clearTimeout(timer);
     }
-  }, [currentIndex, conceptPoints.length]);
+  }, [isOpen, currentIndex, conceptPoints.length]);
 
   const handleStartOwnership = () => {
     onStartOwnership();
