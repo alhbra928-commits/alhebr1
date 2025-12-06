@@ -135,16 +135,48 @@ export const AdvancedCacheSystemDiagnostics: React.FC = () => {
     }
   };
 
-  // إجراء 4: مسح sessionStorage
+  // إجراء 4: مسح sessionStorage (مع الحفاظ على بيانات الجلسة المهمة)
   const clearSessionStorage = async (): Promise<boolean> => {
     try {
-      addLog('🔄 بدء مسح sessionStorage...');
-      const count = sessionStorage.length;
+      addLog('🔄 بدء تنظيف sessionStorage...');
+
+      // البيانات المهمة التي يجب الحفاظ عليها
+      const keysToKeep = [
+        'last_admin_module',
+        'current_admin_module',
+        'last_user_type',
+        'investor_logged_in',
+        'farm_owner_logged_in',
+        'investor_session',
+        'owner_session',
+        'admin_session_token',
+        'admin_username',
+        'admin_permissions'
+      ];
+
+      // حفظ القيم المهمة
+      const savedData: { [key: string]: string } = {};
+      keysToKeep.forEach(key => {
+        const value = sessionStorage.getItem(key);
+        if (value) {
+          savedData[key] = value;
+        }
+      });
+
+      const totalCount = sessionStorage.length;
       sessionStorage.clear();
-      addLog(`✅ تم مسح ${count} عنصر من sessionStorage`);
+
+      // استرجاع القيم المهمة
+      Object.entries(savedData).forEach(([key, value]) => {
+        sessionStorage.setItem(key, value);
+      });
+
+      const removed = totalCount - Object.keys(savedData).length;
+      addLog(`✅ تم حذف ${removed} عنصر من sessionStorage`);
+      addLog(`✅ تم الحفاظ على ${Object.keys(savedData).length} عناصر مهمة (الجلسات)`);
       return true;
     } catch (error) {
-      addLog(`❌ خطأ في مسح sessionStorage: ${error}`);
+      addLog(`❌ خطأ في تنظيف sessionStorage: ${error}`);
       return false;
     }
   };
