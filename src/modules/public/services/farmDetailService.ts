@@ -114,6 +114,8 @@ export class FarmDetailService {
         .insert({
           farm_id: data.farm_id,
           investor_id: investorId,
+          customer_name: data.investor_name,
+          customer_phone: data.investor_phone,
           number_of_trees: data.total_trees,
           price_per_tree: primaryVariety.price_per_tree,
           total_amount: data.total_amount,

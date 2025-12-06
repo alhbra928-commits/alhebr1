@@ -159,7 +159,16 @@ export class InvestorService {
       console.log('🔍 [getInvestorReservations] Starting query...');
       console.log('   → customer_phone:', normalizedPhone);
 
-      const { data, error } = await supabase
+      // First, get investor ID if exists
+      const { data: investor } = await supabase
+        .from('investors')
+        .select('id')
+        .eq('phone', normalizedPhone)
+        .is('deleted_at', null)
+        .maybeSingle();
+
+      // Build query to get reservations by customer_phone OR investor_id
+      let query = supabase
         .from('reservations')
         .select(`
           id,
@@ -176,9 +185,16 @@ export class InvestorService {
             farm_type
           )
         `)
-        .eq('customer_phone', normalizedPhone)
-        .is('deleted_at', null)
-        .order('created_at', { ascending: false });
+        .is('deleted_at', null);
+
+      // Search by customer_phone OR investor_id
+      if (investor) {
+        query = query.or(`customer_phone.eq.${normalizedPhone},investor_id.eq.${investor.id}`);
+      } else {
+        query = query.eq('customer_phone', normalizedPhone);
+      }
+
+      const { data, error } = await query.order('created_at', { ascending: false });
 
       console.log('📊 [getInvestorReservations] Query result:');
       console.log('   → data:', data);
