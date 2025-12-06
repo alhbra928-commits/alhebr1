@@ -25,10 +25,11 @@ export function CertificateModal({ certificate, isOpen, onClose }: CertificateMo
 
   const handleDownload = () => {
     setIsPrinting(true);
+    // الانتظار حتى يتم تحديث DOM قبل الطباعة
     setTimeout(() => {
       window.print();
-      setTimeout(() => setIsPrinting(false), 500);
-    }, 300);
+      setTimeout(() => setIsPrinting(false), 1000);
+    }, 500);
   };
 
   const handleShare = () => {
@@ -363,19 +364,6 @@ export function CertificateModal({ certificate, isOpen, onClose }: CertificateMo
         </div>
       </div>
 
-      {/* Wrapper للطباعة - مخفي على الشاشة، ظاهر عند الطباعة فقط */}
-      <div
-        id="certificate-print-wrapper"
-        style={{
-          display: 'none',
-          position: 'fixed',
-          left: '-9999px',
-          top: '-9999px'
-        }}
-      >
-        <OwnershipCertificate certificate={certificate} />
-      </div>
-
       {/* CSS للطباعة */}
       <style>{`
         @media print {
@@ -385,15 +373,32 @@ export function CertificateModal({ certificate, isOpen, onClose }: CertificateMo
             color-adjust: exact !important;
           }
 
-          .cert-print-hide {
-            display: none !important;
+          /* إخفاء كل شيء ما عدا الشهادة */
+          body * {
+            visibility: hidden !important;
           }
 
-          #certificate-print-wrapper {
-            display: block !important;
-            position: static !important;
+          /* إظهار الشهادة وكل محتوياتها */
+          #certificate-print,
+          #certificate-print * {
+            visibility: visible !important;
+          }
+
+          /* وضع الشهادة في أعلى الصفحة */
+          #certificate-print {
+            position: absolute !important;
             left: 0 !important;
             top: 0 !important;
+            width: 100% !important;
+            background: white !important;
+            padding: 20px !important;
+            margin: 0 !important;
+          }
+
+          /* إخفاء العناصر غير الضرورية بشكل نهائي */
+          .cert-print-hide {
+            display: none !important;
+            visibility: hidden !important;
           }
         }
       `}</style>

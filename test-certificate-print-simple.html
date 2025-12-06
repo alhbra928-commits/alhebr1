@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>اختبار طباعة الشهادة - النسخة المبسطة</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 20px;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .container {
+      max-width: 1200px;
+      width: 100%;
+    }
+
+    .modal-overlay {
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 40px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+      color: white;
+    }
+
+    .header h1 {
+      font-size: 32px;
+      margin-bottom: 10px;
+      color: #d4af37;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      margin-bottom: 30px;
+    }
+
+    .btn {
+      padding: 15px 30px;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-print {
+      background: linear-gradient(135deg, #d4af37, #b8860b);
+      color: white;
+    }
+
+    .btn-print:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(212, 175, 55, 0.5);
+    }
+
+    .certificate-wrapper {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    /* محتوى الشهادة */
+    #certificate-print {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px;
+      background: white;
+      border: 3px solid #d4af37;
+      border-radius: 8px;
+    }
+
+    .cert-logo {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 20px;
+      border: 2px solid #d4af37;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #fdfbf7, #f8f5ed);
+    }
+
+    .cert-title {
+      font-size: 32px;
+      font-weight: bold;
+      color: #d4af37;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .cert-subtitle {
+      font-size: 14px;
+      color: #666;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .cert-name {
+      font-size: 24px;
+      font-weight: bold;
+      color: #d4af37;
+      text-align: center;
+      padding: 15px 30px;
+      background: rgba(212, 175, 55, 0.1);
+      border: 2px solid #d4af37;
+      border-radius: 8px;
+      margin: 20px auto;
+      max-width: 400px;
+    }
+
+    .cert-trees {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      margin: 30px 0;
+    }
+
+    .cert-trees-number {
+      font-size: 36px;
+      font-weight: bold;
+      color: #d4af37;
+      background: #fdfbf7;
+      border: 2px solid #d4af37;
+      border-radius: 8px;
+      padding: 10px 20px;
+    }
+
+    .cert-farm {
+      font-size: 20px;
+      font-weight: bold;
+      color: #d4af37;
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    .cert-info {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin: 30px 0;
+    }
+
+    .cert-info-card {
+      text-align: center;
+      padding: 15px;
+      background: rgba(212, 175, 55, 0.05);
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      border-radius: 8px;
+    }
+
+    .cert-info-label {
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 5px;
+    }
+
+    .cert-info-value {
+      font-size: 14px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .cert-footer {
+      margin-top: 30px;
+      padding: 15px;
+      background: rgba(212, 175, 55, 0.05);
+      border: 1px dashed rgba(212, 175, 55, 0.3);
+      border-radius: 8px;
+      text-align: center;
+      font-size: 12px;
+      color: #666;
+      line-height: 1.6;
+    }
+
+    /* CSS للطباعة */
+    @media print {
+      * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
+      }
+
+      @page {
+        size: A4;
+        margin: 15mm;
+      }
+
+      /* إخفاء كل شيء ما عدا الشهادة */
+      body * {
+        visibility: hidden !important;
+      }
+
+      /* إظهار الشهادة وكل محتوياتها */
+      #certificate-print,
+      #certificate-print * {
+        visibility: visible !important;
+      }
+
+      /* وضع الشهادة في أعلى الصفحة */
+      #certificate-print {
+        position: absolute !important;
+        left: 0 !important;
+        top: 0 !important;
+        width: 100% !important;
+        max-width: none !important;
+        background: white !important;
+        padding: 20px !important;
+        margin: 0 !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+      }
+
+      .cert-logo {
+        width: 60px !important;
+        height: 60px !important;
+      }
+
+      .cert-title {
+        font-size: 24px !important;
+      }
+
+      .cert-name {
+        font-size: 20px !important;
+      }
+
+      .cert-trees-number {
+        font-size: 28px !important;
+      }
+    }
+
+    .status {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: white;
+      padding: 15px 25px;
+      border-radius: 12px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+      display: none;
+    }
+
+    .status.show {
+      display: block;
+      animation: slideIn 0.3s ease-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateY(100px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="modal-overlay">
+      <div class="header">
+        <h1>🏆 اختبار طباعة الشهادة</h1>
+        <p>النسخة المبسطة - اختبار مباشر</p>
+      </div>
+
+      <div class="buttons">
+        <button class="btn btn-print" onclick="printCertificate()">
+          🖨️ طباعة الشهادة
+        </button>
+      </div>
+
+      <div class="certificate-wrapper">
+        <!-- الشهادة -->
+        <div id="certificate-print">
+          <div class="cert-logo">
+            🌴
+          </div>
+
+          <h1 class="cert-title">شهادة تملك</h1>
+          <p class="cert-subtitle">Ownership Certificate</p>
+
+          <p style="text-align: center; color: #333; margin-bottom: 15px;">
+            تشهد <strong style="color: #d4af37;">منصة النخيل والزيتون</strong> بأن السيد / السيدة
+          </p>
+
+          <div class="cert-name">
+            أحمد محمد السعيد
+          </div>
+
+          <p style="text-align: center; color: #333; margin: 15px 0;">مالك لعدد</p>
+
+          <div class="cert-trees">
+            <div class="cert-trees-number">50</div>
+            <span style="font-weight: bold; font-size: 18px; color: #333;">شجرة نخيل</span>
+          </div>
+
+          <p style="text-align: center; color: #333; margin: 15px 0;">في مزرعة</p>
+
+          <div class="cert-farm">مزرعة الخالدية</div>
+
+          <div class="cert-info">
+            <div class="cert-info-card">
+              <p class="cert-info-label">الموقع</p>
+              <p class="cert-info-value">المملكة العربية السعودية</p>
+            </div>
+            <div class="cert-info-card">
+              <p class="cert-info-label">رقم الشهادة</p>
+              <p class="cert-info-value">CERT-2024-001</p>
+            </div>
+            <div class="cert-info-card">
+              <p class="cert-info-label">تاريخ الإصدار</p>
+              <p class="cert-info-value">6 ديسمبر 2024</p>
+            </div>
+          </div>
+
+          <div style="height: 1px; background: linear-gradient(to right, transparent, #d4af37, transparent); margin: 30px 0;"></div>
+
+          <div class="cert-footer">
+            هذه الشهادة صادرة من منصة النخيل والزيتون وتعتبر وثيقة رسمية تثبت ملكية الأشجار المذكورة.
+            للتحقق من صحتها، يرجى زيارة موقعنا الإلكتروني.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="status" id="status">
+    ✅ جاهز للطباعة!
+  </div>
+
+  <script>
+    function printCertificate() {
+      const status = document.getElementById('status');
+      status.textContent = '⏳ جاري التحضير للطباعة...';
+      status.classList.add('show');
+
+      // الانتظار قليلاً قبل الطباعة
+      setTimeout(() => {
+        window.print();
+
+        setTimeout(() => {
+          status.textContent = '✅ تم!';
+          setTimeout(() => {
+            status.classList.remove('show');
+          }, 2000);
+        }, 500);
+      }, 500);
+    }
+
+    // رسالة ترحيب
+    window.onload = () => {
+      const status = document.getElementById('status');
+      status.textContent = '✅ الصفحة جاهزة للاختبار!';
+      status.classList.add('show');
+
+      setTimeout(() => {
+        status.classList.remove('show');
+      }, 3000);
+    };
+  </script>
+</body>
+</html>
