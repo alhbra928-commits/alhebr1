@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Menu, MapPin, Bell } from 'lucide-react';
 
 interface MobileHeaderProps {
@@ -7,6 +7,37 @@ interface MobileHeaderProps {
 }
 
 export function MobileHeader({ onMenuClick, title = 'لوحة التحكم' }: MobileHeaderProps) {
+  useEffect(() => {
+    // iOS Safari Header Fix - JavaScript Solution
+    const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+    if (isIOS) {
+      let headerElement: HTMLElement | null = null;
+
+      const fixHeader = () => {
+        if (!headerElement) {
+          headerElement = document.querySelector('.ios-fixed-header');
+        }
+
+        if (headerElement) {
+          // Force header to stay at top
+          headerElement.style.transform = 'translate3d(0, 0, 0)';
+          headerElement.style.webkitTransform = 'translate3d(0, 0, 0)';
+          headerElement.style.position = 'fixed';
+          headerElement.style.top = '0px';
+        }
+      };
+
+      window.addEventListener('scroll', fixHeader, { passive: true });
+      window.addEventListener('resize', fixHeader, { passive: true });
+      fixHeader();
+
+      return () => {
+        window.removeEventListener('scroll', fixHeader);
+        window.removeEventListener('resize', fixHeader);
+      };
+    }
+  }, []);
+
   return (
     <>
       <style>{`

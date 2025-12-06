@@ -38,6 +38,13 @@ export function InnovativeLoaderGateway({ onComplete }: InnovativeLoaderGatewayP
 
   useEffect(() => {
     loadSettings();
+
+    // Prevent body scroll on iOS when loader is visible
+    document.body.classList.add('loader-active');
+
+    return () => {
+      document.body.classList.remove('loader-active');
+    };
   }, []);
 
   const loadSettings = async () => {
@@ -140,13 +147,60 @@ export function InnovativeLoaderGateway({ onComplete }: InnovativeLoaderGatewayP
   };
 
   return (
-    <div
-      className={`fixed inset-0 z-[9999] transition-opacity duration-${animationDuration}`}
-      style={{
-        background: `linear-gradient(135deg, ${settings.background_color_from} 0%, ${settings.background_color_to} 100%)`,
-        opacity: isVisible ? 1 : 0,
-      }}
-    >
+    <>
+      <style>{`
+        /* iOS Safari Loading Screen Fix */
+        .ios-loader-container {
+          position: fixed;
+          inset: 0;
+          z-index: 9999;
+
+          /* iOS viewport fix */
+          width: 100vw;
+          height: 100vh;
+          height: 100dvh; /* Dynamic Viewport Height for iOS */
+          min-height: -webkit-fill-available;
+
+          /* Prevent scrolling */
+          overflow: hidden;
+
+          /* GPU acceleration */
+          transform: translate3d(0, 0, 0);
+          -webkit-transform: translate3d(0, 0, 0);
+
+          /* iOS safe area */
+          padding-top: env(safe-area-inset-top);
+          padding-bottom: env(safe-area-inset-bottom);
+          padding-left: env(safe-area-inset-left);
+          padding-right: env(safe-area-inset-right);
+        }
+
+        /* Prevent body scroll when loader is visible */
+        body.loader-active {
+          overflow: hidden;
+          position: fixed;
+          width: 100%;
+          height: 100%;
+        }
+
+        @keyframes sparkle {
+          0%, 100% {
+            opacity: 0.1;
+            transform: scale(1);
+          }
+          50% {
+            opacity: 0.3;
+            transform: scale(1.2);
+          }
+        }
+      `}</style>
+      <div
+        className={`ios-loader-container transition-opacity duration-${animationDuration}`}
+        style={{
+          background: `linear-gradient(135deg, ${settings.background_color_from} 0%, ${settings.background_color_to} 100%)`,
+          opacity: isVisible ? 1 : 0,
+        }}
+      >
       {/* Sparkles Background */}
       {settings.show_sparkles && (
         <div className="absolute inset-0 overflow-hidden">
@@ -245,19 +299,7 @@ export function InnovativeLoaderGateway({ onComplete }: InnovativeLoaderGatewayP
           </button>
         )}
       </div>
-
-      <style>{`
-        @keyframes sparkle {
-          0%, 100% {
-            opacity: 0.1;
-            transform: scale(1);
-          }
-          50% {
-            opacity: 0.3;
-            transform: scale(1.2);
-          }
-        }
-      `}</style>
     </div>
+    </>
   );
 }

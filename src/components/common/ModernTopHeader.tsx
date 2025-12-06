@@ -44,6 +44,42 @@ export function ModernTopHeader({
   useEffect(() => {
     setMounted(true);
     loadTexts();
+
+    // iOS Safari Header Fix - JavaScript Solution
+    const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+    if (isIOS) {
+      let headerElement: HTMLElement | null = null;
+      let lastScroll = 0;
+
+      const fixHeader = () => {
+        if (!headerElement) {
+          headerElement = document.querySelector('.modern-header');
+        }
+
+        if (headerElement) {
+          // Force header to stay at top using JavaScript
+          const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+          headerElement.style.transform = 'translate3d(0, 0, 0)';
+          headerElement.style.webkitTransform = 'translate3d(0, 0, 0)';
+          headerElement.style.position = 'fixed';
+          headerElement.style.top = '0px';
+          lastScroll = currentScroll;
+        }
+      };
+
+      // Run on scroll
+      window.addEventListener('scroll', fixHeader, { passive: true });
+      // Run on resize (when Safari URL bar shows/hides)
+      window.addEventListener('resize', fixHeader, { passive: true });
+      // Run immediately
+      fixHeader();
+
+      // Cleanup
+      return () => {
+        window.removeEventListener('scroll', fixHeader);
+        window.removeEventListener('resize', fixHeader);
+      };
+    }
   }, []);
 
   const loadTexts = async () => {
