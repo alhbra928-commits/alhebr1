@@ -29,7 +29,7 @@ export function OwnershipCertificate({ certificate }: OwnershipCertificateProps)
   });
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="max-w-4xl mx-auto ownership-certificate">
       <div
         className="relative rounded-3xl overflow-hidden shadow-2xl"
         style={{
@@ -38,6 +38,88 @@ export function OwnershipCertificate({ certificate }: OwnershipCertificateProps)
           borderImage: 'linear-gradient(135deg, #d4af37, #f4e5c3, #d4af37) 1'
         }}
       >
+      <style>{`
+        @media print {
+          .ownership-certificate {
+            max-width: 100% !important;
+            margin: 0 !important;
+          }
+
+          .ownership-certificate .p-12,
+          .ownership-certificate .md\\:p-16 {
+            padding: 1rem !important;
+          }
+
+          .ownership-certificate .text-5xl,
+          .ownership-certificate .md\\:text-6xl {
+            font-size: 2rem !important;
+          }
+
+          .ownership-certificate .text-3xl,
+          .ownership-certificate .md\\:text-4xl {
+            font-size: 1.5rem !important;
+          }
+
+          .ownership-certificate .text-4xl,
+          .ownership-certificate .md\\:text-5xl {
+            font-size: 1.75rem !important;
+          }
+
+          .ownership-certificate .text-2xl,
+          .ownership-certificate .md\\:text-3xl {
+            font-size: 1.25rem !important;
+          }
+
+          .ownership-certificate .text-xl,
+          .ownership-certificate .md\\:text-2xl {
+            font-size: 1rem !important;
+          }
+
+          .ownership-certificate .mb-8 {
+            margin-bottom: 1rem !important;
+          }
+
+          .ownership-certificate .mb-10 {
+            margin-bottom: 1.25rem !important;
+          }
+
+          .ownership-certificate .mt-10 {
+            margin-top: 1.25rem !important;
+          }
+
+          .ownership-certificate .gap-6 {
+            gap: 0.75rem !important;
+          }
+
+          .ownership-certificate .gap-8 {
+            gap: 1rem !important;
+          }
+
+          .ownership-certificate .w-24,
+          .ownership-certificate .h-24 {
+            width: 4rem !important;
+            height: 4rem !important;
+          }
+
+          .ownership-certificate .w-32,
+          .ownership-certificate .h-32 {
+            width: 5rem !important;
+            height: 5rem !important;
+          }
+
+          .ownership-certificate .space-y-4 > * + * {
+            margin-top: 0.5rem !important;
+          }
+
+          .ownership-certificate .p-6 {
+            padding: 0.75rem !important;
+          }
+
+          .ownership-certificate .p-4 {
+            padding: 0.5rem !important;
+          }
+        }
+      `}</style>
         {/* إطار زخرفي خارجي */}
         <div className="absolute inset-0 pointer-events-none">
           <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">

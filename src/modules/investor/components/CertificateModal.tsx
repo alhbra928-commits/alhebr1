@@ -86,27 +86,69 @@ export function CertificateModal({ certificate, isOpen, onClose }: CertificateMo
 
         {/* محتوى الشهادة */}
         <div className="p-6 md:p-12">
-          <OwnershipCertificate certificate={certificate} />
+          <div className="certificate-print-wrapper">
+            <OwnershipCertificate certificate={certificate} />
+          </div>
         </div>
       </div>
 
       {/* CSS للطباعة */}
       <style>{`
+        @page {
+          size: A4;
+          margin: 10mm;
+        }
+
         @media print {
+          html, body {
+            width: 210mm;
+            height: 297mm;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+          }
+
           body * {
             visibility: hidden;
           }
+
           .fixed.inset-0 {
             position: static !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            height: auto !important;
+            max-height: none !important;
+            overflow: visible !important;
+            margin: 0 !important;
+            padding: 0 !important;
           }
+
           .fixed.inset-0 * {
             visibility: visible;
           }
+
           .fixed.inset-0 {
             background: white !important;
           }
+
           .sticky.top-0 {
             display: none !important;
+          }
+
+          /* تصغير حجم الشهادة لتناسب صفحة A4 */
+          .certificate-print-wrapper {
+            transform: scale(0.75);
+            transform-origin: top center;
+            margin: 0 auto;
+            width: 133.33% !important;
+            page-break-inside: avoid;
+            page-break-before: avoid;
+            page-break-after: avoid;
+          }
+
+          /* إخفاء الـ padding الزائد */
+          .p-6, .md\\:p-12 {
+            padding: 0 !important;
           }
         }
       `}</style>
