@@ -75,7 +75,7 @@ class InboxService {
       const { data, error } = await supabase
         .from('whatsapp_messages')
         .select('*')
-        .eq('recipient_phone', phone)
+        .eq('session_token', phone)
         .order('created_at', { ascending: true });
 
       if (error) {
