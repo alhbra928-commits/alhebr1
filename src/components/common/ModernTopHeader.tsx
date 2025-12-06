@@ -73,7 +73,7 @@ export function ModernTopHeader({
   return (
     <>
       <style>{`
-        /* Modern Header - iOS Safari Fixed */
+        /* Modern Header - iOS Safari ULTIMATE Fix */
         .modern-header {
           position: fixed;
           top: 0;
@@ -87,31 +87,50 @@ export function ModernTopHeader({
             0 4px 30px rgba(0, 0, 0, 0.4),
             0 1px 3px rgba(16, 185, 129, 0.1);
 
-          /* iOS Safari Fix - Force Hardware Acceleration */
-          -webkit-transform: translateZ(0);
-          transform: translateZ(0);
+          /* CRITICAL iOS Safari Fix */
+          /* Use transform instead of top to prevent reflow */
+          transform: translate3d(0, 0, 0);
+          -webkit-transform: translate3d(0, 0, 0);
+
+          /* Lock position completely */
           -webkit-backface-visibility: hidden;
           backface-visibility: hidden;
-          -webkit-perspective: 1000;
-          perspective: 1000;
+          -webkit-perspective: 1000px;
+          perspective: 1000px;
 
-          /* Prevent Safari bounce scroll interference */
-          -webkit-overflow-scrolling: touch;
+          /* Prevent viewport resize from affecting header */
           will-change: transform;
+          contain: layout style paint;
+
+          /* Disable touch scrolling on header itself */
+          touch-action: none;
+          -webkit-touch-callout: none;
 
           /* iOS Safe Area Support */
-          padding-top: env(safe-area-inset-top);
+          padding-top: max(env(safe-area-inset-top), 0px);
           padding-left: env(safe-area-inset-left);
           padding-right: env(safe-area-inset-right);
         }
 
-        /* Force layer composition for iOS */
+        /* Force separate rendering layer */
         .modern-header::before {
           content: '';
           position: absolute;
           inset: 0;
           z-index: -1;
           transform: translateZ(-1px);
+          will-change: transform;
+        }
+
+        /* Prevent iOS Safari URL bar from affecting layout */
+        @supports (-webkit-touch-callout: none) {
+          .modern-header {
+            /* On iOS, use fixed positioning with extra constraints */
+            position: fixed !important;
+            top: 0 !important;
+            transform: translate3d(0, 0, 0) !important;
+            -webkit-transform: translate3d(0, 0, 0) !important;
+          }
         }
 
         .header-container {
@@ -417,20 +436,49 @@ export function ModernTopHeader({
           display: none;
         }
 
-        /* iOS Body Padding Fix */
+        /* iOS Body Scroll Fix */
+        html {
+          /* Lock viewport height to prevent resize on scroll */
+          height: 100%;
+          height: -webkit-fill-available;
+        }
+
         body {
+          /* Prevent bounce and maintain scroll position */
           -webkit-overflow-scrolling: touch;
+          overscroll-behavior-y: none;
+          position: relative;
+          height: 100%;
+          height: -webkit-fill-available;
+        }
+
+        /* iOS Safari specific fixes */
+        @supports (-webkit-touch-callout: none) {
+          html, body {
+            /* Prevent viewport resize */
+            position: fixed;
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+          }
+
+          body > * {
+            /* Make content scrollable instead */
+            overflow: auto;
+            -webkit-overflow-scrolling: touch;
+            height: 100%;
+          }
+
+          .modern-header {
+            /* Keep header absolutely fixed */
+            position: fixed !important;
+            transform: translate3d(0, 0, 0) !important;
+            -webkit-transform: translate3d(0, 0, 0) !important;
+          }
         }
 
         /* Responsive */
         @media (max-width: 768px) {
-          .modern-header {
-            /* iOS Safari viewport fix */
-            position: -webkit-sticky;
-            position: sticky;
-            top: 0;
-          }
-
           .header-container {
             padding: 12px 16px;
           }

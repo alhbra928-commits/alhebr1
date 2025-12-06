@@ -10,42 +10,63 @@ export function MobileHeader({ onMenuClick, title = 'لوحة التحكم' }: M
   return (
     <>
       <style>{`
-        /* iOS Safari Header Fix */
+        /* iOS Safari Header ULTIMATE Fix */
         .ios-fixed-header {
-          /* Force Hardware Acceleration for iOS */
-          -webkit-transform: translateZ(0) !important;
-          transform: translateZ(0) !important;
+          /* CRITICAL: Use transform instead of position changes */
+          -webkit-transform: translate3d(0, 0, 0) !important;
+          transform: translate3d(0, 0, 0) !important;
+
+          /* Lock rendering */
           -webkit-backface-visibility: hidden !important;
           backface-visibility: hidden !important;
-          -webkit-perspective: 1000 !important;
-          perspective: 1000 !important;
+          -webkit-perspective: 1000px !important;
+          perspective: 1000px !important;
 
-          /* Prevent bounce scroll interference */
-          -webkit-overflow-scrolling: touch !important;
+          /* Prevent viewport resize effects */
           will-change: transform !important;
+          contain: layout style paint !important;
 
-          /* Position as sticky on mobile for better iOS handling */
-          position: -webkit-sticky !important;
-          position: sticky !important;
+          /* Disable touch on header */
+          touch-action: none !important;
+          -webkit-touch-callout: none !important;
 
           /* iOS Safe Area Support */
-          padding-top: env(safe-area-inset-top) !important;
+          padding-top: max(env(safe-area-inset-top), 0px) !important;
           padding-left: env(safe-area-inset-left) !important;
           padding-right: env(safe-area-inset-right) !important;
         }
 
-        /* Force layer composition */
+        /* Force separate layer */
         .ios-fixed-header::before {
           content: '';
           position: absolute;
           inset: 0;
           z-index: -1;
           transform: translateZ(-1px);
+          will-change: transform;
         }
 
-        /* Smooth body scrolling for iOS */
-        body {
-          -webkit-overflow-scrolling: touch;
+        /* iOS specific positioning */
+        @supports (-webkit-touch-callout: none) {
+          .ios-fixed-header {
+            position: fixed !important;
+            top: 0 !important;
+            -webkit-transform: translate3d(0, 0, 0) !important;
+            transform: translate3d(0, 0, 0) !important;
+          }
+
+          html, body {
+            /* Prevent viewport jumps */
+            height: 100%;
+            height: -webkit-fill-available;
+            position: relative;
+            overflow-x: hidden;
+          }
+
+          body {
+            overscroll-behavior-y: none;
+            -webkit-overflow-scrolling: touch;
+          }
         }
       `}</style>
 
