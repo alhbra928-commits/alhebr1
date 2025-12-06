@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>✨ تصميم متطور لصفحة الشهادة</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #d4af37, #b8860b);
+      min-height: 100vh;
+      padding: 2rem;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header-card {
+      background: white;
+      border-radius: 24px;
+      padding: 3rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      text-align: center;
+    }
+
+    .sparkle-icon {
+      width: 100px;
+      height: 100px;
+      background: linear-gradient(135deg, #d4af37, #b8860b);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 2rem;
+      animation: pulse 2s infinite;
+      box-shadow: 0 10px 40px rgba(212,175,55,0.5);
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    h1 {
+      color: #1f2937;
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .subtitle {
+      color: #d4af37;
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-bottom: 2rem;
+    }
+
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin: 2rem 0;
+    }
+
+    .comparison-card {
+      background: white;
+      border-radius: 20px;
+      padding: 2rem;
+      border: 3px solid;
+    }
+
+    .old-design {
+      border-color: #94a3b8;
+      background: linear-gradient(135deg, #f1f5f9, white);
+    }
+
+    .new-design {
+      border-color: #d4af37;
+      background: linear-gradient(135deg, #fdfbf7, white);
+      box-shadow: 0 10px 40px rgba(212,175,55,0.3);
+    }
+
+    .card-header {
+      text-align: center;
+      padding-bottom: 1.5rem;
+      margin-bottom: 1.5rem;
+      border-bottom: 2px solid;
+    }
+
+    .old-design .card-header {
+      border-color: #94a3b8;
+    }
+
+    .new-design .card-header {
+      border-color: #d4af37;
+    }
+
+    .card-title {
+      font-size: 1.75rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+
+    .old-design .card-title {
+      color: #64748b;
+    }
+
+    .new-design .card-title {
+      color: #d4af37;
+    }
+
+    .features-section {
+      margin: 2rem 0;
+    }
+
+    .section-title {
+      font-size: 1.25rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+      color: #1f2937;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .feature-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .feature-item {
+      padding: 0.75rem;
+      margin: 0.5rem 0;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .old-design .feature-item {
+      background: #f1f5f9;
+      border-right: 3px solid #94a3b8;
+    }
+
+    .new-design .feature-item {
+      background: linear-gradient(135deg, rgba(212,175,55,0.1), rgba(212,175,55,0.05));
+      border-right: 3px solid #d4af37;
+    }
+
+    .icon {
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+
+    .highlights-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+
+    .highlight-card {
+      background: white;
+      border: 2px solid #d4af37;
+      border-radius: 16px;
+      padding: 1.5rem;
+      text-align: center;
+      transition: transform 0.3s;
+    }
+
+    .highlight-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(212,175,55,0.3);
+    }
+
+    .highlight-icon {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .highlight-text {
+      font-weight: bold;
+      color: #1f2937;
+      margin-bottom: 0.25rem;
+    }
+
+    .highlight-desc {
+      font-size: 0.875rem;
+      color: #64748b;
+    }
+
+    .demo-section {
+      background: white;
+      border-radius: 20px;
+      padding: 2rem;
+      margin-top: 2rem;
+      border: 3px solid #d4af37;
+    }
+
+    .tech-stack {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .tech-card {
+      background: linear-gradient(135deg, #fdfbf7, #f8f5ed);
+      border: 2px solid rgba(212,175,55,0.3);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+
+    .tech-title {
+      font-weight: bold;
+      color: #d4af37;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .tech-desc {
+      color: #64748b;
+      font-size: 0.875rem;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 640px) {
+      body {
+        padding: 1rem;
+      }
+
+      .header-card {
+        padding: 2rem 1.5rem;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      .comparison-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header-card">
+      <div class="sparkle-icon">
+        <span style="font-size: 50px; color: white;">✨</span>
+      </div>
+      <h1>تصميم متطور وفاخر</h1>
+      <p class="subtitle">إعادة تصميم كاملة لصفحة عرض الشهادة</p>
+      <p style="color: #64748b; line-height: 1.8; max-width: 600px; margin: 0 auto;">
+        تم إعادة تصميم صفحة عرض الشهادة بالكامل بتصميم عصري وفاخر مع تأثيرات 3D وحركات سلسة
+        تعكس جودة المنصة واحترافيتها
+      </p>
+    </div>
+
+    <div class="comparison-grid">
+      <div class="comparison-card old-design">
+        <div class="card-header">
+          <div class="card-title">❌ التصميم القديم</div>
+          <div style="color: #64748b;">بسيط وتقليدي</div>
+        </div>
+
+        <div class="features-section">
+          <div class="section-title">
+            <span>📋</span>
+            <span>المشاكل</span>
+          </div>
+          <ul class="feature-list">
+            <li class="feature-item">
+              <span class="icon">🎨</span>
+              <span>تصميم بسيط جداً</span>
+            </li>
+            <li class="feature-item">
+              <span class="icon">🔘</span>
+              <span>أزرار عادية بدون تأثيرات</span>
+            </li>
+            <li class="feature-item">
+              <span class="icon">📊</span>
+              <span>لا معلومات سريعة</span>
+            </li>
+            <li class="feature-item">
+              <span class="icon">💫</span>
+              <span>لا حركات عند الفتح</span>
+            </li>
+            <li class="feature-item">
+              <span class="icon">🖼️</span>
+              <span>خلفية بسيطة</span>
+            </li>
+            <li class="feature-item">
+              <span class="icon">🖱️</span>
+              <span>لا تأثيرات hover</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="comparison-card new-design">
+        <div class="card-header">
+          <div class="card-title">✨ التصميم الجديد</div>
+          <div style="color: #d4af37;">فاخر وعصري</div>
+        </div>
+
+        <div class="features-section">
+          <div class="section-title">
+            <span>🎯</span>
+            <span>التحسينات</span>
+          </div>
+          <ul class="feature-list">
+            <li class="feature-item">
+              <span class="icon">✨</span>
+              <span>تصميم فاخر 3D</span>
+            </li>
+            <li class="feature-item">
+              <span class="icon">🎭</span>
+              <span>تأثيرات متقدمة</span>
+            </li>
+            <li class="feature-item">
+              <span class="icon">📊</span>
+              <span>3 بطاقات معلومات</span>
+            </li>
+            <li class="feature-item">
+              <span class="icon">💫</span>
+              <span>حركات سلسة</span>
+            </li>
+            <li class="feature-item">
+              <span class="icon">🖼️</span>
+              <span>خلفية blur احترافية</span>
+            </li>
+            <li class="feature-item">
+              <span class="icon">🖱️</span>
+              <span>تأثيرات hover مميزة</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="demo-section">
+      <h2 style="color: #d4af37; text-align: center; margin-bottom: 2rem; font-size: 2rem;">
+        ✨ الميزات الجديدة
+      </h2>
+
+      <div class="highlights-grid">
+        <div class="highlight-card">
+          <div class="highlight-icon">🏆</div>
+          <div class="highlight-text">Header فاخر</div>
+          <div class="highlight-desc">أيقونة متحركة + تدرجات ذهبية + glass effect</div>
+        </div>
+
+        <div class="highlight-card">
+          <div class="highlight-icon">📊</div>
+          <div class="highlight-text">بطاقات معلومات</div>
+          <div class="highlight-desc">3 بطاقات مع shimmer effect متحرك</div>
+        </div>
+
+        <div class="highlight-card">
+          <div class="highlight-icon">🎯</div>
+          <div class="highlight-text">أزرار 3D</div>
+          <div class="highlight-desc">تأثيرات hover + shimmer + حالة loading</div>
+        </div>
+
+        <div class="highlight-card">
+          <div class="highlight-icon">💫</div>
+          <div class="highlight-text">حركات سلسة</div>
+          <div class="highlight-desc">slideUp + fadeIn + pulse animations</div>
+        </div>
+
+        <div class="highlight-card">
+          <div class="highlight-icon">📱</div>
+          <div class="highlight-text">Responsive</div>
+          <div class="highlight-desc">يعمل بشكل مثالي على كل الأجهزة</div>
+        </div>
+
+        <div class="highlight-card">
+          <div class="highlight-icon">🎨</div>
+          <div class="highlight-text">Glass Morphism</div>
+          <div class="highlight-desc">خلفية blur + شفافية احترافية</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="demo-section" style="margin-top: 2rem;">
+      <h2 style="color: #d4af37; text-align: center; margin-bottom: 2rem; font-size: 2rem;">
+        🔧 التقنيات المستخدمة
+      </h2>
+
+      <div class="tech-stack">
+        <div class="tech-card">
+          <div class="tech-title">
+            <span>💫</span>
+            <span>CSS Animations</span>
+          </div>
+          <div class="tech-desc">
+            slideUp, fadeIn, shimmer, pulse-ring, float - حركات متقدمة ومتنوعة
+          </div>
+        </div>
+
+        <div class="tech-card">
+          <div class="tech-title">
+            <span>⚛️</span>
+            <span>React Hooks</span>
+          </div>
+          <div class="tech-desc">
+            useState للحالات + useEffect للحركات عند الفتح والإغلاق
+          </div>
+        </div>
+
+        <div class="tech-card">
+          <div class="tech-title">
+            <span>🎨</span>
+            <span>Glass Morphism</span>
+          </div>
+          <div class="tech-desc">
+            backdrop-filter blur + شفافية للخلفية مع تأثير زجاجي
+          </div>
+        </div>
+
+        <div class="tech-card">
+          <div class="tech-title">
+            <span>📱</span>
+            <span>Responsive Design</span>
+          </div>
+          <div class="tech-desc">
+            Tailwind classes مع breakpoints (sm:, md:) للتكيف مع كل الشاشات
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="background: white; border-radius: 20px; padding: 2rem; margin-top: 2rem; text-align: center; border: 3px solid #22c55e;">
+      <div style="font-size: 4rem; margin-bottom: 1rem;">✅</div>
+      <h2 style="color: #22c55e; font-size: 2rem; margin-bottom: 1rem;">
+        جاهز للاستخدام!
+      </h2>
+      <p style="color: #64748b; line-height: 1.8; max-width: 600px; margin: 0 auto;">
+        التصميم الجديد تم بناؤه ونشره. افتح الشهادة الآن وستجد تجربة مستخدم فاخرة
+        ومتطورة مع تأثيرات 3D وحركات سلسة تعكس جودة المنصة.
+      </p>
+      <div style="margin-top: 1.5rem; padding: 1rem; background: #f0fdf4; border-radius: 12px; border: 2px solid #22c55e;">
+        <strong style="color: #166534;">💡 تذكير:</strong>
+        <span style="color: #15803d;"> امسح الكاش بالكامل (Ctrl+Shift+Delete) لرؤية التحديثات</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    console.log('%c✨ التصميم المتطور جاهز!', 'color: #d4af37; font-size: 24px; font-weight: bold;');
+    console.log('%cالميزات الجديدة:', 'color: #b8860b; font-size: 16px; font-weight: bold;');
+    console.log('🏆 Header فاخر مع أيقونة متحركة');
+    console.log('📊 3 بطاقات معلومات مع shimmer');
+    console.log('🎯 أزرار 3D مع تأثيرات متقدمة');
+    console.log('💫 حركات سلسة عند الفتح');
+    console.log('🎨 Glass morphism للخلفية');
+    console.log('📱 Responsive كامل للجوال');
+  </script>
+</body>
+</html>
