@@ -217,9 +217,10 @@ export function MainPlatformInterface({
         onBackToAdmin={onBackToAdmin}
       />
 
-      {showConceptModal && (
-        <ConceptIntroModal onClose={() => setShowConceptModal(false)} />
-      )}
+      <ConceptIntroModal
+        isOpen={showConceptModal}
+        onClose={() => setShowConceptModal(false)}
+      />
 
       {/* Modal فكرة تملك الأشجار */}
       {showIdeaOverview && (

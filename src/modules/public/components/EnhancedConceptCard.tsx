@@ -14,9 +14,7 @@ interface EnhancedConceptCardProps {
 
 export const EnhancedConceptCard: React.FC<EnhancedConceptCardProps> = ({ isOpen, onClose, onStartOwnership }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isVisible, setIsVisible] = useState(false);
-
-  if (!isOpen) return null;
+  const [isVisible, setIsVisible] = useState(true);
 
   const conceptPoints: ConceptPoint[] = [
     {
@@ -52,12 +50,11 @@ export const EnhancedConceptCard: React.FC<EnhancedConceptCardProps> = ({ isOpen
   // Reset animation when modal opens
   useEffect(() => {
     if (isOpen) {
-      setIsVisible(false);
       setCurrentIndex(0);
-      // Small delay to trigger animation
-      setTimeout(() => {
-        setIsVisible(true);
-      }, 50);
+      setIsVisible(true);
+    } else {
+      // Reset when closing
+      setIsVisible(false);
     }
   }, [isOpen]);
 
@@ -69,6 +66,8 @@ export const EnhancedConceptCard: React.FC<EnhancedConceptCardProps> = ({ isOpen
       return () => clearTimeout(timer);
     }
   }, [isOpen, currentIndex, conceptPoints.length]);
+
+  if (!isOpen) return null;
 
   const handleStartOwnership = () => {
     onStartOwnership();

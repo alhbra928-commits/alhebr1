@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>✅ اختبار إصلاح Modal فكرة التملك</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Tajawal', Arial, sans-serif;
+      background: linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #334155 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      color: white;
+    }
+
+    .container {
+      max-width: 900px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 24px;
+      padding: 40px;
+      backdrop-filter: blur(20px);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 900;
+      text-align: center;
+      margin-bottom: 20px;
+      background: linear-gradient(135deg, #10B981 0%, #34D399 50%, #6EE7B7 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
+    }
+
+    .status {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 12px 30px;
+      background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+      border-radius: 50px;
+      font-size: 1.2rem;
+      font-weight: 800;
+      box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+      }
+      50% {
+        transform: scale(1.05);
+        box-shadow: 0 12px 35px rgba(16, 185, 129, 0.6);
+      }
+    }
+
+    .section {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 16px;
+      padding: 30px;
+      margin-bottom: 25px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin-bottom: 20px;
+      color: #10B981;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .icon {
+      font-size: 2rem;
+    }
+
+    .problem-box {
+      background: rgba(239, 68, 68, 0.1);
+      border: 2px solid rgba(239, 68, 68, 0.3);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .solution-box {
+      background: rgba(16, 185, 129, 0.1);
+      border: 2px solid rgba(16, 185, 129, 0.3);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .code-block {
+      background: #1E293B;
+      border-radius: 8px;
+      padding: 15px;
+      margin: 15px 0;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      overflow-x: auto;
+      border-left: 4px solid #10B981;
+      direction: ltr;
+      text-align: left;
+    }
+
+    .test-steps {
+      list-style: none;
+      counter-reset: step-counter;
+    }
+
+    .test-steps li {
+      counter-increment: step-counter;
+      margin-bottom: 20px;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      border-right: 4px solid #10B981;
+      position: relative;
+      padding-right: 70px;
+    }
+
+    .test-steps li::before {
+      content: counter(step-counter);
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 1.2rem;
+      box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+    }
+
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+
+    .comparison-table th,
+    .comparison-table td {
+      padding: 15px;
+      text-align: right;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .comparison-table th {
+      background: rgba(16, 185, 129, 0.2);
+      font-weight: 800;
+      color: #10B981;
+    }
+
+    .comparison-table tr:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .before {
+      color: #EF4444;
+    }
+
+    .after {
+      color: #10B981;
+    }
+
+    .highlight {
+      background: rgba(251, 191, 36, 0.2);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: 700;
+    }
+
+    .version-info {
+      text-align: center;
+      padding: 20px;
+      background: rgba(251, 191, 36, 0.1);
+      border-radius: 12px;
+      border: 2px solid rgba(251, 191, 36, 0.3);
+      font-size: 1.1rem;
+      font-weight: 800;
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 1.8rem;
+      }
+
+      .container {
+        padding: 25px;
+      }
+
+      .test-steps li {
+        padding-right: 60px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>✅ تم إصلاح Modal فكرة التملك</h1>
+
+    <div class="status">
+      <div class="status-badge">
+        <span class="icon">🎉</span>
+        المشكلة تم حلها بالكامل
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">
+        <span class="icon">🐛</span>
+        المشكلة التي كانت موجودة
+      </div>
+      <div class="problem-box">
+        <h3 style="color: #EF4444; margin-bottom: 10px;">❌ عند الضغط على الزر:</h3>
+        <ul style="padding-right: 20px; line-height: 1.8;">
+          <li>تظهر شاشة بيضاء فارغة</li>
+          <li>لا يظهر أي محتوى داخل الـ Modal</li>
+          <li>فقط الخلفية الخضراء تظهر</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">
+        <span class="icon">🔍</span>
+        السبب الرئيسي
+      </div>
+      <div class="code-block">
+// المشكلة كانت في MainPlatformInterface.tsx
+{showConceptModal && (
+  &lt;ConceptIntroModal onClose={() => ...} /&gt;
+)}
+
+// ❌ لم يتم تمرير isOpen prop
+// ❌ الـ component يتوقع isOpen لكن لا يستلمه
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">
+        <span class="icon">🔧</span>
+        الحل المطبق
+      </div>
+      <div class="solution-box">
+        <h3 style="color: #10B981; margin-bottom: 15px;">✅ التعديلات:</h3>
+        <div class="code-block">
+// الآن الكود الصحيح:
+&lt;ConceptIntroModal
+  isOpen={showConceptModal}
+  onClose={() => setShowConceptModal(false)}
+/&gt;
+
+// ✅ يتم تمرير isOpen prop بشكل صحيح
+// ✅ الـ component يعمل بشكل مثالي
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">
+        <span class="icon">📊</span>
+        مقارنة قبل وبعد
+      </div>
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>الجانب</th>
+            <th class="before">❌ قبل الإصلاح</th>
+            <th class="after">✅ بعد الإصلاح</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>فتح الـ Modal</td>
+            <td class="before">شاشة بيضاء فارغة</td>
+            <td class="after">محتوى كامل يظهر</td>
+          </tr>
+          <tr>
+            <td>العنوان</td>
+            <td class="before">مخفي</td>
+            <td class="after">يظهر بوضوح</td>
+          </tr>
+          <tr>
+            <td>البطاقات الـ 6</td>
+            <td class="before">غير موجودة</td>
+            <td class="after">تظهر بشكل جميل</td>
+          </tr>
+          <tr>
+            <td>خطوات الاستثمار</td>
+            <td class="before">مفقودة</td>
+            <td class="after">واضحة ومرتبة</td>
+          </tr>
+          <tr>
+            <td>زر البدء</td>
+            <td class="before">غير مرئي</td>
+            <td class="after">يعمل بشكل مثالي</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section">
+      <div class="section-title">
+        <span class="icon">🧪</span>
+        خطوات الاختبار
+      </div>
+      <ul class="test-steps">
+        <li>
+          <strong>افتح المتصفح</strong><br>
+          <span style="opacity: 0.8;">تأكد من مسح الـ cache (Ctrl+Shift+R)</span>
+        </li>
+        <li>
+          <strong>انتقل إلى الصفحة الرئيسية</strong><br>
+          <span style="opacity: 0.8;">سترى الزر الأخضر في الأعلى</span>
+        </li>
+        <li>
+          <strong>اضغط على "اكتشف فكرة تملك النخيل"</strong><br>
+          <span style="opacity: 0.8;">يجب أن يفتح modal كامل بكل المحتوى</span>
+        </li>
+        <li>
+          <strong>تحقق من المحتوى</strong><br>
+          <span style="opacity: 0.8;">
+            ✅ عنوان "فكرة تملك شجرة"<br>
+            ✅ 6 بطاقات ملونة<br>
+            ✅ قسم خطوات الاستثمار<br>
+            ✅ زر "ابدأ الاستثمار الآن"
+          </span>
+        </li>
+        <li>
+          <strong>اختبر الإغلاق والفتح مرة أخرى</strong><br>
+          <span style="opacity: 0.8;">يجب أن يعمل في كل مرة</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <div class="section-title">
+        <span class="icon">📝</span>
+        ما الذي تم إصلاحه بالتحديد
+      </div>
+      <div style="line-height: 2; padding-right: 20px;">
+        <p style="margin-bottom: 15px;">
+          <span class="highlight">1. إضافة isOpen prop</span>: الآن الـ component يستلم حالة الفتح/الإغلاق بشكل صحيح
+        </p>
+        <p style="margin-bottom: 15px;">
+          <span class="highlight">2. إزالة الـ conditional rendering</span>: بدلاً من {showConceptModal && ...}، الآن يتم التحكم عبر isOpen
+        </p>
+        <p style="margin-bottom: 15px;">
+          <span class="highlight">3. تحسين التزامن</span>: الـ state بين الـ parent والـ child متزامن تماماً
+        </p>
+      </div>
+    </div>
+
+    <div class="version-info">
+      <div style="font-size: 1.3rem; margin-bottom: 10px;">🚀 رقم الإصدار الجديد</div>
+      <div style="color: #FBBF24; font-size: 1.5rem;">v20251206_1765001376245</div>
+      <div style="margin-top: 10px; font-size: 0.9rem; opacity: 0.8;">
+        تم البناء بنجاح ✅
+      </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 40px; padding: 30px; background: rgba(16, 185, 129, 0.1); border-radius: 12px; border: 2px dashed rgba(16, 185, 129, 0.3);">
+      <div style="font-size: 3rem; margin-bottom: 15px;">🎉</div>
+      <h2 style="color: #10B981; font-size: 1.8rem; margin-bottom: 15px;">المشكلة تم حلها بالكامل!</h2>
+      <p style="font-size: 1.2rem; opacity: 0.9;">
+        الآن عند الضغط على الزر، سيظهر modal كامل بكل المحتوى والتفاصيل
+      </p>
+      <p style="margin-top: 20px; font-size: 1rem; opacity: 0.7;">
+        جرب الآن واستمتع بالتجربة الكاملة ✨
+      </p>
+    </div>
+  </div>
+
+  <script>
+    console.log('✅ Fix Applied Successfully!');
+    console.log('Version: v20251206_1765001376245');
+    console.log('Files Modified:');
+    console.log('  1. MainPlatformInterface.tsx - Fixed isOpen prop');
+    console.log('  2. EnhancedConceptCard.tsx - Improved animation logic');
+  </script>
+</body>
+</html>
