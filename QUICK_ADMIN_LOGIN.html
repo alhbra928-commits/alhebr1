@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🔐 دخول سريع للإدارة</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Tajawal', Arial, sans-serif;
+      background: linear-gradient(135deg, #D4AF37 0%, #C9A961 50%, #B8935C 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      color: #1F2937;
+    }
+
+    .container {
+      max-width: 600px;
+      width: 100%;
+      background: white;
+      border-radius: 30px;
+      padding: 50px 40px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      text-align: center;
+    }
+
+    .crown-icon {
+      font-size: 5rem;
+      margin-bottom: 20px;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 900;
+      color: #D4AF37;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      font-size: 1.2rem;
+      color: #6B7280;
+      margin-bottom: 40px;
+    }
+
+    .credential-box {
+      background: linear-gradient(135deg, rgba(212,175,55,0.1) 0%, rgba(255,255,255,0.95) 100%);
+      border: 3px solid #D4AF37;
+      border-radius: 20px;
+      padding: 30px;
+      margin-bottom: 30px;
+      text-align: right;
+    }
+
+    .credential-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px;
+      margin: 15px 0;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .credential-label {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #1F2937;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .credential-value {
+      font-size: 2rem;
+      font-weight: 900;
+      color: #D4AF37;
+      font-family: 'Courier New', monospace;
+      letter-spacing: 4px;
+      background: rgba(212, 175, 55, 0.1);
+      padding: 10px 20px;
+      border-radius: 10px;
+      border: 2px solid rgba(212, 175, 55, 0.3);
+    }
+
+    .copy-button {
+      background: linear-gradient(135deg, #D4AF37, #C9A961);
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 12px;
+      font-weight: 900;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+    }
+
+    .copy-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+    }
+
+    .copy-button:active {
+      transform: translateY(0);
+    }
+
+    .steps {
+      text-align: right;
+      margin: 30px 0;
+      padding: 25px;
+      background: rgba(59, 130, 246, 0.1);
+      border-radius: 20px;
+      border: 2px solid rgba(59, 130, 246, 0.3);
+    }
+
+    .steps h3 {
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: #3B82F6;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .step {
+      background: white;
+      padding: 15px 20px;
+      margin: 10px 0;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .step-number {
+      background: linear-gradient(135deg, #3B82F6, #2563EB);
+      color: white;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .step-text {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #1F2937;
+      text-align: right;
+    }
+
+    .access-button {
+      background: linear-gradient(135deg, #10B981, #059669);
+      color: white;
+      border: none;
+      padding: 20px 50px;
+      border-radius: 20px;
+      font-weight: 900;
+      font-size: 1.5rem;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 30px;
+      transition: all 0.3s;
+      box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+    }
+
+    .access-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 35px rgba(16, 185, 129, 0.4);
+    }
+
+    .access-button:active {
+      transform: translateY(0);
+    }
+
+    .info-box {
+      background: rgba(251, 191, 36, 0.1);
+      border: 2px dashed rgba(251, 191, 36, 0.5);
+      border-radius: 15px;
+      padding: 20px;
+      margin-top: 30px;
+      text-align: right;
+    }
+
+    .info-box h4 {
+      color: #F59E0B;
+      font-weight: 900;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .info-box p {
+      color: #92400E;
+      line-height: 1.8;
+      font-weight: 600;
+    }
+
+    .notification {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-100px);
+      background: linear-gradient(135deg, #10B981, #059669);
+      color: white;
+      padding: 15px 30px;
+      border-radius: 15px;
+      font-weight: 900;
+      font-size: 1.1rem;
+      box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+      transition: transform 0.3s;
+      z-index: 1000;
+    }
+
+    .notification.show {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 30px 20px;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      .credential-value {
+        font-size: 1.5rem;
+        letter-spacing: 2px;
+      }
+
+      .credential-row {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="notification" id="notification">
+    ✅ تم النسخ بنجاح!
+  </div>
+
+  <div class="container">
+    <div class="crown-icon">👑</div>
+    <h1>دخول لوحة الإدارة</h1>
+    <p class="subtitle">بيانات المدير العام</p>
+
+    <div class="credential-box">
+      <div class="credential-row">
+        <div class="credential-label">
+          <span>📱</span>
+          <span>رقم الجوال</span>
+        </div>
+        <div class="credential-value" id="phone">0500000000</div>
+      </div>
+
+      <div class="credential-row">
+        <div class="credential-label">
+          <span>🔑</span>
+          <span>الرمز السري</span>
+        </div>
+        <div class="credential-value" id="code">1234</div>
+      </div>
+
+      <div style="display: flex; gap: 10px; margin-top: 20px;">
+        <button class="copy-button" onclick="copyPhone()">
+          📱 نسخ الجوال
+        </button>
+        <button class="copy-button" onclick="copyCode()">
+          🔑 نسخ الرمز
+        </button>
+      </div>
+    </div>
+
+    <div class="steps">
+      <h3>
+        <span>🚪</span>
+        <span>خطوات الدخول:</span>
+      </h3>
+
+      <div class="step">
+        <div class="step-number">1</div>
+        <div class="step-text">افتح الموقع الرئيسي</div>
+      </div>
+
+      <div class="step">
+        <div class="step-number">2</div>
+        <div class="step-text">اضغط على أيقونة التاج (👑) في أعلى يسار الشاشة</div>
+      </div>
+
+      <div class="step">
+        <div class="step-number">3</div>
+        <div class="step-text">أدخل رقم الجوال: <strong>0500000000</strong></div>
+      </div>
+
+      <div class="step">
+        <div class="step-number">4</div>
+        <div class="step-text">أدخل الرمز السري: <strong>1234</strong></div>
+      </div>
+
+      <div class="step">
+        <div class="step-number">5</div>
+        <div class="step-text">اضغط زر "دخول"</div>
+      </div>
+    </div>
+
+    <button class="access-button" onclick="goToAdmin()">
+      🚀 الانتقال لصفحة الدخول
+    </button>
+
+    <div class="info-box">
+      <h4>
+        <span>⚠️</span>
+        <span>ملاحظة أمنية</span>
+      </h4>
+      <p>
+        الرمز الحالي (1234) هو رمز تجريبي. يُنصح بتغييره لرمز أقوى في البيئة الإنتاجية.
+      </p>
+    </div>
+
+    <div class="info-box" style="background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.5); margin-top: 20px;">
+      <h4 style="color: #059669;">
+        <span>✅</span>
+        <span>الصلاحيات المتاحة</span>
+      </h4>
+      <p style="color: #065F46;">
+        المدير العام لديه وصول كامل لجميع الأقسام: المزارع، المستثمرون، الحجوزات، المالية، التوثيق، أصحاب المزارع، والإعدادات.
+      </p>
+    </div>
+  </div>
+
+  <script>
+    function copyPhone() {
+      const phone = document.getElementById('phone').textContent;
+      navigator.clipboard.writeText(phone).then(() => {
+        showNotification();
+      });
+    }
+
+    function copyCode() {
+      const code = document.getElementById('code').textContent;
+      navigator.clipboard.writeText(code).then(() => {
+        showNotification();
+      });
+    }
+
+    function showNotification() {
+      const notification = document.getElementById('notification');
+      notification.classList.add('show');
+      setTimeout(() => {
+        notification.classList.remove('show');
+      }, 2000);
+    }
+
+    function goToAdmin() {
+      // في حالة التطوير المحلي
+      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        window.open('http://localhost:5173/admin-login', '_blank');
+      } else {
+        // في حالة الإنتاج
+        window.open('/admin-login', '_blank');
+      }
+    }
+
+    // عرض معلومات في الكونسول
+    console.log('🔐 Admin Login Credentials:');
+    console.log('📱 Phone: 0500000000');
+    console.log('🔑 Code: 1234');
+    console.log('');
+    console.log('✅ Full Super Admin Access');
+    console.log('👑 Role: Super Admin (المدير العام)');
+    console.log('');
+    console.log('Steps:');
+    console.log('1. Go to homepage');
+    console.log('2. Click crown icon (👑)');
+    console.log('3. Enter phone: 0500000000');
+    console.log('4. Enter code: 1234');
+    console.log('5. Click login button');
+  </script>
+</body>
+</html>
