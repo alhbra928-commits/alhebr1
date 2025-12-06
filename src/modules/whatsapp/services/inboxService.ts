@@ -38,50 +38,74 @@ class InboxService {
     status?: 'open' | 'closed' | 'archived';
     assigned_to?: string;
   }): Promise<InboxThread[]> {
-    let query = supabase
-      .from('whatsapp_inbox_threads')
-      .select('*')
-      .order('last_message_at', { ascending: false, nullsFirst: false })
-      .order('updated_at', { ascending: false });
+    try {
+      let query = supabase
+        .from('whatsapp_inbox_threads')
+        .select('*')
+        .order('last_message_at', { ascending: false, nullsFirst: false })
+        .order('updated_at', { ascending: false });
 
-    if (filters?.status) {
-      query = query.eq('status', filters.status);
+      if (filters?.status) {
+        query = query.eq('status', filters.status);
+      }
+
+      if (filters?.assigned_to) {
+        query = query.eq('assigned_to', filters.assigned_to);
+      }
+
+      const { data, error } = await query;
+
+      if (error) {
+        console.error('Supabase error in getThreads:', error);
+        throw new Error(`فشل تحميل المحادثات: ${error.message}`);
+      }
+      return data || [];
+    } catch (err: any) {
+      console.error('Error in getThreads:', err);
+      throw err;
     }
-
-    if (filters?.assigned_to) {
-      query = query.eq('assigned_to', filters.assigned_to);
-    }
-
-    const { data, error } = await query;
-
-    if (error) throw error;
-    return data || [];
   }
 
   async getConversation(phone: string): Promise<ConversationMessage[]> {
-    const { data, error } = await supabase
-      .from('whatsapp_messages')
-      .select('*')
-      .eq('recipient_phone', phone)
-      .order('created_at', { ascending: true });
+    try {
+      const { data, error } = await supabase
+        .from('whatsapp_messages')
+        .select('*')
+        .eq('recipient_phone', phone)
+        .order('created_at', { ascending: true });
 
-    if (error) throw error;
-    return data || [];
+      if (error) {
+        console.error('Supabase error in getConversation:', error);
+        throw new Error(`فشل تحميل المحادثة: ${error.message}`);
+      }
+      return data || [];
+    } catch (err: any) {
+      console.error('Error in getConversation:', err);
+      throw err;
+    }
   }
 
   async sendMessage(phone: string, content: string, recipientName?: string): Promise<void> {
-    const { data: session } = await supabase.auth.getSession();
+    try {
+      const { data: session } = await supabase.auth.getSession();
 
-    const { data, error } = await supabase.rpc('send_whatsapp_message', {
-      p_recipient_phone: phone,
-      p_recipient_name: recipientName || null,
-      p_template_id: null,
-      p_content: content,
-      p_event_type: null,
-      p_variables: {}
-    });
+      const { data, error } = await supabase.rpc('send_whatsapp_message', {
+        p_recipient_phone: phone,
+        p_recipient_name: recipientName || null,
+        p_template_id: null,
+        p_content: content,
+        p_event_type: null,
+        p_variables: {}
+      });
 
-    if (error) throw error;
+      if (error) {
+        console.error('Supabase error in sendMessage:', error);
+        throw new Error(`فشل إرسال الرسالة: ${error.message}`);
+      }
+    } catch (err: any) {
+      console.error('Error in sendMessage:', err);
+      throw err;
+    }
   }
 
   async sendTemplate(
@@ -90,25 +114,41 @@ class InboxService {
     variables: Record<string, string>,
     recipientName?: string
   ): Promise<void> {
-    const { data, error } = await supabase.rpc('send_whatsapp_message', {
-      p_recipient_phone: phone,
-      p_recipient_name: recipientName || null,
-      p_template_id: templateId,
-      p_content: null,
-      p_event_type: null,
-      p_variables: variables
-    });
+    try {
+      const { data, error } = await supabase.rpc('send_whatsapp_message', {
+        p_recipient_phone: phone,
+        p_recipient_name: recipientName || null,
+        p_template_id: templateId,
+        p_content: null,
+        p_event_type: null,
+        p_variables: variables
+      });
 
-    if (error) throw error;
+      if (error) {
+        console.error('Supabase error in sendTemplate:', error);
+        throw new Error(`فشل إرسال القالب: ${error.message}`);
+      }
+    } catch (err: any) {
+      console.error('Error in sendTemplate:', err);
+      throw err;
+    }
   }
 
   async updateThreadStatus(threadId: string, status: 'open' | 'closed' | 'archived'): Promise<void> {
-    const { error } = await supabase
-      .from('whatsapp_inbox_threads')
-      .update({ status })
-      .eq('id', threadId);
+    try {
+      const { error } = await supabase
+        .from('whatsapp_inbox_threads')
+        .update({ status })
+        .eq('id', threadId);
 
-    if (error) throw error;
+      if (error) {
+        console.error('Supabase error in updateThreadStatus:', error);
+        throw new Error(`فشل تحديث حالة المحادثة: ${error.message}`);
+      }
+    } catch (err: any) {
+      console.error('Error in updateThreadStatus:', err);
+      throw err;
+    }
   }
 
   async markThreadAsRead(threadId: string): Promise<void> {
@@ -139,33 +179,50 @@ class InboxService {
   }
 
   async searchThreads(searchTerm: string): Promise<InboxThread[]> {
-    const { data, error } = await supabase
-      .from('whatsapp_inbox_threads')
-      .select('*')
-      .or(`user_phone.ilike.%${searchTerm}%,user_name.ilike.%${searchTerm}%,last_message.ilike.%${searchTerm}%`)
-      .order('updated_at', { ascending: false });
+    try {
+      const { data, error } = await supabase
+        .from('whatsapp_inbox_threads')
+        .select('*')
+        .or(`user_phone.ilike.%${searchTerm}%,user_name.ilike.%${searchTerm}%,last_message.ilike.%${searchTerm}%`)
+        .order('updated_at', { ascending: false });
 
-    if (error) throw error;
-    return data || [];
+      if (error) {
+        console.error('Supabase error in searchThreads:', error);
+        throw new Error(`فشل البحث: ${error.message}`);
+      }
+      return data || [];
+    } catch (err: any) {
+      console.error('Error in searchThreads:', err);
+      throw err;
+    }
   }
 
   async getStats() {
-    const [openResult, unreadResult, todayResult] = await Promise.all([
-      supabase.from('whatsapp_inbox_threads').select('id', { count: 'exact', head: true }).eq('status', 'open'),
-      supabase.from('whatsapp_inbox_threads').select('unread_count').eq('status', 'open'),
-      supabase.from('whatsapp_messages')
-        .select('id', { count: 'exact', head: true })
-        .eq('direction', 'outbound')
-        .gte('created_at', new Date(new Date().setHours(0, 0, 0, 0)).toISOString())
-    ]);
+    try {
+      const [openResult, unreadResult, todayResult] = await Promise.all([
+        supabase.from('whatsapp_inbox_threads').select('id', { count: 'exact', head: true }).eq('status', 'open'),
+        supabase.from('whatsapp_inbox_threads').select('unread_count').eq('status', 'open'),
+        supabase.from('whatsapp_messages')
+          .select('id', { count: 'exact', head: true })
+          .eq('direction', 'outbound')
+          .gte('created_at', new Date(new Date().setHours(0, 0, 0, 0)).toISOString())
+      ]);
 
-    const totalUnread = unreadResult.data?.reduce((sum, thread) => sum + (thread.unread_count || 0), 0) || 0;
+      const totalUnread = unreadResult.data?.reduce((sum, thread) => sum + (thread.unread_count || 0), 0) || 0;
 
-    return {
-      open_threads: openResult.count || 0,
-      unread_messages: totalUnread,
-      sent_today: todayResult.count || 0
-    };
+      return {
+        open_threads: openResult.count || 0,
+        unread_messages: totalUnread,
+        sent_today: todayResult.count || 0
+      };
+    } catch (err: any) {
+      console.error('Error in getStats:', err);
+      return {
+        open_threads: 0,
+        unread_messages: 0,
+        sent_today: 0
+      };
+    }
   }
 
   subscribeToNewMessages(callback: (message: ConversationMessage) => void) {

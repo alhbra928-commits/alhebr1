@@ -25,6 +25,23 @@ export interface WhatsAppStats {
   sent_today: number;
 }
 
+export interface WhatsAppTemplate {
+  id: string;
+  name: string;
+  category: string;
+  content_ar: string;
+  content_en: string | null;
+  variables: any[];
+  provider_id: string | null;
+  is_active: boolean;
+  usage_count: number;
+  created_at: string;
+  updated_at: string;
+  created_by: string | null;
+  deleted_at: string | null;
+  deleted_by: string | null;
+}
+
 export const whatsappService = {
   async getProviders(): Promise<WhatsAppProvider[]> {
     try {
@@ -227,6 +244,103 @@ export const whatsappService = {
         total_templates: 0,
         sent_today: 0
       };
+    }
+  },
+
+  async getTemplates(): Promise<WhatsAppTemplate[]> {
+    try {
+      const { data, error } = await supabase
+        .from('whatsapp_templates')
+        .select('*')
+        .is('deleted_at', null)
+        .order('name', { ascending: true });
+
+      if (error) {
+        console.error('Supabase error in getTemplates:', error);
+        throw new Error(`فشل تحميل القوالب: ${error.message}`);
+      }
+      return data || [];
+    } catch (err: any) {
+      console.error('Error in getTemplates:', err);
+      throw err;
+    }
+  },
+
+  async getTemplate(id: string): Promise<WhatsAppTemplate> {
+    try {
+      const { data, error } = await supabase
+        .from('whatsapp_templates')
+        .select('*')
+        .eq('id', id)
+        .is('deleted_at', null)
+        .single();
+
+      if (error) {
+        console.error('Supabase error in getTemplate:', error);
+        throw new Error(`فشل تحميل القالب: ${error.message}`);
+      }
+      return data;
+    } catch (err: any) {
+      console.error('Error in getTemplate:', err);
+      throw err;
+    }
+  },
+
+  async createTemplate(templateData: Partial<WhatsAppTemplate>): Promise<WhatsAppTemplate> {
+    try {
+      const { data, error } = await supabase
+        .from('whatsapp_templates')
+        .insert([templateData])
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Supabase error in createTemplate:', error);
+        throw new Error(`فشل إنشاء القالب: ${error.message}`);
+      }
+      return data;
+    } catch (err: any) {
+      console.error('Error in createTemplate:', err);
+      throw err;
+    }
+  },
+
+  async updateTemplate(id: string, updates: Partial<WhatsAppTemplate>): Promise<WhatsAppTemplate> {
+    try {
+      const { data, error } = await supabase
+        .from('whatsapp_templates')
+        .update({ ...updates, updated_at: new Date().toISOString() })
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Supabase error in updateTemplate:', error);
+        throw new Error(`فشل تحديث القالب: ${error.message}`);
+      }
+      return data;
+    } catch (err: any) {
+      console.error('Error in updateTemplate:', err);
+      throw err;
+    }
+  },
+
+  async deleteTemplate(id: string): Promise<void> {
+    try {
+      const { error } = await supabase
+        .from('whatsapp_templates')
+        .update({
+          deleted_at: new Date().toISOString()
+        })
+        .eq('id', id);
+
+      if (error) {
+        console.error('Supabase error in deleteTemplate:', error);
+        throw new Error(`فشل حذف القالب: ${error.message}`);
+      }
+    } catch (err: any) {
+      console.error('Error in deleteTemplate:', err);
+      throw err;
     }
   },
 

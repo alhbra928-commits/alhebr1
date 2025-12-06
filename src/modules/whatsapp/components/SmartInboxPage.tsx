@@ -63,6 +63,7 @@ export const SmartInboxPage: React.FC = () => {
   const loadData = async () => {
     try {
       setLoading(true);
+      setError(null);
       const [threadsData, templatesData] = await Promise.all([
         inboxService.getThreads(),
         whatsappService.getTemplates()
@@ -70,7 +71,8 @@ export const SmartInboxPage: React.FC = () => {
       setThreads(threadsData);
       setTemplates(templatesData.filter(t => t.is_active));
     } catch (err: any) {
-      setError(err.message);
+      console.error('Error loading inbox data:', err);
+      setError(err.message || 'حدث خطأ في تحميل البيانات');
     } finally {
       setLoading(false);
     }
@@ -82,6 +84,7 @@ export const SmartInboxPage: React.FC = () => {
       setThreads(data);
     } catch (err: any) {
       console.error('Failed to load threads:', err);
+      setError(err.message || 'فشل تحميل المحادثات');
     }
   };
 
@@ -91,11 +94,17 @@ export const SmartInboxPage: React.FC = () => {
       setStats(data);
     } catch (err: any) {
       console.error('Failed to load stats:', err);
+      setStats({
+        open_threads: 0,
+        unread_messages: 0,
+        sent_today: 0
+      });
     }
   };
 
   const loadConversation = async (phone: string) => {
     try {
+      setError(null);
       const data = await inboxService.getConversation(phone);
       setConversation(data);
     } catch (err: any) {
