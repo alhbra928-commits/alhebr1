@@ -40,6 +40,7 @@ export function OwnershipCertificate({ certificate }: OwnershipCertificateProps)
           * {
             -webkit-print-color-adjust: exact !important;
             print-color-adjust: exact !important;
+            color-adjust: exact !important;
           }
 
           html, body {
@@ -47,24 +48,40 @@ export function OwnershipCertificate({ certificate }: OwnershipCertificateProps)
             height: 297mm;
             margin: 0;
             padding: 0;
+            overflow: visible;
           }
 
-          body * {
-            visibility: hidden;
+          /* إخفاء العناصر غير الضرورية فقط */
+          body > *:not(#certificate-print-wrapper) {
+            display: none !important;
           }
 
+          #certificate-print-wrapper,
           #certificate-print,
           #certificate-print * {
-            visibility: visible;
+            display: block !important;
+            visibility: visible !important;
+            position: static !important;
+            opacity: 1 !important;
+          }
+
+          #certificate-print-wrapper {
+            position: absolute !important;
+            left: 0 !important;
+            top: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            background: white !important;
+            padding: 10mm !important;
+            margin: 0 !important;
+            box-sizing: border-box !important;
           }
 
           #certificate-print {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 190mm !important;
-            padding: 10mm !important;
-            margin: 0 !important;
+            width: 100% !important;
+            max-width: 190mm !important;
+            padding: 0 !important;
+            margin: 0 auto !important;
             background: white !important;
             box-sizing: border-box !important;
           }

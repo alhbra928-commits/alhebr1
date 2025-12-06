@@ -341,9 +341,7 @@ export function CertificateModal({ certificate, isOpen, onClose }: CertificateMo
               }}
             >
               <div className="p-4 sm:p-6 md:p-12">
-                <div className="certificate-print-wrapper">
-                  <OwnershipCertificate certificate={certificate} />
-                </div>
+                <OwnershipCertificate certificate={certificate} />
               </div>
 
               {/* ملاحظة في الأسفل */}
@@ -365,6 +363,19 @@ export function CertificateModal({ certificate, isOpen, onClose }: CertificateMo
         </div>
       </div>
 
+      {/* Wrapper للطباعة - مخفي على الشاشة، ظاهر عند الطباعة فقط */}
+      <div
+        id="certificate-print-wrapper"
+        style={{
+          display: 'none',
+          position: 'fixed',
+          left: '-9999px',
+          top: '-9999px'
+        }}
+      >
+        <OwnershipCertificate certificate={certificate} />
+      </div>
+
       {/* CSS للطباعة */}
       <style>{`
         @media print {
@@ -378,9 +389,11 @@ export function CertificateModal({ certificate, isOpen, onClose }: CertificateMo
             display: none !important;
           }
 
-          .certificate-print-wrapper {
-            padding: 0 !important;
-            margin: 0 !important;
+          #certificate-print-wrapper {
+            display: block !important;
+            position: static !important;
+            left: 0 !important;
+            top: 0 !important;
           }
         }
       `}</style>
