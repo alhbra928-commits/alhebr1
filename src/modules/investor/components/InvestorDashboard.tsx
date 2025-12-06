@@ -323,6 +323,10 @@ export function InvestorDashboard({ phone, onLogout, isFirstTimeLogin = false }:
 
             const hasNotification = badgeCount > 0 && !isActive;
 
+            // عرض عدد الحجوزات أو النخيل على أيقونة الحجوزات
+            const showCountBadge = tab.id === 'reservations' && stats && stats.totalReservations > 0;
+            const countToShow = tab.id === 'reservations' ? stats?.totalTrees || 0 : 0;
+
             const handleTabClick = () => {
               setActiveTab(tab.id as TabType);
               NotificationBadgeService.saveLastViewed(tab.id);
@@ -349,6 +353,21 @@ export function InvestorDashboard({ phone, onLogout, isFirstTimeLogin = false }:
                 <div className="relative">
                   <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5" />
                   <NotificationBadge count={badgeCount} animate={!isActive} />
+
+                  {/* Badge لعرض عدد النخيل المحجوزة */}
+                  {showCountBadge && (
+                    <div
+                      className="absolute -top-1 -left-1 px-1.5 py-0.5 rounded-full text-[9px] sm:text-[10px] font-black shadow-lg whitespace-nowrap animate-pulse"
+                      style={{
+                        background: isActive ? 'white' : brandGradients.gold,
+                        color: isActive ? brandColors.primary.gold : 'white',
+                        border: `2px solid ${isActive ? brandColors.primary.gold : 'white'}`,
+                        transform: 'translateY(-50%)',
+                      }}
+                    >
+                      {countToShow.toLocaleString('ar-SA')} 🌴
+                    </div>
+                  )}
                 </div>
 
                 <span className="hidden sm:inline">{tab.label}</span>
@@ -583,6 +602,109 @@ export function InvestorDashboard({ phone, onLogout, isFirstTimeLogin = false }:
             <h2 className="text-3xl font-black mb-6" style={{ color: brandColors.text.primary }}>
               حجوزاتي الحالية
             </h2>
+
+            {/* Summary Card - عرض الإحصائيات بشكل بارز */}
+            {reservations.length > 0 && stats && (
+              <div
+                className="rounded-2xl p-6 mb-6"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(212,175,55,0.15) 0%, rgba(255,255,255,0.95) 100%)',
+                  border: `3px solid ${brandColors.primary.gold}`,
+                  boxShadow: '0 10px 40px rgba(212,175,55,0.2)',
+                }}
+              >
+                <div className="flex items-center gap-3 mb-4">
+                  <div
+                    className="w-12 h-12 rounded-full flex items-center justify-center"
+                    style={{ background: brandGradients.gold }}
+                  >
+                    <FileText className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-black" style={{ color: brandColors.text.primary }}>
+                      ملخص حجوزاتك
+                    </h3>
+                    <p className="text-sm" style={{ color: brandColors.text.secondary }}>
+                      إجمالي النخيل المحجوزة والمبالغ
+                    </p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div
+                    className="text-center p-4 rounded-xl"
+                    style={{
+                      background: 'rgba(59, 130, 246, 0.1)',
+                      border: '2px solid rgba(59, 130, 246, 0.3)',
+                    }}
+                  >
+                    <div className="text-3xl font-black text-blue-500 mb-1">
+                      {stats.totalReservations}
+                    </div>
+                    <div className="text-sm font-bold" style={{ color: brandColors.text.secondary }}>
+                      عدد الحجوزات
+                    </div>
+                  </div>
+
+                  <div
+                    className="text-center p-4 rounded-xl animate-pulse"
+                    style={{
+                      background: 'rgba(16, 185, 129, 0.1)',
+                      border: '3px solid rgba(16, 185, 129, 0.5)',
+                    }}
+                  >
+                    <div className="text-3xl font-black text-green-500 mb-1 flex items-center justify-center gap-2">
+                      {stats.totalTrees.toLocaleString('ar-SA')} 🌴
+                    </div>
+                    <div className="text-sm font-bold" style={{ color: brandColors.text.secondary }}>
+                      إجمالي النخيل
+                    </div>
+                  </div>
+
+                  <div
+                    className="text-center p-4 rounded-xl"
+                    style={{
+                      background: 'rgba(168, 85, 247, 0.1)',
+                      border: '2px solid rgba(168, 85, 247, 0.3)',
+                    }}
+                  >
+                    <div className="text-2xl font-black text-purple-500 mb-1">
+                      {stats.totalAmount.toLocaleString('ar-SA')}
+                    </div>
+                    <div className="text-sm font-bold" style={{ color: brandColors.text.secondary }}>
+                      المبلغ (ر.س)
+                    </div>
+                  </div>
+
+                  <div
+                    className="text-center p-4 rounded-xl"
+                    style={{
+                      background: 'rgba(251, 191, 36, 0.1)',
+                      border: '2px solid rgba(251, 191, 36, 0.3)',
+                    }}
+                  >
+                    <div className="text-2xl font-black text-amber-500 mb-1">
+                      {stats.pendingReservations}
+                    </div>
+                    <div className="text-sm font-bold" style={{ color: brandColors.text.secondary }}>
+                      قيد الانتظار
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  className="mt-4 p-3 rounded-xl text-center"
+                  style={{
+                    background: 'rgba(212, 175, 55, 0.1)',
+                    border: '1px dashed rgba(212, 175, 55, 0.5)',
+                  }}
+                >
+                  <p className="text-sm font-bold" style={{ color: brandColors.primary.gold }}>
+                    ✨ حجوزاتك في طريقها للاعتماد والتوثيق
+                  </p>
+                </div>
+              </div>
+            )}
 
             {reservations.length === 0 ? (
               <div className="text-center py-12">

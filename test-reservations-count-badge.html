@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🌴 عداد النخيل على أيقونة الحجوزات</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Tajawal', Arial, sans-serif;
+      background: linear-gradient(135deg, #D4AF37 0%, #C9A961 50%, #B8935C 100%);
+      min-height: 100vh;
+      padding: 20px;
+      color: #1F2937;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+      padding: 40px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 24px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    h1 {
+      font-size: 3rem;
+      font-weight: 900;
+      color: #D4AF37;
+      margin-bottom: 20px;
+    }
+
+    .badge-demo {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 15px 30px;
+      background: white;
+      border: 3px solid #D4AF37;
+      border-radius: 15px;
+      font-size: 1.5rem;
+      font-weight: 800;
+      box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+    }
+
+    .pulse {
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.8; transform: scale(1.1); }
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+      gap: 30px;
+      margin-bottom: 30px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .card h2 {
+      font-size: 2rem;
+      font-weight: 900;
+      color: #D4AF37;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .demo-section {
+      margin: 20px 0;
+    }
+
+    .demo-title {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: #1F2937;
+      margin-bottom: 15px;
+    }
+
+    .tab-bar {
+      display: flex;
+      gap: 10px;
+      background: #F3F4F6;
+      padding: 15px;
+      border-radius: 15px;
+      overflow-x: auto;
+    }
+
+    .tab {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      background: white;
+      border: 2px solid #E5E7EB;
+      border-radius: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s;
+      white-space: nowrap;
+    }
+
+    .tab:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .tab.active {
+      background: linear-gradient(135deg, #D4AF37, #C9A961);
+      color: white;
+      border-color: #D4AF37;
+      box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3);
+    }
+
+    .tab-badge {
+      position: absolute;
+      top: -8px;
+      left: -8px;
+      background: linear-gradient(135deg, #D4AF37, #C9A961);
+      color: white;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 900;
+      border: 2px solid white;
+      box-shadow: 0 2px 10px rgba(212, 175, 55, 0.4);
+      animation: pulse 2s infinite;
+    }
+
+    .tab.active .tab-badge {
+      background: white;
+      color: #D4AF37;
+      border-color: #D4AF37;
+    }
+
+    .summary-card {
+      background: linear-gradient(135deg, rgba(212,175,55,0.15) 0%, rgba(255,255,255,0.95) 100%);
+      border: 3px solid #D4AF37;
+      border-radius: 20px;
+      padding: 30px;
+      margin: 20px 0;
+      box-shadow: 0 10px 40px rgba(212,175,55,0.2);
+    }
+
+    .summary-header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .summary-icon {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, #D4AF37, #C9A961);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .stat-card {
+      text-align: center;
+      padding: 20px;
+      border-radius: 15px;
+      border: 2px solid;
+    }
+
+    .stat-card.blue {
+      background: rgba(59, 130, 246, 0.1);
+      border-color: rgba(59, 130, 246, 0.3);
+    }
+
+    .stat-card.green {
+      background: rgba(16, 185, 129, 0.1);
+      border-color: rgba(16, 185, 129, 0.5);
+      animation: pulse 2s infinite;
+    }
+
+    .stat-card.purple {
+      background: rgba(168, 85, 247, 0.1);
+      border-color: rgba(168, 85, 247, 0.3);
+    }
+
+    .stat-card.amber {
+      background: rgba(251, 191, 36, 0.1);
+      border-color: rgba(251, 191, 36, 0.3);
+    }
+
+    .stat-value {
+      font-size: 2.5rem;
+      font-weight: 900;
+      margin-bottom: 5px;
+    }
+
+    .stat-value.blue { color: #3B82F6; }
+    .stat-value.green { color: #10B981; }
+    .stat-value.purple { color: #A855F7; }
+    .stat-value.amber { color: #FBBF24; }
+
+    .stat-label {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #6B7280;
+    }
+
+    .message-box {
+      background: rgba(212, 175, 55, 0.1);
+      border: 2px dashed rgba(212, 175, 55, 0.5);
+      border-radius: 12px;
+      padding: 15px;
+      text-align: center;
+      font-weight: 700;
+      color: #D4AF37;
+    }
+
+    .comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin: 30px 0;
+    }
+
+    .before, .after {
+      padding: 20px;
+      border-radius: 15px;
+      border: 3px solid;
+    }
+
+    .before {
+      background: rgba(239, 68, 68, 0.1);
+      border-color: #EF4444;
+    }
+
+    .after {
+      background: rgba(16, 185, 129, 0.1);
+      border-color: #10B981;
+    }
+
+    .comparison-title {
+      font-size: 1.5rem;
+      font-weight: 900;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .before .comparison-title {
+      color: #EF4444;
+    }
+
+    .after .comparison-title {
+      color: #10B981;
+    }
+
+    .feature-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .feature-list li {
+      padding: 10px;
+      margin: 8px 0;
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: 8px;
+      font-weight: 600;
+    }
+
+    .highlight {
+      background: rgba(251, 191, 36, 0.3);
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-weight: 900;
+      border: 2px solid rgba(251, 191, 36, 0.5);
+    }
+
+    .success-banner {
+      background: linear-gradient(135deg, #10B981, #059669);
+      color: white;
+      padding: 40px;
+      border-radius: 20px;
+      text-align: center;
+      margin-top: 30px;
+      box-shadow: 0 10px 40px rgba(16, 185, 129, 0.3);
+    }
+
+    .success-banner h2 {
+      color: white;
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+    }
+
+    @media (max-width: 768px) {
+      h1 { font-size: 2rem; }
+      .grid { grid-template-columns: 1fr; }
+      .comparison { grid-template-columns: 1fr; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🌴 عداد النخيل على أيقونة الحجوزات</h1>
+      <div class="badge-demo pulse">
+        <span>📄</span>
+        <span>حجوزاتي</span>
+        <span class="highlight">150 🌴</span>
+      </div>
+      <p style="margin-top: 20px; font-size: 1.2rem; color: #6B7280;">
+        الآن المستثمر يرى عدد النخيل بوضوح!
+      </p>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h2>🎯 المشكلة</h2>
+        <div class="demo-section">
+          <p style="font-size: 1.1rem; line-height: 1.8; margin-bottom: 15px;">
+            عندما تقوم <strong>سمية</strong> بحجز النخيل وتدخل لوحتها:
+          </p>
+          <ul class="feature-list">
+            <li>❌ لا يتم كتابة عدد النخيل على أيقونة الحجوزات</li>
+            <li>❌ لا تعرف كم نخلة حجزت بدون الدخول للصفحة</li>
+            <li>❌ لا توجد إحصائيات إجمالية واضحة</li>
+            <li>❌ تحتاج للنزول في الصفحة لرؤية التفاصيل</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>✅ الحل</h2>
+        <div class="demo-section">
+          <p style="font-size: 1.1rem; line-height: 1.8; margin-bottom: 15px;">
+            تم إضافة تحسينات بصرية واضحة:
+          </p>
+          <ul class="feature-list">
+            <li>✅ Badge نابض على أيقونة الحجوزات يعرض عدد النخيل</li>
+            <li>✅ Summary Card في أعلى صفحة الحجوزات</li>
+            <li>✅ إحصائيات شاملة (حجوزات، نخيل، مبالغ)</li>
+            <li>✅ رسالة تطمينية "في طريقها للاعتماد"</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>🎨 Badge على الأيقونة</h2>
+
+      <div class="demo-section">
+        <div class="demo-title">قبل التحسين:</div>
+        <div class="tab-bar">
+          <div class="tab">
+            <span>🏠</span>
+            <span>الرئيسية</span>
+          </div>
+          <div class="tab active">
+            <span>📄</span>
+            <span>حجوزاتي</span>
+          </div>
+          <div class="tab">
+            <span>🌳</span>
+            <span>مزارعي</span>
+          </div>
+        </div>
+        <p style="margin-top: 10px; color: #EF4444; font-weight: 700;">
+          ❌ لا يوجد عداد - المستخدم لا يعرف كم نخلة حجز!
+        </p>
+      </div>
+
+      <div class="demo-section" style="margin-top: 30px;">
+        <div class="demo-title">بعد التحسين:</div>
+        <div class="tab-bar">
+          <div class="tab">
+            <span>🏠</span>
+            <span>الرئيسية</span>
+          </div>
+          <div class="tab active">
+            <span class="tab-badge">150 🌴</span>
+            <span>📄</span>
+            <span>حجوزاتي</span>
+          </div>
+          <div class="tab">
+            <span>🌳</span>
+            <span>مزارعي</span>
+          </div>
+        </div>
+        <p style="margin-top: 10px; color: #10B981; font-weight: 700;">
+          ✅ Badge نابض يعرض 150 نخلة - واضح جداً!
+        </p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>📊 Summary Card في صفحة الحجوزات</h2>
+
+      <div class="summary-card">
+        <div class="summary-header">
+          <div class="summary-icon">📄</div>
+          <div>
+            <div style="font-size: 1.5rem; font-weight: 900; color: #1F2937;">ملخص حجوزاتك</div>
+            <div style="font-size: 0.9rem; color: #6B7280;">إجمالي النخيل المحجوزة والمبالغ</div>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card blue">
+            <div class="stat-value blue">3</div>
+            <div class="stat-label">عدد الحجوزات</div>
+          </div>
+
+          <div class="stat-card green">
+            <div class="stat-value green">150 🌴</div>
+            <div class="stat-label">إجمالي النخيل</div>
+          </div>
+
+          <div class="stat-card purple">
+            <div class="stat-value purple">75,000</div>
+            <div class="stat-label">المبلغ (ر.س)</div>
+          </div>
+
+          <div class="stat-card amber">
+            <div class="stat-value amber">3</div>
+            <div class="stat-label">قيد الانتظار</div>
+          </div>
+        </div>
+
+        <div class="message-box">
+          ✨ حجوزاتك في طريقها للاعتماد والتوثيق
+        </div>
+      </div>
+    </div>
+
+    <div class="comparison">
+      <div class="before">
+        <div class="comparison-title">
+          <span>❌</span>
+          <span>قبل</span>
+        </div>
+        <ul class="feature-list">
+          <li>لا يوجد badge على الأيقونة</li>
+          <li>لا يعرف المستخدم العدد إلا بالدخول</li>
+          <li>لا توجد إحصائيات إجمالية</li>
+          <li>تجربة مستخدم أقل وضوحاً</li>
+        </ul>
+      </div>
+
+      <div class="after">
+        <div class="comparison-title">
+          <span>✅</span>
+          <span>بعد</span>
+        </div>
+        <ul class="feature-list">
+          <li>Badge نابض: <strong>150 🌴</strong></li>
+          <li>يرى العدد فوراً على الأيقونة</li>
+          <li>Summary Card شاملة</li>
+          <li>رسالة تطمينية واضحة</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>🧪 حالات الاختبار</h2>
+
+      <div class="demo-section">
+        <div class="demo-title">🔹 سيناريو 1: سمية حجزت 10 نخيل</div>
+        <div class="tab-bar">
+          <div class="tab active">
+            <span class="tab-badge">10 🌴</span>
+            <span>📄</span>
+            <span>حجوزاتي</span>
+          </div>
+        </div>
+        <div style="margin-top: 15px; padding: 15px; background: rgba(16, 185, 129, 0.1); border-radius: 12px;">
+          <p style="font-weight: 700; color: #10B981;">
+            ✅ Badge يعرض: 10 🌴<br>
+            ✅ Summary Card: 1 حجز، 10 نخلة، 5,000 ر.س
+          </p>
+        </div>
+      </div>
+
+      <div class="demo-section" style="margin-top: 30px;">
+        <div class="demo-title">🔹 سيناريو 2: سمية حجزت 150 نخلة (3 حجوزات)</div>
+        <div class="tab-bar">
+          <div class="tab active">
+            <span class="tab-badge">150 🌴</span>
+            <span>📄</span>
+            <span>حجوزاتي</span>
+          </div>
+        </div>
+        <div style="margin-top: 15px; padding: 15px; background: rgba(16, 185, 129, 0.1); border-radius: 12px;">
+          <p style="font-weight: 700; color: #10B981;">
+            ✅ Badge يعرض: 150 🌴<br>
+            ✅ Summary Card: 3 حجوزات، 150 نخلة، 75,000 ر.س<br>
+            ✅ رسالة: "في طريقها للاعتماد"
+          </p>
+        </div>
+      </div>
+
+      <div class="demo-section" style="margin-top: 30px;">
+        <div class="demo-title">🔹 سيناريو 3: مستخدم جديد بدون حجوزات</div>
+        <div class="tab-bar">
+          <div class="tab active">
+            <span>📄</span>
+            <span>حجوزاتي</span>
+          </div>
+        </div>
+        <div style="margin-top: 15px; padding: 15px; background: rgba(107, 114, 128, 0.1); border-radius: 12px;">
+          <p style="font-weight: 700; color: #6B7280;">
+            ℹ️ لا يظهر badge<br>
+            ℹ️ رسالة: "لا توجد حجوزات حالياً"
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="success-banner">
+      <div style="font-size: 5rem; margin-bottom: 20px;">🌴</div>
+      <h2>التحسينات مكتملة!</h2>
+      <p style="font-size: 1.3rem; margin-bottom: 20px; opacity: 0.95;">
+        الآن سمية تعرف بوضوح كم نخلة حجزت وأن حجزها في طريقه للاعتماد
+      </p>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 30px;">
+        <div style="background: rgba(255, 255, 255, 0.2); padding: 20px; border-radius: 12px;">
+          <div style="font-size: 2.5rem; margin-bottom: 10px;">✅</div>
+          <div style="font-weight: 800; font-size: 1.1rem;">Badge نابض</div>
+          <div style="opacity: 0.9; margin-top: 5px;">على الأيقونة</div>
+        </div>
+        <div style="background: rgba(255, 255, 255, 0.2); padding: 20px; border-radius: 12px;">
+          <div style="font-size: 2.5rem; margin-bottom: 10px;">✅</div>
+          <div style="font-weight: 800; font-size: 1.1rem;">Summary Card</div>
+          <div style="opacity: 0.9; margin-top: 5px;">إحصائيات شاملة</div>
+        </div>
+        <div style="background: rgba(255, 255, 255, 0.2); padding: 20px; border-radius: 12px;">
+          <div style="font-size: 2.5rem; margin-bottom: 10px;">✅</div>
+          <div style="font-weight: 800; font-size: 1.1rem;">Responsive</div>
+          <div style="opacity: 0.9; margin-top: 5px;">لجميع الأجهزة</div>
+        </div>
+        <div style="background: rgba(255, 255, 255, 0.2); padding: 20px; border-radius: 12px;">
+          <div style="font-size: 2.5rem; margin-bottom: 10px;">✅</div>
+          <div style="font-weight: 800; font-size: 1.1rem;">رسالة تطمينية</div>
+          <div style="opacity: 0.9; margin-top: 5px;">في طريقها للاعتماد</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    console.log('✅ Reservations Count Badge Feature Complete!');
+    console.log('');
+    console.log('Features:');
+    console.log('  1. ✅ Badge on reservations icon showing total trees count');
+    console.log('  2. ✅ Summary Card with comprehensive stats');
+    console.log('  3. ✅ Pulse animation for visibility');
+    console.log('  4. ✅ Responsive design for all devices');
+    console.log('');
+    console.log('Version: v20251206_1765004284541');
+    console.log('Build ID: 1765004296721_zwrpz0');
+  </script>
+</body>
+</html>
