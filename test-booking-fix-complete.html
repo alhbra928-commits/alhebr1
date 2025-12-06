@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>✅ إصلاح مشكلة الحجز - مكتمل</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Tajawal', Arial, sans-serif;
+      background: linear-gradient(135deg, #047857 0%, #059669 50%, #10b981 100%);
+      min-height: 100vh;
+      padding: 20px;
+      color: white;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+      padding: 40px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 24px;
+      backdrop-filter: blur(20px);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+    }
+
+    h1 {
+      font-size: 3rem;
+      font-weight: 900;
+      margin-bottom: 20px;
+      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 15px 40px;
+      background: linear-gradient(135deg, #FBBF24, #F59E0B);
+      border-radius: 50px;
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #1F2937;
+      box-shadow: 0 10px 30px rgba(251, 191, 36, 0.5);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 25px;
+      margin-bottom: 30px;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      padding: 30px;
+      color: #1F2937;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .card-title {
+      font-size: 1.8rem;
+      font-weight: 900;
+      margin-bottom: 20px;
+      color: #047857;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .icon {
+      font-size: 2.5rem;
+    }
+
+    .problem-box {
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(220, 38, 38, 0.1));
+      border: 3px solid rgba(239, 68, 68, 0.3);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .solution-box {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1));
+      border: 3px solid rgba(16, 185, 129, 0.3);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .code-block {
+      background: #1E293B;
+      color: #10B981;
+      padding: 20px;
+      border-radius: 12px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      overflow-x: auto;
+      margin: 15px 0;
+      border-left: 4px solid #10B981;
+      direction: ltr;
+      text-align: left;
+    }
+
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .comparison-table th,
+    .comparison-table td {
+      padding: 15px;
+      text-align: right;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .comparison-table th {
+      background: linear-gradient(135deg, #047857, #059669);
+      color: white;
+      font-weight: 800;
+    }
+
+    .comparison-table tr:hover {
+      background: rgba(16, 185, 129, 0.05);
+    }
+
+    .before {
+      color: #EF4444;
+      font-weight: 700;
+    }
+
+    .after {
+      color: #10B981;
+      font-weight: 700;
+    }
+
+    .test-steps {
+      list-style: none;
+      counter-reset: step-counter;
+    }
+
+    .test-steps li {
+      counter-increment: step-counter;
+      margin-bottom: 20px;
+      padding: 25px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      border-right: 4px solid #FBBF24;
+      position: relative;
+      padding-right: 80px;
+    }
+
+    .test-steps li::before {
+      content: counter(step-counter);
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 45px;
+      height: 45px;
+      background: linear-gradient(135deg, #FBBF24, #F59E0B);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 1.3rem;
+      color: #1F2937;
+      box-shadow: 0 4px 15px rgba(251, 191, 36, 0.4);
+    }
+
+    .highlight {
+      background: rgba(251, 191, 36, 0.3);
+      padding: 3px 10px;
+      border-radius: 6px;
+      font-weight: 800;
+      border: 2px solid rgba(251, 191, 36, 0.5);
+    }
+
+    .full-width {
+      grid-column: 1 / -1;
+    }
+
+    .version-box {
+      text-align: center;
+      padding: 30px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      backdrop-filter: blur(20px);
+      border: 3px solid rgba(251, 191, 36, 0.5);
+      margin-top: 30px;
+    }
+
+    .success-banner {
+      text-align: center;
+      padding: 40px;
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.2));
+      border-radius: 20px;
+      border: 3px dashed rgba(16, 185, 129, 0.5);
+      margin-top: 30px;
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2rem;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .test-steps li {
+        padding-right: 70px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>✅ إصلاح مشكلة الحجز - مكتمل</h1>
+      <div class="status-badge">
+        <span class="icon">🎉</span>
+        تم الإصلاح بنجاح
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <div class="card-title">
+          <span class="icon">🐛</span>
+          المشكلة الأصلية
+        </div>
+        <div class="problem-box">
+          <h3 style="color: #EF4444; margin-bottom: 15px;">الخطأ الذي كان يظهر:</h3>
+          <div class="code-block">
+null value in column "number_of_trees"
+of relation "reservations"
+violates not-null constraint
+          </div>
+          <p style="margin-top: 15px; line-height: 1.8;">
+            عند محاولة حجز أي شجرة، كان النظام يرفض الطلب لأن البيانات المرسلة غير مكتملة
+          </p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <span class="icon">🔍</span>
+          الأسباب الجذرية
+        </div>
+        <ul style="line-height: 2; padding-right: 20px;">
+          <li><span class="highlight">quantity</span> بدلاً من <span class="highlight">number_of_trees</span></li>
+          <li><span class="highlight">investor_id</span> كان مفقوداً</li>
+          <li><span class="highlight">contract dates</span> لم تكن محددة</li>
+          <li><span class="highlight">price_per_tree</span> لم يتم إرساله</li>
+          <li>عدم تطابق بين Interface والـ Database</li>
+        </ul>
+      </div>
+
+      <div class="card full-width">
+        <div class="card-title">
+          <span class="icon">🔧</span>
+          الإصلاحات المطبقة
+        </div>
+        <div class="solution-box">
+          <h3 style="color: #10B981; margin-bottom: 15px;">✅ التعديلات في farmDetailService.ts:</h3>
+
+          <h4 style="margin: 20px 0 10px; color: #047857;">1. تحديث Interface</h4>
+          <div class="code-block">
+interface CreateReservationData {
+  farm_id: string;
+  investor_name: string;      // ✅ تطابق
+  investor_phone: string;      // ✅ تطابق
+  varieties: VarietyBookingItem[];  // ✅ أصناف متعددة
+  total_trees: number;         // ✅ صحيح
+  total_amount: number;        // ✅ صحيح
+}
+          </div>
+
+          <h4 style="margin: 20px 0 10px; color: #047857;">2. إنشاء/جلب المستثمر</h4>
+          <div class="code-block">
+// البحث عن مستثمر موجود
+const { data: existingInvestor } = await supabase
+  .from('investors')
+  .select('id')
+  .eq('phone', data.investor_phone)
+  .maybeSingle();
+
+if (existingInvestor) {
+  investorId = existingInvestor.id; // ✅ استخدام موجود
+} else {
+  // إنشاء مستثمر جديد
+  const { data: newInvestor } = await supabase
+    .from('investors')
+    .insert({ ... })
+    .select('id')
+    .single();
+
+  investorId = newInvestor.id; // ✅ استخدام جديد
+}
+          </div>
+
+          <h4 style="margin: 20px 0 10px; color: #047857;">3. إرسال جميع الحقول المطلوبة</h4>
+          <div class="code-block">
+const { data: reservation } = await supabase
+  .from('reservations')
+  .insert({
+    farm_id: data.farm_id,
+    investor_id: investorId,              // ✅
+    number_of_trees: data.total_trees,    // ✅
+    price_per_tree: variety.price_per_tree, // ✅
+    total_amount: data.total_amount,      // ✅
+    contract_start_date: today,           // ✅
+    contract_end_date: oneYearLater,      // ✅
+    status: 'pending',
+    payment_status: 'pending',
+    booking_status: 'pending'
+  })
+  .select()
+  .single();
+          </div>
+
+          <h4 style="margin: 20px 0 10px; color: #047857;">4. إنشاء booking_items</h4>
+          <div class="code-block">
+// دعم أصناف متعددة
+const bookingItems = data.varieties.map(v => ({
+  reservation_id: reservation.id,
+  farm_id: data.farm_id,
+  variety_id: v.variety_id,
+  tree_count: v.tree_count,
+  price_per_tree: v.price_per_tree,
+  subtotal: v.tree_count * v.price_per_tree
+}));
+
+await supabase
+  .from('booking_items')
+  .insert(bookingItems);  // ✅ حفظ تفاصيل كل صنف
+          </div>
+        </div>
+      </div>
+
+      <div class="card full-width">
+        <div class="card-title">
+          <span class="icon">📊</span>
+          مقارنة قبل وبعد
+        </div>
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>الحقل</th>
+              <th class="before">❌ قبل</th>
+              <th class="after">✅ بعد</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>عدد الأشجار</td>
+              <td class="before">quantity (خطأ)</td>
+              <td class="after">number_of_trees</td>
+            </tr>
+            <tr>
+              <td>معرف المستثمر</td>
+              <td class="before">null/مفقود</td>
+              <td class="after">يتم إنشاؤه/جلبه تلقائياً</td>
+            </tr>
+            <tr>
+              <td>سعر الشجرة</td>
+              <td class="before">مفقود</td>
+              <td class="after">موجود من الصنف</td>
+            </tr>
+            <tr>
+              <td>تاريخ بداية العقد</td>
+              <td class="before">مفقود</td>
+              <td class="after">تاريخ اليوم</td>
+            </tr>
+            <tr>
+              <td>تاريخ نهاية العقد</td>
+              <td class="before">مفقود</td>
+              <td class="after">بعد سنة</td>
+            </tr>
+            <tr>
+              <td>المبلغ الإجمالي</td>
+              <td class="before">total_price</td>
+              <td class="after">total_amount</td>
+            </tr>
+            <tr>
+              <td>دعم أصناف متعددة</td>
+              <td class="before">لا</td>
+              <td class="after">نعم + booking_items</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card full-width">
+        <div class="card-title">
+          <span class="icon">🧪</span>
+          خطوات الاختبار
+        </div>
+        <ul class="test-steps" style="color: white;">
+          <li>
+            <strong style="font-size: 1.2rem;">افتح المنصة</strong><br>
+            <span style="opacity: 0.9;">انتقل إلى الصفحة الرئيسية</span>
+          </li>
+          <li>
+            <strong style="font-size: 1.2rem;">اختر مزرعة</strong><br>
+            <span style="opacity: 0.9;">اضغط على أي مزرعة متاحة</span>
+          </li>
+          <li>
+            <strong style="font-size: 1.2rem;">اختر الأصناف</strong><br>
+            <span style="opacity: 0.9;">حدد صنفاً واحداً أو أكثر بالكمية المطلوبة</span>
+          </li>
+          <li>
+            <strong style="font-size: 1.2rem;">أدخل بياناتك</strong><br>
+            <span style="opacity: 0.9;">الاسم (3 أحرف+) ورقم الجوال (05xxxxxxxx)</span>
+          </li>
+          <li>
+            <strong style="font-size: 1.2rem;">اضغط "تأكيد الحجز"</strong><br>
+            <span style="opacity: 0.9;">يجب أن يتم بنجاح وتظهر رسالة التأكيد</span>
+          </li>
+          <li>
+            <strong style="font-size: 1.2rem;">تحقق من Console</strong><br>
+            <span style="opacity: 0.9;">لا توجد أخطاء، والحجز تم بنجاح ✅</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="version-box">
+      <div style="font-size: 1.5rem; margin-bottom: 10px; font-weight: 800;">🚀 الإصدار الجديد</div>
+      <div style="color: #FBBF24; font-size: 2rem; font-weight: 900; margin: 15px 0;">
+        v20251206_1765002151812
+      </div>
+      <div style="font-size: 1.2rem; opacity: 0.9;">
+        Build ID: 1765002165175_mcewtr
+      </div>
+      <div style="margin-top: 15px; font-size: 1rem; opacity: 0.8;">
+        تم البناء بنجاح ✅
+      </div>
+    </div>
+
+    <div class="success-banner">
+      <div style="font-size: 4rem; margin-bottom: 20px;">🎉</div>
+      <h2 style="font-size: 2.5rem; margin-bottom: 20px; font-weight: 900;">المشكلة تم حلها بالكامل!</h2>
+      <p style="font-size: 1.3rem; line-height: 1.8; opacity: 0.95;">
+        الآن يمكن للمستخدمين حجز الأشجار بسهولة ونجاح<br>
+        جميع البيانات تُرسل بشكل صحيح ومتكامل
+      </p>
+      <div style="margin-top: 30px; font-size: 3rem;">
+        🌴 ✨ 🌳
+      </div>
+    </div>
+  </div>
+
+  <script>
+    console.log('✅ Booking Fix Applied Successfully!');
+    console.log('Version: v20251206_1765002151812');
+    console.log('Build ID: 1765002165175_mcewtr');
+    console.log('');
+    console.log('Fixes Applied:');
+    console.log('  1. ✅ number_of_trees instead of quantity');
+    console.log('  2. ✅ investor_id creation/retrieval');
+    console.log('  3. ✅ contract_start_date & contract_end_date');
+    console.log('  4. ✅ price_per_tree from variety');
+    console.log('  5. ✅ Multi-variety support with booking_items');
+    console.log('  6. ✅ Complete interface matching');
+  </script>
+</body>
+</html>

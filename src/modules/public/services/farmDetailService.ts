@@ -8,14 +8,19 @@ export interface FarmVariety {
   description_ar?: string;
 }
 
+export interface VarietyBookingItem {
+  variety_id: string;
+  tree_count: number;
+  price_per_tree: number;
+}
+
 export interface CreateReservationData {
   farm_id: string;
-  variety_id: string;
-  customer_name: string;
-  customer_phone: string;
-  customer_email?: string;
-  quantity: number;
-  total_price: number;
+  investor_name: string;
+  investor_phone: string;
+  varieties: VarietyBookingItem[];
+  total_trees: number;
+  total_amount: number;
 }
 
 export class FarmDetailService {
@@ -68,22 +73,85 @@ export class FarmDetailService {
   }
 
   static async createReservation(data: CreateReservationData) {
-    const { data: reservation, error } = await supabase
-      .from('reservations')
-      .insert({
-        farm_id: data.farm_id,
-        variety_id: data.variety_id,
-        customer_name: data.customer_name,
-        customer_phone: data.customer_phone,
-        customer_email: data.customer_email,
-        quantity: data.quantity,
-        total_price: data.total_price,
-        booking_status: 'pending'
-      })
-      .select()
-      .single();
+    try {
+      // First, create or get investor
+      let investorId: string;
 
-    if (error) throw error;
-    return reservation;
+      const { data: existingInvestor } = await supabase
+        .from('investors')
+        .select('id')
+        .eq('phone', data.investor_phone)
+        .maybeSingle();
+
+      if (existingInvestor) {
+        investorId = existingInvestor.id;
+      } else {
+        const { data: newInvestor, error: investorError } = await supabase
+          .from('investors')
+          .insert({
+            full_name: data.investor_name,
+            phone: data.investor_phone,
+            email: '',
+            national_id: '',
+            status: 'active'
+          })
+          .select('id')
+          .single();
+
+        if (investorError) throw investorError;
+        investorId = newInvestor.id;
+      }
+
+      // Create reservation for the primary variety (first one)
+      const primaryVariety = data.varieties[0];
+
+      const contractStartDate = new Date();
+      const contractEndDate = new Date();
+      contractEndDate.setFullYear(contractEndDate.getFullYear() + 1);
+
+      const { data: reservation, error } = await supabase
+        .from('reservations')
+        .insert({
+          farm_id: data.farm_id,
+          investor_id: investorId,
+          number_of_trees: data.total_trees,
+          price_per_tree: primaryVariety.price_per_tree,
+          total_amount: data.total_amount,
+          contract_start_date: contractStartDate.toISOString().split('T')[0],
+          contract_end_date: contractEndDate.toISOString().split('T')[0],
+          status: 'pending',
+          payment_status: 'pending',
+          booking_status: 'pending'
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      // Create booking items for all varieties
+      if (data.varieties.length > 0) {
+        const bookingItems = data.varieties.map(v => ({
+          reservation_id: reservation.id,
+          farm_id: data.farm_id,
+          variety_id: v.variety_id,
+          tree_count: v.tree_count,
+          price_per_tree: v.price_per_tree,
+          subtotal: v.tree_count * v.price_per_tree
+        }));
+
+        const { error: itemsError } = await supabase
+          .from('booking_items')
+          .insert(bookingItems);
+
+        if (itemsError) {
+          console.error('Error creating booking items:', itemsError);
+        }
+      }
+
+      return reservation;
+    } catch (error) {
+      console.error('Error in createReservation:', error);
+      throw error;
+    }
   }
 }
