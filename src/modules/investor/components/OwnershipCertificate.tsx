@@ -43,80 +43,198 @@ export function OwnershipCertificate({ certificate }: OwnershipCertificateProps)
           .ownership-certificate {
             max-width: 100% !important;
             margin: 0 !important;
+            padding: 0 !important;
           }
 
-          .ownership-certificate .p-12,
-          .ownership-certificate .md\\:p-16 {
-            padding: 1rem !important;
-          }
-
-          .ownership-certificate .text-5xl,
-          .ownership-certificate .md\\:text-6xl {
-            font-size: 2rem !important;
-          }
-
-          .ownership-certificate .text-3xl,
-          .ownership-certificate .md\\:text-4xl {
-            font-size: 1.5rem !important;
-          }
-
-          .ownership-certificate .text-4xl,
-          .ownership-certificate .md\\:text-5xl {
-            font-size: 1.75rem !important;
-          }
-
-          .ownership-certificate .text-2xl,
-          .ownership-certificate .md\\:text-3xl {
-            font-size: 1.25rem !important;
-          }
-
-          .ownership-certificate .text-xl,
-          .ownership-certificate .md\\:text-2xl {
-            font-size: 1rem !important;
-          }
-
-          .ownership-certificate .mb-8 {
-            margin-bottom: 1rem !important;
-          }
-
-          .ownership-certificate .mb-10 {
-            margin-bottom: 1.25rem !important;
-          }
-
-          .ownership-certificate .mt-10 {
-            margin-top: 1.25rem !important;
-          }
-
-          .ownership-certificate .gap-6 {
-            gap: 0.75rem !important;
-          }
-
-          .ownership-certificate .gap-8 {
-            gap: 1rem !important;
-          }
-
-          .ownership-certificate .w-24,
-          .ownership-certificate .h-24 {
-            width: 4rem !important;
-            height: 4rem !important;
-          }
-
-          .ownership-certificate .w-32,
-          .ownership-certificate .h-32 {
-            width: 5rem !important;
-            height: 5rem !important;
-          }
-
-          .ownership-certificate .space-y-4 > * + * {
-            margin-top: 0.5rem !important;
-          }
-
-          .ownership-certificate .p-6 {
+          .ownership-certificate > div {
+            border-radius: 12px !important;
             padding: 0.75rem !important;
           }
 
-          .ownership-certificate .p-4 {
+          /* تصغير جميع الأيقونات */
+          .ownership-certificate svg {
+            width: 1rem !important;
+            height: 1rem !important;
+          }
+
+          /* تصغير الشعار */
+          .ownership-certificate .w-24.h-24 {
+            width: 3rem !important;
+            height: 3rem !important;
+          }
+
+          .ownership-certificate .w-10.h-10 {
+            width: 1.5rem !important;
+            height: 1.5rem !important;
+          }
+
+          /* الزخارف */
+          .ownership-certificate .w-32.h-32 {
+            width: 3rem !important;
+            height: 3rem !important;
+          }
+
+          /* تصغير النصوص */
+          .ownership-certificate .text-5xl,
+          .ownership-certificate .text-6xl {
+            font-size: 1.5rem !important;
+            line-height: 1.4 !important;
+          }
+
+          .ownership-certificate .text-4xl {
+            font-size: 1.25rem !important;
+            line-height: 1.3 !important;
+          }
+
+          .ownership-certificate .text-3xl {
+            font-size: 1.125rem !important;
+            line-height: 1.3 !important;
+          }
+
+          .ownership-certificate .text-2xl {
+            font-size: 1rem !important;
+            line-height: 1.3 !important;
+          }
+
+          .ownership-certificate .text-xl {
+            font-size: 0.875rem !important;
+            line-height: 1.3 !important;
+          }
+
+          .ownership-certificate .text-lg {
+            font-size: 0.8rem !important;
+            line-height: 1.2 !important;
+          }
+
+          .ownership-certificate .text-base {
+            font-size: 0.75rem !important;
+            line-height: 1.2 !important;
+          }
+
+          .ownership-certificate .text-sm {
+            font-size: 0.7rem !important;
+            line-height: 1.2 !important;
+          }
+
+          .ownership-certificate .text-xs {
+            font-size: 0.65rem !important;
+            line-height: 1.2 !important;
+          }
+
+          /* تقليل المسافات */
+          .ownership-certificate .mb-8,
+          .ownership-certificate .mb-10 {
+            margin-bottom: 0.5rem !important;
+          }
+
+          .ownership-certificate .mb-6 {
+            margin-bottom: 0.4rem !important;
+          }
+
+          .ownership-certificate .mb-4 {
+            margin-bottom: 0.3rem !important;
+          }
+
+          .ownership-certificate .mb-3 {
+            margin-bottom: 0.25rem !important;
+          }
+
+          .ownership-certificate .mb-2 {
+            margin-bottom: 0.15rem !important;
+          }
+
+          .ownership-certificate .mb-1 {
+            margin-bottom: 0.1rem !important;
+          }
+
+          .ownership-certificate .mt-10 {
+            margin-top: 0.5rem !important;
+          }
+
+          .ownership-certificate .mt-4 {
+            margin-top: 0.3rem !important;
+          }
+
+          .ownership-certificate .space-y-4 > * + * {
+            margin-top: 0.3rem !important;
+          }
+
+          .ownership-certificate .gap-6 {
+            gap: 0.4rem !important;
+          }
+
+          .ownership-certificate .gap-8 {
+            gap: 0.5rem !important;
+          }
+
+          .ownership-certificate .gap-4 {
+            gap: 0.3rem !important;
+          }
+
+          .ownership-certificate .gap-3 {
+            gap: 0.25rem !important;
+          }
+
+          .ownership-certificate .gap-2 {
+            gap: 0.15rem !important;
+          }
+
+          /* تقليل الـ padding */
+          .ownership-certificate .p-12,
+          .ownership-certificate .p-16 {
+            padding: 0.75rem !important;
+          }
+
+          .ownership-certificate .p-8 {
+            padding: 0.6rem !important;
+          }
+
+          .ownership-certificate .p-6 {
             padding: 0.5rem !important;
+          }
+
+          .ownership-certificate .p-4 {
+            padding: 0.35rem !important;
+          }
+
+          .ownership-certificate .p-3 {
+            padding: 0.25rem !important;
+          }
+
+          .ownership-certificate .px-8 {
+            padding-left: 0.6rem !important;
+            padding-right: 0.6rem !important;
+          }
+
+          .ownership-certificate .py-4 {
+            padding-top: 0.35rem !important;
+            padding-bottom: 0.35rem !important;
+          }
+
+          .ownership-certificate .px-6 {
+            padding-left: 0.5rem !important;
+            padding-right: 0.5rem !important;
+          }
+
+          .ownership-certificate .py-3 {
+            padding-top: 0.25rem !important;
+            padding-bottom: 0.25rem !important;
+          }
+
+          /* تصغير الختم */
+          .ownership-certificate .w-32.h-32.rounded-full {
+            width: 3.5rem !important;
+            height: 3.5rem !important;
+          }
+
+          /* إخفاء بعض الزخارف لتوفير المساحة */
+          .ownership-certificate .absolute.inset-0.pointer-events-none {
+            display: none !important;
+          }
+
+          .ownership-certificate .absolute.top-0,
+          .ownership-certificate .absolute.bottom-0 {
+            display: none !important;
           }
         }
       `}</style>

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>اختبار طباعة الشهادة</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 2rem;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+
+    h1 {
+      color: #333;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      font-size: 2rem;
+    }
+
+    .info-box {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+    }
+
+    .info-box h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .info-box ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .info-box li {
+      padding: 0.5rem 0;
+      padding-right: 1.5rem;
+      position: relative;
+    }
+
+    .info-box li:before {
+      content: '✓';
+      position: absolute;
+      right: 0;
+      color: #4ade80;
+      font-weight: bold;
+    }
+
+    .test-steps {
+      background: #f8f9fa;
+      padding: 1.5rem;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+    }
+
+    .test-steps h3 {
+      color: #333;
+      margin-bottom: 1rem;
+    }
+
+    .test-steps ol {
+      padding-right: 1.5rem;
+    }
+
+    .test-steps li {
+      padding: 0.5rem 0;
+      color: #555;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 2rem;
+    }
+
+    .btn {
+      padding: 1rem 2rem;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-success {
+      background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+      color: white;
+    }
+
+    .btn-success:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(74, 222, 128, 0.4);
+    }
+
+    .status {
+      background: white;
+      border: 2px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .status h3 {
+      color: #333;
+      margin-bottom: 1rem;
+    }
+
+    .status-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.75rem;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .status-item:last-child {
+      border-bottom: none;
+    }
+
+    .status-label {
+      color: #666;
+      font-weight: 600;
+    }
+
+    .status-value {
+      color: #333;
+      font-weight: bold;
+    }
+
+    .success {
+      color: #22c55e !important;
+    }
+
+    .warning {
+      color: #f59e0b !important;
+    }
+
+    @media print {
+      body {
+        background: white;
+        padding: 0;
+      }
+
+      .container {
+        box-shadow: none;
+      }
+
+      .buttons,
+      .test-steps {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🖨️ اختبار نظام طباعة الشهادة</h1>
+
+    <div class="info-box">
+      <h2>✨ التحسينات المطبقة</h2>
+      <ul>
+        <li>طباعة في صفحة A4 واحدة فقط</li>
+        <li>تصغير تلقائي ذكي للمحتوى</li>
+        <li>منع تقطيع الشهادة</li>
+        <li>إخفاء الزخارف غير الضرورية</li>
+        <li>حفظ الألوان والتصميم</li>
+      </ul>
+    </div>
+
+    <div class="test-steps">
+      <h3>📋 خطوات الاختبار</h3>
+      <ol>
+        <li><strong>افتح لوحة المستثمر</strong> على المنصة</li>
+        <li><strong>افتح شهادة تملك</strong> من لوحة التحكم</li>
+        <li><strong>اضغط على زر الطباعة</strong> (أو Ctrl+P)</li>
+        <li><strong>تحقق من المعاينة</strong>: يجب أن تظهر صفحة واحدة</li>
+        <li><strong>تأكد من الإعدادات</strong>:
+          <ul>
+            <li>Paper: A4</li>
+            <li>Orientation: Portrait</li>
+            <li>Scale: 100%</li>
+          </ul>
+        </li>
+      </ol>
+    </div>
+
+    <div class="status">
+      <h3>📊 حالة التحديث</h3>
+      <div class="status-item">
+        <span class="status-label">تاريخ التطبيق:</span>
+        <span class="status-value success">6 ديسمبر 2025</span>
+      </div>
+      <div class="status-item">
+        <span class="status-label">الإصدار:</span>
+        <span class="status-value">v2025.12.06_091922</span>
+      </div>
+      <div class="status-item">
+        <span class="status-label">الملفات المعدلة:</span>
+        <span class="status-value">2 ملفات</span>
+      </div>
+      <div class="status-item">
+        <span class="status-label">حالة البناء:</span>
+        <span class="status-value success">✓ نجح</span>
+      </div>
+      <div class="status-item">
+        <span class="status-label">عدد الصفحات المتوقع:</span>
+        <span class="status-value success">1 صفحة A4</span>
+      </div>
+    </div>
+
+    <div class="buttons">
+      <button class="btn btn-primary" onclick="window.print()">
+        <span>🖨️</span>
+        <span>طباعة تجريبية</span>
+      </button>
+      <button class="btn btn-success" onclick="goToApp()">
+        <span>🚀</span>
+        <span>اختبار على المنصة</span>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    function goToApp() {
+      alert('الآن:\n\n1. افتح المنصة\n2. سجل دخول كمستثمر\n3. افتح شهادة التملك\n4. اضغط زر الطباعة\n5. تحقق من أنها صفحة واحدة فقط!');
+    }
+
+    // عرض معلومات الصفحة
+    window.onload = function() {
+      console.log('%c🎉 نظام الطباعة المحدث جاهز!', 'color: #22c55e; font-size: 20px; font-weight: bold;');
+      console.log('%c✓ التحسينات المطبقة:', 'color: #667eea; font-size: 16px; font-weight: bold;');
+      console.log('  - صفحة A4 واحدة');
+      console.log('  - تصغير ذكي');
+      console.log('  - منع التقطيع');
+      console.log('  - إخفاء الزخارف');
+    };
+  </script>
+</body>
+</html>

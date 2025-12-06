@@ -95,16 +95,22 @@ export function CertificateModal({ certificate, isOpen, onClose }: CertificateMo
       {/* CSS للطباعة */}
       <style>{`
         @page {
-          size: A4;
-          margin: 10mm;
+          size: A4 portrait;
+          margin: 8mm;
         }
 
         @media print {
+          * {
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+            color-adjust: exact !important;
+          }
+
           html, body {
             width: 210mm;
             height: 297mm;
-            margin: 0;
-            padding: 0;
+            margin: 0 !important;
+            padding: 0 !important;
             overflow: hidden;
           }
 
@@ -121,34 +127,25 @@ export function CertificateModal({ certificate, isOpen, onClose }: CertificateMo
             overflow: visible !important;
             margin: 0 !important;
             padding: 0 !important;
+            background: white !important;
+            box-shadow: none !important;
           }
 
           .fixed.inset-0 * {
             visibility: visible;
           }
 
-          .fixed.inset-0 {
-            background: white !important;
-          }
-
           .sticky.top-0 {
             display: none !important;
           }
 
-          /* تصغير حجم الشهادة لتناسب صفحة A4 */
           .certificate-print-wrapper {
-            transform: scale(0.75);
-            transform-origin: top center;
-            margin: 0 auto;
-            width: 133.33% !important;
             page-break-inside: avoid;
             page-break-before: avoid;
             page-break-after: avoid;
-          }
-
-          /* إخفاء الـ padding الزائد */
-          .p-6, .md\\:p-12 {
-            padding: 0 !important;
+            break-inside: avoid;
+            width: 100% !important;
+            max-width: 100% !important;
           }
         }
       `}</style>
