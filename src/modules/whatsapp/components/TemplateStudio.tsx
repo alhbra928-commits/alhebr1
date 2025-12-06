@@ -116,39 +116,55 @@ export const TemplateStudio: React.FC = () => {
       const variables = extractVariables(formData.content_ar);
 
       if (editingTemplate) {
-        const { error } = await supabase
+        console.log('Updating template:', editingTemplate.id, formData);
+
+        const { data, error } = await supabase
           .from('whatsapp_templates')
           .update({
             name: formData.name,
             category: formData.category,
             content_ar: formData.content_ar,
-            content_en: formData.content_en,
+            content_en: formData.content_en || null,
             is_active: formData.is_active,
             variables: variables,
             updated_at: new Date().toISOString()
           })
-          .eq('id', editingTemplate.id);
+          .eq('id', editingTemplate.id)
+          .select();
 
-        if (error) throw error;
+        if (error) {
+          console.error('Update error:', error);
+          throw error;
+        }
+
+        console.log('Update successful:', data);
       } else {
-        const { error } = await supabase
+        console.log('Creating new template:', formData);
+
+        const { data, error } = await supabase
           .from('whatsapp_templates')
           .insert({
             name: formData.name,
             category: formData.category,
             content_ar: formData.content_ar,
-            content_en: formData.content_en,
+            content_en: formData.content_en || null,
             is_active: formData.is_active,
             variables: variables,
             usage_count: 0
-          });
+          })
+          .select();
 
-        if (error) throw error;
+        if (error) {
+          console.error('Insert error:', error);
+          throw error;
+        }
+
+        console.log('Insert successful:', data);
       }
 
-      await loadTemplates();
       resetForm();
       setShowForm(false);
+      await loadTemplates();
     } catch (err: any) {
       console.error('Error saving template:', err);
       setError(err.message || 'حدث خطأ أثناء حفظ القالب');
@@ -159,19 +175,22 @@ export const TemplateStudio: React.FC = () => {
     if (!confirm('هل أنت متأكد من حذف هذا القالب؟')) return;
 
     try {
-      const { data: session } = await supabase.auth.getSession();
       const { error } = await supabase
         .from('whatsapp_templates')
         .update({
-          deleted_at: new Date().toISOString(),
-          deleted_by: session?.session?.user?.id
+          deleted_at: new Date().toISOString()
         })
         .eq('id', templateId);
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error deleting template:', error);
+        throw error;
+      }
+
       await loadTemplates();
     } catch (err: any) {
-      setError(err.message);
+      console.error('Delete template error:', err);
+      setError(err.message || 'فشل حذف القالب');
     }
   };
 
