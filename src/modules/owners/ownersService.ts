@@ -22,11 +22,63 @@ export interface FarmOwnerData {
 
 export class OwnersService {
   /**
-   * إنشاء مالك مزرعة جديد
+   * إنشاء مالك مزرعة جديد أو الحصول على الموجود
    */
   static async createOwner(data: Omit<FarmOwnerData, 'id' | 'created_at' | 'updated_at'>): Promise<FarmOwnerData> {
     try {
-      // تحويل البيانات للتوافق مع الجدول (full_name و mobile_number)
+      // أولاً: التحقق من وجود رقم الهاتف
+      const { data: existingOwner } = await supabase
+        .from('farm_owners')
+        .select('*')
+        .eq('mobile_number', data.owner_phone)
+        .maybeSingle();
+
+      // إذا كان موجود: تحديث بياناته وإرجاع السجل
+      if (existingOwner) {
+        console.log('📱 رقم الهاتف موجود مسبقاً، سيتم تحديث البيانات:', existingOwner.id);
+
+        const updateData = {
+          full_name: data.owner_full_name,
+          region: 'السعودية',
+          city: data.farm_location || 'غير محدد',
+          farm_area: data.farm_area,
+          farm_area_unit: data.farm_area_unit,
+          farm_type: data.farm_type,
+          actual_price: data.farm_price,
+          farm_location_region: 'السعودية',
+          farm_location_city: data.farm_location || 'غير محدد',
+          payment_grace_period: data.payment_duration_days,
+          owner_full_name: data.owner_full_name,
+          owner_phone: data.owner_phone,
+          farm_location: data.farm_location,
+          farm_price: data.farm_price,
+          payment_duration_days: data.payment_duration_days,
+          farm_image_url: data.farm_image_url,
+          manual_entry: data.manual_entry,
+          farm_type_other: data.farm_type_other,
+          bank_iban: data.bank_iban,
+          approval_status: data.approval_status,
+          status: data.status,
+          updated_at: new Date().toISOString()
+        };
+
+        const { data: updatedOwner, error: updateError } = await supabase
+          .from('farm_owners')
+          .update(updateData)
+          .eq('id', existingOwner.id)
+          .select()
+          .single();
+
+        if (updateError) {
+          console.error('Error updating owner:', updateError);
+          throw new Error(updateError.message);
+        }
+
+        console.log('✅ تم تحديث بيانات المالك بنجاح:', updatedOwner);
+        return updatedOwner;
+      }
+
+      // إذا لم يكن موجود: إنشاء سجل جديد
       const dbData = {
         // الحقول الإلزامية للنظام القديم
         full_name: data.owner_full_name,
@@ -75,10 +127,10 @@ export class OwnersService {
         throw new Error(error.message);
       }
 
-      console.log('✅ Owner created successfully:', owner);
+      console.log('✅ تم إنشاء مالك جديد بنجاح:', owner);
       return owner;
     } catch (error: any) {
-      console.error('❌ Failed to create owner:', error);
+      console.error('❌ فشل في إنشاء المالك:', error);
       throw error;
     }
   }

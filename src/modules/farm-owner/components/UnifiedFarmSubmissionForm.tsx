@@ -147,11 +147,19 @@ export const UnifiedFarmSubmissionForm: React.FC<UnifiedFarmSubmissionFormProps>
     } catch (error: any) {
       console.error('❌ Error submitting farm:', error);
 
+      // رسالة خطأ واضحة
+      let errorMessage = 'حدث خطأ أثناء إرسال طلب المزرعة.\n\nالرجاء المحاولة مرة أخرى أو التواصل مع الدعم الفني.';
+
+      // إذا كان الخطأ متعلق برقم الهاتف المكرر
+      if (error.message && error.message.includes('mobile_number')) {
+        errorMessage = '⚠️ رقم الهاتف المدخل مسجل مسبقاً في النظام.\n\nإذا كنت قد سجلت من قبل، سيتم تحديث بياناتك تلقائياً.';
+      }
+
       setErrorModal({
         isOpen: true,
         title: '❌ خطأ في إرسال الطلب',
-        message: 'حدث خطأ أثناء إرسال طلب المزرعة.\n\nالرجاء المحاولة مرة أخرى أو التواصل مع الدعم الفني.',
-        technicalDetails: `Error: ${error.message || 'Unknown error'}\n\nTimestamp: ${new Date().toISOString()}\n\nData: ${JSON.stringify(formData, null, 2)}`
+        message: errorMessage,
+        technicalDetails: `Error: ${error.message || 'Unknown error'}\n\nTimestamp: ${new Date().toISOString()}\n\nPhone: ${formData.owner_phone}`
       });
     } finally {
       setLoading(false);
