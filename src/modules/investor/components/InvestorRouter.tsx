@@ -5,7 +5,6 @@ import { InvestorService } from '../services/investorService';
 import { SessionManager } from '../services/sessionManager';
 import { Loader } from 'lucide-react';
 import { brandColors, brandGradients } from '../../finance/styles/brandColors';
-import { FloatingNavigationButton } from '../../../components/common/FloatingNavigationButton';
 
 interface InvestorRouterProps {
   onBack: () => void;
@@ -141,18 +140,11 @@ export function InvestorRouter({ onBack, onGoToPublic, autoLoginPhone, autoLogin
   }
 
   return (
-    <>
-      <InvestorDashboard
-        phone={investorPhone}
-        onLogout={handleLogout}
-        isFirstTimeLogin={isFirstTimeLogin}
-      />
-      {onGoToPublic && (
-        <FloatingNavigationButton
-          onNavigate={onGoToPublic}
-          userType="investor"
-        />
-      )}
-    </>
+    <InvestorDashboard
+      phone={investorPhone}
+      onLogout={handleLogout}
+      isFirstTimeLogin={isFirstTimeLogin}
+      onGoToPublic={onGoToPublic}
+    />
   );
 }
