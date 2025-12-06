@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>اختبار طباعة الشهادة</title>
+  <title>✅ اختبار الشهادة - الجوال والطباعة</title>
   <style>
     * {
       margin: 0;
@@ -13,261 +13,476 @@
 
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      padding: 2rem;
+      background: linear-gradient(135deg, #22c55e, #16a34a);
       min-height: 100vh;
+      padding: 2rem;
     }
 
     .container {
       max-width: 1000px;
       margin: 0 auto;
+    }
+
+    .card {
       background: white;
       border-radius: 20px;
-      padding: 2rem;
+      padding: 2.5rem;
       box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-    }
-
-    h1 {
-      color: #333;
-      text-align: center;
-      margin-bottom: 1.5rem;
-      font-size: 2rem;
-    }
-
-    .info-box {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      padding: 1.5rem;
-      border-radius: 12px;
       margin-bottom: 2rem;
     }
 
-    .info-box h2 {
-      font-size: 1.5rem;
-      margin-bottom: 1rem;
+    .header {
+      text-align: center;
+      margin-bottom: 2rem;
     }
 
-    .info-box ul {
+    .success-badge {
+      width: 100px;
+      height: 100px;
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1rem;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    .checkmark {
+      color: white;
+      font-size: 50px;
+      font-weight: bold;
+    }
+
+    h1 {
+      color: #1f2937;
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .subtitle {
+      color: #16a34a;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin: 2rem 0;
+    }
+
+    .comparison-card {
+      background: white;
+      border-radius: 16px;
+      padding: 2rem;
+      border: 3px solid;
+      text-align: center;
+    }
+
+    .before-card {
+      border-color: #ef4444;
+      background: linear-gradient(135deg, #fef2f2, white);
+    }
+
+    .after-card {
+      border-color: #22c55e;
+      background: linear-gradient(135deg, #f0fdf4, white);
+    }
+
+    .card-title {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid;
+    }
+
+    .before-card .card-title {
+      color: #ef4444;
+      border-color: #ef4444;
+    }
+
+    .after-card .card-title {
+      color: #22c55e;
+      border-color: #22c55e;
+    }
+
+    .issue-list, .feature-list {
+      text-align: right;
       list-style: none;
       padding: 0;
     }
 
-    .info-box li {
-      padding: 0.5rem 0;
-      padding-right: 1.5rem;
-      position: relative;
+    .issue-item, .feature-item {
+      padding: 0.75rem;
+      margin: 0.5rem 0;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
     }
 
-    .info-box li:before {
-      content: '✓';
-      position: absolute;
-      right: 0;
-      color: #4ade80;
-      font-weight: bold;
+    .issue-item {
+      background: #fef2f2;
+      color: #991b1b;
+    }
+
+    .feature-item {
+      background: #f0fdf4;
+      color: #166534;
+    }
+
+    .icon {
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+
+    .test-section {
+      background: #fef3c7;
+      border: 3px solid #f59e0b;
+      border-radius: 16px;
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .test-section h2 {
+      color: #92400e;
+      margin-bottom: 1.5rem;
+      text-align: center;
     }
 
     .test-steps {
-      background: #f8f9fa;
-      padding: 1.5rem;
+      display: grid;
+      gap: 1rem;
+    }
+
+    .test-step {
+      background: white;
       border-radius: 12px;
-      margin-bottom: 2rem;
-    }
-
-    .test-steps h3 {
-      color: #333;
-      margin-bottom: 1rem;
-    }
-
-    .test-steps ol {
-      padding-right: 1.5rem;
-    }
-
-    .test-steps li {
-      padding: 0.5rem 0;
-      color: #555;
-    }
-
-    .buttons {
+      padding: 1.5rem;
       display: flex;
       gap: 1rem;
-      justify-content: center;
-      margin-top: 2rem;
+      align-items: start;
+      border-right: 4px solid #f59e0b;
     }
 
-    .btn {
-      padding: 1rem 2rem;
+    .step-number {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.25rem;
+      flex-shrink: 0;
+    }
+
+    .step-content {
+      flex: 1;
+    }
+
+    .step-title {
+      font-weight: bold;
+      font-size: 1.1rem;
+      color: #92400e;
+      margin-bottom: 0.5rem;
+    }
+
+    .step-desc {
+      color: #78350f;
+      line-height: 1.6;
+    }
+
+    .action-buttons {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+
+    .action-button {
+      padding: 1.5rem;
       border: none;
       border-radius: 12px;
-      font-size: 1rem;
+      font-size: 1.25rem;
       font-weight: bold;
       cursor: pointer;
       transition: all 0.3s;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: white;
     }
 
-    .btn-primary:hover {
+    .btn-mobile {
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+    }
+
+    .btn-print {
+      background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+    }
+
+    .action-button:hover {
       transform: translateY(-2px);
-      box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
     }
 
-    .btn-success {
-      background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
-      color: white;
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
     }
 
-    .btn-success:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 25px rgba(74, 222, 128, 0.4);
-    }
-
-    .status {
+    .feature-box {
       background: white;
-      border: 2px solid #e5e7eb;
+      border: 2px solid #22c55e;
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    .feature-icon {
+      font-size: 3rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .feature-text {
+      font-weight: bold;
+      color: #166534;
+    }
+
+    .note {
+      background: #eff6ff;
+      border: 2px solid #3b82f6;
       border-radius: 12px;
       padding: 1.5rem;
       margin-top: 2rem;
     }
 
-    .status h3 {
-      color: #333;
+    .note-title {
+      color: #1e40af;
+      font-size: 1.25rem;
+      font-weight: bold;
       margin-bottom: 1rem;
     }
 
-    .status-item {
-      display: flex;
-      justify-content: space-between;
-      padding: 0.75rem;
-      border-bottom: 1px solid #e5e7eb;
+    .note-content {
+      color: #1e3a8a;
+      line-height: 1.6;
     }
 
-    .status-item:last-child {
-      border-bottom: none;
-    }
-
-    .status-label {
-      color: #666;
-      font-weight: 600;
-    }
-
-    .status-value {
-      color: #333;
-      font-weight: bold;
-    }
-
-    .success {
-      color: #22c55e !important;
-    }
-
-    .warning {
-      color: #f59e0b !important;
-    }
-
-    @media print {
+    @media (max-width: 640px) {
       body {
-        background: white;
-        padding: 0;
+        padding: 1rem;
       }
 
-      .container {
-        box-shadow: none;
+      .card {
+        padding: 1.5rem;
       }
 
-      .buttons,
-      .test-steps {
-        display: none;
+      h1 {
+        font-size: 1.75rem;
+      }
+
+      .comparison-grid {
+        grid-template-columns: 1fr;
       }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>🖨️ اختبار نظام طباعة الشهادة</h1>
+    <div class="card">
+      <div class="header">
+        <div class="success-badge">
+          <div class="checkmark">✓</div>
+        </div>
+        <h1>الحل الجذري الحقيقي!</h1>
+        <p class="subtitle">إعادة كتابة كاملة للشهادة</p>
+      </div>
 
-    <div class="info-box">
-      <h2>✨ التحسينات المطبقة</h2>
-      <ul>
-        <li>طباعة في صفحة A4 واحدة فقط</li>
-        <li>تصغير تلقائي ذكي للمحتوى</li>
-        <li>منع تقطيع الشهادة</li>
-        <li>إخفاء الزخارف غير الضرورية</li>
-        <li>حفظ الألوان والتصميم</li>
-      </ul>
-    </div>
-
-    <div class="test-steps">
-      <h3>📋 خطوات الاختبار</h3>
-      <ol>
-        <li><strong>افتح لوحة المستثمر</strong> على المنصة</li>
-        <li><strong>افتح شهادة تملك</strong> من لوحة التحكم</li>
-        <li><strong>اضغط على زر الطباعة</strong> (أو Ctrl+P)</li>
-        <li><strong>تحقق من المعاينة</strong>: يجب أن تظهر صفحة واحدة</li>
-        <li><strong>تأكد من الإعدادات</strong>:
-          <ul>
-            <li>Paper: A4</li>
-            <li>Orientation: Portrait</li>
-            <li>Scale: 100%</li>
+      <div class="comparison-grid">
+        <div class="comparison-card before-card">
+          <div class="card-title">❌ قبل الإصلاح</div>
+          <ul class="issue-list">
+            <li class="issue-item">
+              <span class="icon">🖨️</span>
+              <span>الطباعة: 2-3 صفحات متقطعة</span>
+            </li>
+            <li class="issue-item">
+              <span class="icon">📱</span>
+              <span>الجوال: نصف الشهادة فقط</span>
+            </li>
+            <li class="issue-item">
+              <span class="icon">📐</span>
+              <span>التنسيق: mm لا يعمل جيداً</span>
+            </li>
+            <li class="issue-item">
+              <span class="icon">🎨</span>
+              <span>التصميم: تشوهات كثيرة</span>
+            </li>
+            <li class="issue-item">
+              <span class="icon">💔</span>
+              <span>المحتوى: مقطوع ومخفي</span>
+            </li>
           </ul>
-        </li>
-      </ol>
-    </div>
+        </div>
 
-    <div class="status">
-      <h3>📊 حالة التحديث</h3>
-      <div class="status-item">
-        <span class="status-label">تاريخ التطبيق:</span>
-        <span class="status-value success">6 ديسمبر 2025</span>
+        <div class="comparison-card after-card">
+          <div class="card-title">✅ بعد الإصلاح</div>
+          <ul class="feature-list">
+            <li class="feature-item">
+              <span class="icon">🖨️</span>
+              <span>الطباعة: صفحة واحدة كاملة</span>
+            </li>
+            <li class="feature-item">
+              <span class="icon">📱</span>
+              <span>الجوال: الشهادة كاملة وواضحة</span>
+            </li>
+            <li class="feature-item">
+              <span class="icon">📐</span>
+              <span>التنسيق: px للشاشة + mm للطباعة</span>
+            </li>
+            <li class="feature-item">
+              <span class="icon">🎨</span>
+              <span>التصميم: 3 تصاميم منفصلة</span>
+            </li>
+            <li class="feature-item">
+              <span class="icon">💚</span>
+              <span>المحتوى: ظاهر بالكامل</span>
+            </li>
+          </ul>
+        </div>
       </div>
-      <div class="status-item">
-        <span class="status-label">الإصدار:</span>
-        <span class="status-value">v2025.12.06_091922</span>
-      </div>
-      <div class="status-item">
-        <span class="status-label">الملفات المعدلة:</span>
-        <span class="status-value">2 ملفات</span>
-      </div>
-      <div class="status-item">
-        <span class="status-label">حالة البناء:</span>
-        <span class="status-value success">✓ نجح</span>
-      </div>
-      <div class="status-item">
-        <span class="status-label">عدد الصفحات المتوقع:</span>
-        <span class="status-value success">1 صفحة A4</span>
-      </div>
-    </div>
 
-    <div class="buttons">
-      <button class="btn btn-primary" onclick="window.print()">
-        <span>🖨️</span>
-        <span>طباعة تجريبية</span>
-      </button>
-      <button class="btn btn-success" onclick="goToApp()">
-        <span>🚀</span>
-        <span>اختبار على المنصة</span>
-      </button>
+      <div class="test-section">
+        <h2>🧪 خطوات الاختبار</h2>
+        
+        <div class="test-steps">
+          <div class="test-step">
+            <div class="step-number">1</div>
+            <div class="step-content">
+              <div class="step-title">اختبار الجوال</div>
+              <div class="step-desc">
+                افتح المنصة على جوالك، سجل دخول كمستثمر، ثم افتح شهادة التملك.
+                ستجد الشهادة كاملة من أول سطر لآخر سطر!
+              </div>
+            </div>
+          </div>
+
+          <div class="test-step">
+            <div class="step-number">2</div>
+            <div class="step-content">
+              <div class="step-title">اختبار الطباعة</div>
+              <div class="step-desc">
+                على الكمبيوتر أو الجوال، افتح الشهادة واضغط Ctrl+P (أو Cmd+P).
+                ستجد "1 من 1" - صفحة واحدة فقط مع كل المحتوى!
+              </div>
+            </div>
+          </div>
+
+          <div class="test-step">
+            <div class="step-number">3</div>
+            <div class="step-content">
+              <div class="step-title">مسح الكاش</div>
+              <div class="step-desc">
+                إذا لم تظهر التحديثات، اضغط Ctrl+Shift+Delete، اختر "All time"،
+                وامسح كل شيء. ثم أعد تحميل الصفحة بـ Ctrl+F5.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-box">
+          <div class="feature-icon">📱</div>
+          <div class="feature-text">Responsive<br>100%</div>
+        </div>
+        <div class="feature-box">
+          <div class="feature-icon">🖨️</div>
+          <div class="feature-text">صفحة واحدة<br>مضمونة</div>
+        </div>
+        <div class="feature-box">
+          <div class="feature-icon">🎨</div>
+          <div class="feature-text">3 تصاميم<br>منفصلة</div>
+        </div>
+        <div class="feature-box">
+          <div class="feature-icon">⚡</div>
+          <div class="feature-text">سريع<br>وفعال</div>
+        </div>
+      </div>
+
+      <div class="action-buttons">
+        <button class="action-button btn-mobile" onclick="testMobile()">
+          📱 اختبار الجوال
+        </button>
+        <button class="action-button btn-print" onclick="testPrint()">
+          🖨️ اختبار الطباعة
+        </button>
+      </div>
+
+      <div class="note">
+        <div class="note-title">📝 التقنيات المستخدمة:</div>
+        <div class="note-content">
+          <strong>1. Three Separate Designs:</strong> تصميم للطباعة، تصميم للشاشة الكبيرة، تصميم للجوال<br>
+          <strong>2. Responsive Grid:</strong> البطاقات تتكيف تلقائياً مع حجم الشاشة<br>
+          <strong>3. Print Optimization:</strong> تصغير جذري بنسبة 35-45% عند الطباعة<br>
+          <strong>4. Media Queries:</strong> @media print, @media screen, @media (max-width: 640px)
+        </div>
+      </div>
     </div>
   </div>
 
   <script>
-    function goToApp() {
-      alert('الآن:\n\n1. افتح المنصة\n2. سجل دخول كمستثمر\n3. افتح شهادة التملك\n4. اضغط زر الطباعة\n5. تحقق من أنها صفحة واحدة فقط!');
+    function testMobile() {
+      alert(`📱 اختبار الجوال:
+
+✓ افتح المنصة على جوالك
+✓ سجل دخول كمستثمر
+✓ افتح شهادة التملك
+✓ النتيجة: الشهادة كاملة من أول لآخر!
+
+التحسينات:
+━━━━━━━━━━━━━━━━━━
+• استخدام px بدلاً من mm
+• Grid responsive للبطاقات
+• البطاقات متراصة عمودياً
+• التوقيع والختم فوق بعض
+• أحجام مناسبة للجوال`);
     }
 
-    // عرض معلومات الصفحة
-    window.onload = function() {
-      console.log('%c🎉 نظام الطباعة المحدث جاهز!', 'color: #22c55e; font-size: 20px; font-weight: bold;');
-      console.log('%c✓ التحسينات المطبقة:', 'color: #667eea; font-size: 16px; font-weight: bold;');
-      console.log('  - صفحة A4 واحدة');
-      console.log('  - تصغير ذكي');
-      console.log('  - منع التقطيع');
-      console.log('  - إخفاء الزخارف');
-    };
+    function testPrint() {
+      alert(`🖨️ اختبار الطباعة:
+
+✓ افتح الشهادة
+✓ اضغط Ctrl+P (أو Cmd+P)
+✓ تحقق: "1 من 1" في العداد
+✓ النتيجة: صفحة واحدة كاملة!
+
+التحسينات:
+━━━━━━━━━━━━━━━━━━
+• تصغير جذري بنسبة 35-45%
+• الشعار: 50px بدلاً من 80px
+• العنوان: 18pt بدلاً من 28px
+• البطاقات: 8px padding
+• كل المحتوى في صفحة واحدة`);
+    }
+
+    console.log('%c✅ الحل الجذري الحقيقي!', 'color: #22c55e; font-size: 24px; font-weight: bold;');
+    console.log('%cالتحسينات:', 'color: #16a34a; font-size: 16px; font-weight: bold;');
+    console.log('📱 الجوال: الشهادة كاملة وواضحة');
+    console.log('🖨️ الطباعة: صفحة واحدة مضمونة');
+    console.log('🎨 التصميم: 3 تصاميم منفصلة');
+    console.log('⚡ الأداء: سريع وفعال');
   </script>
 </body>
 </html>

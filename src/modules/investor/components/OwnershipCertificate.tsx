@@ -1,5 +1,4 @@
 import { Award, Shield, CheckCircle2, MapPin, Calendar, Trees } from 'lucide-react';
-import { brandColors } from '../../finance/styles/brandColors';
 
 interface OwnershipCertificateProps {
   certificate: {
@@ -31,16 +30,16 @@ export function OwnershipCertificate({ certificate }: OwnershipCertificateProps)
   return (
     <>
       <style>{`
+        /* Print Styles - الأولوية للطباعة */
         @page {
           size: A4 portrait;
-          margin: 0;
+          margin: 10mm;
         }
 
         @media print {
           * {
             -webkit-print-color-adjust: exact !important;
             print-color-adjust: exact !important;
-            color-adjust: exact !important;
           }
 
           html, body {
@@ -48,56 +47,298 @@ export function OwnershipCertificate({ certificate }: OwnershipCertificateProps)
             height: 297mm;
             margin: 0;
             padding: 0;
-            overflow: hidden;
           }
 
           body * {
             visibility: hidden;
           }
 
-          .certificate-print-area,
-          .certificate-print-area * {
+          #certificate-print,
+          #certificate-print * {
             visibility: visible;
           }
 
-          .certificate-print-area {
+          #certificate-print {
             position: absolute;
             left: 0;
             top: 0;
-            width: 210mm !important;
-            height: 297mm !important;
-            max-height: 297mm !important;
+            width: 190mm !important;
+            padding: 10mm !important;
             margin: 0 !important;
-            padding: 8mm !important;
-            box-sizing: border-box !important;
             background: white !important;
-            overflow: hidden !important;
-            page-break-inside: avoid !important;
-            page-break-after: avoid !important;
-            page-break-before: avoid !important;
+            box-sizing: border-box !important;
+          }
+
+          /* تصغير جذري للطباعة */
+          .cert-logo {
+            width: 50px !important;
+            height: 50px !important;
+            margin: 0 auto 8px !important;
+          }
+
+          .cert-title {
+            font-size: 18pt !important;
+            margin: 0 0 4px !important;
+          }
+
+          .cert-subtitle {
+            font-size: 9pt !important;
+            margin: 0 0 10px !important;
+          }
+
+          .cert-intro {
+            font-size: 10pt !important;
+            margin: 0 0 10px !important;
+          }
+
+          .cert-name {
+            font-size: 14pt !important;
+            padding: 8px 12px !important;
+            margin: 0 auto 10px !important;
+          }
+
+          .cert-trees-container {
+            margin: 10px 0 !important;
+          }
+
+          .cert-trees-number {
+            font-size: 18pt !important;
+            padding: 6px 12px !important;
+          }
+
+          .cert-trees-label {
+            font-size: 11pt !important;
+          }
+
+          .cert-farm-name {
+            font-size: 13pt !important;
+            margin: 8px 0 12px !important;
+          }
+
+          .cert-info-cards {
+            display: flex !important;
+            justify-content: space-between !important;
+            gap: 8px !important;
+            margin: 12px 0 !important;
+          }
+
+          .cert-info-card {
+            flex: 1 !important;
+            padding: 8px 6px !important;
+            font-size: 8pt !important;
+          }
+
+          .cert-info-label {
+            font-size: 7pt !important;
+            margin: 4px 0 !important;
+          }
+
+          .cert-info-value {
+            font-size: 9pt !important;
+          }
+
+          .cert-signature-section {
+            display: flex !important;
+            justify-content: space-around !important;
+            margin: 12px 0 !important;
+          }
+
+          .cert-seal {
+            width: 50px !important;
+            height: 50px !important;
+            margin: 0 auto 6px !important;
+          }
+
+          .cert-sig-label {
+            font-size: 9pt !important;
+            margin: 4px 0 2px !important;
+          }
+
+          .cert-sig-sublabel {
+            font-size: 7pt !important;
+          }
+
+          .cert-footer {
+            padding: 8px !important;
+            font-size: 7pt !important;
+            margin-top: 12px !important;
+          }
+
+          .cert-icon-small {
+            width: 14px !important;
+            height: 14px !important;
+          }
+
+          .cert-icon-tiny {
+            width: 10px !important;
+            height: 10px !important;
           }
         }
 
+        /* Screen Styles - جوال ودسكتوب */
         @media screen {
-          .certificate-print-area {
-            width: 210mm;
-            min-height: 297mm;
-            margin: 0 auto;
-            padding: 8mm;
-            box-sizing: border-box;
+          #certificate-print {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 30px;
             background: white;
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+          }
+
+          .cert-logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 15px;
+          }
+
+          .cert-title {
+            font-size: 28px;
+            margin: 0 0 8px;
+          }
+
+          .cert-subtitle {
+            font-size: 14px;
+            margin: 0 0 20px;
+          }
+
+          .cert-intro {
+            font-size: 16px;
+            margin: 0 0 15px;
+          }
+
+          .cert-name {
+            font-size: 22px;
+            padding: 15px 25px;
+            margin: 0 auto 20px;
+            max-width: 400px;
+          }
+
+          .cert-trees-container {
+            margin: 20px 0;
+          }
+
+          .cert-trees-number {
+            font-size: 32px;
+            padding: 12px 20px;
+          }
+
+          .cert-trees-label {
+            font-size: 18px;
+          }
+
+          .cert-farm-name {
+            font-size: 20px;
+            margin: 15px 0 25px;
+          }
+
+          .cert-info-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 25px 0;
+          }
+
+          .cert-info-card {
+            padding: 15px;
+          }
+
+          .cert-info-label {
+            font-size: 12px;
+            margin: 8px 0 4px;
+          }
+
+          .cert-info-value {
+            font-size: 14px;
+          }
+
+          .cert-signature-section {
+            display: flex;
+            justify-content: space-around;
+            margin: 30px 0;
+            gap: 20px;
+          }
+
+          .cert-seal {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 10px;
+          }
+
+          .cert-sig-label {
+            font-size: 14px;
+            margin: 8px 0 4px;
+          }
+
+          .cert-sig-sublabel {
+            font-size: 12px;
+          }
+
+          .cert-footer {
+            padding: 15px;
+            font-size: 12px;
+            margin-top: 25px;
+          }
+
+          .cert-icon-small {
+            width: 24px;
+            height: 24px;
+          }
+
+          .cert-icon-tiny {
+            width: 16px;
+            height: 16px;
+          }
+        }
+
+        /* Mobile Styles */
+        @media screen and (max-width: 640px) {
+          #certificate-print {
+            margin: 10px;
+            padding: 20px;
+          }
+
+          .cert-logo {
+            width: 60px;
+            height: 60px;
+          }
+
+          .cert-title {
+            font-size: 22px;
+          }
+
+          .cert-name {
+            font-size: 18px;
+            padding: 12px 20px;
+          }
+
+          .cert-trees-number {
+            font-size: 26px;
+          }
+
+          .cert-trees-label {
+            font-size: 16px;
+          }
+
+          .cert-info-cards {
+            grid-template-columns: 1fr;
+            gap: 10px;
+          }
+
+          .cert-signature-section {
+            flex-direction: column;
+            gap: 15px;
           }
         }
       `}</style>
 
-      <div className="certificate-print-area" style={{ border: '3px solid #d4af37' }}>
-        {/* Header - مضغوط جداً */}
-        <div style={{ textAlign: 'center', marginBottom: '4mm' }}>
-          <div style={{
-            width: '25mm',
-            height: '25mm',
-            margin: '0 auto 2mm',
+      <div id="certificate-print" style={{
+        border: '3px solid #d4af37',
+        boxSizing: 'border-box'
+      }}>
+        {/* Header */}
+        <div style={{ textAlign: 'center' }}>
+          <div className="cert-logo" style={{
             border: '2px solid #d4af37',
             borderRadius: '50%',
             display: 'flex',
@@ -105,14 +346,12 @@ export function OwnershipCertificate({ certificate }: OwnershipCertificateProps)
             justifyContent: 'center',
             background: 'linear-gradient(135deg, #fdfbf7, #f8f5ed)'
           }}>
-            <Trees style={{ width: '12mm', height: '12mm', color: '#d4af37' }} />
+            <Trees className="cert-icon-small" style={{ color: '#d4af37' }} />
           </div>
 
-          <h1 style={{
-            fontSize: '18pt',
+          <h1 className="cert-title" style={{
             fontWeight: 'bold',
             color: '#d4af37',
-            margin: '0 0 1mm',
             letterSpacing: '1px'
           }}>
             شهادة تملك
@@ -122,153 +361,127 @@ export function OwnershipCertificate({ certificate }: OwnershipCertificateProps)
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: '2mm',
-            marginBottom: '1mm'
+            gap: '8px',
+            marginBottom: '8px'
           }}>
-            <div style={{ width: '15mm', height: '0.5px', background: '#d4af37' }}></div>
-            <Shield style={{ width: '3mm', height: '3mm', color: '#d4af37' }} />
-            <div style={{ width: '15mm', height: '0.5px', background: '#d4af37' }}></div>
+            <div style={{ width: '40px', height: '1px', background: '#d4af37' }}></div>
+            <Shield className="cert-icon-tiny" style={{ color: '#d4af37' }} />
+            <div style={{ width: '40px', height: '1px', background: '#d4af37' }}></div>
           </div>
 
-          <p style={{ fontSize: '8pt', color: '#666', margin: 0 }}>
+          <p className="cert-subtitle" style={{ color: '#666' }}>
             Ownership Certificate
           </p>
         </div>
 
-        {/* Body - مضغوط */}
-        <div style={{ marginBottom: '4mm' }}>
-          <p style={{
-            fontSize: '10pt',
+        {/* Body */}
+        <div>
+          <p className="cert-intro" style={{
             textAlign: 'center',
             color: '#333',
-            margin: '0 0 2mm',
-            lineHeight: '1.2'
+            lineHeight: '1.4'
           }}>
-            تشهد <strong style={{ color: '#d4af37', fontSize: '11pt' }}>منصة النخيل والزيتون</strong> بأن السيد / السيدة
+            تشهد <strong style={{ color: '#d4af37' }}>منصة النخيل والزيتون</strong> بأن السيد / السيدة
           </p>
 
-          <div style={{
+          <div className="cert-name" style={{
             textAlign: 'center',
-            padding: '2mm 6mm',
-            margin: '0 auto 2mm',
-            maxWidth: '100mm',
             background: 'linear-gradient(135deg, rgba(212,175,55,0.1), rgba(212,175,55,0.05))',
-            border: '1.5px solid #d4af37',
-            borderRadius: '6px'
+            border: '2px solid #d4af37',
+            borderRadius: '8px',
+            fontWeight: 'bold',
+            color: '#d4af37'
           }}>
-            <p style={{
-              fontSize: '14pt',
-              fontWeight: 'bold',
-              color: '#d4af37',
-              margin: 0
-            }}>
-              {certificate.investor_name}
-            </p>
+            {certificate.investor_name}
           </div>
 
           <p style={{
-            fontSize: '10pt',
+            fontSize: '14px',
             textAlign: 'center',
             color: '#333',
-            margin: '0 0 2mm'
+            margin: '10px 0'
           }}>
             مالك لعدد
           </p>
 
-          <div style={{
+          <div className="cert-trees-container" style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: '3mm',
-            marginBottom: '2mm'
+            gap: '12px'
           }}>
-            <div style={{
-              padding: '2mm 4mm',
+            <div className="cert-trees-number" style={{
               background: 'linear-gradient(135deg, #fdfbf7, #f8f5ed)',
-              border: '1.5px solid #d4af37',
-              borderRadius: '5px'
+              border: '2px solid #d4af37',
+              borderRadius: '8px',
+              fontWeight: 'bold',
+              color: '#d4af37'
             }}>
-              <span style={{
-                fontSize: '16pt',
-                fontWeight: 'bold',
-                color: '#d4af37'
-              }}>
-                {certificate.reserved_trees.toLocaleString('ar-SA')}
-              </span>
+              {certificate.reserved_trees.toLocaleString('ar-SA')}
             </div>
-            <span style={{ fontSize: '11pt', fontWeight: 'bold', color: '#333' }}>
+            <span className="cert-trees-label" style={{ fontWeight: 'bold', color: '#333' }}>
               شجرة {certificate.farm_type}
             </span>
           </div>
 
           <p style={{
-            fontSize: '10pt',
+            fontSize: '14px',
             textAlign: 'center',
             color: '#333',
-            margin: '0 0 1mm'
+            margin: '10px 0 5px'
           }}>
             في مزرعة
           </p>
 
-          <p style={{
-            fontSize: '13pt',
+          <p className="cert-farm-name" style={{
             fontWeight: 'bold',
             textAlign: 'center',
-            color: '#d4af37',
-            margin: '0 0 4mm'
+            color: '#d4af37'
           }}>
             {certificate.farm_name}
           </p>
         </div>
 
-        {/* Info Cards - مضغوط */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr 1fr 1fr',
-          gap: '2mm',
-          marginBottom: '4mm'
-        }}>
-          <div style={{
+        {/* Info Cards */}
+        <div className="cert-info-cards">
+          <div className="cert-info-card" style={{
             textAlign: 'center',
-            padding: '2mm',
             background: 'linear-gradient(135deg, rgba(212,175,55,0.05), rgba(255,255,255,0.5))',
-            border: '1px solid rgba(212,175,55,0.2)',
-            borderRadius: '5px'
+            border: '1px solid rgba(212,175,55,0.3)',
+            borderRadius: '6px'
           }}>
-            <MapPin style={{ width: '5mm', height: '5mm', color: '#d4af37', margin: '0 auto 0.5mm' }} />
-            <p style={{ fontSize: '7pt', color: '#666', margin: '0 0 0.5mm' }}>الموقع</p>
-            <p style={{ fontSize: '8pt', fontWeight: 'bold', color: '#333', margin: 0 }}>
+            <MapPin className="cert-icon-tiny" style={{ color: '#d4af37', margin: '0 auto' }} />
+            <p className="cert-info-label" style={{ color: '#666' }}>الموقع</p>
+            <p className="cert-info-value" style={{ fontWeight: 'bold', color: '#333' }}>
               {certificate.farm_location || 'السعودية'}
             </p>
           </div>
 
-          <div style={{
+          <div className="cert-info-card" style={{
             textAlign: 'center',
-            padding: '2mm',
             background: 'linear-gradient(135deg, rgba(212,175,55,0.05), rgba(255,255,255,0.5))',
-            border: '1px solid rgba(212,175,55,0.2)',
-            borderRadius: '5px'
+            border: '1px solid rgba(212,175,55,0.3)',
+            borderRadius: '6px'
           }}>
-            <Award style={{ width: '5mm', height: '5mm', color: '#d4af37', margin: '0 auto 0.5mm' }} />
-            <p style={{ fontSize: '7pt', color: '#666', margin: '0 0 0.5mm' }}>رقم الشهادة</p>
-            <p style={{ fontSize: '8pt', fontWeight: 'bold', color: '#333', margin: 0 }}>
+            <Award className="cert-icon-tiny" style={{ color: '#d4af37', margin: '0 auto' }} />
+            <p className="cert-info-label" style={{ color: '#666' }}>رقم الشهادة</p>
+            <p className="cert-info-value" style={{ fontWeight: 'bold', color: '#333', wordBreak: 'break-all' }}>
               {certificate.certificate_code}
             </p>
           </div>
 
-          <div style={{
+          <div className="cert-info-card" style={{
             textAlign: 'center',
-            padding: '2mm',
             background: 'linear-gradient(135deg, rgba(212,175,55,0.05), rgba(255,255,255,0.5))',
-            border: '1px solid rgba(212,175,55,0.2)',
-            borderRadius: '5px'
+            border: '1px solid rgba(212,175,55,0.3)',
+            borderRadius: '6px'
           }}>
-            <Calendar style={{ width: '5mm', height: '5mm', color: '#d4af37', margin: '0 auto 0.5mm' }} />
-            <p style={{ fontSize: '7pt', color: '#666', margin: '0 0 0.5mm' }}>تاريخ الإصدار</p>
-            <p style={{ fontSize: '7.5pt', fontWeight: 'bold', color: '#333', margin: '0 0 0.5mm' }}>
+            <Calendar className="cert-icon-tiny" style={{ color: '#d4af37', margin: '0 auto' }} />
+            <p className="cert-info-label" style={{ color: '#666' }}>تاريخ الإصدار</p>
+            <p className="cert-info-value" style={{ fontWeight: 'bold', color: '#333', marginBottom: '4px' }}>
               {gregorianDate}
             </p>
-            <p style={{ fontSize: '6.5pt', color: '#666', margin: 0 }}>
+            <p style={{ fontSize: '11px', color: '#666' }}>
               {hijriDate}
             </p>
           </div>
@@ -276,41 +489,33 @@ export function OwnershipCertificate({ certificate }: OwnershipCertificateProps)
 
         {/* Separator */}
         <div style={{
-          height: '0.5px',
+          height: '1px',
           background: 'linear-gradient(to right, transparent, #d4af37, transparent)',
-          margin: '4mm 0'
+          margin: '20px 0'
         }}></div>
 
-        {/* Signature & Seal - مضغوط */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
-          gap: '4mm',
-          marginBottom: '4mm'
-        }}>
-          <div style={{ textAlign: 'center' }}>
+        {/* Signature & Seal */}
+        <div className="cert-signature-section">
+          <div style={{ textAlign: 'center', flex: 1 }}>
             <div style={{
-              fontSize: '20pt',
+              fontSize: '24px',
               color: '#d4af37',
               opacity: 0.6,
-              marginBottom: '1mm',
+              marginBottom: '8px',
               fontFamily: 'cursive'
             }}>
               _______
             </div>
-            <p style={{ fontSize: '9pt', fontWeight: 'bold', color: '#333', margin: '0 0 0.5mm' }}>
+            <p className="cert-sig-label" style={{ fontWeight: 'bold', color: '#333' }}>
               توقيع المدير العام
             </p>
-            <p style={{ fontSize: '7pt', color: '#666', margin: 0 }}>
+            <p className="cert-sig-sublabel" style={{ color: '#666' }}>
               General Manager Signature
             </p>
           </div>
 
-          <div style={{ textAlign: 'center' }}>
-            <div style={{
-              width: '22mm',
-              height: '22mm',
-              margin: '0 auto 1mm',
+          <div style={{ textAlign: 'center', flex: 1 }}>
+            <div className="cert-seal" style={{
               borderRadius: '50%',
               border: '2px solid #d4af37',
               display: 'flex',
@@ -319,31 +524,29 @@ export function OwnershipCertificate({ certificate }: OwnershipCertificateProps)
               justifyContent: 'center',
               background: 'radial-gradient(circle, rgba(212,175,55,0.1), rgba(212,175,55,0.05))'
             }}>
-              <CheckCircle2 style={{ width: '8mm', height: '8mm', color: '#d4af37' }} />
-              <span style={{ fontSize: '7pt', fontWeight: 'bold', color: '#d4af37' }}>معتمد</span>
-              <span style={{ fontSize: '6pt', color: '#666' }}>CERTIFIED</span>
+              <CheckCircle2 style={{ width: '30px', height: '30px', color: '#d4af37' }} />
+              <span style={{ fontSize: '10px', fontWeight: 'bold', color: '#d4af37', marginTop: '4px' }}>معتمد</span>
             </div>
-            <p style={{ fontSize: '9pt', fontWeight: 'bold', color: '#333', margin: '0 0 0.5mm' }}>
+            <p className="cert-sig-label" style={{ fontWeight: 'bold', color: '#333' }}>
               الختم الرسمي
             </p>
-            <p style={{ fontSize: '7pt', color: '#666', margin: 0 }}>
+            <p className="cert-sig-sublabel" style={{ color: '#666' }}>
               Official Seal
             </p>
           </div>
         </div>
 
-        {/* Footer Note - مضغوط */}
-        <div style={{
-          padding: '2mm',
+        {/* Footer */}
+        <div className="cert-footer" style={{
           background: 'linear-gradient(135deg, rgba(212,175,55,0.05), rgba(255,255,255,0.3))',
           border: '1px dashed rgba(212,175,55,0.3)',
-          borderRadius: '5px',
-          textAlign: 'center'
+          borderRadius: '6px',
+          textAlign: 'center',
+          color: '#666',
+          lineHeight: '1.5'
         }}>
-          <p style={{ fontSize: '7pt', color: '#666', margin: 0, lineHeight: '1.3' }}>
-            هذه الشهادة صادرة من منصة النخيل والزيتون الإلكترونية وتعتبر وثيقة رسمية تثبت ملكية الأشجار المذكورة أعلاه.
-            للتحقق من صحة الشهادة، يرجى زيارة موقعنا الإلكتروني وإدخال رقم الشهادة.
-          </p>
+          هذه الشهادة صادرة من منصة النخيل والزيتون وتعتبر وثيقة رسمية تثبت ملكية الأشجار المذكورة.
+          للتحقق من صحتها، يرجى زيارة موقعنا الإلكتروني.
         </div>
       </div>
     </>
