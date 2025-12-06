@@ -71,8 +71,14 @@ export const WhatsAppDashboard: React.FC<WhatsAppDashboardProps> = ({ onBack }) 
       setLoading(true);
       const data = await whatsappService.getStats();
       setStats(data);
-    } catch (err) {
+    } catch (err: any) {
       console.error('Failed to load stats:', err);
+      setStats({
+        total_providers: 0,
+        total_messages: 0,
+        total_templates: 0,
+        sent_today: 0
+      });
     } finally {
       setLoading(false);
     }

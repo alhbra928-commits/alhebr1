@@ -43,10 +43,12 @@ export const ExternalIntegration: React.FC = () => {
   const loadProviders = async () => {
     try {
       setLoading(true);
+      setError(null);
       const data = await whatsappService.getProviders();
       setProviders(data);
     } catch (err: any) {
-      setError(err.message);
+      console.error('Error loading providers:', err);
+      setError(err.message || 'حدث خطأ في تحميل البيانات');
     } finally {
       setLoading(false);
     }
@@ -56,6 +58,7 @@ export const ExternalIntegration: React.FC = () => {
     e.preventDefault();
 
     try {
+      setError(null);
       if (editingProvider) {
         await whatsappService.updateProvider(editingProvider.id, formData);
       } else {
@@ -65,13 +68,15 @@ export const ExternalIntegration: React.FC = () => {
       await loadProviders();
       resetForm();
     } catch (err: any) {
-      setError(err.message);
+      console.error('Error submitting provider:', err);
+      setError(err.message || 'حدث خطأ في حفظ البيانات');
     }
   };
 
   const handleTestConnection = async (providerId: string) => {
     setTestingProvider(providerId);
     try {
+      setError(null);
       const result = await whatsappService.testConnection(providerId);
 
       if (result.success) {
@@ -82,7 +87,8 @@ export const ExternalIntegration: React.FC = () => {
 
       await loadProviders();
     } catch (err: any) {
-      setError(err.message);
+      console.error('Error testing connection:', err);
+      setError(err.message || 'حدث خطأ في اختبار الاتصال');
     } finally {
       setTestingProvider(null);
     }
@@ -90,19 +96,23 @@ export const ExternalIntegration: React.FC = () => {
 
   const handleSetDefault = async (providerId: string) => {
     try {
+      setError(null);
       await whatsappService.setDefaultProvider(providerId);
       await loadProviders();
     } catch (err: any) {
-      setError(err.message);
+      console.error('Error setting default provider:', err);
+      setError(err.message || 'حدث خطأ في تعيين المزود الافتراضي');
     }
   };
 
   const handleToggleActive = async (providerId: string, currentStatus: boolean) => {
     try {
+      setError(null);
       await whatsappService.updateProvider(providerId, { is_active: !currentStatus });
       await loadProviders();
     } catch (err: any) {
-      setError(err.message);
+      console.error('Error toggling provider status:', err);
+      setError(err.message || 'حدث خطأ في تغيير حالة المزود');
     }
   };
 
@@ -110,10 +120,12 @@ export const ExternalIntegration: React.FC = () => {
     if (!confirm('هل أنت متأكد من حذف هذا المزود؟')) return;
 
     try {
+      setError(null);
       await whatsappService.deleteProvider(providerId);
       await loadProviders();
     } catch (err: any) {
-      setError(err.message);
+      console.error('Error deleting provider:', err);
+      setError(err.message || 'حدث خطأ في حذف المزود');
     }
   };
 
