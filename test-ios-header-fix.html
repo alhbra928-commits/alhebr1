@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>اختبار إصلاح الهيدر - iPhone</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: none;
+      background: linear-gradient(135deg, #ECFDF5 0%, #F0FDF4 100%);
+    }
+
+    /* iOS Safari Fixed Header */
+    .test-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 10000;
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.98) 0%, rgba(10, 20, 15, 0.98) 100%);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      border-bottom: 1px solid rgba(16, 185, 129, 0.15);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+
+      /* iOS Safari Fix - Force Hardware Acceleration */
+      -webkit-transform: translateZ(0);
+      transform: translateZ(0);
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      -webkit-perspective: 1000;
+      perspective: 1000;
+
+      /* Prevent Safari bounce scroll interference */
+      -webkit-overflow-scrolling: touch;
+      will-change: transform;
+
+      /* iOS Safe Area Support */
+      padding-top: env(safe-area-inset-top);
+      padding-left: env(safe-area-inset-left);
+      padding-right: env(safe-area-inset-right);
+    }
+
+    /* Force layer composition for iOS */
+    .test-header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      transform: translateZ(-1px);
+    }
+
+    @media (max-width: 768px) {
+      .test-header {
+        position: -webkit-sticky;
+        position: sticky;
+        top: 0;
+      }
+    }
+
+    .header-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: white;
+      font-size: 24px;
+      font-weight: 900;
+    }
+
+    .status-badge {
+      padding: 8px 20px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: white;
+      font-weight: 700;
+      font-size: 14px;
+      box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4);
+    }
+
+    .content {
+      padding: 120px 24px 40px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .test-section {
+      background: white;
+      border-radius: 20px;
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .test-section h2 {
+      color: #10b981;
+      font-size: 20px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .test-section p {
+      color: #374151;
+      line-height: 1.8;
+      margin-bottom: 12px;
+    }
+
+    .check-item {
+      display: flex;
+      align-items: start;
+      gap: 12px;
+      padding: 12px;
+      background: #F0FDF4;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      border: 2px solid #10b981;
+    }
+
+    .check-icon {
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+
+    .check-text {
+      color: #065f46;
+      font-weight: 600;
+    }
+
+    .warning-box {
+      background: #FEF3C7;
+      border: 2px solid #F59E0B;
+      border-radius: 12px;
+      padding: 16px;
+      margin-top: 20px;
+    }
+
+    .warning-box h3 {
+      color: #92400E;
+      margin-bottom: 8px;
+      font-size: 16px;
+    }
+
+    .warning-box p {
+      color: #92400E;
+      font-size: 14px;
+    }
+
+    .scroll-indicator {
+      text-align: center;
+      padding: 40px;
+      font-size: 48px;
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .fixed-notice {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      right: 20px;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: white;
+      padding: 16px 20px;
+      border-radius: 16px;
+      text-align: center;
+      font-weight: 700;
+      box-shadow: 0 8px 30px rgba(16, 185, 129, 0.4);
+      z-index: 9999;
+    }
+  </style>
+</head>
+<body>
+  <!-- Test Header -->
+  <header class="test-header">
+    <div class="header-content">
+      <div class="logo">
+        <span>🌿</span>
+        <span>مزادات</span>
+      </div>
+      <div class="status-badge">
+        ✅ ثابت
+      </div>
+    </div>
+  </header>
+
+  <!-- Content -->
+  <div class="content">
+    <div class="test-section">
+      <h2>🎯 اختبار إصلاح الهيدر على iPhone</h2>
+      <p>مرحباً! هذه الصفحة لاختبار إصلاح مشكلة الهيدر المتحرك على أجهزة iPhone.</p>
+    </div>
+
+    <div class="test-section">
+      <h2>✅ الإصلاحات المطبقة</h2>
+
+      <div class="check-item">
+        <span class="check-icon">⚡</span>
+        <span class="check-text">تفعيل Hardware Acceleration باستخدام GPU</span>
+      </div>
+
+      <div class="check-item">
+        <span class="check-icon">🔒</span>
+        <span class="check-text">منع تأثير Bounce Scroll على العناصر الثابتة</span>
+      </div>
+
+      <div class="check-item">
+        <span class="check-icon">📱</span>
+        <span class="check-text">استخدام Position Sticky على iOS</span>
+      </div>
+
+      <div class="check-item">
+        <span class="check-icon">🎯</span>
+        <span class="check-text">دعم Safe Area للأجهزة ذات النوتش</span>
+      </div>
+
+      <div class="check-item">
+        <span class="check-icon">🔧</span>
+        <span class="check-text">Force Layer Composition لتحسين الأداء</span>
+      </div>
+    </div>
+
+    <div class="test-section">
+      <h2>🧪 كيفية الاختبار</h2>
+      <p><strong>1. قم بالتمرير للأسفل بسرعة</strong></p>
+      <p>يجب أن يبقى الهيدر الأسود ثابتاً في الأعلى</p>
+
+      <p><strong>2. قم بالتمرير للأعلى بسرعة</strong></p>
+      <p>الهيدر لا يجب أن يتحرك أو يهتز</p>
+
+      <p><strong>3. جرب التمرير السريع المتكرر</strong></p>
+      <p>الهيدر يجب أن يبقى مستقراً تماماً</p>
+
+      <div class="warning-box">
+        <h3>⚠️ ملاحظة مهمة</h3>
+        <p>الإصلاح مصمم خصيصاً لـ Safari على iOS. إذا كنت تستخدم متصفح آخر، قد لا تلاحظ الفرق.</p>
+      </div>
+    </div>
+
+    <div class="scroll-indicator">
+      👇
+      <p style="font-size: 16px; margin-top: 10px;">مرر للأسفل للاختبار</p>
+    </div>
+
+    <!-- Filler content to enable scrolling -->
+    <div class="test-section">
+      <h2>📝 محتوى اختباري 1</h2>
+      <p>هذا محتوى اختباري لتمكين التمرير. قم بالتمرير للأعلى والأسفل بسرعة.</p>
+      <p>الهيدر في الأعلى يجب أن يبقى ثابتاً تماماً ولا يتحرك مع التمرير.</p>
+    </div>
+
+    <div class="test-section">
+      <h2>📝 محتوى اختباري 2</h2>
+      <p>استمر في التمرير... الهيدر يجب أن يكون ثابتاً.</p>
+      <p>في السابق، كان الهيدر يتحرك قليلاً عند التمرير بسبب خاصية Safari التي تخفي شريط العنوان.</p>
+    </div>
+
+    <div class="test-section">
+      <h2>📝 محتوى اختباري 3</h2>
+      <p>الآن مع الإصلاحات الجديدة:</p>
+      <p>✅ تم استخدام Hardware Acceleration</p>
+      <p>✅ تم منع Bounce Scroll من التأثير</p>
+      <p>✅ تم استخدام Position Sticky على iOS</p>
+    </div>
+
+    <div class="test-section">
+      <h2>📝 محتوى اختباري 4</h2>
+      <p>جرب التمرير السريع جداً للأعلى والأسفل.</p>
+      <p>الهيدر يجب أن يبقى في مكانه دون أي حركة.</p>
+    </div>
+
+    <div class="test-section">
+      <h2>📝 محتوى اختباري 5</h2>
+      <p>ممتاز! إذا كان الهيدر ثابتاً، فالإصلاح يعمل بشكل صحيح.</p>
+      <p>يمكنك الآن استخدام المنصة بثقة على iPhone.</p>
+    </div>
+
+    <div class="test-section">
+      <h2>✨ النتيجة</h2>
+      <p>إذا بقي الهيدر الأسود في الأعلى ثابتاً تماماً أثناء التمرير، فالإصلاح نجح!</p>
+      <p>يمكنك الآن العودة للمنصة واستخدامها بشكل طبيعي.</p>
+    </div>
+  </div>
+
+  <!-- Fixed Notice -->
+  <div class="fixed-notice">
+    🎉 الهيدر ثابت ويعمل بشكل صحيح!
+  </div>
+
+  <script>
+    // Log device info for debugging
+    console.log('User Agent:', navigator.userAgent);
+    console.log('Platform:', navigator.platform);
+    console.log('iOS:', /iPhone|iPad|iPod/.test(navigator.userAgent));
+    console.log('Safari:', /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent));
+
+    // Test scroll behavior
+    let lastScrollTop = 0;
+    window.addEventListener('scroll', function() {
+      const st = window.pageYOffset || document.documentElement.scrollTop;
+      const direction = st > lastScrollTop ? 'down' : 'up';
+      console.log('Scroll Direction:', direction, 'Position:', st);
+      lastScrollTop = st <= 0 ? 0 : st;
+    }, false);
+  </script>
+</body>
+</html>

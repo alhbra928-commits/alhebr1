@@ -73,7 +73,7 @@ export function ModernTopHeader({
   return (
     <>
       <style>{`
-        /* Modern Header */
+        /* Modern Header - iOS Safari Fixed */
         .modern-header {
           position: fixed;
           top: 0;
@@ -86,6 +86,32 @@ export function ModernTopHeader({
           box-shadow:
             0 4px 30px rgba(0, 0, 0, 0.4),
             0 1px 3px rgba(16, 185, 129, 0.1);
+
+          /* iOS Safari Fix - Force Hardware Acceleration */
+          -webkit-transform: translateZ(0);
+          transform: translateZ(0);
+          -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+          -webkit-perspective: 1000;
+          perspective: 1000;
+
+          /* Prevent Safari bounce scroll interference */
+          -webkit-overflow-scrolling: touch;
+          will-change: transform;
+
+          /* iOS Safe Area Support */
+          padding-top: env(safe-area-inset-top);
+          padding-left: env(safe-area-inset-left);
+          padding-right: env(safe-area-inset-right);
+        }
+
+        /* Force layer composition for iOS */
+        .modern-header::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          z-index: -1;
+          transform: translateZ(-1px);
         }
 
         .header-container {
@@ -304,10 +330,10 @@ export function ModernTopHeader({
           pointer-events: auto;
         }
 
-        /* Mobile Menu */
+        /* Mobile Menu - iOS Fixed */
         .mobile-menu {
           position: fixed;
-          top: 72px;
+          top: calc(72px + env(safe-area-inset-top));
           left: 16px;
           right: 16px;
           background: linear-gradient(135deg, rgba(10, 20, 15, 0.98) 0%, rgba(0, 0, 0, 0.98) 100%);
@@ -323,10 +349,16 @@ export function ModernTopHeader({
           opacity: 0;
           pointer-events: none;
           transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+          /* iOS Fix */
+          -webkit-transform: translateY(-20px) translateZ(0);
+          -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
         }
 
         .mobile-menu.open {
           transform: translateY(0);
+          -webkit-transform: translateY(0) translateZ(0);
           opacity: 1;
           pointer-events: auto;
         }
@@ -385,8 +417,20 @@ export function ModernTopHeader({
           display: none;
         }
 
+        /* iOS Body Padding Fix */
+        body {
+          -webkit-overflow-scrolling: touch;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
+          .modern-header {
+            /* iOS Safari viewport fix */
+            position: -webkit-sticky;
+            position: sticky;
+            top: 0;
+          }
+
           .header-container {
             padding: 12px 16px;
           }

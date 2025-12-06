@@ -8,8 +8,49 @@ interface MobileHeaderProps {
 
 export function MobileHeader({ onMenuClick, title = 'لوحة التحكم' }: MobileHeaderProps) {
   return (
-    <header className="lg:hidden fixed top-0 left-0 right-0 z-30 bg-gradient-to-r from-amber-900 to-orange-900 text-white shadow-lg safe-area-top">
-      <div className="flex items-center justify-between px-4 py-3">
+    <>
+      <style>{`
+        /* iOS Safari Header Fix */
+        .ios-fixed-header {
+          /* Force Hardware Acceleration for iOS */
+          -webkit-transform: translateZ(0) !important;
+          transform: translateZ(0) !important;
+          -webkit-backface-visibility: hidden !important;
+          backface-visibility: hidden !important;
+          -webkit-perspective: 1000 !important;
+          perspective: 1000 !important;
+
+          /* Prevent bounce scroll interference */
+          -webkit-overflow-scrolling: touch !important;
+          will-change: transform !important;
+
+          /* Position as sticky on mobile for better iOS handling */
+          position: -webkit-sticky !important;
+          position: sticky !important;
+
+          /* iOS Safe Area Support */
+          padding-top: env(safe-area-inset-top) !important;
+          padding-left: env(safe-area-inset-left) !important;
+          padding-right: env(safe-area-inset-right) !important;
+        }
+
+        /* Force layer composition */
+        .ios-fixed-header::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          z-index: -1;
+          transform: translateZ(-1px);
+        }
+
+        /* Smooth body scrolling for iOS */
+        body {
+          -webkit-overflow-scrolling: touch;
+        }
+      `}</style>
+
+      <header className="ios-fixed-header lg:hidden fixed top-0 left-0 right-0 z-30 bg-gradient-to-r from-amber-900 to-orange-900 text-white shadow-lg safe-area-top">
+        <div className="flex items-center justify-between px-4 py-3">
         {/* Menu Button */}
         <button
           onClick={onMenuClick}
@@ -37,5 +78,6 @@ export function MobileHeader({ onMenuClick, title = 'لوحة التحكم' }: M
         </button>
       </div>
     </header>
+    </>
   );
 }
