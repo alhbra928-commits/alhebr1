@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { X } from 'lucide-react';
 
 interface ConceptPoint {
   icon: string;
@@ -6,12 +7,16 @@ interface ConceptPoint {
 }
 
 interface EnhancedConceptCardProps {
+  isOpen: boolean;
+  onClose: () => void;
   onStartOwnership: () => void;
 }
 
-export const EnhancedConceptCard: React.FC<EnhancedConceptCardProps> = ({ onStartOwnership }) => {
+export const EnhancedConceptCard: React.FC<EnhancedConceptCardProps> = ({ isOpen, onClose, onStartOwnership }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
+
+  if (!isOpen) return null;
 
   const conceptPoints: ConceptPoint[] = [
     {
@@ -57,14 +62,23 @@ export const EnhancedConceptCard: React.FC<EnhancedConceptCardProps> = ({ onStar
     }
   }, [currentIndex, conceptPoints.length]);
 
+  const handleStartOwnership = () => {
+    onStartOwnership();
+    onClose();
+  };
+
   return (
-    <div className="w-full flex justify-center items-center py-8 px-4 relative">
+    <div
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+      onClick={onClose}
+    >
       <div
         className={`
-          relative max-w-4xl w-full rounded-3xl overflow-hidden
+          relative max-w-4xl w-full max-h-[90vh] overflow-y-auto rounded-3xl
           transition-all duration-1000
           ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}
         `}
+        onClick={(e) => e.stopPropagation()}
         style={{
           background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.95) 0%, rgba(5, 150, 105, 0.98) 50%, rgba(4, 120, 87, 0.95) 100%)',
           backdropFilter: 'blur(20px)',
@@ -86,6 +100,14 @@ export const EnhancedConceptCard: React.FC<EnhancedConceptCardProps> = ({ onStar
 
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-yellow-300 to-transparent" />
         <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-yellow-300 to-transparent" />
+
+        {/* Close Button */}
+        <button
+          onClick={onClose}
+          className="absolute top-4 left-4 z-20 p-2 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-sm transition-all duration-300 hover:scale-110"
+        >
+          <X className="h-6 w-6 text-white" />
+        </button>
 
         <div className="relative z-10 p-6 sm:p-8 md:p-10">
           <div className="text-center mb-8">
@@ -161,7 +183,7 @@ export const EnhancedConceptCard: React.FC<EnhancedConceptCardProps> = ({ onStar
               }}
             >
               <button
-                onClick={onStartOwnership}
+                onClick={handleStartOwnership}
                 className="
                   relative overflow-hidden
                   px-8 py-5 sm:px-12 sm:py-6

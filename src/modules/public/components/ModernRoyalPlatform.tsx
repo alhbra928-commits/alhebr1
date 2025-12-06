@@ -38,6 +38,7 @@ export function ModernRoyalPlatform({
   const [farms, setFarms] = useState<PublicFarm[]>([]);
   const [currentView, setCurrentView] = useState<ViewMode>('home');
   const [smartButtonOpen, setSmartButtonOpen] = useState(false);
+  const [conceptModalOpen, setConceptModalOpen] = useState(false);
   const [selectedFarm, setSelectedFarm] = useState<PublicFarm | null>(null);
   const [isInitialLoading, setIsInitialLoading] = useState(false);
   const [loadingProgress, setLoadingProgress] = useState(100);
@@ -396,8 +397,15 @@ export function ModernRoyalPlatform({
           onExternalOpenChange={setSmartButtonOpen}
         />
 
-        {/* Enhanced Concept Card */}
-        <EnhancedConceptCard onStartOwnership={() => setCurrentView('concept')} />
+        {/* Concept Button */}
+        <GreenConceptButton onClick={() => setConceptModalOpen(true)} />
+
+        {/* Enhanced Concept Modal */}
+        <EnhancedConceptCard
+          isOpen={conceptModalOpen}
+          onClose={() => setConceptModalOpen(false)}
+          onStartOwnership={() => setCurrentView('concept')}
+        />
 
         {/* Main Content */}
         <main className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 md:py-12 pb-32 sm:pb-40">
