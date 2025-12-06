@@ -59,6 +59,8 @@ export class OwnersService {
           bank_iban: data.bank_iban,
           approval_status: data.approval_status,
           status: data.status,
+          deleted_at: null,
+          deleted_by: null,
           updated_at: new Date().toISOString()
         };
 
