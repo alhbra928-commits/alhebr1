@@ -109,8 +109,7 @@ export class NotificationBadgeService {
       let query = supabase
         .from('documentation')
         .select('id', { count: 'exact', head: true })
-        .eq('investor_id', investor.id)
-        .is('deleted_at', null);
+        .eq('investor_id', investor.id);
 
       if (lastViewed) {
         query = query.gt('updated_at', lastViewed);

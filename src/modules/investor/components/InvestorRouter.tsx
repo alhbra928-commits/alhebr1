@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { SmartInvestorLoginPage } from './SmartInvestorLoginPage';
 import { InvestorDashboard } from './InvestorDashboard';
 import { InvestorService } from '../services/investorService';
@@ -78,7 +78,7 @@ export function InvestorRouter({ onBack, onGoToPublic, autoLoginPhone, autoLogin
     }
   };
 
-  const handleLoginSuccess = async (phone: string, token: string, investorName?: string) => {
+  const handleLoginSuccess = useCallback(async (phone: string, token: string, investorName?: string) => {
     console.log('🎯 [handleLoginSuccess] Called with:', { phone, token, investorName });
 
     // فحص إذا كان هذا أول دخول
@@ -99,7 +99,7 @@ export function InvestorRouter({ onBack, onGoToPublic, autoLoginPhone, autoLogin
     setSessionToken(token);
     setIsLoggedIn(true);
     setIsFirstTimeLogin(isFirst);
-  };
+  }, []);
 
   const handleLogout = async () => {
     if (sessionToken) {
