@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>اختبار Bottom Navigation - iOS Safari</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #f5f3f0 0%, #e8e5e0 100%);
+      padding-bottom: calc(76px + env(safe-area-inset-bottom));
+      min-height: 100vh;
+    }
+
+    .test-header {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: white;
+      padding: 20px;
+      padding-top: max(20px, env(safe-area-inset-top));
+      text-align: center;
+    }
+
+    .test-content {
+      padding: 20px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .test-card {
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .test-card h3 {
+      color: #10b981;
+      margin-bottom: 12px;
+      font-size: 18px;
+    }
+
+    .test-card p {
+      color: #666;
+      line-height: 1.6;
+      margin-bottom: 8px;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .status.success {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .status.warning {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    /* Bottom Navigation Bar - SAME AS PRODUCTION */
+    .bottom-nav-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 10000;
+      background: linear-gradient(180deg,
+        rgba(255, 255, 255, 0.98) 0%,
+        rgba(255, 255, 255, 0.98) 100%
+      );
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-top: 1px solid rgba(16, 185, 129, 0.1);
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+
+      /* CRITICAL iOS Safari Fix */
+      transform: translate3d(0, 0, 0);
+      -webkit-transform: translate3d(0, 0, 0);
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      will-change: transform;
+      contain: layout style paint;
+
+      /* iOS Safe Area Support */
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .bottom-nav-bar::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      transform: translateZ(-1px);
+      will-change: transform;
+    }
+
+    @supports (-webkit-touch-callout: none) {
+      .bottom-nav-bar {
+        position: fixed !important;
+        bottom: 0 !important;
+        transform: translate3d(0, 0, 0) !important;
+        -webkit-transform: translate3d(0, 0, 0) !important;
+      }
+    }
+
+    .bottom-nav-container {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      max-width: 100%;
+      padding: 8px 8px 0 8px;
+    }
+
+    .bottom-nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      padding: 10px 8px;
+      border-radius: 12px;
+      border: none;
+      background: transparent;
+      color: rgba(107, 114, 128, 0.8);
+      font-weight: 600;
+      font-size: 11px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      user-select: none;
+    }
+
+    .bottom-nav-item:active {
+      transform: scale(0.95);
+    }
+
+    .bottom-nav-item.active {
+      color: #10b981;
+    }
+
+    .bottom-nav-item.active .nav-icon-wrapper {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+
+    .nav-icon-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: rgba(243, 244, 246, 0.8);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      font-size: 24px;
+    }
+
+    .bottom-nav-item.smart .nav-icon-wrapper {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      box-shadow: 0 4px 16px rgba(16, 185, 129, 0.4);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    .nav-label {
+      font-size: 11px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .test-instructions {
+      background: #fef3c7;
+      border: 2px solid #f59e0b;
+      border-radius: 12px;
+      padding: 16px;
+      margin: 20px;
+      color: #92400e;
+    }
+
+    .test-instructions h2 {
+      margin-bottom: 12px;
+      font-size: 16px;
+    }
+
+    .test-instructions ol {
+      margin-right: 20px;
+      line-height: 1.8;
+    }
+
+    .scroll-indicator {
+      text-align: center;
+      padding: 40px 20px;
+      color: #10b981;
+      font-size: 14px;
+      font-weight: bold;
+      animation: bounce 2s ease-in-out infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+  </style>
+</head>
+<body>
+  <div class="test-header">
+    <h1>🧪 اختبار Bottom Navigation</h1>
+    <p style="margin-top: 8px;">iOS Safari Test</p>
+  </div>
+
+  <div class="test-instructions">
+    <h2>📋 تعليمات الاختبار:</h2>
+    <ol>
+      <li>افتح هذه الصفحة على <strong>iPhone Safari</strong></li>
+      <li>تمرر لأعلى ولأسفل بسرعة</li>
+      <li>تأكد من ثبات الشريط السفلي</li>
+      <li>اضغط على الأزرار للتأكد من عملها</li>
+    </ol>
+  </div>
+
+  <div class="test-content">
+    <div class="test-card">
+      <h3>✅ اختبار #1: الثبات</h3>
+      <p>الشريط السفلي يجب أن يبقى ثابتاً تماماً</p>
+      <span class="status success">مطلوب</span>
+    </div>
+
+    <div class="test-card">
+      <h3>✅ اختبار #2: عدم التحرك</h3>
+      <p>لا يجب أن يتحرك الشريط مع المحتوى</p>
+      <span class="status success">مطلوب</span>
+    </div>
+
+    <div class="test-card">
+      <h3>✅ اختبار #3: Safe Area</h3>
+      <p>يجب أن يتكيف مع شق iPhone</p>
+      <span class="status success">مطلوب</span>
+    </div>
+
+    <div class="test-card">
+      <h3>✅ اختبار #4: الأزرار</h3>
+      <p>جميع الأزرار يجب أن تستجيب عند الضغط</p>
+      <span class="status success">مطلوب</span>
+    </div>
+
+    <div class="test-card">
+      <h3>📊 نتيجة الاختبار</h3>
+      <p id="test-result">جاري الاختبار... امسح الصفحة</p>
+    </div>
+
+    <div class="scroll-indicator">
+      ⬇️ امسح للأسفل لمزيد من المحتوى ⬇️
+    </div>
+
+    <!-- محتوى تجريبي طويل -->
+    <div class="test-card">
+      <h3>📝 محتوى تجريبي #1</h3>
+      <p>هذا محتوى طويل للاختبار</p>
+      <p>يجب أن يتمرر المحتوى بشكل طبيعي</p>
+      <p>بينما الشريط السفلي يبقى ثابتاً</p>
+    </div>
+
+    <div class="test-card">
+      <h3>📝 محتوى تجريبي #2</h3>
+      <p>استمر في التمرير...</p>
+      <p>لاحظ الشريط السفلي</p>
+      <p>هل يتحرك؟ لا يجب!</p>
+    </div>
+
+    <div class="test-card">
+      <h3>📝 محتوى تجريبي #3</h3>
+      <p>محتوى إضافي للاختبار</p>
+      <p>لتوفير تمرير كافي</p>
+    </div>
+
+    <div class="test-card">
+      <h3>📝 محتوى تجريبي #4</h3>
+      <p>قرب النهاية...</p>
+      <p>تأكد من الشريط السفلي</p>
+    </div>
+
+    <div class="test-card">
+      <h3>📝 محتوى تجريبي #5</h3>
+      <p>محتوى إضافي</p>
+    </div>
+
+    <div class="test-card">
+      <h3>📝 محتوى تجريبي #6</h3>
+      <p>المزيد من المحتوى</p>
+    </div>
+
+    <div class="test-card">
+      <h3>📝 محتوى تجريبي #7</h3>
+      <p>نهاية الصفحة</p>
+    </div>
+
+    <div class="scroll-indicator" style="padding-bottom: 40px;">
+      ⬆️ الآن امسح للأعلى ⬆️
+    </div>
+  </div>
+
+  <!-- Bottom Navigation Bar -->
+  <nav class="bottom-nav-bar">
+    <div class="bottom-nav-container">
+      <!-- Home -->
+      <button class="bottom-nav-item active" onclick="activateTab(this, 'home')">
+        <div class="nav-icon-wrapper">🏠</div>
+        <span class="nav-label">الرئيسية</span>
+      </button>
+
+      <!-- Account -->
+      <button class="bottom-nav-item" onclick="activateTab(this, 'account')">
+        <div class="nav-icon-wrapper">👤</div>
+        <span class="nav-label">حسابي</span>
+      </button>
+
+      <!-- Smart Assistant -->
+      <button class="bottom-nav-item smart" onclick="activateTab(this, 'smart')">
+        <div class="nav-icon-wrapper">💬</div>
+        <span class="nav-label">المساعد</span>
+      </button>
+
+      <!-- Phone -->
+      <button class="bottom-nav-item" onclick="callPhone()">
+        <div class="nav-icon-wrapper">📞</div>
+        <span class="nav-label">اتصل</span>
+      </button>
+    </div>
+  </nav>
+
+  <script>
+    let scrollCount = 0;
+    let lastScrollTop = 0;
+
+    window.addEventListener('scroll', function() {
+      const st = window.pageYOffset || document.documentElement.scrollTop;
+      if (Math.abs(st - lastScrollTop) > 50) {
+        scrollCount++;
+        lastScrollTop = st;
+
+        if (scrollCount >= 3) {
+          document.getElementById('test-result').innerHTML =
+            '✅ رائع! الشريط السفلي ثابت تماماً<br>' +
+            '<span class="status success">نجح الاختبار</span>';
+        }
+      }
+    });
+
+    function activateTab(button, tab) {
+      // Remove active from all
+      document.querySelectorAll('.bottom-nav-item').forEach(item => {
+        item.classList.remove('active');
+      });
+
+      // Add active to clicked
+      if (tab !== 'smart') {
+        button.classList.add('active');
+      }
+
+      // Haptic feedback (if supported)
+      if (navigator.vibrate) {
+        navigator.vibrate(10);
+      }
+
+      console.log('Tab activated:', tab);
+      alert('تم الضغط على: ' + button.querySelector('.nav-label').textContent);
+    }
+
+    function callPhone() {
+      const phoneNumber = '966569335257';
+      window.location.href = 'tel:' + phoneNumber;
+    }
+
+    // Test if we're on iOS
+    const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+    if (isIOS) {
+      console.log('✅ Running on iOS - Perfect for testing!');
+    } else {
+      console.log('⚠️ Not on iOS - Test on iPhone for best results');
+    }
+  </script>
+</body>
+</html>

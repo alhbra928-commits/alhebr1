@@ -10,6 +10,7 @@ import { SimpleLoader } from '../../../components/common/SimpleLoader';
 import { AdminCrownButton } from './AdminCrownButton';
 import { ConceptIntroductionPage } from './ConceptIntroductionPage';
 import { EnhancedConceptCard } from './EnhancedConceptCard';
+import { BottomNavigationBar } from '../../../components/common/BottomNavigationBar';
 
 type ViewMode = 'home' | 'farmDetail' | 'booking' | 'investor' | 'verification' | 'concept';
 
@@ -29,6 +30,7 @@ export function RoyalMainInterface({
   const [selectedFarm, setSelectedFarm] = useState<PublicFarm | null>(null);
   const [loading, setLoading] = useState(true);
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
+  const [activeBottomTab, setActiveBottomTab] = useState<string>('home');
 
   useEffect(() => {
     loadData();
@@ -329,7 +331,24 @@ export function RoyalMainInterface({
         )}
       </main>
 
-      {/* Bottom Navigation */}
+      {/* Bottom Navigation Bar - iOS Safari Optimized */}
+      <BottomNavigationBar
+        currentSection={activeBottomTab}
+        onNavigate={(section) => {
+          console.log('[RoyalBottomNav] Navigate to:', section);
+          setActiveBottomTab(section);
+
+          if (section === 'home') {
+            handleGoHome();
+          } else if (section === 'account') {
+            setCurrentView('investor');
+          }
+        }}
+        onSmartButtonClick={() => {
+          console.log('[RoyalBottomNav] Smart button clicked');
+        }}
+        phoneNumber="966569335257"
+      />
     </div>
   );
 }

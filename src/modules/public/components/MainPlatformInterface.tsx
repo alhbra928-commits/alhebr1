@@ -15,6 +15,7 @@ import { AdminCrownButton } from './AdminCrownButton';
 import { GlowingConceptButton } from './GlowingConceptButton';
 import { ConceptIntroductionPage } from './ConceptIntroductionPage';
 import { IdeaOverviewSection } from './IdeaOverviewSection';
+import { BottomNavigationBar } from '../../../components/common/BottomNavigationBar';
 
 type ViewMode = 'home' | 'farmDetail' | 'booking' | 'investor' | 'verification' | 'concept';
 
@@ -247,7 +248,24 @@ export function MainPlatformInterface({
         </div>
       )}
 
-      {/* Bottom Navigation Bar for Public - Always Show */}
+      {/* Bottom Navigation Bar - iOS Safari Optimized */}
+      <BottomNavigationBar
+        currentSection={activeBottomTab || 'home'}
+        onNavigate={(section) => {
+          console.log('[BottomNav] Navigate to:', section);
+          setActiveBottomTab(section);
+
+          if (section === 'home') {
+            handleGoHome();
+          } else if (section === 'account') {
+            handleGoToInvestorPanel();
+          }
+        }}
+        onSmartButtonClick={() => {
+          console.log('[BottomNav] Smart button clicked');
+        }}
+        phoneNumber="966569335257"
+      />
     </div>
   );
 }
