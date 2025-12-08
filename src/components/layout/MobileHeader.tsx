@@ -8,124 +8,63 @@ interface MobileHeaderProps {
 
 export function MobileHeader({ onMenuClick, title = 'لوحة التحكم' }: MobileHeaderProps) {
   useEffect(() => {
-    // ULTIMATE iOS Safari Header Fix - Continuous Monitoring
     const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
     if (isIOS) {
-      console.log('🍎 iOS detected - Applying ULTIMATE mobile header fix');
-
-      let headerElement: HTMLElement | null = null;
-      let animationFrameId: number;
-      let isRunning = true;
-
-      // Prevent body overscroll
-      document.body.style.overscrollBehavior = 'none';
-      document.documentElement.style.overscrollBehavior = 'none';
-
-      // Lock header position using requestAnimationFrame
-      const lockHeader = () => {
-        if (!isRunning) return;
-
-        if (!headerElement) {
-          headerElement = document.querySelector('.ios-fixed-header');
-        }
-
-        if (headerElement) {
-          const rect = headerElement.getBoundingClientRect();
-
-          // If header moved even 1px, force it back
-          if (rect.top !== 0) {
-            headerElement.style.position = 'fixed';
-            headerElement.style.top = '0px';
-            headerElement.style.left = '0px';
-            headerElement.style.right = '0px';
-            headerElement.style.transform = 'translate3d(0, 0, 0)';
-            headerElement.style.webkitTransform = 'translate3d(0, 0, 0)';
-          }
-        }
-
-        // Continue monitoring
-        animationFrameId = requestAnimationFrame(lockHeader);
-      };
-
-      // Start continuous monitoring
-      lockHeader();
-
-      // Cleanup
-      return () => {
-        isRunning = false;
-        if (animationFrameId) {
-          cancelAnimationFrame(animationFrameId);
-        }
-        document.body.style.overscrollBehavior = '';
-        document.documentElement.style.overscrollBehavior = '';
-      };
+      console.log('🍎 iOS ULTIMATE STICKY FIX - CSS-only solution active');
     }
   }, []);
 
   return (
     <>
       <style>{`
-        /* iOS Safari Header ULTIMATE Fix */
-        .ios-fixed-header {
-          /* CRITICAL: Use transform instead of position changes */
-          -webkit-transform: translate3d(0, 0, 0) !important;
-          transform: translate3d(0, 0, 0) !important;
-
-          /* Lock rendering */
-          -webkit-backface-visibility: hidden !important;
-          backface-visibility: hidden !important;
-          -webkit-perspective: 1000px !important;
-          perspective: 1000px !important;
-
-          /* Prevent viewport resize effects */
-          will-change: transform !important;
-          contain: layout style paint !important;
-
-          /* Disable touch on header */
-          touch-action: none !important;
-          -webkit-touch-callout: none !important;
-
-          /* iOS Safe Area Support */
-          padding-top: max(env(safe-area-inset-top), 0px) !important;
-          padding-left: env(safe-area-inset-left) !important;
-          padding-right: env(safe-area-inset-right) !important;
-        }
-
-        /* Force separate layer */
-        .ios-fixed-header::before {
-          content: '';
-          position: absolute;
-          inset: 0;
-          z-index: -1;
-          transform: translateZ(-1px);
-          will-change: transform;
-        }
-
-        /* iOS specific positioning */
+        /* iOS Safari ULTIMATE STICKY Solution */
         @supports (-webkit-touch-callout: none) {
-          .ios-fixed-header {
-            position: fixed !important;
+          /* Lock body, make main content scrollable */
+          html, body {
+            height: 100% !important;
+            height: -webkit-fill-available !important;
+            overflow: hidden !important;
+            position: relative !important;
+          }
+
+          /* Header stays absolute at top */
+          .ios-sticky-header {
+            position: sticky !important;
+            position: -webkit-sticky !important;
             top: 0 !important;
+            z-index: 9999 !important;
+
+            /* Hardware acceleration */
             -webkit-transform: translate3d(0, 0, 0) !important;
             transform: translate3d(0, 0, 0) !important;
+            -webkit-backface-visibility: hidden !important;
+            backface-visibility: hidden !important;
+            will-change: transform !important;
+
+            /* Prevent any touch interference */
+            touch-action: pan-y !important;
           }
 
-          html, body {
-            /* Prevent viewport jumps */
-            height: 100%;
-            height: -webkit-fill-available;
-            position: relative;
-            overflow-x: hidden;
+          /* Content scrollable area */
+          .ios-scroll-content {
+            height: 100vh !important;
+            height: -webkit-fill-available !important;
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
+            -webkit-overflow-scrolling: touch !important;
+            overscroll-behavior: none !important;
           }
+        }
 
-          body {
-            overscroll-behavior-y: none;
-            -webkit-overflow-scrolling: touch;
-          }
+        /* Non-iOS normal behavior */
+        .ios-sticky-header {
+          position: fixed;
+          top: 0;
+          z-index: 30;
         }
       `}</style>
 
-      <header className="ios-fixed-header lg:hidden fixed top-0 left-0 right-0 z-30 bg-gradient-to-r from-amber-900 to-orange-900 text-white shadow-lg safe-area-top">
+      <header className="ios-sticky-header lg:hidden left-0 right-0 bg-gradient-to-r from-amber-900 to-orange-900 text-white shadow-lg safe-area-top">
         <div className="flex items-center justify-between px-4 py-3">
         {/* Menu Button */}
         <button

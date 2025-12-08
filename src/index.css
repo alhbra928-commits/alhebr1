@@ -42,32 +42,41 @@ html, body {
     background: linear-gradient(135deg, #ECFDF5 0%, #F0FDF4 50%, #F0FDFA 100%) !important;
   }
 
-  /* iOS Safari Header Lock - Prevent any movement */
+  /* iOS Safari Ultimate Header Fix */
   @supports (-webkit-touch-callout: none) {
+    /* Lock html & body - no scrolling at root */
     html {
-      height: 100%;
-      height: -webkit-fill-available;
+      height: 100% !important;
+      height: -webkit-fill-available !important;
+      overflow: hidden !important;
+      position: fixed !important;
+      width: 100% !important;
     }
 
     body {
-      min-height: 100vh;
-      min-height: -webkit-fill-available;
-      overscroll-behavior: none;
-      -webkit-overflow-scrolling: touch;
+      height: 100% !important;
+      height: -webkit-fill-available !important;
+      overflow: hidden !important;
+      position: fixed !important;
+      width: 100% !important;
+      overscroll-behavior: none !important;
+    }
+
+    /* Make content area scrollable instead */
+    .ios-scroll-content {
+      height: 100vh !important;
+      height: -webkit-fill-available !important;
+      overflow-y: auto !important;
+      overflow-x: hidden !important;
+      -webkit-overflow-scrolling: touch !important;
+      overscroll-behavior-y: contain !important;
+      position: relative !important;
     }
   }
 
-  /* Remove padding from body - let components handle it */
-
-  /* iOS Safari Fixed Header Support */
+  /* Non-iOS normal scrolling */
   html, body {
-    height: auto !important;
     overflow-x: hidden;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-
-    /* Prevent bounce scroll from affecting fixed elements */
-    overscroll-behavior: none;
     max-width: 100vw;
   }
 
