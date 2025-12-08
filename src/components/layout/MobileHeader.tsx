@@ -9,9 +9,13 @@ interface MobileHeaderProps {
 export function MobileHeader({ onMenuClick, title = 'لوحة التحكم' }: MobileHeaderProps) {
   useEffect(() => {
     const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-    if (isIOS) {
-      console.log('🍎 iOS ULTIMATE STICKY FIX - CSS-only solution active');
-    }
+    if (!isIOS) return;
+
+    console.log('🍎 iOS ULTIMATE FIX - Pure CSS Sticky (no JS intervention)');
+
+    // Just log - let CSS handle everything
+    // The sticky position + locked body approach should work
+    // If this doesn't work, user needs to try it on real device first
   }, []);
 
   return (
