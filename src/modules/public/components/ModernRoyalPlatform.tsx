@@ -9,7 +9,6 @@ import { EnhancedConceptCard } from './EnhancedConceptCard';
 import { AdminCrownButton } from './AdminCrownButton';
 import { BackToAdminButton } from './BackToAdminButton';
 import { SmartFloatingButton } from '../../../components/common/SmartFloatingButton';
-import { ModernTopHeader } from '../../../components/common/ModernTopHeader';
 import { InnovativeFarmCard } from './InnovativeFarmCard';
 import { Modern3DTicker } from '../../../components/common/Modern3DTicker';
 import { modern3DTickerService, TickerMessage, TickerSettings } from '../../../services/modern3DTickerService';
@@ -349,18 +348,6 @@ export function ModernRoyalPlatform({
           speed={tickerSettings.speed}
           height={tickerSettings.height}
           enabled={tickerSettings.enabled}
-        />
-
-
-        {/* Modern Top Header - الهيدر العلوي الحديث */}
-        <ModernTopHeader
-          onNavigate={(section) => {
-            if (section === 'home') setCurrentView('home');
-            else if (section === 'account') setCurrentView('investor');
-          }}
-          currentSection={currentView === 'home' ? 'home' : currentView === 'investor' ? 'account' : 'home'}
-          onSmartButtonClick={() => setSmartButtonOpen(true)}
-          phoneNumber="966569335257"
         />
 
         {/* Smart Floating Button - يُفتح من الشريط الجانبي فقط */}
