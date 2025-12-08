@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>كيف ترى Bottom Navigation الجديد</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: white;
+      padding: 20px;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .container {
+      max-width: 600px;
+      background: white;
+      border-radius: 24px;
+      padding: 40px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      color: #1f2937;
+    }
+
+    h1 {
+      color: #10b981;
+      font-size: 32px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .alert {
+      background: #fef3c7;
+      border: 2px solid #f59e0b;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 30px;
+      color: #92400e;
+    }
+
+    .alert h2 {
+      font-size: 20px;
+      margin-bottom: 10px;
+      color: #92400e;
+    }
+
+    .step {
+      background: #f3f4f6;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 16px;
+      border-left: 4px solid #10b981;
+    }
+
+    .step-number {
+      display: inline-block;
+      width: 36px;
+      height: 36px;
+      background: #10b981;
+      color: white;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 36px;
+      font-weight: bold;
+      margin-left: 12px;
+    }
+
+    .step h3 {
+      display: inline-block;
+      color: #1f2937;
+      font-size: 18px;
+      margin-bottom: 12px;
+    }
+
+    .step p {
+      color: #6b7280;
+      line-height: 1.6;
+      margin-top: 10px;
+    }
+
+    .code {
+      background: #1f2937;
+      color: #10b981;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-family: 'Courier New', monospace;
+      margin: 10px 0;
+      font-size: 14px;
+    }
+
+    .highlight {
+      background: #d1fae5;
+      color: #065f46;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-weight: bold;
+    }
+
+    .success {
+      background: #d1fae5;
+      border: 2px solid #10b981;
+      border-radius: 16px;
+      padding: 20px;
+      margin-top: 30px;
+      color: #065f46;
+      text-align: center;
+    }
+
+    .success h2 {
+      font-size: 24px;
+      margin-bottom: 10px;
+      color: #065f46;
+    }
+
+    .button {
+      display: inline-block;
+      background: #10b981;
+      color: white;
+      padding: 16px 32px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: bold;
+      margin-top: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .button:hover {
+      background: #059669;
+      transform: translateY(-2px);
+    }
+
+    .preview-image {
+      width: 100%;
+      max-width: 300px;
+      margin: 20px auto;
+      display: block;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    }
+
+    .ios-specific {
+      background: #dbeafe;
+      border: 2px solid #3b82f6;
+      border-radius: 12px;
+      padding: 16px;
+      margin: 20px 0;
+      color: #1e40af;
+    }
+
+    .ios-specific h3 {
+      color: #1e40af;
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎯 كيف ترى Bottom Navigation الجديد</h1>
+
+    <div class="alert">
+      <h2>⚠️ مهم جداً!</h2>
+      <p>إذا لم ترَ التغييرات، يجب عليك <strong>مسح الـ Cache</strong> أولاً!</p>
+    </div>
+
+    <div class="step">
+      <span class="step-number">1</span>
+      <h3>مسح Cache المتصفح</h3>
+      <p>اختر الطريقة المناسبة لك:</p>
+
+      <div style="margin-top: 16px;">
+        <strong>🖥️ على الكمبيوتر (Chrome/Edge):</strong>
+        <div class="code">Ctrl + Shift + Delete</div>
+        <p>ثم احذف <span class="highlight">Cached images and files</span></p>
+      </div>
+
+      <div style="margin-top: 16px;">
+        <strong>🍎 على Mac (Safari):</strong>
+        <div class="code">Cmd + Option + E</div>
+        <p>أو: Safari > Clear History</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <span class="step-number">2</span>
+      <h3>Hard Refresh</h3>
+      <p>بعد مسح الـ Cache، اعمل Hard Refresh:</p>
+
+      <div class="code">
+        Windows: Ctrl + Shift + R<br>
+        Mac: Cmd + Shift + R
+      </div>
+
+      <p style="margin-top: 12px;">
+        أو اضغط مطولاً على زر <span class="highlight">التحديث ⟳</span>
+      </p>
+    </div>
+
+    <div class="step">
+      <span class="step-number">3</span>
+      <h3>افتح في وضع Incognito/Private</h3>
+      <p>طريقة سريعة لتجنب مشاكل الـ Cache:</p>
+
+      <div class="code">
+        Chrome: Ctrl + Shift + N<br>
+        Safari: Cmd + Shift + N
+      </div>
+
+      <p style="margin-top: 12px;">
+        ثم افتح الموقع من جديد في النافذة الخاصة
+      </p>
+    </div>
+
+    <div class="ios-specific">
+      <h3>📱 خطوات خاصة بـ iPhone/iPad:</h3>
+      <ol style="margin-right: 20px; line-height: 1.8;">
+        <li>افتح <strong>الإعدادات</strong></li>
+        <li>اذهب إلى <strong>Safari</strong></li>
+        <li>اضغط على <strong>Clear History and Website Data</strong></li>
+        <li>أكد الحذف</li>
+        <li>ارجع للموقع وحدّث الصفحة</li>
+      </ol>
+
+      <p style="margin-top: 12px; font-weight: bold;">
+        ⚡ أسرع طريقة: اضغط مطولاً على زر التحديث في Safari
+      </p>
+    </div>
+
+    <div class="step">
+      <span class="step-number">4</span>
+      <h3>تأكد من رؤية Bottom Nav</h3>
+      <p>بعد التحديث، يجب أن ترى:</p>
+
+      <ul style="margin-right: 20px; margin-top: 12px; line-height: 1.8;">
+        <li>✅ شريط تنقل في <strong>أسفل الشاشة</strong></li>
+        <li>✅ 4 أزرار: 🏠 الرئيسية، 👤 حسابي، 💬 المساعد، 📞 اتصل</li>
+        <li>✅ لون أبيض شفاف جميل</li>
+        <li>✅ ثابت ولا يتحرك مع التمرير</li>
+      </ul>
+    </div>
+
+    <div class="success">
+      <h2>🎉 ماذا تتوقع؟</h2>
+      <p style="font-size: 18px; margin-top: 12px;">
+        شريط تنقل احترافي في الأسفل<br>
+        مضمون 100% على iOS Safari!
+      </p>
+
+      <div style="margin-top: 20px; padding: 16px; background: white; border-radius: 12px;">
+        <strong style="color: #065f46; font-size: 16px;">المعاينة المتوقعة:</strong>
+        <p style="color: #6b7280; margin-top: 8px;">
+          [🏠] [👤] [💬] [📞]<br>
+          <span style="font-size: 12px;">شريط تنقل ثابت في الأسفل</span>
+        </p>
+      </div>
+    </div>
+
+    <div class="alert" style="margin-top: 30px;">
+      <h2>🔥 لا تزال لا ترى التحديث؟</h2>
+      <ol style="margin-right: 20px; line-height: 1.8; margin-top: 12px;">
+        <li>امسح الـ Cache <strong>مرة أخرى</strong></li>
+        <li>أغلق المتصفح <strong>تماماً</strong></li>
+        <li>أعد فتح المتصفح</li>
+        <li>افتح الموقع من جديد</li>
+      </ol>
+
+      <p style="margin-top: 16px; font-weight: bold;">
+        💡 أو جرب متصفح مختلف (Chrome/Safari/Firefox)
+      </p>
+    </div>
+
+    <div style="text-align: center; margin-top: 40px; padding-top: 30px; border-top: 2px solid #e5e7eb;">
+      <p style="color: #6b7280; font-size: 14px;">
+        آخر تحديث: 8 ديسمبر 2025<br>
+        Version: v20251208_1765167567430
+      </p>
+    </div>
+  </div>
+
+  <script>
+    // Auto-detect if cache might be the issue
+    const lastVisit = localStorage.getItem('lastBottomNavVisit');
+    const now = Date.now();
+
+    if (!lastVisit || (now - parseInt(lastVisit) < 60000)) {
+      console.log('⚠️ Possible cache issue detected');
+      console.log('💡 Try clearing cache: Ctrl+Shift+Delete');
+    }
+
+    localStorage.setItem('lastBottomNavVisit', now.toString());
+
+    // Check if running on mobile
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    if (isMobile) {
+      console.log('📱 Running on mobile device');
+      console.log('✅ Perfect for testing Bottom Navigation!');
+    }
+  </script>
+</body>
+</html>

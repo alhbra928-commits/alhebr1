@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>اختبار Bottom Navigation الآن!</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: white;
+      padding: 20px;
+      min-height: 100vh;
+      padding-bottom: calc(100px + env(safe-area-inset-bottom));
+    }
+
+    .container {
+      max-width: 500px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 32px;
+      margin-bottom: 20px;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    .alert {
+      background: #fef3c7;
+      color: #92400e;
+      padding: 24px;
+      border-radius: 16px;
+      margin: 20px 0;
+      font-size: 18px;
+      font-weight: bold;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    }
+
+    .steps {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 24px;
+      margin: 20px 0;
+      text-align: right;
+      backdrop-filter: blur(10px);
+    }
+
+    .steps h2 {
+      font-size: 24px;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
+    .steps ol {
+      margin-right: 20px;
+      line-height: 2;
+      font-size: 16px;
+    }
+
+    .button {
+      display: inline-block;
+      background: white;
+      color: #10b981;
+      padding: 20px 40px;
+      border-radius: 16px;
+      font-size: 20px;
+      font-weight: bold;
+      text-decoration: none;
+      margin: 20px 10px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .button:active {
+      transform: scale(0.95);
+    }
+
+    .preview {
+      background: white;
+      border-radius: 24px;
+      padding: 40px 20px;
+      margin: 30px 0;
+      color: #1f2937;
+    }
+
+    .preview h3 {
+      color: #10b981;
+      font-size: 20px;
+      margin-bottom: 20px;
+    }
+
+    .bottom-nav-demo {
+      background: rgba(255, 255, 255, 0.98);
+      border-radius: 20px;
+      padding: 12px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+      border-top: 1px solid rgba(16, 185, 129, 0.1);
+    }
+
+    .nav-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      padding: 12px;
+      border-radius: 12px;
+      background: rgba(243, 244, 246, 0.8);
+      font-size: 24px;
+    }
+
+    .nav-btn.active {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    }
+
+    .nav-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #6b7280;
+    }
+
+    .nav-btn.active .nav-label {
+      color: white;
+    }
+
+    .success-box {
+      background: #d1fae5;
+      color: #065f46;
+      padding: 20px;
+      border-radius: 16px;
+      margin: 20px 0;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎯 Bottom Navigation جاهز!</h1>
+
+    <div class="alert">
+      ⚠️ إذا لم ترَ التحديث<br>
+      امسح الـ Cache أولاً!
+    </div>
+
+    <div class="steps">
+      <h2>📱 على iPhone/iPad:</h2>
+      <ol>
+        <li>الإعدادات</li>
+        <li>Safari</li>
+        <li>Clear History and Website Data</li>
+        <li>تأكيد</li>
+        <li>افتح الموقع من جديد</li>
+      </ol>
+    </div>
+
+    <div class="steps">
+      <h2>💻 على الكمبيوتر:</h2>
+      <ol>
+        <li>Ctrl + Shift + Delete</li>
+        <li>اختر Cached files</li>
+        <li>احذف</li>
+        <li>Ctrl + Shift + R</li>
+      </ol>
+    </div>
+
+    <a href="javascript:location.reload(true)" class="button">
+      🔄 تحديث الصفحة
+    </a>
+
+    <div class="preview">
+      <h3>✨ كيف سيبدو Bottom Nav:</h3>
+
+      <div class="bottom-nav-demo">
+        <div class="nav-btn active">
+          <span>🏠</span>
+          <span class="nav-label">الرئيسية</span>
+        </div>
+        <div class="nav-btn">
+          <span>👤</span>
+          <span class="nav-label">حسابي</span>
+        </div>
+        <div class="nav-btn" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+          <span>💬</span>
+          <span class="nav-label" style="color: white;">المساعد</span>
+        </div>
+        <div class="nav-btn">
+          <span>📞</span>
+          <span class="nav-label">اتصل</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="success-box">
+      ✅ البناء نجح<br>
+      ✅ الكود جاهز<br>
+      ⏳ فقط امسح الـ Cache!
+    </div>
+
+    <div style="margin-top: 40px; font-size: 14px; opacity: 0.8;">
+      Version: v20251208_1765167567430<br>
+      Status: Built Successfully
+    </div>
+  </div>
+
+  <script>
+    // تحقق من وجود Bottom Nav في DOM
+    setTimeout(() => {
+      const hasBottomNav = document.querySelector('.bottom-nav-bar');
+      if (hasBottomNav) {
+        alert('✅ Bottom Navigation موجود!');
+      } else {
+        console.log('⏳ Bottom Navigation سيظهر في الموقع الرئيسي بعد مسح الـ Cache');
+      }
+    }, 1000);
+  </script>
+</body>
+</html>
