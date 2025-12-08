@@ -391,7 +391,7 @@ function App() {
 
         <Suspense fallback={<div className="min-h-screen bg-gradient-to-br from-emerald-50 to-green-50" />}>
           {/* iOS Scroll wrapper - Makes content scrollable while header stays fixed */}
-          <div className={`ios-scroll-content ${adminSession && activeModule !== 'public' && activeModule !== 'farm-owner' ? 'pt-14 lg:pt-0' : ''}`}>
+          <div className="ios-scroll-content">
             {renderModule()}
           </div>
         </Suspense>

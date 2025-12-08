@@ -11,31 +11,62 @@ export function MobileHeader({ onMenuClick, title = 'لوحة التحكم' }: M
     const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
     if (!isIOS) return;
 
-    console.log('🍎 iOS ULTIMATE FIX - Pure CSS Sticky (no JS intervention)');
+    console.log('🔥 iOS NUCLEAR FIX - Absolute positioning with forced lock');
 
-    // Just log - let CSS handle everything
-    // The sticky position + locked body approach should work
-    // If this doesn't work, user needs to try it on real device first
+    const header = document.querySelector('.mobile-header-locked') as HTMLElement;
+    if (!header) return;
+
+    // Force lock the header position
+    const lockHeaderPosition = () => {
+      header.style.position = 'fixed';
+      header.style.top = '0';
+      header.style.left = '0';
+      header.style.right = '0';
+      header.style.transform = 'translate3d(0, 0, 0)';
+      header.style.webkitTransform = 'translate3d(0, 0, 0)';
+      header.style.zIndex = '9999';
+    };
+
+    // Lock immediately
+    lockHeaderPosition();
+
+    // Re-lock on any scroll event
+    let rafId: number;
+    const onScroll = () => {
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(lockHeaderPosition);
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    document.addEventListener('touchmove', onScroll, { passive: true });
+
+    // Re-lock every 100ms for extra safety
+    const interval = setInterval(lockHeaderPosition, 100);
+
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      document.removeEventListener('touchmove', onScroll);
+      clearInterval(interval);
+      if (rafId) cancelAnimationFrame(rafId);
+    };
   }, []);
 
   return (
     <>
       <style>{`
-        /* iOS Safari ULTIMATE STICKY Solution */
+        /* iOS NUCLEAR Solution - Fixed position locked */
         @supports (-webkit-touch-callout: none) {
-          /* Lock body, make main content scrollable */
           html, body {
             height: 100% !important;
             height: -webkit-fill-available !important;
             overflow: hidden !important;
-            position: relative !important;
           }
 
-          /* Header stays absolute at top */
-          .ios-sticky-header {
-            position: sticky !important;
-            position: -webkit-sticky !important;
+          .mobile-header-locked {
+            position: fixed !important;
             top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
             z-index: 9999 !important;
 
             /* Hardware acceleration */
@@ -45,11 +76,11 @@ export function MobileHeader({ onMenuClick, title = 'لوحة التحكم' }: M
             backface-visibility: hidden !important;
             will-change: transform !important;
 
-            /* Prevent any touch interference */
-            touch-action: pan-y !important;
+            /* Isolate from scroll context */
+            isolation: isolate !important;
+            contain: layout style !important;
           }
 
-          /* Content scrollable area */
           .ios-scroll-content {
             height: 100vh !important;
             height: -webkit-fill-available !important;
@@ -57,18 +88,35 @@ export function MobileHeader({ onMenuClick, title = 'لوحة التحكم' }: M
             overflow-x: hidden !important;
             -webkit-overflow-scrolling: touch !important;
             overscroll-behavior: none !important;
+            padding-top: 56px !important; /* Space for fixed header */
+          }
+
+          /* Remove padding on large screens */
+          @media (min-width: 1024px) {
+            .ios-scroll-content {
+              padding-top: 0 !important;
+            }
           }
         }
 
-        /* Non-iOS normal behavior */
-        .ios-sticky-header {
+        /* Non-iOS - Normal behavior */
+        .mobile-header-locked {
           position: fixed;
           top: 0;
+          left: 0;
+          right: 0;
           z-index: 30;
+        }
+
+        /* Add padding for content on mobile (non-iOS too) */
+        @media (max-width: 1023px) {
+          .ios-scroll-content {
+            padding-top: 56px;
+          }
         }
       `}</style>
 
-      <header className="ios-sticky-header lg:hidden left-0 right-0 bg-gradient-to-r from-amber-900 to-orange-900 text-white shadow-lg safe-area-top">
+      <header className="mobile-header-locked lg:hidden bg-gradient-to-r from-amber-900 to-orange-900 text-white shadow-lg safe-area-top">
         <div className="flex items-center justify-between px-4 py-3">
         {/* Menu Button */}
         <button
