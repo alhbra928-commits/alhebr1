@@ -32,6 +32,7 @@ export const LiveActivityTicker: React.FC = () => {
   const loadData = async () => {
     try {
       console.log('🔄 LiveActivityTicker: Loading data...');
+      console.log('⏰ Timestamp:', new Date().toLocaleTimeString('ar-SA'));
 
       const [activitiesData, settingsData] = await Promise.all([
         liveActivityTickerService.getActivities(),
@@ -40,14 +41,29 @@ export const LiveActivityTicker: React.FC = () => {
 
       console.log('✅ LiveActivityTicker: Data loaded', {
         activitiesCount: activitiesData.length,
-        settings: settingsData
+        settings: settingsData,
+        activities: activitiesData
       });
+
+      if (activitiesData.length === 0) {
+        console.warn('⚠️ PROBLEM: No activities returned!');
+        console.warn('Settings:', settingsData);
+        console.warn('Check: simulation_enabled =', settingsData?.simulation_enabled);
+        console.warn('Check: real_enabled =', settingsData?.real_enabled);
+        console.warn('Check: mode =', settingsData?.mode);
+      } else {
+        console.log('🎉 SUCCESS: Activities ready to display!');
+        activitiesData.slice(0, 3).forEach((act, i) => {
+          console.log(`   ${i + 1}. ${act.icon} ${act.title}`);
+        });
+      }
 
       setActivities(activitiesData);
       setSettings(settingsData);
       setIsLoading(false);
     } catch (error) {
       console.error('❌ LiveActivityTicker: Error loading ticker data:', error);
+      console.error('❌ Error details:', error);
       setIsLoading(false);
     }
   };
@@ -90,10 +106,24 @@ export const LiveActivityTicker: React.FC = () => {
   }
 
   if (!settings || activities.length === 0) {
-    console.warn('⚠️ LiveActivityTicker: No settings or activities', {
-      hasSettings: !!settings,
-      activitiesLength: activities.length
-    });
+    console.error('❌ CRITICAL: No settings or activities!');
+    console.error('hasSettings:', !!settings);
+    console.error('activitiesLength:', activities.length);
+    console.error('settings:', settings);
+
+    if (settings) {
+      console.error('🔍 Settings details:');
+      console.error('   - mode:', settings.mode);
+      console.error('   - simulation_enabled:', settings.simulation_enabled);
+      console.error('   - real_enabled:', settings.real_enabled);
+      console.error('   - items_per_cycle:', settings.items_per_cycle);
+    }
+
+    console.error('💡 Trying to reload in 3 seconds...');
+    setTimeout(() => {
+      console.log('🔄 Attempting reload...');
+      loadData();
+    }, 3000);
 
     return (
       <div
@@ -103,7 +133,7 @@ export const LiveActivityTicker: React.FC = () => {
           left: 0,
           right: 0,
           zIndex: 9998,
-          background: 'linear-gradient(135deg, #1a4d2e 0%, #0f2817 100%)',
+          background: 'linear-gradient(135deg, #dc2626 0%, #991b1b 100%)',
           borderBottom: '1px solid rgba(212, 175, 55, 0.3)',
           boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
           overflow: 'hidden',
@@ -114,8 +144,8 @@ export const LiveActivityTicker: React.FC = () => {
         }}
       >
         <div className="flex items-center gap-3">
-          <span className="text-2xl">🌴</span>
-          <span className="text-amber-200 text-sm font-medium">مرحباً بك في منصة النخيل والزيتون</span>
+          <span className="text-2xl">⚠️</span>
+          <span className="text-white text-sm font-medium">لا توجد أنشطة - راجع Console (F12)</span>
         </div>
       </div>
     );

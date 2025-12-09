@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚨 إصلاح الشريط الآن</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+            padding: 30px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .header {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+        .header h1 {
+            color: #dc2626;
+            font-size: 48px;
+            margin-bottom: 15px;
+            font-weight: 900;
+        }
+        .header p {
+            color: #6b7280;
+            font-size: 18px;
+            line-height: 1.8;
+        }
+        .card {
+            background: white;
+            padding: 35px;
+            border-radius: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+        .card h2 {
+            color: #1e8449;
+            font-size: 28px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #1e8449;
+        }
+        .step {
+            display: flex;
+            gap: 20px;
+            padding: 25px;
+            background: #f9fafb;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border-right: 5px solid #1e8449;
+            transition: all 0.3s;
+        }
+        .step:hover {
+            transform: translateX(-5px);
+            box-shadow: 0 5px 20px rgba(30, 132, 73, 0.2);
+        }
+        .step-number {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #1e8449 0%, #0f4123 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 24px;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(30, 132, 73, 0.3);
+        }
+        .step-content {
+            flex: 1;
+        }
+        .step-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a4d2e;
+            margin-bottom: 10px;
+        }
+        .step-desc {
+            color: #6b7280;
+            line-height: 1.8;
+            font-size: 15px;
+        }
+        .code-block {
+            background: #1a202c;
+            color: #90cdf4;
+            padding: 25px;
+            border-radius: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.8;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+        .success { color: #10b981; }
+        .warning { color: #f59e0b; }
+        .error { color: #ef4444; }
+        .info { color: #3b82f6; }
+        .btn {
+            display: inline-block;
+            padding: 18px 40px;
+            background: linear-gradient(135deg, #1e8449 0%, #0f4123 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 18px;
+            text-align: center;
+            transition: all 0.3s;
+            box-shadow: 0 5px 20px rgba(30, 132, 73, 0.4);
+            border: none;
+            cursor: pointer;
+        }
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(30, 132, 73, 0.6);
+        }
+        .btn-danger {
+            background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+            box-shadow: 0 5px 20px rgba(220, 38, 38, 0.4);
+        }
+        .btn-danger:hover {
+            box-shadow: 0 8px 30px rgba(220, 38, 38, 0.6);
+        }
+        .buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        .alert {
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            font-weight: 600;
+            line-height: 1.8;
+        }
+        .alert-danger {
+            background: #fee2e2;
+            border: 2px solid #dc2626;
+            color: #991b1b;
+        }
+        .alert-success {
+            background: #d1fae5;
+            border: 2px solid #10b981;
+            color: #065f46;
+        }
+        .alert-warning {
+            background: #fef3c7;
+            border: 2px solid #f59e0b;
+            color: #92400e;
+        }
+        .console-example {
+            background: #1f2937;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 15px 0;
+            color: #e5e7eb;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚨 إصلاح الشريط</h1>
+            <p><strong>التشخيص الشامل والإصلاح الفوري</strong></p>
+        </div>
+
+        <div class="alert alert-danger">
+            <p style="font-size: 20px; margin-bottom: 10px;">⚠️ <strong>المشكلة:</strong></p>
+            <p>الشريط موجود لكن فارغ من الإعلانات ولا يستجيب مع الإعدادات</p>
+        </div>
+
+        <div class="card">
+            <h2>
+                <span style="font-size: 36px;">🔍</span>
+                <span>خطوات التشخيص الفوري</span>
+            </h2>
+
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <div class="step-title">احذف Cache كاملاً</div>
+                    <div class="step-desc">
+                        <strong>Windows/Linux:</strong> Ctrl + Shift + Delete<br>
+                        <strong>Mac:</strong> Cmd + Shift + Delete<br>
+                        <strong>اختر:</strong> All time → Delete everything
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <div class="step-title">Hard Reload</div>
+                    <div class="step-desc">
+                        <strong>Windows/Linux:</strong> Ctrl + Shift + R<br>
+                        <strong>Mac:</strong> Cmd + Shift + R<br>
+                        <strong>أو:</strong> افتح DevTools → اضغط مع الاستمرار على زر Reload → اختر "Empty Cache and Hard Reload"
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <div class="step-title">افتح Console قبل أي شيء</div>
+                    <div class="step-desc">
+                        اضغط <strong>F12</strong> أو <strong>Ctrl + Shift + I</strong><br>
+                        اذهب لتبويب <strong>Console</strong><br>
+                        <strong>⚠️ مهم جداً:</strong> Console يجب أن يكون مفتوحاً قبل تحميل الصفحة
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <div class="step-title">افتح المنصة</div>
+                    <div class="step-desc">
+                        اذهب إلى <strong>http://localhost:5173/</strong><br>
+                        أو افتح المنصة المنشورة
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">5</div>
+                <div class="step-content">
+                    <div class="step-title">راقب Console بعناية</div>
+                    <div class="step-desc">
+                        يجب أن ترى رسائل مفصلة جداً عن حالة الشريط<br>
+                        اقرأ كل رسالة بعناية وحدد المشكلة
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>
+                <span style="font-size: 36px;">✅</span>
+                <span>إذا كان النظام يعمل</span>
+            </h2>
+
+            <p style="margin-bottom: 20px; color: #6b7280; font-size: 16px;">
+                ستظهر هذه الرسائل في Console:
+            </p>
+
+            <div class="console-example">
+<span class="success">🔄 LiveActivityTicker: Loading data...</span>
+<span class="info">⏰ Timestamp: 10:45:32</span>
+<span class="info">📊 Getting activities with settings: {mode: "hybrid", ...}</span>
+<span class="info">🎭 Generating 5 simulated activities...</span>
+<span class="success">✅ Generated 5 simulated activities</span>
+<span class="info">📌 Real activities: 2</span>
+<span class="info">🎯 Final activities count: 10</span>
+<span class="success">✅ LiveActivityTicker: Data loaded {activitiesCount: 10, ...}</span>
+<span class="success">🎉 SUCCESS: Activities ready to display!</span>
+<span class="success">   1. 🌴 تم حجز 3 أشجار نخيل في منطقة الأحساء قبل دقائق</span>
+<span class="success">   2. 👤 انضم مستثمر جديد من الرياض للمنصة قبل قليل</span>
+<span class="success">   3. 📈 ارتفاع الطلب على أشجار الزيتون بنسبة 25% الآن</span>
+            </div>
+
+            <div class="alert alert-success">
+                <p style="font-size: 18px;">✅ <strong>النتيجة:</strong></p>
+                <p>الشريط يعمل بنجاح ويعرض الأنشطة المتحركة في الأعلى</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>
+                <span style="font-size: 36px;">❌</span>
+                <span>إذا كانت هناك مشكلة</span>
+            </h2>
+
+            <p style="margin-bottom: 20px; color: #6b7280; font-size: 16px;">
+                ستظهر هذه الرسائل في Console:
+            </p>
+
+            <div class="console-example">
+<span class="error">🔄 LiveActivityTicker: Loading data...</span>
+<span class="error">⚠️ PROBLEM: No activities returned!</span>
+<span class="warning">Settings: {mode: "hybrid", simulation_enabled: true, ...}</span>
+<span class="warning">Check: simulation_enabled = true</span>
+<span class="warning">Check: real_enabled = true</span>
+<span class="warning">Check: mode = hybrid</span>
+<span class="error">❌ CRITICAL: No settings or activities!</span>
+<span class="error">hasSettings: true</span>
+<span class="error">activitiesLength: 0</span>
+            </div>
+
+            <div class="alert alert-danger">
+                <p style="font-size: 18px;">❌ <strong>النتيجة:</strong></p>
+                <p>هناك مشكلة في الإعدادات أو قاعدة البيانات</p>
+            </div>
+
+            <p style="margin: 20px 0; color: #6b7280; font-size: 16px;">
+                <strong>الحل:</strong>
+            </p>
+
+            <div style="background: #f9fafb; padding: 25px; border-radius: 12px; border-right: 5px solid #dc2626;">
+                <p style="font-size: 18px; font-weight: 700; color: #dc2626; margin-bottom: 15px;">
+                    افتح Supabase SQL Editor ونفذ هذا:
+                </p>
+
+                <div class="code-block">
+-- 1. تحقق من عدد الأنشطة المحاكاة
+SELECT COUNT(*) FROM simulated_activities WHERE is_active = true;
+
+-- 2. إذا كانت النتيجة 0 أو أقل من 10، أضف أنشطة
+INSERT INTO simulated_activities (template_ar, icon, weight, is_active)
+VALUES
+  ('تم حجز 3 أشجار نخيل في منطقة الأحساء', '🌴', 20, true),
+  ('انضم مستثمر جديد من الرياض للمنصة', '👤', 15, true),
+  ('ارتفاع الطلب على أشجار الزيتون بنسبة 25%', '📈', 25, true),
+  ('تم إصدار 5 شهادات تملك اليوم', '📜', 18, true),
+  ('مزرعة جديدة تمت إضافتها في الخرج', '🏡', 12, true),
+  ('تم توزيع أرباح بقيمة 50,000 ريال', '💰', 22, true),
+  ('تسجيل 10 حجوزات جديدة خلال الساعة الأخيرة', '🎯', 16, true),
+  ('افتتاح مزرعة جديدة للاستثمار', '🌟', 19, true),
+  ('نجاح موسم الحصاد لمزرعة الرياض', '🎉', 14, true),
+  ('تحديث أسعار الأشجار حسب السوق', '📊', 13, true);
+
+-- 3. تحقق من الإعدادات
+SELECT * FROM activity_ticker_settings;
+
+-- 4. إذا كانت simulation_enabled = false، فعّلها
+UPDATE activity_ticker_settings
+SET simulation_enabled = true,
+    real_enabled = true,
+    mode = 'hybrid'
+WHERE id IS NOT NULL;
+
+-- 5. أضف نشاط يدوي للاختبار
+SELECT create_manual_activity(
+    'test',
+    '✅ النظام يعمل الآن بنجاح',
+    'System working',
+    '✅',
+    10
+);
+                </div>
+
+                <p style="margin-top: 20px; font-size: 16px; color: #6b7280;">
+                    <strong>بعد تنفيذ الاستعلامات:</strong><br>
+                    ✅ أعد تحميل الصفحة (Ctrl + Shift + R)<br>
+                    ✅ راقب Console مرة أخرى<br>
+                    ✅ يجب أن يعمل الشريط الآن
+                </p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>
+                <span style="font-size: 36px;">📊</span>
+                <span>استعلام تشخيصي شامل</span>
+            </h2>
+
+            <p style="margin-bottom: 20px; color: #6b7280; font-size: 16px;">
+                نفذ هذا في Supabase لمعرفة الوضع الكامل:
+            </p>
+
+            <div class="code-block">
+SELECT
+    'Settings Count' as metric,
+    COUNT(*)::text as value
+FROM activity_ticker_settings
+
+UNION ALL
+
+SELECT
+    'Real Activities (Visible)',
+    COUNT(*)::text
+FROM platform_activities
+WHERE is_visible = true
+
+UNION ALL
+
+SELECT
+    'Simulated Activities (Active)',
+    COUNT(*)::text
+FROM simulated_activities
+WHERE is_active = true
+
+UNION ALL
+
+SELECT
+    'Settings Mode',
+    mode
+FROM activity_ticker_settings
+LIMIT 1
+
+UNION ALL
+
+SELECT
+    'Simulation Enabled',
+    CASE WHEN simulation_enabled THEN 'YES' ELSE 'NO' END
+FROM activity_ticker_settings
+LIMIT 1
+
+UNION ALL
+
+SELECT
+    'Real Enabled',
+    CASE WHEN real_enabled THEN 'YES' ELSE 'NO' END
+FROM activity_ticker_settings
+LIMIT 1;
+            </div>
+
+            <p style="margin-top: 20px; color: #6b7280; font-size: 16px;">
+                <strong>النتيجة المتوقعة:</strong>
+            </p>
+
+            <div style="background: #d1fae5; padding: 20px; border-radius: 12px; margin-top: 15px; border: 2px solid #10b981;">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <tr style="background: #059669; color: white;">
+                        <th style="padding: 12px; text-align: right; border: 1px solid white;">Metric</th>
+                        <th style="padding: 12px; text-align: right; border: 1px solid white;">Value</th>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px; border: 1px solid #10b981; font-weight: 600;">Settings Count</td>
+                        <td style="padding: 12px; border: 1px solid #10b981; color: #059669; font-weight: 700;">1</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px; border: 1px solid #10b981; font-weight: 600;">Real Activities</td>
+                        <td style="padding: 12px; border: 1px solid #10b981; color: #059669; font-weight: 700;">2+</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px; border: 1px solid #10b981; font-weight: 600;">Simulated Activities</td>
+                        <td style="padding: 12px; border: 1px solid #10b981; color: #059669; font-weight: 700;">10+</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px; border: 1px solid #10b981; font-weight: 600;">Mode</td>
+                        <td style="padding: 12px; border: 1px solid #10b981; color: #059669; font-weight: 700;">hybrid</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px; border: 1px solid #10b981; font-weight: 600;">Simulation Enabled</td>
+                        <td style="padding: 12px; border: 1px solid #10b981; color: #059669; font-weight: 700;">YES</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px; border: 1px solid #10b981; font-weight: 600;">Real Enabled</td>
+                        <td style="padding: 12px; border: 1px solid #10b981; color: #059669; font-weight: 700;">YES</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="card" style="background: #fef3c7; border: 3px solid #f59e0b;">
+            <h2 style="color: #92400e;">
+                <span style="font-size: 36px;">⚠️</span>
+                <span>هام جداً</span>
+            </h2>
+
+            <div style="color: #92400e; line-height: 2; font-size: 16px;">
+                <p style="margin-bottom: 15px; font-weight: 700; font-size: 18px;">
+                    قبل أي شيء:
+                </p>
+                <ol style="padding-right: 20px;">
+                    <li style="margin-bottom: 10px;"><strong>Console مفتوح دائماً:</strong> يجب أن يكون مفتوحاً قبل تحميل الصفحة</li>
+                    <li style="margin-bottom: 10px;"><strong>Cache محذوف:</strong> Ctrl + Shift + Delete → All time</li>
+                    <li style="margin-bottom: 10px;"><strong>Hard Reload:</strong> Ctrl + Shift + R</li>
+                    <li style="margin-bottom: 10px;"><strong>راقب الرسائل:</strong> كل رسالة في Console مهمة</li>
+                    <li style="margin-bottom: 10px;"><strong>أرسل Screenshot:</strong> إذا استمرت المشكلة، أرسل صورة من Console</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="buttons">
+            <a href="/" class="btn">🏠 افتح المنصة</a>
+            <button onclick="window.location.reload(true)" class="btn btn-danger">🔄 Hard Reload</button>
+        </div>
+
+        <div style="margin-top: 40px; padding: 30px; background: white; border-radius: 20px; text-align: center;">
+            <h2 style="color: #1e8449; margin-bottom: 15px; font-size: 32px;">🎉 التشخيص جاهز</h2>
+            <p style="color: #6b7280; line-height: 1.8; font-size: 18px;">
+                Console الآن يعرض رسائل تفصيلية جداً<br>
+                ستظهر المشكلة بوضوح 100%<br>
+                اتبع الخطوات أعلاه بدقة
+            </p>
+        </div>
+    </div>
+</body>
+</html>

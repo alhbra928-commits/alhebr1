@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔍 تشخيص شريط النشاط</title>
+    <script type="module">
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+        const supabaseUrl = 'YOUR_SUPABASE_URL';
+        const supabaseKey = 'YOUR_SUPABASE_ANON_KEY';
+        const supabase = createClient(supabaseUrl, supabaseKey);
+
+        async function testTicker() {
+            console.clear();
+            console.log('🔍 بدء تشخيص شريط النشاط...\n');
+
+            // 1. فحص الإعدادات
+            console.log('📊 1. فحص الإعدادات:');
+            const { data: settings, error: settingsError } = await supabase
+                .from('activity_ticker_settings')
+                .select('*')
+                .limit(1)
+                .maybeSingle();
+
+            if (settingsError) {
+                console.error('❌ خطأ في الإعدادات:', settingsError);
+            } else if (!settings) {
+                console.warn('⚠️ لا توجد إعدادات!');
+            } else {
+                console.log('✅ الإعدادات:', settings);
+            }
+
+            // 2. فحص الأنشطة الحقيقية
+            console.log('\n📊 2. فحص الأنشطة الحقيقية:');
+            const { data: realActivities, error: realError } = await supabase
+                .from('platform_activities')
+                .select('*')
+                .eq('is_visible', true)
+                .order('priority', { ascending: false })
+                .order('timestamp', { ascending: false })
+                .limit(10);
+
+            if (realError) {
+                console.error('❌ خطأ في الأنشطة الحقيقية:', realError);
+            } else {
+                console.log(`✅ عدد الأنشطة الحقيقية: ${realActivities?.length || 0}`);
+                if (realActivities && realActivities.length > 0) {
+                    realActivities.forEach(act => {
+                        console.log(`   - ${act.icon} ${act.activity_title_ar}`);
+                    });
+                }
+            }
+
+            // 3. فحص الأنشطة المحاكاة
+            console.log('\n📊 3. فحص الأنشطة المحاكاة:');
+            const { data: simActivities, error: simError } = await supabase
+                .from('simulated_activities')
+                .select('*')
+                .eq('is_active', true);
+
+            if (simError) {
+                console.error('❌ خطأ في الأنشطة المحاكاة:', simError);
+            } else {
+                console.log(`✅ عدد الأنشطة المحاكاة: ${simActivities?.length || 0}`);
+                if (simActivities && simActivities.length > 0) {
+                    simActivities.slice(0, 5).forEach(act => {
+                        console.log(`   - ${act.icon} ${act.template_ar.substring(0, 50)}...`);
+                    });
+                }
+            }
+
+            // 4. اختبار توليد نشاط محاكى
+            if (simActivities && simActivities.length > 0) {
+                console.log('\n📊 4. اختبار توليد نشاط محاكى:');
+                const totalWeight = simActivities.reduce((sum, item) => sum + item.weight, 0);
+                let random = Math.random() * totalWeight;
+
+                let selected = simActivities[0];
+                for (const activity of simActivities) {
+                    random -= activity.weight;
+                    if (random <= 0) {
+                        selected = activity;
+                        break;
+                    }
+                }
+
+                const timings = ['قبل دقائق', 'قبل قليل', 'منذ 5 دقائق', 'منذ 10 دقائق', 'الآن'];
+                const timing = timings[Math.floor(Math.random() * timings.length)];
+
+                console.log(`✅ نشاط محاكى تم توليده:`);
+                console.log(`   ${selected.icon} ${selected.template_ar} ${timing}`);
+            }
+
+            // 5. محاكاة getActivities()
+            console.log('\n📊 5. محاكاة getActivities():');
+            if (settings) {
+                let activities = [];
+
+                // إضافة الأنشطة الحقيقية
+                if ((settings.mode === 'real' || settings.mode === 'hybrid') && settings.real_enabled) {
+                    const count = settings.mode === 'real' ? settings.items_per_cycle : Math.floor(settings.items_per_cycle / 2);
+                    const realToAdd = (realActivities || []).slice(0, count);
+                    activities = [...activities, ...realToAdd];
+                    console.log(`   ✅ أضيف ${realToAdd.length} نشاط حقيقي`);
+                }
+
+                // إضافة الأنشطة المحاكاة
+                if ((settings.mode === 'simulation' || settings.mode === 'hybrid') && settings.simulation_enabled) {
+                    const count = settings.mode === 'simulation'
+                        ? settings.items_per_cycle
+                        : Math.ceil(settings.items_per_cycle / 2);
+
+                    console.log(`   ⏳ جاري توليد ${count} نشاط محاكى...`);
+
+                    if (simActivities && simActivities.length > 0) {
+                        for (let i = 0; i < count; i++) {
+                            const totalWeight = simActivities.reduce((sum, item) => sum + item.weight, 0);
+                            let random = Math.random() * totalWeight;
+
+                            let selected = simActivities[0];
+                            for (const activity of simActivities) {
+                                random -= activity.weight;
+                                if (random <= 0) {
+                                    selected = activity;
+                                    break;
+                                }
+                            }
+
+                            const timings = ['قبل دقائق', 'قبل قليل', 'منذ 5 دقائق', 'منذ 10 دقائق', 'الآن'];
+                            const timing = timings[Math.floor(Math.random() * timings.length)];
+
+                            activities.push({
+                                id: `sim-${Date.now()}-${i}`,
+                                title: `${selected.template_ar} ${timing}`,
+                                icon: selected.icon,
+                                priority: 5
+                            });
+                        }
+                        console.log(`   ✅ تم توليد ${count} نشاط محاكى`);
+                    } else {
+                        console.warn('   ⚠️ لا توجد أنشطة محاكاة في قاعدة البيانات!');
+                    }
+                }
+
+                console.log(`\n🎯 إجمالي الأنشطة: ${activities.length}`);
+
+                if (activities.length === 0) {
+                    console.error('❌ المشكلة: لا توجد أنشطة للعرض!');
+                    console.log('\n🔧 الحل المقترح:');
+                    console.log('   1. تأكد من تفعيل simulation_enabled أو real_enabled');
+                    console.log('   2. تأكد من وجود أنشطة في simulated_activities');
+                    console.log('   3. تأكد من وجود أنشطة في platform_activities');
+                } else {
+                    console.log('\n✅ عرض بعض الأنشطة:');
+                    activities.slice(0, 5).forEach((act, i) => {
+                        console.log(`   ${i + 1}. ${act.icon} ${act.title || act.activity_title_ar}`);
+                    });
+                }
+            }
+
+            console.log('\n✅ انتهى التشخيص');
+
+            // عرض النتائج على الشاشة
+            document.getElementById('results').innerHTML = `
+                <div style="background: white; padding: 30px; border-radius: 15px; margin-top: 20px;">
+                    <h3 style="color: #1e8449; margin-bottom: 15px;">📊 نتائج التشخيص</h3>
+                    <p style="margin: 10px 0;"><strong>الإعدادات:</strong> ${settings ? '✅ موجودة' : '❌ مفقودة'}</p>
+                    <p style="margin: 10px 0;"><strong>الوضع:</strong> ${settings?.mode || 'غير محدد'}</p>
+                    <p style="margin: 10px 0;"><strong>المحاكاة مفعلة:</strong> ${settings?.simulation_enabled ? '✅ نعم' : '❌ لا'}</p>
+                    <p style="margin: 10px 0;"><strong>الحقيقي مفعل:</strong> ${settings?.real_enabled ? '✅ نعم' : '❌ لا'}</p>
+                    <p style="margin: 10px 0;"><strong>أنشطة حقيقية:</strong> ${realActivities?.length || 0}</p>
+                    <p style="margin: 10px 0;"><strong>أنشطة محاكاة:</strong> ${simActivities?.length || 0}</p>
+                    <hr style="margin: 20px 0; border: none; border-top: 2px solid #e5e7eb;">
+                    <p style="font-weight: bold; color: #dc2626; font-size: 18px;">
+                        ⚠️ راجع Console للتفاصيل الكاملة (F12)
+                    </p>
+                </div>
+            `;
+        }
+
+        // تشغيل التشخيص
+        window.addEventListener('load', () => {
+            setTimeout(testTicker, 1000);
+        });
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e8449 0%, #0f4123 100%);
+            padding: 40px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+        h1 {
+            color: #1e8449;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 32px;
+        }
+        .warning {
+            background: #fef3c7;
+            border-right: 5px solid #f59e0b;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            color: #92400e;
+            line-height: 1.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 تشخيص شريط النشاط المباشر</h1>
+
+        <div class="warning">
+            <p><strong>⚠️ تعليمات مهمة:</strong></p>
+            <ol style="margin-top: 10px; padding-right: 20px;">
+                <li>افتح Console الآن (اضغط F12)</li>
+                <li>راقب الرسائل التفصيلية</li>
+                <li>سيتم تشغيل التشخيص تلقائياً</li>
+            </ol>
+        </div>
+
+        <div id="results">
+            <div style="text-align: center; padding: 40px;">
+                <div class="animate-spin" style="width: 50px; height: 50px; border: 4px solid #1e8449; border-top-color: transparent; border-radius: 50%; margin: 0 auto 20px;"></div>
+                <p style="color: #1e8449; font-weight: 600;">جاري تشغيل التشخيص...</p>
+            </div>
+        </div>
+
+        <div style="margin-top: 30px; padding: 20px; background: #f0fdf4; border-radius: 12px; border: 2px solid #86efac;">
+            <h3 style="color: #15803d; margin-bottom: 15px;">📝 خطوات الإصلاح المقترحة:</h3>
+            <ol style="padding-right: 20px; color: #166534; line-height: 2;">
+                <li>تأكد من فتح Console لرؤية التفاصيل</li>
+                <li>تحقق من وجود أنشطة في simulated_activities</li>
+                <li>تحقق من تفعيل simulation_enabled</li>
+                <li>راجع الأخطاء إن وجدت</li>
+            </ol>
+        </div>
+    </div>
+
+    <style>
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .animate-spin {
+            animation: spin 1s linear infinite;
+        }
+    </style>
+</body>
+</html>
