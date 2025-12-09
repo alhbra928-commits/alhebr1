@@ -54,8 +54,59 @@ export const LiveActivityTicker: React.FC = () => {
     }
   };
 
-  if (isLoading || !settings || activities.length === 0) {
-    return null;
+  // عرض الشريط دائماً حتى أثناء التحميل
+  if (isLoading) {
+    return (
+      <div
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 9998,
+          background: 'linear-gradient(135deg, #1a4d2e 0%, #0f2817 100%)',
+          borderBottom: '1px solid rgba(212, 175, 55, 0.3)',
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+          overflow: 'hidden',
+          height: '48px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
+      >
+        <div className="flex items-center gap-3">
+          <div className="animate-spin h-5 w-5 border-2 border-amber-400 border-t-transparent rounded-full"></div>
+          <span className="text-amber-200 text-sm font-medium">جاري تحميل الأنشطة...</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (!settings || activities.length === 0) {
+    return (
+      <div
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 9998,
+          background: 'linear-gradient(135deg, #1a4d2e 0%, #0f2817 100%)',
+          borderBottom: '1px solid rgba(212, 175, 55, 0.3)',
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+          overflow: 'hidden',
+          height: '48px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
+      >
+        <div className="flex items-center gap-3">
+          <span className="text-2xl">🌴</span>
+          <span className="text-amber-200 text-sm font-medium">مرحباً بك في منصة النخيل والزيتون</span>
+        </div>
+      </div>
+    );
   }
 
   const speedDuration = liveActivityTickerService.getSpeedDuration(settings.scroll_speed);

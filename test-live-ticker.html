@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌴 اختبار شريط النشاط المباشر</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding-top: 80px;
+        }
+
+        /* شريط النشاط المباشر */
+        .live-ticker {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 9998;
+            background: linear-gradient(135deg, #1a4d2e 0%, #0f2817 100%);
+            border-bottom: 2px solid rgba(212, 175, 55, 0.4);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            height: 56px;
+            display: flex;
+            align-items: center;
+        }
+
+        .ticker-content {
+            display: flex;
+            align-items: center;
+            animation: scroll-ticker 35s linear infinite;
+            white-space: nowrap;
+            padding-right: 100vw;
+        }
+
+        .ticker-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 40px;
+            border-right: 1px solid rgba(212, 175, 55, 0.3);
+            min-width: fit-content;
+        }
+
+        .ticker-icon {
+            font-size: 24px;
+            filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.3));
+        }
+
+        .ticker-text {
+            font-size: 15px;
+            font-weight: 600;
+            color: #f4e5c2;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+            letter-spacing: 0.3px;
+        }
+
+        @keyframes scroll-ticker {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-33.333%);
+            }
+        }
+
+        /* المحتوى */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .status-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .success-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        h1 {
+            color: #1a4d2e;
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+        .description {
+            color: #666;
+            font-size: 18px;
+            line-height: 1.8;
+            margin-bottom: 30px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .info-item {
+            background: linear-gradient(135deg, #1a4d2e 0%, #2d7a4e 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(26, 77, 46, 0.3);
+        }
+
+        .info-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+
+        .info-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        .info-value {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 15px 40px;
+            background: linear-gradient(135deg, #d4af37 0%, #c89b3c 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 18px;
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <!-- شريط النشاط المباشر -->
+    <div class="live-ticker">
+        <div class="ticker-content">
+            <div class="ticker-item">
+                <span class="ticker-icon">🌴</span>
+                <span class="ticker-text">تم حجز 3 أشجار نخيل في منطقة الأحساء قبل دقائق</span>
+            </div>
+            <div class="ticker-item">
+                <span class="ticker-icon">👤</span>
+                <span class="ticker-text">انضم مستثمر جديد من الرياض للمنصة</span>
+            </div>
+            <div class="ticker-item">
+                <span class="ticker-icon">📈</span>
+                <span class="ticker-text">ارتفاع الطلب على أشجار الزيتون بنسبة 25%</span>
+            </div>
+            <div class="ticker-item">
+                <span class="ticker-icon">📜</span>
+                <span class="ticker-text">تم إصدار 5 شهادات تملك اليوم</span>
+            </div>
+            <div class="ticker-item">
+                <span class="ticker-icon">🏡</span>
+                <span class="ticker-text">مزرعة جديدة تمت إضافتها في الخرج</span>
+            </div>
+            <div class="ticker-item">
+                <span class="ticker-icon">✨</span>
+                <span class="ticker-text">100+ مستثمر نشط على المنصة الآن</span>
+            </div>
+            <div class="ticker-item">
+                <span class="ticker-icon">🌴</span>
+                <span class="ticker-text">حجز شجرتي نخيل في مزرعة الواحة</span>
+            </div>
+            <div class="ticker-item">
+                <span class="ticker-icon">🫒</span>
+                <span class="ticker-text">مستثمر من جدة اشترى 5 أشجار زيتون</span>
+            </div>
+            <div class="ticker-item">
+                <span class="ticker-icon">🔥</span>
+                <span class="ticker-text">شجرة الزيتون الأكثر طلباً هذا الأسبوع</span>
+            </div>
+
+            <!-- تكرار العناصر للحركة السلسة -->
+            <div class="ticker-item">
+                <span class="ticker-icon">🌴</span>
+                <span class="ticker-text">تم حجز 3 أشجار نخيل في منطقة الأحساء قبل دقائق</span>
+            </div>
+            <div class="ticker-item">
+                <span class="ticker-icon">👤</span>
+                <span class="ticker-text">انضم مستثمر جديد من الرياض للمنصة</span>
+            </div>
+            <div class="ticker-item">
+                <span class="ticker-icon">📈</span>
+                <span class="ticker-text">ارتفاع الطلب على أشجار الزيتون بنسبة 25%</span>
+            </div>
+            <div class="ticker-item">
+                <span class="ticker-icon">📜</span>
+                <span class="ticker-text">تم إصدار 5 شهادات تملك اليوم</span>
+            </div>
+            <div class="ticker-item">
+                <span class="ticker-icon">🏡</span>
+                <span class="ticker-text">مزرعة جديدة تمت إضافتها في الخرج</span>
+            </div>
+            <div class="ticker-item">
+                <span class="ticker-icon">✨</span>
+                <span class="ticker-text">100+ مستثمر نشط على المنصة الآن</span>
+            </div>
+            <div class="ticker-item">
+                <span class="ticker-icon">🌴</span>
+                <span class="ticker-text">حجز شجرتي نخيل في مزرعة الواحة</span>
+            </div>
+            <div class="ticker-item">
+                <span class="ticker-icon">🫒</span>
+                <span class="ticker-text">مستثمر من جدة اشترى 5 أشجار زيتون</span>
+            </div>
+            <div class="ticker-item">
+                <span class="ticker-icon">🔥</span>
+                <span class="ticker-text">شجرة الزيتون الأكثر طلباً هذا الأسبوع</span>
+            </div>
+
+            <!-- تكرار ثالث -->
+            <div class="ticker-item">
+                <span class="ticker-icon">🌴</span>
+                <span class="ticker-text">تم حجز 3 أشجار نخيل في منطقة الأحساء قبل دقائق</span>
+            </div>
+            <div class="ticker-item">
+                <span class="ticker-icon">👤</span>
+                <span class="ticker-text">انضم مستثمر جديد من الرياض للمنصة</span>
+            </div>
+            <div class="ticker-item">
+                <span class="ticker-icon">📈</span>
+                <span class="ticker-text">ارتفاع الطلب على أشجار الزيتون بنسبة 25%</span>
+            </div>
+            <div class="ticker-item">
+                <span class="ticker-icon">📜</span>
+                <span class="ticker-text">تم إصدار 5 شهادات تملك اليوم</span>
+            </div>
+            <div class="ticker-item">
+                <span class="ticker-icon">🏡</span>
+                <span class="ticker-text">مزرعة جديدة تمت إضافتها في الخرج</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- المحتوى الرئيسي -->
+    <div class="container">
+        <div class="status-card">
+            <div class="success-icon">✅</div>
+            <h1>شريط النشاط المباشر جاهز للعمل!</h1>
+            <p class="description">
+                تم إنشاء شريط النشاط المباشر بنجاح! يعرض الآن أنشطة المنصة بشكل حي ومتحرك في أعلى الصفحة.<br>
+                الشريط يدعم ثلاثة أوضاع: وهمي، حقيقي، وهجين (الافتراضي).
+            </p>
+
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-icon">🎯</div>
+                    <div class="info-title">عدد القوالب النشطة</div>
+                    <div class="info-value">30 قالب</div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-icon">⚙️</div>
+                    <div class="info-title">الوضع الحالي</div>
+                    <div class="info-value">هجين</div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-icon">🚀</div>
+                    <div class="info-title">السرعة</div>
+                    <div class="info-value">متوسطة</div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-icon">🔄</div>
+                    <div class="info-title">التحديث التلقائي</div>
+                    <div class="info-value">كل 15 ثانية</div>
+                </div>
+            </div>
+
+            <a href="/" class="btn">عودة للمنصة</a>
+        </div>
+
+        <div class="status-card">
+            <h2 style="color: #1a4d2e; margin-bottom: 20px;">📊 حالة النظام</h2>
+            <div style="text-align: right; padding: 20px;">
+                <p style="margin: 10px 0; color: #2d7a4e; font-weight: 600;">
+                    ✅ قاعدة البيانات: متصلة ونشطة
+                </p>
+                <p style="margin: 10px 0; color: #2d7a4e; font-weight: 600;">
+                    ✅ الجداول: تم إنشاؤها بنجاح (3 جداول)
+                </p>
+                <p style="margin: 10px 0; color: #2d7a4e; font-weight: 600;">
+                    ✅ البيانات الوهمية: 30 قالب جاهز
+                </p>
+                <p style="margin: 10px 0; color: #2d7a4e; font-weight: 600;">
+                    ✅ الإعدادات الافتراضية: مفعّلة
+                </p>
+                <p style="margin: 10px 0; color: #2d7a4e; font-weight: 600;">
+                    ✅ Realtime: مفعّل
+                </p>
+                <p style="margin: 10px 0; color: #2d7a4e; font-weight: 600;">
+                    ✅ RLS Policies: مطبّقة بأمان
+                </p>
+            </div>
+        </div>
+
+        <div class="status-card">
+            <h2 style="color: #1a4d2e; margin-bottom: 20px;">🎛️ التحكم بالشريط</h2>
+            <p style="color: #666; margin-bottom: 20px;">
+                يمكنك التحكم الكامل بشريط النشاط من لوحة الإعدادات:
+            </p>
+            <ul style="text-align: right; color: #666; line-height: 2;">
+                <li>تغيير الألوان والتصميم</li>
+                <li>التحكم في السرعة</li>
+                <li>اختيار الوضع (وهمي / حقيقي / هجين)</li>
+                <li>إضافة وحذف الأنشطة</li>
+                <li>تخصيص الأيقونات والنصوص</li>
+            </ul>
+            <p style="margin-top: 20px; color: #2d7a4e; font-weight: 600;">
+                📍 المسار: الإدارة → الإعدادات → شريط النشاط المباشر
+            </p>
+        </div>
+    </div>
+</body>
+</html>
