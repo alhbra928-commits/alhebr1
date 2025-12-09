@@ -48,9 +48,18 @@ export const LiveActivityTickerSettings: React.FC = () => {
   };
 
   const handleCreateManualActivity = async () => {
-    if (!manualActivity.titleAr.trim()) return;
+    console.log('🔘 Add button clicked!');
+    console.log('📝 Manual activity data:', manualActivity);
+
+    if (!manualActivity.titleAr.trim()) {
+      console.warn('⚠️ Empty title, aborting');
+      alert('يرجى إدخال النص بالعربية');
+      return;
+    }
 
     try {
+      console.log('⏳ Creating activity...');
+
       await liveActivityTickerService.createManualActivity(
         manualActivity.type,
         manualActivity.titleAr,
@@ -58,6 +67,8 @@ export const LiveActivityTickerSettings: React.FC = () => {
         manualActivity.icon,
         manualActivity.priority
       );
+
+      console.log('✅ Activity created, resetting form...');
 
       setManualActivity({
         type: 'stats',
@@ -67,9 +78,15 @@ export const LiveActivityTickerSettings: React.FC = () => {
         priority: 5
       });
       setShowManualForm(false);
+
+      console.log('🔄 Reloading data...');
       await loadData();
+
+      console.log('🎉 All done!');
+      alert('تم إضافة النشاط بنجاح!');
     } catch (error) {
-      console.error('Error creating activity:', error);
+      console.error('❌ Error creating activity:', error);
+      alert('حدث خطأ عند إضافة النشاط: ' + (error as any).message);
     }
   };
 

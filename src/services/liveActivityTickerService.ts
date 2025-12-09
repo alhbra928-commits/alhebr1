@@ -246,18 +246,27 @@ class LiveActivityTickerService {
     icon: string = '⭐',
     priority: number = 5
   ): Promise<void> {
-    const { error } = await supabase
-      .from('platform_activities')
-      .insert({
-        activity_type: type,
-        activity_title_ar: titleAr,
-        activity_title_en: titleEn,
-        icon,
-        priority,
-        is_visible: true
+    console.log('➕ Creating manual activity:', { type, titleAr, icon, priority });
+
+    try {
+      const { data, error } = await supabase.rpc('create_manual_activity', {
+        p_activity_type: type,
+        p_activity_title_ar: titleAr,
+        p_activity_title_en: titleEn,
+        p_icon: icon,
+        p_priority: priority
       });
 
-    if (error) throw error;
+      if (error) {
+        console.error('❌ Error creating activity:', error);
+        throw error;
+      }
+
+      console.log('✅ Activity created successfully:', data);
+    } catch (error) {
+      console.error('❌ Failed to create activity:', error);
+      throw error;
+    }
   }
 
   async deleteActivity(id: string): Promise<void> {

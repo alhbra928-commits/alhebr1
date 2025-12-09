@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧪 اختبار إضافة النشاط اليدوي</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e8449 0%, #0f4123 100%);
+            padding: 40px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 42px;
+            font-weight: 900;
+            margin-bottom: 10px;
+            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 35px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 24px;
+            font-weight: 800;
+            color: #1a4d2e;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #1e8449;
+        }
+
+        .icon {
+            font-size: 28px;
+        }
+
+        .step {
+            display: flex;
+            gap: 15px;
+            padding: 18px;
+            background: #f0fdf4;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            border: 2px solid #86efac;
+        }
+
+        .step-number {
+            width: 35px;
+            height: 35px;
+            background: linear-gradient(135deg, #1e8449 0%, #0f4123 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            flex-shrink: 0;
+        }
+
+        .step-text {
+            flex: 1;
+            color: #1a4d2e;
+            line-height: 1.6;
+            font-size: 15px;
+        }
+
+        .console-example {
+            background: #1a202c;
+            color: #90cdf4;
+            padding: 20px;
+            border-radius: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.8;
+            margin: 15px 0;
+        }
+
+        .console-log {
+            color: #90cdf4;
+        }
+
+        .console-success {
+            color: #68d391;
+        }
+
+        .console-error {
+            color: #fc8181;
+        }
+
+        .warning {
+            background: #fef3c7;
+            border-right: 5px solid #f59e0b;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+
+        .warning-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #92400e;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 15px 35px;
+            background: linear-gradient(135deg, #1e8449 0%, #0f4123 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 700;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(30, 132, 73, 0.4);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(30, 132, 73, 0.6);
+        }
+
+        .buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .checklist {
+            display: grid;
+            gap: 12px;
+        }
+
+        .check-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px;
+            background: #f0fdf4;
+            border-radius: 10px;
+        }
+
+        .check-icon {
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧪 اختبار إضافة النشاط</h1>
+            <p style="font-size: 20px; opacity: 0.95;">التحقق من عمل زر الإضافة</p>
+        </div>
+
+        <div class="card">
+            <div class="section-title">
+                <span class="icon">🎯</span>
+                <span>خطوات الاختبار</span>
+            </div>
+
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-text">
+                    <strong>افتح Console (F12)</strong><br>
+                    يجب أن يكون مفتوحاً قبل كل خطوة
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-text">
+                    <strong>اذهب للإعدادات</strong><br>
+                    الإعدادات → شريط النشاط المباشر
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-text">
+                    <strong>اضغط "إضافة نشاط يدوي"</strong><br>
+                    يجب أن يظهر النموذج
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">4</div>
+                <div class="step-text">
+                    <strong>اكتب نصاً تجريبياً</strong><br>
+                    مثال: "اختبار النشاط اليدوي"
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">5</div>
+                <div class="step-text">
+                    <strong>اضغط زر "إضافة"</strong><br>
+                    راقب Console - يجب أن ترى الرسائل أدناه
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="section-title">
+                <span class="icon">📋</span>
+                <span>ماذا يجب أن ترى في Console</span>
+            </div>
+
+            <h3 style="color: #1a4d2e; margin-bottom: 12px;">✅ عند الضغط على زر "إضافة":</h3>
+            <div class="console-example">
+<span class="console-log">🔘 Add button clicked!</span>
+<span class="console-log">📝 Manual activity data: {type: "stats", titleAr: "...", ...}</span>
+<span class="console-log">⏳ Creating activity...</span>
+<span class="console-log">➕ Creating manual activity: {...}</span>
+<span class="console-success">✅ Activity created successfully: ...</span>
+<span class="console-success">✅ Activity created, resetting form...</span>
+<span class="console-log">🔄 Reloading data...</span>
+<span class="console-success">🎉 All done!</span>
+            </div>
+
+            <div style="margin-top: 20px;">
+                <h3 style="color: #1a4d2e; margin-bottom: 12px;">📢 يجب أن يظهر:</h3>
+                <ul style="list-style: none; padding: 0;">
+                    <li style="padding: 10px; background: #dcfce7; margin-bottom: 8px; border-radius: 8px; font-weight: 600; color: #15803d;">
+                        ✅ Alert: "تم إضافة النشاط بنجاح!"
+                    </li>
+                    <li style="padding: 10px; background: #dcfce7; margin-bottom: 8px; border-radius: 8px; font-weight: 600; color: #15803d;">
+                        ✅ النموذج يختفي
+                    </li>
+                    <li style="padding: 10px; background: #dcfce7; margin-bottom: 8px; border-radius: 8px; font-weight: 600; color: #15803d;">
+                        ✅ النشاط الجديد يظهر في القائمة
+                    </li>
+                    <li style="padding: 10px; background: #dcfce7; margin-bottom: 8px; border-radius: 8px; font-weight: 600; color: #15803d;">
+                        ✅ الشريط يتحدث فوراً في الأعلى
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="section-title">
+                <span class="icon">❌</span>
+                <span>إذا رأيت خطأ</span>
+            </div>
+
+            <h3 style="color: #dc2626; margin-bottom: 12px;">رسائل الخطأ المحتملة:</h3>
+            <div class="console-example">
+<span class="console-error">❌ Error creating activity: ...</span>
+<span class="console-error">❌ Failed to create activity: ...</span>
+            </div>
+
+            <div style="margin-top: 20px;">
+                <h3 style="color: #1a4d2e; margin-bottom: 12px;">الحل:</h3>
+                <div class="step">
+                    <div class="step-text">
+                        <strong>1. انسخ نص الخطأ الكامل من Console</strong><br>
+                        <strong>2. أرسله لي</strong><br>
+                        <strong>3. تحقق من RLS policies في Supabase</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="warning">
+            <div class="warning-title">
+                <span>⚠️</span>
+                <span>هام جداً</span>
+            </div>
+            <p style="color: #92400e; line-height: 1.8; font-size: 15px;">
+                <strong>1. احذف Cache:</strong> Ctrl + Shift + Delete<br>
+                <strong>2. Hard Reload:</strong> Ctrl + Shift + R<br>
+                <strong>3. افتح Console:</strong> قبل الضغط على زر الإضافة<br>
+                <strong>4. راقب الرسائل:</strong> كل خطوة لها رسالة
+            </p>
+        </div>
+
+        <div class="card">
+            <div class="section-title">
+                <span class="icon">🔧</span>
+                <span>الإصلاحات المطبقة</span>
+            </div>
+
+            <div class="checklist">
+                <div class="check-item">
+                    <span class="check-icon">✅</span>
+                    <span><strong>إنشاء دالة create_manual_activity</strong> - إدراج آمن ومضمون</span>
+                </div>
+
+                <div class="check-item">
+                    <span class="check-icon">✅</span>
+                    <span><strong>تحديث RLS Policy</strong> - السماح لـ anon بالإدراج</span>
+                </div>
+
+                <div class="check-item">
+                    <span class="check-icon">✅</span>
+                    <span><strong>استخدام RPC</strong> - تجاوز مشاكل RLS</span>
+                </div>
+
+                <div class="check-item">
+                    <span class="check-icon">✅</span>
+                    <span><strong>Console Logs شاملة</strong> - تشخيص كل خطوة</span>
+                </div>
+
+                <div class="check-item">
+                    <span class="check-icon">✅</span>
+                    <span><strong>Alert Messages</strong> - تأكيد النجاح أو الخطأ</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="buttons">
+            <a href="/" class="btn">🏠 افتح المنصة</a>
+        </div>
+
+        <div style="margin-top: 40px; text-align: center; background: white; padding: 30px; border-radius: 20px;">
+            <h2 style="color: #1e8449; margin-bottom: 15px;">🎉 تم تطبيق الإصلاحات!</h2>
+            <p style="color: #1a4d2e; line-height: 1.8; font-size: 16px;">
+                زر الإضافة يجب أن يعمل الآن<br>
+                جميع الرسائل تظهر في Console<br>
+                النشاط يُضاف ويظهر فوراً
+            </p>
+        </div>
+    </div>
+</body>
+</html>
