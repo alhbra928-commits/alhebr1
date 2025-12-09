@@ -14,7 +14,7 @@
     <meta name="pragma" content="no-cache" />
     <meta name="last-modified" content="__BUILD_VERSION__" />
     <meta name="version" content="__BUILD_VERSION__" />
-    <meta name="cache-buster" content="v20251209_1765290156782" />
+    <meta name="cache-buster" content="v20251209_1765290877139" />
 
     <!-- iPhone/Safari specific headers -->
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -24,9 +24,8 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <title>منصة النخيل والزيتون</title>
 
-    <!-- 🎯 SIMPLE STICKY SOLUTION (مثل الحراج الزراعي) -->
+    <!-- Basic Reset Only -->
     <style>
-      /* Basic Reset */
       * {
         margin: 0;
         padding: 0;
@@ -39,22 +38,8 @@
         overflow-x: hidden;
       }
 
-      /* Main Container - Normal Scroll */
       #root {
         min-height: 100vh;
-        padding-bottom: calc(90px + env(safe-area-inset-bottom, 20px));
-      }
-
-      /* Global Bottom Dock - FIXED POSITION (بسيط وفعال) */
-      #global-bottom-dock {
-        position: fixed !important;
-        bottom: 0 !important;
-        left: 0 !important;
-        right: 0 !important;
-        z-index: 999999 !important;
-        background: white !important;
-        border-top: 1px solid #e5e7eb !important;
-        padding-bottom: env(safe-area-inset-bottom, 20px) !important;
       }
     </style>
 
@@ -111,7 +96,4 @@
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
-
-  <!-- 🎯 Global Bottom Dock - خارج body تماماً -->
-  <div id="global-bottom-dock"></div>
 </html>
