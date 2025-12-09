@@ -338,14 +338,14 @@ export function VerticalSideTabs({
 
   return (
     <>
-      <div className="fixed right-0 top-1/2 -translate-y-1/2 z-[999999] flex flex-col gap-3 pr-0">
+      <div className="fixed left-0 top-1/2 -translate-y-1/2 z-[999999] flex flex-col gap-3 pl-0">
         {tabs.map((tab, index) => (
           <button
             key={tab.id}
             onClick={() => handleTabClick(tab.id)}
-            className="group relative w-[32px] h-[90px] bg-gradient-to-br from-emerald-600 to-emerald-700 hover:from-emerald-500 hover:to-emerald-600 rounded-r-2xl shadow-2xl transition-all duration-300 hover:w-[36px] border-2 border-amber-400 hover:border-amber-300 flex items-center justify-center overflow-hidden"
+            className="group relative w-[32px] h-[90px] bg-gradient-to-br from-emerald-600 to-emerald-700 hover:from-emerald-500 hover:to-emerald-600 rounded-l-2xl shadow-2xl transition-all duration-300 hover:w-[36px] border-2 border-amber-400 hover:border-amber-300 flex items-center justify-center overflow-hidden"
             style={{
-              animation: `slideInRight 0.5s ease-out ${index * 0.1}s both`
+              animation: `slideInLeft 0.5s ease-out ${index * 0.1}s both`
             }}
             aria-label={tab.label}
           >
@@ -353,9 +353,9 @@ export function VerticalSideTabs({
               {tab.icon()}
             </div>
 
-            <div className="absolute inset-0 bg-gradient-to-l from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
               style={{
-                transform: 'translateX(-100%)',
+                transform: 'translateX(100%)',
                 animation: 'shimmer 2s infinite'
               }}
             />
@@ -374,13 +374,16 @@ export function VerticalSideTabs({
           />
 
           <div
-            className="fixed top-0 right-0 h-full w-[80%] max-w-[500px] bg-gradient-to-br from-white via-emerald-50/30 to-amber-50/20 shadow-2xl z-[999999] overflow-y-auto transition-transform duration-300"
+            className="fixed top-0 left-0 h-full w-[80%] max-w-[500px] bg-gradient-to-br from-white via-emerald-50/30 to-amber-50/20 shadow-2xl z-[999999] overflow-y-auto transition-transform duration-300"
             style={{
-              animation: 'slideInFromRight 0.3s ease-out',
-              borderLeft: '3px solid #fbbf24'
+              animation: 'slideInFromLeft 0.3s ease-out',
+              borderRight: '3px solid #fbbf24'
             }}
           >
-            <div className="sticky top-0 bg-gradient-to-l from-emerald-600 to-emerald-700 p-4 flex items-center justify-between border-b-2 border-amber-400 z-10">
+            <div className="sticky top-0 bg-gradient-to-r from-emerald-600 to-emerald-700 p-4 flex items-center justify-between border-b-2 border-amber-400 z-10">
+              <h2 className="text-xl font-bold text-white">
+                {activeTabConfig?.label}
+              </h2>
               <button
                 onClick={closeDrawer}
                 className="p-2 hover:bg-white/20 rounded-lg transition-colors duration-200"
@@ -388,9 +391,6 @@ export function VerticalSideTabs({
               >
                 <X className="w-6 h-6 text-white" />
               </button>
-              <h2 className="text-xl font-bold text-white">
-                {activeTabConfig?.label}
-              </h2>
             </div>
 
             <div className="min-h-[calc(100vh-80px)]">
@@ -401,9 +401,9 @@ export function VerticalSideTabs({
       )}
 
       <style>{`
-        @keyframes slideInRight {
+        @keyframes slideInLeft {
           from {
-            transform: translateX(100%);
+            transform: translateX(-100%);
             opacity: 0;
           }
           to {
@@ -412,9 +412,9 @@ export function VerticalSideTabs({
           }
         }
 
-        @keyframes slideInFromRight {
+        @keyframes slideInFromLeft {
           from {
-            transform: translateX(100%);
+            transform: translateX(-100%);
           }
           to {
             transform: translateX(0);
@@ -432,21 +432,21 @@ export function VerticalSideTabs({
 
         @keyframes shimmer {
           0% {
-            transform: translateX(-100%);
+            transform: translateX(100%);
           }
           100% {
-            transform: translateX(200%);
+            transform: translateX(-200%);
           }
         }
 
         @media (max-width: 768px) {
-          .fixed.right-0.top-1\\/2 {
-            right: 0 !important;
+          .fixed.left-0.top-1\\/2 {
+            left: 0 !important;
           }
         }
 
         @supports (-webkit-touch-callout: none) {
-          .fixed.right-0.top-1\\/2 button {
+          .fixed.left-0.top-1\\/2 button {
             -webkit-tap-highlight-color: transparent;
             touch-action: manipulation;
           }
