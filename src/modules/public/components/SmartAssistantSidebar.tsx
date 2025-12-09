@@ -4,8 +4,10 @@ import { brandColors, brandGradients } from '../../finance/styles/brandColors';
 import { FarmSuggestion } from '../types/farm.types';
 
 interface SmartAssistantSidebarProps {
-  suggestions: FarmSuggestion[];
-  onSuggestionClick: (barcode: string) => void;
+  isOpen: boolean;
+  onClose: () => void;
+  suggestions?: FarmSuggestion[];
+  onSuggestionClick?: (barcode: string) => void;
 }
 
 interface Notification {
@@ -15,8 +17,10 @@ interface Notification {
 }
 
 export function SmartAssistantSidebar({
-  suggestions,
-  onSuggestionClick,
+  isOpen,
+  onClose,
+  suggestions = [],
+  onSuggestionClick = () => {},
 }: SmartAssistantSidebarProps) {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [isVisible, setIsVisible] = useState(true);
@@ -77,31 +81,49 @@ export function SmartAssistantSidebar({
     return () => clearInterval(interval);
   }, []);
 
+  if (!isOpen) return null;
+
   return (
-    <div
-      className={`space-y-6 sticky top-8 transition-all duration-300 ${
-        isVisible ? 'translate-x-0 opacity-100' : 'lg:translate-x-0 lg:opacity-100 translate-x-full opacity-0 pointer-events-none lg:pointer-events-auto'
-      }`}
-    >
+    <>
+      {/* Backdrop */}
       <div
-        className="rounded-3xl p-6 backdrop-blur-lg animate-fadeIn"
-        style={{
-          background: 'rgba(245, 243, 238, 0.8)',
-          border: `2px solid ${brandColors.border.light}`,
-          boxShadow: `0 10px 40px ${brandColors.shadow.dark}`,
-        }}
+        className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 animate-fadeIn"
+        onClick={onClose}
+      />
+
+      {/* Sidebar */}
+      <div
+        className="fixed top-0 right-0 h-full w-full max-w-md bg-white z-50 overflow-y-auto animate-slideInRight shadow-2xl"
       >
-        <div className="flex items-center gap-3 mb-6">
-          <div
-            className="w-10 h-10 rounded-full flex items-center justify-center"
-            style={{ background: brandGradients.gold }}
-          >
-            <Sparkles className="h-5 w-5" style={{ color: brandColors.text.white }} />
+        <div className="p-6">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-3">
+              <div
+                className="w-10 h-10 rounded-full flex items-center justify-center"
+                style={{ background: brandGradients.gold }}
+              >
+                <Sparkles className="h-5 w-5" style={{ color: brandColors.text.white }} />
+              </div>
+              <h3 className="text-xl font-black" style={{ color: brandColors.text.primary }}>
+                المساعد الذكي
+              </h3>
+            </div>
+            <button
+              onClick={onClose}
+              className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors"
+            >
+              <ArrowLeft className="h-5 w-5" style={{ color: brandColors.text.primary }} />
+            </button>
           </div>
-          <h3 className="text-xl font-black" style={{ color: brandColors.text.primary }}>
-            المساعد الذكي
-          </h3>
-        </div>
+
+        <div
+          className="rounded-3xl p-6 backdrop-blur-lg"
+          style={{
+            background: 'rgba(245, 243, 238, 0.8)',
+            border: `2px solid ${brandColors.border.light}`,
+            boxShadow: `0 10px 40px ${brandColors.shadow.dark}`,
+          }}
+        >
 
         <div className="space-y-3 mb-6">
           <h4 className="text-sm font-bold mb-3" style={{ color: brandColors.text.secondary }}>
@@ -226,6 +248,8 @@ export function SmartAssistantSidebar({
           استفد الآن
         </button>
       </div>
-    </div>
+        </div>
+      </div>
+    </>
   );
 }
