@@ -13,6 +13,7 @@ import { InnovativeFarmCard } from './InnovativeFarmCard';
 import { Modern3DTicker } from '../../../components/common/Modern3DTicker';
 import { modern3DTickerService, TickerMessage, TickerSettings } from '../../../services/modern3DTickerService';
 import { getPlatformTextsBySection } from '../../../services/platformTextsService';
+import { VerticalSideTabs } from '../../../components/common/VerticalSideTabs';
 
 // Lazy load heavy components
 const InnovativeFarmDetailPage = lazy(() => import('./InnovativeFarmDetailPage').then(m => ({ default: m.InnovativeFarmDetailPage })));
@@ -413,6 +414,20 @@ export function ModernRoyalPlatform({
       {onBackToAdmin && (
         <BackToAdminButton onBackToAdmin={onBackToAdmin} />
       )}
+
+      {/* Vertical Side Tabs - Luxury Navigation */}
+      <VerticalSideTabs
+        onSmartAssistantClick={() => {
+          console.log('Smart Assistant clicked');
+        }}
+        onHomeClick={() => {
+          setViewMode('home');
+          setSelectedFarmId(null);
+        }}
+        onAccountClick={() => {
+          setViewMode('investor');
+        }}
+      />
     </div>
   );
 }
