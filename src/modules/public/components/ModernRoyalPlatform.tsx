@@ -11,6 +11,7 @@ import { BackToAdminButton } from './BackToAdminButton';
 import { SmartFloatingButton } from '../../../components/common/SmartFloatingButton';
 import { InnovativeFarmCard } from './InnovativeFarmCard';
 import { Modern3DTicker } from '../../../components/common/Modern3DTicker';
+import { LiveActivityTicker } from '../../../components/common/LiveActivityTicker';
 import { modern3DTickerService, TickerMessage, TickerSettings } from '../../../services/modern3DTickerService';
 import { getPlatformTextsBySection } from '../../../services/platformTextsService';
 import { VerticalSideTabs } from '../../../components/common/VerticalSideTabs';
@@ -343,7 +344,10 @@ export function ModernRoyalPlatform({
       <div className="fixed inset-0 bg-white/30 backdrop-blur-[2px] pointer-events-none"></div>
 
       {/* Content */}
-      <div className="relative z-10" style={{ flex: '1 0 auto', paddingBottom: '90px' }}>
+      <div className="relative z-10" style={{ flex: '1 0 auto', paddingTop: '56px', paddingBottom: '90px' }}>
+        {/* Live Activity Ticker - شريط النشاط المباشر */}
+        <LiveActivityTicker />
+
         {/* Modern 3D Ticker */}
         <Modern3DTicker
           messages={tickerMessages}
