@@ -505,48 +505,60 @@ export const SmartFloatingButton: React.FC<SmartFloatingButtonProps> = ({
 
   return (
     <>
-      {/* Chat Popup - Mobile Optimized with Keyboard Support */}
+      {/* Chat Popup - Full Screen Overlay للجوال - مستقل تماماً */}
       {isOpen && (
         <>
-          {/* Backdrop - like MobileSidebar */}
-          {isMobile && (
-            <div
-              className="fixed inset-0 bg-black/60 z-[9998]"
-              onClick={() => {
-                setIsOpen(false);
-                if (onExternalOpenChange) {
-                  onExternalOpenChange(false);
-                }
-              }}
-            />
-          )}
-
+          {/* Backdrop - طبقة الخلفية الشفافة */}
           <div
-            ref={chatContainerRef}
-            className={`fixed bg-gray-900 shadow-2xl flex flex-col ${
-              isMobile
-                ? 'inset-0 top-0 left-0 right-0 bottom-0 z-[9999] rounded-none w-full h-full'
-                : 'bottom-24 right-6 w-[420px] max-h-[650px] z-[9999] rounded-2xl overflow-hidden'
-            }`}
-            style={isMobile ? {
+            className="fixed inset-0 bg-black/70 z-[99998]"
+            onClick={() => {
+              setIsOpen(false);
+              if (onExternalOpenChange) {
+                onExternalOpenChange(false);
+              }
+            }}
+            style={{
               position: 'fixed',
-              zIndex: 9999,
-              width: '100vw',
-              height: '100vh',
               top: 0,
               left: 0,
               right: 0,
-              bottom: 0
-            } : undefined}
+              bottom: 0,
+              width: '100vw',
+              height: '100vh'
+            }}
+          />
+
+          {/* نافذة الشات - Overlay مستقل 85-90% */}
+          <div
+            ref={chatContainerRef}
+            className="fixed bg-gray-900 shadow-2xl flex flex-col z-[99999]"
+            style={{
+              position: 'fixed',
+              top: isMobile ? '5vh' : '50%',
+              left: isMobile ? '5vw' : '50%',
+              transform: isMobile ? 'none' : 'translate(-50%, -50%)',
+              width: isMobile ? '90vw' : '420px',
+              height: isMobile ? '90vh' : 'auto',
+              maxHeight: isMobile ? '90vh' : '650px',
+              borderRadius: isMobile ? '24px' : '16px',
+              overflow: 'hidden',
+              zIndex: 99999,
+              // منع تأثير الكيبورد على iPhone
+              ...(isIPhone ? {
+                position: 'fixed',
+                WebkitOverflowScrolling: 'touch'
+              } : {})
+            }}
             dir="rtl"
           >
-          {/* Header - Compact */}
+          {/* Header - واضح ومرئي دائماً */}
           <div
-            className={`flex items-center justify-between flex-shrink-0 ${
-              isMobile ? 'px-4 py-4 pt-safe sticky top-0 z-[10000]' : 'px-3 py-2'
-            }`}
+            className="flex items-center justify-between flex-shrink-0 px-4 py-4"
             style={{
               background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+              position: 'sticky',
+              top: 0,
+              zIndex: 100,
               ...(isMobile ? {
                 paddingTop: 'max(1rem, env(safe-area-inset-top))',
                 minHeight: '64px',
@@ -644,14 +656,16 @@ export const SmartFloatingButton: React.FC<SmartFloatingButtonProps> = ({
             </div>
           </div>
 
-          {/* Messages Area */}
+          {/* Messages Area - منطقة الرسائل ظاهرة بالكامل */}
           <div
-            className={`flex-1 overflow-y-auto bg-gray-800/50 overscroll-contain ${
-              isMobile ? 'p-4 space-y-2' : 'p-2 space-y-1.5'
-            }`}
+            className="flex-1 overflow-y-auto bg-gray-800/50 p-4 space-y-3"
             style={{
               WebkitOverflowScrolling: 'touch',
-              minHeight: isMobile ? '200px' : '150px'
+              overflowY: 'auto',
+              flex: '1 1 auto',
+              minHeight: '300px',
+              maxHeight: 'calc(90vh - 200px)',
+              position: 'relative'
             }}
           >
             {messages.length === 0 ? (
@@ -746,31 +760,34 @@ export const SmartFloatingButton: React.FC<SmartFloatingButtonProps> = ({
             </div>
           )}
 
-          {/* Input Area */}
-          <div className={`bg-gray-900 border-t border-gray-700 flex-shrink-0 ${
-            isMobile ? 'p-4' : 'p-2'
-          }`}>
-            <div className={`flex items-stretch ${
-              isMobile ? 'gap-3' : 'gap-1.5'
-            }`}>
-              {/* WhatsApp Button */}
+          {/* Input Area - ثابت في الأسفل دائماً - 100% ظاهر */}
+          <div
+            className="bg-gray-900 border-t border-gray-700 flex-shrink-0 p-4"
+            style={{
+              position: 'sticky',
+              bottom: 0,
+              zIndex: 100,
+              ...(isMobile || isIPhone ? {
+                paddingBottom: 'max(1rem, env(safe-area-inset-bottom))',
+                minHeight: '90px'
+              } : {})
+            }}
+          >
+            <div className="flex items-stretch gap-3">
+              {/* WhatsApp Button - حجم واضح */}
               <a
                 href="https://wa.me/966569335257"
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`flex-shrink-0 rounded-xl bg-gradient-to-br from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 flex items-center justify-center transition-all hover:scale-105 active:scale-95 shadow-lg ${
-                  isMobile ? 'w-12 h-12' : 'w-9 h-9'
-                }`}
+                className="flex-shrink-0 w-14 h-14 rounded-xl bg-gradient-to-br from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 flex items-center justify-center transition-all hover:scale-105 active:scale-95 shadow-lg"
                 title="واتساب"
               >
-                <svg className={`text-white ${
-                  isMobile ? 'w-6 h-6' : 'w-4 h-4'
-                }`} fill="currentColor" viewBox="0 0 24 24">
+                <svg className="text-white w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.890-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
                 </svg>
               </a>
 
-              {/* Input Field */}
+              {/* Input Field - واضح وكبير */}
               <input
                 ref={inputRef}
                 type="text"
@@ -779,36 +796,34 @@ export const SmartFloatingButton: React.FC<SmartFloatingButtonProps> = ({
                 onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
                 placeholder="اكتب رسالتك..."
                 disabled={sending}
-                className={`flex-1 min-w-0 bg-gray-800 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 disabled:opacity-50 ${
-                  isMobile ? 'px-4 py-3 text-base' : 'px-2 py-2 text-xs'
-                }`}
+                className="flex-1 min-w-0 bg-gray-800 border-2 border-gray-700 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 disabled:opacity-50 px-4 py-4 text-base"
                 autoComplete="off"
+                style={{
+                  minHeight: '56px',
+                  fontSize: '16px' // منع تكبير Safari iOS
+                }}
               />
 
-              {/* Send Button */}
+              {/* Send Button - واضح وكبير */}
               <button
                 onClick={handleSendMessage}
                 disabled={!inputMessage.trim() || sending}
-                className={`flex-shrink-0 rounded-xl flex items-center justify-center transition-all disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 ${
-                  isMobile ? 'w-12 h-12' : 'w-9 h-9'
-                }`}
+                className="flex-shrink-0 w-14 h-14 rounded-xl flex items-center justify-center transition-all disabled:opacity-50 disabled:cursor-not-allowed active:scale-95"
                 style={{
                   background: inputMessage.trim() && !sending
                     ? 'linear-gradient(135deg, #10b981 0%, #059669 100%)'
                     : '#374151',
                   boxShadow: inputMessage.trim() && !sending
                     ? '0 4px 16px rgba(16, 185, 129, 0.5)'
-                    : '0 2px 6px rgba(0, 0, 0, 0.2)'
+                    : '0 2px 6px rgba(0, 0, 0, 0.2)',
+                  minHeight: '56px',
+                  minWidth: '56px'
                 }}
               >
                 {sending ? (
-                  <div className={`border-2 border-white border-t-transparent rounded-full animate-spin ${
-                    isMobile ? 'w-6 h-6' : 'w-4 h-4'
-                  }`} />
+                  <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
                 ) : (
-                  <Send className={`text-white ${
-                    isMobile ? 'w-6 h-6' : 'w-4 h-4'
-                  }`} />
+                  <Send className="text-white w-6 h-6" />
                 )}
               </button>
             </div>
@@ -821,6 +836,42 @@ export const SmartFloatingButton: React.FC<SmartFloatingButtonProps> = ({
         </div>
         </>
       )}
+
+      {/* CSS للتعامل الكامل مع iPhone Safari */}
+      <style>{`
+        @supports (-webkit-touch-callout: none) {
+          /* iPhone only styles */
+          .fixed[style*="z-index: 99999"] {
+            position: fixed !important;
+            width: 90vw !important;
+            height: 90vh !important;
+            max-height: 90vh !important;
+            top: 5vh !important;
+            left: 5vw !important;
+            transform: none !important;
+            -webkit-transform: none !important;
+          }
+
+          /* منع تغيير الحجم عند ظهور الكيبورد */
+          input:focus,
+          textarea:focus {
+            font-size: 16px !important;
+          }
+        }
+
+        /* منع Safari من تكبير الإدخال */
+        input[type="text"],
+        textarea {
+          font-size: 16px !important;
+        }
+
+        /* ضمان ظهور صندوق الإدخال دائماً */
+        .fixed > div:last-child {
+          position: sticky !important;
+          bottom: 0 !important;
+          z-index: 100 !important;
+        }
+      `}</style>
     </>
   );
 };

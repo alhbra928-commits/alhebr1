@@ -378,6 +378,26 @@ export function VerticalSideTabs({
       )}
 
       <style>{`
+        /* تثبيت الأيقونات الجانبية بشكل كامل على جميع الأجهزة */
+        .fixed.left-0 {
+          position: fixed !important;
+          left: 0 !important;
+          top: 50% !important;
+          transform: translateY(-50%) !important;
+          -webkit-transform: translateY(-50%) !important;
+          z-index: 999999 !important;
+        }
+
+        /* منع التحرك مع التمرير على iPhone */
+        @supports (-webkit-touch-callout: none) {
+          .fixed.left-0 {
+            position: fixed !important;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            will-change: transform;
+          }
+        }
+
         @keyframes slideInLeft {
           from {
             transform: translateX(-100%);
