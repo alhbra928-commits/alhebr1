@@ -53,22 +53,48 @@ export function VerticalSideTabs({
       ),
       content: () => (
         <div className="p-6 text-right">
-          <h2 className="text-2xl font-bold text-emerald-900 mb-4">
-            المساعد الذكي
-          </h2>
-          <p className="text-emerald-700 leading-relaxed mb-6">
-            أهلاً بك في خدمة المساعد الذكي. كيف يمكنني مساعدتك اليوم؟
+          <div className="mb-6 p-4 bg-gradient-to-l from-emerald-600 to-emerald-700 rounded-2xl text-white">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="8" r="3" fill="currentColor"/>
+                  <path d="M12 14c-4 0-7 2-7 4v2h14v-2c0-2-3-4-7-4z" fill="currentColor"/>
+                </svg>
+              </div>
+              <div>
+                <h3 className="font-bold text-lg">المساعد الذكي</h3>
+                <p className="text-emerald-100 text-sm">متاح الآن للمساعدة</p>
+              </div>
+            </div>
+          </div>
+
+          <p className="text-emerald-700 leading-relaxed mb-6 text-base">
+            مرحباً بك! أنا هنا لمساعدتك في الاستثمار الزراعي. اختر من الخيارات أدناه:
           </p>
+
           <div className="space-y-3">
-            <button className="w-full p-4 bg-gradient-to-l from-emerald-50 to-emerald-100 hover:from-emerald-100 hover:to-emerald-200 text-emerald-900 rounded-xl text-right transition-all duration-300 border border-emerald-200">
-              استفسار عن المزارع المتاحة
+            <button className="w-full p-4 bg-gradient-to-l from-emerald-50 to-emerald-100 hover:from-emerald-100 hover:to-emerald-200 text-emerald-900 rounded-xl text-right transition-all duration-300 border border-emerald-200 shadow-sm hover:shadow-md">
+              <div className="font-bold mb-1">🌳 المزارع المتاحة</div>
+              <div className="text-sm text-emerald-700">تصفح جميع فرص الاستثمار</div>
             </button>
-            <button className="w-full p-4 bg-gradient-to-l from-emerald-50 to-emerald-100 hover:from-emerald-100 hover:to-emerald-200 text-emerald-900 rounded-xl text-right transition-all duration-300 border border-emerald-200">
-              متابعة حجز سابق
+            <button className="w-full p-4 bg-gradient-to-l from-blue-50 to-blue-100 hover:from-blue-100 hover:to-blue-200 text-blue-900 rounded-xl text-right transition-all duration-300 border border-blue-200 shadow-sm hover:shadow-md">
+              <div className="font-bold mb-1">📋 حجوزاتي</div>
+              <div className="text-sm text-blue-700">متابعة الحجوزات والمدفوعات</div>
             </button>
-            <button className="w-full p-4 bg-gradient-to-l from-emerald-50 to-emerald-100 hover:from-emerald-100 hover:to-emerald-200 text-emerald-900 rounded-xl text-right transition-all duration-300 border border-emerald-200">
-              الأسئلة الشائعة
+            <button className="w-full p-4 bg-gradient-to-l from-amber-50 to-amber-100 hover:from-amber-100 hover:to-amber-200 text-amber-900 rounded-xl text-right transition-all duration-300 border border-amber-200 shadow-sm hover:shadow-md">
+              <div className="font-bold mb-1">❓ الأسئلة الشائعة</div>
+              <div className="text-sm text-amber-700">إجابات سريعة لاستفساراتك</div>
             </button>
+            <button className="w-full p-4 bg-gradient-to-l from-purple-50 to-purple-100 hover:from-purple-100 hover:to-purple-200 text-purple-900 rounded-xl text-right transition-all duration-300 border border-purple-200 shadow-sm hover:shadow-md">
+              <div className="font-bold mb-1">📞 تواصل معنا</div>
+              <div className="text-sm text-purple-700">فريق الدعم في خدمتك</div>
+            </button>
+          </div>
+
+          <div className="mt-6 p-4 bg-amber-50 border border-amber-200 rounded-xl">
+            <p className="text-amber-900 text-sm">
+              💡 <strong>نصيحة:</strong> يمكنك التواصل معنا عبر WhatsApp للحصول على رد فوري!
+            </p>
           </div>
         </div>
       )
@@ -100,24 +126,64 @@ export function VerticalSideTabs({
       ),
       content: () => (
         <div className="p-6 text-right">
-          <h2 className="text-2xl font-bold text-emerald-900 mb-4">
-            الرئيسية
-          </h2>
-          <p className="text-emerald-700 leading-relaxed mb-6">
-            مرحباً بك في منصة مزاد النخيل والزيتون
+          <div className="mb-6 p-4 bg-gradient-to-l from-emerald-600 to-emerald-700 rounded-2xl text-white">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" fill="currentColor"/>
+                  <path d="M9 22V12h6v10" fill="#FFD700" opacity="0.8"/>
+                </svg>
+              </div>
+              <div>
+                <h3 className="font-bold text-lg">الصفحة الرئيسية</h3>
+                <p className="text-emerald-100 text-sm">منصة مزاد النخيل والزيتون</p>
+              </div>
+            </div>
+          </div>
+
+          <p className="text-emerald-700 leading-relaxed mb-6 text-base">
+            استكشف فرص الاستثمار الزراعي المتاحة الآن
           </p>
+
           <div className="space-y-4">
-            <div className="p-4 bg-gradient-to-l from-amber-50 to-amber-100 rounded-xl border border-amber-200">
-              <h3 className="font-bold text-amber-900 mb-2">المزارع المتاحة</h3>
-              <p className="text-amber-800 text-sm">تصفح أفضل المزارع</p>
+            <div className="p-5 bg-gradient-to-l from-amber-50 to-amber-100 rounded-xl border-2 border-amber-200 hover:border-amber-300 transition-all duration-300 cursor-pointer shadow-sm hover:shadow-md">
+              <div className="flex items-start gap-3">
+                <div className="text-3xl">🌴</div>
+                <div className="flex-1">
+                  <h3 className="font-bold text-amber-900 mb-1 text-lg">المزارع المتاحة</h3>
+                  <p className="text-amber-800 text-sm leading-relaxed">تصفح أفضل المزارع وابدأ استثمارك الزراعي</p>
+                </div>
+              </div>
             </div>
-            <div className="p-4 bg-gradient-to-l from-emerald-50 to-emerald-100 rounded-xl border border-emerald-200">
-              <h3 className="font-bold text-emerald-900 mb-2">فرص الاستثمار</h3>
-              <p className="text-emerald-800 text-sm">استثمر في الزراعة المستدامة</p>
+
+            <div className="p-5 bg-gradient-to-l from-emerald-50 to-emerald-100 rounded-xl border-2 border-emerald-200 hover:border-emerald-300 transition-all duration-300 cursor-pointer shadow-sm hover:shadow-md">
+              <div className="flex items-start gap-3">
+                <div className="text-3xl">💰</div>
+                <div className="flex-1">
+                  <h3 className="font-bold text-emerald-900 mb-1 text-lg">فرص الاستثمار</h3>
+                  <p className="text-emerald-800 text-sm leading-relaxed">استثمر في الزراعة المستدامة بعوائد مضمونة</p>
+                </div>
+              </div>
             </div>
-            <div className="p-4 bg-gradient-to-l from-blue-50 to-blue-100 rounded-xl border border-blue-200">
-              <h3 className="font-bold text-blue-900 mb-2">شهادات الملكية</h3>
-              <p className="text-blue-800 text-sm">تحقق من شهاداتك</p>
+
+            <div className="p-5 bg-gradient-to-l from-blue-50 to-blue-100 rounded-xl border-2 border-blue-200 hover:border-blue-300 transition-all duration-300 cursor-pointer shadow-sm hover:shadow-md">
+              <div className="flex items-start gap-3">
+                <div className="text-3xl">📜</div>
+                <div className="flex-1">
+                  <h3 className="font-bold text-blue-900 mb-1 text-lg">شهادات الملكية</h3>
+                  <p className="text-blue-800 text-sm leading-relaxed">تحقق من شهادات الملكية الخاصة بك</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="p-5 bg-gradient-to-l from-rose-50 to-rose-100 rounded-xl border-2 border-rose-200 hover:border-rose-300 transition-all duration-300 cursor-pointer shadow-sm hover:shadow-md">
+              <div className="flex items-start gap-3">
+                <div className="text-3xl">📊</div>
+                <div className="flex-1">
+                  <h3 className="font-bold text-rose-900 mb-1 text-lg">إحصائيات المنصة</h3>
+                  <p className="text-rose-800 text-sm leading-relaxed">تابع أداء استثماراتك والعوائد</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -154,25 +220,93 @@ export function VerticalSideTabs({
       ),
       content: () => (
         <div className="p-6 text-right">
-          <h2 className="text-2xl font-bold text-emerald-900 mb-4">
-            حسابي
-          </h2>
-          <p className="text-emerald-700 leading-relaxed mb-6">
-            إدارة معلوماتك الشخصية وحجوزاتك
+          <div className="mb-6 p-4 bg-gradient-to-l from-emerald-600 to-emerald-700 rounded-2xl text-white">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="8" r="4" fill="currentColor"/>
+                  <path d="M6 21v-2a4 4 0 014-4h4a4 4 0 014 4v2" stroke="currentColor" strokeWidth="2"/>
+                </svg>
+              </div>
+              <div>
+                <h3 className="font-bold text-lg">حسابي</h3>
+                <p className="text-emerald-100 text-sm">إدارة الحساب والحجوزات</p>
+              </div>
+            </div>
+          </div>
+
+          <p className="text-emerald-700 leading-relaxed mb-6 text-base">
+            أدِر معلوماتك الشخصية واستثماراتك من مكان واحد
           </p>
+
           <div className="space-y-3">
-            <button className="w-full p-4 bg-gradient-to-l from-emerald-50 to-emerald-100 hover:from-emerald-100 hover:to-emerald-200 text-emerald-900 rounded-xl text-right transition-all duration-300 border border-emerald-200">
-              معلوماتي الشخصية
+            <button className="w-full p-4 bg-gradient-to-l from-blue-50 to-blue-100 hover:from-blue-100 hover:to-blue-200 text-blue-900 rounded-xl text-right transition-all duration-300 border-2 border-blue-200 hover:border-blue-300 shadow-sm hover:shadow-md">
+              <div className="flex items-center gap-3">
+                <span className="text-2xl">👤</span>
+                <div className="flex-1">
+                  <div className="font-bold">معلوماتي الشخصية</div>
+                  <div className="text-sm text-blue-700">تحديث البيانات الشخصية</div>
+                </div>
+              </div>
             </button>
-            <button className="w-full p-4 bg-gradient-to-l from-emerald-50 to-emerald-100 hover:from-emerald-100 hover:to-emerald-200 text-emerald-900 rounded-xl text-right transition-all duration-300 border border-emerald-200">
-              حجوزاتي
+
+            <button className="w-full p-4 bg-gradient-to-l from-emerald-50 to-emerald-100 hover:from-emerald-100 hover:to-emerald-200 text-emerald-900 rounded-xl text-right transition-all duration-300 border-2 border-emerald-200 hover:border-emerald-300 shadow-sm hover:shadow-md">
+              <div className="flex items-center gap-3">
+                <span className="text-2xl">📋</span>
+                <div className="flex-1">
+                  <div className="font-bold">حجوزاتي</div>
+                  <div className="text-sm text-emerald-700">متابعة جميع الحجوزات</div>
+                </div>
+              </div>
             </button>
-            <button className="w-full p-4 bg-gradient-to-l from-emerald-50 to-emerald-100 hover:from-emerald-100 hover:to-emerald-200 text-emerald-900 rounded-xl text-right transition-all duration-300 border border-emerald-200">
-              شهادات الملكية
+
+            <button className="w-full p-4 bg-gradient-to-l from-amber-50 to-amber-100 hover:from-amber-100 hover:to-amber-200 text-amber-900 rounded-xl text-right transition-all duration-300 border-2 border-amber-200 hover:border-amber-300 shadow-sm hover:shadow-md">
+              <div className="flex items-center gap-3">
+                <span className="text-2xl">📜</span>
+                <div className="flex-1">
+                  <div className="font-bold">شهادات الملكية</div>
+                  <div className="text-sm text-amber-700">عرض وتحميل الشهادات</div>
+                </div>
+              </div>
             </button>
-            <button className="w-full p-4 bg-gradient-to-l from-rose-50 to-rose-100 hover:from-rose-100 hover:to-rose-200 text-rose-900 rounded-xl text-right transition-all duration-300 border border-rose-200">
-              تسجيل الخروج
+
+            <button className="w-full p-4 bg-gradient-to-l from-purple-50 to-purple-100 hover:from-purple-100 hover:to-purple-200 text-purple-900 rounded-xl text-right transition-all duration-300 border-2 border-purple-200 hover:border-purple-300 shadow-sm hover:shadow-md">
+              <div className="flex items-center gap-3">
+                <span className="text-2xl">💰</span>
+                <div className="flex-1">
+                  <div className="font-bold">المدفوعات</div>
+                  <div className="text-sm text-purple-700">سجل المعاملات المالية</div>
+                </div>
+              </div>
             </button>
+
+            <button className="w-full p-4 bg-gradient-to-l from-teal-50 to-teal-100 hover:from-teal-100 hover:to-teal-200 text-teal-900 rounded-xl text-right transition-all duration-300 border-2 border-teal-200 hover:border-teal-300 shadow-sm hover:shadow-md">
+              <div className="flex items-center gap-3">
+                <span className="text-2xl">🔔</span>
+                <div className="flex-1">
+                  <div className="font-bold">الإشعارات</div>
+                  <div className="text-sm text-teal-700">تحديثات وإشعارات مهمة</div>
+                </div>
+              </div>
+            </button>
+
+            <div className="border-t-2 border-gray-200 my-4"></div>
+
+            <button className="w-full p-4 bg-gradient-to-l from-rose-50 to-rose-100 hover:from-rose-100 hover:to-rose-200 text-rose-900 rounded-xl text-right transition-all duration-300 border-2 border-rose-200 hover:border-rose-300 shadow-sm hover:shadow-md">
+              <div className="flex items-center gap-3">
+                <span className="text-2xl">🚪</span>
+                <div className="flex-1">
+                  <div className="font-bold">تسجيل الخروج</div>
+                  <div className="text-sm text-rose-700">الخروج من الحساب بأمان</div>
+                </div>
+              </div>
+            </button>
+          </div>
+
+          <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-xl">
+            <p className="text-blue-900 text-sm">
+              🔒 <strong>حسابك آمن:</strong> جميع بياناتك محمية بأعلى معايير الأمان
+            </p>
           </div>
         </div>
       )
@@ -180,21 +314,18 @@ export function VerticalSideTabs({
   ];
 
   const handleTabClick = (tabId: string) => {
+    setActiveTab(tabId);
+    setIsDrawerOpen(true);
+
     if (tabId === 'assistant' && onSmartAssistantClick) {
       onSmartAssistantClick();
-      return;
     }
     if (tabId === 'home' && onHomeClick) {
       onHomeClick();
-      return;
     }
     if (tabId === 'account' && onAccountClick) {
       onAccountClick();
-      return;
     }
-
-    setActiveTab(tabId);
-    setIsDrawerOpen(true);
   };
 
   const closeDrawer = () => {
