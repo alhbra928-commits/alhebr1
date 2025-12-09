@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 
 interface TabConfig {
@@ -21,6 +22,12 @@ export function VerticalSideTabs({
 }: VerticalSideTabsProps) {
   const [activeTab, setActiveTab] = useState<string | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  // Portal mounting
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const tabs: TabConfig[] = [
     {
@@ -313,16 +320,36 @@ export function VerticalSideTabs({
 
   const activeTabConfig = tabs.find(tab => tab.id === activeTab);
 
-  return (
+  // محتوى الأيقونات - مستقل تماماً خارج DOM
+  const iconsContent = (
     <>
-      <div className="fixed left-0 top-1/2 -translate-y-1/2 z-[999999] flex flex-col gap-3 pl-0 pointer-events-auto">
+      {/* Container ثابت مرتبط بالـ viewport مباشرة */}
+      <div
+        style={{
+          position: 'fixed',
+          left: 0,
+          top: '50vh', // استخدام vh بدلاً من %
+          transform: 'translateY(-50%)',
+          zIndex: 999999,
+          pointerEvents: 'auto',
+          // تثبيت إضافي لـ iPhone
+          WebkitTransform: 'translateY(-50%)',
+          willChange: 'transform',
+          WebkitBackfaceVisibility: 'hidden',
+          backfaceVisibility: 'hidden'
+        }}
+        className="flex flex-col gap-3"
+      >
         {tabs.map((tab, index) => (
           <button
             key={tab.id}
             onClick={() => handleTabClick(tab.id)}
-            className="group relative w-[32px] h-[90px] sm:h-[95px] bg-gradient-to-br from-emerald-600 to-emerald-700 hover:from-emerald-500 hover:to-emerald-600 rounded-l-2xl shadow-2xl transition-all duration-300 hover:w-[36px] border-2 border-amber-400 hover:border-amber-300 flex items-center justify-center overflow-hidden active:scale-95 pointer-events-auto"
+            className="group relative w-[32px] h-[90px] sm:h-[95px] bg-gradient-to-br from-emerald-600 to-emerald-700 hover:from-emerald-500 hover:to-emerald-600 rounded-l-2xl shadow-2xl transition-all duration-300 hover:w-[36px] border-2 border-amber-400 hover:border-amber-300 flex items-center justify-center overflow-hidden active:scale-95"
             style={{
-              animation: `slideInLeft 0.5s ease-out ${index * 0.1}s both`
+              animation: `slideInLeft 0.5s ease-out ${index * 0.1}s both`,
+              pointerEvents: 'auto',
+              touchAction: 'manipulation',
+              WebkitTapHighlightColor: 'transparent'
             }}
             aria-label={tab.label}
           >
@@ -378,26 +405,7 @@ export function VerticalSideTabs({
       )}
 
       <style>{`
-        /* تثبيت الأيقونات الجانبية بشكل كامل على جميع الأجهزة */
-        .fixed.left-0 {
-          position: fixed !important;
-          left: 0 !important;
-          top: 50% !important;
-          transform: translateY(-50%) !important;
-          -webkit-transform: translateY(-50%) !important;
-          z-index: 999999 !important;
-        }
-
-        /* منع التحرك مع التمرير على iPhone */
-        @supports (-webkit-touch-callout: none) {
-          .fixed.left-0 {
-            position: fixed !important;
-            -webkit-backface-visibility: hidden;
-            backface-visibility: hidden;
-            will-change: transform;
-          }
-        }
-
+        /* ربط الأيقونات بالـ viewport مباشرة - ليس بالصفحة */
         @keyframes slideInLeft {
           from {
             transform: translateX(-100%);
@@ -436,19 +444,47 @@ export function VerticalSideTabs({
           }
         }
 
-        @media (max-width: 768px) {
-          .fixed.left-0.top-1\\/2 {
-            left: 0 !important;
-          }
-        }
-
+        /* تثبيت خاص لـ iPhone Safari */
         @supports (-webkit-touch-callout: none) {
-          .fixed.left-0.top-1\\/2 button {
+          /* الأيقونات ثابتة تماماً على iPhone */
+          div[style*="position: fixed"][style*="top: 50vh"] {
+            position: fixed !important;
+            left: 0 !important;
+            top: 50vh !important;
+            transform: translateY(-50%) !important;
+            -webkit-transform: translateY(-50%) !important;
+            z-index: 999999 !important;
+            -webkit-backface-visibility: hidden !important;
+            backface-visibility: hidden !important;
+            will-change: transform !important;
+          }
+
+          /* منع أي تأثير للكيبورد */
+          button {
             -webkit-tap-highlight-color: transparent;
             touch-action: manipulation;
           }
         }
+
+        /* ضمان ظهور الأيقونات على جميع الأحجام */
+        @media (max-width: 768px) {
+          div[style*="position: fixed"][style*="top: 50vh"] {
+            left: 0 !important;
+            display: flex !important;
+            flex-direction: column !important;
+          }
+        }
+
+        /* منع التمرير من التأثير على الأيقونات */
+        body {
+          overflow-x: hidden;
+        }
       `}</style>
     </>
   );
+
+  // استخدام Portal لفصل الأيقونات تماماً عن DOM الأساسي
+  if (!mounted) return null;
+
+  return createPortal(iconsContent, document.body);
 }
