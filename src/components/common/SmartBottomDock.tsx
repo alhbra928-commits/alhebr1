@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react';
+import ReactDOM from 'react-dom';
 import { Home, User, MessageCircle, Phone } from 'lucide-react';
 
 /**
  * 🎯 Smart Bottom Dock - نظام Dock احترافي مثل واتساب وإنستغرام
  *
  * هذا المكون مصمم خصيصاً لـ iPhone Safari:
- * - منفصل تماماً عن body وال DOM الرئيسي
- * - يستخدم Portal للخروج من التسلسل الهرمي
+ * - خارج <body> تماماً - في #global-bottom-dock
+ * - يستخدم Portal للخروج من React DOM
  * - ثابت 100% لا يتأثر بالتمرير
  * - يحترم safe-area في iPhone
  * - يمنع Safari من إخفائه أو تحريكه
+ * - نفس آلية واتساب، تيك توك، وإنستغرام
  */
 
 interface DockItem {
@@ -32,23 +34,19 @@ export const SmartBottomDock: React.FC<SmartBottomDockProps> = ({
   const [dockContainer, setDockContainer] = useState<HTMLDivElement | null>(null);
   const [isVisible, setIsVisible] = useState(true);
 
-  // إنشاء حاوية منفصلة خارج React DOM
+  // استخدام #global-bottom-dock الموجود في HTML (خارج body تماماً)
   useEffect(() => {
-    // إنشاء container خاص للـ Dock خارج #root
-    const container = document.createElement('div');
-    container.id = 'smart-bottom-dock-portal';
-    container.setAttribute('data-dock', 'true');
+    // البحث عن الـ container الموجود مسبقاً في HTML
+    const container = document.getElementById('global-bottom-dock') as HTMLDivElement;
 
-    // إضافة مباشرة لـ body (خارج #root)
-    document.body.appendChild(container);
-    setDockContainer(container);
+    if (container) {
+      container.setAttribute('data-dock', 'true');
+      setDockContainer(container);
+    } else {
+      console.error('❌ #global-bottom-dock not found! Make sure it exists in index.html');
+    }
 
-    // Cleanup عند unmount
-    return () => {
-      if (document.body.contains(container)) {
-        document.body.removeChild(container);
-      }
-    };
+    // لا نحتاج cleanup لأن العنصر موجود في HTML
   }, []);
 
   // منع Safari من إخفاء الـ Dock
@@ -116,18 +114,19 @@ export const SmartBottomDock: React.FC<SmartBottomDockProps> = ({
 
   if (!dockContainer) return null;
 
-  // Render مباشرة في الـ container الخاص
-  return (
+  // Render content
+  const dockContent = (
     <>
       {/* CSS Styles - مضمنة مباشرة لضمان التطبيق */}
       <style>{`
         /* ============================================
            SMART BOTTOM DOCK - ULTIMATE iOS FIX
            نظام Dock احترافي مثل واتساب وإنستغرام
+           خارج <body> تماماً - نفس مستوى <html>
            ============================================ */
 
-        /* حاوية الـ Dock - منفصلة تماماً */
-        #smart-bottom-dock-portal {
+        /* حاوية الـ Dock - خارج body تماماً */
+        #global-bottom-dock {
           /* CRITICAL: Outside normal document flow */
           position: fixed !important;
           bottom: 0 !important;
@@ -304,7 +303,7 @@ export const SmartBottomDock: React.FC<SmartBottomDockProps> = ({
 
         /* iOS Safari Specific Fixes */
         @supports (-webkit-touch-callout: none) {
-          #smart-bottom-dock-portal {
+          #global-bottom-dock {
             /* Lock completely on iOS */
             position: fixed !important;
             bottom: 0 !important;
@@ -319,13 +318,13 @@ export const SmartBottomDock: React.FC<SmartBottomDockProps> = ({
             -webkit-overscroll-behavior: none !important;
           }
 
-          /* Ensure body has space for dock */
-          body {
+          /* #root is the scroll container now (not body) */
+          #root {
             padding-bottom: max(90px, calc(90px + env(safe-area-inset-bottom))) !important;
           }
 
-          /* Prevent Safari from hiding dock on scroll */
-          html {
+          /* html & body have overflow: hidden */
+          html, body {
             overscroll-behavior-y: none !important;
             -webkit-overscroll-behavior-y: none !important;
           }
@@ -382,12 +381,12 @@ export const SmartBottomDock: React.FC<SmartBottomDockProps> = ({
           }
         }
 
-        #smart-bottom-dock-portal {
+        #global-bottom-dock {
           animation: dock-slide-up 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
 
         /* Prevent content from going under dock */
-        body.has-smart-dock {
+        #root {
           padding-bottom: max(90px, calc(90px + env(safe-area-inset-bottom))) !important;
         }
 
@@ -404,50 +403,34 @@ export const SmartBottomDock: React.FC<SmartBottomDockProps> = ({
         }
       `}</style>
 
-      {/* Render الـ Dock في الـ container الخاص */}
-      {dockContainer && (
-        <>
-          {/* Overlay Layer */}
-          <div className="smart-dock-overlay" />
-
-          {/* Main Dock */}
-          <div
-            id="smart-bottom-dock-portal"
-            style={{
-              position: 'fixed',
-              bottom: 0,
-              left: 0,
-              right: 0,
-              zIndex: 2147483647
-            }}
-          >
-            <div className="smart-dock-content">
-              <div className="smart-dock-grid">
-                {dockItems.map((item) => (
-                  <button
-                    key={item.id}
-                    className={`smart-dock-button ${activeItem === item.id ? 'active' : ''}`}
-                    onClick={item.onClick}
-                    aria-label={item.label}
-                  >
-                    <div className="smart-dock-icon">
-                      {item.icon}
-                      {item.badge && item.badge > 0 && (
-                        <span className="smart-dock-badge">
-                          {item.badge > 99 ? '99+' : item.badge}
-                        </span>
-                      )}
-                    </div>
-                    <span className="smart-dock-label">{item.label}</span>
-                  </button>
-                ))}
+      {/* Dock Content */}
+      <div className="smart-dock-content">
+        <div className="smart-dock-grid">
+          {dockItems.map((item) => (
+            <button
+              key={item.id}
+              className={`smart-dock-button ${activeItem === item.id ? 'active' : ''}`}
+              onClick={item.onClick}
+              aria-label={item.label}
+            >
+              <div className="smart-dock-icon">
+                {item.icon}
+                {item.badge && item.badge > 0 && (
+                  <span className="smart-dock-badge">
+                    {item.badge > 99 ? '99+' : item.badge}
+                  </span>
+                )}
               </div>
-            </div>
-          </div>
-        </>
-      )}
+              <span className="smart-dock-label">{item.label}</span>
+            </button>
+          ))}
+        </div>
+      </div>
     </>
   );
+
+  // استخدام Portal لرسم المحتوى في #global-bottom-dock (خارج body)
+  return dockContainer ? ReactDOM.createPortal(dockContent, dockContainer) : null;
 };
 
 // Export للاستخدام

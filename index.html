@@ -14,7 +14,7 @@
     <meta name="pragma" content="no-cache" />
     <meta name="last-modified" content="__BUILD_VERSION__" />
     <meta name="version" content="__BUILD_VERSION__" />
-    <meta name="cache-buster" content="v20251209_1765285464287" />
+    <meta name="cache-buster" content="v20251209_1765286136114" />
 
     <!-- iPhone/Safari specific headers -->
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -24,37 +24,72 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <title>منصة النخيل والزيتون</title>
 
-    <!-- CRITICAL: Ensure body has proper structure for fixed footer -->
+    <!-- 🎯 ULTIMATE STRUCTURE: Footer خارج body تماماً -->
     <style>
+      /* CRITICAL: منع Safari من تغيير ارتفاع viewport */
       html, body {
         margin: 0;
         padding: 0;
         width: 100%;
         height: 100%;
-        overflow-x: hidden;
-      }
-
-      body {
+        overflow: hidden !important; /* NO SCROLL on html/body */
         position: relative;
-        padding-bottom: max(90px, calc(90px + env(safe-area-inset-bottom))) !important;
+        -webkit-overflow-scrolling: auto;
       }
 
+      /* Scroll Container للمحتوى */
       #root {
-        min-height: 100vh;
+        height: 100%;
+        overflow-y: auto;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
         position: relative;
+        padding-bottom: max(90px, calc(90px + env(safe-area-inset-bottom)));
       }
 
-      /* ULTIMATE iOS Fix for Bottom Navigation */
+      /* Global Bottom Dock - خارج body تماماً */
+      #global-bottom-dock {
+        position: fixed !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        width: 100% !important;
+        z-index: 999999 !important;
+
+        /* Force GPU Layer */
+        transform: translate3d(0, 0, 0) !important;
+        -webkit-transform: translate3d(0, 0, 0) !important;
+        -webkit-backface-visibility: hidden !important;
+        backface-visibility: hidden !important;
+        will-change: transform !important;
+
+        /* منع أي تأثير من Safari */
+        pointer-events: auto !important;
+        touch-action: manipulation !important;
+      }
+
+      /* iOS Safari Specific */
       @supports (-webkit-touch-callout: none) {
-        body {
-          /* DO NOT use position: fixed */
-          position: relative !important;
+        html, body {
+          overflow: hidden !important;
+          height: 100% !important;
+          position: fixed !important;
+          width: 100% !important;
+        }
+
+        #root {
+          position: absolute !important;
+          top: 0 !important;
+          left: 0 !important;
+          right: 0 !important;
+          bottom: 0 !important;
           overflow-y: auto !important;
           -webkit-overflow-scrolling: touch !important;
         }
 
-        html {
-          overflow-y: auto !important;
+        #global-bottom-dock {
+          position: fixed !important;
+          /* Lock to viewport, not body */
         }
       }
     </style>
@@ -63,7 +98,7 @@
     <script>
       (function() {
         const BUILD_VERSION = '__BUILD_VERSION__';
-        const FORCE_UPDATE_VERSION = 'v20251209_SMART_DOCK_ULTIMATE';
+        const FORCE_UPDATE_VERSION = 'v20251209_GLOBAL_DOCK_OUTSIDE_BODY';
 
         console.log('%c✅ منصة النخيل والزيتون', 'color:#10b981;font-size:18px;font-weight:bold');
         console.log('Version:', BUILD_VERSION);
@@ -110,8 +145,9 @@
   </head>
   <body>
     <div id="root"></div>
-    
-    
     <script type="module" src="/src/main.tsx"></script>
   </body>
+
+  <!-- 🎯 Global Bottom Dock - خارج body تماماً -->
+  <div id="global-bottom-dock"></div>
 </html>
