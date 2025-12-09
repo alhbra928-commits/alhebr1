@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Send, Sparkles, X, Bot, User } from 'lucide-react';
+import { Send, X, User } from 'lucide-react';
 import { brandColors, brandGradients } from '../../finance/styles/brandColors';
 import { supabase } from '../../../lib/supabase';
 
@@ -176,13 +176,13 @@ export function SmartAssistantSidebar({
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div
-                className="w-12 h-12 rounded-full flex items-center justify-center animate-pulse"
+                className="w-12 h-12 rounded-full flex items-center justify-center animate-pulse text-3xl"
                 style={{
                   background: 'rgba(255, 255, 255, 0.3)',
                   backdropFilter: 'blur(10px)',
                 }}
               >
-                <Sparkles className="h-6 w-6" style={{ color: brandColors.text.white }} />
+                🤖
               </div>
               <div>
                 <h3 className="text-xl font-black" style={{ color: brandColors.text.white }}>
@@ -214,7 +214,7 @@ export function SmartAssistantSidebar({
               {/* Avatar */}
               <div
                 className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
-                  message.sender === 'bot' ? 'animate-pulse' : ''
+                  message.sender === 'bot' ? 'animate-pulse text-base' : ''
                 }`}
                 style={{
                   background: message.sender === 'bot'
@@ -223,7 +223,7 @@ export function SmartAssistantSidebar({
                 }}
               >
                 {message.sender === 'bot' ? (
-                  <Bot className="h-4 w-4" style={{ color: brandColors.text.white }} />
+                  '🤖'
                 ) : (
                   <User className="h-4 w-4" style={{ color: brandColors.text.white }} />
                 )}
@@ -277,10 +277,10 @@ export function SmartAssistantSidebar({
           {isTyping && (
             <div className="flex gap-3 animate-fadeInUp">
               <div
-                className="w-8 h-8 rounded-full flex items-center justify-center animate-pulse"
+                className="w-8 h-8 rounded-full flex items-center justify-center animate-pulse text-base"
                 style={{ background: brandGradients.gold }}
               >
-                <Bot className="h-4 w-4" style={{ color: brandColors.text.white }} />
+                🤖
               </div>
               <div
                 className="p-4 rounded-2xl rounded-tl-none"
