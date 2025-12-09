@@ -276,9 +276,13 @@ div[class*="overflow"]::-webkit-scrollbar {
   animation: shine 2s infinite;
 }
 
-/* 🌿 Glass Green Footer - ABSOLUTE FIXED */
+/* 🌿 Space for Smart Bottom Dock */
 body {
-  padding-bottom: max(80px, calc(80px + env(safe-area-inset-bottom)));
+  padding-bottom: max(90px, calc(90px + env(safe-area-inset-bottom)));
+}
+
+body.has-smart-dock {
+  padding-bottom: max(90px, calc(90px + env(safe-area-inset-bottom))) !important;
 }
 
 /* NUCLEAR OPTION: Footer MUST be fixed NO MATTER WHAT */
