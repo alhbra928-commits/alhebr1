@@ -61,11 +61,12 @@ export function BottomNavigationBar({
     <>
       <style>{`
         .bottom-nav-bar {
-          position: fixed;
-          bottom: 0;
-          left: 0;
-          right: 0;
-          z-index: 10000;
+          position: fixed !important;
+          bottom: 0 !important;
+          left: 0 !important;
+          right: 0 !important;
+          width: 100% !important;
+          z-index: 999999 !important;
 
           background: linear-gradient(180deg,
             rgba(255, 255, 255, 0.98) 0%,
@@ -79,18 +80,20 @@ export function BottomNavigationBar({
             0 -4px 20px rgba(0, 0, 0, 0.08),
             0 -1px 3px rgba(0, 0, 0, 0.05);
 
-          /* CRITICAL iOS Safari Fix */
-          transform: translate3d(0, 0, 0);
-          -webkit-transform: translate3d(0, 0, 0);
-          -webkit-backface-visibility: hidden;
-          backface-visibility: hidden;
+          /* ULTIMATE iOS Safari Fix */
+          transform: translate3d(0, 0, 0) !important;
+          -webkit-transform: translate3d(0, 0, 0) !important;
+          -webkit-backface-visibility: hidden !important;
+          backface-visibility: hidden !important;
 
           /* Lock position completely */
-          will-change: transform;
-          contain: layout style paint;
+          will-change: transform, opacity !important;
+          contain: layout style paint !important;
+          isolation: isolate !important;
 
           /* iOS Safe Area Support */
           padding-bottom: env(safe-area-inset-bottom);
+          padding-bottom: max(env(safe-area-inset-bottom), 20px);
         }
 
         /* Force separate rendering layer */
@@ -103,13 +106,30 @@ export function BottomNavigationBar({
           will-change: transform;
         }
 
-        /* iOS Safari specific fixes */
+        /* NUCLEAR OPTION: iOS Safari specific fixes */
         @supports (-webkit-touch-callout: none) {
           .bottom-nav-bar {
             position: fixed !important;
             bottom: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            width: 100vw !important;
+            max-width: 100vw !important;
             transform: translate3d(0, 0, 0) !important;
             -webkit-transform: translate3d(0, 0, 0) !important;
+
+            /* Force separate layer */
+            -webkit-perspective: 1000px !important;
+            perspective: 1000px !important;
+
+            /* Lock it down */
+            pointer-events: auto !important;
+            touch-action: manipulation !important;
+          }
+
+          /* Make sure body doesn't cover it */
+          body {
+            padding-bottom: max(90px, calc(90px + env(safe-area-inset-bottom))) !important;
           }
         }
 

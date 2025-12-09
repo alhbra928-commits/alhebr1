@@ -14,7 +14,7 @@
     <meta name="pragma" content="no-cache" />
     <meta name="last-modified" content="__BUILD_VERSION__" />
     <meta name="version" content="__BUILD_VERSION__" />
-    <meta name="cache-buster" content="v20251208_1765169386878" />
+    <meta name="cache-buster" content="v20251209_1765282672700" />
 
     <!-- iPhone/Safari specific headers -->
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -36,12 +36,26 @@
 
       body {
         position: relative;
-        padding-bottom: 0 !important;
+        padding-bottom: max(90px, calc(90px + env(safe-area-inset-bottom))) !important;
       }
 
       #root {
         min-height: 100vh;
         position: relative;
+      }
+
+      /* ULTIMATE iOS Fix for Bottom Navigation */
+      @supports (-webkit-touch-callout: none) {
+        body {
+          /* DO NOT use position: fixed */
+          position: relative !important;
+          overflow-y: auto !important;
+          -webkit-overflow-scrolling: touch !important;
+        }
+
+        html {
+          overflow-y: auto !important;
+        }
       }
     </style>
 

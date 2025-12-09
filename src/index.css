@@ -44,33 +44,34 @@ html, body {
 
   /* iOS Safari Ultimate Header Fix */
   @supports (-webkit-touch-callout: none) {
-    /* Lock html & body - no scrolling at root */
+    /* CRITICAL: DO NOT use position: fixed on body */
+    /* This prevents bottom navigation from working */
     html {
-      height: 100% !important;
-      height: -webkit-fill-available !important;
-      overflow: hidden !important;
-      position: fixed !important;
-      width: 100% !important;
+      height: 100%;
+      height: -webkit-fill-available;
+      overflow-x: hidden;
+      width: 100%;
     }
 
     body {
-      height: 100% !important;
-      height: -webkit-fill-available !important;
-      overflow: hidden !important;
-      position: fixed !important;
-      width: 100% !important;
-      overscroll-behavior: none !important;
+      height: 100%;
+      height: -webkit-fill-available;
+      overflow-x: hidden;
+      overflow-y: auto;
+      width: 100%;
+      overscroll-behavior: none;
+      -webkit-overflow-scrolling: touch;
     }
 
     /* Make content area scrollable instead */
     .ios-scroll-content {
-      height: 100vh !important;
-      height: -webkit-fill-available !important;
-      overflow-y: auto !important;
-      overflow-x: hidden !important;
-      -webkit-overflow-scrolling: touch !important;
-      overscroll-behavior-y: contain !important;
-      position: relative !important;
+      height: 100vh;
+      height: -webkit-fill-available;
+      overflow-y: auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior-y: contain;
+      position: relative;
     }
   }
 
