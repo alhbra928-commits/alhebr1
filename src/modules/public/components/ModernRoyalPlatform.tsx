@@ -13,6 +13,7 @@ import { InnovativeFarmCard } from './InnovativeFarmCard';
 import { Modern3DTicker } from '../../../components/common/Modern3DTicker';
 import { modern3DTickerService, TickerMessage, TickerSettings } from '../../../services/modern3DTickerService';
 import { getPlatformTextsBySection } from '../../../services/platformTextsService';
+import { AgriculturalFooter } from '../../../components/common/AgriculturalFooter';
 
 // Lazy load heavy components
 const InnovativeFarmDetailPage = lazy(() => import('./InnovativeFarmDetailPage').then(m => ({ default: m.InnovativeFarmDetailPage })));
@@ -413,6 +414,14 @@ export function ModernRoyalPlatform({
       {onBackToAdmin && (
         <BackToAdminButton onBackToAdmin={onBackToAdmin} />
       )}
+
+      {/* Agricultural Footer - Like Haraj Style */}
+      <AgriculturalFooter
+        platformName="منصة النخيل والزيتون"
+        phoneNumber="+966 56 933 5257"
+        email="info@palmolive.sa"
+        address="المملكة العربية السعودية"
+      />
     </div>
   );
 }
