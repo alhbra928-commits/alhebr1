@@ -2,33 +2,14 @@ import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { Home, User, MessageCircle, Phone } from 'lucide-react';
 
-// TypeScript declaration for visualViewport API
-declare global {
-  interface Window {
-    visualViewport?: {
-      height: number;
-      width: number;
-      offsetTop: number;
-      offsetLeft: number;
-      pageTop: number;
-      pageLeft: number;
-      scale: number;
-      addEventListener(type: string, listener: () => void): void;
-      removeEventListener(type: string, listener: () => void): void;
-    };
-  }
-}
-
 /**
- * 🎯 Smart Bottom Dock - نظام Dock احترافي مثل واتساب وإنستغرام
+ * 🎯 Smart Bottom Dock - حل بسيط مثل الحراج الزراعي
  *
- * هذا المكون مصمم خصيصاً لـ iPhone Safari:
- * - خارج <body> تماماً - في #global-bottom-dock
+ * يستخدم position: fixed البسيط - لا تعقيدات!
+ * - خارج <body> في #global-bottom-dock
  * - يستخدم Portal للخروج من React DOM
- * - ثابت 100% لا يتأثر بالتمرير
+ * - position: fixed - ثابت دائماً
  * - يحترم safe-area في iPhone
- * - يمنع Safari من إخفائه أو تحريكه
- * - نفس آلية واتساب، تيك توك، وإنستغرام
  */
 
 interface DockItem {
@@ -66,106 +47,8 @@ export const SmartBottomDock: React.FC<SmartBottomDockProps> = ({
     // لا نحتاج cleanup لأن العنصر موجود في HTML
   }, []);
 
-  // 🎯 ULTIMATE FIX: visualViewport API لتثبيت الفوتر
-  useEffect(() => {
-    if (!dockContainer) return;
-
-    // التحقق من دعم visualViewport API
-    if (!window.visualViewport) {
-      console.warn('⚠️ visualViewport API not supported - using fallback');
-      return;
-    }
-
-    let ticking = false;
-
-    const updateFooterPosition = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          if (window.visualViewport && dockContainer) {
-            // الحصول على ارتفاع viewport الفعلي
-            const vpHeight = window.visualViewport.height;
-            const vpOffsetTop = window.visualViewport.offsetTop || 0;
-            const vpOffsetLeft = window.visualViewport.offsetLeft || 0;
-
-            // حساب الموضع الدقيق للفوتر
-            // نريده في أسفل الشاشة المرئية دائماً
-            const footerHeight = dockContainer.offsetHeight || 90;
-            const safeAreaBottom = parseInt(
-              getComputedStyle(document.documentElement)
-                .getPropertyValue('padding-bottom') || '0'
-            );
-
-            // تحديث CSS Variables
-            document.documentElement.style.setProperty(
-              '--footer-bottom',
-              `${Math.max(0, vpOffsetTop)}px`
-            );
-
-            // تثبيت الفوتر باستخدام transform للأداء الأفضل
-            // dockContainer.style.transform = `translate3d(${-vpOffsetLeft}px, 0, 0)`;
-
-            console.debug('📐 Footer position updated:', {
-              vpHeight,
-              vpOffsetTop,
-              vpOffsetLeft,
-              footerHeight
-            });
-          }
-
-          ticking = false;
-        });
-
-        ticking = true;
-      }
-    };
-
-    // تحديث عند resize و scroll
-    window.visualViewport.addEventListener('resize', updateFooterPosition);
-    window.visualViewport.addEventListener('scroll', updateFooterPosition);
-
-    // تحديث فوري
-    updateFooterPosition();
-
-    // Cleanup
-    return () => {
-      if (window.visualViewport) {
-        window.visualViewport.removeEventListener('resize', updateFooterPosition);
-        window.visualViewport.removeEventListener('scroll', updateFooterPosition);
-      }
-    };
-  }, [dockContainer]);
-
-  // منع Safari من إخفاء الـ Dock
-  useEffect(() => {
-    if (!dockContainer) return;
-
-    // منع bounce scrolling
-    const preventBounce = (e: TouchEvent) => {
-      const target = e.target as HTMLElement;
-      if (target.closest('[data-dock="true"]')) {
-        e.preventDefault();
-      }
-    };
-
-    // منع viewport resize عند ظهور/اختفاء شريط Safari
-    const preventResize = () => {
-      const viewport = document.querySelector('meta[name="viewport"]');
-      if (viewport) {
-        viewport.setAttribute('content',
-          'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover'
-        );
-      }
-    };
-
-    document.addEventListener('touchmove', preventBounce, { passive: false });
-    window.addEventListener('resize', preventResize);
-    preventResize();
-
-    return () => {
-      document.removeEventListener('touchmove', preventBounce);
-      window.removeEventListener('resize', preventResize);
-    };
-  }, [dockContainer]);
+  // بسيط: لا حاجة لـ visualViewport أو معالجات معقدة
+  // CSS position: fixed يكفي!
 
   // Default items
   const defaultItems: DockItem[] = [
