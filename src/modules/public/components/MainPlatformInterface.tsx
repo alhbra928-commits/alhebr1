@@ -15,7 +15,6 @@ import { AdminCrownButton } from './AdminCrownButton';
 import { GlowingConceptButton } from './GlowingConceptButton';
 import { ConceptIntroductionPage } from './ConceptIntroductionPage';
 import { IdeaOverviewSection } from './IdeaOverviewSection';
-import { LiveActivityTicker } from '../../../components/common/LiveActivityTicker';
 
 type ViewMode = 'home' | 'farmDetail' | 'booking' | 'investor' | 'verification' | 'concept';
 
@@ -159,9 +158,6 @@ export function MainPlatformInterface({
         minHeight: '-webkit-fill-available'
       }}
     >
-      {/* شريط النشاط المباشر */}
-      <LiveActivityTicker />
-
       {isTransitioning && (
         <div className="fixed inset-0 z-50 flex items-center justify-center" style={{ background: 'rgba(0, 0, 0, 0.4)', backdropFilter: 'blur(4px)' }}>
           <div className="text-center">

@@ -10,9 +10,6 @@ import { AdminCrownButton } from './AdminCrownButton';
 import { BackToAdminButton } from './BackToAdminButton';
 import { SmartFloatingButton } from '../../../components/common/SmartFloatingButton';
 import { InnovativeFarmCard } from './InnovativeFarmCard';
-import { Modern3DTicker } from '../../../components/common/Modern3DTicker';
-import { LiveActivityTicker } from '../../../components/common/LiveActivityTicker';
-import { modern3DTickerService, TickerMessage, TickerSettings } from '../../../services/modern3DTickerService';
 import { getPlatformTextsBySection } from '../../../services/platformTextsService';
 import { VerticalSideTabs } from '../../../components/common/VerticalSideTabs';
 import { SmartAssistantSidebar } from './SmartAssistantSidebar';
@@ -45,13 +42,6 @@ export function ModernRoyalPlatform({
   const [isInitialLoading, setIsInitialLoading] = useState(false);
   const [loadingProgress, setLoadingProgress] = useState(100);
   const [mousePosition, setMousePosition] = useState({ x: 50, y: 50 });
-  const [tickerMessages, setTickerMessages] = useState<TickerMessage[]>([]);
-  const [tickerSettings, setTickerSettings] = useState<TickerSettings>({
-    id: '1',
-    enabled: true,
-    speed: 40,
-    height: '80px'
-  });
   const [platformName, setPlatformName] = useState('منصة الحبر');
   const [activeBottomTab, setActiveBottomTab] = useState<string>('home');
   const [smartAssistantOpen, setSmartAssistantOpen] = useState(false);
@@ -76,10 +66,7 @@ export function ModernRoyalPlatform({
         setLoadingProgress(95);
 
         // تحميل باقي البيانات
-        await Promise.all([
-          loadPlatformTexts(),
-          loadTickerData()
-        ]);
+        await loadPlatformTexts();
 
         setLoadingProgress(100);
 
@@ -98,26 +85,6 @@ export function ModernRoyalPlatform({
     };
 
     loadEverything();
-
-    // Subscribe to ticker updates - بعد التحميل
-    let unsubscribeMessages: (() => void) | null = null;
-    let unsubscribeSettings: (() => void) | null = null;
-
-    const timer = setTimeout(() => {
-      unsubscribeMessages = modern3DTickerService.subscribeToMessages((messages) => {
-        setTickerMessages(messages);
-      });
-
-      unsubscribeSettings = modern3DTickerService.subscribeToSettings((settings) => {
-        setTickerSettings(settings);
-      });
-    }, 1500);
-
-    return () => {
-      clearTimeout(timer);
-      if (unsubscribeMessages) unsubscribeMessages();
-      if (unsubscribeSettings) unsubscribeSettings();
-    };
   }, []);
 
   // Mouse move - تأخير التفعيل
@@ -149,19 +116,6 @@ export function ModernRoyalPlatform({
       setFarms(farmsData);
     } catch (error) {
       console.error('Error loading farms:', error);
-    }
-  };
-
-  const loadTickerData = async () => {
-    try {
-      const [messages, settings] = await Promise.all([
-        modern3DTickerService.getActiveMessages(),
-        modern3DTickerService.getSettings()
-      ]);
-      setTickerMessages(messages);
-      setTickerSettings(settings);
-    } catch (error) {
-      console.error('Error loading ticker data:', error);
     }
   };
 
@@ -345,17 +299,6 @@ export function ModernRoyalPlatform({
 
       {/* Content */}
       <div className="relative z-10" style={{ flex: '1 0 auto', paddingTop: '56px', paddingBottom: '90px' }}>
-        {/* Live Activity Ticker - شريط النشاط المباشر */}
-        <LiveActivityTicker />
-
-        {/* Modern 3D Ticker */}
-        <Modern3DTicker
-          messages={tickerMessages}
-          speed={tickerSettings.speed}
-          height={tickerSettings.height}
-          enabled={tickerSettings.enabled}
-        />
-
         {/* Smart Floating Button - يُفتح من الشريط الجانبي فقط */}
         <SmartFloatingButton
           externalOpen={smartButtonOpen}

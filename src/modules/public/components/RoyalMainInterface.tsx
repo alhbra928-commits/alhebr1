@@ -10,7 +10,6 @@ import { SimpleLoader } from '../../../components/common/SimpleLoader';
 import { AdminCrownButton } from './AdminCrownButton';
 import { ConceptIntroductionPage } from './ConceptIntroductionPage';
 import { EnhancedConceptCard } from './EnhancedConceptCard';
-import { LiveActivityTicker } from '../../../components/common/LiveActivityTicker';
 
 type ViewMode = 'home' | 'farmDetail' | 'booking' | 'investor' | 'verification' | 'concept';
 
@@ -109,8 +108,7 @@ export function RoyalMainInterface({
   // Home View - Royal Design
   return (
     <>
-      <LiveActivityTicker />
-      <div className="min-h-screen bg-gradient-to-br from-amber-50 via-yellow-50 to-amber-100" style={{ paddingTop: '48px' }}>
+      <div className="min-h-screen bg-gradient-to-br from-amber-50 via-yellow-50 to-amber-100">
       {/* Decorative Background Pattern */}
       <div className="fixed inset-0 opacity-5">
         <div className="absolute inset-0" style={{
