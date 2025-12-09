@@ -31,16 +31,23 @@ export const LiveActivityTicker: React.FC = () => {
 
   const loadData = async () => {
     try {
+      console.log('🔄 LiveActivityTicker: Loading data...');
+
       const [activitiesData, settingsData] = await Promise.all([
         liveActivityTickerService.getActivities(),
         liveActivityTickerService.getSettings()
       ]);
 
+      console.log('✅ LiveActivityTicker: Data loaded', {
+        activitiesCount: activitiesData.length,
+        settings: settingsData
+      });
+
       setActivities(activitiesData);
       setSettings(settingsData);
       setIsLoading(false);
     } catch (error) {
-      console.error('Error loading ticker data:', error);
+      console.error('❌ LiveActivityTicker: Error loading ticker data:', error);
       setIsLoading(false);
     }
   };
@@ -83,6 +90,11 @@ export const LiveActivityTicker: React.FC = () => {
   }
 
   if (!settings || activities.length === 0) {
+    console.warn('⚠️ LiveActivityTicker: No settings or activities', {
+      hasSettings: !!settings,
+      activitiesLength: activities.length
+    });
+
     return (
       <div
         style={{

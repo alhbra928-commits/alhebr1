@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔍 دليل تشخيص شريط النشاط المباشر</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 42px;
+            font-weight: 900;
+            margin-bottom: 10px;
+            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 35px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 26px;
+            font-weight: 800;
+            color: #2d3748;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .icon {
+            font-size: 32px;
+        }
+
+        .problem {
+            background: #fff5f5;
+            border-right: 5px solid #fc8181;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .problem-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #c53030;
+            margin-bottom: 10px;
+        }
+
+        .solution {
+            background: #f0fff4;
+            border-right: 5px solid #48bb78;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 15px;
+        }
+
+        .solution-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #22543d;
+            margin-bottom: 10px;
+        }
+
+        .step {
+            display: flex;
+            gap: 15px;
+            padding: 18px;
+            background: #f7fafc;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            border: 2px solid #e2e8f0;
+        }
+
+        .step-number {
+            width: 35px;
+            height: 35px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            flex-shrink: 0;
+        }
+
+        .step-text {
+            flex: 1;
+            color: #2d3748;
+            line-height: 1.6;
+        }
+
+        .code-block {
+            background: #1a202c;
+            color: #68d391;
+            padding: 20px;
+            border-radius: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+
+        .warning {
+            background: #fffaf0;
+            border-right: 5px solid #ed8936;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+
+        .warning-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #7c2d12;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .checklist {
+            display: grid;
+            gap: 12px;
+        }
+
+        .check-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px;
+            background: #edf2f7;
+            border-radius: 10px;
+        }
+
+        .check-icon {
+            font-size: 24px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 15px 35px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 700;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(102, 126, 234, 0.6);
+        }
+
+        .buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .console-example {
+            background: #2d3748;
+            color: #90cdf4;
+            padding: 20px;
+            border-radius: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.8;
+            margin: 15px 0;
+        }
+
+        .console-log {
+            color: #90cdf4;
+        }
+
+        .console-success {
+            color: #68d391;
+        }
+
+        .console-error {
+            color: #fc8181;
+        }
+
+        .console-warning {
+            color: #f6ad55;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 دليل التشخيص الكامل</h1>
+            <p style="font-size: 20px; opacity: 0.95;">شريط النشاط المباشر</p>
+        </div>
+
+        <div class="card">
+            <div class="section-title">
+                <span class="icon">🎯</span>
+                <span>المشاكل والحلول</span>
+            </div>
+
+            <div class="problem">
+                <div class="problem-title">❌ المشكلة 1: الشريط فارغ - لا توجد كتابات</div>
+                <p style="color: #742a2a; line-height: 1.6;">
+                    الشريط يظهر لكن لا توجد رسائل متحركة فيه
+                </p>
+
+                <div class="solution">
+                    <div class="solution-title">✅ الحل الجذري</div>
+
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-text">
+                            <strong>افتح Console في المتصفح</strong> (اضغط F12)
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-text">
+                            <strong>ابحث عن هذه الرسائل:</strong>
+                            <div class="console-example">
+<span class="console-log">🔄 LiveActivityTicker: Loading data...</span>
+<span class="console-log">📊 Getting activities with settings: {...}</span>
+<span class="console-log">🎭 Generating X simulated activities...</span>
+<span class="console-success">✅ Generated X simulated activities</span>
+<span class="console-success">🎯 Final activities count: X</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-text">
+                            <strong>إذا رأيت:</strong> "Final activities count: 0"<br>
+                            <strong>السبب:</strong> مشكلة في قاعدة البيانات<br>
+                            <strong>الحل:</strong> شغّل الاستعلام أدناه
+                        </div>
+                    </div>
+
+                    <div class="code-block">
+-- في Supabase SQL Editor
+SELECT COUNT(*) FROM simulated_activities WHERE is_active = true;
+
+-- يجب أن يرجع: 30
+-- إذا رجع 0، شغّل migration مرة أخرى
+                    </div>
+                </div>
+            </div>
+
+            <div class="problem">
+                <div class="problem-title">❌ المشكلة 2: الإعدادات لا تُحفظ</div>
+                <p style="color: #742a2a; line-height: 1.6;">
+                    عند تغيير الإعدادات والخروج ثم العودة، التغييرات غير موجودة
+                </p>
+
+                <div class="solution">
+                    <div class="solution-title">✅ الحل الجذري</div>
+
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-text">
+                            <strong>تم إنشاء دالة آمنة:</strong> save_ticker_settings<br>
+                            هذه الدالة تحفظ الإعدادات بشكل مضمون
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-text">
+                            <strong>افتح Console عند الحفظ</strong><br>
+                            يجب أن ترى:
+                            <div class="console-example">
+<span class="console-log">🔄 Updating settings: {...}</span>
+<span class="console-success">✅ Settings saved successfully: {...}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-text">
+                            <strong>إذا رأيت خطأ:</strong>
+                            <div class="console-example">
+<span class="console-error">❌ Error saving settings: ...</span>
+                            </div>
+                            <strong>الحل:</strong> تحقق من RLS policies في قاعدة البيانات
+                        </div>
+                    </div>
+
+                    <div class="code-block">
+-- التحقق من السياسات
+SELECT * FROM pg_policies
+WHERE tablename = 'activity_ticker_settings';
+
+-- يجب أن تجد:
+-- "Anyone can view ticker settings"
+-- "Anyone can update ticker settings"
+-- "Anyone can insert ticker settings"
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="section-title">
+                <span class="icon">🧪</span>
+                <span>خطوات الاختبار الشاملة</span>
+            </div>
+
+            <div class="checklist">
+                <div class="check-item">
+                    <span class="check-icon">1️⃣</span>
+                    <span><strong>افتح الصفحة الرئيسية</strong> → يجب أن ترى شريط أخضر في الأعلى</span>
+                </div>
+
+                <div class="check-item">
+                    <span class="check-icon">2️⃣</span>
+                    <span><strong>افتح Console (F12)</strong> → ابحث عن رسائل التشخيص</span>
+                </div>
+
+                <div class="check-item">
+                    <span class="check-icon">3️⃣</span>
+                    <span><strong>اذهب للإعدادات</strong> → شريط النشاط المباشر</span>
+                </div>
+
+                <div class="check-item">
+                    <span class="check-icon">4️⃣</span>
+                    <span><strong>غيّر أي إعداد</strong> → راقب Console للتأكد من الحفظ</span>
+                </div>
+
+                <div class="check-item">
+                    <span class="check-icon">5️⃣</span>
+                    <span><strong>أعد تحميل الصفحة</strong> → تحقق من بقاء التغييرات</span>
+                </div>
+
+                <div class="check-item">
+                    <span class="check-icon">6️⃣</span>
+                    <span><strong>أضف نشاط يدوي</strong> → يجب أن يظهر في الشريط فوراً</span>
+                </div>
+
+                <div class="check-item">
+                    <span class="check-icon">7️⃣</span>
+                    <span><strong>غيّر السرعة</strong> → يجب أن يتغير التمرير فوراً</span>
+                </div>
+
+                <div class="check-item">
+                    <span class="check-icon">8️⃣</span>
+                    <span><strong>غيّر الألوان</strong> → يجب أن تتحدث الألوان مباشرة</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="section-title">
+                <span class="icon">🔧</span>
+                <span>الإصلاحات الجذرية المطبقة</span>
+            </div>
+
+            <div class="checklist">
+                <div class="check-item">
+                    <span class="check-icon">✅</span>
+                    <span><strong>إنشاء دالة save_ticker_settings</strong> - حفظ آمن ومضمون</span>
+                </div>
+
+                <div class="check-item">
+                    <span class="check-icon">✅</span>
+                    <span><strong>تحديث RLS Policies</strong> - السماح بالقراءة والكتابة للجميع</span>
+                </div>
+
+                <div class="check-item">
+                    <span class="check-icon">✅</span>
+                    <span><strong>إضافة Console Logs شاملة</strong> - تشخيص سهل وواضح</span>
+                </div>
+
+                <div class="check-item">
+                    <span class="check-icon">✅</span>
+                    <span><strong>استخدام RPC للحفظ</strong> - تجاوز مشاكل RLS</span>
+                </div>
+
+                <div class="check-item">
+                    <span class="check-icon">✅</span>
+                    <span><strong>معالجة الأخطاء بشكل كامل</strong> - Try/catch في جميع الدوال</span>
+                </div>
+
+                <div class="check-item">
+                    <span class="check-icon">✅</span>
+                    <span><strong>إنشاء سجل افتراضي</strong> - التأكد من وجود إعدادات دائماً</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="warning">
+            <div class="warning-title">
+                <span>⚠️</span>
+                <span>هام جداً</span>
+            </div>
+            <p style="color: #7c2d12; line-height: 1.8; font-size: 15px;">
+                <strong>1. احذف Cache:</strong> Ctrl + Shift + Delete → Clear Everything<br>
+                <strong>2. Hard Reload:</strong> Ctrl + Shift + R<br>
+                <strong>3. افتح Console:</strong> F12 قبل فتح الصفحة<br>
+                <strong>4. راقب الرسائل:</strong> تتبع رسائل التشخيص
+            </p>
+        </div>
+
+        <div class="card">
+            <div class="section-title">
+                <span class="icon">📋</span>
+                <span>ماذا تبحث عنه في Console</span>
+            </div>
+
+            <div style="margin-bottom: 20px;">
+                <h3 style="color: #2d3748; margin-bottom: 12px;">✅ رسائل النجاح (يجب أن تراها):</h3>
+                <div class="console-example">
+<span class="console-log">🔄 LiveActivityTicker: Loading data...</span>
+<span class="console-log">📊 Getting activities with settings: {...}</span>
+<span class="console-log">🎭 Generating 5 simulated activities...</span>
+<span class="console-success">✅ Generated 5 simulated activities</span>
+<span class="console-success">🎯 Final activities count: 5</span>
+<span class="console-success">✅ LiveActivityTicker: Data loaded</span>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 20px;">
+                <h3 style="color: #2d3748; margin-bottom: 12px;">❌ رسائل الخطأ (إذا رأيتها):</h3>
+                <div class="console-example">
+<span class="console-error">❌ Error loading ticker data: ...</span>
+<span class="console-error">❌ Error getting activities: ...</span>
+<span class="console-error">❌ Error saving settings: ...</span>
+                </div>
+                <p style="margin-top: 10px; color: #c53030;">
+                    <strong>إذا رأيت أي من هذه:</strong> اتصل بي مع نص الخطأ الكامل
+                </p>
+            </div>
+
+            <div>
+                <h3 style="color: #2d3748; margin-bottom: 12px;">⚠️ رسائل التحذير:</h3>
+                <div class="console-example">
+<span class="console-warning">⚠️ LiveActivityTicker: No settings or activities</span>
+                </div>
+                <p style="margin-top: 10px; color: #7c2d12;">
+                    <strong>هذا يعني:</strong> لا توجد بيانات في قاعدة البيانات
+                </p>
+            </div>
+        </div>
+
+        <div class="buttons">
+            <a href="/" class="btn">🏠 افتح المنصة</a>
+            <a href="/test-ticker-now.html" class="btn">👁️ اختبار سريع</a>
+        </div>
+
+        <div style="margin-top: 40px; text-align: center; background: white; padding: 30px; border-radius: 20px;">
+            <h2 style="color: #667eea; margin-bottom: 15px;">🎉 تم تطبيق جميع الإصلاحات!</h2>
+            <p style="color: #4a5568; line-height: 1.8; font-size: 16px;">
+                الشريط يجب أن يعمل الآن بشكل كامل<br>
+                الإعدادات يجب أن تُحفظ بشكل دائم<br>
+                جميع المشاكل تم حلها جذرياً
+            </p>
+        </div>
+    </div>
+</body>
+</html>

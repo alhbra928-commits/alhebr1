@@ -59,39 +59,36 @@ class LiveActivityTickerService {
   }
 
   async updateSettings(updates: Partial<TickerSettings>): Promise<void> {
-    const { data, error } = await supabase
-      .from('activity_ticker_settings')
-      .select('id')
-      .limit(1)
-      .maybeSingle();
+    console.log('🔄 Updating settings:', updates);
 
-    if (error) throw error;
+    try {
+      const currentSettings = await this.getSettings();
+      const newSettings = { ...currentSettings, ...updates };
 
-    if (data) {
-      const { error: updateError } = await supabase
-        .from('activity_ticker_settings')
-        .update({
-          ...updates,
-          updated_at: new Date().toISOString()
-        })
-        .eq('id', data.id);
+      const { data, error } = await supabase.rpc('save_ticker_settings', {
+        p_mode: newSettings.mode,
+        p_simulation_enabled: newSettings.simulation_enabled,
+        p_real_enabled: newSettings.real_enabled,
+        p_scroll_speed: newSettings.scroll_speed,
+        p_items_per_cycle: newSettings.items_per_cycle,
+        p_simulation_interval_seconds: newSettings.simulation_interval_seconds,
+        p_show_timestamps: newSettings.show_timestamps,
+        p_background_color: newSettings.background_color,
+        p_text_color: newSettings.text_color,
+        p_icon_color: newSettings.icon_color
+      });
 
-      if (updateError) throw updateError;
-    } else {
-      const defaultSettings = await this.getSettings();
-      const { error: insertError } = await supabase
-        .from('activity_ticker_settings')
-        .insert({
-          ...defaultSettings,
-          ...updates,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        });
+      if (error) {
+        console.error('❌ Error saving settings:', error);
+        throw error;
+      }
 
-      if (insertError) throw insertError;
+      console.log('✅ Settings saved successfully:', data);
+      this.settingsCache = null;
+    } catch (error) {
+      console.error('❌ Failed to update settings:', error);
+      throw error;
     }
-
-    this.settingsCache = null;
   }
 
   async getRealActivities(limit: number = 10): Promise<Activity[]> {
@@ -162,34 +159,49 @@ class LiveActivityTickerService {
   }
 
   async getActivities(): Promise<Activity[]> {
-    const settings = await this.getSettings();
-    let activities: Activity[] = [];
+    try {
+      const settings = await this.getSettings();
+      console.log('📊 Getting activities with settings:', settings);
 
-    if (settings.mode === 'real' || settings.mode === 'hybrid') {
-      if (settings.real_enabled) {
-        const realActivities = await this.getRealActivities(
-          settings.mode === 'real' ? settings.items_per_cycle : Math.floor(settings.items_per_cycle / 2)
-        );
-        activities = [...activities, ...realActivities];
-      }
-    }
+      let activities: Activity[] = [];
 
-    if (settings.mode === 'simulation' || settings.mode === 'hybrid') {
-      if (settings.simulation_enabled) {
-        const simulationCount = settings.mode === 'simulation'
-          ? settings.items_per_cycle
-          : Math.ceil(settings.items_per_cycle / 2);
-
-        for (let i = 0; i < simulationCount; i++) {
-          const simActivity = await this.generateSimulatedActivity();
-          activities.push(simActivity);
+      if (settings.mode === 'real' || settings.mode === 'hybrid') {
+        if (settings.real_enabled) {
+          const realActivities = await this.getRealActivities(
+            settings.mode === 'real' ? settings.items_per_cycle : Math.floor(settings.items_per_cycle / 2)
+          );
+          activities = [...activities, ...realActivities];
+          console.log(`📌 Real activities: ${realActivities.length}`);
         }
       }
+
+      if (settings.mode === 'simulation' || settings.mode === 'hybrid') {
+        if (settings.simulation_enabled) {
+          const simulationCount = settings.mode === 'simulation'
+            ? settings.items_per_cycle
+            : Math.ceil(settings.items_per_cycle / 2);
+
+          console.log(`🎭 Generating ${simulationCount} simulated activities...`);
+
+          for (let i = 0; i < simulationCount; i++) {
+            const simActivity = await this.generateSimulatedActivity();
+            activities.push(simActivity);
+          }
+
+          console.log(`✅ Generated ${simulationCount} simulated activities`);
+        }
+      }
+
+      activities.sort((a, b) => b.priority - a.priority);
+
+      const finalActivities = activities.slice(0, settings.items_per_cycle);
+      console.log(`🎯 Final activities count: ${finalActivities.length}`);
+
+      return finalActivities;
+    } catch (error) {
+      console.error('❌ Error getting activities:', error);
+      return [];
     }
-
-    activities.sort((a, b) => b.priority - a.priority);
-
-    return activities.slice(0, settings.items_per_cycle);
   }
 
   subscribeToRealtime(callback: (activities: Activity[]) => void): () => void {
