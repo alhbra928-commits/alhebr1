@@ -14,6 +14,7 @@ import { Modern3DTicker } from '../../../components/common/Modern3DTicker';
 import { modern3DTickerService, TickerMessage, TickerSettings } from '../../../services/modern3DTickerService';
 import { getPlatformTextsBySection } from '../../../services/platformTextsService';
 import { VerticalSideTabs } from '../../../components/common/VerticalSideTabs';
+import { SmartAssistantSidebar } from './SmartAssistantSidebar';
 
 // Lazy load heavy components
 const InnovativeFarmDetailPage = lazy(() => import('./InnovativeFarmDetailPage').then(m => ({ default: m.InnovativeFarmDetailPage })));
@@ -52,6 +53,7 @@ export function ModernRoyalPlatform({
   });
   const [platformName, setPlatformName] = useState('منصة الحبر');
   const [activeBottomTab, setActiveBottomTab] = useState<string>('home');
+  const [smartAssistantOpen, setSmartAssistantOpen] = useState(false);
 
   // شاشة التحميل المبتكرة مع شريط التقدم
   useEffect(() => {
@@ -418,7 +420,7 @@ export function ModernRoyalPlatform({
       {/* Vertical Side Tabs - Luxury Navigation */}
       <VerticalSideTabs
         onSmartAssistantClick={() => {
-          console.log('Smart Assistant clicked');
+          setSmartAssistantOpen(true);
         }}
         onHomeClick={() => {
           setViewMode('home');
@@ -427,6 +429,12 @@ export function ModernRoyalPlatform({
         onAccountClick={() => {
           setViewMode('investor');
         }}
+      />
+
+      {/* Smart Assistant Sidebar */}
+      <SmartAssistantSidebar
+        isOpen={smartAssistantOpen}
+        onClose={() => setSmartAssistantOpen(false)}
       />
     </div>
   );

@@ -314,17 +314,18 @@ export function VerticalSideTabs({
   ];
 
   const handleTabClick = (tabId: string) => {
-    setActiveTab(tabId);
-    setIsDrawerOpen(true);
-
+    // نفذ الوظيفة الخاصة بكل أيقونة مباشرة
     if (tabId === 'assistant' && onSmartAssistantClick) {
       onSmartAssistantClick();
+      return;
     }
     if (tabId === 'home' && onHomeClick) {
       onHomeClick();
+      return;
     }
     if (tabId === 'account' && onAccountClick) {
       onAccountClick();
+      return;
     }
   };
 
