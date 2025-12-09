@@ -13,7 +13,6 @@ import { InnovativeFarmCard } from './InnovativeFarmCard';
 import { Modern3DTicker } from '../../../components/common/Modern3DTicker';
 import { modern3DTickerService, TickerMessage, TickerSettings } from '../../../services/modern3DTickerService';
 import { getPlatformTextsBySection } from '../../../services/platformTextsService';
-import { BottomNavigationBar } from '../../../components/common/BottomNavigationBar';
 
 // Lazy load heavy components
 const InnovativeFarmDetailPage = lazy(() => import('./InnovativeFarmDetailPage').then(m => ({ default: m.InnovativeFarmDetailPage })));
@@ -414,27 +413,6 @@ export function ModernRoyalPlatform({
       {onBackToAdmin && (
         <BackToAdminButton onBackToAdmin={onBackToAdmin} />
       )}
-
-      {/* Bottom Navigation Bar - iOS Safari Optimized */}
-      <BottomNavigationBar
-        currentSection={activeBottomTab}
-        onNavigate={(section) => {
-          console.log('[ModernRoyalBottomNav] Navigate to:', section);
-          setActiveBottomTab(section);
-
-          if (section === 'home') {
-            handleGoHome();
-          } else if (section === 'account') {
-            setCurrentView('investor');
-          }
-        }}
-        onSmartButtonClick={() => {
-          console.log('[ModernRoyalBottomNav] Smart button clicked');
-          setSmartButtonOpen(true);
-        }}
-        phoneNumber="966569335257"
-      />
-
     </div>
   );
 }
