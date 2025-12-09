@@ -423,11 +423,11 @@ export function ModernRoyalPlatform({
           setSmartAssistantOpen(true);
         }}
         onHomeClick={() => {
-          setViewMode('home');
-          setSelectedFarmId(null);
+          setCurrentView('home');
+          setSelectedFarm(null);
         }}
         onAccountClick={() => {
-          setViewMode('investor');
+          setCurrentView('investor');
         }}
       />
 
