@@ -415,13 +415,8 @@ export function ModernRoyalPlatform({
         <BackToAdminButton onBackToAdmin={onBackToAdmin} />
       )}
 
-      {/* Agricultural Footer - Like Haraj Style */}
-      <AgriculturalFooter
-        platformName="منصة النخيل والزيتون"
-        phoneNumber="+966 56 933 5257"
-        email="info@palmolive.sa"
-        address="المملكة العربية السعودية"
-      />
+      {/* Simple Footer Bar */}
+      <AgriculturalFooter />
     </div>
   );
 }
