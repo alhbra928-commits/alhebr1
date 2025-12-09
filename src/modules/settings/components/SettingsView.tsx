@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Settings, Map, Video, Mail, Key, Globe, Bell, Shield, Database, BarChart3, Package, Activity, Type, Sparkles, PanelLeftClose, Loader2 } from 'lucide-react';
+import { Settings, Map, Video, Mail, Key, Globe, Bell, Shield, Database, BarChart3, Package, Activity, Type, Sparkles, PanelLeftClose, Loader2, TrendingUp } from 'lucide-react';
 import { Card3D } from '../../../components/ui/Card3D';
 import { BackButton } from '../../../components/common/BackButton';
 import { BackupCenter } from '../../backups/components/BackupCenter';
@@ -9,13 +9,14 @@ import { CompletePlatformTextsManager } from './CompletePlatformTextsManager';
 import { Modern3DTickerManager } from './Modern3DTickerManager';
 import { SideDockSettings } from './SideDockSettings';
 import { InnovativeLoaderSettings } from './InnovativeLoaderSettings';
+import { LiveActivityTickerSettings } from './LiveActivityTickerSettings';
 
 interface SettingsViewProps {
   onBack?: () => void;
 }
 
 export function SettingsView({ onBack }: SettingsViewProps) {
-  const [activeTab, setActiveTab] = useState<'general' | 'backup' | 'ticker' | 'versions' | 'diagnostics' | 'texts' | 'side-dock' | 'loader'>('general');
+  const [activeTab, setActiveTab] = useState<'general' | 'backup' | 'ticker' | 'versions' | 'diagnostics' | 'texts' | 'side-dock' | 'loader' | 'activity-ticker'>('general');
   const [settings, setSettings] = useState({
     mapApiKey: 'AIza*********************',
     videoService: 'youtube',
@@ -131,9 +132,22 @@ export function SettingsView({ onBack }: SettingsViewProps) {
             <Loader2 className="h-5 w-5" />
             شاشة التحميل المبتكرة
           </button>
+          <button
+            onClick={() => setActiveTab('activity-ticker')}
+            className={`flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all ${
+              activeTab === 'activity-ticker'
+                ? 'bg-gradient-to-r from-green-700 to-green-600 text-white shadow-lg'
+                : 'bg-white text-[#2C2C2C] hover:bg-[#F4EBDD]'
+            }`}
+          >
+            <TrendingUp className="h-5 w-5" />
+            شريط النشاط المباشر
+          </button>
         </div>
 
-        {activeTab === 'ticker' ? (
+        {activeTab === 'activity-ticker' ? (
+          <LiveActivityTickerSettings />
+        ) : activeTab === 'ticker' ? (
           <Modern3DTickerManager />
         ) : activeTab === 'backup' ? (
           <BackupCenter />
