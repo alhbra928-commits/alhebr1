@@ -1,85 +1,150 @@
-import React, { useState, useEffect } from 'react';
-import { TrendingUp, Bell, Sparkles, ArrowLeft } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Send, Sparkles, X, Bot, User } from 'lucide-react';
 import { brandColors, brandGradients } from '../../finance/styles/brandColors';
-import { FarmSuggestion } from '../types/farm.types';
+import { supabase } from '../../../lib/supabase';
 
 interface SmartAssistantSidebarProps {
   isOpen: boolean;
   onClose: () => void;
-  suggestions?: FarmSuggestion[];
-  onSuggestionClick?: (barcode: string) => void;
 }
 
-interface Notification {
+interface Message {
   id: string;
-  message: string;
+  text: string;
+  sender: 'user' | 'bot';
   timestamp: Date;
 }
+
+interface QuickQuestion {
+  id: string;
+  text: string;
+  keywords: string[];
+}
+
+const quickQuestions: QuickQuestion[] = [
+  { id: '1', text: 'ما هي أنواع المزارع المتاحة؟', keywords: ['أنواع', 'مزارع', 'متاحة'] },
+  { id: '2', text: 'كيف يمكنني حجز أشجار؟', keywords: ['حجز', 'أشجار', 'طريقة'] },
+  { id: '3', text: 'ما هي أسعار الأشجار؟', keywords: ['أسعار', 'سعر', 'تكلفة'] },
+  { id: '4', text: 'متى يتم تسليم الشهادات؟', keywords: ['شهادات', 'تسليم', 'متى'] },
+];
 
 export function SmartAssistantSidebar({
   isOpen,
   onClose,
-  suggestions = [],
-  onSuggestionClick = () => {},
 }: SmartAssistantSidebarProps) {
-  const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [isVisible, setIsVisible] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [inputValue, setInputValue] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Scroll behavior للإخفاء في الجوال
   useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
+    if (isOpen && messages.length === 0) {
+      // رسالة ترحيبية عند الفتح
+      const welcomeMessage: Message = {
+        id: '0',
+        text: 'مرحباً بك في المساعد الذكي لمنصة المزاد! 🌿\n\nكيف يمكنني مساعدتك اليوم؟',
+        sender: 'bot',
+        timestamp: new Date(),
+      };
+      setMessages([welcomeMessage]);
+    }
+  }, [isOpen]);
 
-      // في الجوال فقط (< 1024px)
-      if (window.innerWidth < 1024) {
-        // إخفاء عند Scroll للأعلى
-        if (currentScrollY > lastScrollY && currentScrollY > 100) {
-          setIsVisible(false);
-        } else if (currentScrollY < lastScrollY) {
-          setIsVisible(true);
-        }
-      } else {
-        // في Desktop دائماً ظاهر
-        setIsVisible(true);
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const findMatchingResponse = async (userMessage: string): Promise<string> => {
+    try {
+      // البحث في قاعدة البيانات عن رد مناسب
+      const { data: responses, error } = await supabase
+        .from('whatsapp_auto_responses')
+        .select('*')
+        .eq('status', 'active')
+        .is('deleted_at', null)
+        .order('priority', { ascending: false });
+
+      if (error || !responses || responses.length === 0) {
+        return 'شكراً على تواصلك! فريق الدعم سيساعدك قريباً. 🌟';
       }
 
-      setLastScrollY(currentScrollY);
+      const userMessageLower = userMessage.toLowerCase();
+
+      // البحث عن تطابق في الكلمات المفتاحية
+      for (const response of responses) {
+        const keyword = response.keyword?.toLowerCase() || '';
+
+        if (keyword && userMessageLower.includes(keyword)) {
+          // تحديث عداد الاستخدام
+          await supabase
+            .from('whatsapp_auto_responses')
+            .update({
+              usage_count: (response.usage_count || 0) + 1,
+              last_used_at: new Date().toISOString()
+            })
+            .eq('id', response.id);
+
+          return response.response_ar || response.response_en || 'شكراً على تواصلك!';
+        }
+      }
+
+      // استخدام الرد الافتراضي fallback
+      const fallbackResponse = responses.find((r: any) => r.is_default_fallback && r.fallback_enabled);
+      if (fallbackResponse) {
+        return fallbackResponse.response_ar || fallbackResponse.response_en || 'شكراً على سؤالك!';
+      }
+
+      return 'شكراً على سؤالك! يمكنك التواصل مع فريق الدعم للحصول على إجابة دقيقة. 💬\n\nأو استخدم الأسئلة الشائعة أعلاه للحصول على إجابات سريعة.';
+    } catch (error) {
+      console.error('Error finding response:', error);
+      return 'عذراً، حدث خطأ. يرجى المحاولة مرة أخرى. 🔄';
+    }
+  };
+
+  const handleSendMessage = async () => {
+    if (!inputValue.trim()) return;
+
+    const userMessage: Message = {
+      id: Date.now().toString(),
+      text: inputValue,
+      sender: 'user',
+      timestamp: new Date(),
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [lastScrollY]);
+    setMessages(prev => [...prev, userMessage]);
+    setInputValue('');
+    setIsTyping(true);
 
-  useEffect(() => {
-    const initialNotifications: Notification[] = [
-      {
-        id: '1',
-        message: '🌿 افتُتح حجز مزرعة جديدة في المدينة المنورة!',
+    // محاكاة تأخير الكتابة
+    setTimeout(async () => {
+      const botResponseText = await findMatchingResponse(inputValue);
+
+      const botMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        text: botResponseText,
+        sender: 'bot',
         timestamp: new Date(),
-      },
-    ];
-    setNotifications(initialNotifications);
+      };
 
-    const interval = setInterval(() => {
-      const messages = [
-        '🎉 تم حجز 5 أشجار في آخر ساعة',
-        '⭐ مزرعة الطائف وصلت 80% من الحجوزات',
-        '🌱 عرض خاص: خصم 10% على الدفعة الأولى',
-      ];
-      const randomMessage = messages[Math.floor(Math.random() * messages.length)];
-      setNotifications((prev) => [
-        {
-          id: Date.now().toString(),
-          message: randomMessage,
-          timestamp: new Date(),
-        },
-        ...prev.slice(0, 4),
-      ]);
-    }, 30000);
+      setMessages(prev => [...prev, botMessage]);
+      setIsTyping(false);
+    }, 1000);
+  };
 
-    return () => clearInterval(interval);
-  }, []);
+  const handleQuickQuestion = (question: QuickQuestion) => {
+    setInputValue(question.text);
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
+    }
+  };
 
   if (!isOpen) return null;
 
@@ -91,163 +156,229 @@ export function SmartAssistantSidebar({
         onClick={onClose}
       />
 
-      {/* Sidebar */}
+      {/* Chat Sidebar */}
       <div
-        className="fixed top-0 right-0 h-full w-full max-w-md bg-white z-50 overflow-y-auto animate-slideInRight shadow-2xl"
+        className="fixed top-0 right-0 h-full w-full max-w-md z-50 flex flex-col animate-slideInRight shadow-2xl"
+        style={{
+          background: 'linear-gradient(135deg, #f5f3ee 0%, #ffffff 100%)',
+        }}
       >
-        <div className="p-6">
-          <div className="flex items-center justify-between mb-6">
+        {/* Header */}
+        <div
+          className="p-6 border-b"
+          style={{
+            background: brandGradients.gold,
+            borderColor: brandColors.border.light,
+          }}
+        >
+          <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div
-                className="w-10 h-10 rounded-full flex items-center justify-center"
-                style={{ background: brandGradients.gold }}
+                className="w-12 h-12 rounded-full flex items-center justify-center animate-pulse"
+                style={{
+                  background: 'rgba(255, 255, 255, 0.3)',
+                  backdropFilter: 'blur(10px)',
+                }}
               >
-                <Sparkles className="h-5 w-5" style={{ color: brandColors.text.white }} />
+                <Sparkles className="h-6 w-6" style={{ color: brandColors.text.white }} />
               </div>
-              <h3 className="text-xl font-black" style={{ color: brandColors.text.primary }}>
-                المساعد الذكي
-              </h3>
+              <div>
+                <h3 className="text-xl font-black" style={{ color: brandColors.text.white }}>
+                  المساعد الذكي
+                </h3>
+                <p className="text-xs opacity-90" style={{ color: brandColors.text.white }}>
+                  متاح دائماً للإجابة على أسئلتك
+                </p>
+              </div>
             </div>
             <button
               onClick={onClose}
-              className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors"
+              className="w-10 h-10 rounded-full flex items-center justify-center hover:bg-white/20 transition-colors"
             >
-              <ArrowLeft className="h-5 w-5" style={{ color: brandColors.text.primary }} />
+              <X className="h-5 w-5" style={{ color: brandColors.text.white }} />
             </button>
           </div>
+        </div>
 
-        <div
-          className="rounded-3xl p-6 backdrop-blur-lg"
-          style={{
-            background: 'rgba(245, 243, 238, 0.8)',
-            border: `2px solid ${brandColors.border.light}`,
-            boxShadow: `0 10px 40px ${brandColors.shadow.dark}`,
-          }}
-        >
-
-        <div className="space-y-3 mb-6">
-          <h4 className="text-sm font-bold mb-3" style={{ color: brandColors.text.secondary }}>
-            مزارع مقترحة لك
-          </h4>
-          {suggestions.map((suggestion, index) => (
-            <button
-              key={suggestion.barcode}
-              onClick={() => onSuggestionClick(suggestion.barcode)}
-              className="w-full p-4 rounded-xl text-right transition-all duration-300 hover:scale-105 animate-fadeInUp"
-              style={{
-                background: 'rgba(255, 255, 255, 0.6)',
-                border: `1px solid ${brandColors.border.light}`,
-                animationDelay: `${index * 0.1}s`,
-              }}
+        {/* Messages Area */}
+        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+          {messages.map((message) => (
+            <div
+              key={message.id}
+              className={`flex gap-3 animate-fadeInUp ${
+                message.sender === 'user' ? 'flex-row-reverse' : 'flex-row'
+              }`}
             >
-              <div className="flex items-start justify-between mb-2">
-                <div>
-                  <p className="font-black text-sm mb-1" style={{ color: brandColors.text.primary }}>
-                    {suggestion.farm_name}
-                  </p>
-                  <p className="text-xs" style={{ color: brandColors.text.secondary }}>
-                    {suggestion.barcode}
-                  </p>
-                </div>
-                <ArrowLeft className="h-4 w-4" style={{ color: brandColors.primary.gold }} />
-              </div>
+              {/* Avatar */}
               <div
-                className="inline-block px-3 py-1 rounded-full text-xs font-bold"
+                className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
+                  message.sender === 'bot' ? 'animate-pulse' : ''
+                }`}
                 style={{
-                  background: brandColors.primary.goldLight,
-                  color: brandColors.text.primary,
+                  background: message.sender === 'bot'
+                    ? brandGradients.gold
+                    : brandColors.primary.green,
                 }}
               >
-                {suggestion.badge}
+                {message.sender === 'bot' ? (
+                  <Bot className="h-4 w-4" style={{ color: brandColors.text.white }} />
+                ) : (
+                  <User className="h-4 w-4" style={{ color: brandColors.text.white }} />
+                )}
               </div>
-            </button>
-          ))}
-        </div>
 
-        {suggestions.length === 0 && (
-          <div className="text-center py-6">
-            <TrendingUp className="h-12 w-12 mx-auto mb-3" style={{ color: brandColors.primary.gold }} />
-            <p className="text-sm" style={{ color: brandColors.text.secondary }}>
-              لا توجد اقتراحات حالياً
-            </p>
-          </div>
-        )}
-      </div>
-
-      <div
-        className="rounded-3xl p-6 backdrop-blur-lg animate-fadeIn"
-        style={{
-          background: 'rgba(245, 243, 238, 0.8)',
-          border: `2px solid ${brandColors.border.light}`,
-          boxShadow: `0 10px 40px ${brandColors.shadow.dark}`,
-          animationDelay: '0.2s',
-        }}
-      >
-        <div className="flex items-center gap-3 mb-4">
-          <Bell className="h-5 w-5" style={{ color: brandColors.primary.gold }} />
-          <h3 className="text-lg font-black" style={{ color: brandColors.text.primary }}>
-            التنبيهات
-          </h3>
-        </div>
-
-        <div className="space-y-3">
-          {notifications.map((notification, index) => (
-            <div
-              key={notification.id}
-              className="p-3 rounded-xl animate-slideIn"
-              style={{
-                background: 'rgba(212, 175, 55, 0.1)',
-                border: `1px solid ${brandColors.border.light}`,
-                animationDelay: `${index * 0.1}s`,
-              }}
-            >
-              <p className="text-sm font-bold mb-1" style={{ color: brandColors.text.primary }}>
-                {notification.message}
-              </p>
-              <p className="text-xs" style={{ color: brandColors.text.secondary }}>
-                {notification.timestamp.toLocaleTimeString('ar-SA', {
-                  hour: '2-digit',
-                  minute: '2-digit',
-                })}
-              </p>
+              {/* Message Bubble */}
+              <div
+                className={`max-w-[75%] p-4 rounded-2xl ${
+                  message.sender === 'user'
+                    ? 'rounded-tr-none'
+                    : 'rounded-tl-none'
+                }`}
+                style={{
+                  background: message.sender === 'user'
+                    ? brandColors.primary.green
+                    : 'rgba(245, 243, 238, 0.9)',
+                  border: message.sender === 'bot'
+                    ? `1px solid ${brandColors.border.light}`
+                    : 'none',
+                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+                }}
+              >
+                <p
+                  className="text-sm leading-relaxed whitespace-pre-wrap"
+                  style={{
+                    color: message.sender === 'user'
+                      ? brandColors.text.white
+                      : brandColors.text.primary,
+                  }}
+                >
+                  {message.text}
+                </p>
+                <p
+                  className="text-xs mt-2 opacity-70"
+                  style={{
+                    color: message.sender === 'user'
+                      ? brandColors.text.white
+                      : brandColors.text.secondary,
+                  }}
+                >
+                  {message.timestamp.toLocaleTimeString('ar-SA', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  })}
+                </p>
+              </div>
             </div>
           ))}
+
+          {/* Typing Indicator */}
+          {isTyping && (
+            <div className="flex gap-3 animate-fadeInUp">
+              <div
+                className="w-8 h-8 rounded-full flex items-center justify-center animate-pulse"
+                style={{ background: brandGradients.gold }}
+              >
+                <Bot className="h-4 w-4" style={{ color: brandColors.text.white }} />
+              </div>
+              <div
+                className="p-4 rounded-2xl rounded-tl-none"
+                style={{
+                  background: 'rgba(245, 243, 238, 0.9)',
+                  border: `1px solid ${brandColors.border.light}`,
+                }}
+              >
+                <div className="flex gap-1">
+                  <div
+                    className="w-2 h-2 rounded-full animate-bounce"
+                    style={{
+                      background: brandColors.primary.gold,
+                      animationDelay: '0ms',
+                    }}
+                  />
+                  <div
+                    className="w-2 h-2 rounded-full animate-bounce"
+                    style={{
+                      background: brandColors.primary.gold,
+                      animationDelay: '150ms',
+                    }}
+                  />
+                  <div
+                    className="w-2 h-2 rounded-full animate-bounce"
+                    style={{
+                      background: brandColors.primary.gold,
+                      animationDelay: '300ms',
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+          <div ref={messagesEndRef} />
         </div>
 
-        {notifications.length === 0 && (
-          <div className="text-center py-6">
-            <Bell className="h-12 w-12 mx-auto mb-3 opacity-30" style={{ color: brandColors.text.secondary }} />
-            <p className="text-sm" style={{ color: brandColors.text.secondary }}>
-              لا توجد تنبيهات جديدة
+        {/* Quick Questions */}
+        {messages.length <= 1 && (
+          <div className="px-4 pb-2">
+            <p className="text-xs font-bold mb-2" style={{ color: brandColors.text.secondary }}>
+              أسئلة شائعة:
             </p>
+            <div className="flex flex-wrap gap-2">
+              {quickQuestions.map((question) => (
+                <button
+                  key={question.id}
+                  onClick={() => handleQuickQuestion(question)}
+                  className="px-3 py-2 rounded-full text-xs font-bold transition-all duration-300 hover:scale-105"
+                  style={{
+                    background: 'rgba(212, 175, 55, 0.1)',
+                    border: `1px solid ${brandColors.border.light}`,
+                    color: brandColors.text.primary,
+                  }}
+                >
+                  {question.text}
+                </button>
+              ))}
+            </div>
           </div>
         )}
-      </div>
 
-      <div
-        className="rounded-3xl p-6 text-center backdrop-blur-lg animate-fadeIn"
-        style={{
-          background: brandGradients.gold,
-          boxShadow: `0 10px 40px ${brandColors.shadow.gold}`,
-          animationDelay: '0.4s',
-        }}
-      >
-        <p className="text-2xl font-black mb-2" style={{ color: brandColors.text.white }}>
-          🌟 عرض خاص
-        </p>
-        <p className="text-sm mb-4" style={{ color: brandColors.text.white }}>
-          خصم 15% على أول حجز لك
-        </p>
-        <button
-          className="w-full py-3 rounded-xl font-bold transition-all duration-300 hover:scale-105"
+        {/* Input Area */}
+        <div
+          className="p-4 border-t"
           style={{
-            background: brandColors.text.white,
-            color: brandColors.primary.gold,
+            background: 'rgba(255, 255, 255, 0.9)',
+            backdropFilter: 'blur(10px)',
+            borderColor: brandColors.border.light,
           }}
         >
-          استفد الآن
-        </button>
-      </div>
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              onKeyPress={handleKeyPress}
+              placeholder="اكتب سؤالك هنا..."
+              className="flex-1 px-4 py-3 rounded-xl text-sm focus:outline-none focus:ring-2 transition-all"
+              style={{
+                background: 'white',
+                border: `1px solid ${brandColors.border.light}`,
+                color: brandColors.text.primary,
+              }}
+            />
+            <button
+              onClick={handleSendMessage}
+              disabled={!inputValue.trim()}
+              className="w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+              style={{
+                background: inputValue.trim() ? brandGradients.gold : brandColors.border.light,
+              }}
+            >
+              <Send className="h-5 w-5" style={{ color: brandColors.text.white }} />
+            </button>
+          </div>
+          <p className="text-xs mt-2 text-center" style={{ color: brandColors.text.secondary }}>
+            اضغط Enter للإرسال
+          </p>
         </div>
       </div>
     </>
