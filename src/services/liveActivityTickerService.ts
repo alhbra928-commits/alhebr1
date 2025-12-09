@@ -77,6 +77,18 @@ class LiveActivityTickerService {
         .eq('id', data.id);
 
       if (updateError) throw updateError;
+    } else {
+      const defaultSettings = await this.getSettings();
+      const { error: insertError } = await supabase
+        .from('activity_ticker_settings')
+        .insert({
+          ...defaultSettings,
+          ...updates,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        });
+
+      if (insertError) throw insertError;
     }
 
     this.settingsCache = null;
