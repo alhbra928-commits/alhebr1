@@ -152,15 +152,17 @@ export function SmartAssistantSidebar({
     <>
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 animate-fadeIn"
+        className="fixed inset-0 bg-black/60 backdrop-blur-sm animate-fadeIn"
+        style={{ zIndex: 9999998 }}
         onClick={onClose}
       />
 
       {/* Chat Sidebar */}
       <div
-        className="fixed top-0 right-0 h-full w-full max-w-md z-50 flex flex-col animate-slideInRight shadow-2xl"
+        className="fixed top-0 right-0 h-full w-full max-w-md flex flex-col animate-slideInRight shadow-2xl"
         style={{
           background: 'linear-gradient(135deg, #f5f3ee 0%, #ffffff 100%)',
+          zIndex: 9999999
         }}
       >
         {/* Header */}
