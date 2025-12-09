@@ -27,39 +27,16 @@ export function VerticalSideTabs({
       id: 'assistant',
       label: 'المساعد الذكي',
       icon: () => (
-        <svg
-          width="28"
-          height="28"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          className="drop-shadow-lg"
-        >
-          <circle cx="12" cy="8" r="3" fill="currentColor" opacity="0.9"/>
-          <path
-            d="M12 14c-4 0-7 2-7 4v2h14v-2c0-2-3-4-7-4z"
-            fill="currentColor"
-            opacity="0.9"
-          />
-          <circle cx="8" cy="11" r="1.5" fill="#FFD700"/>
-          <circle cx="16" cy="11" r="1.5" fill="#FFD700"/>
-          <path
-            d="M10 15h4"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-          />
-        </svg>
+        <div className="text-3xl">
+          🤖
+        </div>
       ),
       content: () => (
         <div className="p-6 text-right">
           <div className="mb-6 p-4 bg-gradient-to-l from-emerald-600 to-emerald-700 rounded-2xl text-white">
             <div className="flex items-center gap-3 mb-2">
-              <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                  <circle cx="12" cy="8" r="3" fill="currentColor"/>
-                  <path d="M12 14c-4 0-7 2-7 4v2h14v-2c0-2-3-4-7-4z" fill="currentColor"/>
-                </svg>
+              <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center text-2xl">
+                🤖
               </div>
               <div>
                 <h3 className="font-bold text-lg">المساعد الذكي</h3>
