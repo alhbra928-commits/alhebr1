@@ -10,7 +10,6 @@ import { SimpleLoader } from '../../../components/common/SimpleLoader';
 import { AdminCrownButton } from './AdminCrownButton';
 import { ConceptIntroductionPage } from './ConceptIntroductionPage';
 import { EnhancedConceptCard } from './EnhancedConceptCard';
-import { AgriculturalFooter } from '../../../components/common/AgriculturalFooter';
 
 type ViewMode = 'home' | 'farmDetail' | 'booking' | 'investor' | 'verification' | 'concept';
 
@@ -330,9 +329,6 @@ export function RoyalMainInterface({
           </>
         )}
       </main>
-
-      {/* Simple Footer Bar */}
-      <AgriculturalFooter />
     </div>
   );
 }
