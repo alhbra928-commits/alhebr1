@@ -345,31 +345,36 @@ export function SmartAssistantSidebar({
               <div
                 style={{
                   maxWidth: '75%',
-                  padding: '16px',
+                  padding: message.sender === 'user' ? '18px 20px' : '16px',
                   borderRadius: '16px',
                   borderTopLeftRadius: message.sender === 'user' ? '16px' : '4px',
                   borderTopRightRadius: message.sender === 'user' ? '4px' : '16px',
                   background: message.sender === 'user'
-                    ? brandColors.primary.green
+                    ? 'linear-gradient(135deg, #2d5f3f 0%, #1e8449 100%)'
                     : 'rgba(245, 243, 238, 0.9)',
                   border: message.sender === 'bot' ? `1px solid ${brandColors.border.light}` : 'none',
-                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)'
+                  boxShadow: message.sender === 'user'
+                    ? '0 4px 12px rgba(29, 132, 73, 0.3)'
+                    : '0 2px 8px rgba(0, 0, 0, 0.1)'
                 }}
               >
                 <p style={{
-                  fontSize: '14px',
-                  lineHeight: '1.6',
+                  fontSize: '15px',
+                  lineHeight: '1.65',
                   whiteSpace: 'pre-wrap',
-                  color: message.sender === 'user' ? brandColors.text.white : brandColors.text.primary,
-                  margin: 0
+                  color: message.sender === 'user' ? '#ffffff' : brandColors.text.primary,
+                  fontWeight: message.sender === 'user' ? 600 : 400,
+                  margin: 0,
+                  textShadow: message.sender === 'user' ? '0 1px 2px rgba(0, 0, 0, 0.1)' : 'none'
                 }}>
                   {message.text}
                 </p>
                 <p style={{
                   fontSize: '11px',
                   marginTop: '8px',
-                  opacity: 0.7,
-                  color: message.sender === 'user' ? brandColors.text.white : brandColors.text.secondary,
+                  opacity: message.sender === 'user' ? 0.95 : 0.7,
+                  color: message.sender === 'user' ? '#f0f0f0' : brandColors.text.secondary,
+                  fontWeight: message.sender === 'user' ? 500 : 400,
                   margin: '8px 0 0 0'
                 }}>
                   {message.timestamp.toLocaleTimeString('ar-SA', {
