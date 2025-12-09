@@ -36,7 +36,7 @@ export const InnovativeFarmCard: React.FC<InnovativeFarmCardProps> = ({ farm, on
 
   return (
     <div
-      className="group relative cursor-pointer transform transition-all duration-500 hover:scale-105"
+      className="group relative cursor-pointer transform transition-all duration-500 hover:scale-105 w-full"
       onClick={onClick}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -45,7 +45,7 @@ export const InnovativeFarmCard: React.FC<InnovativeFarmCardProps> = ({ farm, on
       <div className="absolute -inset-1 bg-gradient-to-r from-emerald-400 via-green-500 to-teal-400 rounded-3xl blur-xl opacity-0 group-hover:opacity-40 transition-all duration-700 animate-pulse"></div>
 
       {/* Main Card */}
-      <div className="relative bg-white rounded-3xl overflow-hidden shadow-2xl hover:shadow-3xl transition-all duration-500 border-2 border-emerald-100 hover:border-emerald-400 h-full">
+      <div className="relative bg-white rounded-3xl overflow-hidden shadow-2xl hover:shadow-3xl transition-all duration-500 border-2 border-emerald-100 hover:border-emerald-400 h-full mx-auto max-w-full">
 
         {/* Image Section with Parallax Effect */}
         <div className="relative h-64 overflow-hidden">

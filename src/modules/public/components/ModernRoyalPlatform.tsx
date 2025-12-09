@@ -369,14 +369,14 @@ export function ModernRoyalPlatform({
         />
 
         {/* Main Content */}
-        <main className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 md:py-12 pb-32 sm:pb-40">
+        <main className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 md:py-12 pb-32 sm:pb-40 pl-12 sm:pl-16 md:pl-6">
           {/* Farms Grid */}
           <div>
-            <div className="flex items-center justify-between mb-6 sm:mb-8">
+            <div className="flex items-center justify-between mb-6 sm:mb-8 flex-wrap gap-3">
               <h2 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-emerald-800 to-green-700 bg-clip-text text-transparent">
                 المزارع المتاحة
               </h2>
-              <div className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-white/60 backdrop-blur-xl rounded-full border border-emerald-200">
+              <div className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-white/60 backdrop-blur-xl rounded-full border border-emerald-200 shadow-sm">
                 <Star className="w-4 h-4 text-emerald-600" fill="currentColor" />
                 <span className="text-sm font-semibold text-emerald-700">{farms.length} مزرعة متاحة</span>
               </div>
@@ -391,7 +391,7 @@ export function ModernRoyalPlatform({
                 <p className="text-emerald-600">سيتم إضافة مزارع جديدة قريباً</p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
                 {farms.map((farm) => (
                   <InnovativeFarmCard
                     key={farm.id}
@@ -436,6 +436,37 @@ export function ModernRoyalPlatform({
         isOpen={smartAssistantOpen}
         onClose={() => setSmartAssistantOpen(false)}
       />
+
+      {/* تنسيق متجاوب للأيقونات والمحتوى */}
+      <style>{`
+        @media (max-width: 768px) {
+          /* ضمان عدم تداخل المحتوى مع الأيقونات الجانبية */
+          main.container {
+            padding-left: 48px !important;
+          }
+        }
+
+        @media (max-width: 480px) {
+          /* تقليل المسافة على الشاشات الصغيرة جداً */
+          main.container {
+            padding-left: 40px !important;
+            padding-right: 8px !important;
+          }
+        }
+
+        /* ضمان عدم تداخل البطاقات */
+        .grid {
+          position: relative;
+          z-index: 10;
+        }
+
+        /* تحسين العرض على الأجهزة اللوحية */
+        @media (min-width: 640px) and (max-width: 1024px) {
+          main.container {
+            padding-left: 56px !important;
+          }
+        }
+      `}</style>
     </div>
   );
 }

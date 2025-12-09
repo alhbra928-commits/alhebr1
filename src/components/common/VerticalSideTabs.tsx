@@ -315,12 +315,12 @@ export function VerticalSideTabs({
 
   return (
     <>
-      <div className="fixed left-0 top-1/2 -translate-y-1/2 z-[999999] flex flex-col gap-3 pl-0">
+      <div className="fixed left-0 top-1/2 -translate-y-1/2 z-[999999] flex flex-col gap-3 pl-0 pointer-events-auto">
         {tabs.map((tab, index) => (
           <button
             key={tab.id}
             onClick={() => handleTabClick(tab.id)}
-            className="group relative w-[32px] h-[90px] bg-gradient-to-br from-emerald-600 to-emerald-700 hover:from-emerald-500 hover:to-emerald-600 rounded-l-2xl shadow-2xl transition-all duration-300 hover:w-[36px] border-2 border-amber-400 hover:border-amber-300 flex items-center justify-center overflow-hidden"
+            className="group relative w-[32px] h-[90px] sm:h-[95px] bg-gradient-to-br from-emerald-600 to-emerald-700 hover:from-emerald-500 hover:to-emerald-600 rounded-l-2xl shadow-2xl transition-all duration-300 hover:w-[36px] border-2 border-amber-400 hover:border-amber-300 flex items-center justify-center overflow-hidden active:scale-95 pointer-events-auto"
             style={{
               animation: `slideInLeft 0.5s ease-out ${index * 0.1}s both`
             }}
