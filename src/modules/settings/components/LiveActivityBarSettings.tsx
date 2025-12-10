@@ -3,7 +3,6 @@ import {
   Activity, Power, Zap, Settings, Plus, Trash2, Edit2, Save,
   AlertCircle, CheckCircle, TreePine, Calendar, UserPlus, Shield
 } from 'lucide-react';
-import { Card3D } from '../../../components/ui/Card3D';
 import { liveActivityBarService, ActivityBarSettings, FakeEvent } from '../../../services/liveActivityBarService';
 
 export function LiveActivityBarSettings() {
@@ -158,7 +157,7 @@ export function LiveActivityBarSettings() {
       )}
 
       {/* الإعدادات الأساسية */}
-      <Card3D>
+      <div className="bg-white rounded-2xl shadow-lg border border-gray-100">
         <div className="p-6">
           <div className="flex items-center gap-3 mb-6">
             <div className="p-3 rounded-xl bg-gradient-to-br from-emerald-500 to-green-600 text-white">
@@ -182,9 +181,9 @@ export function LiveActivityBarSettings() {
               </div>
               <button
                 onClick={() => handleUpdateSettings({ enabled: !settings.enabled })}
-                className={`relative inline-flex h-8 w-14 items-center rounded-full transition-colors ${
+                className={`relative inline-flex h-8 w-14 items-center rounded-full transition-colors cursor-pointer ${
                   settings.enabled ? 'bg-emerald-500' : 'bg-gray-300'
-                }`}
+                } ${saving ? 'opacity-50 cursor-not-allowed' : 'hover:opacity-90'}`}
                 disabled={saving}
               >
                 <span
@@ -210,11 +209,11 @@ export function LiveActivityBarSettings() {
                     key={mode.value}
                     onClick={() => handleUpdateSettings({ mode: mode.value as any })}
                     disabled={saving}
-                    className={`p-3 rounded-lg border-2 transition-all ${
+                    className={`p-3 rounded-lg border-2 transition-all cursor-pointer ${
                       settings.mode === mode.value
                         ? 'border-emerald-500 bg-emerald-50'
-                        : 'border-gray-200 hover:border-emerald-300'
-                    }`}
+                        : 'border-gray-200 hover:border-emerald-300 hover:bg-gray-50'
+                    } ${saving ? 'opacity-50 cursor-not-allowed' : ''}`}
                   >
                     <p className="font-semibold text-sm">{mode.label}</p>
                     <p className="text-xs text-gray-600">{mode.desc}</p>
@@ -263,7 +262,7 @@ export function LiveActivityBarSettings() {
                       type="checkbox"
                       checked={settings[key as keyof ActivityBarSettings] as boolean}
                       onChange={(e) => handleUpdateSettings({ [key]: e.target.checked })}
-                      className="w-4 h-4 text-emerald-600 rounded"
+                      className="w-4 h-4 text-emerald-600 rounded cursor-pointer"
                     />
                     <Icon className="h-4 w-4 text-emerald-600" />
                     <span className="text-sm">{label}</span>
@@ -273,10 +272,10 @@ export function LiveActivityBarSettings() {
             </div>
           </div>
         </div>
-      </Card3D>
+      </div>
 
       {/* إدارة الأحداث الوهمية */}
-      <Card3D>
+      <div className="bg-white rounded-2xl shadow-lg border border-gray-100">
         <div className="p-6">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
@@ -290,7 +289,7 @@ export function LiveActivityBarSettings() {
             </div>
             <button
               onClick={() => setShowAddEvent(!showAddEvent)}
-              className="flex items-center gap-2 px-4 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 transition-colors"
+              className="flex items-center gap-2 px-4 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 transition-colors cursor-pointer shadow-sm hover:shadow-md"
             >
               <Plus className="h-4 w-4" />
               إضافة حدث
@@ -307,7 +306,7 @@ export function LiveActivityBarSettings() {
                   <select
                     value={newEvent.event_type}
                     onChange={(e) => setNewEvent({ ...newEvent, event_type: e.target.value as any })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg cursor-pointer focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                   >
                     <option value="ownership">تملك</option>
                     <option value="booking">حجز</option>
@@ -321,7 +320,7 @@ export function LiveActivityBarSettings() {
                     type="text"
                     value={newEvent.message_ar}
                     onChange={(e) => setNewEvent({ ...newEvent, message_ar: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                     placeholder="مثال: 🎉 أحمد محمد قام بتملك 5 أشجار"
                   />
                 </div>
@@ -331,7 +330,7 @@ export function LiveActivityBarSettings() {
                     type="text"
                     value={newEvent.message_en}
                     onChange={(e) => setNewEvent({ ...newEvent, message_en: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                     placeholder="Example: 🎉 Ahmed Mohammed owned 5 trees"
                   />
                 </div>
@@ -339,14 +338,14 @@ export function LiveActivityBarSettings() {
                   <button
                     onClick={handleAddEvent}
                     disabled={saving}
-                    className="flex items-center gap-2 px-4 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 transition-colors disabled:opacity-50"
+                    className="flex items-center gap-2 px-4 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed shadow-sm hover:shadow-md"
                   >
                     <Save className="h-4 w-4" />
                     حفظ
                   </button>
                   <button
                     onClick={() => setShowAddEvent(false)}
-                    className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+                    className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors cursor-pointer shadow-sm hover:shadow-md"
                   >
                     إلغاء
                   </button>
@@ -383,15 +382,15 @@ export function LiveActivityBarSettings() {
                   <div className="flex items-center gap-2 ml-4">
                     <button
                       onClick={() => handleUpdateEvent(event.id, { enabled: !event.enabled })}
-                      className={`p-2 rounded-lg transition-colors ${
-                        event.enabled ? 'bg-emerald-100 text-emerald-600' : 'bg-gray-100 text-gray-400'
+                      className={`p-2 rounded-lg transition-colors cursor-pointer hover:shadow-md ${
+                        event.enabled ? 'bg-emerald-100 text-emerald-600 hover:bg-emerald-200' : 'bg-gray-100 text-gray-400 hover:bg-gray-200'
                       }`}
                     >
                       <Power className="h-4 w-4" />
                     </button>
                     <button
                       onClick={() => handleDeleteEvent(event.id)}
-                      className="p-2 rounded-lg bg-red-100 text-red-600 hover:bg-red-200 transition-colors"
+                      className="p-2 rounded-lg bg-red-100 text-red-600 hover:bg-red-200 transition-colors cursor-pointer hover:shadow-md"
                     >
                       <Trash2 className="h-4 w-4" />
                     </button>
@@ -401,7 +400,7 @@ export function LiveActivityBarSettings() {
             ))}
           </div>
         </div>
-      </Card3D>
+      </div>
     </div>
   );
 }
