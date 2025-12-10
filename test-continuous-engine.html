@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>اختبار محرك التمرير المستمر</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #1E4620 0%, #2C5F2D 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
+      color: white;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 1.2rem;
+      opacity: 0.9;
+      margin-bottom: 40px;
+    }
+
+    .ticker-wrapper {
+      background: linear-gradient(135deg, #2C5F2D 0%, #1E4620 50%, #2C5F2D 100%);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      margin-bottom: 30px;
+      border: 2px solid rgba(212, 175, 55, 0.3);
+    }
+
+    .ticker-container {
+      height: 80px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .ticker-track {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      height: 100%;
+      will-change: transform;
+      padding: 0 20px;
+    }
+
+    .ticker-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      white-space: nowrap;
+      padding: 12px 20px;
+      background: linear-gradient(135deg, rgba(212, 175, 55, 0.15), rgba(196, 148, 31, 0.1));
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      border-radius: 12px;
+      flex-shrink: 0;
+    }
+
+    .ticker-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, rgba(212, 175, 55, 0.3), rgba(196, 148, 31, 0.2));
+      border: 1px solid rgba(212, 175, 55, 0.4);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+
+    .ticker-text {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #F5F5DC;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .controls {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 30px;
+      margin-bottom: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .control-group {
+      margin-bottom: 20px;
+    }
+
+    .control-group:last-child {
+      margin-bottom: 0;
+    }
+
+    .control-label {
+      display: block;
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      padding: 12px 24px;
+      background: linear-gradient(135deg, rgba(212, 175, 55, 0.3), rgba(196, 148, 31, 0.2));
+      border: 2px solid rgba(212, 175, 55, 0.5);
+      border-radius: 12px;
+      color: white;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    button:hover {
+      background: linear-gradient(135deg, rgba(212, 175, 55, 0.5), rgba(196, 148, 31, 0.3));
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(212, 175, 55, 0.4);
+    }
+
+    button.active {
+      background: linear-gradient(135deg, #D4AF37, #C4941F);
+      border-color: #D4AF37;
+    }
+
+    .stats {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 20px;
+      padding: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+
+    .stat-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .stat-label {
+      font-weight: 600;
+      opacity: 0.9;
+    }
+
+    .stat-value {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #D4AF37;
+      font-family: 'Courier New', monospace;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      background: linear-gradient(135deg, #10B981, #059669);
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎯 اختبار محرك التمرير المستمر</h1>
+    <p class="subtitle">Continuous Scroll Engine - Live Demo</p>
+
+    <div class="ticker-wrapper">
+      <div class="ticker-container" id="tickerContainer">
+        <div class="ticker-track" id="tickerTrack"></div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <div class="control-group">
+        <span class="control-label">التحكم في المحرك:</span>
+        <div class="button-group">
+          <button id="playBtn" class="active">▶️ تشغيل</button>
+          <button id="pauseBtn">⏸️ إيقاف مؤقت</button>
+          <button id="resetBtn">🔄 إعادة تعيين</button>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <span class="control-label">سرعة الحركة:</span>
+        <div class="button-group">
+          <button id="slowBtn">🐌 بطيء (30 px/s)</button>
+          <button id="mediumBtn" class="active">🚶 متوسط (50 px/s)</button>
+          <button id="fastBtn">🏃 سريع (80 px/s)</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats">
+      <h2 style="margin-bottom: 20px; font-size: 1.5rem;">📊 إحصائيات الأداء المباشرة</h2>
+
+      <div class="stat-row">
+        <span class="stat-label">حالة المحرك:</span>
+        <span class="stat-value" id="engineStatus">
+          <span class="badge">🟢 يعمل</span>
+        </span>
+      </div>
+
+      <div class="stat-row">
+        <span class="stat-label">السرعة الحالية:</span>
+        <span class="stat-value" id="currentSpeed">50 بكسل/ثانية</span>
+      </div>
+
+      <div class="stat-row">
+        <span class="stat-label">الموقع الحالي:</span>
+        <span class="stat-value" id="currentPosition">0 بكسل</span>
+      </div>
+
+      <div class="stat-row">
+        <span class="stat-label">FPS (الفريمات في الثانية):</span>
+        <span class="stat-value" id="fps">60 fps</span>
+      </div>
+
+      <div class="stat-row">
+        <span class="stat-label">إجمالي المسافة المقطوعة:</span>
+        <span class="stat-value" id="totalDistance">0 بكسل</span>
+      </div>
+
+      <div class="stat-row">
+        <span class="stat-label">عدد مرات إعادة التعيين:</span>
+        <span class="stat-value" id="resetCount">0 مرة</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const messages = [
+      { text: '🎯 مرحباً بكم في محرك التمرير المستمر', icon: '✨' },
+      { text: '📈 تم حجز 15 شجرة زيتون في مزرعة الخالدية', icon: '🛒' },
+      { text: '🏆 تم إصدار شهادة تملك جديدة لمستثمر', icon: '🏅' },
+      { text: '👤 مستثمر جديد انضم إلى المنصة', icon: '🎉' },
+      { text: '🌲 مزرعة جديدة متاحة للاستثمار الآن', icon: '🌳' },
+      { text: '💰 عملية دفع تمت بنجاح', icon: '💵' },
+      { text: '📊 تحديث: تم إضافة 50 شجرة جديدة', icon: '📈' },
+      { text: '🚀 النظام يعمل بكفاءة عالية', icon: '⚡' },
+      { text: '✅ لا توجد فجوات في الحركة', icon: '🎯' }
+    ];
+
+    const track = document.getElementById('tickerTrack');
+    let animationId = null;
+    let position = 0;
+    let lastTime = 0;
+    let speed = 50;
+    let isPlaying = true;
+    let totalDistance = 0;
+    let resetCount = 0;
+    let frameCount = 0;
+    let lastFpsTime = performance.now();
+
+    // إنشاء المحتوى المكرر
+    function createContent() {
+      track.innerHTML = '';
+      const duplicated = [...messages, ...messages];
+
+      duplicated.forEach((msg, index) => {
+        const item = document.createElement('div');
+        item.className = 'ticker-item';
+        item.innerHTML = `
+          <div class="ticker-icon">${msg.icon}</div>
+          <div class="ticker-text">${msg.text}</div>
+        `;
+        track.appendChild(item);
+      });
+    }
+
+    // المحرك
+    function animate(currentTime) {
+      if (!isPlaying) {
+        animationId = requestAnimationFrame(animate);
+        return;
+      }
+
+      if (lastTime === 0) {
+        lastTime = currentTime;
+      }
+
+      const deltaTime = (currentTime - lastTime) / 1000;
+      lastTime = currentTime;
+
+      position += speed * deltaTime;
+      totalDistance += speed * deltaTime;
+
+      const trackWidth = track.offsetWidth / 2;
+
+      if (position >= trackWidth) {
+        position = position - trackWidth;
+        resetCount++;
+      }
+
+      track.style.transform = `translateX(-${position}px)`;
+
+      // حساب FPS
+      frameCount++;
+      if (currentTime - lastFpsTime >= 1000) {
+        const fps = Math.round(frameCount * 1000 / (currentTime - lastFpsTime));
+        document.getElementById('fps').textContent = fps + ' fps';
+        frameCount = 0;
+        lastFpsTime = currentTime;
+      }
+
+      // تحديث الإحصائيات
+      document.getElementById('currentPosition').textContent = Math.round(position) + ' بكسل';
+      document.getElementById('totalDistance').textContent = Math.round(totalDistance).toLocaleString() + ' بكسل';
+      document.getElementById('resetCount').textContent = resetCount + ' مرة';
+
+      animationId = requestAnimationFrame(animate);
+    }
+
+    // التحكم في التشغيل
+    document.getElementById('playBtn').addEventListener('click', function() {
+      isPlaying = true;
+      lastTime = 0;
+      document.getElementById('engineStatus').innerHTML = '<span class="badge">🟢 يعمل</span>';
+      this.classList.add('active');
+      document.getElementById('pauseBtn').classList.remove('active');
+    });
+
+    document.getElementById('pauseBtn').addEventListener('click', function() {
+      isPlaying = false;
+      document.getElementById('engineStatus').innerHTML = '<span class="badge" style="background: linear-gradient(135deg, #EF4444, #DC2626)">🔴 متوقف</span>';
+      this.classList.add('active');
+      document.getElementById('playBtn').classList.remove('active');
+    });
+
+    document.getElementById('resetBtn').addEventListener('click', function() {
+      position = 0;
+      lastTime = 0;
+      totalDistance = 0;
+      resetCount = 0;
+      track.style.transform = 'translateX(0)';
+      document.getElementById('currentPosition').textContent = '0 بكسل';
+      document.getElementById('totalDistance').textContent = '0 بكسل';
+      document.getElementById('resetCount').textContent = '0 مرة';
+    });
+
+    // السرعات
+    document.getElementById('slowBtn').addEventListener('click', function() {
+      speed = 30;
+      document.getElementById('currentSpeed').textContent = '30 بكسل/ثانية';
+      document.querySelectorAll('.button-group button').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+    });
+
+    document.getElementById('mediumBtn').addEventListener('click', function() {
+      speed = 50;
+      document.getElementById('currentSpeed').textContent = '50 بكسل/ثانية';
+      document.querySelectorAll('#mediumBtn').forEach(b => {
+        b.parentElement.querySelectorAll('button').forEach(btn => btn.classList.remove('active'));
+      });
+      this.classList.add('active');
+    });
+
+    document.getElementById('fastBtn').addEventListener('click', function() {
+      speed = 80;
+      document.getElementById('currentSpeed').textContent = '80 بكسل/ثانية';
+      document.querySelectorAll('.button-group button').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+    });
+
+    // البدء
+    createContent();
+    requestAnimationFrame(animate);
+  </script>
+</body>
+</html>
