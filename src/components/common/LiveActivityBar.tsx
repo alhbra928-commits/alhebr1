@@ -112,22 +112,37 @@ export function LiveActivityBar() {
 
   const duplicatedActivities = [...activities, ...activities];
 
+  // 🔧 فصل الشريط كطبقة مستقلة تماماً - Standalone Overlay Layer
   return (
     <>
       <style>{`
+        /* 🎯 STANDALONE WRAPPER LAYER - خارج Flow الصفحة تماماً */
+        .live-activity-bar-wrapper {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100vw;
+          height: 48px;
+          z-index: 10000;
+          pointer-events: none;
+        }
+
+        /* 🎨 MAIN ACTIVITY BAR - الشريط الرئيسي */
         .live-activity-bar {
           position: fixed;
           top: 0;
           left: 0;
           right: 0;
+          width: 100%;
           overflow: hidden;
           background: linear-gradient(135deg, #2C5F2D 0%, #1E4620 50%, #2C5F2D 100%);
           box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
           border-bottom: 2px solid rgba(212, 175, 55, 0.3);
           height: 48px;
-          z-index: 9999;
+          z-index: 10000;
           -webkit-backdrop-filter: blur(10px);
           backdrop-filter: blur(10px);
+          pointer-events: auto;
         }
 
         .live-activity-bar-inner {
@@ -146,16 +161,21 @@ export function LiveActivityBar() {
           will-change: transform;
         }
 
-        /* iPhone specific fixes - نفس طريقة الإصلاح للايقونات الجانبية */
+        /* 🍎 iPhone specific fixes - نفس طريقة الإصلاح للايقونات الجانبية */
         @supports (-webkit-touch-callout: none) {
-          .live-activity-bar,
-          .live-activity-bar-inner,
-          .live-activity-bar-track {
+          .live-activity-bar-wrapper,
+          .live-activity-bar {
             position: fixed;
             -webkit-transform: translate3d(0, 0, 0);
             transform: translate3d(0, 0, 0);
             -webkit-backface-visibility: hidden;
             backface-visibility: hidden;
+            will-change: transform;
+          }
+
+          .live-activity-bar-wrapper {
+            top: env(safe-area-inset-top, 0px);
+            height: calc(48px + env(safe-area-inset-top, 0px));
           }
 
           .live-activity-bar {
@@ -164,102 +184,105 @@ export function LiveActivityBar() {
             height: calc(48px + env(safe-area-inset-top, 0px));
           }
 
-          .live-activity-bar-inner {
-            position: relative;
-          }
-
+          .live-activity-bar-inner,
           .live-activity-bar-track {
             position: relative;
+            -webkit-transform: translate3d(0, 0, 0);
+            transform: translate3d(0, 0, 0);
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
           }
         }
 
-        /* Additional iPhone Safari fixes */
+        /* 📱 Additional iPhone Safari overscroll/bounce fixes */
         @media only screen
           and (max-width: 768px)
           and (-webkit-min-device-pixel-ratio: 2) {
-          .live-activity-bar,
-          .live-activity-bar-inner,
-          .live-activity-bar-track {
-            position: fixed;
+
+          .live-activity-bar-wrapper {
+            position: fixed !important;
             will-change: transform;
             -webkit-overflow-scrolling: touch;
           }
 
           .live-activity-bar {
             position: fixed !important;
+            will-change: transform;
+            -webkit-overflow-scrolling: touch;
           }
 
-          .live-activity-bar-inner {
-            position: relative !important;
-          }
-
+          .live-activity-bar-inner,
           .live-activity-bar-track {
             position: relative !important;
           }
 
+          /* منع Safari من إعادة حساب الموضع عند التمرير */
           body {
             -webkit-overflow-scrolling: touch;
           }
         }
       `}</style>
 
-      <div
-        ref={containerRef}
-        className="live-activity-bar"
-      >
-        <div className="live-activity-bar-inner">
-          <div
-            ref={trackRef}
-            className="live-activity-bar-track"
-          >
-            {duplicatedActivities.map((activity, index) => {
-              const IconComponent = iconMap[activity.icon] || Sparkles;
-              return (
-                <div
-                  key={`activity-${index}`}
-                  className="flex items-center gap-3 whitespace-nowrap px-4"
-                  style={{
-                    minWidth: 'max-content',
-                  }}
-                >
-                  <div
-                    className="flex-shrink-0 p-2 rounded-lg"
-                    style={{
-                      background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(196, 148, 31, 0.15) 100%)',
-                      border: '1px solid rgba(212, 175, 55, 0.3)',
-                    }}
-                  >
-                    <IconComponent className="h-5 w-5" style={{ color: '#D4AF37' }} />
-                  </div>
-                  <span
-                    className="font-semibold text-base"
-                    style={{
-                      color: '#F5F5DC',
-                      textShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
-                      letterSpacing: '0.3px',
-                    }}
-                  >
-                    {activity.message}
-                  </span>
-                  <div
-                    className="w-1.5 h-1.5 rounded-full mx-3 flex-shrink-0"
-                    style={{
-                      background: 'linear-gradient(135deg, #D4AF37 0%, #C4941F 100%)',
-                      boxShadow: '0 0 8px rgba(212, 175, 55, 0.6)',
-                    }}
-                  />
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
+      {/* 🎯 Standalone Wrapper - خارج Flow الصفحة تماماً */}
+      <div className="live-activity-bar-wrapper">
         <div
-          className="absolute bottom-0 left-0 right-0 h-[2px]"
-          style={{
-            background: 'linear-gradient(90deg, transparent 0%, rgba(212, 175, 55, 0.5) 50%, transparent 100%)',
-          }}
-        />
+          ref={containerRef}
+          className="live-activity-bar"
+        >
+          <div className="live-activity-bar-inner">
+            <div
+              ref={trackRef}
+              className="live-activity-bar-track"
+            >
+              {duplicatedActivities.map((activity, index) => {
+                const IconComponent = iconMap[activity.icon] || Sparkles;
+                return (
+                  <div
+                    key={`activity-${index}`}
+                    className="flex items-center gap-3 whitespace-nowrap px-4"
+                    style={{
+                      minWidth: 'max-content',
+                    }}
+                  >
+                    <div
+                      className="flex-shrink-0 p-2 rounded-lg"
+                      style={{
+                        background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(196, 148, 31, 0.15) 100%)',
+                        border: '1px solid rgba(212, 175, 55, 0.3)',
+                      }}
+                    >
+                      <IconComponent className="h-5 w-5" style={{ color: '#D4AF37' }} />
+                    </div>
+                    <span
+                      className="font-semibold text-base"
+                      style={{
+                        color: '#F5F5DC',
+                        textShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
+                        letterSpacing: '0.3px',
+                      }}
+                    >
+                      {activity.message}
+                    </span>
+                    <div
+                      className="w-1.5 h-1.5 rounded-full mx-3 flex-shrink-0"
+                      style={{
+                        background: 'linear-gradient(135deg, #D4AF37 0%, #C4941F 100%)',
+                        boxShadow: '0 0 8px rgba(212, 175, 55, 0.6)',
+                      }}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          <div
+            className="absolute bottom-0 left-0 right-0 h-[2px]"
+            style={{
+              background: 'linear-gradient(90deg, transparent 0%, rgba(212, 175, 55, 0.5) 50%, transparent 100%)',
+            }}
+          />
+        </div>
       </div>
     </>
   );
