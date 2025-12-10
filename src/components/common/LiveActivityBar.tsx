@@ -54,27 +54,34 @@ export function LiveActivityBar() {
   }
 
   const speedDuration = {
-    slow: '60s',
-    medium: '40s',
-    fast: '25s'
+    slow: '90s',
+    medium: '60s',
+    fast: '40s'
   }[scrollSpeed];
 
-  const duplicatedActivities = [...activities, ...activities];
+  // كرر المحتوى 5 مرات لضمان ملء أي شاشة
+  const repeatedActivities = [
+    ...activities,
+    ...activities,
+    ...activities,
+    ...activities,
+    ...activities
+  ];
 
   return (
     <>
       <style>{`
-        @keyframes scroll-infinite {
-          from {
-            transform: translateX(0);
+        @keyframes seamless-ticker {
+          0% {
+            transform: translate3d(0, 0, 0);
           }
-          to {
-            transform: translateX(-50%);
+          100% {
+            transform: translate3d(-20%, 0, 0);
           }
         }
 
-        .scroll-track {
-          animation: scroll-infinite ${speedDuration} linear infinite;
+        .ticker-track {
+          animation: seamless-ticker ${speedDuration} linear infinite;
           will-change: transform;
         }
       `}</style>
@@ -93,17 +100,18 @@ export function LiveActivityBar() {
       >
         <div className="h-full flex items-center">
           <div
-            className="scroll-track flex items-center gap-8"
+            className="ticker-track flex items-center gap-6"
             style={{
               minWidth: 'max-content',
+              paddingRight: '2rem',
             }}
           >
-            {duplicatedActivities.map((activity, index) => {
+            {repeatedActivities.map((activity, index) => {
               const IconComponent = iconMap[activity.icon] || Sparkles;
               return (
                 <div
                   key={`activity-${index}`}
-                  className="flex items-center gap-3 whitespace-nowrap px-6"
+                  className="flex items-center gap-3 whitespace-nowrap px-4"
                   style={{
                     minWidth: 'max-content',
                   }}
