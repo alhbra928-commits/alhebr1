@@ -81,9 +81,10 @@ class LiveActivityBarService {
       .from('live_activity_bar_settings')
       .insert(defaultSettings)
       .select()
-      .single();
+      .maybeSingle();
 
     if (error) throw error;
+    if (!data) throw new Error('Failed to create default settings');
     this.currentSettings = data as ActivityBarSettings;
     return data as ActivityBarSettings;
   }
@@ -98,9 +99,10 @@ class LiveActivityBarService {
         .update(updates)
         .eq('id', settings.id)
         .select()
-        .single();
+        .maybeSingle();
 
       if (error) throw error;
+      if (!data) throw new Error('Failed to update settings');
 
       this.currentSettings = data as ActivityBarSettings;
       this.notifySettingsListeners(data as ActivityBarSettings);
@@ -141,9 +143,10 @@ class LiveActivityBarService {
         .from('live_activity_fake_events')
         .insert(event)
         .select()
-        .single();
+        .maybeSingle();
 
       if (error) throw error;
+      if (!data) throw new Error('Failed to add fake event');
       return data as FakeEvent;
     } catch (error) {
       console.error('Error adding fake event:', error);
@@ -159,9 +162,10 @@ class LiveActivityBarService {
         .update(updates)
         .eq('id', id)
         .select()
-        .single();
+        .maybeSingle();
 
       if (error) throw error;
+      if (!data) throw new Error('Failed to update fake event');
       return data as FakeEvent;
     } catch (error) {
       console.error('Error updating fake event:', error);
