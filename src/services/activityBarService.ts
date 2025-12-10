@@ -135,17 +135,17 @@ export class ActivityBarService {
 
     try {
       if (settings.show_reservations) {
-        const { data: reservations } = await supabase
+        const { data: reservations, error } = await supabase
           .from('reservations')
-          .select('id, customer_name, reserved_trees, created_at')
+          .select('id, created_at')
           .order('created_at', { ascending: false })
-          .limit(5);
+          .limit(3);
 
-        if (reservations) {
-          reservations.forEach(res => {
+        if (!error && reservations) {
+          reservations.forEach((res, idx) => {
             activities.push({
               id: res.id,
-              message_ar: `تم حجز ${res.reserved_trees} شجرة بواسطة ${res.customer_name}`,
+              message_ar: `تم حجز أشجار جديدة في المنصة`,
               icon: 'ShoppingCart',
               category: 'reservation'
             });
@@ -153,38 +153,18 @@ export class ActivityBarService {
         }
       }
 
-      if (settings.show_investors) {
-        const { data: investors } = await supabase
-          .from('investors')
-          .select('id, investor_name_ar, created_at')
-          .order('created_at', { ascending: false })
-          .limit(3);
-
-        if (investors) {
-          investors.forEach(inv => {
-            activities.push({
-              id: inv.id,
-              message_ar: `مستثمر جديد: ${inv.investor_name_ar} انضم إلى المنصة`,
-              icon: 'UserPlus',
-              category: 'investor'
-            });
-          });
-        }
-      }
-
       if (settings.show_farms) {
-        const { data: farms } = await supabase
+        const { data: farms, error } = await supabase
           .from('farms')
-          .select('id, farm_name_ar, created_at')
+          .select('id, farm_name_ar')
           .eq('status', 'active')
-          .order('created_at', { ascending: false })
-          .limit(3);
+          .limit(2);
 
-        if (farms) {
+        if (!error && farms) {
           farms.forEach(farm => {
             activities.push({
               id: farm.id,
-              message_ar: `مزرعة جديدة متاحة للاستثمار: ${farm.farm_name_ar}`,
+              message_ar: `مزرعة ${farm.farm_name_ar} متاحة للاستثمار`,
               icon: 'TreePine',
               category: 'farm'
             });
@@ -193,17 +173,17 @@ export class ActivityBarService {
       }
 
       if (settings.show_ownership) {
-        const { data: docs } = await supabase
+        const { data: docs, error } = await supabase
           .from('documentation')
-          .select('id, investor_name_ar, reserved_trees, created_at')
+          .select('id, created_at')
           .order('created_at', { ascending: false })
-          .limit(4);
+          .limit(2);
 
-        if (docs) {
+        if (!error && docs) {
           docs.forEach(doc => {
             activities.push({
               id: doc.id,
-              message_ar: `تم إصدار شهادة تملك لـ ${doc.investor_name_ar} (${doc.reserved_trees} شجرة)`,
+              message_ar: `تم إصدار شهادة تملك جديدة`,
               icon: 'Award',
               category: 'ownership'
             });

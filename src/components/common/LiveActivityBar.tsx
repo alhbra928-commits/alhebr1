@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import {
   TrendingUp, UserPlus, ShoppingCart, Award, TreePine,
   Sparkles, DollarSign, User
@@ -25,8 +25,6 @@ export function LiveActivityBar() {
   const [activities, setActivities] = useState<Activity[]>([]);
   const [isEnabled, setIsEnabled] = useState(true);
   const [scrollSpeed, setScrollSpeed] = useState<'slow' | 'medium' | 'fast'>('medium');
-  const [displayDuration, setDisplayDuration] = useState(5);
-  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     loadActivities();
@@ -40,7 +38,6 @@ export function LiveActivityBar() {
       if (settings) {
         setIsEnabled(settings.is_enabled);
         setScrollSpeed(settings.scroll_speed);
-        setDisplayDuration(settings.display_duration);
       }
 
       const data = await ActivityBarService.getActivitiesToDisplay();
@@ -56,75 +53,56 @@ export function LiveActivityBar() {
     return null;
   }
 
-  const speedClass = {
-    slow: 'animate-scroll-slow',
-    medium: 'animate-scroll-medium',
-    fast: 'animate-scroll-fast'
+  const speedDuration = {
+    slow: '80s',
+    medium: '50s',
+    fast: '30s'
   }[scrollSpeed];
 
-  const duplicatedActivities = [...activities, ...activities, ...activities];
+  const totalActivities = [...activities, ...activities, ...activities, ...activities];
 
   return (
     <>
       <style>{`
-        @keyframes scroll-continuous {
+        @keyframes seamless-scroll {
           0% {
             transform: translateX(0);
           }
           100% {
-            transform: translateX(-33.333%);
+            transform: translateX(-25%);
           }
         }
 
-        .animate-scroll-slow {
-          animation: scroll-continuous 60s linear infinite;
+        .activity-scroll-container {
+          animation: seamless-scroll ${speedDuration} linear infinite;
+          will-change: transform;
         }
 
-        .animate-scroll-medium {
-          animation: scroll-continuous 40s linear infinite;
-        }
-
-        .animate-scroll-fast {
-          animation: scroll-continuous 25s linear infinite;
-        }
-
-        @media (max-width: 768px) {
-          .animate-scroll-slow {
-            animation: scroll-continuous 45s linear infinite;
-          }
-
-          .animate-scroll-medium {
-            animation: scroll-continuous 30s linear infinite;
-          }
-
-          .animate-scroll-fast {
-            animation: scroll-continuous 20s linear infinite;
-          }
+        .activity-scroll-container:hover {
+          animation-play-state: running;
         }
       `}</style>
 
       <div
-        className="fixed top-0 left-0 right-0 z-[9999] overflow-hidden"
+        className="fixed top-0 left-0 right-0 overflow-hidden"
         style={{
           background: 'linear-gradient(135deg, #2C5F2D 0%, #1E4620 50%, #2C5F2D 100%)',
           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
           borderBottom: '2px solid rgba(212, 175, 55, 0.3)',
           height: '48px',
+          zIndex: 9999,
           WebkitBackdropFilter: 'blur(10px)',
           backdropFilter: 'blur(10px)',
         }}
       >
         <div className="h-full flex items-center">
           <div
-            ref={containerRef}
-            className={`flex items-center gap-8 ${speedClass}`}
+            className="activity-scroll-container flex items-center gap-8"
             style={{
               minWidth: 'max-content',
-              paddingLeft: '100vw',
-              willChange: 'transform',
             }}
           >
-            {duplicatedActivities.map((activity, index) => {
+            {totalActivities.map((activity, index) => {
               const IconComponent = iconMap[activity.icon] || Sparkles;
               return (
                 <div
@@ -154,7 +132,7 @@ export function LiveActivityBar() {
                     {activity.message}
                   </span>
                   <div
-                    className="w-1 h-1 rounded-full mx-2 flex-shrink-0"
+                    className="w-1.5 h-1.5 rounded-full mx-3 flex-shrink-0"
                     style={{
                       background: 'linear-gradient(135deg, #D4AF37 0%, #C4941F 100%)',
                       boxShadow: '0 0 8px rgba(212, 175, 55, 0.6)',
