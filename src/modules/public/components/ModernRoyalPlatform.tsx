@@ -298,9 +298,6 @@ export function ModernRoyalPlatform({
       {/* Glass Overlay - Simple and Clean */}
       <div className="fixed inset-0 bg-white/30 backdrop-blur-[2px] pointer-events-none"></div>
 
-      {/* Live Activity Bar - الشريط الجديد المتطور */}
-      <LiveActivityBar />
-
       {/* Content */}
       <div className="relative z-10" style={{ flex: '1 0 auto', paddingTop: '104px', paddingBottom: '90px' }}>
         {/* Smart Floating Button - يُفتح من الشريط الجانبي فقط */}
@@ -356,6 +353,11 @@ export function ModernRoyalPlatform({
         </main>
 
       </div>
+
+      {/* 🎯 ROOT LEVEL COMPONENTS - خارج Flow الصفحة تماماً */}
+
+      {/* Live Activity Bar - Standalone Layer مثل الأيقونات الجانبية */}
+      <LiveActivityBar />
 
       {/* Admin Crown Button - Green */}
       <AdminCrownButton
