@@ -113,76 +113,154 @@ export function LiveActivityBar() {
   const duplicatedActivities = [...activities, ...activities];
 
   return (
-    <div
-      ref={containerRef}
-      className="fixed top-0 left-0 right-0 overflow-hidden"
-      style={{
-        background: 'linear-gradient(135deg, #2C5F2D 0%, #1E4620 50%, #2C5F2D 100%)',
-        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
-        borderBottom: '2px solid rgba(212, 175, 55, 0.3)',
-        height: '48px',
-        zIndex: 9999,
-        WebkitBackdropFilter: 'blur(10px)',
-        backdropFilter: 'blur(10px)',
-      }}
-    >
-      <div className="h-full flex items-center">
-        <div
-          ref={trackRef}
-          className="flex items-center gap-6"
-          style={{
-            minWidth: 'max-content',
-            willChange: 'transform',
-          }}
-        >
-          {duplicatedActivities.map((activity, index) => {
-            const IconComponent = iconMap[activity.icon] || Sparkles;
-            return (
-              <div
-                key={`activity-${index}`}
-                className="flex items-center gap-3 whitespace-nowrap px-4"
-                style={{
-                  minWidth: 'max-content',
-                }}
-              >
-                <div
-                  className="flex-shrink-0 p-2 rounded-lg"
-                  style={{
-                    background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(196, 148, 31, 0.15) 100%)',
-                    border: '1px solid rgba(212, 175, 55, 0.3)',
-                  }}
-                >
-                  <IconComponent className="h-5 w-5" style={{ color: '#D4AF37' }} />
-                </div>
-                <span
-                  className="font-semibold text-base"
-                  style={{
-                    color: '#F5F5DC',
-                    textShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
-                    letterSpacing: '0.3px',
-                  }}
-                >
-                  {activity.message}
-                </span>
-                <div
-                  className="w-1.5 h-1.5 rounded-full mx-3 flex-shrink-0"
-                  style={{
-                    background: 'linear-gradient(135deg, #D4AF37 0%, #C4941F 100%)',
-                    boxShadow: '0 0 8px rgba(212, 175, 55, 0.6)',
-                  }}
-                />
-              </div>
-            );
-          })}
-        </div>
-      </div>
+    <>
+      <style>{`
+        .live-activity-bar {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          overflow: hidden;
+          background: linear-gradient(135deg, #2C5F2D 0%, #1E4620 50%, #2C5F2D 100%);
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+          border-bottom: 2px solid rgba(212, 175, 55, 0.3);
+          height: 48px;
+          z-index: 9999;
+          -webkit-backdrop-filter: blur(10px);
+          backdrop-filter: blur(10px);
+        }
+
+        .live-activity-bar-inner {
+          height: 100%;
+          display: flex;
+          align-items: center;
+          position: relative;
+          overflow: hidden;
+        }
+
+        .live-activity-bar-track {
+          display: flex;
+          align-items: center;
+          gap: 24px;
+          min-width: max-content;
+          will-change: transform;
+        }
+
+        /* iPhone specific fixes - نفس طريقة الإصلاح للايقونات الجانبية */
+        @supports (-webkit-touch-callout: none) {
+          .live-activity-bar,
+          .live-activity-bar-inner,
+          .live-activity-bar-track {
+            position: fixed;
+            -webkit-transform: translate3d(0, 0, 0);
+            transform: translate3d(0, 0, 0);
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+          }
+
+          .live-activity-bar {
+            top: env(safe-area-inset-top, 0px);
+            padding-top: env(safe-area-inset-top, 0px);
+            height: calc(48px + env(safe-area-inset-top, 0px));
+          }
+
+          .live-activity-bar-inner {
+            position: relative;
+          }
+
+          .live-activity-bar-track {
+            position: relative;
+          }
+        }
+
+        /* Additional iPhone Safari fixes */
+        @media only screen
+          and (max-width: 768px)
+          and (-webkit-min-device-pixel-ratio: 2) {
+          .live-activity-bar,
+          .live-activity-bar-inner,
+          .live-activity-bar-track {
+            position: fixed;
+            will-change: transform;
+            -webkit-overflow-scrolling: touch;
+          }
+
+          .live-activity-bar {
+            position: fixed !important;
+          }
+
+          .live-activity-bar-inner {
+            position: relative !important;
+          }
+
+          .live-activity-bar-track {
+            position: relative !important;
+          }
+
+          body {
+            -webkit-overflow-scrolling: touch;
+          }
+        }
+      `}</style>
 
       <div
-        className="absolute bottom-0 left-0 right-0 h-[2px]"
-        style={{
-          background: 'linear-gradient(90deg, transparent 0%, rgba(212, 175, 55, 0.5) 50%, transparent 100%)',
-        }}
-      />
-    </div>
+        ref={containerRef}
+        className="live-activity-bar"
+      >
+        <div className="live-activity-bar-inner">
+          <div
+            ref={trackRef}
+            className="live-activity-bar-track"
+          >
+            {duplicatedActivities.map((activity, index) => {
+              const IconComponent = iconMap[activity.icon] || Sparkles;
+              return (
+                <div
+                  key={`activity-${index}`}
+                  className="flex items-center gap-3 whitespace-nowrap px-4"
+                  style={{
+                    minWidth: 'max-content',
+                  }}
+                >
+                  <div
+                    className="flex-shrink-0 p-2 rounded-lg"
+                    style={{
+                      background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(196, 148, 31, 0.15) 100%)',
+                      border: '1px solid rgba(212, 175, 55, 0.3)',
+                    }}
+                  >
+                    <IconComponent className="h-5 w-5" style={{ color: '#D4AF37' }} />
+                  </div>
+                  <span
+                    className="font-semibold text-base"
+                    style={{
+                      color: '#F5F5DC',
+                      textShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
+                      letterSpacing: '0.3px',
+                    }}
+                  >
+                    {activity.message}
+                  </span>
+                  <div
+                    className="w-1.5 h-1.5 rounded-full mx-3 flex-shrink-0"
+                    style={{
+                      background: 'linear-gradient(135deg, #D4AF37 0%, #C4941F 100%)',
+                      boxShadow: '0 0 8px rgba(212, 175, 55, 0.6)',
+                    }}
+                  />
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        <div
+          className="absolute bottom-0 left-0 right-0 h-[2px]"
+          style={{
+            background: 'linear-gradient(90deg, transparent 0%, rgba(212, 175, 55, 0.5) 50%, transparent 100%)',
+          }}
+        />
+      </div>
+    </>
   );
 }
