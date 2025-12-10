@@ -274,33 +274,39 @@ class LiveActivityBarService {
     const settings = await this.getSettings();
     if (!settings.enabled || settings.mode === 'real') return;
 
-    // توليد حدث كل 5-10 ثوان
-    const interval = 5000 + Math.random() * 5000;
-
-    this.fakeEventInterval = setInterval(async () => {
-      const event = await this.generateFakeEvent();
-      if (event) {
-        const currentEvents = await this.getActiveEvents();
-        this.notifyEventListeners([event, ...currentEvents.slice(0, 9)]);
-      }
-    }, interval);
-
-    // توليد الأحداث الأولية
-    const initialEvents: ActivityEvent[] = [];
+    // جلب جميع الأحداث الوهمية المفعلة
     const fakeEvents = await this.getFakeEvents();
 
-    for (let i = 0; i < Math.min(5, fakeEvents.length); i++) {
-      const randomEvent = fakeEvents[Math.floor(Math.random() * fakeEvents.length)];
-      initialEvents.push({
-        id: `fake-init-${i}`,
-        message: randomEvent.message_ar,
-        icon: randomEvent.icon,
-        timestamp: new Date(Date.now() - i * 60000),
-        type: randomEvent.event_type
-      });
-    }
+    if (fakeEvents.length === 0) return;
 
+    // توليد قائمة من الأحداث للعرض المستمر
+    const generateEventsList = () => {
+      const eventsList: ActivityEvent[] = [];
+
+      // إنشاء 10 أحداث عشوائية من القائمة
+      for (let i = 0; i < 10; i++) {
+        const randomEvent = fakeEvents[Math.floor(Math.random() * fakeEvents.length)];
+        eventsList.push({
+          id: `fake-${Date.now()}-${i}`,
+          message: randomEvent.message_ar,
+          icon: randomEvent.icon,
+          timestamp: new Date(Date.now() - i * 30000),
+          type: randomEvent.event_type
+        });
+      }
+
+      return eventsList;
+    };
+
+    // عرض الأحداث الأولية
+    const initialEvents = generateEventsList();
     this.notifyEventListeners(initialEvents);
+
+    // تحديث الأحداث كل 15 ثانية لإضافة تنوع
+    this.fakeEventInterval = setInterval(() => {
+      const newEvents = generateEventsList();
+      this.notifyEventListeners(newEvents);
+    }, 15000);
   }
 
   // إيقاف توليد الأحداث الوهمية

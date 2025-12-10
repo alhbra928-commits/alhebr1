@@ -48,11 +48,11 @@ export function LiveActivityBar() {
     return null;
   }
 
-  // دمج الأحداث للعرض المستمر (تكرارها لملء الشاشة)
-  const displayEvents = [...events, ...events, ...events];
+  // دمج الأحداث للعرض المستمر (تكرارها 4 مرات لضمان عدم وجود فراغات)
+  const displayEvents = [...events, ...events, ...events, ...events];
 
-  // حساب مدة الحركة بناءً على السرعة
-  const animationDuration = `${100 - settings.speed + 20}s`;
+  // حساب مدة الحركة بناءً على السرعة (سرعة أفضل)
+  const animationDuration = `${Math.max(20, 80 - settings.speed)}s`;
 
   return (
     <div
@@ -96,8 +96,13 @@ export function LiveActivityBar() {
             transform: translateX(0);
           }
           100% {
-            transform: translateX(-33.333%);
+            transform: translateX(-25%);
           }
+        }
+
+        /* الحركة تستمر بدون توقف - سلسة تماماً */
+        .fixed > div {
+          will-change: transform;
         }
 
         /* إيقاف الحركة عند التحويم */
