@@ -1,32 +1,25 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   TreePine, Calendar, UserPlus, CheckCircle, Award,
-  Sprout, Target, Trophy, Sparkles, Gem, Gift, Shield
+  Sprout, Target, Trophy, Sparkles, Gem, Gift, Shield, Star, Zap
 } from 'lucide-react';
 import { liveActivityBarService, ActivityEvent, ActivityBarSettings } from '../../services/liveActivityBarService';
 
 const iconMap: Record<string, any> = {
-  TreePine,
-  Calendar,
-  UserPlus,
-  CheckCircle,
-  Award,
-  Sprout,
-  Target,
-  Trophy,
-  Sparkles,
-  Gem,
-  Gift,
-  Shield
+  TreePine, Calendar, UserPlus, CheckCircle, Award,
+  Sprout, Target, Trophy, Sparkles, Gem, Gift, Shield, Star, Zap
 };
 
 export function LiveActivityBar() {
   const [events, setEvents] = useState<ActivityEvent[]>([]);
   const [settings, setSettings] = useState<ActivityBarSettings | null>(null);
   const [isVisible, setIsVisible] = useState(true);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const positionRef = useRef(0);
+  const animationRef = useRef<number>();
+  const isPausedRef = useRef(false);
 
   useEffect(() => {
-    // الاشتراك في الأحداث والإعدادات
     const unsubscribeEvents = liveActivityBarService.subscribeToEvents(setEvents);
     const unsubscribeSettings = liveActivityBarService.subscribeToSettings(setSettings);
 
@@ -36,80 +29,183 @@ export function LiveActivityBar() {
     };
   }, []);
 
-  // إخفاء الشريط إذا كان معطلاً
   useEffect(() => {
     if (settings) {
       setIsVisible(settings.enabled);
     }
   }, [settings]);
 
+  // نظام Infinite Scroll الحقيقي بدون gaps - باستخدام requestAnimationFrame
+  useEffect(() => {
+    if (!scrollRef.current || events.length === 0 || !settings) return;
+
+    const container = scrollRef.current;
+    const speed = settings.speed / 10; // السرعة
+
+    const animate = () => {
+      if (!isPausedRef.current && container) {
+        positionRef.current -= speed;
+
+        // عندما يتحرك مسافة العرض، نعيد تموضعه بسلاسة
+        const totalWidth = container.scrollWidth / 6; // لأن لدينا 6 نسخ
+        if (Math.abs(positionRef.current) >= totalWidth) {
+          positionRef.current = 0;
+        }
+
+        container.style.transform = `translateX(${positionRef.current}px)`;
+      }
+
+      animationRef.current = requestAnimationFrame(animate);
+    };
+
+    animationRef.current = requestAnimationFrame(animate);
+
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, [events, settings]);
+
   if (!isVisible || !settings || events.length === 0) {
     return null;
   }
 
-  // حساب مدة الحركة بناءً على السرعة
-  const animationDuration = Math.max(15, 60 - settings.speed);
+  // مضاعفة الأحداث 6 مرات لضمان تغطية كاملة بدون فجوات
+  const repeatedEvents = [
+    ...events, ...events, ...events,
+    ...events, ...events, ...events
+  ];
 
-  // مكون الحدث الواحد
-  const EventItem = ({ event }: { event: ActivityEvent }) => {
+  const EventItem = ({ event, index }: { event: ActivityEvent; index: number }) => {
     const IconComponent = iconMap[event.icon] || CheckCircle;
 
     return (
       <div
-        className="flex items-center gap-3 px-6 py-1 whitespace-nowrap group relative"
+        className="flex items-center gap-4 px-8 whitespace-nowrap group relative"
         style={{ color: settings.text_color }}
       >
-        {/* حاوية الأيقونة مع تأثيرات 3D */}
+        {/* أيقونة مبتكرة بتصميم 3D متقدم */}
         <div className="relative flex-shrink-0">
-          {/* توهج خلفي */}
+          {/* طبقة التوهج الخارجية - متحركة */}
           <div
-            className="absolute inset-0 rounded-full blur-md opacity-40 group-hover:opacity-70 transition-opacity duration-300"
+            className="absolute -inset-2 rounded-full blur-xl opacity-50 animate-pulse"
             style={{
-              backgroundColor: settings.text_color,
-              transform: 'scale(1.5)'
+              background: `radial-gradient(circle, ${settings.text_color}60, transparent)`,
+              animation: 'pulse 2s ease-in-out infinite'
             }}
           />
 
-          {/* خلفية الأيقونة */}
+          {/* طبقة التوهج المتوسطة */}
           <div
-            className="relative rounded-full p-2 backdrop-blur-sm shadow-lg transform group-hover:scale-110 transition-transform duration-300"
+            className="absolute -inset-1 rounded-full blur-md opacity-60"
             style={{
-              background: `linear-gradient(135deg, ${settings.text_color}20, ${settings.text_color}10)`,
-              border: `1px solid ${settings.text_color}30`
+              background: `linear-gradient(135deg, ${settings.text_color}80, ${settings.text_color}40)`,
+            }}
+          />
+
+          {/* الأيقونة الرئيسية */}
+          <div
+            className="relative rounded-xl p-2.5 backdrop-blur-md shadow-2xl transform group-hover:scale-125 group-hover:rotate-12 transition-all duration-500 ease-out"
+            style={{
+              background: `linear-gradient(135deg,
+                ${settings.text_color}30,
+                ${settings.text_color}15,
+                ${settings.text_color}25
+              )`,
+              border: `1.5px solid ${settings.text_color}50`,
+              boxShadow: `
+                0 4px 15px ${settings.text_color}30,
+                inset 0 1px 2px ${settings.text_color}40,
+                0 0 20px ${settings.text_color}20
+              `
             }}
           >
-            <IconComponent className="h-4 w-4 drop-shadow-lg" />
+            <IconComponent
+              className="h-5 w-5 drop-shadow-2xl relative z-10"
+              style={{
+                filter: `drop-shadow(0 0 8px ${settings.text_color})`
+              }}
+            />
+
+            {/* بريق داخلي */}
+            <div
+              className="absolute inset-0 rounded-xl opacity-40"
+              style={{
+                background: `linear-gradient(45deg, transparent, ${settings.text_color}20, transparent)`,
+              }}
+            />
+          </div>
+
+          {/* شرارات متحركة */}
+          <div className="absolute -top-1 -right-1 w-2 h-2">
+            <Sparkles
+              className="w-3 h-3 animate-ping opacity-75"
+              style={{ color: settings.text_color }}
+            />
           </div>
         </div>
 
-        {/* النص */}
-        <span
-          className="font-medium text-sm drop-shadow-sm group-hover:drop-shadow-md transition-all duration-300"
-          style={{
-            textShadow: `0 0 10px ${settings.text_color}40`
-          }}
-        >
-          {event.message}
-        </span>
-
-        {/* فاصل مبتكر */}
-        <div className="flex items-center gap-1 mx-3 opacity-50">
-          <div
-            className="w-1 h-1 rounded-full animate-pulse"
-            style={{ backgroundColor: settings.text_color }}
-          />
-          <div
-            className="w-1 h-1 rounded-full animate-pulse"
+        {/* النص بتأثيرات متقدمة */}
+        <div className="relative">
+          <span
+            className="font-bold text-base drop-shadow-lg group-hover:scale-105 transition-transform duration-300 inline-block relative z-10"
             style={{
-              backgroundColor: settings.text_color,
-              animationDelay: '0.2s'
+              textShadow: `
+                0 0 20px ${settings.text_color}60,
+                0 2px 4px ${settings.text_color}40,
+                0 4px 8px ${settings.text_color}20
+              `,
+              color: settings.text_color
+            }}
+          >
+            {event.message}
+          </span>
+
+          {/* خط سفلي متحرك */}
+          <div
+            className="absolute -bottom-1 left-0 h-0.5 w-0 group-hover:w-full transition-all duration-500"
+            style={{
+              background: `linear-gradient(90deg, transparent, ${settings.text_color}, transparent)`,
+              boxShadow: `0 0 10px ${settings.text_color}`
             }}
           />
+        </div>
+
+        {/* فاصل مبتكر مع أنيميشن */}
+        <div className="flex items-center gap-2 mx-4 relative">
+          {/* خط فاصل */}
           <div
-            className="w-1 h-1 rounded-full animate-pulse"
+            className="h-8 w-px"
             style={{
-              backgroundColor: settings.text_color,
-              animationDelay: '0.4s'
+              background: `linear-gradient(to bottom, transparent, ${settings.text_color}60, transparent)`
+            }}
+          />
+
+          {/* نجمة وسطية */}
+          <div className="relative">
+            <Star
+              className="h-4 w-4 animate-spin"
+              style={{
+                color: settings.text_color,
+                animationDuration: '3s'
+              }}
+            />
+            <div
+              className="absolute inset-0 animate-ping opacity-50"
+              style={{
+                background: settings.text_color,
+                borderRadius: '50%',
+                filter: 'blur(4px)'
+              }}
+            />
+          </div>
+
+          {/* خط فاصل */}
+          <div
+            className="h-8 w-px"
+            style={{
+              background: `linear-gradient(to bottom, transparent, ${settings.text_color}60, transparent)`
             }}
           />
         </div>
@@ -119,81 +215,67 @@ export function LiveActivityBar() {
 
   return (
     <div
-      className="fixed top-0 left-0 right-0 z-[9999] overflow-hidden shadow-2xl border-b"
+      className="fixed top-0 left-0 right-0 z-[9999] overflow-hidden shadow-2xl"
       style={{
         backgroundColor: settings.background_color,
         height: settings.height,
-        backdropFilter: 'blur(12px)',
-        borderColor: `${settings.text_color}20`
+        backdropFilter: 'blur(16px)',
+        borderBottom: `2px solid ${settings.text_color}30`,
+        boxShadow: `
+          0 4px 20px ${settings.text_color}20,
+          inset 0 1px 0 ${settings.text_color}10
+        `
       }}
     >
-      {/* Dual Marquee - نسختين متطابقتين تتحركان بشكل متزامن لضمان عدم وجود فجوات */}
+      {/* خلفية متحركة */}
+      <div
+        className="absolute inset-0 opacity-10"
+        style={{
+          background: `
+            repeating-linear-gradient(
+              90deg,
+              ${settings.text_color}00 0px,
+              ${settings.text_color}20 50px,
+              ${settings.text_color}00 100px
+            )
+          `,
+          animation: 'shimmer 3s linear infinite'
+        }}
+      />
+
+      {/* المحتوى */}
       <div className="relative h-full flex items-center">
-        {/* المجموعة الأولى */}
         <div
-          className="flex items-center h-full animate-scroll-seamless"
+          ref={scrollRef}
+          className="flex items-center h-full"
           style={{
-            animationDuration: `${animationDuration}s`,
-            minWidth: 'fit-content'
+            willChange: 'transform',
+            backfaceVisibility: 'hidden',
+            perspective: '1000px'
+          }}
+          onMouseEnter={() => {
+            isPausedRef.current = true;
+          }}
+          onMouseLeave={() => {
+            isPausedRef.current = false;
           }}
         >
-          {events.map((event) => (
-            <EventItem key={`group1-${event.id}`} event={event} />
-          ))}
-        </div>
-
-        {/* المجموعة الثانية - نسخة متطابقة */}
-        <div
-          className="flex items-center h-full animate-scroll-seamless"
-          style={{
-            animationDuration: `${animationDuration}s`,
-            minWidth: 'fit-content'
-          }}
-        >
-          {events.map((event) => (
-            <EventItem key={`group2-${event.id}`} event={event} />
-          ))}
-        </div>
-
-        {/* المجموعة الثالثة - لضمان ملء الشاشة */}
-        <div
-          className="flex items-center h-full animate-scroll-seamless"
-          style={{
-            animationDuration: `${animationDuration}s`,
-            minWidth: 'fit-content'
-          }}
-        >
-          {events.map((event) => (
-            <EventItem key={`group3-${event.id}`} event={event} />
+          {repeatedEvents.map((event, index) => (
+            <EventItem key={`${event.id}-${index}`} event={event} index={index} />
           ))}
         </div>
       </div>
 
       <style>{`
-        @keyframes scroll-seamless {
-          from {
-            transform: translateX(0);
-          }
-          to {
-            transform: translateX(-100%);
-          }
+        @keyframes shimmer {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(100px); }
         }
 
-        .animate-scroll-seamless {
-          animation: scroll-seamless linear infinite;
-          animation-play-state: running;
-          will-change: transform;
-        }
-
-        /* إيقاف مؤقت عند التحويم */
-        .fixed:hover .animate-scroll-seamless {
-          animation-play-state: paused;
-        }
-
-        /* تحسين الأداء */
-        .animate-scroll-seamless {
-          backface-visibility: hidden;
-          perspective: 1000px;
+        /* تحسينات الأداء */
+        @keyframes pulse {
+          0%, 100% { opacity: 0.5; transform: scale(1); }
+          50% { opacity: 0.8; transform: scale(1.1); }
         }
       `}</style>
     </div>
