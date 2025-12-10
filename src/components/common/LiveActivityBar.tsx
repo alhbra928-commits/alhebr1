@@ -54,12 +54,19 @@ export function LiveActivityBar() {
   }
 
   const speedDuration = {
-    slow: '80s',
-    medium: '50s',
-    fast: '30s'
+    slow: '90s',
+    medium: '60s',
+    fast: '40s'
   }[scrollSpeed];
 
-  const totalActivities = [...activities, ...activities, ...activities, ...activities];
+  const totalActivities = [
+    ...activities,
+    ...activities,
+    ...activities,
+    ...activities,
+    ...activities,
+    ...activities
+  ];
 
   return (
     <>
@@ -69,13 +76,15 @@ export function LiveActivityBar() {
             transform: translateX(0);
           }
           100% {
-            transform: translateX(-25%);
+            transform: translateX(-16.666666%);
           }
         }
 
         .activity-scroll-container {
           animation: seamless-scroll ${speedDuration} linear infinite;
           will-change: transform;
+          backface-visibility: hidden;
+          -webkit-backface-visibility: hidden;
         }
 
         .activity-scroll-container:hover {
