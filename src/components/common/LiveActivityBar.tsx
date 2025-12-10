@@ -54,41 +54,28 @@ export function LiveActivityBar() {
   }
 
   const speedDuration = {
-    slow: '90s',
-    medium: '60s',
-    fast: '40s'
+    slow: '60s',
+    medium: '40s',
+    fast: '25s'
   }[scrollSpeed];
 
-  const totalActivities = [
-    ...activities,
-    ...activities,
-    ...activities,
-    ...activities,
-    ...activities,
-    ...activities
-  ];
+  const duplicatedActivities = [...activities, ...activities];
 
   return (
     <>
       <style>{`
-        @keyframes seamless-scroll {
-          0% {
+        @keyframes scroll-infinite {
+          from {
             transform: translateX(0);
           }
-          100% {
-            transform: translateX(-16.666666%);
+          to {
+            transform: translateX(-50%);
           }
         }
 
-        .activity-scroll-container {
-          animation: seamless-scroll ${speedDuration} linear infinite;
+        .scroll-track {
+          animation: scroll-infinite ${speedDuration} linear infinite;
           will-change: transform;
-          backface-visibility: hidden;
-          -webkit-backface-visibility: hidden;
-        }
-
-        .activity-scroll-container:hover {
-          animation-play-state: running;
         }
       `}</style>
 
@@ -106,12 +93,12 @@ export function LiveActivityBar() {
       >
         <div className="h-full flex items-center">
           <div
-            className="activity-scroll-container flex items-center gap-8"
+            className="scroll-track flex items-center gap-8"
             style={{
               minWidth: 'max-content',
             }}
           >
-            {totalActivities.map((activity, index) => {
+            {duplicatedActivities.map((activity, index) => {
               const IconComponent = iconMap[activity.icon] || Sparkles;
               return (
                 <div
