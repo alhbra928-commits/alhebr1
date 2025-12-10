@@ -14,10 +14,12 @@ export function LiveActivityBar() {
   const [events, setEvents] = useState<ActivityEvent[]>([]);
   const [settings, setSettings] = useState<ActivityBarSettings | null>(null);
   const [isVisible, setIsVisible] = useState(true);
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
   const positionRef = useRef(0);
   const animationRef = useRef<number>();
   const isPausedRef = useRef(false);
+  const singleLoopWidthRef = useRef(0);
 
   useEffect(() => {
     const unsubscribeEvents = liveActivityBarService.subscribeToEvents(setEvents);
@@ -35,21 +37,38 @@ export function LiveActivityBar() {
     }
   }, [settings]);
 
-  // نظام Infinite Scroll الحقيقي بدون gaps - باستخدام requestAnimationFrame
+  // حساب عرض loop واحدة بدقة
   useEffect(() => {
-    if (!scrollRef.current || events.length === 0 || !settings) return;
+    if (wrapperRef.current && events.length > 0) {
+      // انتظار render كامل
+      setTimeout(() => {
+        if (wrapperRef.current) {
+          // العرض الحقيقي = نصف scrollWidth (لأن لدينا نسختين)
+          singleLoopWidthRef.current = wrapperRef.current.scrollWidth / 2;
+        }
+      }, 100);
+    }
+  }, [events]);
 
-    const container = scrollRef.current;
-    const speed = settings.speed / 10; // السرعة
+  // نظام Seamless Infinite Scroll الحقيقي - بدون gaps مطلقاً
+  useEffect(() => {
+    if (!containerRef.current || !wrapperRef.current || events.length === 0 || !settings) return;
+
+    const container = containerRef.current;
+    const speed = settings.speed / 10;
 
     const animate = () => {
-      if (!isPausedRef.current && container) {
+      if (!isPausedRef.current && container && singleLoopWidthRef.current > 0) {
+        // تحريك مستمر
         positionRef.current -= speed;
 
-        // عندما يتحرك مسافة العرض، نعيد تموضعه بسلاسة
-        const totalWidth = container.scrollWidth / 6; // لأن لدينا 6 نسخ
-        if (Math.abs(positionRef.current) >= totalWidth) {
-          positionRef.current = 0;
+        // الحل الجذري: عندما نصل لنهاية loop، نعيد تموضع بإضافة loopWidth
+        // هذا يحافظ على السلاسة التامة بدون أي قفزة
+        const loopWidth = singleLoopWidthRef.current;
+
+        // بدلاً من reset إلى 0، نضيف loopWidth (يعطي نفس النتيجة لكن بسلاسة)
+        while (positionRef.current <= -loopWidth) {
+          positionRef.current += loopWidth;
         }
 
         container.style.transform = `translateX(${positionRef.current}px)`;
@@ -71,11 +90,8 @@ export function LiveActivityBar() {
     return null;
   }
 
-  // مضاعفة الأحداث 6 مرات لضمان تغطية كاملة بدون فجوات
-  const repeatedEvents = [
-    ...events, ...events, ...events,
-    ...events, ...events, ...events
-  ];
+  // نسختين فقط كافيتان مع الحساب الصحيح
+  const doubledEvents = [...events, ...events];
 
   const EventItem = ({ event, index }: { event: ActivityEvent; index: number }) => {
     const IconComponent = iconMap[event.icon] || CheckCircle;
@@ -244,9 +260,9 @@ export function LiveActivityBar() {
       />
 
       {/* المحتوى */}
-      <div className="relative h-full flex items-center">
+      <div className="relative h-full flex items-center overflow-hidden">
         <div
-          ref={scrollRef}
+          ref={containerRef}
           className="flex items-center h-full"
           style={{
             willChange: 'transform',
@@ -260,9 +276,14 @@ export function LiveActivityBar() {
             isPausedRef.current = false;
           }}
         >
-          {repeatedEvents.map((event, index) => (
-            <EventItem key={`${event.id}-${index}`} event={event} index={index} />
-          ))}
+          <div
+            ref={wrapperRef}
+            className="flex items-center h-full"
+          >
+            {doubledEvents.map((event, index) => (
+              <EventItem key={`${event.id}-${index}`} event={event} index={index} />
+            ))}
+          </div>
         </div>
       </div>
 
