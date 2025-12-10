@@ -13,7 +13,6 @@ import { InnovativeFarmCard } from './InnovativeFarmCard';
 import { getPlatformTextsBySection } from '../../../services/platformTextsService';
 import { VerticalSideTabs } from '../../../components/common/VerticalSideTabs';
 import { SmartAssistantSidebar } from './SmartAssistantSidebar';
-import { LiveActivityBar } from '../../../components/common/LiveActivityBar';
 
 // Lazy load heavy components
 const InnovativeFarmDetailPage = lazy(() => import('./InnovativeFarmDetailPage').then(m => ({ default: m.InnovativeFarmDetailPage })));
@@ -297,9 +296,6 @@ export function ModernRoyalPlatform({
     >
       {/* Glass Overlay - Simple and Clean */}
       <div className="fixed inset-0 bg-white/30 backdrop-blur-[2px] pointer-events-none"></div>
-
-      {/* Live Activity Bar - شريط النشاط المباشر */}
-      <LiveActivityBar />
 
       {/* Content */}
       <div className="relative z-10" style={{ flex: '1 0 auto', paddingTop: '104px', paddingBottom: '90px' }}>
