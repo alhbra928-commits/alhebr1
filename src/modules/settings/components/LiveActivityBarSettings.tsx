@@ -270,6 +270,103 @@ export function LiveActivityBarSettings() {
                 ))}
               </div>
             </div>
+
+            {/* ارتفاع الشريط */}
+            <div className="p-4 bg-gray-50 rounded-xl">
+              <label className="block font-semibold text-[#2C2C2C] mb-3">
+                ارتفاع الشريط (px)
+              </label>
+              <input
+                type="number"
+                min="30"
+                max="80"
+                value={parseInt(settings.height)}
+                onChange={(e) => handleUpdateSettings({ height: `${e.target.value}px` })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+              />
+            </div>
+
+            {/* لون الخلفية */}
+            <div className="p-4 bg-gray-50 rounded-xl">
+              <label className="block font-semibold text-[#2C2C2C] mb-3">
+                لون الخلفية
+              </label>
+              <div className="flex items-center gap-3">
+                <input
+                  type="color"
+                  value={settings.background_color}
+                  onChange={(e) => handleUpdateSettings({ background_color: e.target.value })}
+                  className="w-16 h-10 rounded-lg cursor-pointer border-2 border-gray-300"
+                />
+                <input
+                  type="text"
+                  value={settings.background_color}
+                  onChange={(e) => handleUpdateSettings({ background_color: e.target.value })}
+                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 font-mono text-sm"
+                  placeholder="#000000"
+                />
+              </div>
+              <p className="text-xs text-gray-500 mt-2">يدعم rgba() للشفافية، مثال: rgba(0,0,0,0.8)</p>
+            </div>
+
+            {/* لون النص */}
+            <div className="p-4 bg-gray-50 rounded-xl">
+              <label className="block font-semibold text-[#2C2C2C] mb-3">
+                لون النص والأيقونات
+              </label>
+              <div className="flex items-center gap-3">
+                <input
+                  type="color"
+                  value={settings.text_color}
+                  onChange={(e) => handleUpdateSettings({ text_color: e.target.value })}
+                  className="w-16 h-10 rounded-lg cursor-pointer border-2 border-gray-300"
+                />
+                <input
+                  type="text"
+                  value={settings.text_color}
+                  onChange={(e) => handleUpdateSettings({ text_color: e.target.value })}
+                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 font-mono text-sm"
+                  placeholder="#FFFFFF"
+                />
+              </div>
+            </div>
+
+            {/* قوالب ألوان جاهزة */}
+            <div className="p-4 bg-gray-50 rounded-xl">
+              <label className="block font-semibold text-[#2C2C2C] mb-3">
+                قوالب ألوان جاهزة
+              </label>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                {[
+                  { name: 'داكن', bg: 'rgba(0, 0, 0, 0.9)', text: '#ffffff' },
+                  { name: 'أخضر', bg: 'rgba(16, 185, 129, 0.95)', text: '#ffffff' },
+                  { name: 'أزرق', bg: 'rgba(59, 130, 246, 0.95)', text: '#ffffff' },
+                  { name: 'ذهبي', bg: 'rgba(245, 158, 11, 0.95)', text: '#ffffff' },
+                  { name: 'زجاجي', bg: 'rgba(255, 255, 255, 0.1)', text: '#ffffff' },
+                  { name: 'بنفسجي', bg: 'rgba(139, 92, 246, 0.95)', text: '#ffffff' },
+                  { name: 'وردي', bg: 'rgba(236, 72, 153, 0.95)', text: '#ffffff' },
+                  { name: 'فاتح', bg: 'rgba(255, 255, 255, 0.95)', text: '#000000' }
+                ].map((template) => (
+                  <button
+                    key={template.name}
+                    onClick={() => handleUpdateSettings({
+                      background_color: template.bg,
+                      text_color: template.text
+                    })}
+                    className="relative p-3 rounded-lg border-2 border-gray-200 hover:border-emerald-500 transition-all cursor-pointer group overflow-hidden"
+                    style={{
+                      background: template.bg,
+                      backdropFilter: 'blur(12px)'
+                    }}
+                  >
+                    <p className="text-xs font-semibold relative z-10" style={{ color: template.text }}>
+                      {template.name}
+                    </p>
+                    <div className="absolute inset-0 bg-emerald-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>

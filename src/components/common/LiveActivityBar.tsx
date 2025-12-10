@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import {
   TreePine, Calendar, UserPlus, CheckCircle, Award,
   Sprout, Target, Trophy, Sparkles, Gem, Gift, Shield
@@ -24,7 +24,6 @@ export function LiveActivityBar() {
   const [events, setEvents] = useState<ActivityEvent[]>([]);
   const [settings, setSettings] = useState<ActivityBarSettings | null>(null);
   const [isVisible, setIsVisible] = useState(true);
-  const marqueeRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // الاشتراك في الأحداث والإعدادات
@@ -48,66 +47,153 @@ export function LiveActivityBar() {
     return null;
   }
 
-  // دمج الأحداث للعرض المستمر (تكرارها 4 مرات لضمان عدم وجود فراغات)
-  const displayEvents = [...events, ...events, ...events, ...events];
+  // حساب مدة الحركة بناءً على السرعة
+  const animationDuration = Math.max(15, 60 - settings.speed);
 
-  // حساب مدة الحركة بناءً على السرعة (سرعة أفضل)
-  const animationDuration = `${Math.max(20, 80 - settings.speed)}s`;
+  // مكون الحدث الواحد
+  const EventItem = ({ event }: { event: ActivityEvent }) => {
+    const IconComponent = iconMap[event.icon] || CheckCircle;
+
+    return (
+      <div
+        className="flex items-center gap-3 px-6 py-1 whitespace-nowrap group relative"
+        style={{ color: settings.text_color }}
+      >
+        {/* حاوية الأيقونة مع تأثيرات 3D */}
+        <div className="relative flex-shrink-0">
+          {/* توهج خلفي */}
+          <div
+            className="absolute inset-0 rounded-full blur-md opacity-40 group-hover:opacity-70 transition-opacity duration-300"
+            style={{
+              backgroundColor: settings.text_color,
+              transform: 'scale(1.5)'
+            }}
+          />
+
+          {/* خلفية الأيقونة */}
+          <div
+            className="relative rounded-full p-2 backdrop-blur-sm shadow-lg transform group-hover:scale-110 transition-transform duration-300"
+            style={{
+              background: `linear-gradient(135deg, ${settings.text_color}20, ${settings.text_color}10)`,
+              border: `1px solid ${settings.text_color}30`
+            }}
+          >
+            <IconComponent className="h-4 w-4 drop-shadow-lg" />
+          </div>
+        </div>
+
+        {/* النص */}
+        <span
+          className="font-medium text-sm drop-shadow-sm group-hover:drop-shadow-md transition-all duration-300"
+          style={{
+            textShadow: `0 0 10px ${settings.text_color}40`
+          }}
+        >
+          {event.message}
+        </span>
+
+        {/* فاصل مبتكر */}
+        <div className="flex items-center gap-1 mx-3 opacity-50">
+          <div
+            className="w-1 h-1 rounded-full animate-pulse"
+            style={{ backgroundColor: settings.text_color }}
+          />
+          <div
+            className="w-1 h-1 rounded-full animate-pulse"
+            style={{
+              backgroundColor: settings.text_color,
+              animationDelay: '0.2s'
+            }}
+          />
+          <div
+            className="w-1 h-1 rounded-full animate-pulse"
+            style={{
+              backgroundColor: settings.text_color,
+              animationDelay: '0.4s'
+            }}
+          />
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div
-      className="fixed top-0 left-0 right-0 z-[9999] overflow-hidden shadow-lg"
+      className="fixed top-0 left-0 right-0 z-[9999] overflow-hidden shadow-2xl border-b"
       style={{
         backgroundColor: settings.background_color,
         height: settings.height,
-        backdropFilter: 'blur(8px)',
+        backdropFilter: 'blur(12px)',
+        borderColor: `${settings.text_color}20`
       }}
     >
-      <div
-        ref={marqueeRef}
-        className="flex items-center h-full"
-        style={{
-          animation: `marquee ${animationDuration} linear infinite`,
-          width: 'fit-content',
-        }}
-      >
-        {displayEvents.map((event, index) => {
-          const IconComponent = iconMap[event.icon] || CheckCircle;
+      {/* Dual Marquee - نسختين متطابقتين تتحركان بشكل متزامن لضمان عدم وجود فجوات */}
+      <div className="relative h-full flex items-center">
+        {/* المجموعة الأولى */}
+        <div
+          className="flex items-center h-full animate-scroll-seamless"
+          style={{
+            animationDuration: `${animationDuration}s`,
+            minWidth: 'fit-content'
+          }}
+        >
+          {events.map((event) => (
+            <EventItem key={`group1-${event.id}`} event={event} />
+          ))}
+        </div>
 
-          return (
-            <div
-              key={`${event.id}-${index}`}
-              className="flex items-center gap-3 px-8 whitespace-nowrap"
-              style={{
-                color: settings.text_color,
-              }}
-            >
-              <IconComponent className="h-5 w-5 flex-shrink-0" />
-              <span className="font-medium text-sm">{event.message}</span>
-              <span className="text-xs opacity-70 mx-4">•</span>
-            </div>
-          );
-        })}
+        {/* المجموعة الثانية - نسخة متطابقة */}
+        <div
+          className="flex items-center h-full animate-scroll-seamless"
+          style={{
+            animationDuration: `${animationDuration}s`,
+            minWidth: 'fit-content'
+          }}
+        >
+          {events.map((event) => (
+            <EventItem key={`group2-${event.id}`} event={event} />
+          ))}
+        </div>
+
+        {/* المجموعة الثالثة - لضمان ملء الشاشة */}
+        <div
+          className="flex items-center h-full animate-scroll-seamless"
+          style={{
+            animationDuration: `${animationDuration}s`,
+            minWidth: 'fit-content'
+          }}
+        >
+          {events.map((event) => (
+            <EventItem key={`group3-${event.id}`} event={event} />
+          ))}
+        </div>
       </div>
 
       <style>{`
-        @keyframes marquee {
-          0% {
+        @keyframes scroll-seamless {
+          from {
             transform: translateX(0);
           }
-          100% {
-            transform: translateX(-25%);
+          to {
+            transform: translateX(-100%);
           }
         }
 
-        /* الحركة تستمر بدون توقف - سلسة تماماً */
-        .fixed > div {
+        .animate-scroll-seamless {
+          animation: scroll-seamless linear infinite;
+          animation-play-state: running;
           will-change: transform;
         }
 
-        /* إيقاف الحركة عند التحويم */
-        .fixed:hover > div {
+        /* إيقاف مؤقت عند التحويم */
+        .fixed:hover .animate-scroll-seamless {
           animation-play-state: paused;
+        }
+
+        /* تحسين الأداء */
+        .animate-scroll-seamless {
+          backface-visibility: hidden;
+          perspective: 1000px;
         }
       `}</style>
     </div>
