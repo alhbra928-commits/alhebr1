@@ -53,30 +53,28 @@ export function LiveActivityBar() {
     return null;
   }
 
-  // حساب مدة الأنيميشن بناءً على السرعة وعدد العناصر
-  const speedValues = {
-    slow: 80,
-    medium: 50,
-    fast: 30
+  // حساب السرعة بالثواني - ثابت وبسيط
+  const speedMap = {
+    slow: '60s',
+    medium: '40s',
+    fast: '25s'
   };
 
-  const durationSeconds = activities.length * speedValues[scrollSpeed];
+  const animationDuration = speedMap[scrollSpeed];
 
   return (
     <>
       <style>{`
-        /* Animation Definition */
-        @keyframes continuous-scroll {
-          0% {
+        @keyframes seamless-scroll {
+          from {
             transform: translateX(0);
           }
-          100% {
+          to {
             transform: translateX(-50%);
           }
         }
 
-        /* Main Container */
-        .modern-activity-bar-container {
+        .live-activity-bar-wrapper {
           position: relative;
           width: 100%;
           height: 48px;
@@ -87,56 +85,43 @@ export function LiveActivityBar() {
             rgba(44, 95, 45, 0.98) 100%
           );
           border-bottom: 1px solid rgba(212, 175, 55, 0.3);
-          backdrop-filter: blur(12px);
-          -webkit-backdrop-filter: blur(12px);
-
-          /* GPU Acceleration */
-          transform: translate3d(0, 0, 0);
-          will-change: auto;
+          border-radius: 0;
+          margin: 0;
+          padding: 0;
         }
 
-        /* Scrolling Track */
-        .modern-activity-track {
+        .live-activity-scrolltrack {
           display: flex;
           align-items: center;
           height: 100%;
-          width: fit-content;
-
-          /* CSS Animation - سلس وثابت */
-          animation: continuous-scroll ${durationSeconds}s linear infinite;
-          animation-play-state: running;
-
-          /* GPU Layer */
-          transform: translate3d(0, 0, 0);
+          width: max-content;
+          animation: seamless-scroll ${animationDuration} linear infinite;
           will-change: transform;
         }
 
-        .modern-activity-track:hover {
+        .live-activity-scrolltrack:hover {
           animation-play-state: paused;
         }
 
-        /* Activity Group - مجموعة واحدة من الأنشطة */
-        .modern-activity-group {
+        .live-activity-content-group {
           display: flex;
           align-items: center;
-          flex-shrink: 0;
           height: 100%;
+          padding: 0;
+          margin: 0;
         }
 
-        /* Single Activity Item */
-        .modern-activity-item {
-          display: inline-flex;
+        .live-activity-single-item {
+          display: flex;
           align-items: center;
           gap: 12px;
-          padding: 0 24px;
-          white-space: nowrap;
+          padding: 0 28px;
           height: 100%;
+          white-space: nowrap;
           flex-shrink: 0;
         }
 
-        /* Icon Container */
-        .modern-activity-icon {
-          flex-shrink: 0;
+        .live-activity-icon-box {
           width: 36px;
           height: 36px;
           display: flex;
@@ -144,120 +129,88 @@ export function LiveActivityBar() {
           justify-content: center;
           border-radius: 10px;
           background: linear-gradient(135deg,
-            rgba(212, 175, 55, 0.25) 0%,
-            rgba(196, 148, 31, 0.18) 100%
+            rgba(212, 175, 55, 0.25),
+            rgba(196, 148, 31, 0.15)
           );
-          border: 1px solid rgba(212, 175, 55, 0.35);
-          box-shadow: 0 2px 8px rgba(212, 175, 55, 0.15);
-          transition: all 0.3s ease;
+          border: 1px solid rgba(212, 175, 55, 0.4);
+          flex-shrink: 0;
         }
 
-        .modern-activity-item:hover .modern-activity-icon {
-          transform: scale(1.05);
-          box-shadow: 0 4px 12px rgba(212, 175, 55, 0.25);
-        }
-
-        /* Text */
-        .modern-activity-text {
+        .live-activity-message-text {
           font-size: 15px;
           font-weight: 600;
           color: #F5F5DC;
-          text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-          letter-spacing: 0.3px;
+          text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
         }
 
-        /* Separator Dot */
-        .modern-activity-separator {
+        .live-activity-dot-separator {
           width: 4px;
           height: 4px;
           border-radius: 50%;
-          background: linear-gradient(135deg, #D4AF37 0%, #C4941F 100%);
-          margin: 0 20px;
+          background: rgba(212, 175, 55, 0.6);
+          margin: 0 18px;
           flex-shrink: 0;
-          box-shadow: 0 0 8px rgba(212, 175, 55, 0.5);
         }
 
-        /* Bottom Accent Line */
-        .modern-activity-accent {
-          position: absolute;
-          bottom: 0;
-          left: 0;
-          right: 0;
-          height: 2px;
-          background: linear-gradient(90deg,
-            transparent 0%,
-            rgba(212, 175, 55, 0.6) 50%,
-            transparent 100%
-          );
-          pointer-events: none;
-        }
-
-        /* Responsive adjustments */
         @media (max-width: 768px) {
-          .modern-activity-bar-container {
+          .live-activity-bar-wrapper {
             height: 44px;
           }
 
-          .modern-activity-item {
+          .live-activity-single-item {
             padding: 0 20px;
             gap: 10px;
           }
 
-          .modern-activity-icon {
+          .live-activity-icon-box {
             width: 32px;
             height: 32px;
           }
 
-          .modern-activity-text {
+          .live-activity-message-text {
             font-size: 14px;
           }
         }
       `}</style>
 
-      <div className="modern-activity-bar-container">
-        <div className="modern-activity-track">
+      <div className="live-activity-bar-wrapper">
+        <div className="live-activity-scrolltrack">
           {/* المجموعة الأولى */}
-          <div className="modern-activity-group">
-            {activities.map((activity, index) => {
+          <div className="live-activity-content-group">
+            {activities.map((activity, idx) => {
               const IconComponent = iconMap[activity.icon] || Sparkles;
               return (
-                <div key={`group1-${index}`} style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
-                  <div className="modern-activity-item">
-                    <div className="modern-activity-icon">
-                      <IconComponent size={20} style={{ color: '#D4AF37' }} />
+                <div key={`g1-${idx}`} style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
+                  <div className="live-activity-single-item">
+                    <div className="live-activity-icon-box">
+                      <IconComponent size={20} style={{ color: '#D4AF37', flexShrink: 0 }} />
                     </div>
-                    <span className="modern-activity-text">{activity.message}</span>
+                    <span className="live-activity-message-text">{activity.message}</span>
                   </div>
-                  {index < activities.length - 1 && (
-                    <div className="modern-activity-separator" />
-                  )}
+                  {idx < activities.length - 1 && <div className="live-activity-dot-separator" />}
                 </div>
               );
             })}
           </div>
 
-          {/* المجموعة الثانية - نسخة مطابقة للأولى */}
-          <div className="modern-activity-group">
-            {activities.map((activity, index) => {
+          {/* المجموعة الثانية - نسخة مطابقة */}
+          <div className="live-activity-content-group">
+            {activities.map((activity, idx) => {
               const IconComponent = iconMap[activity.icon] || Sparkles;
               return (
-                <div key={`group2-${index}`} style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
-                  <div className="modern-activity-item">
-                    <div className="modern-activity-icon">
-                      <IconComponent size={20} style={{ color: '#D4AF37' }} />
+                <div key={`g2-${idx}`} style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
+                  <div className="live-activity-single-item">
+                    <div className="live-activity-icon-box">
+                      <IconComponent size={20} style={{ color: '#D4AF37', flexShrink: 0 }} />
                     </div>
-                    <span className="modern-activity-text">{activity.message}</span>
+                    <span className="live-activity-message-text">{activity.message}</span>
                   </div>
-                  {index < activities.length - 1 && (
-                    <div className="modern-activity-separator" />
-                  )}
+                  {idx < activities.length - 1 && <div className="live-activity-dot-separator" />}
                 </div>
               );
             })}
           </div>
         </div>
-
-        <div className="modern-activity-accent" />
       </div>
     </>
   );

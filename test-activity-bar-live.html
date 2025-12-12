@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار شريط النشاط المباشر</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #1a1a1a;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #D4AF37;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+
+        .info-box {
+            background: rgba(44, 95, 45, 0.3);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            color: #F5F5DC;
+        }
+
+        .info-box h2 {
+            color: #D4AF37;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .info-box p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .status.active {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+            border: 1px solid #22c55e;
+        }
+
+        /* شريط النشاط */
+        @keyframes continuous-scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .modern-activity-bar-container {
+            position: relative;
+            width: 100%;
+            height: 48px;
+            overflow: hidden;
+            background: linear-gradient(135deg,
+                rgba(44, 95, 45, 0.98) 0%,
+                rgba(30, 70, 32, 0.98) 50%,
+                rgba(44, 95, 45, 0.98) 100%
+            );
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 12px;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            margin-bottom: 20px;
+            transform: translate3d(0, 0, 0);
+        }
+
+        .modern-activity-track {
+            display: flex;
+            align-items: center;
+            height: 100%;
+            width: fit-content;
+            animation: continuous-scroll 40s linear infinite;
+            transform: translate3d(0, 0, 0);
+            will-change: transform;
+        }
+
+        .modern-activity-track:hover {
+            animation-play-state: paused;
+        }
+
+        .modern-activity-group {
+            display: flex;
+            align-items: center;
+            flex-shrink: 0;
+            height: 100%;
+        }
+
+        .modern-activity-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 24px;
+            white-space: nowrap;
+            height: 100%;
+            flex-shrink: 0;
+        }
+
+        .modern-activity-icon {
+            flex-shrink: 0;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            background: linear-gradient(135deg,
+                rgba(212, 175, 55, 0.25) 0%,
+                rgba(196, 148, 31, 0.18) 100%
+            );
+            border: 1px solid rgba(212, 175, 55, 0.35);
+            box-shadow: 0 2px 8px rgba(212, 175, 55, 0.15);
+            font-size: 20px;
+        }
+
+        .modern-activity-text {
+            font-size: 15px;
+            font-weight: 600;
+            color: #F5F5DC;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+            letter-spacing: 0.3px;
+        }
+
+        .modern-activity-separator {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #D4AF37 0%, #C4941F 100%);
+            margin: 0 20px;
+            flex-shrink: 0;
+            box-shadow: 0 0 8px rgba(212, 175, 55, 0.5);
+        }
+
+        .modern-activity-accent {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg,
+                transparent 0%,
+                rgba(212, 175, 55, 0.6) 50%,
+                transparent 100%
+            );
+        }
+
+        .test-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        button {
+            background: linear-gradient(135deg, #2C5F2D 0%, #1E4620 100%);
+            color: #F5F5DC;
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, #3A7A3B 0%, #2A5A2C 100%);
+            border-color: rgba(212, 175, 55, 0.6);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+        }
+
+        .data-table {
+            width: 100%;
+            background: rgba(44, 95, 45, 0.2);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 8px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+
+        .data-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 12px;
+            text-align: right;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            color: #F5F5DC;
+        }
+
+        .data-table th {
+            background: rgba(44, 95, 45, 0.4);
+            color: #D4AF37;
+            font-weight: 600;
+        }
+
+        .data-table tr:hover {
+            background: rgba(44, 95, 45, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 اختبار شريط النشاط المتحرك المباشر</h1>
+
+    <div class="info-box">
+        <h2>📊 حالة النظام</h2>
+        <p><strong>الإعدادات:</strong> <span class="status active">مفعّل</span></p>
+        <p><strong>وضع البيانات:</strong> hybrid (رسائل ثابتة + بيانات حقيقية)</p>
+        <p><strong>السرعة:</strong> fast</p>
+        <p><strong>عدد الرسائل:</strong> <span id="message-count">...</span></p>
+        <p><strong>عدد الحجوزات:</strong> 18</p>
+        <p><strong>عدد المزارع:</strong> 2</p>
+    </div>
+
+    <h2 style="color: #D4AF37; margin-bottom: 15px;">الشريط المتحرك:</h2>
+
+    <div class="modern-activity-bar-container">
+        <div class="modern-activity-track" id="activity-track">
+            <!-- سيتم ملء البيانات من JavaScript -->
+        </div>
+        <div class="modern-activity-accent"></div>
+    </div>
+
+    <div class="test-buttons">
+        <button onclick="loadRealData()">🔄 تحميل البيانات الحقيقية</button>
+        <button onclick="testAnimation()">▶️ اختبار الحركة</button>
+        <button onclick="window.location.href='/'">🏠 العودة للمنصة</button>
+    </div>
+
+    <div class="data-table">
+        <h2 style="color: #D4AF37; padding: 15px;">الرسائل المحملة:</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>الرسالة</th>
+                    <th>الأيقونة</th>
+                    <th>الحالة</th>
+                </tr>
+            </thead>
+            <tbody id="messages-table">
+                <tr>
+                    <td colspan="4" style="text-align: center;">جاري التحميل...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script type="module">
+        import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+        const supabase = createClient(
+            'https://qlnpsvfubddpkxlzqphe.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFsbnBzdmZ1YmRkcGt4bHpxcGhlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjk0MTc2ODksImV4cCI6MjA0NDk5MzY4OX0.Bh_UWt15SkHiOrI7CCX20PXl7AVSDvwIVEV8bbqRgMk'
+        );
+
+        const icons = {
+            'TrendingUp': '📈',
+            'TreePine': '🌲',
+            'UserPlus': '👤',
+            'ShoppingCart': '🛒',
+            'Award': '🏆',
+            'Sparkles': '✨',
+            'DollarSign': '💰',
+            'User': '👨'
+        };
+
+        async function loadRealData() {
+            try {
+                console.log('🔍 جاري تحميل البيانات...');
+
+                // تحميل الإعدادات
+                const { data: settings } = await supabase
+                    .from('activity_bar_settings')
+                    .select('*')
+                    .limit(1)
+                    .single();
+
+                console.log('⚙️ الإعدادات:', settings);
+
+                // تحميل الرسائل
+                const { data: messages } = await supabase
+                    .from('activity_bar_messages')
+                    .select('*')
+                    .eq('is_active', true)
+                    .order('display_order');
+
+                console.log('📨 الرسائل:', messages);
+
+                if (messages && messages.length > 0) {
+                    document.getElementById('message-count').textContent = messages.length;
+                    displayMessages(messages);
+                    renderActivityBar(messages);
+                } else {
+                    alert('❌ لا توجد رسائل نشطة!');
+                }
+            } catch (error) {
+                console.error('❌ خطأ:', error);
+                alert('حدث خطأ: ' + error.message);
+            }
+        }
+
+        function displayMessages(messages) {
+            const tbody = document.getElementById('messages-table');
+            tbody.innerHTML = messages.map((msg, index) => `
+                <tr>
+                    <td>${index + 1}</td>
+                    <td>${msg.message_ar}</td>
+                    <td>${icons[msg.icon] || msg.icon}</td>
+                    <td><span class="status active">نشط</span></td>
+                </tr>
+            `).join('');
+        }
+
+        function renderActivityBar(messages) {
+            const track = document.getElementById('activity-track');
+            
+            // مجموعتين متطابقتين
+            const createGroup = () => messages.map(msg => `
+                <div style="display: flex; align-items: center; height: 100%;">
+                    <div class="modern-activity-item">
+                        <div class="modern-activity-icon">
+                            ${icons[msg.icon] || '✨'}
+                        </div>
+                        <span class="modern-activity-text">${msg.message_ar}</span>
+                    </div>
+                    <div class="modern-activity-separator"></div>
+                </div>
+            `).join('');
+
+            track.innerHTML = `
+                <div class="modern-activity-group">${createGroup()}</div>
+                <div class="modern-activity-group">${createGroup()}</div>
+            `;
+
+            console.log('✅ تم عرض الشريط بنجاح!');
+        }
+
+        function testAnimation() {
+            const track = document.getElementById('activity-track');
+            track.style.animationPlayState = track.style.animationPlayState === 'paused' ? 'running' : 'paused';
+        }
+
+        // تحميل تلقائي عند فتح الصفحة
+        window.addEventListener('load', loadRealData);
+        window.loadRealData = loadRealData;
+        window.testAnimation = testAnimation;
+    </script>
+</body>
+</html>
