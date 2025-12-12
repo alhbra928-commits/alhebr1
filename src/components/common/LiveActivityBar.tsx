@@ -84,10 +84,12 @@ export function LiveActivityBar() {
 
       positionRef.current += speedInPxPerSecond * deltaTime;
 
-      const trackWidth = trackRef.current.offsetWidth / 2;
+      // ✅ التكرار 5x، لذلك نقسم على 5 لـ seamless loop
+      const trackWidth = trackRef.current.offsetWidth / 5;
 
+      // ✅ سكرول سلس بدون توقف - يعود للبداية بسلاسة
       if (positionRef.current >= trackWidth) {
-        positionRef.current = positionRef.current - trackWidth;
+        positionRef.current = positionRef.current % trackWidth;
       }
 
       trackRef.current.style.transform = `translateX(-${positionRef.current}px)`;
@@ -110,7 +112,14 @@ export function LiveActivityBar() {
     return null;
   }
 
-  const duplicatedActivities = [...activities, ...activities];
+  // ✅ تكرار 5x لضمان عدم وجود فراغات أبداً
+  const seamlessActivities = [
+    ...activities,
+    ...activities,
+    ...activities,
+    ...activities,
+    ...activities
+  ];
 
   // ✅ ثبات جذري 100% - نفس تقنية Farm Detail Page
   return (
@@ -165,13 +174,35 @@ export function LiveActivityBar() {
           isolation: isolate;
         }
 
+        /* ✅ Track بدون Gap - استخدام padding للعناصر بدلاً من gap */
         .live-activity-bar-track {
           display: flex;
           align-items: center;
-          gap: 24px;
+          gap: 0;
           min-width: max-content;
           will-change: transform;
           position: relative;
+        }
+
+        /* ✅ Activity Item - متصلة بدون فراغات */
+        .activity-bar-item {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          white-space: nowrap;
+          padding: 0 20px;
+          min-width: max-content;
+        }
+
+        /* ✅ Separator - فاصل بصري بين العناصر */
+        .activity-separator {
+          width: 1.5px;
+          height: 1.5px;
+          border-radius: 50%;
+          margin: 0 16px;
+          flex-shrink: 0;
+          background: linear-gradient(135deg, #D4AF37 0%, #C4941F 100%);
+          box-shadow: 0 0 8px rgba(212, 175, 55, 0.6);
         }
       `}</style>
 
@@ -186,15 +217,12 @@ export function LiveActivityBar() {
               ref={trackRef}
               className="live-activity-bar-track"
             >
-              {duplicatedActivities.map((activity, index) => {
+              {seamlessActivities.map((activity, index) => {
                 const IconComponent = iconMap[activity.icon] || Sparkles;
                 return (
                   <div
                     key={`activity-${index}`}
-                    className="flex items-center gap-3 whitespace-nowrap px-4"
-                    style={{
-                      minWidth: 'max-content',
-                    }}
+                    className="activity-bar-item"
                   >
                     <div
                       className="flex-shrink-0 p-2 rounded-lg"
@@ -215,13 +243,7 @@ export function LiveActivityBar() {
                     >
                       {activity.message}
                     </span>
-                    <div
-                      className="w-1.5 h-1.5 rounded-full mx-3 flex-shrink-0"
-                      style={{
-                        background: 'linear-gradient(135deg, #D4AF37 0%, #C4941F 100%)',
-                        boxShadow: '0 0 8px rgba(212, 175, 55, 0.6)',
-                      }}
-                    />
+                    <div className="activity-separator" />
                   </div>
                 );
               })}
