@@ -148,121 +148,35 @@ export const InnovativeFarmDetailPage: React.FC<InnovativeFarmDetailPageProps> =
   ];
 
   return (
-    <div
-      className="flex flex-col bg-white"
-      dir="rtl"
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        width: '100%',
-        height: '100vh',
-        height: '100dvh',
-        overflow: 'hidden'
-      }}
-    >
-      {/* ============ HEADER ثابت جذرياً 100% ============ */}
-      <div
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          zIndex: 999999,
-          backgroundColor: 'rgba(255, 255, 255, 0.95)',
-          borderBottom: '1px solid #e5e7eb',
-          paddingTop: 'max(8px, env(safe-area-inset-top))',
-          paddingBottom: '12px',
-          paddingLeft: '16px',
-          paddingRight: '16px',
-          WebkitBackdropFilter: 'saturate(180%) blur(20px)',
-          backdropFilter: 'saturate(180%) blur(20px)',
-          WebkitTransform: 'translate3d(0, 0, 0)',
-          transform: 'translate3d(0, 0, 0)',
-          WebkitPerspective: 1000,
-          perspective: 1000,
-          willChange: 'transform',
-          isolation: 'isolate',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
-          pointerEvents: 'auto'
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+    <div className="min-h-screen bg-white" dir="rtl">
+      {/* Header الثابت الشفاف */}
+      <div className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-xl border-b border-gray-100">
+        <div className="flex items-center justify-between p-4">
           <button
             onClick={onBack}
-            style={{
-              width: '40px',
-              height: '40px',
-              backgroundColor: '#f3f4f6',
-              borderRadius: '50%',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              border: 'none',
-              cursor: 'pointer',
-              WebkitTapHighlightColor: 'transparent',
-              touchAction: 'manipulation'
-            }}
+            className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors active:scale-95"
           >
-            <ArrowRight style={{ width: '20px', height: '20px', color: '#1f2937' }} />
+            <ArrowRight className="w-5 h-5 text-gray-800" />
           </button>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <div className="flex items-center gap-2">
             <button
               onClick={() => setIsLiked(!isLiked)}
-              style={{
-                width: '40px',
-                height: '40px',
-                backgroundColor: isLiked ? '#ef4444' : '#f3f4f6',
-                color: isLiked ? 'white' : '#4b5563',
-                borderRadius: '50%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                border: 'none',
-                cursor: 'pointer',
-                WebkitTapHighlightColor: 'transparent',
-                touchAction: 'manipulation'
-              }}
+              className={`w-10 h-10 rounded-full flex items-center justify-center transition-all active:scale-95 ${
+                isLiked ? 'bg-red-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              }`}
             >
-              <Heart style={{ width: '20px', height: '20px', fill: isLiked ? 'currentColor' : 'none' }} />
+              <Heart className={`w-5 h-5 ${isLiked ? 'fill-current' : ''}`} />
             </button>
-            <button
-              style={{
-                width: '40px',
-                height: '40px',
-                backgroundColor: '#f3f4f6',
-                borderRadius: '50%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                border: 'none',
-                cursor: 'pointer',
-                WebkitTapHighlightColor: 'transparent',
-                touchAction: 'manipulation'
-              }}
-            >
-              <Share2 style={{ width: '20px', height: '20px', color: '#4b5563' }} />
+            <button className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors active:scale-95">
+              <Share2 className="w-5 h-5 text-gray-600" />
             </button>
           </div>
         </div>
       </div>
 
-      {/* ============ المحتوى القابل للسكرول - منفصل تماماً ============ */}
-      <div
-        style={{
-          flex: 1,
-          overflowY: 'auto',
-          overflowX: 'hidden',
-          WebkitOverflowScrolling: 'touch',
-          marginTop: 'calc(64px + env(safe-area-inset-top))',
-          paddingBottom: 'calc(144px + env(safe-area-inset-bottom))',
-          position: 'relative',
-          isolation: 'isolate'
-        }}
-      >
+      {/* المحتوى الرئيسي */}
+      <div className="pt-16 pb-36">
         {/* صورة المزرعة */}
         <div className="relative h-80 overflow-hidden">
           {farmImage ? (
