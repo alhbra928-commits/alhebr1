@@ -1,49 +1,44 @@
 import { useEffect, useState } from 'react';
-import {
-  TrendingUp, UserPlus, ShoppingCart, Award, TreePine,
-  Sparkles, DollarSign, User
-} from 'lucide-react';
-import { ActivityBarService } from '../../services/activityBarService';
+import { ShoppingCart, Award, TreePine, Sparkles } from 'lucide-react';
+import { LiveActivityService, LiveActivity } from '../../services/liveActivityService';
 
 const iconMap: Record<string, any> = {
-  TrendingUp,
-  UserPlus,
   ShoppingCart,
   Award,
   TreePine,
   Sparkles,
-  DollarSign,
-  User,
 };
 
-interface Activity {
-  message: string;
-  icon: string;
-}
-
 export function LiveActivityBar() {
-  const [activities, setActivities] = useState<Activity[]>([]);
+  const [activities, setActivities] = useState<LiveActivity[]>([]);
   const [isEnabled, setIsEnabled] = useState(true);
-  const [scrollSpeed, setScrollSpeed] = useState<'slow' | 'medium' | 'fast'>('medium');
+  const [speed, setSpeed] = useState<'slow' | 'medium' | 'fast'>('medium');
 
   useEffect(() => {
     loadActivities();
+
+    const unsubscribe = LiveActivityService.subscribeToChanges(() => {
+      loadActivities();
+    });
+
     const interval = setInterval(loadActivities, 30000);
-    return () => clearInterval(interval);
+
+    return () => {
+      unsubscribe();
+      clearInterval(interval);
+    };
   }, []);
 
   const loadActivities = async () => {
     try {
-      const settings = await ActivityBarService.getSettings();
+      const settings = await LiveActivityService.getSettings();
       if (settings) {
         setIsEnabled(settings.is_enabled);
-        setScrollSpeed(settings.scroll_speed);
+        setSpeed(settings.animation_speed);
       }
 
-      const data = await ActivityBarService.getActivitiesToDisplay();
-      if (data.length > 0) {
-        setActivities(data);
-      }
+      const data = await LiveActivityService.getLiveActivities();
+      setActivities(data);
     } catch (error) {
       console.error('Error loading activities:', error);
     }
@@ -53,159 +48,146 @@ export function LiveActivityBar() {
     return null;
   }
 
-  // حساب السرعة بالثواني - ثابت وبسيط
-  const speedMap = {
-    slow: '60s',
-    medium: '40s',
-    fast: '25s'
+  const speedDuration = {
+    slow: '50s',
+    medium: '35s',
+    fast: '22s'
   };
-
-  const animationDuration = speedMap[scrollSpeed];
 
   return (
     <>
       <style>{`
-        @keyframes seamless-scroll {
-          from {
-            transform: translateX(0);
-          }
-          to {
-            transform: translateX(-50%);
-          }
+        @keyframes smooth-scroll-left {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
         }
 
-        .live-activity-bar-wrapper {
+        .modern-live-activity-container {
           position: relative;
           width: 100%;
-          height: 48px;
+          height: 50px;
           overflow: hidden;
           background: linear-gradient(135deg,
-            rgba(44, 95, 45, 0.98) 0%,
-            rgba(30, 70, 32, 0.98) 50%,
-            rgba(44, 95, 45, 0.98) 100%
+            rgba(30, 70, 32, 0.95) 0%,
+            rgba(44, 95, 45, 0.95) 50%,
+            rgba(30, 70, 32, 0.95) 100%
           );
-          border-bottom: 1px solid rgba(212, 175, 55, 0.3);
-          border-radius: 0;
-          margin: 0;
-          padding: 0;
+          border-bottom: 1px solid rgba(212, 175, 55, 0.25);
         }
 
-        .live-activity-scrolltrack {
+        .modern-live-activity-track {
           display: flex;
           align-items: center;
           height: 100%;
-          width: max-content;
-          animation: seamless-scroll ${animationDuration} linear infinite;
+          animation: smooth-scroll-left ${speedDuration[speed]} linear infinite;
           will-change: transform;
         }
 
-        .live-activity-scrolltrack:hover {
+        .modern-live-activity-track:hover {
           animation-play-state: paused;
         }
 
-        .live-activity-content-group {
+        .modern-live-activity-group {
           display: flex;
           align-items: center;
           height: 100%;
-          padding: 0;
-          margin: 0;
+          flex-shrink: 0;
         }
 
-        .live-activity-single-item {
+        .modern-live-activity-item {
           display: flex;
           align-items: center;
-          gap: 12px;
-          padding: 0 28px;
+          gap: 10px;
+          padding: 0 24px;
           height: 100%;
           white-space: nowrap;
           flex-shrink: 0;
         }
 
-        .live-activity-icon-box {
-          width: 36px;
-          height: 36px;
+        .modern-live-activity-icon {
+          width: 34px;
+          height: 34px;
           display: flex;
           align-items: center;
           justify-content: center;
-          border-radius: 10px;
-          background: linear-gradient(135deg,
-            rgba(212, 175, 55, 0.25),
-            rgba(196, 148, 31, 0.15)
-          );
-          border: 1px solid rgba(212, 175, 55, 0.4);
+          border-radius: 8px;
+          background: rgba(212, 175, 55, 0.2);
+          border: 1px solid rgba(212, 175, 55, 0.35);
           flex-shrink: 0;
         }
 
-        .live-activity-message-text {
-          font-size: 15px;
+        .modern-live-activity-text {
+          font-size: 14px;
           font-weight: 600;
           color: #F5F5DC;
-          text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+          text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
         }
 
-        .live-activity-dot-separator {
-          width: 4px;
-          height: 4px;
+        .modern-live-activity-separator {
+          width: 3px;
+          height: 3px;
           border-radius: 50%;
-          background: rgba(212, 175, 55, 0.6);
-          margin: 0 18px;
+          background: rgba(212, 175, 55, 0.5);
+          margin: 0 16px;
           flex-shrink: 0;
         }
 
         @media (max-width: 768px) {
-          .live-activity-bar-wrapper {
-            height: 44px;
+          .modern-live-activity-container {
+            height: 46px;
           }
 
-          .live-activity-single-item {
-            padding: 0 20px;
-            gap: 10px;
+          .modern-live-activity-item {
+            padding: 0 18px;
+            gap: 8px;
           }
 
-          .live-activity-icon-box {
-            width: 32px;
-            height: 32px;
+          .modern-live-activity-icon {
+            width: 30px;
+            height: 30px;
           }
 
-          .live-activity-message-text {
-            font-size: 14px;
+          .modern-live-activity-text {
+            font-size: 13px;
           }
         }
       `}</style>
 
-      <div className="live-activity-bar-wrapper">
-        <div className="live-activity-scrolltrack">
-          {/* المجموعة الأولى */}
-          <div className="live-activity-content-group">
+      <div className="modern-live-activity-container">
+        <div className="modern-live-activity-track">
+          <div className="modern-live-activity-group">
             {activities.map((activity, idx) => {
-              const IconComponent = iconMap[activity.icon] || Sparkles;
+              const Icon = iconMap[activity.icon] || Sparkles;
               return (
-                <div key={`g1-${idx}`} style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
-                  <div className="live-activity-single-item">
-                    <div className="live-activity-icon-box">
-                      <IconComponent size={20} style={{ color: '#D4AF37', flexShrink: 0 }} />
+                <div key={`a-${idx}`} style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
+                  <div className="modern-live-activity-item">
+                    <div className="modern-live-activity-icon">
+                      <Icon size={18} style={{ color: '#D4AF37' }} />
                     </div>
-                    <span className="live-activity-message-text">{activity.message}</span>
+                    <span className="modern-live-activity-text">{activity.message}</span>
                   </div>
-                  {idx < activities.length - 1 && <div className="live-activity-dot-separator" />}
+                  {idx < activities.length - 1 && (
+                    <div className="modern-live-activity-separator" />
+                  )}
                 </div>
               );
             })}
           </div>
 
-          {/* المجموعة الثانية - نسخة مطابقة */}
-          <div className="live-activity-content-group">
+          <div className="modern-live-activity-group">
             {activities.map((activity, idx) => {
-              const IconComponent = iconMap[activity.icon] || Sparkles;
+              const Icon = iconMap[activity.icon] || Sparkles;
               return (
-                <div key={`g2-${idx}`} style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
-                  <div className="live-activity-single-item">
-                    <div className="live-activity-icon-box">
-                      <IconComponent size={20} style={{ color: '#D4AF37', flexShrink: 0 }} />
+                <div key={`b-${idx}`} style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
+                  <div className="modern-live-activity-item">
+                    <div className="modern-live-activity-icon">
+                      <Icon size={18} style={{ color: '#D4AF37' }} />
                     </div>
-                    <span className="live-activity-message-text">{activity.message}</span>
+                    <span className="modern-live-activity-text">{activity.message}</span>
                   </div>
-                  {idx < activities.length - 1 && <div className="live-activity-dot-separator" />}
+                  {idx < activities.length - 1 && (
+                    <div className="modern-live-activity-separator" />
+                  )}
                 </div>
               );
             })}
