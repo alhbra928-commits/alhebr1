@@ -298,6 +298,50 @@ export function ModernRoyalPlatform({
       {/* Glass Overlay - Simple and Clean */}
       <div className="fixed inset-0 bg-white/30 backdrop-blur-[2px] pointer-events-none"></div>
 
+      {/* ============ HEADER الثابت مثل Farm Detail تماماً ============ */}
+      <div
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 999999,
+          backgroundColor: 'rgba(255, 255, 255, 0.95)',
+          borderBottom: '1px solid #e5e7eb',
+          paddingTop: 'max(8px, env(safe-area-inset-top))',
+          paddingBottom: '8px',
+          paddingLeft: '16px',
+          paddingRight: '16px',
+          WebkitBackdropFilter: 'saturate(180%) blur(20px)',
+          backdropFilter: 'saturate(180%) blur(20px)',
+          WebkitTransform: 'translate3d(0, 0, 0)',
+          transform: 'translate3d(0, 0, 0)',
+          WebkitPerspective: 1000,
+          perspective: 1000,
+          willChange: 'transform',
+          isolation: 'isolate',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+          pointerEvents: 'auto'
+        }}
+      >
+        {/* الشريط المتحرك داخل الهيدر */}
+        <div style={{ marginBottom: '8px' }}>
+          <LiveActivityBar />
+        </div>
+
+        {/* معلومات إضافية يمكن إضافتها لاحقاً */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: '14px',
+          color: '#059669',
+          fontWeight: '600'
+        }}>
+          {platformName}
+        </div>
+      </div>
+
       {/* Content */}
       <div className="relative z-10" style={{ flex: '1 0 auto', paddingTop: '104px', paddingBottom: '90px' }}>
         {/* Smart Floating Button - يُفتح من الشريط الجانبي فقط */}
@@ -355,9 +399,6 @@ export function ModernRoyalPlatform({
       </div>
 
       {/* 🎯 ROOT LEVEL COMPONENTS - خارج Flow الصفحة تماماً */}
-
-      {/* Live Activity Bar - Standalone Layer مثل الأيقونات الجانبية */}
-      <LiveActivityBar />
 
       {/* Admin Crown Button - Green */}
       <AdminCrownButton

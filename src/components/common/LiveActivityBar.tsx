@@ -116,15 +116,11 @@ export function LiveActivityBar() {
   return (
     <>
       <style>{`
-        /* ============ ULTIMATE FIXED WRAPPER - ثابت جذرياً ============ */
+        /* ============ RELATIVE WRAPPER - داخل الهيدر الثابت ============ */
         .live-activity-bar-wrapper {
-          position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
+          position: relative;
           width: 100%;
           height: 48px;
-          z-index: 10000;
           pointer-events: none;
           overflow: hidden;
 
@@ -133,25 +129,19 @@ export function LiveActivityBar() {
           -webkit-transform: translate3d(0, 0, 0);
           -webkit-backface-visibility: hidden;
           backface-visibility: hidden;
-          -webkit-perspective: 1000;
-          perspective: 1000;
           will-change: transform;
           isolation: isolate;
         }
 
-        /* ============ MAIN ACTIVITY BAR - ثابت جذرياً ============ */
+        /* ============ MAIN ACTIVITY BAR - relative داخل الهيدر ============ */
         .live-activity-bar {
-          position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
+          position: relative;
           width: 100%;
           height: 48px;
           overflow: hidden;
           background: linear-gradient(135deg, #2C5F2D 0%, #1E4620 50%, #2C5F2D 100%);
           box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-          border-bottom: 2px solid rgba(212, 175, 55, 0.3);
-          z-index: 10000;
+          border-radius: 12px;
           -webkit-backdrop-filter: blur(10px);
           backdrop-filter: blur(10px);
           pointer-events: auto;
@@ -183,19 +173,9 @@ export function LiveActivityBar() {
           will-change: transform;
           position: relative;
         }
-
-        /* ============ iOS SAFARI FIX - ضمانات إضافية ============ */
-        @supports (-webkit-touch-callout: none) {
-          .live-activity-bar-wrapper,
-          .live-activity-bar {
-            position: fixed !important;
-            transform: translate3d(0, 0, 0) !important;
-            -webkit-transform: translate3d(0, 0, 0) !important;
-          }
-        }
       `}</style>
 
-      {/* 🎯 Standalone Wrapper - خارج Flow الصفحة تماماً */}
+      {/* 🎯 Wrapper داخل الهيدر الثابت */}
       <div className="live-activity-bar-wrapper">
         <div
           ref={containerRef}
