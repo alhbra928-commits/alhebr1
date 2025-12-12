@@ -8,6 +8,15 @@ export interface LiveActivitySettings {
   show_certificates: boolean;
   show_farms: boolean;
   max_items: number;
+  background_style: 'gradient' | 'solid' | 'glass';
+  text_color: string;
+  icon_color: string;
+  border_style: 'none' | 'bottom' | 'top' | 'both';
+  height: number;
+  pause_on_hover: boolean;
+  show_separator: boolean;
+  enable_sound: boolean;
+  refresh_interval: number;
   updated_at: string;
 }
 
