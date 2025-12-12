@@ -7,6 +7,9 @@ const __dirname = dirname(__filename);
 
 console.log('\n🔄 Running post-build tasks...\n');
 
+// Allow overriding output directory via OUT_DIR env var (default: dist)
+const OUT_DIR = process.env.OUT_DIR || 'dist';
+
 const manifestPath = join(__dirname, '..', 'version-manifest.json');
 let version = `v${Date.now()}`;
 
@@ -16,9 +19,9 @@ if (existsSync(manifestPath)) {
   console.log(`📌 Using version: ${version}`);
 }
 
-const distIndexPath = join(__dirname, '..', 'dist', 'index.html');
-if (existsSync(distIndexPath)) {
-  let content = readFileSync(distIndexPath, 'utf-8');
+const outIndexPath = join(__dirname, '..', OUT_DIR, 'index.html');
+if (existsSync(outIndexPath)) {
+  let content = readFileSync(outIndexPath, 'utf-8');
 
   // Replace __BUILD_VERSION__ placeholder with actual version
   content = content.replace(/__BUILD_VERSION__/g, version);
@@ -48,7 +51,7 @@ if (existsSync(distIndexPath)) {
 
           // Show update message
           const msg = document.createElement('div');
-          msg.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#10b981;color:white;padding:20px 40px;border-radius:12px;font-size:18px;font-weight:bold;z-index:999999;box-shadow:0 8px 32px rgba(0,0,0,0.3);text-align:center;';
+          msg.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#10b981;color:white;padding:20px 40px;border-radius:12px;font-size:18px;font-weight:bold;z-index:999999';
           msg.innerHTML = '🔄<br>تحديث جديد<br>جارٍ التحديث...';
           document.body.appendChild(msg);
 
@@ -63,7 +66,7 @@ if (existsSync(distIndexPath)) {
         // Visual indicator
         const indicator = document.createElement('div');
         indicator.id = 'version-indicator';
-        indicator.style.cssText = 'position:fixed;bottom:10px;left:10px;background:rgba(0,0,0,0.8);color:#0f0;padding:8px 12px;border-radius:8px;font-family:monospace;font-size:11px;z-index:999999;';
+        indicator.style.cssText = 'position:fixed;bottom:10px;left:10px;background:rgba(0,0,0,0.8);color:#0f0;padding:8px 12px;border-radius:8px;font-family:monospace;font-size:11px;z-index:999999';
         indicator.textContent = VERSION;
         document.addEventListener('DOMContentLoaded', () => {
           document.body.appendChild(indicator);
@@ -74,12 +77,12 @@ if (existsSync(distIndexPath)) {
   </body>`;
 
   content = content.replace('</body>', swScript);
-  writeFileSync(distIndexPath, content, 'utf-8');
-  console.log('✅ Added Service Worker + ultra-aggressive cache prevention to dist/index.html');
+  writeFileSync(outIndexPath, content, 'utf-8');
+  console.log('✅ Added Service Worker + ultra-aggressive cache prevention to build index.html');
 
-  // Copy and update service-worker.js
+  // Copy and update service-worker.js from public to outDir
   const swPath = join(__dirname, '..', 'public', 'service-worker.js');
-  const swDestPath = join(__dirname, '..', 'dist', 'service-worker.js');
+  const swDestPath = join(__dirname, '..', OUT_DIR, 'service-worker.js');
   if (existsSync(swPath)) {
     let swContent = readFileSync(swPath, 'utf-8');
     swContent = swContent.replace(/__SW_VERSION__/g, version);
@@ -87,23 +90,37 @@ if (existsSync(distIndexPath)) {
     console.log(`✅ Copied and updated service-worker.js with version ${version}`);
   }
 
-  // Copy SW files to dist
+  // Copy SW helper files to outDir (if present)
   const swFiles = ['sw-force-update.js', 'register-sw.js'];
   swFiles.forEach(file => {
     const srcPath = join(__dirname, '..', 'public', file);
-    const destPath = join(__dirname, '..', 'dist', file);
+    const destPath = join(__dirname, '..', OUT_DIR, file);
     if (existsSync(srcPath)) {
       let swContent = readFileSync(srcPath, 'utf-8');
       // Replace version in SW files
       swContent = swContent.replace(/v\d{8}_\d+/g, version);
       writeFileSync(destPath, swContent, 'utf-8');
-      console.log(`✅ Copied and updated ${file} to dist/`);
+      console.log(`✅ Copied and updated ${file} to ${OUT_DIR}/`);
     }
   });
+} else {
+  console.warn(`⚠️  No index.html found in ${OUT_DIR}/ — skipping index post-processing`);
+}
+
+// Copy version-manifest.json (if present) into OUT_DIR so post-build features can use it
+try {
+  const srcManifest = join(__dirname, '..', 'version-manifest.json');
+  const destManifest = join(__dirname, '..', OUT_DIR, 'version-manifest.json');
+  if (existsSync(srcManifest)) {
+    copyFileSync(srcManifest, destManifest);
+    console.log('✅ Copied version-manifest.json to build output');
+  }
+} catch (error) {
+  console.warn('⚠️ Could not copy version-manifest.json:', error.message);
 }
 
 // Create CDN-compatible _headers file
-const headersPath = join(__dirname, '..', 'dist', '_headers');
+const headersPath = join(__dirname, '..', OUT_DIR, '_headers');
 writeFileSync(headersPath, `# ULTRA AGGRESSIVE CACHE PREVENTION FOR CDN/PREVIEW
 # Compatible with Netlify, Vercel, Cloudflare, etc.
 
@@ -152,11 +169,10 @@ writeFileSync(headersPath, `# ULTRA AGGRESSIVE CACHE PREVENTION FOR CDN/PREVIEW
 `);
 console.log('✅ Created ultra-aggressive _headers file');
 
-const redirectsPath = join(__dirname, '..', 'dist', '_redirects');
+const redirectsPath = join(__dirname, '..', OUT_DIR, '_redirects');
 writeFileSync(redirectsPath, '/*    /index.html   200\n');
 console.log('✅ Created _redirects file');
 
-// Generate Atomic Deployment Manifest
 console.log('\n🔐 Generating Atomic Deployment Manifest...\n');
 try {
   const { execSync } = await import('child_process');
@@ -164,25 +180,6 @@ try {
   console.log('✅ Manifest generation completed');
 } catch (error) {
   console.error('❌ Manifest generation failed:', error.message);
-}
-
-// 🔥 DISABLED: No aggressive cache busters (prevents reload loops)
-// try {
-//   const { execSync } = await import('child_process');
-//   execSync('node scripts/inject-cache-busters.mjs', { stdio: 'inherit' });
-//   console.log('✅ Aggressive cache busters injected');
-// } catch (error) {
-//   console.error('⚠️ Cache busters injection skipped:', error.message);
-// }
-console.log('⚠️ Cache busters DISABLED (prevents reload loops)');
-
-// 🔥 FORCE CDN PURGE
-try {
-  const { execSync } = await import('child_process');
-  execSync('node scripts/force-cdn-purge.mjs', { stdio: 'inherit' });
-  console.log('✅ CDN Purge system activated');
-} catch (error) {
-  console.error('⚠️ CDN Purge system skipped:', error.message);
 }
 
 console.log('\n✅ Post-build tasks completed!\n');

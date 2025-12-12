@@ -12,7 +12,9 @@
     "generate-cache": "node scripts/generate-cache-buster.js",
     "lint": "eslint .",
     "preview": "vite preview",
-    "typecheck": "tsc --noEmit -p tsconfig.app.json"
+    "typecheck": "tsc --noEmit -p tsconfig.app.json",
+    "build:public_html": "vite build --outDir public_html",
+    "deploy:hostinger": "OUT_DIR=public_html npm run prebuild && vite build --outDir $OUT_DIR && node scripts/post-build.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.57.4",
