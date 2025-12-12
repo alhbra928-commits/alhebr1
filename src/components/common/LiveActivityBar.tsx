@@ -112,45 +112,67 @@ export function LiveActivityBar() {
 
   const duplicatedActivities = [...activities, ...activities];
 
-  // 🔧 فصل الشريط كطبقة مستقلة تماماً - Standalone Overlay Layer
+  // ✅ ثبات جذري 100% - نفس تقنية Farm Detail Page
   return (
     <>
       <style>{`
-        /* 🎯 STANDALONE WRAPPER LAYER - خارج Flow الصفحة تماماً */
+        /* ============ ULTIMATE FIXED WRAPPER - ثابت جذرياً ============ */
         .live-activity-bar-wrapper {
           position: fixed;
           top: 0;
           left: 0;
-          width: 100vw;
+          right: 0;
+          width: 100%;
           height: 48px;
           z-index: 10000;
           pointer-events: none;
+          overflow: hidden;
+
+          /* GPU Layer منفصل */
+          transform: translate3d(0, 0, 0);
+          -webkit-transform: translate3d(0, 0, 0);
+          -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+          -webkit-perspective: 1000;
+          perspective: 1000;
+          will-change: transform;
+          isolation: isolate;
         }
 
-        /* 🎨 MAIN ACTIVITY BAR - الشريط الرئيسي */
+        /* ============ MAIN ACTIVITY BAR - ثابت جذرياً ============ */
         .live-activity-bar {
           position: fixed;
           top: 0;
           left: 0;
           right: 0;
           width: 100%;
+          height: 48px;
           overflow: hidden;
           background: linear-gradient(135deg, #2C5F2D 0%, #1E4620 50%, #2C5F2D 100%);
           box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
           border-bottom: 2px solid rgba(212, 175, 55, 0.3);
-          height: 48px;
           z-index: 10000;
           -webkit-backdrop-filter: blur(10px);
           backdrop-filter: blur(10px);
           pointer-events: auto;
+
+          /* GPU Layer + Isolation */
+          transform: translate3d(0, 0, 0);
+          -webkit-transform: translate3d(0, 0, 0);
+          -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+          will-change: transform;
+          isolation: isolate;
         }
 
+        /* ============ INNER CONTENT - محتوى السكرول ============ */
         .live-activity-bar-inner {
           height: 100%;
           display: flex;
           align-items: center;
           position: relative;
           overflow: hidden;
+          isolation: isolate;
         }
 
         .live-activity-bar-track {
@@ -159,66 +181,16 @@ export function LiveActivityBar() {
           gap: 24px;
           min-width: max-content;
           will-change: transform;
+          position: relative;
         }
 
-        /* 🍎 iPhone specific fixes - نفس طريقة الإصلاح للايقونات الجانبية */
+        /* ============ iOS SAFARI FIX - ضمانات إضافية ============ */
         @supports (-webkit-touch-callout: none) {
           .live-activity-bar-wrapper,
           .live-activity-bar {
-            position: fixed;
-            -webkit-transform: translate3d(0, 0, 0);
-            transform: translate3d(0, 0, 0);
-            -webkit-backface-visibility: hidden;
-            backface-visibility: hidden;
-            will-change: transform;
-          }
-
-          .live-activity-bar-wrapper {
-            top: env(safe-area-inset-top, 0px);
-            height: calc(48px + env(safe-area-inset-top, 0px));
-          }
-
-          .live-activity-bar {
-            top: env(safe-area-inset-top, 0px);
-            padding-top: env(safe-area-inset-top, 0px);
-            height: calc(48px + env(safe-area-inset-top, 0px));
-          }
-
-          .live-activity-bar-inner,
-          .live-activity-bar-track {
-            position: relative;
-            -webkit-transform: translate3d(0, 0, 0);
-            transform: translate3d(0, 0, 0);
-            -webkit-backface-visibility: hidden;
-            backface-visibility: hidden;
-          }
-        }
-
-        /* 📱 Additional iPhone Safari overscroll/bounce fixes */
-        @media only screen
-          and (max-width: 768px)
-          and (-webkit-min-device-pixel-ratio: 2) {
-
-          .live-activity-bar-wrapper {
             position: fixed !important;
-            will-change: transform;
-            -webkit-overflow-scrolling: touch;
-          }
-
-          .live-activity-bar {
-            position: fixed !important;
-            will-change: transform;
-            -webkit-overflow-scrolling: touch;
-          }
-
-          .live-activity-bar-inner,
-          .live-activity-bar-track {
-            position: relative !important;
-          }
-
-          /* منع Safari من إعادة حساب الموضع عند التمرير */
-          body {
-            -webkit-overflow-scrolling: touch;
+            transform: translate3d(0, 0, 0) !important;
+            -webkit-transform: translate3d(0, 0, 0) !important;
           }
         }
       `}</style>
