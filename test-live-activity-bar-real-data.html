@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>اختبار شريط النشاط المباشر - البيانات الحقيقية</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+      min-height: 100vh;
+      padding: 0;
+      color: #F5F5DC;
+    }
+    .preview-container {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+    .info-panel {
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(10px);
+      border: 2px solid #2C5F2D;
+      border-radius: 20px;
+      padding: 2rem;
+      margin: 2rem;
+    }
+    h1 {
+      text-align: center;
+      color: #D4AF37;
+      margin-bottom: 2rem;
+      font-size: 2.5rem;
+      text-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+    }
+    .status {
+      padding: 1.5rem;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      font-size: 1.1rem;
+      text-align: center;
+      font-weight: bold;
+      border: 2px solid;
+    }
+    .status.loading {
+      background: rgba(255, 165, 0, 0.2);
+      border-color: #FFA500;
+      color: #FFA500;
+    }
+    .status.success {
+      background: rgba(34, 197, 94, 0.2);
+      border-color: #22C55E;
+      color: #22C55E;
+    }
+    .status.error {
+      background: rgba(239, 68, 68, 0.2);
+      border-color: #EF4444;
+      color: #EF4444;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: linear-gradient(135deg, #2C5F2D 0%, #1a3a1c 100%);
+      border: 2px solid #D4AF37;
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+    }
+    .stat-value {
+      font-size: 2.5rem;
+      color: #D4AF37;
+      font-weight: bold;
+      text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+    }
+    .stat-label {
+      color: #F5F5DC;
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+    }
+    .section {
+      background: rgba(44, 95, 45, 0.1);
+      border: 2px solid #2C5F2D;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .section h2 {
+      color: #D4AF37;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .activities-list {
+      display: grid;
+      gap: 0.75rem;
+      max-height: 400px;
+      overflow-y: auto;
+      padding-right: 0.5rem;
+    }
+    .activities-list::-webkit-scrollbar {
+      width: 8px;
+    }
+    .activities-list::-webkit-scrollbar-track {
+      background: rgba(0,0,0,0.2);
+      border-radius: 4px;
+    }
+    .activities-list::-webkit-scrollbar-thumb {
+      background: #D4AF37;
+      border-radius: 4px;
+    }
+    .activity-item {
+      background: rgba(0,0,0,0.3);
+      border: 1px solid #2C5F2D;
+      border-radius: 8px;
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .activity-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      background: rgba(212, 175, 55, 0.2);
+      border: 1px solid rgba(212, 175, 55, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .activity-content {
+      flex: 1;
+    }
+    .activity-message {
+      color: #F5F5DC;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    .activity-meta {
+      color: #9CA3AF;
+      font-size: 0.85rem;
+      display: flex;
+      gap: 1rem;
+    }
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: bold;
+    }
+    .badge.auto {
+      background: rgba(59, 130, 246, 0.2);
+      color: #3B82F6;
+      border: 1px solid rgba(59, 130, 246, 0.4);
+    }
+    .badge.manual {
+      background: rgba(212, 175, 55, 0.2);
+      color: #D4AF37;
+      border: 1px solid rgba(212, 175, 55, 0.4);
+    }
+    .live-bar-preview {
+      margin: 2rem 0;
+      border: 2px solid #D4AF37;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .settings-display {
+      background: rgba(0,0,0,0.3);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+    .settings-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 0.5rem;
+    }
+    .settings-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.5rem;
+      background: rgba(44, 95, 45, 0.1);
+      border-radius: 6px;
+    }
+    .settings-label {
+      color: #9CA3AF;
+    }
+    .settings-value {
+      color: #D4AF37;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="preview-container">
+    <!-- الشريط المباشر -->
+    <div class="live-bar-preview" id="live-bar-container">
+      <div style="padding: 20px; text-align: center; color: #9CA3AF;">
+        جاري التحميل...
+      </div>
+    </div>
+
+    <!-- لوحة المعلومات -->
+    <div class="info-panel">
+      <h1>🎯 اختبار شريط النشاط المباشر</h1>
+
+      <div id="status" class="status loading">
+        ⏳ جاري الاتصال بقاعدة البيانات...
+      </div>
+
+      <!-- الإحصائيات -->
+      <div class="section">
+        <h2>📊 إحصائيات البيانات</h2>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-value" id="reservations-count">0</div>
+            <div class="stat-label">الحجوزات</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="certificates-count">0</div>
+            <div class="stat-label">الشهادات</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="farms-count">0</div>
+            <div class="stat-label">المزارع النشطة</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="custom-messages-count">0</div>
+            <div class="stat-label">الرسائل المخصصة</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="total-activities">0</div>
+            <div class="stat-label">إجمالي الأنشطة</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- الإعدادات -->
+      <div class="section">
+        <h2>⚙️ الإعدادات الحالية</h2>
+        <div class="settings-display" id="settings-display">
+          <p style="text-align: center; color: #9CA3AF;">جاري التحميل...</p>
+        </div>
+      </div>
+
+      <!-- قائمة الأنشطة -->
+      <div class="section">
+        <h2>📋 الأنشطة المعروضة</h2>
+        <div class="activities-list" id="activities-list">
+          <p style="text-align: center; color: #9CA3AF;">جاري التحميل...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+    const SUPABASE_URL = 'https://vfbqltncrkbrbagwgjwi.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZmYnFsdG5jcmticmJhZ3dnandpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjk0MDE2MDYsImV4cCI6MjA0NDk3NzYwNn0.fh5nhL5L3oqhlNqXnlwbvMv_JNI05J4yt_NrUK1htMg';
+
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const iconMap = {
+      'ShoppingCart': '🛒',
+      'Award': '🏆',
+      'TreePine': '🌲',
+      'Sparkles': '✨',
+      'TrendingUp': '📈',
+      'Users': '👥',
+      'Zap': '⚡',
+      'Star': '⭐'
+    };
+
+    function updateStatus(message, type = 'loading') {
+      const statusEl = document.getElementById('status');
+      statusEl.textContent = message;
+      statusEl.className = `status ${type}`;
+    }
+
+    async function loadDataStats() {
+      try {
+        const [reservations, certificates, farms, customMessages] = await Promise.all([
+          supabase.from('reservations').select('id', { count: 'exact', head: true }),
+          supabase.from('documentation').select('id', { count: 'exact', head: true }),
+          supabase.from('farms').select('id', { count: 'exact', head: true }).eq('status', 'active'),
+          supabase.from('live_activity_custom_messages').select('id', { count: 'exact', head: true }).eq('is_active', true)
+        ]);
+
+        document.getElementById('reservations-count').textContent = reservations.count || 0;
+        document.getElementById('certificates-count').textContent = certificates.count || 0;
+        document.getElementById('farms-count').textContent = farms.count || 0;
+        document.getElementById('custom-messages-count').textContent = customMessages.count || 0;
+
+        return {
+          reservations: reservations.count || 0,
+          certificates: certificates.count || 0,
+          farms: farms.count || 0,
+          customMessages: customMessages.count || 0
+        };
+      } catch (error) {
+        console.error('Error loading data stats:', error);
+        return { reservations: 0, certificates: 0, farms: 0, customMessages: 0 };
+      }
+    }
+
+    async function loadSettings() {
+      try {
+        const { data, error } = await supabase
+          .from('live_activity_settings')
+          .select('*')
+          .limit(1)
+          .single();
+
+        if (error) throw error;
+
+        const settingsHTML = `
+          <div class="settings-row">
+            <div class="settings-item">
+              <span class="settings-label">الحالة:</span>
+              <span class="settings-value">${data.is_enabled ? '✅ مفعل' : '❌ معطل'}</span>
+            </div>
+            <div class="settings-item">
+              <span class="settings-label">وضع المحتوى:</span>
+              <span class="settings-value">${data.content_mode === 'auto' ? 'تلقائي' : data.content_mode === 'manual' ? 'يدوي' : 'كلاهما'}</span>
+            </div>
+            <div class="settings-item">
+              <span class="settings-label">السرعة:</span>
+              <span class="settings-value">${data.animation_speed === 'fast' ? 'سريع' : data.animation_speed === 'medium' ? 'متوسط' : 'بطيء'}</span>
+            </div>
+            <div class="settings-item">
+              <span class="settings-label">عرض الحجوزات:</span>
+              <span class="settings-value">${data.show_reservations ? '✅' : '❌'}</span>
+            </div>
+            <div class="settings-item">
+              <span class="settings-label">عرض الشهادات:</span>
+              <span class="settings-value">${data.show_certificates ? '✅' : '❌'}</span>
+            </div>
+            <div class="settings-item">
+              <span class="settings-label">عرض المزارع:</span>
+              <span class="settings-value">${data.show_farms ? '✅' : '❌'}</span>
+            </div>
+            <div class="settings-item">
+              <span class="settings-label">الحد الأقصى:</span>
+              <span class="settings-value">${data.max_items} عنصر</span>
+            </div>
+            <div class="settings-item">
+              <span class="settings-label">فترة التحديث:</span>
+              <span class="settings-value">${data.refresh_interval} ثانية</span>
+            </div>
+          </div>
+        `;
+
+        document.getElementById('settings-display').innerHTML = settingsHTML;
+        return data;
+      } catch (error) {
+        console.error('Error loading settings:', error);
+        return null;
+      }
+    }
+
+    async function loadActivities(settings) {
+      try {
+        let activities = [];
+
+        // Load custom messages
+        if (settings.content_mode === 'manual' || settings.content_mode === 'both') {
+          const { data: customMessages } = await supabase
+            .from('live_activity_custom_messages')
+            .select('*')
+            .eq('is_active', true)
+            .order('priority', { ascending: false });
+
+          if (customMessages) {
+            activities = activities.concat(customMessages.map(msg => ({
+              id: msg.id,
+              message: msg.message_ar,
+              icon: msg.icon,
+              timestamp: msg.created_at,
+              type: 'custom',
+              source: 'manual'
+            })));
+          }
+        }
+
+        // Load auto activities
+        if (settings.content_mode === 'auto' || settings.content_mode === 'both') {
+          const maxPerType = Math.ceil(settings.max_items / 3);
+
+          if (settings.show_reservations) {
+            const { data: reservations } = await supabase
+              .from('reservations')
+              .select('id, customer_name, created_at')
+              .order('created_at', { ascending: false })
+              .limit(maxPerType);
+
+            if (reservations) {
+              reservations.forEach(res => {
+                activities.push({
+                  id: res.id,
+                  message: `حجز جديد من ${res.customer_name}`,
+                  icon: 'ShoppingCart',
+                  timestamp: res.created_at,
+                  type: 'reservation',
+                  source: 'auto'
+                });
+              });
+            }
+          }
+
+          if (settings.show_certificates) {
+            const { data: certificates } = await supabase
+              .from('documentation')
+              .select('id, created_at')
+              .order('created_at', { ascending: false })
+              .limit(maxPerType);
+
+            if (certificates) {
+              certificates.forEach(cert => {
+                activities.push({
+                  id: cert.id,
+                  message: 'تم إصدار شهادة تملك جديدة',
+                  icon: 'Award',
+                  timestamp: cert.created_at,
+                  type: 'certificate',
+                  source: 'auto'
+                });
+              });
+            }
+          }
+
+          if (settings.show_farms) {
+            const { data: farms } = await supabase
+              .from('farms')
+              .select('id, farm_name_ar, created_at')
+              .eq('status', 'active')
+              .order('created_at', { ascending: false })
+              .limit(maxPerType);
+
+            if (farms) {
+              farms.forEach(farm => {
+                activities.push({
+                  id: farm.id,
+                  message: `مزرعة ${farm.farm_name_ar} متاحة للاستثمار`,
+                  icon: 'TreePine',
+                  timestamp: farm.created_at,
+                  type: 'farm',
+                  source: 'auto'
+                });
+              });
+            }
+          }
+        }
+
+        // Sort and limit
+        activities.sort((a, b) => {
+          if (settings.content_mode === 'both') {
+            if (a.source !== b.source) {
+              return a.source === 'manual' ? -1 : 1;
+            }
+          }
+          return new Date(b.timestamp) - new Date(a.timestamp);
+        });
+
+        activities = activities.slice(0, settings.max_items);
+
+        document.getElementById('total-activities').textContent = activities.length;
+
+        // Display activities
+        if (activities.length === 0) {
+          document.getElementById('activities-list').innerHTML =
+            '<p style="text-align: center; color: #9CA3AF;">لا توجد أنشطة للعرض</p>';
+        } else {
+          const activitiesHTML = activities.map(activity => `
+            <div class="activity-item">
+              <div class="activity-icon">
+                ${iconMap[activity.icon] || '✨'}
+              </div>
+              <div class="activity-content">
+                <div class="activity-message">${activity.message}</div>
+                <div class="activity-meta">
+                  <span>${new Date(activity.timestamp).toLocaleDateString('ar-SA')}</span>
+                  <span class="badge ${activity.source}">${activity.source === 'auto' ? 'تلقائي' : 'يدوي'}</span>
+                  <span>${activity.type === 'reservation' ? 'حجز' : activity.type === 'certificate' ? 'شهادة' : activity.type === 'farm' ? 'مزرعة' : 'مخصص'}</span>
+                </div>
+              </div>
+            </div>
+          `).join('');
+
+          document.getElementById('activities-list').innerHTML = activitiesHTML;
+        }
+
+        return activities;
+      } catch (error) {
+        console.error('Error loading activities:', error);
+        return [];
+      }
+    }
+
+    function renderLiveBar(activities, settings) {
+      if (!activities || activities.length === 0 || !settings.is_enabled) {
+        document.getElementById('live-bar-container').innerHTML = `
+          <div style="padding: 20px; text-align: center; color: #9CA3AF;">
+            ${!settings.is_enabled ? 'الشريط معطل' : 'لا توجد أنشطة للعرض'}
+          </div>
+        `;
+        return;
+      }
+
+      const speedDuration = {
+        slow: '40s',
+        medium: '25s',
+        fast: '12s'
+      };
+
+      const getBackgroundStyle = () => {
+        switch (settings.background_style) {
+          case 'gradient':
+            return 'linear-gradient(135deg, rgba(30, 70, 32, 0.95) 0%, rgba(44, 95, 45, 0.95) 50%, rgba(30, 70, 32, 0.95) 100%)';
+          case 'solid':
+            return 'rgba(30, 70, 32, 0.95)';
+          case 'glass':
+            return 'rgba(30, 70, 32, 0.7)';
+          default:
+            return 'linear-gradient(135deg, rgba(30, 70, 32, 0.95) 0%, rgba(44, 95, 45, 0.95) 50%, rgba(30, 70, 32, 0.95) 100%)';
+        }
+      };
+
+      const barHTML = `
+        <style>
+          @keyframes smooth-scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+          }
+          .live-bar {
+            position: relative;
+            width: 100%;
+            height: ${settings.height}px;
+            overflow: hidden;
+            background: ${getBackgroundStyle()};
+            backdrop-filter: ${settings.background_style === 'glass' ? 'blur(10px)' : 'none'};
+          }
+          .live-bar-track {
+            display: flex;
+            align-items: center;
+            height: 100%;
+            animation: smooth-scroll ${speedDuration[settings.animation_speed]} linear infinite;
+          }
+          .live-bar-track:hover {
+            ${settings.pause_on_hover ? 'animation-play-state: paused;' : ''}
+          }
+          .live-bar-group {
+            display: flex;
+            align-items: center;
+            height: 100%;
+          }
+          .live-bar-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0 24px;
+            height: 100%;
+            white-space: nowrap;
+          }
+          .live-bar-icon {
+            width: 34px;
+            height: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            background: ${settings.icon_color}33;
+            border: 1px solid ${settings.icon_color}55;
+            font-size: 18px;
+          }
+          .live-bar-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: ${settings.text_color};
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+          }
+          .live-bar-separator {
+            width: 3px;
+            height: 3px;
+            border-radius: 50%;
+            background: ${settings.icon_color}80;
+            margin: 0 16px;
+          }
+        </style>
+        <div class="live-bar">
+          <div class="live-bar-track">
+            <div class="live-bar-group">
+              ${activities.map((activity, idx) => `
+                <div style="display: flex; align-items: center; height: 100%;">
+                  <div class="live-bar-item">
+                    <div class="live-bar-icon">${iconMap[activity.icon] || '✨'}</div>
+                    <span class="live-bar-text">${activity.message}</span>
+                  </div>
+                  ${settings.show_separator && idx < activities.length - 1 ? '<div class="live-bar-separator"></div>' : ''}
+                </div>
+              `).join('')}
+            </div>
+            <div class="live-bar-group">
+              ${activities.map((activity, idx) => `
+                <div style="display: flex; align-items: center; height: 100%;">
+                  <div class="live-bar-item">
+                    <div class="live-bar-icon">${iconMap[activity.icon] || '✨'}</div>
+                    <span class="live-bar-text">${activity.message}</span>
+                  </div>
+                  ${settings.show_separator && idx < activities.length - 1 ? '<div class="live-bar-separator"></div>' : ''}
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        </div>
+      `;
+
+      document.getElementById('live-bar-container').innerHTML = barHTML;
+    }
+
+    // Main initialization
+    (async () => {
+      try {
+        updateStatus('⏳ جاري تحميل البيانات...', 'loading');
+
+        const [stats, settings] = await Promise.all([
+          loadDataStats(),
+          loadSettings()
+        ]);
+
+        if (!settings) {
+          updateStatus('❌ فشل تحميل الإعدادات', 'error');
+          return;
+        }
+
+        const activities = await loadActivities(settings);
+        renderLiveBar(activities, settings);
+
+        updateStatus(`✅ تم تحميل ${activities.length} نشاط بنجاح`, 'success');
+
+        // Auto refresh
+        setInterval(async () => {
+          const freshActivities = await loadActivities(settings);
+          renderLiveBar(freshActivities, settings);
+          await loadDataStats();
+        }, settings.refresh_interval * 1000);
+
+      } catch (error) {
+        console.error('Error:', error);
+        updateStatus('❌ حدث خطأ في التحميل', 'error');
+      }
+    })();
+  </script>
+</body>
+</html>
