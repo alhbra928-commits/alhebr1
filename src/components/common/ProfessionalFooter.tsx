@@ -433,39 +433,25 @@ export function ProfessionalFooter({ onAdminLogin, onFarmOwnerLogin }: Professio
           title="لوحات التحكم"
         >
           {adminButtonExpanded && (
-            <div className="relative flex items-center justify-center">
+            <div className="relative flex flex-col items-center justify-center gap-1" style={{ width: '32px', height: '32px' }}>
               {/* Crown Icon - Top */}
               <Crown
-                className="text-white absolute"
-                size={18}
+                className="text-white"
+                size={14}
                 style={{
                   filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))',
                   animation: showAdminMenu ? 'none' : 'pulse 2s infinite',
-                  top: '-6px',
-                  left: '50%',
-                  transform: 'translateX(-50%)',
                 }}
               />
+              {/* Divider */}
+              <div className="w-4 h-px bg-white opacity-40" />
               {/* Shield Icon - Bottom */}
               <Shield
-                className="text-white absolute"
-                size={18}
+                className="text-white"
+                size={14}
                 style={{
                   filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))',
                   animation: showAdminMenu ? 'none' : 'pulse 2s infinite',
-                  bottom: '-6px',
-                  left: '50%',
-                  transform: 'translateX(-50%)',
-                }}
-              />
-              {/* Center divider line */}
-              <div
-                className="absolute bg-white opacity-40"
-                style={{
-                  width: '2px',
-                  height: '24px',
-                  left: '50%',
-                  transform: 'translateX(-50%)',
                 }}
               />
             </div>
