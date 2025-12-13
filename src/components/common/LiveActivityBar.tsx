@@ -7,6 +7,10 @@ const iconMap: Record<string, any> = {
   Award,
   TreePine,
   Sparkles,
+  TrendingUp: Sparkles,
+  Users: Sparkles,
+  Zap: Sparkles,
+  Star: Award,
 };
 
 export function LiveActivityBar() {

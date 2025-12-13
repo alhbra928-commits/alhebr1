@@ -17,6 +17,11 @@ export interface LiveActivitySettings {
   show_separator: boolean;
   enable_sound: boolean;
   refresh_interval: number;
+  content_mode: 'auto' | 'manual' | 'both';
+  auto_update_interval: number;
+  show_timestamps: boolean;
+  enable_animations: boolean;
+  duplicate_content: boolean;
   updated_at: string;
 }
 
@@ -25,7 +30,19 @@ export interface LiveActivity {
   message: string;
   icon: string;
   timestamp: string;
-  type: 'reservation' | 'certificate' | 'farm';
+  type: 'reservation' | 'certificate' | 'farm' | 'custom';
+  source: 'auto' | 'manual';
+}
+
+export interface CustomMessage {
+  id: string;
+  message_ar: string;
+  message_en?: string;
+  icon: string;
+  is_active: boolean;
+  priority: number;
+  created_at: string;
+  updated_at: string;
 }
 
 export class LiveActivityService {
@@ -63,17 +80,88 @@ export class LiveActivityService {
     }
   }
 
-  static async getLiveActivities(): Promise<LiveActivity[]> {
+  static async getCustomMessages(): Promise<CustomMessage[]> {
     try {
-      const settings = await this.getSettings();
-      if (!settings || !settings.is_enabled) {
-        return [];
-      }
+      const { data, error } = await supabase
+        .from('live_activity_custom_messages')
+        .select('*')
+        .eq('is_active', true)
+        .order('priority', { ascending: false })
+        .order('created_at', { ascending: false });
 
-      const activities: LiveActivity[] = [];
-      const maxPerType = Math.ceil(settings.max_items / 3);
+      if (error) throw error;
+      return data || [];
+    } catch (error) {
+      console.error('Error fetching custom messages:', error);
+      return [];
+    }
+  }
 
-      // جلب الحجوزات الأخيرة
+  static async getAllCustomMessages(): Promise<CustomMessage[]> {
+    try {
+      const { data, error } = await supabase
+        .from('live_activity_custom_messages')
+        .select('*')
+        .order('priority', { ascending: false })
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      return data || [];
+    } catch (error) {
+      console.error('Error fetching all custom messages:', error);
+      return [];
+    }
+  }
+
+  static async addCustomMessage(message: Omit<CustomMessage, 'id' | 'created_at' | 'updated_at'>): Promise<boolean> {
+    try {
+      const { error } = await supabase
+        .from('live_activity_custom_messages')
+        .insert([message]);
+
+      if (error) throw error;
+      return true;
+    } catch (error) {
+      console.error('Error adding custom message:', error);
+      return false;
+    }
+  }
+
+  static async updateCustomMessage(id: string, updates: Partial<CustomMessage>): Promise<boolean> {
+    try {
+      const { error } = await supabase
+        .from('live_activity_custom_messages')
+        .update(updates)
+        .eq('id', id);
+
+      if (error) throw error;
+      return true;
+    } catch (error) {
+      console.error('Error updating custom message:', error);
+      return false;
+    }
+  }
+
+  static async deleteCustomMessage(id: string): Promise<boolean> {
+    try {
+      const { error } = await supabase
+        .from('live_activity_custom_messages')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+      return true;
+    } catch (error) {
+      console.error('Error deleting custom message:', error);
+      return false;
+    }
+  }
+
+  static async getAutoActivities(settings: LiveActivitySettings): Promise<LiveActivity[]> {
+    const activities: LiveActivity[] = [];
+    const maxPerType = Math.ceil(settings.max_items / 3);
+
+    try {
       if (settings.show_reservations) {
         const { data: reservations } = await supabase
           .from('reservations')
@@ -89,13 +177,13 @@ export class LiveActivityService {
               message: `تم حجز أشجار جديدة بواسطة ${name}`,
               icon: 'ShoppingCart',
               timestamp: res.created_at,
-              type: 'reservation'
+              type: 'reservation',
+              source: 'auto'
             });
           });
         }
       }
 
-      // جلب الشهادات الأخيرة
       if (settings.show_certificates) {
         const { data: certificates } = await supabase
           .from('documentation')
@@ -110,13 +198,13 @@ export class LiveActivityService {
               message: `تم إصدار شهادة تملك جديدة`,
               icon: 'Award',
               timestamp: cert.created_at,
-              type: 'certificate'
+              type: 'certificate',
+              source: 'auto'
             });
           });
         }
       }
 
-      // جلب المزارع النشطة
       if (settings.show_farms) {
         const { data: farms } = await supabase
           .from('farms')
@@ -132,18 +220,55 @@ export class LiveActivityService {
               message: `مزرعة ${farm.farm_name_ar} متاحة للاستثمار`,
               icon: 'TreePine',
               timestamp: farm.created_at,
-              type: 'farm'
+              type: 'farm',
+              source: 'auto'
             });
           });
         }
       }
+    } catch (error) {
+      console.error('Error fetching auto activities:', error);
+    }
 
-      // ترتيب حسب الوقت
-      activities.sort((a, b) =>
-        new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
-      );
+    return activities;
+  }
 
-      // تحديد العدد الأقصى
+  static async getLiveActivities(): Promise<LiveActivity[]> {
+    try {
+      const settings = await this.getSettings();
+      if (!settings || !settings.is_enabled) {
+        return [];
+      }
+
+      let activities: LiveActivity[] = [];
+
+      if (settings.content_mode === 'auto' || settings.content_mode === 'both') {
+        const autoActivities = await this.getAutoActivities(settings);
+        activities = [...activities, ...autoActivities];
+      }
+
+      if (settings.content_mode === 'manual' || settings.content_mode === 'both') {
+        const customMessages = await this.getCustomMessages();
+        const manualActivities = customMessages.map(msg => ({
+          id: msg.id,
+          message: msg.message_ar,
+          icon: msg.icon,
+          timestamp: msg.created_at,
+          type: 'custom' as const,
+          source: 'manual' as const
+        }));
+        activities = [...activities, ...manualActivities];
+      }
+
+      activities.sort((a, b) => {
+        if (settings.content_mode === 'both') {
+          const aIsCustom = a.source === 'manual' ? 1 : 0;
+          const bIsCustom = b.source === 'manual' ? 1 : 0;
+          if (aIsCustom !== bIsCustom) return bIsCustom - aIsCustom;
+        }
+        return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
+      });
+
       return activities.slice(0, settings.max_items);
     } catch (error) {
       console.error('Error fetching live activities:', error);
@@ -164,6 +289,14 @@ export class LiveActivityService {
       )
       .on('postgres_changes',
         { event: '*', schema: 'public', table: 'farms' },
+        callback
+      )
+      .on('postgres_changes',
+        { event: '*', schema: 'public', table: 'live_activity_custom_messages' },
+        callback
+      )
+      .on('postgres_changes',
+        { event: '*', schema: 'public', table: 'live_activity_settings' },
         callback
       )
       .subscribe();
