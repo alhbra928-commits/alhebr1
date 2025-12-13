@@ -58,7 +58,8 @@ const SECTION_NAMES: Record<string, { name: string; icon: string; description: s
   // الإدارات الخاصة (لا تُحذف)
   'contact_bar': { name: 'شريط التواصل', icon: '📞', description: '⚙️ إدارة خاصة - من تبويب شريط التواصل' },
   'side_dock': { name: 'الشريط الجانبي', icon: '🎛️', description: '⚙️ إدارة خاصة - من تبويب الشريط الجانبي' },
-  'loader': { name: 'شاشة التحميل', icon: '👑', description: '⚙️ إدارة خاصة - من تبويب شاشة التحميل' }
+  'loader': { name: 'شاشة التحميل', icon: '👑', description: '⚙️ إدارة خاصة - من تبويب شاشة التحميل' },
+  'live_activity': { name: 'شريط النشاط المباشر', icon: '📊', description: '⚙️ إدارة خاصة - من تبويب شريط النشاط' }
 };
 
 export function CompletePlatformTextsManager() {
