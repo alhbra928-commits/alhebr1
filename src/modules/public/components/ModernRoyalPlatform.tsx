@@ -6,6 +6,7 @@ import { PublicFarm } from '../types/farm.types';
 import { PublicFarmService } from '../services/publicFarmService';
 import { GreenConceptButton } from './GreenConceptButton';
 import { EnhancedConceptCard } from './EnhancedConceptCard';
+import { AdminCrownButton } from './AdminCrownButton';
 import { BackToAdminButton } from './BackToAdminButton';
 import { SmartFloatingButton } from '../../../components/common/SmartFloatingButton';
 import { InnovativeFarmCard } from './InnovativeFarmCard';
@@ -404,6 +405,12 @@ export function ModernRoyalPlatform({
 
       {/* 🎯 ROOT LEVEL COMPONENTS - خارج Flow الصفحة تماماً */}
 
+      {/* Admin Crown Button - Green */}
+      <AdminCrownButton
+        onAdminLogin={onAdminLogin}
+        onFarmOwnerLogin={onFarmOwnerLogin}
+      />
+
       {/* Back to Admin Button - Shows when logged in */}
       {onBackToAdmin && (
         <BackToAdminButton onBackToAdmin={onBackToAdmin} />
@@ -430,10 +437,7 @@ export function ModernRoyalPlatform({
       />
 
       {/* Professional Footer */}
-      <ProfessionalFooter
-        onAdminLogin={onAdminLogin}
-        onFarmOwnerLogin={onFarmOwnerLogin}
-      />
+      <ProfessionalFooter />
 
       {/* تنسيق متجاوب للأيقونات والمحتوى */}
       <style>{`
