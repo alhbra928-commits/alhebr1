@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { User, Phone, ChevronRight, ChevronLeft, UserCog, Tractor } from 'lucide-react';
+import { User, Phone, ChevronRight, ChevronLeft, Home } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 
 interface InnovativeSideDockProps {
@@ -46,6 +46,7 @@ export function InnovativeSideDock({
     defaultState: 'visible'
   });
   const [isVisible, setIsVisible] = useState(true);
+  const [isHomeDropdownOpen, setIsHomeDropdownOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -178,24 +179,57 @@ export function InnovativeSideDock({
           margin: 4px auto;
         }
 
-        .side-dock-admin-button {
-          background: linear-gradient(135deg, #3B82F6, #2563EB);
-          box-shadow: 0 4px 20px rgba(59, 130, 246, 0.5);
+        .side-dock-dropdown {
+          position: absolute;
+          left: 80px;
+          background: rgba(0, 0, 0, 0.95);
+          backdrop-filter: blur(20px);
+          border-radius: 16px;
+          padding: 8px;
+          min-width: 200px;
+          border: 2px solid rgba(16, 185, 129, 0.3);
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+          opacity: 0;
+          transform: translateX(-10px);
+          pointer-events: none;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          z-index: 10001;
         }
 
-        .side-dock-admin-button:hover {
-          background: linear-gradient(135deg, #2563EB, #1D4ED8);
-          box-shadow: 0 6px 30px rgba(59, 130, 246, 0.7);
+        .side-dock-dropdown.open {
+          opacity: 1;
+          transform: translateX(0);
+          pointer-events: auto;
         }
 
-        .side-dock-owner-button {
-          background: linear-gradient(135deg, #10B981, #059669);
-          box-shadow: 0 4px 20px rgba(16, 185, 129, 0.5);
+        .side-dock-dropdown-item {
+          width: 100%;
+          padding: 12px 16px;
+          background: rgba(255, 255, 255, 0.05);
+          border: none;
+          border-radius: 12px;
+          color: white;
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          cursor: pointer;
+          transition: all 0.2s;
+          text-align: right;
+          font-size: 14px;
+          margin-bottom: 6px;
         }
 
-        .side-dock-owner-button:hover {
-          background: linear-gradient(135deg, #059669, #047857);
-          box-shadow: 0 6px 30px rgba(16, 185, 129, 0.7);
+        .side-dock-dropdown-item:last-child {
+          margin-bottom: 0;
+        }
+
+        .side-dock-dropdown-item:hover {
+          background: rgba(16, 185, 129, 0.2);
+          transform: translateX(-4px);
+        }
+
+        .side-dock-dropdown-item:active {
+          transform: translateX(-2px) scale(0.98);
         }
 
         .side-dock-toggle {
@@ -391,21 +425,38 @@ export function InnovativeSideDock({
               </>
             )}
 
-            <button
-              className="side-dock-button side-dock-admin-button"
-              onClick={() => window.location.href = '/admin-login'}
-              title="لوحة الإدارة"
-            >
-              <UserCog size={22} />
-            </button>
+            <div style={{ position: 'relative' }}>
+              <button
+                className={`side-dock-button ${currentSection === 'home' ? 'active' : ''}`}
+                onClick={() => setIsHomeDropdownOpen(!isHomeDropdownOpen)}
+                title={texts.homeTooltip}
+              >
+                <Home size={22} />
+              </button>
 
-            <button
-              className="side-dock-button side-dock-owner-button"
-              onClick={() => window.location.href = '/farm-owner-login'}
-              title="لوحة صاحب المزرعة"
-            >
-              <Tractor size={22} />
-            </button>
+              <div className={`side-dock-dropdown ${isHomeDropdownOpen ? 'open' : ''}`}>
+                <button
+                  className="side-dock-dropdown-item"
+                  onClick={() => {
+                    window.location.href = '/admin-login';
+                    setIsHomeDropdownOpen(false);
+                  }}
+                >
+                  <span>👤</span>
+                  <span>لوحة الإدارة</span>
+                </button>
+                <button
+                  className="side-dock-dropdown-item"
+                  onClick={() => {
+                    window.location.href = '/farm-owner-login';
+                    setIsHomeDropdownOpen(false);
+                  }}
+                >
+                  <span>🚜</span>
+                  <span>لوحة صاحب المزرعة</span>
+                </button>
+              </div>
+            </div>
 
             <button
               className={`side-dock-button ${currentSection === 'account' ? 'active' : ''}`}
