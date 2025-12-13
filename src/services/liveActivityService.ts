@@ -174,13 +174,13 @@ export class LiveActivityService {
       if (settings.show_reservations) {
         const { data: reservations } = await supabase
           .from('reservations')
-          .select('id, created_at, customer_name_ar')
+          .select('id, created_at, customer_name')
           .order('created_at', { ascending: false })
           .limit(maxPerType);
 
         if (reservations) {
           reservations.forEach(res => {
-            const name = res.customer_name_ar || 'مستثمر';
+            const name = res.customer_name || 'مستثمر';
             activities.push({
               id: res.id,
               message: `تم حجز أشجار جديدة بواسطة ${name}`,
@@ -217,7 +217,7 @@ export class LiveActivityService {
       if (settings.show_farms) {
         const { data: farms } = await supabase
           .from('farms')
-          .select('id, farm_name_ar, created_at')
+          .select('id, farm_name, created_at')
           .eq('status', 'active')
           .order('created_at', { ascending: false })
           .limit(maxPerType);
@@ -226,7 +226,7 @@ export class LiveActivityService {
           farms.forEach(farm => {
             activities.push({
               id: farm.id,
-              message: `مزرعة ${farm.farm_name_ar} متاحة للاستثمار`,
+              message: `مزرعة ${farm.farm_name} متاحة للاستثمار`,
               icon: 'TreePine',
               timestamp: farm.created_at,
               type: 'farm',
