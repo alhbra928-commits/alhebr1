@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>اختبار الهيدر الثابت - الأيفون</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            min-height: 100vh;
+        }
+
+        /* الهيدر الثابت - نفس الأسلوب المطبق */
+        .fixed-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 999999;
+            background: rgba(255, 255, 255, 0.95);
+            border-bottom: 2px solid #10b981;
+            padding-top: max(8px, env(safe-area-inset-top));
+            padding-bottom: 12px;
+            padding-left: 16px;
+            padding-right: 16px;
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-transform: translate3d(0, 0, 0);
+            transform: translate3d(0, 0, 0);
+            -webkit-perspective: 1000;
+            perspective: 1000;
+            will-change: transform;
+            isolation: isolate;
+            pointer-events: auto;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 900;
+            color: #047857;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status {
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        /* المحتوى */
+        .content {
+            margin-top: calc(80px + env(safe-area-inset-top));
+            padding: 20px;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .test-card {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .test-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #047857;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .test-description {
+            color: #6b7280;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .success {
+            color: #10b981;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .instruction {
+            background: #f0fdf4;
+            border: 2px solid #10b981;
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 16px;
+        }
+
+        .instruction-title {
+            font-weight: bold;
+            color: #047857;
+            margin-bottom: 8px;
+        }
+
+        .instruction-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .instruction-list li {
+            padding: 8px 0;
+            color: #374151;
+            position: relative;
+            padding-right: 24px;
+        }
+
+        .instruction-list li:before {
+            content: "✓";
+            position: absolute;
+            right: 0;
+            color: #10b981;
+            font-weight: bold;
+        }
+
+        .scroll-indicator {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(16, 185, 129, 0.9);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 24px;
+            font-weight: bold;
+            box-shadow: 0 4px 16px rgba(16, 185, 129, 0.4);
+            animation: bounce 2s infinite;
+            z-index: 100;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-10px); }
+        }
+
+        .spacer {
+            height: 300px;
+        }
+
+        .emoji {
+            font-size: 32px;
+        }
+    </style>
+</head>
+<body>
+    <!-- الهيدر الثابت -->
+    <div class="fixed-header">
+        <div class="header-content">
+            <div class="logo">
+                <span class="emoji">🌳</span>
+                <span>اختبار الهيدر</span>
+            </div>
+            <div class="status">✅ ثابت</div>
+        </div>
+    </div>
+
+    <!-- المحتوى -->
+    <div class="content">
+        <div class="test-card">
+            <div class="test-title">
+                <span class="emoji">🎯</span>
+                <span>اختبار الهيدر الثابت على الأيفون</span>
+            </div>
+            <div class="test-description">
+                هذه الصفحة تستخدم نفس الأسلوب المطبق على جميع صفحات المنصة.
+                الهيدر في الأعلى يجب أن يبقى ثابتاً 100% أثناء التمرير.
+            </div>
+            <div class="success">✅ تم التطبيق بنجاح على جميع الصفحات!</div>
+        </div>
+
+        <div class="test-card">
+            <div class="test-title">
+                <span class="emoji">📱</span>
+                <span>الصفحات المطبق عليها الإصلاح</span>
+            </div>
+            <ul class="instruction-list">
+                <li>الصفحة الرئيسية (RoyalMainInterface)</li>
+                <li>صفحة معلومات المزرعة (InnovativeFarmDetailPage)</li>
+                <li>صفحة الحجز (TemporaryBookingPage)</li>
+                <li>لوحة المستثمر (InvestorDashboard)</li>
+                <li>لوحة التحكم (MobileHeader)</li>
+            </ul>
+        </div>
+
+        <div class="test-card">
+            <div class="test-title">
+                <span class="emoji">🔧</span>
+                <span>التقنيات المستخدمة</span>
+            </div>
+            <ul class="instruction-list">
+                <li>position: fixed - تثبيت مطلق</li>
+                <li>env(safe-area-inset-top) - دعم notch</li>
+                <li>translate3d(0,0,0) - تسريع عتادي</li>
+                <li>zIndex: 999999 - أعلى طبقة</li>
+                <li>isolation: isolate - عزل السكرول</li>
+                <li>willChange: transform - تحسين الأداء</li>
+            </ul>
+        </div>
+
+        <div class="test-card">
+            <div class="instruction">
+                <div class="instruction-title">📋 كيف تختبر؟</div>
+                <ul class="instruction-list">
+                    <li>اسحب هذه الصفحة للأسفل والأعلى</li>
+                    <li>راقب الهيدر في الأعلى</li>
+                    <li>يجب أن يبقى ثابتاً 100%</li>
+                    <li>لا يتحرك ولا يقفز</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- محتوى طويل للاختبار -->
+        <div class="test-card">
+            <div class="test-title">
+                <span class="emoji">⬇️</span>
+                <span>استمر بالتمرير للأسفل...</span>
+            </div>
+            <div class="test-description">
+                لاحظ أن الهيدر يبقى ثابتاً في الأعلى أثناء التمرير.
+            </div>
+        </div>
+
+        <div class="spacer"></div>
+
+        <div class="test-card">
+            <div class="test-title">
+                <span class="emoji">✅</span>
+                <span>إذا وصلت هنا والهيدر ثابت</span>
+            </div>
+            <div class="success" style="font-size: 24px; text-align: center; padding: 20px;">
+                🎉 الإصلاح يعمل بشكل مثالي!
+            </div>
+        </div>
+
+        <div class="spacer"></div>
+
+        <div class="test-card">
+            <div class="test-title">
+                <span class="emoji">⬆️</span>
+                <span>ارجع للأعلى مرة أخرى</span>
+            </div>
+            <div class="test-description">
+                جرب التمرير بسرعة للأعلى والأسفل.
+                الهيدر يجب أن يبقى ثابتاً دائماً.
+            </div>
+        </div>
+
+        <div class="spacer"></div>
+
+        <div class="test-card" style="background: linear-gradient(135deg, #10b981, #047857); color: white; text-align: center; padding: 40px;">
+            <div style="font-size: 48px; margin-bottom: 16px;">✨</div>
+            <div style="font-size: 24px; font-weight: bold; margin-bottom: 12px;">
+                الإصلاح مكتمل!
+            </div>
+            <div style="font-size: 16px; opacity: 0.9;">
+                جميع الصفحات تستخدم الآن نفس الأسلوب الثابت
+            </div>
+        </div>
+    </div>
+
+    <!-- مؤشر التمرير -->
+    <div class="scroll-indicator">
+        ⬇️ جرب التمرير ⬇️
+    </div>
+
+    <script>
+        // إخفاء مؤشر التمرير عند التمرير
+        let scrollTimer;
+        window.addEventListener('scroll', () => {
+            const indicator = document.querySelector('.scroll-indicator');
+            if (window.scrollY > 100) {
+                indicator.style.display = 'none';
+            }
+        });
+
+        // عرض رسالة عند التحميل
+        window.addEventListener('load', () => {
+            console.log('✅ الهيدر الثابت تم تحميله بنجاح');
+            console.log('🎯 التقنيات المطبقة:');
+            console.log('   - position: fixed');
+            console.log('   - zIndex: 999999');
+            console.log('   - translate3d(0,0,0)');
+            console.log('   - env(safe-area-inset-top)');
+            console.log('   - isolation: isolate');
+        });
+    </script>
+</body>
+</html>
