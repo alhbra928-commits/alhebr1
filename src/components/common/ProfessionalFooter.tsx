@@ -416,7 +416,7 @@ export function ProfessionalFooter({ onAdminLogin, onFarmOwnerLogin }: Professio
               setShowAdminMenu(!showAdminMenu);
             }
           }}
-          className={`transition-all duration-500 ease-out flex items-center justify-center relative ${
+          className={`transition-all duration-500 ease-out flex flex-col items-center justify-center relative gap-1.5 ${
             adminButtonExpanded
               ? 'w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-500 via-yellow-500 to-green-500 shadow-2xl'
               : 'w-2 h-2 rounded-full bg-gradient-to-br from-yellow-600 to-green-700 opacity-30 hover:opacity-60'
@@ -429,32 +429,35 @@ export function ProfessionalFooter({ onAdminLogin, onFarmOwnerLogin }: Professio
               : '0 0 10px rgba(251, 191, 36, 0.4)',
             transform: adminButtonExpanded ? 'scale(1)' : 'scale(1)',
             WebkitTapHighlightColor: 'transparent',
+            padding: adminButtonExpanded ? '12px' : '0',
           }}
           title="لوحات التحكم"
         >
           {adminButtonExpanded && (
-            <div className="relative flex flex-col items-center justify-center gap-1" style={{ width: '32px', height: '32px' }}>
+            <>
               {/* Crown Icon - Top */}
               <Crown
                 className="text-white"
-                size={14}
+                size={20}
                 style={{
                   filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))',
                   animation: showAdminMenu ? 'none' : 'pulse 2s infinite',
+                  flexShrink: 0,
                 }}
               />
               {/* Divider */}
-              <div className="w-4 h-px bg-white opacity-40" />
+              <div style={{ width: '24px', height: '1.5px', background: 'rgba(255,255,255,0.5)' }} />
               {/* Shield Icon - Bottom */}
               <Shield
                 className="text-white"
-                size={14}
+                size={20}
                 style={{
                   filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))',
                   animation: showAdminMenu ? 'none' : 'pulse 2s infinite',
+                  flexShrink: 0,
                 }}
               />
-            </div>
+            </>
           )}
         </button>
 
