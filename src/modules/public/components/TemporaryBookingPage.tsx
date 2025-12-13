@@ -385,7 +385,7 @@ export function TemporaryBookingPage({
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-3 sm:px-4 md:px-4 lg:px-6 py-2 sm:py-3 md:py-4 lg:py-6" style={{ marginTop: 'calc(80px + env(safe-area-inset-top))' }}>
+      <div className="max-w-6xl mx-auto px-3 sm:px-4 md:px-4 lg:px-6 py-2 sm:py-3 md:py-4 lg:py-6" style={{ marginTop: 'calc(80px + env(safe-area-inset-top))', paddingBottom: 'calc(220px + env(safe-area-inset-bottom))' }}>
         <div
           className="group rounded-2xl sm:rounded-2xl md:rounded-3xl p-4 sm:p-6 md:p-8 lg:p-12 mb-3 sm:mb-4 md:mb-5 lg:mb-8 text-center relative overflow-hidden transition-all duration-500 active:scale-[0.98] touch-manipulation"
           style={{

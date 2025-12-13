@@ -350,7 +350,7 @@ export function InvestorDashboard({ phone, onLogout, isFirstTimeLogin = false, o
         </div>
       </div>
 
-      <div className="max-w-[1400px] mx-auto px-2 sm:px-3 md:px-4 lg:px-6 py-3 sm:py-4 md:py-6 lg:py-8" style={{ marginTop: 'calc(130px + env(safe-area-inset-top))' }}>
+      <div className="max-w-[1400px] mx-auto px-2 sm:px-3 md:px-4 lg:px-6 py-3 sm:py-4 md:py-6 lg:py-8" style={{ marginTop: 'calc(130px + env(safe-area-inset-top))', paddingBottom: 'calc(220px + env(safe-area-inset-bottom))' }}>
         <div className="flex gap-1.5 sm:gap-2 md:gap-3 lg:gap-4 mb-4 sm:mb-6 md:mb-8 overflow-x-auto pb-2 scrollbar-hide">
           {tabs.map((tab) => {
             const Icon = tab.icon;

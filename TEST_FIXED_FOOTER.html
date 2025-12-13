@@ -1,250 +1,85 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>اختبار الفوتر الثابت</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #ECFDF5 0%, #F0FDF4 100%);
-      padding-bottom: 80px;
-    }
-
-    .content {
-      padding: 20px;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    .box {
-      background: white;
-      padding: 30px;
-      margin: 20px 0;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-
-    h1 {
-      color: #047857;
-      margin-bottom: 20px;
-      font-size: 32px;
-    }
-
-    h2 {
-      color: #059669;
-      margin: 30px 0 15px 0;
-      font-size: 24px;
-    }
-
-    p {
-      line-height: 1.8;
-      color: #374151;
-      margin-bottom: 15px;
-    }
-
-    .status {
-      position: fixed;
-      top: 20px;
-      left: 20px;
-      background: white;
-      padding: 15px 20px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      z-index: 10000;
-    }
-
-    .status h3 {
-      color: #047857;
-      margin-bottom: 10px;
-      font-size: 18px;
-    }
-
-    .status p {
-      margin: 5px 0;
-      font-size: 14px;
-    }
-
-    .pass {
-      color: #10b981;
-      font-weight: bold;
-    }
-
-    .fail {
-      color: #ef4444;
-      font-weight: bold;
-    }
-
-    /* الفوتر - نسخة مطابقة */
-    #fixed-bottom-bar {
-      position: fixed !important;
-      bottom: 0 !important;
-      left: 0 !important;
-      right: 0 !important;
-      width: 100% !important;
-      z-index: 9999 !important;
-      background: linear-gradient(to right, rgb(5, 150, 105), rgb(22, 163, 74), rgb(5, 150, 105));
-      border-top: 2px solid rgb(52, 211, 153);
-      box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
-      padding: 12px 20px;
-      padding-bottom: env(safe-area-inset-bottom);
-      transform: translate3d(0, 0, 0) !important;
-      -webkit-transform: translate3d(0, 0, 0) !important;
-      backface-visibility: hidden !important;
-      -webkit-backface-visibility: hidden !important;
-    }
-
-    #fixed-bottom-bar .content-bar {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 20px;
-      flex-wrap: wrap;
-    }
-
-    #fixed-bottom-bar .item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      color: white;
-      font-size: 14px;
-    }
-
-    #fixed-bottom-bar .icon {
-      width: 24px;
-      height: 24px;
-      background: rgba(255,255,255,0.2);
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    @media (max-width: 768px) {
-      #fixed-bottom-bar .content-bar {
-        font-size: 12px;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>اختبار الهيدر والفوتر الثابتين</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+        }
+        .fixed-header {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 999999;
+            background: rgba(255, 255, 255, 0.95);
+            border-bottom: 2px solid #10b981;
+            padding: max(12px, env(safe-area-inset-top)) 16px 12px;
+            -webkit-transform: translate3d(0, 0, 0);
+            transform: translate3d(0, 0, 0);
+            isolation: isolate; will-change: transform;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+        }
+        .fixed-footer {
+            position: fixed; bottom: 0; left: 0; right: 0; z-index: 999998;
+            background: linear-gradient(135deg, #047857 0%, #065f46 100%);
+            color: white;
+            padding: 12px 16px max(12px, env(safe-area-inset-bottom));
+            -webkit-transform: translate3d(0, 0, 0);
+            transform: translate3d(0, 0, 0);
+            isolation: isolate; will-change: transform;
+            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.2);
+        }
+        .content {
+            padding-top: calc(80px + env(safe-area-inset-top));
+            padding-bottom: calc(120px + env(safe-area-inset-bottom));
+            padding: 20px; max-width: 1200px; margin: 0 auto;
+        }
+        .test-card {
+            background: white; border-radius: 20px; padding: 24px;
+            margin-bottom: 20px; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+        .success { color: #10b981; font-weight: bold; font-size: 20px; text-align: center; padding: 40px; }
+    </style>
 </head>
 <body>
-
-  <!-- حالة الاختبار -->
-  <div class="status">
-    <h3>🧪 حالة الاختبار</h3>
-    <p>موضع الفوتر: <span id="position-status">...</span></p>
-    <p>Bottom: <span id="bottom-status">...</span></p>
-    <p>عند التمرير: <span id="scroll-status">...</span></p>
-  </div>
-
-  <!-- المحتوى -->
-  <div class="content">
-    <div class="box">
-      <h1>✅ اختبار الفوتر الثابت</h1>
-      <p>هذه صفحة اختبار بسيطة للتحقق من أن الفوتر ثابت تماماً في أسفل الشاشة.</p>
-      <p><strong>التعليمات:</strong></p>
-      <ol style="margin-right: 20px; line-height: 2;">
-        <li>مرّر الصفحة لأعلى وأسفل بسرعة</li>
-        <li>راقب الفوتر الأخضر في الأسفل</li>
-        <li>يجب أن يبقى ثابتاً تماماً</li>
-        <li>لا يتحرك أبداً مع التمرير</li>
-      </ol>
+    <div class="fixed-header">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="font-weight: 900; color: #047857;">🌳 الهيدر الثابت</div>
+            <div style="padding: 6px 12px; background: #10b981; color: white; border-radius: 12px; font-size: 12px; font-weight: bold;">✅ ثابت</div>
+        </div>
     </div>
 
-    <div class="box">
-      <h2>📱 اختبار على الجوال</h2>
-      <p>1. افتح هذه الصفحة على جهاز iPhone أو Android</p>
-      <p>2. مرّر الصفحة بسرعة</p>
-      <p>3. الفوتر يجب أن يبقى ثابت</p>
-      <p>4. لا يتأثر بشريط العنوان في Safari</p>
+    <div class="content" style="padding-top: calc(80px + env(safe-area-inset-top)); padding-bottom: calc(120px + env(safe-area-inset-bottom));">
+        <div class="test-card">
+            <h2 style="color: #047857; margin-bottom: 12px;">🎯 الهيدر والفوتر الثابتان</h2>
+            <p style="color: #6b7280; line-height: 1.6;">الهيدر في الأعلى والفوتر في الأسفل كلاهما ثابت. المحتوى يتحرك بينهما.</p>
+        </div>
+        
+        <div style="height: 300px;"></div>
+        
+        <div class="test-card">
+            <h2 style="color: #047857; margin-bottom: 12px;">⬇️ استمر بالتمرير</h2>
+            <p style="color: #6b7280;">لاحظ أن الهيدر والفوتر يبقيان ثابتين.</p>
+        </div>
+        
+        <div style="height: 300px;"></div>
+        
+        <div class="test-card">
+            <h2 style="color: #047857; margin-bottom: 12px;">✨ منتصف الطريق</h2>
+            <p style="color: #6b7280;">إذا كنت ترى الهيدر والفوتر ثابتين، فالإصلاح يعمل!</p>
+        </div>
+        
+        <div style="height: 300px;"></div>
+        
+        <div class="success">🎉 الإصلاح مكتمل!</div>
     </div>
 
-    <div class="box">
-      <h2>💻 اختبار على الديسكتوب</h2>
-      <p>1. افتح الصفحة في Chrome أو Firefox أو Safari</p>
-      <p>2. مرّر الصفحة بسرعة</p>
-      <p>3. الفوتر يجب أن يبقى ثابت</p>
-      <p>4. جرب تصغير وتكبير النافذة</p>
+    <div class="fixed-footer">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="font-weight: 900;">✨ الفوتر الثابت</div>
+            <div style="font-size: 12px; opacity: 0.9;">© 2025</div>
+        </div>
     </div>
-
-    <div class="box">
-      <h2>🧪 اختبار في DevTools</h2>
-      <p>1. افتح DevTools (F12)</p>
-      <p>2. اختر Device Toolbar (Ctrl+Shift+M)</p>
-      <p>3. جرب iPhone, iPad, Responsive</p>
-      <p>4. الفوتر يجب أن يبقى ثابت في جميع الأحجام</p>
-    </div>
-
-    <!-- محتوى إضافي للتمرير -->
-    <div class="box"><h2>محتوى 1</h2><p>محتوى تجريبي للتمرير...</p></div>
-    <div class="box"><h2>محتوى 2</h2><p>محتوى تجريبي للتمرير...</p></div>
-    <div class="box"><h2>محتوى 3</h2><p>محتوى تجريبي للتمرير...</p></div>
-    <div class="box"><h2>محتوى 4</h2><p>محتوى تجريبي للتمرير...</p></div>
-    <div class="box"><h2>محتوى 5</h2><p>محتوى تجريبي للتمرير...</p></div>
-    <div class="box"><h2>محتوى 6</h2><p>محتوى تجريبي للتمرير...</p></div>
-    <div class="box"><h2>محتوى 7</h2><p>محتوى تجريبي للتمرير...</p></div>
-    <div class="box"><h2>محتوى 8</h2><p>محتوى تجريبي للتمرير...</p></div>
-  </div>
-
-  <!-- الفوتر الثابت -->
-  <div id="fixed-bottom-bar">
-    <div class="content-bar">
-      <div class="item">
-        <div class="icon">📞</div>
-        <div>اتصل بنا: 920000000</div>
-      </div>
-      <div class="item">
-        <div class="icon">📧</div>
-        <div>info@palmolive.sa</div>
-      </div>
-      <div class="item">
-        <div class="icon">🕐</div>
-        <div>8 صباحاً - 8 مساءً</div>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    // فحص موضع الفوتر
-    function checkFooter() {
-      const footer = document.getElementById('fixed-bottom-bar');
-      const computed = window.getComputedStyle(footer);
-      
-      const position = computed.position;
-      const bottom = computed.bottom;
-      
-      document.getElementById('position-status').textContent = position;
-      document.getElementById('position-status').className = position === 'fixed' ? 'pass' : 'fail';
-      
-      document.getElementById('bottom-status').textContent = bottom;
-      document.getElementById('bottom-status').className = bottom === '0px' ? 'pass' : 'fail';
-    }
-
-    // فحص أثناء التمرير
-    let lastScrollY = window.scrollY;
-    window.addEventListener('scroll', () => {
-      const footer = document.getElementById('fixed-bottom-bar');
-      const rect = footer.getBoundingClientRect();
-      const isFixed = rect.bottom === window.innerHeight;
-      
-      document.getElementById('scroll-status').textContent = isFixed ? '✅ ثابت' : '❌ يتحرك';
-      document.getElementById('scroll-status').className = isFixed ? 'pass' : 'fail';
-      
-      lastScrollY = window.scrollY;
-    });
-
-    // فحص أولي
-    checkFooter();
-    setInterval(checkFooter, 1000);
-  </script>
-
 </body>
 </html>

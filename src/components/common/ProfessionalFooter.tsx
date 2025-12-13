@@ -64,11 +64,25 @@ export function ProfessionalFooter() {
 
   return (
     <footer
-      className="relative w-full mt-auto overflow-hidden"
       style={{
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        zIndex: 999998,
         backgroundColor: footerInfo.footer_bg_color,
         color: footerInfo.footer_text_color,
-        paddingBottom: isMobile ? 'max(16px, env(safe-area-inset-bottom))' : '0',
+        paddingBottom: isMobile ? 'max(16px, env(safe-area-inset-bottom))' : '16px',
+        WebkitTransform: 'translate3d(0, 0, 0)',
+        transform: 'translate3d(0, 0, 0)',
+        WebkitPerspective: 1000,
+        perspective: 1000,
+        willChange: 'transform',
+        isolation: 'isolate',
+        boxShadow: '0 -4px 12px rgba(0,0,0,0.1)',
+        pointerEvents: 'auto',
+        overflow: 'hidden',
+        width: '100%',
       }}
     >
       {/* 3D Background Effects */}

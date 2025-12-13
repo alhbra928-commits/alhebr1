@@ -258,7 +258,7 @@ export function RoyalMainInterface({
           overflow: 'auto',
           WebkitOverflowScrolling: 'touch',
           paddingTop: 'calc(var(--header-height, 280px) + 16px)',
-          paddingBottom: 'max(120px, calc(env(safe-area-inset-bottom) + 100px))',
+          paddingBottom: 'max(200px, calc(env(safe-area-inset-bottom) + 180px))',
         }}
         className="relative"
       >

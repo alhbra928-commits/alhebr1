@@ -257,7 +257,7 @@ export const InnovativeFarmDetailPage: React.FC<InnovativeFarmDetailPageProps> =
           overflowX: 'hidden',
           WebkitOverflowScrolling: 'touch',
           marginTop: 'calc(64px + env(safe-area-inset-top))',
-          paddingBottom: 'calc(144px + env(safe-area-inset-bottom))',
+          paddingBottom: 'calc(220px + env(safe-area-inset-bottom))',
           position: 'relative',
           isolation: 'isolate'
         }}
