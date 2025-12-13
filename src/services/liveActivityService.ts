@@ -217,7 +217,7 @@ export class LiveActivityService {
       if (settings.show_farms) {
         const { data: farms } = await supabase
           .from('farms')
-          .select('id, farm_name, created_at')
+          .select('id, name_ar, created_at')
           .eq('status', 'active')
           .order('created_at', { ascending: false })
           .limit(maxPerType);
@@ -226,7 +226,7 @@ export class LiveActivityService {
           farms.forEach(farm => {
             activities.push({
               id: farm.id,
-              message: `مزرعة ${farm.farm_name} متاحة للاستثمار`,
+              message: `مزرعة ${farm.name_ar} متاحة للاستثمار`,
               icon: 'TreePine',
               timestamp: farm.created_at,
               type: 'farm',
