@@ -14,6 +14,7 @@ import { getPlatformTextsBySection } from '../../../services/platformTextsServic
 import { VerticalSideTabs } from '../../../components/common/VerticalSideTabs';
 import { SmartAssistantSidebar } from './SmartAssistantSidebar';
 import { LiveActivityBar } from '../../../components/common/LiveActivityBar';
+import { ProfessionalFooter } from '../../../components/common/ProfessionalFooter';
 
 // Lazy load heavy components
 const InnovativeFarmDetailPage = lazy(() => import('./InnovativeFarmDetailPage').then(m => ({ default: m.InnovativeFarmDetailPage })));
@@ -434,6 +435,9 @@ export function ModernRoyalPlatform({
         isOpen={smartAssistantOpen}
         onClose={() => setSmartAssistantOpen(false)}
       />
+
+      {/* Professional Footer */}
+      <ProfessionalFooter />
 
       {/* تنسيق متجاوب للأيقونات والمحتوى */}
       <style>{`

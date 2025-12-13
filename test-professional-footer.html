@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>اختبار الفوتر الاحترافي</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
+      padding: 2rem;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 2rem;
+      font-size: 2.5rem;
+    }
+    .instructions {
+      background: white;
+      border-radius: 16px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    .instructions h2 {
+      color: #1A472A;
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+    }
+    .instructions ol {
+      margin-right: 2rem;
+      line-height: 2;
+    }
+    .section {
+      background: white;
+      border-radius: 16px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    .section h2 {
+      color: #2c3e50;
+      margin-bottom: 1.5rem;
+      font-size: 1.8rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .info-card {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .info-label {
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+    .info-value {
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+    .status {
+      padding: 1rem;
+      border-radius: 12px;
+      margin-bottom: 1rem;
+      font-weight: bold;
+      text-align: center;
+    }
+    .status.success {
+      background: #d4edda;
+      color: #155724;
+      border: 2px solid #c3e6cb;
+    }
+    .status.error {
+      background: #f8d7da;
+      color: #721c24;
+      border: 2px solid #f5c6cb;
+    }
+    .status.info {
+      background: #d1ecf1;
+      color: #0c5460;
+      border: 2px solid #bee5eb;
+    }
+    .button {
+      background: linear-gradient(135deg, #1A472A, #2C5F2D);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      margin: 0.25rem;
+    }
+    .button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(26, 71, 42, 0.3);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .test-card {
+      background: #f8f9fa;
+      border: 2px solid #dee2e6;
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+    .test-card h3 {
+      color: #495057;
+      margin-bottom: 1rem;
+      font-size: 1.2rem;
+    }
+    .test-result {
+      padding: 0.75rem;
+      border-radius: 8px;
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+    }
+    .test-result.pass {
+      background: #d4edda;
+      color: #155724;
+    }
+    .test-result.fail {
+      background: #f8d7da;
+      color: #721c24;
+    }
+    .code {
+      background: rgba(0, 0, 0, 0.8);
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      color: #D4AF37;
+      font-size: 0.9rem;
+    }
+    .preview-box {
+      border: 2px solid #dee2e6;
+      border-radius: 12px;
+      padding: 1rem;
+      background: #f8f9fa;
+      min-height: 200px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🏢 اختبار الفوتر الاحترافي</h1>
+
+    <div class="instructions">
+      <h2>📋 طريقة الاختبار</h2>
+      <ol>
+        <li>افتح <strong>لوحة الإدارة</strong> في نافذة أخرى</li>
+        <li>اذهب إلى: <span class="code">الإعدادات → الفوتر الاحترافي</span></li>
+        <li>عدّل أي معلومة (مثل: اسم المؤسسة، البريد، الهاتف)</li>
+        <li>احفظ التغييرات</li>
+        <li>ارجع لهذه الصفحة وشاهد التحديث الفوري!</li>
+      </ol>
+    </div>
+
+    <div id="status" class="status info">
+      ⏳ جاري الاتصال بقاعدة البيانات...
+    </div>
+
+    <div class="section">
+      <h2>🏢 معلومات المؤسسة</h2>
+      <div class="grid">
+        <div class="info-card">
+          <div class="info-label">اسم المؤسسة (عربي)</div>
+          <div class="info-value" id="org-name-ar">جاري التحميل...</div>
+        </div>
+        <div class="info-card">
+          <div class="info-label">اسم المؤسسة (English)</div>
+          <div class="info-value" id="org-name-en">Loading...</div>
+        </div>
+        <div class="info-card">
+          <div class="info-label">رقم السجل التجاري</div>
+          <div class="info-value" id="commercial-reg">جاري التحميل...</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>📞 معلومات التواصل</h2>
+      <div class="grid">
+        <div class="info-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+          <div class="info-label">البريد الإلكتروني</div>
+          <div class="info-value" id="email">جاري التحميل...</div>
+        </div>
+        <div class="info-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+          <div class="info-label">رقم الهاتف</div>
+          <div class="info-value" id="phone">جاري التحميل...</div>
+        </div>
+        <div class="info-card" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+          <div class="info-label">واتساب</div>
+          <div class="info-value" id="whatsapp">جاري التحميل...</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>🌍 الموقع الجغرافي</h2>
+      <div class="grid">
+        <div class="info-card" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+          <div class="info-label">المدينة</div>
+          <div class="info-value" id="city">جاري التحميل...</div>
+        </div>
+        <div class="info-card" style="background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);">
+          <div class="info-label">الدولة</div>
+          <div class="info-value" id="country">جاري التحميل...</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>🛡️ عبارة الثقة</h2>
+      <div class="preview-box">
+        <p id="trust-statement" style="font-size: 1.1rem; line-height: 1.8; color: #2c3e50;">
+          جاري التحميل...
+        </p>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>⚙️ إعدادات العرض</h2>
+      <div class="grid">
+        <div class="test-card">
+          <h3>🖥️ نشط</h3>
+          <div class="test-result" id="test-active">جاري الفحص...</div>
+        </div>
+        <div class="test-card">
+          <h3>📱 عرض في الجوال</h3>
+          <div class="test-result" id="test-mobile">جاري الفحص...</div>
+        </div>
+        <div class="test-card">
+          <h3>📲 مضغوط في الجوال</h3>
+          <div class="test-result" id="test-collapsed">جاري الفحص...</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>🎨 الألوان</h2>
+      <div class="grid">
+        <div class="test-card">
+          <h3>لون الخلفية</h3>
+          <div style="display: flex; align-items: center; gap: 1rem; margin-top: 0.5rem;">
+            <div id="bg-color-preview" style="width: 60px; height: 60px; border-radius: 8px; border: 2px solid #dee2e6;"></div>
+            <div>
+              <div class="info-label">Hex Code:</div>
+              <div id="bg-color-code" class="code"></div>
+            </div>
+          </div>
+        </div>
+        <div class="test-card">
+          <h3>لون النص</h3>
+          <div style="display: flex; align-items: center; gap: 1rem; margin-top: 0.5rem;">
+            <div id="text-color-preview" style="width: 60px; height: 60px; border-radius: 8px; border: 2px solid #dee2e6;"></div>
+            <div>
+              <div class="info-label">Hex Code:</div>
+              <div id="text-color-code" class="code"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>🔄 التحديثات</h2>
+      <div class="test-card">
+        <h3>إحصائيات التحديثات</h3>
+        <p style="margin-bottom: 0.5rem;">عدد التحديثات المستلمة: <strong id="update-count">0</strong></p>
+        <p>آخر تحديث: <strong id="last-update">لم يتم بعد</strong></p>
+        <button class="button" onclick="forceReload()">🔄 إعادة تحميل يدوية</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+    const SUPABASE_URL = 'https://vfbqltncrkbrbrbagwgjwi.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZmYnFsdG5jcmticmJhZ3dnandpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjk0MDE2MDYsImV4cCI6MjA0NDk3NzYwNn0.fh5nhL5L3oqhlNqXnlwbvMv_JNI05J4yt_NrUK1htMg';
+
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    let updateCount = 0;
+
+    async function loadFooter() {
+      try {
+        const { data, error } = await supabase
+          .from('footer_info')
+          .select('*')
+          .eq('is_active', true)
+          .single();
+
+        if (error) throw error;
+
+        // معلومات المؤسسة
+        document.getElementById('org-name-ar').textContent = data.organization_name_ar;
+        document.getElementById('org-name-en').textContent = data.organization_name_en || 'N/A';
+        document.getElementById('commercial-reg').textContent = data.commercial_registration || 'غير محدد';
+
+        // معلومات التواصل
+        document.getElementById('email').textContent = data.email;
+        document.getElementById('phone').textContent = data.phone;
+        document.getElementById('whatsapp').textContent = data.whatsapp;
+
+        // الموقع
+        document.getElementById('city').textContent = data.city_ar;
+        document.getElementById('country').textContent = data.country_ar;
+
+        // عبارة الثقة
+        document.getElementById('trust-statement').textContent = data.trust_statement_ar;
+
+        // إعدادات العرض
+        const activeEl = document.getElementById('test-active');
+        activeEl.textContent = data.is_active ? '✅ نشط' : '❌ معطل';
+        activeEl.className = `test-result ${data.is_active ? 'pass' : 'fail'}`;
+
+        const mobileEl = document.getElementById('test-mobile');
+        mobileEl.textContent = data.show_in_mobile ? '✅ يظهر في الجوال' : '❌ لا يظهر في الجوال';
+        mobileEl.className = `test-result ${data.show_in_mobile ? 'pass' : 'fail'}`;
+
+        const collapsedEl = document.getElementById('test-collapsed');
+        collapsedEl.textContent = data.mobile_collapsed ? '✅ مضغوط' : '❌ كامل';
+        collapsedEl.className = `test-result ${data.mobile_collapsed ? 'pass' : 'fail'}`;
+
+        // الألوان
+        document.getElementById('bg-color-preview').style.backgroundColor = data.footer_bg_color;
+        document.getElementById('bg-color-code').textContent = data.footer_bg_color;
+        document.getElementById('text-color-preview').style.backgroundColor = data.footer_text_color;
+        document.getElementById('text-color-code').textContent = data.footer_text_color;
+
+        updateStatus('✅ تم تحميل معلومات الفوتر بنجاح!', 'success');
+        return true;
+      } catch (error) {
+        console.error('Error loading footer:', error);
+        updateStatus(`❌ خطأ: ${error.message}`, 'error');
+        return false;
+      }
+    }
+
+    function subscribeToChanges() {
+      const channel = supabase
+        .channel('footer_changes')
+        .on(
+          'postgres_changes',
+          {
+            event: '*',
+            schema: 'public',
+            table: 'footer_info'
+          },
+          (payload) => {
+            console.log('🔔 تحديث مستلم:', payload);
+            updateCount++;
+            document.getElementById('update-count').textContent = updateCount;
+            document.getElementById('last-update').textContent = new Date().toLocaleTimeString('ar-SA');
+
+            loadFooter();
+
+            updateStatus('🔔 تم استقبال تحديث جديد!', 'success');
+            setTimeout(() => {
+              updateStatus('📡 يستمع للتحديثات المباشرة...', 'info');
+            }, 3000);
+          }
+        )
+        .subscribe((status) => {
+          console.log('📡 حالة الاشتراك:', status);
+          if (status === 'SUBSCRIBED') {
+            updateStatus('📡 يستمع للتحديثات المباشرة...', 'info');
+          }
+        });
+
+      return channel;
+    }
+
+    function updateStatus(message, type) {
+      const status = document.getElementById('status');
+      status.textContent = message;
+      status.className = `status ${type}`;
+    }
+
+    window.forceReload = () => {
+      loadFooter();
+    };
+
+    // Initialize
+    (async () => {
+      const success = await loadFooter();
+      if (success) {
+        subscribeToChanges();
+      }
+    })();
+  </script>
+</body>
+</html>
