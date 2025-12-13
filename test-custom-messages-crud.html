@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>اختبار عمليات الرسائل المخصصة - CRUD</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+      min-height: 100vh;
+      padding: 2rem;
+      color: #F5F5DC;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 2rem;
+      border: 2px solid #2C5F2D;
+    }
+    h1 {
+      text-align: center;
+      color: #D4AF37;
+      margin-bottom: 2rem;
+      font-size: 2.5rem;
+      text-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+    }
+    .status {
+      padding: 1.5rem;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      font-size: 1.1rem;
+      text-align: center;
+      font-weight: bold;
+      border: 2px solid;
+    }
+    .status.loading {
+      background: rgba(255, 165, 0, 0.2);
+      border-color: #FFA500;
+      color: #FFA500;
+    }
+    .status.success {
+      background: rgba(34, 197, 94, 0.2);
+      border-color: #22C55E;
+      color: #22C55E;
+    }
+    .status.error {
+      background: rgba(239, 68, 68, 0.2);
+      border-color: #EF4444;
+      color: #EF4444;
+    }
+    .section {
+      background: rgba(44, 95, 45, 0.1);
+      border: 2px solid #2C5F2D;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .section h2 {
+      color: #D4AF37;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .test-item {
+      background: rgba(0,0,0,0.3);
+      border: 1px solid #2C5F2D;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+    .test-item h3 {
+      color: #D4AF37;
+      margin-bottom: 0.5rem;
+      font-size: 1.1rem;
+    }
+    .test-result {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0.75rem;
+      border-radius: 6px;
+      margin-top: 0.5rem;
+    }
+    .test-result.pending {
+      background: rgba(156, 163, 175, 0.2);
+      color: #9CA3AF;
+    }
+    .test-result.pass {
+      background: rgba(34, 197, 94, 0.2);
+      color: #22C55E;
+    }
+    .test-result.fail {
+      background: rgba(239, 68, 68, 0.2);
+      color: #EF4444;
+    }
+    .icon {
+      width: 24px;
+      height: 24px;
+    }
+    .messages-list {
+      display: grid;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .message-card {
+      background: rgba(0,0,0,0.4);
+      border: 1px solid #2C5F2D;
+      border-radius: 8px;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .message-content {
+      flex: 1;
+    }
+    .message-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .btn {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.3s;
+    }
+    .btn-edit {
+      background: #D4AF37;
+      color: #000;
+    }
+    .btn-delete {
+      background: #EF4444;
+      color: #FFF;
+    }
+    .btn-toggle {
+      background: #3B82F6;
+      color: #FFF;
+    }
+    .btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 20px rgba(212, 175, 55, 0.4);
+    }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .stat-card {
+      background: linear-gradient(135deg, #2C5F2D 0%, #1a3a1c 100%);
+      border: 2px solid #D4AF37;
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+    }
+    .stat-value {
+      font-size: 2.5rem;
+      color: #D4AF37;
+      font-weight: bold;
+      text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+    }
+    .stat-label {
+      color: #F5F5DC;
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+    }
+    .code-block {
+      background: #000;
+      border: 1px solid #2C5F2D;
+      border-radius: 6px;
+      padding: 1rem;
+      margin-top: 0.5rem;
+      overflow-x: auto;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      color: #22C55E;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🧪 اختبار عمليات الرسائل المخصصة</h1>
+
+    <div id="status" class="status loading">
+      ⏳ جاري الاتصال بقاعدة البيانات...
+    </div>
+
+    <div class="section">
+      <h2>📊 الإحصائيات</h2>
+      <div class="stats">
+        <div class="stat-card">
+          <div class="stat-value" id="total-count">0</div>
+          <div class="stat-label">إجمالي الرسائل</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="active-count">0</div>
+          <div class="stat-label">الرسائل المفعلة</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="inactive-count">0</div>
+          <div class="stat-label">الرسائل المعطلة</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>✅ اختبارات CRUD</h2>
+
+      <div class="test-item">
+        <h3>1️⃣ اختبار القراءة (READ)</h3>
+        <div id="test-read" class="test-result pending">
+          <span class="icon">⏳</span>
+          <span>في الانتظار...</span>
+        </div>
+      </div>
+
+      <div class="test-item">
+        <h3>2️⃣ اختبار الإضافة (CREATE)</h3>
+        <div id="test-create" class="test-result pending">
+          <span class="icon">⏳</span>
+          <span>في الانتظار...</span>
+        </div>
+      </div>
+
+      <div class="test-item">
+        <h3>3️⃣ اختبار التعديل (UPDATE)</h3>
+        <div id="test-update" class="test-result pending">
+          <span class="icon">⏳</span>
+          <span>في الانتظار...</span>
+        </div>
+      </div>
+
+      <div class="test-item">
+        <h3>4️⃣ اختبار الحذف (DELETE)</h3>
+        <div id="test-delete" class="test-result pending">
+          <span class="icon">⏳</span>
+          <span>في الانتظار...</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>📋 قائمة الرسائل الحالية</h2>
+      <div id="messages-list" class="messages-list">
+        <p style="text-align: center; color: #9CA3AF;">جاري التحميل...</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>🔍 سجل الأحداث</h2>
+      <div id="log" class="code-block"></div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+    const SUPABASE_URL = 'https://vfbqltncrkbrbagwgjwi.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZmYnFsdG5jcmticmJhZ3dnandpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjk0MDE2MDYsImV4cCI6MjA0NDk3NzYwNn0.fh5nhL5L3oqhlNqXnlwbvMv_JNI05J4yt_NrUK1htMg';
+
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    let testMessageId = null;
+    const log = [];
+
+    function addLog(message, type = 'info') {
+      const timestamp = new Date().toLocaleTimeString('ar-SA');
+      const icon = type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️';
+      log.push(`[${timestamp}] ${icon} ${message}`);
+      document.getElementById('log').innerHTML = log.join('\n');
+    }
+
+    function updateStatus(message, type = 'loading') {
+      const statusEl = document.getElementById('status');
+      statusEl.textContent = message;
+      statusEl.className = `status ${type}`;
+    }
+
+    function setTestResult(testId, passed, message) {
+      const el = document.getElementById(testId);
+      el.className = `test-result ${passed ? 'pass' : 'fail'}`;
+      el.innerHTML = `
+        <span class="icon">${passed ? '✅' : '❌'}</span>
+        <span>${message}</span>
+      `;
+    }
+
+    async function loadMessages() {
+      try {
+        const { data, error } = await supabase
+          .from('live_activity_custom_messages')
+          .select('*')
+          .order('priority', { ascending: false });
+
+        if (error) throw error;
+
+        const total = data.length;
+        const active = data.filter(m => m.is_active).length;
+        const inactive = total - active;
+
+        document.getElementById('total-count').textContent = total;
+        document.getElementById('active-count').textContent = active;
+        document.getElementById('inactive-count').textContent = inactive;
+
+        const listEl = document.getElementById('messages-list');
+        if (data.length === 0) {
+          listEl.innerHTML = '<p style="text-align: center; color: #9CA3AF;">لا توجد رسائل</p>';
+        } else {
+          listEl.innerHTML = data.map(msg => `
+            <div class="message-card">
+              <div class="message-content">
+                <div style="font-weight: bold; color: #D4AF37; margin-bottom: 0.5rem;">
+                  ${msg.message_ar}
+                </div>
+                <div style="font-size: 0.9rem; color: #9CA3AF;">
+                  الحالة: ${msg.is_active ? '🟢 مفعل' : '🔴 معطل'} | الأولوية: ${msg.priority}
+                </div>
+              </div>
+            </div>
+          `).join('');
+        }
+
+        return data;
+      } catch (error) {
+        console.error('خطأ في تحميل الرسائل:', error);
+        return [];
+      }
+    }
+
+    async function runTests() {
+      updateStatus('🧪 جاري تشغيل الاختبارات...', 'loading');
+
+      // Test 1: READ
+      addLog('بدء اختبار القراءة (READ)...');
+      try {
+        const { data, error } = await supabase
+          .from('live_activity_custom_messages')
+          .select('*');
+
+        if (error) throw error;
+
+        setTestResult('test-read', true, `تم قراءة ${data.length} رسالة بنجاح`);
+        addLog(`✅ اختبار القراءة نجح: تم العثور على ${data.length} رسالة`, 'success');
+      } catch (error) {
+        setTestResult('test-read', false, `فشل: ${error.message}`);
+        addLog(`❌ اختبار القراءة فشل: ${error.message}`, 'error');
+      }
+
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      // Test 2: CREATE
+      addLog('بدء اختبار الإضافة (CREATE)...');
+      try {
+        const { data, error } = await supabase
+          .from('live_activity_custom_messages')
+          .insert({
+            message_ar: '🧪 رسالة اختبار - يجب حذفها',
+            message_en: 'Test message - should be deleted',
+            icon: 'Sparkles',
+            is_active: true,
+            priority: 1
+          })
+          .select()
+          .single();
+
+        if (error) throw error;
+
+        testMessageId = data.id;
+        setTestResult('test-create', true, 'تم إنشاء رسالة اختبار بنجاح');
+        addLog(`✅ اختبار الإضافة نجح: تم إنشاء رسالة بمعرف ${testMessageId}`, 'success');
+        await loadMessages();
+      } catch (error) {
+        setTestResult('test-create', false, `فشل: ${error.message}`);
+        addLog(`❌ اختبار الإضافة فشل: ${error.message}`, 'error');
+      }
+
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      // Test 3: UPDATE
+      if (testMessageId) {
+        addLog('بدء اختبار التعديل (UPDATE)...');
+        try {
+          const { error } = await supabase
+            .from('live_activity_custom_messages')
+            .update({
+              message_ar: '🧪 رسالة اختبار (معدلة)',
+              is_active: false
+            })
+            .eq('id', testMessageId);
+
+          if (error) throw error;
+
+          setTestResult('test-update', true, 'تم تعديل الرسالة بنجاح');
+          addLog('✅ اختبار التعديل نجح: تم تحديث الرسالة', 'success');
+          await loadMessages();
+        } catch (error) {
+          setTestResult('test-update', false, `فشل: ${error.message}`);
+          addLog(`❌ اختبار التعديل فشل: ${error.message}`, 'error');
+        }
+
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        // Test 4: DELETE
+        addLog('بدء اختبار الحذف (DELETE)...');
+        try {
+          const { error } = await supabase
+            .from('live_activity_custom_messages')
+            .delete()
+            .eq('id', testMessageId);
+
+          if (error) throw error;
+
+          setTestResult('test-delete', true, 'تم حذف الرسالة بنجاح');
+          addLog('✅ اختبار الحذف نجح: تم حذف الرسالة الاختبارية', 'success');
+          await loadMessages();
+        } catch (error) {
+          setTestResult('test-delete', false, `فشل: ${error.message}`);
+          addLog(`❌ اختبار الحذف فشل: ${error.message}`, 'error');
+        }
+      } else {
+        setTestResult('test-update', false, 'تم تخطيه: فشل إنشاء الرسالة');
+        setTestResult('test-delete', false, 'تم تخطيه: فشل إنشاء الرسالة');
+      }
+
+      updateStatus('✅ اكتملت جميع الاختبارات', 'success');
+      addLog('🎉 انتهت جميع الاختبارات!', 'success');
+    }
+
+    // بدء الاختبارات
+    (async () => {
+      updateStatus('⏳ جاري تحميل البيانات الأولية...', 'loading');
+      await loadMessages();
+      updateStatus('✅ تم الاتصال بنجاح', 'success');
+
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      await runTests();
+    })();
+  </script>
+</body>
+</html>
