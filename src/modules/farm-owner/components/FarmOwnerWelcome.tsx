@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Sparkles, TreePine, DollarSign, Users, Shield, Award, ArrowLeft, CheckCircle, Heart, Handshake } from 'lucide-react';
+import { getPlatformTextsBySection } from '../../../services/platformTextsService';
 
 interface FarmOwnerWelcomeProps {
   ownerName: string;
@@ -9,10 +10,27 @@ interface FarmOwnerWelcomeProps {
 export const FarmOwnerWelcome: React.FC<FarmOwnerWelcomeProps> = ({ ownerName, onComplete }) => {
   const [step, setStep] = useState(0);
   const [showContent, setShowContent] = useState(false);
+  const [platformName, setPlatformName] = useState('منصة ريفي للاستثمار الزراعي');
+  const [welcomeMessage, setWelcomeMessage] = useState('شكراً لك لثقتك في منصة ريفي للاستثمار الزراعي');
 
   useEffect(() => {
     setTimeout(() => setShowContent(true), 300);
+    loadPlatformTexts();
   }, []);
+
+  const loadPlatformTexts = async () => {
+    try {
+      const heroTexts = await getPlatformTextsBySection('hero');
+      if (heroTexts.hero_title?.ar) {
+        setPlatformName(heroTexts.hero_title.ar);
+      }
+      if (heroTexts.hero_welcome_owner?.ar) {
+        setWelcomeMessage(heroTexts.hero_welcome_owner.ar);
+      }
+    } catch (error) {
+      console.error('Error loading platform texts:', error);
+    }
+  };
 
   const benefits = [
     {
@@ -126,7 +144,7 @@ export const FarmOwnerWelcome: React.FC<FarmOwnerWelcomeProps> = ({ ownerName, o
           </h1>
 
           <p className="text-xl md:text-2xl font-bold mb-3" style={{ color: '#A4D65E' }}>
-            شكراً لك لثقتك في منصة الحبر للتسويق الزراعي
+            {welcomeMessage}
           </p>
 
           <p className="text-lg mb-4 max-w-2xl mx-auto" style={{ color: '#A4D65E', opacity: 0.9 }}>
@@ -139,7 +157,7 @@ export const FarmOwnerWelcome: React.FC<FarmOwnerWelcomeProps> = ({ ownerName, o
           }}>
             <Handshake className="text-yellow-400" size={24} />
             <span className="font-bold" style={{ color: '#8BC34A' }}>
-              بائع موثوق في منصة الحبر للتسويق الزراعي
+              بائع موثوق في {platformName}
             </span>
           </div>
         </div>

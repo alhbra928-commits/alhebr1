@@ -43,7 +43,8 @@ export function ModernRoyalPlatform({
   const [isInitialLoading, setIsInitialLoading] = useState(false);
   const [loadingProgress, setLoadingProgress] = useState(100);
   const [mousePosition, setMousePosition] = useState({ x: 50, y: 50 });
-  const [platformName, setPlatformName] = useState('منصة الحبر');
+  const [platformName, setPlatformName] = useState('جاري التحميل...');
+  const [platformDescription, setPlatformDescription] = useState('منصة استثمار زراعي متطورة');
   const [activeBottomTab, setActiveBottomTab] = useState<string>('home');
   const [smartAssistantOpen, setSmartAssistantOpen] = useState(false);
 
@@ -122,9 +123,12 @@ export function ModernRoyalPlatform({
 
   const loadPlatformTexts = async () => {
     try {
-      const homeTexts = await getPlatformTextsBySection('home');
-      if (homeTexts.main_title) {
-        setPlatformName(homeTexts.main_title.ar);
+      const heroTexts = await getPlatformTextsBySection('hero');
+      if (heroTexts.hero_title?.ar) {
+        setPlatformName(heroTexts.hero_title.ar);
+      }
+      if (heroTexts.hero_subtitle?.ar) {
+        setPlatformDescription(heroTexts.hero_subtitle.ar);
       }
     } catch (error) {
       console.error('Error loading platform texts:', error);
@@ -166,7 +170,7 @@ export function ModernRoyalPlatform({
               {platformName}
             </h1>
             <p className="text-emerald-600 font-medium text-lg animate-fade-in delay-150">
-              منصة استثمار زراعي متطورة
+              {platformDescription}
             </p>
           </div>
 

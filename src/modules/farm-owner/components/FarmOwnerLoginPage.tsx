@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { farmOwnerService } from '../services/farmOwnerService';
 import { RefreshCw, ArrowRight } from 'lucide-react';
+import { getPlatformTextsBySection } from '../../../services/platformTextsService';
 
 interface FarmOwnerLoginPageProps {
   onLoginSuccess: (profileId: string, status: string) => void;
@@ -16,6 +17,7 @@ export const FarmOwnerLoginPage: React.FC<FarmOwnerLoginPageProps> = ({ onLoginS
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [countdown, setCountdown] = useState(0);
+  const [platformSubtitle, setPlatformSubtitle] = useState('منصة ريفي للاستثمار الزراعي - استثمارك يبدأ من الأرض');
 
   useEffect(() => {
     if (countdown > 0) {
@@ -23,6 +25,21 @@ export const FarmOwnerLoginPage: React.FC<FarmOwnerLoginPageProps> = ({ onLoginS
       return () => clearTimeout(timer);
     }
   }, [countdown]);
+
+  useEffect(() => {
+    loadPlatformTexts();
+  }, []);
+
+  const loadPlatformTexts = async () => {
+    try {
+      const heroTexts = await getPlatformTextsBySection('hero');
+      if (heroTexts.hero_subtitle?.ar) {
+        setPlatformSubtitle(heroTexts.hero_subtitle.ar);
+      }
+    } catch (error) {
+      console.error('Error loading platform texts:', error);
+    }
+  };
 
   const handleMobileSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -145,7 +162,7 @@ export const FarmOwnerLoginPage: React.FC<FarmOwnerLoginPageProps> = ({ onLoginS
             لوحة صاحب المزرعة
           </h1>
           <p className="text-xs sm:text-sm px-6" style={{ color: '#8BC34A', opacity: 0.8 }}>
-            منصة الحبر الزراعية - استثمارك يبدأ من الأرض
+            {platformSubtitle}
           </p>
         </div>
 
