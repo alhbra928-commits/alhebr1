@@ -445,7 +445,7 @@ export function InnovativeSideDock({
                 onClick={() => setIsHomeDropdownOpen(!isHomeDropdownOpen)}
                 title="لوحات التحكم"
               >
-                <Home size={22} />
+                <UserCog size={22} />
                 {isHomeDropdownOpen ? <ChevronUp size={14} style={{ position: 'absolute', bottom: 4, right: 4 }} /> : <ChevronDown size={14} style={{ position: 'absolute', bottom: 4, right: 4 }} />}
               </button>
 
