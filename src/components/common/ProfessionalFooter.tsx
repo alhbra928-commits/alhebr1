@@ -34,7 +34,7 @@ interface ProfessionalFooterProps {
 
 export function ProfessionalFooter({ onAdminLogin, onFarmOwnerLogin }: ProfessionalFooterProps) {
   const [footerInfo, setFooterInfo] = useState<FooterInfo | null>(null);
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isContentExpanded, setIsContentExpanded] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [adminButtonExpanded, setAdminButtonExpanded] = useState(false);
   const [showAdminMenu, setShowAdminMenu] = useState(false);
@@ -66,96 +66,58 @@ export function ProfessionalFooter({ onAdminLogin, onFarmOwnerLogin }: Professio
   if (!footerInfo) return null;
   if (!footerInfo.show_in_mobile && isMobile) return null;
 
-  const shouldCollapse = isMobile && footerInfo.mobile_collapsed;
-  const showContent = !shouldCollapse || isExpanded;
-
   return (
-    <footer
+    <div
       style={{
         position: 'fixed',
         bottom: 0,
         left: 0,
         right: 0,
         zIndex: 999998,
-        backgroundColor: footerInfo.footer_bg_color,
-        color: footerInfo.footer_text_color,
-        paddingBottom: isMobile ? 'max(16px, env(safe-area-inset-bottom))' : '16px',
-        WebkitTransform: 'translate3d(0, 0, 0)',
-        transform: 'translate3d(0, 0, 0)',
-        WebkitPerspective: 1000,
-        perspective: 1000,
-        willChange: 'transform',
-        isolation: 'isolate',
-        boxShadow: '0 -4px 12px rgba(0,0,0,0.1)',
         pointerEvents: 'auto',
-        overflow: 'hidden',
         width: '100%',
       }}
     >
-      {/* 3D Background Effects */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div
-          className="absolute -top-1/2 -right-1/4 w-96 h-96 rounded-full opacity-5"
-          style={{
-            background: 'radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%)',
-            filter: 'blur(60px)',
-            transform: 'translateZ(-20px)',
-          }}
-        />
-        <div
-          className="absolute -bottom-1/2 -left-1/4 w-96 h-96 rounded-full opacity-5"
-          style={{
-            background: 'radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%)',
-            filter: 'blur(60px)',
-            transform: 'translateZ(-20px)',
-          }}
-        />
-      </div>
-
-      {/* Mobile Collapsed Header */}
-      {shouldCollapse && (
-        <button
-          onClick={() => setIsExpanded(!isExpanded)}
-          className="relative w-full flex items-center justify-between transition-all active:scale-[0.98]"
-          style={{
-            color: footerInfo.footer_text_color,
-            padding: '16px max(16px, env(safe-area-inset-right)) 16px max(16px, env(safe-area-inset-left))',
-            minHeight: '56px',
-            WebkitTapHighlightColor: 'transparent',
-          }}
-        >
-          <div className="flex items-center gap-3">
-            <div
-              className="w-10 h-10 rounded-xl flex items-center justify-center"
-              style={{
-                background: 'linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.05))',
-                boxShadow: '0 4px 12px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.2)',
-              }}
-            >
-              <Building2 size={20} />
-            </div>
-            <span
-              className="text-base font-bold"
-              style={{
-                textShadow: '0 2px 4px rgba(0,0,0,0.15), 0 4px 8px rgba(0,0,0,0.1)',
-              }}
-            >
-              {footerInfo.organization_name_ar}
-            </span>
-          </div>
+      {/* Expanded Content Panel - Slides Up */}
+      <div
+        style={{
+          position: 'absolute',
+          bottom: isMobile ? '64px' : '72px',
+          left: 0,
+          right: 0,
+          backgroundColor: footerInfo.footer_bg_color,
+          color: footerInfo.footer_text_color,
+          maxHeight: isContentExpanded ? '80vh' : '0',
+          overflowY: isContentExpanded ? 'auto' : 'hidden',
+          transition: 'max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease',
+          opacity: isContentExpanded ? 1 : 0,
+          boxShadow: isContentExpanded ? '0 -8px 32px rgba(0,0,0,0.2)' : 'none',
+          borderTop: isContentExpanded ? '2px solid rgba(255,255,255,0.1)' : 'none',
+          WebkitTransform: 'translate3d(0, 0, 0)',
+          transform: 'translate3d(0, 0, 0)',
+        }}
+      >
+        {/* 3D Background Effects */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div
-            className="w-8 h-8 rounded-full flex items-center justify-center"
+            className="absolute -top-1/2 -right-1/4 w-96 h-96 rounded-full opacity-5"
             style={{
-              background: 'rgba(255,255,255,0.1)',
+              background: 'radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%)',
+              filter: 'blur(60px)',
+              transform: 'translateZ(-20px)',
             }}
-          >
-            {isExpanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-          </div>
-        </button>
-      )}
+          />
+          <div
+            className="absolute -bottom-1/2 -left-1/4 w-96 h-96 rounded-full opacity-5"
+            style={{
+              background: 'radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%)',
+              filter: 'blur(60px)',
+              transform: 'translateZ(-20px)',
+            }}
+          />
+        </div>
 
-      {/* Main Footer Content */}
-      {showContent && (
+        {/* Content */}
         <div
           className="relative z-10"
           style={{
@@ -381,7 +343,60 @@ export function ProfessionalFooter({ onAdminLogin, onFarmOwnerLogin }: Professio
             </div>
           </div>
         </div>
-      )}
+      </div>
+
+      {/* Main Footer Bar - Always Visible */}
+      <button
+        onClick={() => setIsContentExpanded(!isContentExpanded)}
+        style={{
+          width: '100%',
+          backgroundColor: footerInfo.footer_bg_color,
+          color: footerInfo.footer_text_color,
+          padding: isMobile
+            ? '16px max(16px, env(safe-area-inset-right)) max(16px, calc(16px + env(safe-area-inset-bottom))) max(16px, env(safe-area-inset-left))'
+            : '20px 20px 20px 20px',
+          boxShadow: '0 -4px 20px rgba(0,0,0,0.15)',
+          borderTop: '2px solid rgba(255,255,255,0.1)',
+          transition: 'all 0.3s ease',
+          cursor: 'pointer',
+          WebkitTapHighlightColor: 'transparent',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '12px',
+          position: 'relative',
+          zIndex: 1,
+        }}
+        className="hover:brightness-110 active:scale-[0.99]"
+      >
+        <Building2 size={isMobile ? 20 : 24} style={{ flexShrink: 0 }} />
+        <span
+          style={{
+            fontSize: isMobile ? '15px' : '18px',
+            fontWeight: 700,
+            textShadow: '0 2px 4px rgba(0,0,0,0.2)',
+            letterSpacing: '0.02em',
+          }}
+        >
+          {footerInfo.organization_name_ar}
+        </span>
+        <div
+          style={{
+            width: isMobile ? '32px' : '36px',
+            height: isMobile ? '32px' : '36px',
+            borderRadius: '50%',
+            background: 'rgba(255,255,255,0.1)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            transition: 'transform 0.3s ease',
+            transform: isContentExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
+            flexShrink: 0,
+          }}
+        >
+          <ChevronUp size={isMobile ? 18 : 20} />
+        </div>
+      </button>
 
       {/* Hidden Admin Button */}
       <div
@@ -554,6 +569,6 @@ export function ProfessionalFooter({ onAdminLogin, onFarmOwnerLogin }: Professio
           }
         `}
       </style>
-    </footer>
+    </div>
   );
 }
