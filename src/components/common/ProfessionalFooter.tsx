@@ -407,7 +407,7 @@ export function ProfessionalFooter({ onAdminLogin, onFarmOwnerLogin }: Professio
           zIndex: 999999,
         }}
       >
-        {/* Small Dot Button */}
+        {/* Unified Dashboard Button */}
         <button
           onClick={() => {
             if (!adminButtonExpanded) {
@@ -416,31 +416,59 @@ export function ProfessionalFooter({ onAdminLogin, onFarmOwnerLogin }: Professio
               setShowAdminMenu(!showAdminMenu);
             }
           }}
-          className={`transition-all duration-500 ease-out flex items-center justify-center ${
+          className={`transition-all duration-500 ease-out flex items-center justify-center relative ${
             adminButtonExpanded
-              ? 'w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-500 via-yellow-500 to-amber-600 shadow-2xl'
-              : 'w-2 h-2 rounded-full bg-gradient-to-br from-yellow-600 to-amber-700 opacity-30 hover:opacity-60'
+              ? 'w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-500 via-yellow-500 to-green-500 shadow-2xl'
+              : 'w-2 h-2 rounded-full bg-gradient-to-br from-yellow-600 to-green-700 opacity-30 hover:opacity-60'
           }`}
           style={{
             backdropFilter: 'blur(10px)',
             border: adminButtonExpanded ? '2px solid rgba(251, 191, 36, 0.3)' : 'none',
             boxShadow: adminButtonExpanded
-              ? '0 10px 40px rgba(251, 191, 36, 0.5), 0 0 80px rgba(251, 191, 36, 0.3), inset 0 1px 0 rgba(255,255,255,0.4)'
+              ? '0 10px 40px rgba(251, 191, 36, 0.5), 0 0 80px rgba(34, 197, 94, 0.3), inset 0 1px 0 rgba(255,255,255,0.4)'
               : '0 0 10px rgba(251, 191, 36, 0.4)',
             transform: adminButtonExpanded ? 'scale(1)' : 'scale(1)',
             WebkitTapHighlightColor: 'transparent',
           }}
-          title="تسجيل الدخول"
+          title="لوحات التحكم"
         >
           {adminButtonExpanded && (
-            <Crown
-              className="text-white transition-all duration-300"
-              size={28}
-              style={{
-                filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))',
-                animation: showAdminMenu ? 'none' : 'pulse 2s infinite',
-              }}
-            />
+            <div className="relative flex items-center justify-center">
+              {/* Crown Icon - Top */}
+              <Crown
+                className="text-white absolute"
+                size={18}
+                style={{
+                  filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))',
+                  animation: showAdminMenu ? 'none' : 'pulse 2s infinite',
+                  top: '-6px',
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                }}
+              />
+              {/* Shield Icon - Bottom */}
+              <Shield
+                className="text-white absolute"
+                size={18}
+                style={{
+                  filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))',
+                  animation: showAdminMenu ? 'none' : 'pulse 2s infinite',
+                  bottom: '-6px',
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                }}
+              />
+              {/* Center divider line */}
+              <div
+                className="absolute bg-white opacity-40"
+                style={{
+                  width: '2px',
+                  height: '24px',
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                }}
+              />
+            </div>
           )}
         </button>
 
@@ -471,7 +499,7 @@ export function ProfessionalFooter({ onAdminLogin, onFarmOwnerLogin }: Professio
               <div
                 className="p-5 text-center relative overflow-hidden"
                 style={{
-                  background: 'linear-gradient(135deg, #f59e0b 0%, #eab308 50%, #d97706 100%)',
+                  background: 'linear-gradient(135deg, #f59e0b 0%, #eab308 50%, #22c55e 100%)',
                 }}
               >
                 <div
@@ -480,8 +508,13 @@ export function ProfessionalFooter({ onAdminLogin, onFarmOwnerLogin }: Professio
                     backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(255,255,255,0.3) 0%, transparent 50%)',
                   }}
                 />
-                <Crown className="w-10 h-10 text-white mx-auto mb-3 drop-shadow-lg relative z-10" />
-                <p className="text-white font-bold text-lg drop-shadow-md relative z-10">اختر نوع الحساب</p>
+                <div className="relative z-10 flex items-center justify-center gap-3 mb-3">
+                  <Crown className="w-8 h-8 text-white drop-shadow-lg" />
+                  <div className="w-px h-8 bg-white opacity-40" />
+                  <Shield className="w-8 h-8 text-white drop-shadow-lg" />
+                </div>
+                <p className="text-white font-bold text-lg drop-shadow-md relative z-10">لوحات التحكم</p>
+                <p className="text-white text-xs opacity-80 mt-1 relative z-10">اختر نوع الحساب</p>
               </div>
 
               {/* Menu Options */}
