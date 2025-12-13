@@ -8,7 +8,7 @@ import { AdvancedCacheSystemDiagnostics } from './AdvancedCacheSystemDiagnostics
 import { CompletePlatformTextsManager } from './CompletePlatformTextsManager';
 import { SideDockSettings } from './SideDockSettings';
 import { InnovativeLoaderSettings } from './InnovativeLoaderSettings';
-import { LiveActivityBarSettings } from './LiveActivityBarSettings';
+import { AdvancedLiveActivitySettings } from './AdvancedLiveActivitySettings';
 
 interface SettingsViewProps {
   onBack?: () => void;
@@ -146,7 +146,7 @@ export function SettingsView({ onBack }: SettingsViewProps) {
         ) : activeTab === 'loader' ? (
           <InnovativeLoaderSettings />
         ) : activeTab === 'activity-bar' ? (
-          <LiveActivityBarSettings />
+          <AdvancedLiveActivitySettings />
         ) : (
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
