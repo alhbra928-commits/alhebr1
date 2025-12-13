@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Home, User, Phone, Brain, ChevronRight, ChevronLeft } from 'lucide-react';
+import { Home, User, Phone, Brain, ChevronRight, ChevronLeft, UserCog, Tractor, ChevronUp, ChevronDown } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 
 interface InnovativeSideDockProps {
@@ -46,6 +46,7 @@ export function InnovativeSideDock({
     defaultState: 'visible'
   });
   const [isVisible, setIsVisible] = useState(true);
+  const [isHomeDropdownOpen, setIsHomeDropdownOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -176,6 +177,73 @@ export function InnovativeSideDock({
           height: 2px;
           background: rgba(16, 185, 129, 0.2);
           margin: 4px auto;
+        }
+
+        .home-dropdown {
+          position: absolute;
+          left: 80px;
+          background: rgba(0, 0, 0, 0.95);
+          backdrop-filter: blur(20px);
+          border-radius: 16px;
+          padding: 8px;
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+          border: 2px solid rgba(16, 185, 129, 0.3);
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+          min-width: 180px;
+          animation: slideIn 0.2s ease-out;
+        }
+
+        @keyframes slideIn {
+          from {
+            opacity: 0;
+            transform: translateX(-10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+
+        .dropdown-button {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 10px 12px;
+          border-radius: 12px;
+          border: none;
+          background: rgba(255, 255, 255, 0.05);
+          color: white;
+          cursor: pointer;
+          transition: all 0.2s;
+          font-size: 13px;
+          white-space: nowrap;
+        }
+
+        .dropdown-button:hover {
+          background: rgba(16, 185, 129, 0.2);
+          transform: scale(1.02);
+        }
+
+        .dropdown-button:active {
+          transform: scale(0.98);
+        }
+
+        .dropdown-button.admin {
+          background: linear-gradient(135deg, #3B82F6, #2563EB);
+        }
+
+        .dropdown-button.admin:hover {
+          background: linear-gradient(135deg, #2563EB, #1D4ED8);
+        }
+
+        .dropdown-button.owner {
+          background: linear-gradient(135deg, #10B981, #059669);
+        }
+
+        .dropdown-button.owner:hover {
+          background: linear-gradient(135deg, #059669, #047857);
         }
 
         .side-dock-toggle {
@@ -371,13 +439,42 @@ export function InnovativeSideDock({
               </>
             )}
 
-            <button
-              className={`side-dock-button ${currentSection === 'home' ? 'active' : ''}`}
-              onClick={() => onNavigate?.('home')}
-              title={texts.homeTooltip}
-            >
-              <Home size={22} />
-            </button>
+            <div style={{ position: 'relative' }}>
+              <button
+                className="side-dock-button"
+                onClick={() => setIsHomeDropdownOpen(!isHomeDropdownOpen)}
+                title="لوحات التحكم"
+              >
+                <Home size={22} />
+                {isHomeDropdownOpen ? <ChevronUp size={14} style={{ position: 'absolute', bottom: 4, right: 4 }} /> : <ChevronDown size={14} style={{ position: 'absolute', bottom: 4, right: 4 }} />}
+              </button>
+
+              {isHomeDropdownOpen && (
+                <div className="home-dropdown">
+                  <button
+                    className="dropdown-button admin"
+                    onClick={() => {
+                      window.location.href = '/admin-login';
+                      setIsHomeDropdownOpen(false);
+                    }}
+                  >
+                    <UserCog size={18} />
+                    <span>لوحة الإدارة</span>
+                  </button>
+
+                  <button
+                    className="dropdown-button owner"
+                    onClick={() => {
+                      window.location.href = '/farm-owner-login';
+                      setIsHomeDropdownOpen(false);
+                    }}
+                  >
+                    <Tractor size={18} />
+                    <span>لوحة صاحب المزرعة</span>
+                  </button>
+                </div>
+              )}
+            </div>
 
             <button
               className={`side-dock-button ${currentSection === 'account' ? 'active' : ''}`}
