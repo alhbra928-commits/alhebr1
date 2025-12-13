@@ -30,9 +30,24 @@ export function RoyalMainInterface({
   const [loading, setLoading] = useState(true);
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
   const [activeBottomTab, setActiveBottomTab] = useState<string>('home');
+  const [headerHeight, setHeaderHeight] = useState(280);
 
   useEffect(() => {
     loadData();
+
+    // حساب ارتفاع الهيدر
+    const calculateHeaderHeight = () => {
+      const header = document.querySelector('header');
+      if (header) {
+        const height = header.offsetHeight;
+        setHeaderHeight(height);
+        document.documentElement.style.setProperty('--header-height', `${height}px`);
+      }
+    };
+
+    calculateHeaderHeight();
+    window.addEventListener('resize', calculateHeaderHeight);
+    return () => window.removeEventListener('resize', calculateHeaderHeight);
   }, []);
 
   const loadData = async () => {
@@ -108,7 +123,19 @@ export function RoyalMainInterface({
   // Home View - Royal Design
   return (
     <>
-      <div className="min-h-screen bg-gradient-to-br from-amber-50 via-yellow-50 to-amber-100">
+      <div
+        className="bg-gradient-to-br from-amber-50 via-yellow-50 to-amber-100"
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          width: '100%',
+          height: '100dvh',
+          overflow: 'hidden'
+        }}
+      >
       {/* Decorative Background Pattern */}
       <div className="fixed inset-0 opacity-5">
         <div className="absolute inset-0" style={{
@@ -117,8 +144,29 @@ export function RoyalMainInterface({
         }}></div>
       </div>
 
-      {/* Royal Header */}
-      <header className="relative bg-gradient-to-r from-amber-700 via-yellow-600 to-amber-700 shadow-2xl">
+      {/* Royal Header - Fixed */}
+      <header
+        className="bg-gradient-to-r from-amber-700 via-yellow-600 to-amber-700 shadow-2xl"
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 999999,
+          paddingTop: 'max(8px, env(safe-area-inset-top))',
+          paddingLeft: 'max(16px, env(safe-area-inset-left))',
+          paddingRight: 'max(16px, env(safe-area-inset-right))',
+          WebkitBackdropFilter: 'saturate(180%) blur(20px)',
+          backdropFilter: 'saturate(180%) blur(20px)',
+          WebkitTransform: 'translate3d(0, 0, 0)',
+          transform: 'translate3d(0, 0, 0)',
+          WebkitPerspective: 1000,
+          perspective: 1000,
+          willChange: 'transform',
+          isolation: 'isolate',
+          pointerEvents: 'auto'
+        }}
+      >
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JpZCIgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48cGF0aCBkPSJNIDQwIDAgTCAwIDAgMCA0MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLW9wYWNpdHk9IjAuMSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyaWQpIi8+PC9zdmc+')] opacity-20"></div>
 
         <div className="relative container mx-auto px-4 sm:px-6 py-4 sm:py-6 md:py-8">
@@ -199,8 +247,22 @@ export function RoyalMainInterface({
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="relative container mx-auto px-4 sm:px-6 py-6 sm:py-8 md:py-12 pb-32 sm:pb-40">
+      {/* Main Content - Scrollable */}
+      <main
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          overflow: 'auto',
+          WebkitOverflowScrolling: 'touch',
+          paddingTop: 'calc(var(--header-height, 280px) + 16px)',
+          paddingBottom: 'max(120px, calc(env(safe-area-inset-bottom) + 100px))',
+        }}
+        className="relative"
+      >
+        <div className="container mx-auto px-4 sm:px-6">
         {loading ? (
           <div className="flex justify-center items-center py-20">
             <SimpleLoader />
@@ -329,6 +391,7 @@ export function RoyalMainInterface({
             )}
           </>
         )}
+        </div>
       </main>
     </div>
     </>
