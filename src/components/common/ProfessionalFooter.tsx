@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Building2, Mail, Phone, MessageCircle, MapPin, Shield, ChevronDown, ChevronUp } from 'lucide-react';
+import { Building2, Mail, Phone, MessageCircle, MapPin, Shield, ChevronDown, ChevronUp, Crown } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 
 interface FooterInfo {
@@ -27,10 +27,17 @@ interface FooterInfo {
   is_active: boolean;
 }
 
-export function ProfessionalFooter() {
+interface ProfessionalFooterProps {
+  onAdminLogin?: () => void;
+  onFarmOwnerLogin?: () => void;
+}
+
+export function ProfessionalFooter({ onAdminLogin, onFarmOwnerLogin }: ProfessionalFooterProps) {
   const [footerInfo, setFooterInfo] = useState<FooterInfo | null>(null);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [adminButtonExpanded, setAdminButtonExpanded] = useState(false);
+  const [showAdminMenu, setShowAdminMenu] = useState(false);
 
   useEffect(() => {
     loadFooterInfo();
@@ -375,6 +382,178 @@ export function ProfessionalFooter() {
           </div>
         </div>
       )}
+
+      {/* Hidden Admin Button */}
+      <div
+        style={{
+          position: 'absolute',
+          bottom: isMobile ? 'max(8px, calc(8px + env(safe-area-inset-bottom)))' : '8px',
+          left: '8px',
+          zIndex: 999999,
+        }}
+      >
+        {/* Small Dot Button */}
+        <button
+          onClick={() => {
+            if (!adminButtonExpanded) {
+              setAdminButtonExpanded(true);
+            } else {
+              setShowAdminMenu(!showAdminMenu);
+            }
+          }}
+          className={`transition-all duration-500 ease-out flex items-center justify-center ${
+            adminButtonExpanded
+              ? 'w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-500 via-yellow-500 to-amber-600 shadow-2xl'
+              : 'w-2 h-2 rounded-full bg-gradient-to-br from-yellow-600 to-amber-700 opacity-30 hover:opacity-60'
+          }`}
+          style={{
+            backdropFilter: 'blur(10px)',
+            border: adminButtonExpanded ? '2px solid rgba(251, 191, 36, 0.3)' : 'none',
+            boxShadow: adminButtonExpanded
+              ? '0 10px 40px rgba(251, 191, 36, 0.5), 0 0 80px rgba(251, 191, 36, 0.3), inset 0 1px 0 rgba(255,255,255,0.4)'
+              : '0 0 10px rgba(251, 191, 36, 0.4)',
+            transform: adminButtonExpanded ? 'scale(1)' : 'scale(1)',
+            WebkitTapHighlightColor: 'transparent',
+          }}
+          title="تسجيل الدخول"
+        >
+          {adminButtonExpanded && (
+            <Crown
+              className="text-white transition-all duration-300"
+              size={28}
+              style={{
+                filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))',
+                animation: showAdminMenu ? 'none' : 'pulse 2s infinite',
+              }}
+            />
+          )}
+        </button>
+
+        {/* Expanded Menu */}
+        {showAdminMenu && adminButtonExpanded && (
+          <>
+            {/* Backdrop */}
+            <div
+              onClick={() => {
+                setShowAdminMenu(false);
+                setAdminButtonExpanded(false);
+              }}
+              className="fixed inset-0 bg-black/20 backdrop-blur-sm"
+              style={{ zIndex: 999998, left: 0, right: 0, top: 0, bottom: 0 }}
+            />
+
+            {/* Menu Content with 3D Effect */}
+            <div
+              className="absolute left-0 bg-white rounded-2xl shadow-2xl overflow-hidden border-2 border-amber-200 min-w-[280px]"
+              style={{
+                bottom: '72px',
+                zIndex: 999999,
+                animation: 'slideUpFade 0.3s ease-out',
+                transformOrigin: 'bottom left',
+              }}
+            >
+              {/* Menu Header */}
+              <div
+                className="p-5 text-center relative overflow-hidden"
+                style={{
+                  background: 'linear-gradient(135deg, #f59e0b 0%, #eab308 50%, #d97706 100%)',
+                }}
+              >
+                <div
+                  className="absolute inset-0 opacity-20"
+                  style={{
+                    backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(255,255,255,0.3) 0%, transparent 50%)',
+                  }}
+                />
+                <Crown className="w-10 h-10 text-white mx-auto mb-3 drop-shadow-lg relative z-10" />
+                <p className="text-white font-bold text-lg drop-shadow-md relative z-10">اختر نوع الحساب</p>
+              </div>
+
+              {/* Menu Options */}
+              <div className="p-3">
+                {/* Admin Option */}
+                <button
+                  onClick={() => {
+                    setShowAdminMenu(false);
+                    setAdminButtonExpanded(false);
+                    if (onAdminLogin) onAdminLogin();
+                  }}
+                  className="w-full text-right px-5 py-4 hover:bg-amber-50 rounded-xl transition-all text-gray-800 font-bold text-base mb-2 flex items-center gap-3 group border-2 border-transparent hover:border-amber-200 active:scale-95"
+                  style={{
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+                    WebkitTapHighlightColor: 'transparent',
+                  }}
+                >
+                  <div
+                    className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform"
+                    style={{
+                      boxShadow: '0 4px 12px rgba(251, 191, 36, 0.3)',
+                    }}
+                  >
+                    <Crown className="w-6 h-6 text-white" />
+                  </div>
+                  <div className="flex flex-col items-start">
+                    <span className="text-lg font-bold text-amber-900">لوحة الإدارة</span>
+                    <span className="text-xs text-gray-500">إدارة كاملة للمنصة</span>
+                  </div>
+                </button>
+
+                {/* Farm Owner Option */}
+                <button
+                  onClick={() => {
+                    setShowAdminMenu(false);
+                    setAdminButtonExpanded(false);
+                    if (onFarmOwnerLogin) onFarmOwnerLogin();
+                  }}
+                  className="w-full text-right px-5 py-4 hover:bg-green-50 rounded-xl transition-all text-gray-800 font-bold text-base flex items-center gap-3 group border-2 border-transparent hover:border-green-200 active:scale-95"
+                  style={{
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+                    WebkitTapHighlightColor: 'transparent',
+                  }}
+                >
+                  <div
+                    className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform"
+                    style={{
+                      boxShadow: '0 4px 12px rgba(34, 197, 94, 0.3)',
+                    }}
+                  >
+                    <Shield className="w-6 h-6 text-white" />
+                  </div>
+                  <div className="flex flex-col items-start">
+                    <span className="text-lg font-bold text-green-900">صاحب مزرعة</span>
+                    <span className="text-xs text-gray-500">إدارة مزارعك</span>
+                  </div>
+                </button>
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+
+      {/* Keyframes for animation */}
+      <style>
+        {`
+          @keyframes slideUpFade {
+            from {
+              opacity: 0;
+              transform: translateY(20px) scale(0.9);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0) scale(1);
+            }
+          }
+
+          @keyframes pulse {
+            0%, 100% {
+              transform: scale(1);
+            }
+            50% {
+              transform: scale(1.1);
+            }
+          }
+        `}
+      </style>
     </footer>
   );
 }
