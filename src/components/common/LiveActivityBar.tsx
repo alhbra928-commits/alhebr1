@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { ShoppingCart, Award, TreePine, Sparkles } from 'lucide-react';
 import { LiveActivityService, LiveActivity, LiveActivitySettings } from '../../services/liveActivityService';
 
@@ -16,58 +16,90 @@ const iconMap: Record<string, any> = {
 export function LiveActivityBar() {
   const [activities, setActivities] = useState<LiveActivity[]>([]);
   const [settings, setSettings] = useState<LiveActivitySettings | null>(null);
-  const [updateKey, setUpdateKey] = useState(0);
+  const [renderKey, setRenderKey] = useState(0);
+
+  const loadSettings = useCallback(async () => {
+    try {
+      const loadedSettings = await LiveActivityService.getSettings();
+      if (loadedSettings) {
+        console.log('🔄 Live Activity Bar: Settings loaded', {
+          enabled: loadedSettings.is_enabled,
+          mode: loadedSettings.content_mode,
+          speed: loadedSettings.animation_speed,
+          height: loadedSettings.height
+        });
+        setSettings(loadedSettings);
+        setRenderKey(prev => prev + 1);
+      }
+    } catch (error) {
+      console.error('Error loading settings:', error);
+    }
+  }, []);
+
+  const loadActivities = useCallback(async () => {
+    try {
+      const data = await LiveActivityService.getLiveActivities();
+      console.log('📊 Live Activity Bar: Activities loaded', {
+        count: data.length,
+        types: data.map(a => a.type),
+        sources: data.map(a => a.source)
+      });
+      setActivities(data);
+    } catch (error) {
+      console.error('Error loading activities:', error);
+    }
+  }, []);
 
   useEffect(() => {
+    loadSettings();
     loadActivities();
+  }, [loadSettings, loadActivities]);
 
+  useEffect(() => {
+    if (!settings) return;
+
+    const refreshInterval = setInterval(() => {
+      loadActivities();
+    }, settings.refresh_interval * 1000);
+
+    return () => clearInterval(refreshInterval);
+  }, [settings, loadActivities]);
+
+  useEffect(() => {
     const unsubscribe = LiveActivityService.subscribeToChanges(() => {
+      loadSettings();
       loadActivities();
     });
 
     const handleSettingsUpdate = ((event: CustomEvent) => {
       const newSettings = event.detail;
+      console.log('⚡ Live Activity Bar: Settings updated via event!', {
+        mode: newSettings.content_mode,
+        speed: newSettings.animation_speed,
+        height: newSettings.height,
+        colors: { text: newSettings.text_color, icon: newSettings.icon_color }
+      });
       setSettings(newSettings);
-      setUpdateKey(prev => prev + 1);
+      setRenderKey(prev => prev + 1);
+      setTimeout(() => loadActivities(), 100);
     }) as EventListener;
 
     window.addEventListener('live-activity-settings-updated', handleSettingsUpdate);
 
-    const interval = setInterval(() => {
-      if (settings) {
-        loadActivities();
-      }
-    }, (settings?.refresh_interval || 30) * 1000);
-
     return () => {
       unsubscribe();
-      clearInterval(interval);
       window.removeEventListener('live-activity-settings-updated', handleSettingsUpdate);
     };
-  }, [settings?.refresh_interval]);
-
-  const loadActivities = async () => {
-    try {
-      const loadedSettings = await LiveActivityService.getSettings();
-      if (loadedSettings) {
-        setSettings(loadedSettings);
-      }
-
-      const data = await LiveActivityService.getLiveActivities();
-      setActivities(data);
-    } catch (error) {
-      console.error('Error loading activities:', error);
-    }
-  };
+  }, [loadSettings, loadActivities]);
 
   if (!settings || !settings.is_enabled || activities.length === 0) {
     return null;
   }
 
   const speedDuration = {
-    slow: '50s',
-    medium: '35s',
-    fast: '22s'
+    slow: '40s',
+    medium: '25s',
+    fast: '12s'
   };
 
   const getBackgroundStyle = () => {
@@ -97,39 +129,40 @@ export function LiveActivityBar() {
   return (
     <>
       <style>{`
-        @keyframes smooth-scroll-left-${updateKey} {
+        @keyframes smooth-scroll-left-${renderKey} {
           0% { transform: translateX(0); }
           100% { transform: translateX(-50%); }
         }
 
-        .modern-live-activity-container-${updateKey} {
+        .modern-live-activity-container-${renderKey} {
           position: relative;
           width: 100%;
           height: ${settings.height}px;
           overflow: hidden;
           background: ${getBackgroundStyle()};
           backdrop-filter: ${settings.background_style === 'glass' ? 'blur(10px)' : 'none'};
+          z-index: 999;
         }
 
-        .modern-live-activity-track-${updateKey} {
+        .modern-live-activity-track-${renderKey} {
           display: flex;
           align-items: center;
           height: 100%;
-          animation: smooth-scroll-left-${updateKey} ${speedDuration[settings.animation_speed]} linear infinite;
+          animation: smooth-scroll-left-${renderKey} ${speedDuration[settings.animation_speed]} linear infinite;
           will-change: transform;
           ${settings.pause_on_hover ? 'cursor: pointer;' : ''}
         }
 
-        ${settings.pause_on_hover ? `.modern-live-activity-track-${updateKey}:hover { animation-play-state: paused; }` : ''}
+        ${settings.pause_on_hover ? `.modern-live-activity-track-${renderKey}:hover { animation-play-state: paused; }` : ''}
 
-        .modern-live-activity-group-${updateKey} {
+        .modern-live-activity-group-${renderKey} {
           display: flex;
           align-items: center;
           height: 100%;
           flex-shrink: 0;
         }
 
-        .modern-live-activity-item-${updateKey} {
+        .modern-live-activity-item-${renderKey} {
           display: flex;
           align-items: center;
           gap: 10px;
@@ -139,7 +172,7 @@ export function LiveActivityBar() {
           flex-shrink: 0;
         }
 
-        .modern-live-activity-icon-${updateKey} {
+        .modern-live-activity-icon-${renderKey} {
           width: 34px;
           height: 34px;
           display: flex;
@@ -149,16 +182,22 @@ export function LiveActivityBar() {
           background: ${settings.icon_color}33;
           border: 1px solid ${settings.icon_color}55;
           flex-shrink: 0;
+          transition: all 0.3s ease;
         }
 
-        .modern-live-activity-text-${updateKey} {
+        .modern-live-activity-icon-${renderKey}:hover {
+          background: ${settings.icon_color}55;
+          transform: scale(1.1);
+        }
+
+        .modern-live-activity-text-${renderKey} {
           font-size: 14px;
           font-weight: 600;
           color: ${settings.text_color};
           text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
         }
 
-        .modern-live-activity-separator-${updateKey} {
+        .modern-live-activity-separator-${renderKey} {
           width: 3px;
           height: 3px;
           border-radius: 50%;
@@ -168,60 +207,60 @@ export function LiveActivityBar() {
         }
 
         @media (max-width: 768px) {
-          .modern-live-activity-container-${updateKey} {
+          .modern-live-activity-container-${renderKey} {
             height: ${Math.max(46, settings.height - 4)}px;
           }
 
-          .modern-live-activity-item-${updateKey} {
+          .modern-live-activity-item-${renderKey} {
             padding: 0 18px;
             gap: 8px;
           }
 
-          .modern-live-activity-icon-${updateKey} {
+          .modern-live-activity-icon-${renderKey} {
             width: 30px;
             height: 30px;
           }
 
-          .modern-live-activity-text-${updateKey} {
+          .modern-live-activity-text-${renderKey} {
             font-size: 13px;
           }
         }
       `}</style>
 
-      <div className={`modern-live-activity-container-${updateKey}`} style={getBorderStyle()}>
-        <div className={`modern-live-activity-track-${updateKey}`}>
-          <div className={`modern-live-activity-group-${updateKey}`}>
+      <div className={`modern-live-activity-container-${renderKey}`} style={getBorderStyle()}>
+        <div className={`modern-live-activity-track-${renderKey}`}>
+          <div className={`modern-live-activity-group-${renderKey}`}>
             {activities.map((activity, idx) => {
               const Icon = iconMap[activity.icon] || Sparkles;
               return (
-                <div key={`a-${idx}`} style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
-                  <div className={`modern-live-activity-item-${updateKey}`}>
-                    <div className={`modern-live-activity-icon-${updateKey}`}>
+                <div key={`a-${idx}-${activity.id}`} style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
+                  <div className={`modern-live-activity-item-${renderKey}`}>
+                    <div className={`modern-live-activity-icon-${renderKey}`}>
                       <Icon size={18} style={{ color: settings.icon_color }} />
                     </div>
-                    <span className={`modern-live-activity-text-${updateKey}`}>{activity.message}</span>
+                    <span className={`modern-live-activity-text-${renderKey}`}>{activity.message}</span>
                   </div>
                   {settings.show_separator && idx < activities.length - 1 && (
-                    <div className={`modern-live-activity-separator-${updateKey}`} />
+                    <div className={`modern-live-activity-separator-${renderKey}`} />
                   )}
                 </div>
               );
             })}
           </div>
 
-          <div className={`modern-live-activity-group-${updateKey}`}>
+          <div className={`modern-live-activity-group-${renderKey}`}>
             {activities.map((activity, idx) => {
               const Icon = iconMap[activity.icon] || Sparkles;
               return (
-                <div key={`b-${idx}`} style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
-                  <div className={`modern-live-activity-item-${updateKey}`}>
-                    <div className={`modern-live-activity-icon-${updateKey}`}>
+                <div key={`b-${idx}-${activity.id}`} style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
+                  <div className={`modern-live-activity-item-${renderKey}`}>
+                    <div className={`modern-live-activity-icon-${renderKey}`}>
                       <Icon size={18} style={{ color: settings.icon_color }} />
                     </div>
-                    <span className={`modern-live-activity-text-${updateKey}`}>{activity.message}</span>
+                    <span className={`modern-live-activity-text-${renderKey}`}>{activity.message}</span>
                   </div>
                   {settings.show_separator && idx < activities.length - 1 && (
-                    <div className={`modern-live-activity-separator-${updateKey}`} />
+                    <div className={`modern-live-activity-separator-${renderKey}`} />
                   )}
                 </div>
               );

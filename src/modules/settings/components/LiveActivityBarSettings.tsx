@@ -110,14 +110,18 @@ export function LiveActivityBarSettings() {
 
     setSaving(true);
     try {
+      console.log('💾 Saving settings to database...', settings);
       const success = await LiveActivityService.updateSettings(settings);
       if (success) {
+        console.log('✅ Settings saved! Dispatching event...');
         window.dispatchEvent(new CustomEvent('live-activity-settings-updated', {
           detail: settings
         }));
+        console.log('📡 Event dispatched to Live Activity Bar');
         alert('✅ تم حفظ الإعدادات وتطبيقها مباشرة!');
         loadStats();
       } else {
+        console.error('❌ Failed to save settings');
         alert('❌ فشل حفظ الإعدادات');
       }
     } catch (error) {
@@ -214,9 +218,9 @@ export function LiveActivityBarSettings() {
   };
 
   const speedDuration = {
-    slow: '50s',
-    medium: '35s',
-    fast: '22s'
+    slow: '40s',
+    medium: '25s',
+    fast: '12s'
   };
 
   const getMockActivities = () => {

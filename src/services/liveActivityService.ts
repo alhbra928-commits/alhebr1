@@ -65,14 +65,23 @@ export class LiveActivityService {
   static async updateSettings(updates: Partial<LiveActivitySettings>): Promise<boolean> {
     try {
       const currentSettings = await this.getSettings();
-      if (!currentSettings) return false;
+      if (!currentSettings) {
+        console.error('No current settings found!');
+        return false;
+      }
 
+      console.log('📝 Updating settings in database...', updates);
       const { error } = await supabase
         .from('live_activity_settings')
         .update(updates)
         .eq('id', currentSettings.id);
 
-      if (error) throw error;
+      if (error) {
+        console.error('Database update error:', error);
+        throw error;
+      }
+
+      console.log('✅ Settings updated successfully in database!');
       return true;
     } catch (error) {
       console.error('Error updating settings:', error);
@@ -237,18 +246,22 @@ export class LiveActivityService {
     try {
       const settings = await this.getSettings();
       if (!settings || !settings.is_enabled) {
+        console.log('⚠️ Live activities disabled or no settings found');
         return [];
       }
 
+      console.log('🔍 Fetching activities with mode:', settings.content_mode);
       let activities: LiveActivity[] = [];
 
       if (settings.content_mode === 'auto' || settings.content_mode === 'both') {
         const autoActivities = await this.getAutoActivities(settings);
+        console.log(`📊 Auto activities: ${autoActivities.length}`);
         activities = [...activities, ...autoActivities];
       }
 
       if (settings.content_mode === 'manual' || settings.content_mode === 'both') {
         const customMessages = await this.getCustomMessages();
+        console.log(`✍️ Custom messages: ${customMessages.length}`);
         const manualActivities = customMessages.map(msg => ({
           id: msg.id,
           message: msg.message_ar,
@@ -269,7 +282,9 @@ export class LiveActivityService {
         return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
       });
 
-      return activities.slice(0, settings.max_items);
+      const finalActivities = activities.slice(0, settings.max_items);
+      console.log(`✅ Final activities count: ${finalActivities.length}`);
+      return finalActivities;
     } catch (error) {
       console.error('Error fetching live activities:', error);
       return [];
