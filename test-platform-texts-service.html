@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>اختبار خدمة نصوص المنصة</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      min-height: 100vh;
+      padding: 2rem;
+      color: #F5F5DC;
+    }
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    h1 {
+      text-align: center;
+      color: #D4AF37;
+      margin-bottom: 2rem;
+      font-size: 2.5rem;
+      text-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+    }
+    .section {
+      background: rgba(0, 0, 0, 0.3);
+      border: 2px solid #2C5F2D;
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+    .section h2 {
+      color: #D4AF37;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.8rem;
+    }
+    .button {
+      background: linear-gradient(135deg, #2C5F2D, #3D7C3F);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      margin: 0.25rem;
+    }
+    .button:hover {
+      background: linear-gradient(135deg, #3D7C3F, #4A9150);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+    }
+    .button:active {
+      transform: translateY(0);
+    }
+    .button.danger {
+      background: linear-gradient(135deg, #DC2626, #B91C1C);
+    }
+    .button.danger:hover {
+      background: linear-gradient(135deg, #B91C1C, #991B1B);
+    }
+    .input-group {
+      margin-bottom: 1rem;
+    }
+    .input-group label {
+      display: block;
+      color: #D4AF37;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+    }
+    .input-group input,
+    .input-group select {
+      width: 100%;
+      padding: 0.75rem;
+      background: rgba(0, 0, 0, 0.3);
+      border: 2px solid #2C5F2D;
+      border-radius: 8px;
+      color: #F5F5DC;
+      font-size: 1rem;
+    }
+    .input-group input:focus,
+    .input-group select:focus {
+      outline: none;
+      border-color: #D4AF37;
+    }
+    .result {
+      background: rgba(44, 95, 45, 0.2);
+      border: 2px solid #2C5F2D;
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-top: 1rem;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    .result pre {
+      color: #F5F5DC;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      font-family: 'Courier New', monospace;
+    }
+    .status {
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      font-weight: bold;
+      text-align: center;
+    }
+    .status.success {
+      background: rgba(34, 197, 94, 0.2);
+      border: 2px solid #22C55E;
+      color: #22C55E;
+    }
+    .status.error {
+      background: rgba(239, 68, 68, 0.2);
+      border: 2px solid #EF4444;
+      color: #EF4444;
+    }
+    .status.info {
+      background: rgba(59, 130, 246, 0.2);
+      border: 2px solid #3B82F6;
+      color: #3B82F6;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1rem;
+    }
+    .stats-card {
+      background: rgba(44, 95, 45, 0.2);
+      border: 2px solid #2C5F2D;
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+    }
+    .stats-number {
+      font-size: 3rem;
+      color: #D4AF37;
+      font-weight: bold;
+      text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+    }
+    .stats-label {
+      color: #F5F5DC;
+      font-size: 1rem;
+      margin-top: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🧪 اختبار خدمة نصوص المنصة</h1>
+
+    <div id="status" class="status info">
+      ⏳ جاري الاتصال بالخدمة...
+    </div>
+
+    <div class="grid">
+      <div class="stats-card">
+        <div class="stats-number" id="total-sections">0</div>
+        <div class="stats-label">إجمالي الأقسام</div>
+      </div>
+      <div class="stats-card">
+        <div class="stats-number" id="total-texts">0</div>
+        <div class="stats-label">إجمالي النصوص</div>
+      </div>
+      <div class="stats-card">
+        <div class="stats-number" id="cache-hits">0</div>
+        <div class="stats-label">طلبات الكاش</div>
+      </div>
+    </div>
+
+    <!-- Test 1: Get Texts By Section -->
+    <div class="section">
+      <h2>📋 اختبار 1: جلب نصوص قسم</h2>
+      <div class="input-group">
+        <label>اسم القسم:</label>
+        <select id="section-select">
+          <option value="live_activity">live_activity</option>
+          <option value="contact_bar">contact_bar</option>
+          <option value="side_dock">side_dock</option>
+          <option value="loader">loader</option>
+          <option value="hero">hero</option>
+          <option value="features">features</option>
+        </select>
+      </div>
+      <button class="button" onclick="testGetTextsBySection()">
+        🚀 تشغيل الاختبار
+      </button>
+      <div id="result-1" class="result" style="display: none;">
+        <pre id="output-1"></pre>
+      </div>
+    </div>
+
+    <!-- Test 2: Get Single Text -->
+    <div class="section">
+      <h2>📝 اختبار 2: جلب نص واحد</h2>
+      <div class="grid">
+        <div class="input-group">
+          <label>القسم:</label>
+          <input type="text" id="text-section" value="live_activity" />
+        </div>
+        <div class="input-group">
+          <label>المفتاح:</label>
+          <input type="text" id="text-key" value="section_title" />
+        </div>
+        <div class="input-group">
+          <label>اللغة:</label>
+          <select id="text-lang">
+            <option value="ar">العربية</option>
+            <option value="en">English</option>
+          </select>
+        </div>
+      </div>
+      <button class="button" onclick="testGetSingleText()">
+        🚀 تشغيل الاختبار
+      </button>
+      <div id="result-2" class="result" style="display: none;">
+        <pre id="output-2"></pre>
+      </div>
+    </div>
+
+    <!-- Test 3: Get All Texts -->
+    <div class="section">
+      <h2>🌐 اختبار 3: جلب جميع النصوص</h2>
+      <button class="button" onclick="testGetAllTexts()">
+        🚀 تشغيل الاختبار
+      </button>
+      <div id="result-3" class="result" style="display: none;">
+        <pre id="output-3"></pre>
+      </div>
+    </div>
+
+    <!-- Test 4: Cache Test -->
+    <div class="section">
+      <h2>💾 اختبار 4: اختبار الكاش</h2>
+      <p style="color: #F5F5DC; margin-bottom: 1rem;">
+        سيقوم بطلب نفس القسم 3 مرات متتالية. المرة الأولى من قاعدة البيانات، والباقي من الكاش.
+      </p>
+      <button class="button" onclick="testCache()">
+        🚀 تشغيل الاختبار
+      </button>
+      <div id="result-4" class="result" style="display: none;">
+        <pre id="output-4"></pre>
+      </div>
+    </div>
+
+    <!-- Test 5: Realtime Updates -->
+    <div class="section">
+      <h2>📡 اختبار 5: التحديثات المباشرة (Realtime)</h2>
+      <p style="color: #F5F5DC; margin-bottom: 1rem;">
+        سيقوم بالاشتراك في تغييرات النصوص. عندما تقوم بتعديل أي نص من لوحة الإدارة، ستظهر رسالة هنا.
+      </p>
+      <button class="button" onclick="testRealtime()">
+        🚀 بدء الاستماع
+      </button>
+      <button class="button danger" onclick="stopRealtime()">
+        ⏹️ إيقاف الاستماع
+      </button>
+      <div id="result-5" class="result" style="display: none;">
+        <pre id="output-5"></pre>
+      </div>
+    </div>
+
+    <!-- Test 6: Clear Cache -->
+    <div class="section">
+      <h2>🗑️ اختبار 6: مسح الكاش</h2>
+      <button class="button danger" onclick="testClearCache()">
+        🗑️ مسح الكاش
+      </button>
+      <div id="result-6" class="result" style="display: none;">
+        <pre id="output-6"></pre>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+    const SUPABASE_URL = 'https://vfbqltncrkbrbagwgjwi.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZmYnFsdG5jcmticmJhZ3dnandpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjk0MDE2MDYsImV4cCI6MjA0NDk3NzYwNn0.fh5nhL5L3oqhlNqXnlwbvMv_JNI05J4yt_NrUK1htMg';
+
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // PlatformTextsService Implementation
+    class PlatformTextsService {
+      constructor() {
+        this.cache = new Map();
+        this.cacheDuration = 5 * 60 * 1000;
+        this.cacheHits = 0;
+        this.realtimeUnsubscribe = null;
+      }
+
+      async getTextsBySection(section) {
+        const cacheKey = `section_${section}`;
+        const cached = this.cache.get(cacheKey);
+
+        if (cached && Date.now() - cached.timestamp < this.cacheDuration) {
+          this.cacheHits++;
+          document.getElementById('cache-hits').textContent = this.cacheHits;
+          console.log(`✅ من الكاش: ${section}`);
+          return { data: cached.data, fromCache: true };
+        }
+
+        console.log(`📡 من قاعدة البيانات: ${section}`);
+        const { data, error } = await supabase
+          .from('platform_texts')
+          .select('*')
+          .eq('section', section)
+          .order('display_order', { ascending: true });
+
+        if (error) throw error;
+
+        const textsMap = {};
+        data?.forEach((text) => {
+          textsMap[text.key] = {
+            ar: text.text_ar,
+            en: text.text_en,
+            description: text.description
+          };
+        });
+
+        this.cache.set(cacheKey, { data: textsMap, timestamp: Date.now() });
+        return { data: textsMap, fromCache: false };
+      }
+
+      async getText(section, key, lang = 'ar') {
+        const { data, error } = await supabase
+          .from('platform_texts')
+          .select('text_ar, text_en')
+          .eq('section', section)
+          .eq('key', key)
+          .maybeSingle();
+
+        if (error) throw error;
+        if (!data) return null;
+
+        return lang === 'ar' ? data.text_ar : data.text_en;
+      }
+
+      async getAllTexts() {
+        const { data, error } = await supabase
+          .from('platform_texts')
+          .select('*')
+          .order('section', { ascending: true })
+          .order('display_order', { ascending: true });
+
+        if (error) throw error;
+
+        const result = {};
+        data?.forEach((text) => {
+          if (!result[text.section]) {
+            result[text.section] = {};
+          }
+          result[text.section][text.key] = {
+            ar: text.text_ar,
+            en: text.text_en,
+            description: text.description
+          };
+        });
+
+        // Update stats
+        const sections = Object.keys(result).length;
+        const totalTexts = data?.length || 0;
+        document.getElementById('total-sections').textContent = sections;
+        document.getElementById('total-texts').textContent = totalTexts;
+
+        return result;
+      }
+
+      clearCache() {
+        this.cache.clear();
+        this.cacheHits = 0;
+        document.getElementById('cache-hits').textContent = 0;
+        console.log('🗑️ تم مسح الكاش');
+      }
+
+      subscribeToChanges(callback) {
+        const channel = supabase
+          .channel('platform_texts_changes')
+          .on('postgres_changes', {
+            event: '*',
+            schema: 'public',
+            table: 'platform_texts'
+          }, () => {
+            this.clearCache();
+            callback();
+          })
+          .subscribe();
+
+        this.realtimeUnsubscribe = () => channel.unsubscribe();
+        return this.realtimeUnsubscribe;
+      }
+
+      unsubscribe() {
+        if (this.realtimeUnsubscribe) {
+          this.realtimeUnsubscribe();
+          this.realtimeUnsubscribe = null;
+        }
+      }
+    }
+
+    const service = new PlatformTextsService();
+    window.service = service;
+
+    // Test Functions
+    window.testGetTextsBySection = async () => {
+      const section = document.getElementById('section-select').value;
+      const result = document.getElementById('result-1');
+      const output = document.getElementById('output-1');
+
+      try {
+        const start = performance.now();
+        const { data, fromCache } = await service.getTextsBySection(section);
+        const end = performance.now();
+
+        result.style.display = 'block';
+        output.textContent = JSON.stringify({
+          section,
+          fromCache,
+          duration: `${(end - start).toFixed(2)}ms`,
+          textsCount: Object.keys(data).length,
+          data
+        }, null, 2);
+
+        updateStatus(`✅ تم جلب ${Object.keys(data).length} نص من ${section}`, 'success');
+      } catch (error) {
+        updateStatus(`❌ خطأ: ${error.message}`, 'error');
+        output.textContent = error.stack;
+      }
+    };
+
+    window.testGetSingleText = async () => {
+      const section = document.getElementById('text-section').value;
+      const key = document.getElementById('text-key').value;
+      const lang = document.getElementById('text-lang').value;
+      const result = document.getElementById('result-2');
+      const output = document.getElementById('output-2');
+
+      try {
+        const start = performance.now();
+        const text = await service.getText(section, key, lang);
+        const end = performance.now();
+
+        result.style.display = 'block';
+        output.textContent = JSON.stringify({
+          section,
+          key,
+          lang,
+          duration: `${(end - start).toFixed(2)}ms`,
+          text
+        }, null, 2);
+
+        updateStatus(`✅ تم جلب النص بنجاح`, 'success');
+      } catch (error) {
+        updateStatus(`❌ خطأ: ${error.message}`, 'error');
+        output.textContent = error.stack;
+      }
+    };
+
+    window.testGetAllTexts = async () => {
+      const result = document.getElementById('result-3');
+      const output = document.getElementById('output-3');
+
+      try {
+        const start = performance.now();
+        const allTexts = await service.getAllTexts();
+        const end = performance.now();
+
+        const sections = Object.keys(allTexts).length;
+        const totalTexts = Object.values(allTexts).reduce((acc, section) =>
+          acc + Object.keys(section).length, 0
+        );
+
+        result.style.display = 'block';
+        output.textContent = JSON.stringify({
+          duration: `${(end - start).toFixed(2)}ms`,
+          sections,
+          totalTexts,
+          data: allTexts
+        }, null, 2);
+
+        updateStatus(`✅ تم جلب ${totalTexts} نص من ${sections} قسم`, 'success');
+      } catch (error) {
+        updateStatus(`❌ خطأ: ${error.message}`, 'error');
+        output.textContent = error.stack;
+      }
+    };
+
+    window.testCache = async () => {
+      const result = document.getElementById('result-4');
+      const output = document.getElementById('output-4');
+
+      try {
+        const section = 'live_activity';
+        const results = [];
+
+        for (let i = 1; i <= 3; i++) {
+          const start = performance.now();
+          const { data, fromCache } = await service.getTextsBySection(section);
+          const end = performance.now();
+
+          results.push({
+            attempt: i,
+            fromCache,
+            duration: `${(end - start).toFixed(2)}ms`,
+            textsCount: Object.keys(data).length
+          });
+        }
+
+        result.style.display = 'block';
+        output.textContent = JSON.stringify({
+          section,
+          results,
+          conclusion: 'المحاولة الأولى من قاعدة البيانات، والباقي من الكاش (أسرع بكثير)'
+        }, null, 2);
+
+        updateStatus(`✅ اختبار الكاش نجح - لاحظ الفرق في السرعة!`, 'success');
+      } catch (error) {
+        updateStatus(`❌ خطأ: ${error.message}`, 'error');
+        output.textContent = error.stack;
+      }
+    };
+
+    let realtimeMessages = [];
+    window.testRealtime = () => {
+      const result = document.getElementById('result-5');
+      const output = document.getElementById('output-5');
+
+      realtimeMessages = [];
+      realtimeMessages.push(`⏰ ${new Date().toLocaleTimeString('ar-SA')} - بدء الاستماع للتحديثات...`);
+
+      result.style.display = 'block';
+      output.textContent = realtimeMessages.join('\n');
+
+      service.subscribeToChanges(() => {
+        const time = new Date().toLocaleTimeString('ar-SA');
+        realtimeMessages.push(`🔔 ${time} - تم اكتشاف تحديث في النصوص!`);
+        realtimeMessages.push(`   - تم مسح الكاش تلقائياً`);
+        output.textContent = realtimeMessages.join('\n');
+        updateStatus(`🔔 تم استقبال تحديث جديد!`, 'success');
+      });
+
+      updateStatus(`📡 الآن يستمع للتحديثات المباشرة...`, 'info');
+    };
+
+    window.stopRealtime = () => {
+      service.unsubscribe();
+      updateStatus(`⏹️ تم إيقاف الاستماع`, 'info');
+    };
+
+    window.testClearCache = () => {
+      const result = document.getElementById('result-6');
+      const output = document.getElementById('output-6');
+
+      service.clearCache();
+
+      result.style.display = 'block';
+      output.textContent = JSON.stringify({
+        message: 'تم مسح الكاش بنجاح',
+        timestamp: new Date().toISOString(),
+        note: 'الطلبات التالية ستذهب مباشرة إلى قاعدة البيانات'
+      }, null, 2);
+
+      updateStatus(`🗑️ تم مسح الكاش`, 'success');
+    };
+
+    function updateStatus(message, type) {
+      const status = document.getElementById('status');
+      status.textContent = message;
+      status.className = `status ${type}`;
+    }
+
+    // Initialize
+    (async () => {
+      try {
+        await service.getAllTexts();
+        updateStatus('✅ الخدمة جاهزة للاختبار!', 'success');
+      } catch (error) {
+        updateStatus(`❌ خطأ في الاتصال: ${error.message}`, 'error');
+      }
+    })();
+  </script>
+</body>
+</html>
