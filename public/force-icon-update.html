@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>إجبار تحديث الأيقونة</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 500px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 28px;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .steps {
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid #10b981;
+      border-radius: 15px;
+      padding: 25px;
+      margin-bottom: 25px;
+    }
+
+    .step {
+      padding: 15px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .step:last-child {
+      margin-bottom: 0;
+    }
+
+    .step-number {
+      width: 35px;
+      height: 35px;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      flex-shrink: 0;
+    }
+
+    .step-text {
+      flex: 1;
+      line-height: 1.6;
+    }
+
+    .button {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      border: none;
+      border-radius: 10px;
+      color: white;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-bottom: 15px;
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(16, 185, 129, 0.4);
+    }
+
+    .button:active {
+      transform: translateY(0);
+    }
+
+    .status {
+      text-align: center;
+      padding: 15px;
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid #3b82f6;
+      border-radius: 10px;
+      margin-top: 20px;
+      font-size: 14px;
+    }
+
+    .success {
+      background: rgba(16, 185, 129, 0.2);
+      border-color: #10b981;
+      color: #10b981;
+      font-weight: bold;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .loading {
+      animation: pulse 1.5s infinite;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔄 تحديث الأيقونة</h1>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-number">1</div>
+        <div class="step-text">اضغط على الزر أدناه لمسح الكاش</div>
+      </div>
+      <div class="step">
+        <div class="step-number">2</div>
+        <div class="step-text">سيتم إعادة تحميل الصفحة تلقائياً</div>
+      </div>
+      <div class="step">
+        <div class="step-number">3</div>
+        <div class="step-text">ستظهر الأيقونة الجديدة (UserCog)</div>
+      </div>
+    </div>
+
+    <button class="button" onclick="forceClearAndReload()">
+      🗑️ امسح الكاش وحدث الآن
+    </button>
+
+    <button class="button" onclick="window.location.href='/'">
+      🏠 العودة للصفحة الرئيسية
+    </button>
+
+    <div id="status" class="status">
+      جاهز للتحديث...
+    </div>
+  </div>
+
+  <script>
+    async function forceClearAndReload() {
+      const statusDiv = document.getElementById('status');
+      statusDiv.textContent = '⏳ جاري مسح الكاش...';
+      statusDiv.className = 'status loading';
+
+      try {
+        // 1. مسح localStorage
+        localStorage.clear();
+        await new Promise(r => setTimeout(r, 200));
+        statusDiv.textContent = '✅ تم مسح localStorage';
+
+        // 2. مسح sessionStorage
+        sessionStorage.clear();
+        await new Promise(r => setTimeout(r, 200));
+        statusDiv.textContent = '✅ تم مسح sessionStorage';
+
+        // 3. مسح Service Worker Cache
+        if ('caches' in window) {
+          const cacheNames = await caches.keys();
+          await Promise.all(cacheNames.map(name => caches.delete(name)));
+          statusDiv.textContent = '✅ تم مسح Service Worker Cache';
+          await new Promise(r => setTimeout(r, 200));
+        }
+
+        // 4. إلغاء تسجيل Service Workers
+        if ('serviceWorker' in navigator) {
+          const registrations = await navigator.serviceWorker.getRegistrations();
+          await Promise.all(registrations.map(reg => reg.unregister()));
+          statusDiv.textContent = '✅ تم إلغاء تسجيل Service Workers';
+          await new Promise(r => setTimeout(r, 200));
+        }
+
+        // 5. رسالة النجاح
+        statusDiv.textContent = '✅ تم! إعادة التحميل الآن...';
+        statusDiv.className = 'status success';
+
+        // 6. إعادة التحميل مع مسح الكاش
+        await new Promise(r => setTimeout(r, 1000));
+        window.location.href = '/?nocache=' + Date.now();
+        setTimeout(() => {
+          window.location.reload(true);
+        }, 100);
+
+      } catch (error) {
+        statusDiv.textContent = '⚠️ حدث خطأ: ' + error.message;
+        statusDiv.className = 'status';
+      }
+    }
+
+    // تشغيل تلقائي عند فتح الصفحة مع query parameter
+    if (window.location.search.includes('auto=true')) {
+      setTimeout(forceClearAndReload, 1000);
+    }
+  </script>
+</body>
+</html>

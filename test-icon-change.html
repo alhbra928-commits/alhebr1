@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>اختبار تغيير الأيقونة</title>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      color: white;
+      padding: 40px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 40px;
+      max-width: 600px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 32px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .comparison {
+      display: flex;
+      gap: 40px;
+      margin: 30px 0;
+      justify-content: center;
+    }
+
+    .icon-box {
+      text-align: center;
+      padding: 30px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 15px;
+      flex: 1;
+    }
+
+    .icon-box.old {
+      border: 2px solid #ef4444;
+    }
+
+    .icon-box.new {
+      border: 2px solid #10b981;
+      box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+    }
+
+    .icon-box svg {
+      width: 80px;
+      height: 80px;
+      margin: 20px auto;
+      display: block;
+    }
+
+    .icon-box.old svg {
+      stroke: #ef4444;
+    }
+
+    .icon-box.new svg {
+      stroke: #10b981;
+    }
+
+    .label {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .description {
+      font-size: 14px;
+      opacity: 0.8;
+      margin-top: 10px;
+    }
+
+    .status {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      padding: 20px;
+      border-radius: 15px;
+      text-align: center;
+      margin-top: 30px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .instructions {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid #ef4444;
+      border-radius: 10px;
+      padding: 20px;
+      margin-top: 20px;
+    }
+
+    .instructions h3 {
+      color: #ef4444;
+      margin-bottom: 15px;
+    }
+
+    .instructions ol {
+      padding-right: 20px;
+      line-height: 1.8;
+    }
+
+    .instructions strong {
+      color: #fbbf24;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔄 تأكيد تغيير الأيقونة</h1>
+
+    <div class="comparison">
+      <div class="icon-box old">
+        <div class="label">❌ القديمة</div>
+        <i data-lucide="home"></i>
+        <div class="description">Home<br>أيقونة المنزل</div>
+      </div>
+
+      <div class="icon-box new">
+        <div class="label">✅ الجديدة</div>
+        <i data-lucide="user-cog"></i>
+        <div class="description">UserCog<br>أيقونة لوحات التحكم</div>
+      </div>
+    </div>
+
+    <div class="status">
+      ✅ التغيير تم بنجاح في الكود!
+    </div>
+
+    <div class="instructions">
+      <h3>⚠️ إذا لم تظهر الأيقونة الجديدة:</h3>
+      <ol>
+        <li><strong>Chrome/Edge:</strong> اضغط <strong>Ctrl + Shift + Delete</strong> → اختر "الصور والملفات المحفوظة" → امسح</li>
+        <li><strong>Safari (iPhone/Mac):</strong> الإعدادات → Safari → مسح السجل والبيانات</li>
+        <li><strong>أو:</strong> افتح نافذة تصفح خاص/متخفي (Incognito)</li>
+        <li><strong>أو:</strong> أعد تشغيل dev server بـ <code>npm run dev</code></li>
+      </ol>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>
