@@ -251,10 +251,28 @@ export function InvestorDashboard({ phone, onLogout, isFirstTimeLogin = false, o
       )}
 
       <div
-        className="sticky top-0 z-50 backdrop-blur-md border-b"
         style={{
-          background: 'rgba(245, 240, 230, 0.9)',
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 999999,
+          background: 'rgba(245, 240, 230, 0.95)',
+          borderBottom: '1px solid',
           borderColor: brandColors.primary.gold + '20',
+          paddingTop: 'max(8px, env(safe-area-inset-top))',
+          paddingBottom: '12px',
+          paddingLeft: '16px',
+          paddingRight: '16px',
+          WebkitBackdropFilter: 'saturate(180%) blur(20px)',
+          backdropFilter: 'saturate(180%) blur(20px)',
+          WebkitTransform: 'translate3d(0, 0, 0)',
+          transform: 'translate3d(0, 0, 0)',
+          WebkitPerspective: 1000,
+          perspective: 1000,
+          willChange: 'transform',
+          isolation: 'isolate',
+          pointerEvents: 'auto'
         }}
       >
         <div className="max-w-[1400px] mx-auto px-2 sm:px-3 md:px-4 lg:px-6 py-2 sm:py-3 md:py-4">
@@ -332,7 +350,7 @@ export function InvestorDashboard({ phone, onLogout, isFirstTimeLogin = false, o
         </div>
       </div>
 
-      <div className="max-w-[1400px] mx-auto px-2 sm:px-3 md:px-4 lg:px-6 py-3 sm:py-4 md:py-6 lg:py-8">
+      <div className="max-w-[1400px] mx-auto px-2 sm:px-3 md:px-4 lg:px-6 py-3 sm:py-4 md:py-6 lg:py-8" style={{ marginTop: 'calc(130px + env(safe-area-inset-top))' }}>
         <div className="flex gap-1.5 sm:gap-2 md:gap-3 lg:gap-4 mb-4 sm:mb-6 md:mb-8 overflow-x-auto pb-2 scrollbar-hide">
           {tabs.map((tab) => {
             const Icon = tab.icon;

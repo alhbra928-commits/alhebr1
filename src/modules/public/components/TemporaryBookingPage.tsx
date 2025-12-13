@@ -320,11 +320,29 @@ export function TemporaryBookingPage({
       dir="rtl"
     >
       <div
-        className="sticky top-0 z-50 backdrop-blur-2xl border-b safe-top"
         style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 999999,
           background: 'rgba(255, 255, 255, 0.95)',
+          borderBottom: '1px solid',
           borderColor: `${greenTheme.lighter}50`,
-          boxShadow: `0 4px 24px ${greenTheme.primary}10`
+          boxShadow: `0 4px 24px ${greenTheme.primary}10`,
+          paddingTop: 'max(8px, env(safe-area-inset-top))',
+          paddingBottom: '12px',
+          paddingLeft: '16px',
+          paddingRight: '16px',
+          WebkitBackdropFilter: 'saturate(180%) blur(20px)',
+          backdropFilter: 'saturate(180%) blur(20px)',
+          WebkitTransform: 'translate3d(0, 0, 0)',
+          transform: 'translate3d(0, 0, 0)',
+          WebkitPerspective: 1000,
+          perspective: 1000,
+          willChange: 'transform',
+          isolation: 'isolate',
+          pointerEvents: 'auto'
         }}
       >
         <div className="max-w-6xl mx-auto px-3 sm:px-4 md:px-6 lg:px-6 py-3 sm:py-3 md:py-4">
@@ -367,7 +385,7 @@ export function TemporaryBookingPage({
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-3 sm:px-4 md:px-4 lg:px-6 py-2 sm:py-3 md:py-4 lg:py-6">
+      <div className="max-w-6xl mx-auto px-3 sm:px-4 md:px-4 lg:px-6 py-2 sm:py-3 md:py-4 lg:py-6" style={{ marginTop: 'calc(80px + env(safe-area-inset-top))' }}>
         <div
           className="group rounded-2xl sm:rounded-2xl md:rounded-3xl p-4 sm:p-6 md:p-8 lg:p-12 mb-3 sm:mb-4 md:mb-5 lg:mb-8 text-center relative overflow-hidden transition-all duration-500 active:scale-[0.98] touch-manipulation"
           style={{

@@ -7,117 +7,35 @@ interface MobileHeaderProps {
 }
 
 export function MobileHeader({ onMenuClick, title = 'لوحة التحكم' }: MobileHeaderProps) {
-  useEffect(() => {
-    const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-    if (!isIOS) return;
-
-    console.log('🔥 iOS NUCLEAR FIX - Absolute positioning with forced lock');
-
-    const header = document.querySelector('.mobile-header-locked') as HTMLElement;
-    if (!header) return;
-
-    // Force lock the header position
-    const lockHeaderPosition = () => {
-      header.style.position = 'fixed';
-      header.style.top = '0';
-      header.style.left = '0';
-      header.style.right = '0';
-      header.style.transform = 'translate3d(0, 0, 0)';
-      header.style.webkitTransform = 'translate3d(0, 0, 0)';
-      header.style.zIndex = '9999';
-    };
-
-    // Lock immediately
-    lockHeaderPosition();
-
-    // Re-lock on any scroll event
-    let rafId: number;
-    const onScroll = () => {
-      if (rafId) cancelAnimationFrame(rafId);
-      rafId = requestAnimationFrame(lockHeaderPosition);
-    };
-
-    window.addEventListener('scroll', onScroll, { passive: true });
-    document.addEventListener('touchmove', onScroll, { passive: true });
-
-    // Re-lock every 100ms for extra safety
-    const interval = setInterval(lockHeaderPosition, 100);
-
-    return () => {
-      window.removeEventListener('scroll', onScroll);
-      document.removeEventListener('touchmove', onScroll);
-      clearInterval(interval);
-      if (rafId) cancelAnimationFrame(rafId);
-    };
-  }, []);
+  // تم إلغاء الكود القديم - نستخدم الآن inline styles مباشرة
 
   return (
     <>
-      <style>{`
-        /* iOS NUCLEAR Solution - Fixed position locked */
-        @supports (-webkit-touch-callout: none) {
-          html, body {
-            height: 100% !important;
-            height: -webkit-fill-available !important;
-            overflow: hidden !important;
-          }
 
-          .mobile-header-locked {
-            position: fixed !important;
-            top: 0 !important;
-            left: 0 !important;
-            right: 0 !important;
-            z-index: 9999 !important;
-
-            /* Hardware acceleration */
-            -webkit-transform: translate3d(0, 0, 0) !important;
-            transform: translate3d(0, 0, 0) !important;
-            -webkit-backface-visibility: hidden !important;
-            backface-visibility: hidden !important;
-            will-change: transform !important;
-
-            /* Isolate from scroll context */
-            isolation: isolate !important;
-            contain: layout style !important;
-          }
-
-          .ios-scroll-content {
-            height: 100vh !important;
-            height: -webkit-fill-available !important;
-            overflow-y: auto !important;
-            overflow-x: hidden !important;
-            -webkit-overflow-scrolling: touch !important;
-            overscroll-behavior: none !important;
-            padding-top: 56px !important; /* Space for fixed header */
-          }
-
-          /* Remove padding on large screens */
-          @media (min-width: 1024px) {
-            .ios-scroll-content {
-              padding-top: 0 !important;
-            }
-          }
-        }
-
-        /* Non-iOS - Normal behavior */
-        .mobile-header-locked {
-          position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          z-index: 30;
-        }
-
-        /* Add padding for content on mobile (non-iOS too) */
-        @media (max-width: 1023px) {
-          .ios-scroll-content {
-            padding-top: 56px;
-          }
-        }
-      `}</style>
-
-      <header className="mobile-header-locked lg:hidden bg-gradient-to-r from-amber-900 to-orange-900 text-white shadow-lg safe-area-top">
-        <div className="flex items-center justify-between px-4 py-3">
+      <div
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 999999,
+          paddingTop: 'max(8px, env(safe-area-inset-top))',
+          paddingBottom: '12px',
+          paddingLeft: '16px',
+          paddingRight: '16px',
+          WebkitBackdropFilter: 'saturate(180%) blur(20px)',
+          backdropFilter: 'saturate(180%) blur(20px)',
+          WebkitTransform: 'translate3d(0, 0, 0)',
+          transform: 'translate3d(0, 0, 0)',
+          WebkitPerspective: 1000,
+          perspective: 1000,
+          willChange: 'transform',
+          isolation: 'isolate',
+          pointerEvents: 'auto'
+        }}
+        className="lg:hidden bg-gradient-to-r from-amber-900 to-orange-900 text-white shadow-lg"
+      >
+        <div className="flex items-center justify-between">
         {/* Menu Button */}
         <button
           onClick={onMenuClick}
@@ -144,7 +62,7 @@ export function MobileHeader({ onMenuClick, title = 'لوحة التحكم' }: M
           <div className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
         </button>
       </div>
-    </header>
+    </div>
     </>
   );
 }
