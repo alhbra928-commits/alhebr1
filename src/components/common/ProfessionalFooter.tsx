@@ -419,14 +419,14 @@ export function ProfessionalFooter({ onAdminLogin, onFarmOwnerLogin }: Professio
           className={`transition-all duration-500 ease-out flex flex-col items-center justify-center relative gap-1.5 ${
             adminButtonExpanded
               ? 'w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-500 via-yellow-500 to-green-500 shadow-2xl'
-              : 'w-2 h-2 rounded-full bg-gradient-to-br from-yellow-600 to-green-700 opacity-30 hover:opacity-60'
+              : 'w-4 h-4 rounded-full bg-gradient-to-br from-amber-400 via-yellow-500 to-green-500 opacity-60 hover:opacity-90 animate-pulse'
           }`}
           style={{
             backdropFilter: 'blur(10px)',
             border: adminButtonExpanded ? '2px solid rgba(251, 191, 36, 0.3)' : 'none',
             boxShadow: adminButtonExpanded
               ? '0 10px 40px rgba(251, 191, 36, 0.5), 0 0 80px rgba(34, 197, 94, 0.3), inset 0 1px 0 rgba(255,255,255,0.4)'
-              : '0 0 10px rgba(251, 191, 36, 0.4)',
+              : '0 0 20px rgba(251, 191, 36, 0.6), 0 0 40px rgba(34, 197, 94, 0.4)',
             transform: adminButtonExpanded ? 'scale(1)' : 'scale(1)',
             WebkitTapHighlightColor: 'transparent',
             padding: adminButtonExpanded ? '12px' : '0',
