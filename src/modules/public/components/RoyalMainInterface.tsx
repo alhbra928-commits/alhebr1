@@ -10,6 +10,7 @@ import { SimpleLoader } from '../../../components/common/SimpleLoader';
 import { AdminCrownButton } from './AdminCrownButton';
 import { ConceptIntroductionPage } from './ConceptIntroductionPage';
 import { EnhancedConceptCard } from './EnhancedConceptCard';
+import { platformTextsService } from '../../../services/platformTextsService';
 
 type ViewMode = 'home' | 'farmDetail' | 'booking' | 'investor' | 'verification' | 'concept';
 
@@ -31,9 +32,12 @@ export function RoyalMainInterface({
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
   const [activeBottomTab, setActiveBottomTab] = useState<string>('home');
   const [headerHeight, setHeaderHeight] = useState(280);
+  const [platformTitle, setPlatformTitle] = useState('جاري التحميل...');
+  const [platformSubtitle, setPlatformSubtitle] = useState('جاري التحميل...');
 
   useEffect(() => {
     loadData();
+    loadTexts();
 
     // حساب ارتفاع الهيدر
     const calculateHeaderHeight = () => {
@@ -49,6 +53,18 @@ export function RoyalMainInterface({
     window.addEventListener('resize', calculateHeaderHeight);
     return () => window.removeEventListener('resize', calculateHeaderHeight);
   }, []);
+
+  const loadTexts = async () => {
+    try {
+      const title = await platformTextsService.getText('header', 'platform_title', 'ar');
+      const subtitle = await platformTextsService.getText('header', 'platform_subtitle', 'ar');
+
+      if (title) setPlatformTitle(title);
+      if (subtitle) setPlatformSubtitle(subtitle);
+    } catch (error) {
+      console.error('Error loading platform texts:', error);
+    }
+  };
 
   const loadData = async () => {
     try {
@@ -180,9 +196,9 @@ export function RoyalMainInterface({
               </div>
               <div className="min-w-0 flex-1">
                 <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold text-white tracking-wide break-words leading-tight">
-                  منصة الاستثمار الزراعي الملكية
+                  {platformTitle}
                 </h1>
-                <p className="text-amber-100 mt-0.5 sm:mt-1 text-xs sm:text-sm md:text-base lg:text-lg break-words">استثمار فاخر في عالم النخيل والزيتون</p>
+                <p className="text-amber-100 mt-0.5 sm:mt-1 text-xs sm:text-sm md:text-base lg:text-lg break-words">{platformSubtitle}</p>
               </div>
             </div>
 
