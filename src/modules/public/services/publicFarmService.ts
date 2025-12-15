@@ -5,6 +5,12 @@ export class PublicFarmService {
   private static farmsCache: { data: PublicFarm[]; timestamp: number } | null = null;
   private static CACHE_DURATION = 30000; // 30 seconds
 
+  // ✅ وظيفة لمسح الـ cache (عند إنشاء حجز جديد)
+  static clearCache(): void {
+    this.farmsCache = null;
+    console.log('[PublicFarmService] Cache cleared');
+  }
+
   static async getAllFarms(limit: number = 20): Promise<PublicFarm[]> {
     // Check cache
     if (this.farmsCache && Date.now() - this.farmsCache.timestamp < this.CACHE_DURATION) {

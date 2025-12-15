@@ -1,4 +1,5 @@
 import { supabase } from '../../../lib/supabase';
+import { PublicFarmService } from './publicFarmService';
 
 export interface FarmVariety {
   id: string;
@@ -136,7 +137,7 @@ export class FarmDetailService {
           reservation_id: reservation.id,
           farm_id: data.farm_id,
           variety_id: v.variety_id,
-          tree_count: v.tree_count,
+          quantity: v.tree_count,  // ✅ الحقل الصحيح هو quantity
           price_per_tree: v.price_per_tree,
           subtotal: v.tree_count * v.price_per_tree
         }));
@@ -147,8 +148,13 @@ export class FarmDetailService {
 
         if (itemsError) {
           console.error('Error creating booking items:', itemsError);
+          throw itemsError;  // ✅ رمي الخطأ لإيقاف العملية
         }
       }
+
+      // ✅ مسح الـ cache بعد إنشاء الحجز لإعادة تحميل البيانات المحدثة
+      this.cache.delete(data.farm_id);
+      PublicFarmService.clearCache();
 
       return reservation;
     } catch (error) {
