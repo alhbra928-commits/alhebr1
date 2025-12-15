@@ -12,7 +12,7 @@ import { ConceptIntroductionPage } from './ConceptIntroductionPage';
 import { EnhancedConceptCard } from './EnhancedConceptCard';
 import { LiveActivityBar } from '../../../components/common/LiveActivityBar';
 import { AdaptiveSmartButton } from '../../../components/common/AdaptiveSmartButton';
-import { GlassGreenFooter } from '../../../components/common/GlassGreenFooter';
+import { CompanyInfoFooter } from '../../../components/common/CompanyInfoFooter';
 
 type ViewMode = 'home' | 'farmDetail' | 'booking' | 'investor' | 'verification' | 'concept';
 
@@ -206,7 +206,7 @@ export function RoyalMainInterface({
       </header>
 
       {/* Main Content */}
-      <main className="relative container mx-auto px-4 sm:px-6 py-6 sm:py-8 md:py-12 pb-32 sm:pb-40">
+      <main className="relative container mx-auto px-4 sm:px-6 py-6 sm:py-8 md:py-12">
         {loading ? (
           <div className="flex justify-center items-center py-20">
             <SimpleLoader />
@@ -344,20 +344,15 @@ export function RoyalMainInterface({
       defaultMessage="مرحباً! أود الاستفسار عن فرص الاستثمار الزراعي"
     />
 
-    {/* الفوتر الزجاجي الأخضر */}
-    <GlassGreenFooter
-      activeTab={activeBottomTab}
-      onTabChange={(tabId) => {
-        setActiveBottomTab(tabId);
-        if (tabId === 'profile') {
-          setCurrentView('investor');
-        } else if (tabId === 'home') {
-          handleGoHome();
-        }
-      }}
-      onWhatsAppClick={() => {
-        window.open('https://wa.me/966500000000?text=مرحباً! أود الاستفسار عن المنصة', '_blank');
-      }}
+    {/* فوتر معلومات المؤسسة */}
+    <CompanyInfoFooter
+      companyName="منصة الاستثمار الزراعي الملكية"
+      commercialRegister="1234567890"
+      phone="+966500000000"
+      whatsapp="+966500000000"
+      email="info@palmolive.sa"
+      city="الرياض، المملكة العربية السعودية"
+      workingHours="الأحد - الخميس: 9 صباحاً - 6 مساءً"
     />
     </>
   );
