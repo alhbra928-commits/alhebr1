@@ -13,6 +13,7 @@ import { BackButton } from '../../../components/common/BackButton';
 import { FarmOwnerFormModal } from './FarmOwnerFormModal';
 import { FarmOwner3DCard } from './FarmOwner3DCard';
 import { OwnerDashboardModal } from './OwnerDashboardModal';
+import { FinancialDetailsModal } from './FinancialDetailsModal';
 import { OwnersService, FarmOwnerData } from '../ownersService';
 import { usePermissions } from '../../../contexts/PermissionsContext';
 
@@ -32,6 +33,8 @@ export function OwnersView({ onBack }: OwnersViewProps) {
   const [filterStatus, setFilterStatus] = useState<string>('all');
   const [showDashboard, setShowDashboard] = useState(false);
   const [dashboardOwner, setDashboardOwner] = useState<FarmOwnerData | null>(null);
+  const [showFinancials, setShowFinancials] = useState(false);
+  const [financialOwner, setFinancialOwner] = useState<FarmOwnerData | null>(null);
 
   const { isAdmin, canCreate, canEdit, canDelete } = usePermissions();
 
@@ -155,8 +158,8 @@ export function OwnersView({ onBack }: OwnersViewProps) {
   };
 
   const handleViewFinancials = (owner: FarmOwnerData) => {
-    console.log('View financials for:', owner);
-    alert(`عرض البيانات المالية لـ ${owner.owner_full_name}\n\nهذه الميزة قيد التطوير...`);
+    setFinancialOwner(owner);
+    setShowFinancials(true);
   };
 
   const handleOpenDashboard = (owner: FarmOwnerData) => {
@@ -331,6 +334,17 @@ export function OwnersView({ onBack }: OwnersViewProps) {
           onClose={() => {
             setShowDashboard(false);
             setDashboardOwner(null);
+          }}
+        />
+      )}
+
+      {/* Financial Details Modal */}
+      {showFinancials && financialOwner && (
+        <FinancialDetailsModal
+          owner={financialOwner}
+          onClose={() => {
+            setShowFinancials(false);
+            setFinancialOwner(null);
           }}
         />
       )}
