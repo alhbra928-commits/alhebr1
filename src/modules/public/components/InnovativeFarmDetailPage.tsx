@@ -19,6 +19,7 @@ import { FarmDetailService } from '../services/farmDetailService';
 import { MazadCrownLoader } from '../../../components/common/MazadCrownLoader';
 import { LiveActivityBar } from '../../../components/common/LiveActivityBar';
 import { AdaptiveSmartButton } from '../../../components/common/AdaptiveSmartButton';
+import { GlassGreenFooter } from '../../../components/common/GlassGreenFooter';
 
 interface InnovativeFarmDetailPageProps {
   farmId: string;
@@ -515,6 +516,19 @@ export const InnovativeFarmDetailPage: React.FC<InnovativeFarmDetailPageProps> =
       <AdaptiveSmartButton
         phoneNumber="966500000000"
         defaultMessage={`مرحباً! أود الاستفسار عن ${farm?.farm_name_ar || 'هذه المزرعة'}`}
+      />
+
+      {/* الفوتر الزجاجي الأخضر */}
+      <GlassGreenFooter
+        activeTab="farms"
+        onTabChange={(tabId) => {
+          if (tabId === 'home') {
+            onBack();
+          }
+        }}
+        onWhatsAppClick={() => {
+          window.open(`https://wa.me/966500000000?text=مرحباً! أود الاستفسار عن ${farm?.farm_name_ar || 'هذه المزرعة'}`, '_blank');
+        }}
       />
     </>
   );

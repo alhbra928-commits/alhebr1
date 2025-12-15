@@ -12,6 +12,7 @@ import { ConceptIntroductionPage } from './ConceptIntroductionPage';
 import { EnhancedConceptCard } from './EnhancedConceptCard';
 import { LiveActivityBar } from '../../../components/common/LiveActivityBar';
 import { AdaptiveSmartButton } from '../../../components/common/AdaptiveSmartButton';
+import { GlassGreenFooter } from '../../../components/common/GlassGreenFooter';
 
 type ViewMode = 'home' | 'farmDetail' | 'booking' | 'investor' | 'verification' | 'concept';
 
@@ -341,6 +342,19 @@ export function RoyalMainInterface({
     <AdaptiveSmartButton
       phoneNumber="966500000000"
       defaultMessage="مرحباً! أود الاستفسار عن فرص الاستثمار الزراعي"
+    />
+
+    {/* الفوتر الزجاجي الأخضر */}
+    <GlassGreenFooter
+      activeTab="home"
+      onTabChange={(tabId) => {
+        if (tabId === 'profile') {
+          setViewMode('investor');
+        }
+      }}
+      onWhatsAppClick={() => {
+        window.open('https://wa.me/966500000000?text=مرحباً! أود الاستفسار عن المنصة', '_blank');
+      }}
     />
     </>
   );
