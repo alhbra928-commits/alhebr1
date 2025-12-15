@@ -367,23 +367,23 @@ export function RoyalMainInterface({
           counts={filterCounts}
         />
       )}
+
+      {/* فوتر معلومات المؤسسة */}
+      <CompanyInfoFooter
+        companyName="منصة الاستثمار الزراعي الملكية"
+        commercialRegister="1234567890"
+        phone="+966500000000"
+        whatsapp="+966500000000"
+        email="info@palmolive.sa"
+        city="الرياض، المملكة العربية السعودية"
+        workingHours="الأحد - الخميس: 9 صباحاً - 6 مساءً"
+      />
     </div>
 
     {/* الزر العائم الذكي للواتساب */}
     <AdaptiveSmartButton
       phoneNumber="966500000000"
       defaultMessage="مرحباً! أود الاستفسار عن فرص الاستثمار الزراعي"
-    />
-
-    {/* فوتر معلومات المؤسسة */}
-    <CompanyInfoFooter
-      companyName="منصة الاستثمار الزراعي الملكية"
-      commercialRegister="1234567890"
-      phone="+966500000000"
-      whatsapp="+966500000000"
-      email="info@palmolive.sa"
-      city="الرياض، المملكة العربية السعودية"
-      workingHours="الأحد - الخميس: 9 صباحاً - 6 مساءً"
     />
     </>
   );
