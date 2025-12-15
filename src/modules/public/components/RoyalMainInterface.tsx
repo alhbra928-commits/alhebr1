@@ -11,6 +11,7 @@ import { AdminCrownButton } from './AdminCrownButton';
 import { ConceptIntroductionPage } from './ConceptIntroductionPage';
 import { EnhancedConceptCard } from './EnhancedConceptCard';
 import { LiveActivityBar } from '../../../components/common/LiveActivityBar';
+import { AdaptiveSmartButton } from '../../../components/common/AdaptiveSmartButton';
 
 type ViewMode = 'home' | 'farmDetail' | 'booking' | 'investor' | 'verification' | 'concept';
 
@@ -335,6 +336,12 @@ export function RoyalMainInterface({
         )}
       </main>
     </div>
+
+    {/* الزر العائم الذكي للواتساب */}
+    <AdaptiveSmartButton
+      phoneNumber="966500000000"
+      defaultMessage="مرحباً! أود الاستفسار عن فرص الاستثمار الزراعي"
+    />
     </>
   );
 }

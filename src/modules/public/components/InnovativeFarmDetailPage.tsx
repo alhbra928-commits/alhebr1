@@ -18,6 +18,7 @@ import {
 import { FarmDetailService } from '../services/farmDetailService';
 import { MazadCrownLoader } from '../../../components/common/MazadCrownLoader';
 import { LiveActivityBar } from '../../../components/common/LiveActivityBar';
+import { AdaptiveSmartButton } from '../../../components/common/AdaptiveSmartButton';
 
 interface InnovativeFarmDetailPageProps {
   farmId: string;
@@ -509,6 +510,12 @@ export const InnovativeFarmDetailPage: React.FC<InnovativeFarmDetailPageProps> =
         }
       `}</style>
       </div>
+
+      {/* الزر العائم الذكي للواتساب */}
+      <AdaptiveSmartButton
+        phoneNumber="966500000000"
+        defaultMessage={`مرحباً! أود الاستفسار عن ${farm?.farm_name_ar || 'هذه المزرعة'}`}
+      />
     </>
   );
 };
