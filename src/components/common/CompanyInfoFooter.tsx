@@ -21,138 +21,118 @@ export function CompanyInfoFooter({
   workingHours = 'الأحد - الخميس: 9 صباحاً - 6 مساءً',
 }: CompanyInfoFooterProps) {
   return (
-    <footer className="bg-gradient-to-br from-emerald-900 via-green-800 to-emerald-900 text-white mt-16">
+    <footer className="relative bg-gradient-to-br from-emerald-900 via-green-800 to-emerald-900 text-white mt-12 sm:mt-16">
+      {/* خط علوي ذهبي */}
       <div className="h-1 bg-gradient-to-r from-amber-400 via-yellow-500 to-amber-400"></div>
 
-      <div className="container mx-auto px-4 sm:px-6 py-8 sm:py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <div className="space-y-4">
-            <div className="flex items-start gap-3">
-              <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-amber-400 to-yellow-500 rounded-xl flex items-center justify-center shadow-lg">
-                <Building2 className="w-6 h-6 text-white" strokeWidth={2.5} />
-              </div>
-              <div className="flex-1 min-w-0">
-                <h3 className="text-lg sm:text-xl font-bold text-amber-300 mb-2 leading-tight">
-                  {companyName}
-                </h3>
-                <div className="flex items-center gap-2 text-emerald-100 text-sm">
-                  <Shield className="w-4 h-4 flex-shrink-0" />
-                  <span className="break-words">السجل التجاري: {commercialRegister}</span>
-                </div>
-              </div>
+      <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 md:py-10">
+        {/* معلومات المؤسسة الرئيسية */}
+        <div className="text-center mb-6 sm:mb-8">
+          <div className="inline-flex items-center justify-center gap-3 mb-3">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-amber-400 to-yellow-500 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0">
+              <Building2 className="w-5 h-5 sm:w-6 sm:h-6 text-white" strokeWidth={2.5} />
             </div>
-
-            <div className="text-emerald-200 text-sm leading-relaxed pr-15">
-              <p>{city}</p>
-              <p className="mt-1">{workingHours}</p>
-            </div>
+            <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-amber-300 leading-tight">
+              {companyName}
+            </h3>
           </div>
 
-          <div className="space-y-3">
-            <h4 className="text-amber-300 font-bold text-lg mb-4">تواصل معنا</h4>
-
-            <a
-              href={`tel:${phone}`}
-              className="flex items-center gap-3 group hover:bg-white/10 p-3 rounded-xl transition-all duration-300"
-              style={{ WebkitTapHighlightColor: 'transparent' }}
-            >
-              <div className="w-10 h-10 bg-emerald-700/50 rounded-lg flex items-center justify-center group-hover:bg-emerald-600/50 transition-colors">
-                <Phone className="w-5 h-5 text-amber-300" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-emerald-200 text-xs">الهاتف</p>
-                <p className="text-white font-semibold text-sm sm:text-base break-all" dir="ltr">
-                  {phone}
-                </p>
-              </div>
-            </a>
-
-            <a
-              href={`https://wa.me/${whatsapp.replace(/\D/g, '')}?text=مرحباً! أود الاستفسار عن فرص الاستثمار`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-3 group hover:bg-white/10 p-3 rounded-xl transition-all duration-300"
-              style={{ WebkitTapHighlightColor: 'transparent' }}
-            >
-              <div className="w-10 h-10 bg-green-600/50 rounded-lg flex items-center justify-center group-hover:bg-green-500/50 transition-colors">
-                <MessageCircle className="w-5 h-5 text-amber-300" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-emerald-200 text-xs">واتساب</p>
-                <p className="text-white font-semibold text-sm sm:text-base break-all" dir="ltr">
-                  {whatsapp}
-                </p>
-              </div>
-            </a>
-
-            <a
-              href={`mailto:${email}`}
-              className="flex items-center gap-3 group hover:bg-white/10 p-3 rounded-xl transition-all duration-300"
-              style={{ WebkitTapHighlightColor: 'transparent' }}
-            >
-              <div className="w-10 h-10 bg-emerald-700/50 rounded-lg flex items-center justify-center group-hover:bg-emerald-600/50 transition-colors">
-                <Mail className="w-5 h-5 text-amber-300" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-emerald-200 text-xs">البريد الإلكتروني</p>
-                <p className="text-white font-semibold text-sm break-all" dir="ltr">
-                  {email}
-                </p>
-              </div>
-            </a>
+          <div className="flex items-center justify-center gap-2 text-emerald-100 text-xs sm:text-sm mb-3 flex-wrap">
+            <Shield className="w-4 h-4 flex-shrink-0 text-amber-400" />
+            <span>السجل التجاري: {commercialRegister}</span>
           </div>
 
-          <div className="space-y-3">
-            <h4 className="text-amber-300 font-bold text-lg mb-4">الوثائق والسياسات</h4>
-
-            <div className="space-y-2">
-              <a
-                href="#"
-                className="flex items-center gap-2 text-emerald-200 hover:text-amber-300 transition-colors text-sm group"
-              >
-                <FileText className="w-4 h-4 group-hover:scale-110 transition-transform" />
-                <span>سياسة الخصوصية</span>
-              </a>
-
-              <a
-                href="#"
-                className="flex items-center gap-2 text-emerald-200 hover:text-amber-300 transition-colors text-sm group"
-              >
-                <FileText className="w-4 h-4 group-hover:scale-110 transition-transform" />
-                <span>الشروط والأحكام</span>
-              </a>
-
-              <a
-                href="#"
-                className="flex items-center gap-2 text-emerald-200 hover:text-amber-300 transition-colors text-sm group"
-              >
-                <Shield className="w-4 h-4 group-hover:scale-110 transition-transform" />
-                <span>سياسة الاسترجاع</span>
-              </a>
-            </div>
-
-            <div className="mt-6 p-4 bg-white/5 rounded-xl border border-amber-400/30">
-              <div className="flex items-center justify-center gap-2 text-amber-300">
-                <Shield className="w-5 h-5" />
-                <span className="text-sm font-semibold">استثمار موثوق ومضمون</span>
-              </div>
-            </div>
+          <div className="text-emerald-200 text-xs sm:text-sm space-y-1">
+            <p>{city}</p>
+            <p>{workingHours}</p>
           </div>
         </div>
 
-        <div className="mt-8 pt-6 border-t border-emerald-700/50">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-right">
-            <p className="text-emerald-300 text-sm">
-              © {new Date().getFullYear()} {companyName}. جميع الحقوق محفوظة.
-            </p>
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-              <span className="text-emerald-200 text-xs">منصة فعالة ومعتمدة</span>
+        {/* أزرار التواصل - بسيطة ونظيفة */}
+        <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 mb-6">
+          <a
+            href={`tel:${phone}`}
+            className="group flex items-center gap-2 px-4 py-2.5 bg-white/10 hover:bg-white/20 rounded-xl transition-all duration-300 border border-white/20"
+            style={{ WebkitTapHighlightColor: 'transparent' }}
+          >
+            <div className="w-8 h-8 bg-emerald-700/50 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+              <Phone className="w-4 h-4 text-amber-300" />
             </div>
+            <div className="text-right">
+              <p className="text-emerald-200 text-[10px] leading-none mb-0.5">الهاتف</p>
+              <p className="text-white font-semibold text-xs sm:text-sm" dir="ltr">
+                {phone}
+              </p>
+            </div>
+          </a>
+
+          <a
+            href={`https://wa.me/${whatsapp.replace(/\D/g, '')}?text=مرحباً! أود الاستفسار عن فرص الاستثمار`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group flex items-center gap-2 px-4 py-2.5 bg-green-600/30 hover:bg-green-600/50 rounded-xl transition-all duration-300 border border-green-500/30"
+            style={{ WebkitTapHighlightColor: 'transparent' }}
+          >
+            <div className="w-8 h-8 bg-green-600/50 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+              <MessageCircle className="w-4 h-4 text-white" />
+            </div>
+            <div className="text-right">
+              <p className="text-green-200 text-[10px] leading-none mb-0.5">واتساب</p>
+              <p className="text-white font-semibold text-xs sm:text-sm" dir="ltr">
+                {whatsapp}
+              </p>
+            </div>
+          </a>
+
+          <a
+            href={`mailto:${email}`}
+            className="group flex items-center gap-2 px-4 py-2.5 bg-white/10 hover:bg-white/20 rounded-xl transition-all duration-300 border border-white/20"
+            style={{ WebkitTapHighlightColor: 'transparent' }}
+          >
+            <div className="w-8 h-8 bg-emerald-700/50 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+              <Mail className="w-4 h-4 text-amber-300" />
+            </div>
+            <div className="text-right">
+              <p className="text-emerald-200 text-[10px] leading-none mb-0.5">البريد</p>
+              <p className="text-white font-semibold text-xs sm:text-sm break-all" dir="ltr">
+                {email}
+              </p>
+            </div>
+          </a>
+        </div>
+
+        {/* روابط السياسات - صغيرة جداً في الأسفل */}
+        <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 text-xs text-emerald-300/70 mb-4">
+          <a
+            href="#"
+            className="hover:text-amber-300 transition-colors inline-flex items-center gap-1"
+          >
+            <FileText className="w-3 h-3" />
+            <span>سياسة الخصوصية</span>
+          </a>
+          <span className="text-emerald-700">•</span>
+          <a
+            href="#"
+            className="hover:text-amber-300 transition-colors inline-flex items-center gap-1"
+          >
+            <FileText className="w-3 h-3" />
+            <span>الشروط والأحكام</span>
+          </a>
+        </div>
+
+        {/* حقوق الطبع */}
+        <div className="text-center pt-4 border-t border-emerald-700/30">
+          <p className="text-emerald-300/80 text-xs sm:text-sm">
+            © {new Date().getFullYear()} {companyName}. جميع الحقوق محفوظة.
+          </p>
+          <div className="flex items-center justify-center gap-2 mt-2">
+            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+            <span className="text-emerald-200/70 text-xs">استثمار موثوق ومضمون</span>
           </div>
         </div>
       </div>
 
+      {/* خط سفلي ذهبي */}
       <div className="h-1 bg-gradient-to-r from-amber-400 via-yellow-500 to-amber-400"></div>
     </footer>
   );
