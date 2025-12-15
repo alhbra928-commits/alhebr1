@@ -60,6 +60,17 @@ export default defineConfig({
       'Pragma': 'no-cache',
       'Expires': '0',
     },
+    // تعطيل HMR لمنع التعارضات في التحديثات
+    hmr: false,
+    // تقليل file watching aggressiveness
+    watch: {
+      usePolling: false,
+      // إضافة debounce للتأخير بين التحديثات
+      awaitWriteFinish: {
+        stabilityThreshold: 2000,
+        pollInterval: 100
+      }
+    },
   },
   build: {
     assetsInlineLimit: 0,
