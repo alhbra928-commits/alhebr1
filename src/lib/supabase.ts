@@ -15,6 +15,45 @@ if (import.meta.env.DEV) {
   });
 }
 
+// Custom fetch with retry logic
+const customFetch = async (url: RequestInfo | URL, options?: RequestInit) => {
+  const maxRetries = 3;
+  const retryDelay = 1000; // 1 second
+
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      const response = await fetch(url, options);
+
+      // If successful or client error (4xx), return immediately
+      if (response.ok || (response.status >= 400 && response.status < 500)) {
+        return response;
+      }
+
+      // If server error (5xx) and not last attempt, retry
+      if (response.status >= 500 && attempt < maxRetries) {
+        console.warn(`⚠️ Server error ${response.status}, retrying (${attempt}/${maxRetries})...`);
+        await new Promise(resolve => setTimeout(resolve, retryDelay * attempt));
+        continue;
+      }
+
+      return response;
+    } catch (error) {
+      // Network error
+      if (attempt < maxRetries) {
+        console.warn(`⚠️ Network error, retrying (${attempt}/${maxRetries})...`, error);
+        await new Promise(resolve => setTimeout(resolve, retryDelay * attempt));
+        continue;
+      }
+
+      // Last attempt failed
+      throw error;
+    }
+  }
+
+  // Should never reach here, but TypeScript needs it
+  throw new Error('Max retries exceeded');
+};
+
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   db: {
     schema: 'public',
@@ -26,6 +65,7 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     headers: {
       'x-client-info': 'palm-olive-platform',
     },
+    fetch: customFetch,
   },
   realtime: {
     params: {

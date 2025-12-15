@@ -1,6 +1,7 @@
 import { useState, lazy, Suspense, useEffect } from 'react';
 import { AdminSessionService } from './modules/admin/services/adminSessionService';
 import { PermissionsProvider } from './contexts/PermissionsContext';
+import { ConnectionStatus } from './components/common/ConnectionStatus';
 
 // Lazy load EVERYTHING - including admin components
 const SmartAdminLoginPage = lazy(() => import('./modules/admin/components/SmartAdminLoginPage').then(m => ({ default: m.SmartAdminLoginPage })));
@@ -400,6 +401,8 @@ function App() {
         </Suspense>
       </PermissionsProvider>
 
+      {/* Connection Status Monitor */}
+      <ConnectionStatus />
     </div>
   );
 }
