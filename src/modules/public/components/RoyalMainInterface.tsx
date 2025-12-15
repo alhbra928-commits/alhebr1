@@ -346,10 +346,13 @@ export function RoyalMainInterface({
 
     {/* الفوتر الزجاجي الأخضر */}
     <GlassGreenFooter
-      activeTab="home"
+      activeTab={activeBottomTab}
       onTabChange={(tabId) => {
+        setActiveBottomTab(tabId);
         if (tabId === 'profile') {
-          setViewMode('investor');
+          setCurrentView('investor');
+        } else if (tabId === 'home') {
+          handleGoHome();
         }
       }}
       onWhatsAppClick={() => {

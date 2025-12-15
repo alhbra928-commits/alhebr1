@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>اختبار الفوتر الزجاجي الأخضر</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      min-height: 100vh;
+      padding-bottom: max(80px, calc(80px + env(safe-area-inset-bottom)));
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #b45309 0%, #ca8a04 50%, #b45309 100%);
+      color: white;
+      padding: 40px 20px;
+      text-align: center;
+      border-radius: 20px;
+      margin-bottom: 30px;
+      box-shadow: 0 10px 30px rgba(180, 83, 9, 0.3);
+    }
+
+    .header h1 {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+
+    .content {
+      background: white;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+    }
+
+    .content h2 {
+      color: #b45309;
+      margin-bottom: 15px;
+    }
+
+    .content p {
+      line-height: 1.8;
+      color: #666;
+      margin-bottom: 15px;
+    }
+
+    .footer-demo {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 9999;
+      background: linear-gradient(to bottom, rgba(236, 253, 245, 0.95), rgba(209, 250, 229, 0.98), rgba(167, 243, 208, 0.95));
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border-top: 2px solid rgba(74, 222, 128, 0.5);
+      box-shadow:
+        0 -8px 32px rgba(34, 197, 94, 0.15),
+        0 -4px 16px rgba(74, 222, 128, 0.1),
+        0 -2px 8px rgba(134, 239, 172, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6),
+        inset 0 -1px 0 rgba(34, 197, 94, 0.1);
+    }
+
+    .footer-nav {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 12px 16px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .footer-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      min-width: 70px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .footer-btn-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.4), rgba(209, 250, 229, 0.3));
+      box-shadow:
+        0 4px 12px rgba(34, 197, 94, 0.1),
+        inset 0 2px 0 rgba(255, 255, 255, 0.6);
+      border: 2px solid transparent;
+    }
+
+    .footer-btn.active .footer-btn-icon {
+      background: linear-gradient(135deg, rgba(34, 197, 94, 0.5), rgba(74, 222, 128, 0.4));
+      box-shadow:
+        0 8px 20px rgba(34, 197, 94, 0.3),
+        0 4px 12px rgba(74, 222, 128, 0.2),
+        inset 0 2px 0 rgba(255, 255, 255, 0.5);
+      border: 2px solid rgba(74, 222, 128, 0.6);
+      transform: scale(1.05);
+    }
+
+    .footer-btn:hover .footer-btn-icon {
+      transform: scale(1.05);
+    }
+
+    .footer-btn-icon svg {
+      width: 24px;
+      height: 24px;
+      stroke: #15803d;
+      stroke-width: 2;
+      fill: none;
+      transition: all 0.3s ease;
+    }
+
+    .footer-btn.active .footer-btn-icon svg {
+      stroke: white;
+      stroke-width: 2.5;
+    }
+
+    .footer-btn-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: #16a34a;
+      transition: all 0.3s ease;
+    }
+
+    .footer-btn.active .footer-btn-label {
+      color: #15803d;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 1; }
+    }
+
+    .footer-btn.active .footer-btn-icon::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 16px;
+      background: linear-gradient(135deg, rgba(34, 197, 94, 0.3), rgba(74, 222, 128, 0.2));
+      animation: pulse 2s ease infinite;
+    }
+
+    .safe-area {
+      height: env(safe-area-inset-bottom);
+      min-height: 0;
+    }
+
+    .status-badge {
+      display: inline-block;
+      background: #22c55e;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: bold;
+      margin: 20px 0;
+    }
+
+    .info-box {
+      background: #ecfdf5;
+      border: 2px solid #a7f3d0;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 20px 0;
+    }
+
+    .info-box h3 {
+      color: #15803d;
+      margin-bottom: 10px;
+    }
+
+    .info-box ul {
+      list-style-position: inside;
+      color: #166534;
+    }
+
+    .info-box ul li {
+      margin: 8px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🌿 اختبار الفوتر الزجاجي الأخضر</h1>
+      <p>هذا عرض مباشر لتصميم الفوتر الجديد</p>
+      <span class="status-badge">✅ جاهز للنشر</span>
+    </div>
+
+    <div class="content">
+      <h2>📱 التصميم الجديد</h2>
+      <p>الفوتر الآن بتصميم زجاجي أخضر حديث يتماشى مع الهوية الزراعية للمنصة.</p>
+
+      <div class="info-box">
+        <h3>✨ المميزات:</h3>
+        <ul>
+          <li>تصميم زجاجي شفاف بتأثير Blur</li>
+          <li>لون أخضر زمردي يناسب المزارع</li>
+          <li>4 أزرار رئيسية: الرئيسية | المزارع | واتساب | حسابي</li>
+          <li>الزر النشط يتوهج بلون أخضر مميز</li>
+          <li>متوافق مع iPhone (Safe Area) وجميع الأجهزة</li>
+          <li>ثابت في الأسفل دائماً</li>
+          <li>تأثيرات حركة ناعمة</li>
+        </ul>
+      </div>
+
+      <div class="info-box">
+        <h3>🎯 الأزرار:</h3>
+        <ul>
+          <li>🏠 <strong>الرئيسية</strong> - العودة للصفحة الرئيسية</li>
+          <li>🌿 <strong>المزارع</strong> - عرض جميع المزارع المتاحة</li>
+          <li>💬 <strong>تواصل</strong> - فتح محادثة واتساب</li>
+          <li>👤 <strong>حسابي</strong> - الدخول لحساب المستثمر</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="content">
+      <h2>🚀 جاهز للنشر</h2>
+      <p>الفوتر مبني ومجهز في مجلد <code>dist/</code></p>
+      <p><strong>Version:</strong> v20251215_1765836401521</p>
+      <p><strong>الملف:</strong> palmolive-footer-fixed.tar.gz (439 KB)</p>
+    </div>
+
+    <div class="content">
+      <h2>📋 معلومات النشر</h2>
+      <p>بعد نشر الموقع، امسح الكاش (Ctrl+Shift+R) لترى الفوتر فوراً!</p>
+    </div>
+
+    <!-- Add some filler content to show scrolling -->
+    <div class="content">
+      <h2>📝 محتوى تجريبي</h2>
+      <p>انزل للأسفل لترى كيف يبقى الفوتر ثابتاً...</p>
+    </div>
+
+    <div class="content">
+      <h2>🌳 مزارع نخيل وزيتون</h2>
+      <p>استثمر في أرقى المزارع مع ضمان الجودة والعائد المميز</p>
+    </div>
+
+    <div class="content">
+      <h2>💰 عوائد مضمونة</h2>
+      <p>معدل عائد سنوي يصل إلى 25% مع ضمانات كاملة</p>
+    </div>
+  </div>
+
+  <!-- الفوتر الزجاجي الأخضر -->
+  <footer class="footer-demo">
+    <nav class="footer-nav">
+      <button class="footer-btn active" onclick="setActive(this)">
+        <div class="footer-btn-icon">
+          <svg viewBox="0 0 24 24">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            <polyline points="9 22 9 12 15 12 15 22"/>
+          </svg>
+        </div>
+        <span class="footer-btn-label">الرئيسية</span>
+      </button>
+
+      <button class="footer-btn" onclick="setActive(this)">
+        <div class="footer-btn-icon">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+        </div>
+        <span class="footer-btn-label">المزارع</span>
+      </button>
+
+      <button class="footer-btn" onclick="setActive(this); alert('سيتم فتح واتساب');">
+        <div class="footer-btn-icon">
+          <svg viewBox="0 0 24 24">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+        </div>
+        <span class="footer-btn-label">تواصل</span>
+      </button>
+
+      <button class="footer-btn" onclick="setActive(this)">
+        <div class="footer-btn-icon">
+          <svg viewBox="0 0 24 24">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+        </div>
+        <span class="footer-btn-label">حسابي</span>
+      </button>
+    </nav>
+    <div class="safe-area"></div>
+  </footer>
+
+  <script>
+    function setActive(btn) {
+      // Remove active class from all buttons
+      document.querySelectorAll('.footer-btn').forEach(b => {
+        b.classList.remove('active');
+      });
+
+      // Add active class to clicked button
+      btn.classList.add('active');
+
+      // Smooth scroll to top
+      if (btn.querySelector('.footer-btn-label').textContent === 'الرئيسية') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    // Show success message
+    window.addEventListener('load', () => {
+      console.log('✅ الفوتر الزجاجي الأخضر جاهز!');
+      console.log('Version: v20251215_1765836401521');
+    });
+  </script>
+</body>
+</html>
