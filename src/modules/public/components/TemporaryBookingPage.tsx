@@ -25,6 +25,7 @@ import { brandColors, brandGradients } from '../../finance/styles/brandColors';
 import { FarmDetailService, FarmVariety, CreateReservationData } from '../services/farmDetailService';
 import { MazadCrownLoader } from '../../../components/common/MazadCrownLoader';
 import { SimpleLoader } from '../../../components/common/SimpleLoader';
+import { CompanyInfoFooter } from '../../../components/common/CompanyInfoFooter';
 
 interface TemporaryBookingPageProps {
   farmId: string;
@@ -1010,6 +1011,17 @@ export function TemporaryBookingPage({
           user-select: none;
         }
       `}</style>
+
+      {/* فوتر معلومات المؤسسة */}
+      <CompanyInfoFooter
+        companyName="منصة الاستثمار الزراعي الملكية"
+        commercialRegister="1234567890"
+        phone="+966500000000"
+        whatsapp="+966500000000"
+        email="info@palmolive.sa"
+        city="الرياض، المملكة العربية السعودية"
+        workingHours="الأحد - الخميس: 9 صباحاً - 6 مساءً"
+      />
     </div>
   );
 }
