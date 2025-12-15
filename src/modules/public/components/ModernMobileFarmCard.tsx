@@ -170,24 +170,24 @@ export function ModernMobileFarmCard({ farm, onOwn, onClick }: ModernMobileFarmC
             </div>
           </div>
 
-          {/* Total Trees */}
+          {/* Reserved Trees */}
           <div
             className="relative rounded-2xl p-4 overflow-hidden"
             style={{
-              background: 'rgba(245, 158, 11, 0.1)',
-              border: '1.5px solid rgba(245, 158, 11, 0.3)',
+              background: 'rgba(59, 130, 246, 0.1)',
+              border: '1.5px solid rgba(59, 130, 246, 0.3)',
             }}
           >
             <div className="absolute top-0 right-0 w-20 h-20 rounded-full blur-3xl opacity-20"
-              style={{ background: '#F59E0B' }}
+              style={{ background: '#3B82F6' }}
             />
             <div className="relative z-10">
               <div className="flex items-center gap-2 mb-2">
-                <Sprout className="h-4 w-4 text-[#F59E0B]" />
-                <span className="text-[10px] font-bold text-gray-600">الإجمالي</span>
+                <Users className="h-4 w-4 text-[#3B82F6]" />
+                <span className="text-[10px] font-bold text-gray-600">المحجوز</span>
               </div>
-              <div className="text-3xl font-black text-[#F59E0B]">
-                {(farm.total_trees || 0).toLocaleString('ar-SA')}
+              <div className="text-3xl font-black text-[#3B82F6]">
+                {((farm.total_trees || 0) - (farm.available_trees || 0)).toLocaleString('ar-SA')}
               </div>
               <div className="text-[10px] text-gray-500 font-medium mt-1">شجرة</div>
             </div>

@@ -195,24 +195,24 @@ export function FarmCard3D({ farm, onOwn, onClick }: FarmCard3DProps) {
           <div
             className="relative rounded-xl sm:rounded-2xl p-3 sm:p-4 text-center overflow-hidden transition-all duration-500 active:scale-95 sm:hover:scale-105"
             style={{
-              background: 'linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(251, 191, 36, 0.15) 100%)',
-              border: '2px solid rgba(245, 158, 11, 0.3)',
-              boxShadow: '0 4px 15px rgba(245, 158, 11, 0.15)',
+              background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(96, 165, 250, 0.15) 100%)',
+              border: '2px solid rgba(59, 130, 246, 0.3)',
+              boxShadow: '0 4px 15px rgba(59, 130, 246, 0.15)',
             }}
           >
             <div className="absolute top-0 right-0 w-16 h-16 sm:w-20 sm:h-20 rounded-full blur-2xl opacity-30" style={{
-              background: '#F59E0B',
+              background: '#3B82F6',
             }} />
 
             <div className="relative z-10">
               <div className="flex items-center justify-center gap-1 sm:gap-2 mb-1 sm:mb-2">
-                <Sprout className="h-4 w-4 sm:h-5 sm:w-5 text-amber-600" />
+                <Sprout className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600" />
                 <p className="text-[10px] sm:text-xs font-black" style={{ color: brandColors.text.secondary }}>
-                  إجمالي الأشجار
+                  الأشجار المحجوزة
                 </p>
               </div>
-              <p className="text-2xl sm:text-3xl font-black mb-0.5 text-amber-600">
-                {(farm.total_trees || 0).toLocaleString('ar-SA')}
+              <p className="text-2xl sm:text-3xl font-black mb-0.5 text-blue-600">
+                {((farm.total_trees || 0) - (farm.available_trees || 0)).toLocaleString('ar-SA')}
               </p>
               <p className="text-[10px] sm:text-xs font-black" style={{ color: brandColors.text.secondary }}>
                 شجرة
