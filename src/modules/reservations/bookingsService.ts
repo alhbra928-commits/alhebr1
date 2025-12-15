@@ -733,21 +733,22 @@ ${this.generateSecurityCheck(error)}
   static async approve(id: string): Promise<void> {
     console.log('✅ [approve] Approving booking:', id);
 
-    const { data, error } = await supabase
-      .from('reservations')
-      .update({
-        status: 'confirmed',
-        booking_status: 'approved'
-      })
-      .eq('id', id)
-      .select();
+    // استخدام الدالة السريعة لتجنب timeout
+    const { data, error } = await supabase.rpc('fast_approve_booking', {
+      p_booking_id: id
+    });
 
     if (error) {
       console.error('❌ [approve] Error:', error);
       throw error;
     }
 
-    console.log('✅ [approve] Success, updated rows:', data?.length);
+    if (data && !data.success) {
+      console.error('❌ [approve] Function error:', data.error);
+      throw new Error(data.error);
+    }
+
+    console.log('✅ [approve] Success');
   }
 
   static async reject(id: string): Promise<void> {
