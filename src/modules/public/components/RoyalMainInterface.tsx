@@ -10,6 +10,7 @@ import { SimpleLoader } from '../../../components/common/SimpleLoader';
 import { AdminCrownButton } from './AdminCrownButton';
 import { ConceptIntroductionPage } from './ConceptIntroductionPage';
 import { EnhancedConceptCard } from './EnhancedConceptCard';
+import { LiveActivityBar } from '../../../components/common/LiveActivityBar';
 
 type ViewMode = 'home' | 'farmDetail' | 'booking' | 'investor' | 'verification' | 'concept';
 
@@ -108,6 +109,9 @@ export function RoyalMainInterface({
   // Home View - Royal Design
   return (
     <>
+      {/* شريط الإحصائيات المتحرك العلوي */}
+      <LiveActivityBar />
+
       <div className="min-h-screen bg-gradient-to-br from-amber-50 via-yellow-50 to-amber-100">
       {/* Decorative Background Pattern */}
       <div className="fixed inset-0 opacity-5">
