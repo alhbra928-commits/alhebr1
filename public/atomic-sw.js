@@ -187,6 +187,18 @@ self.addEventListener('message', (event) => {
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
 
+  // Ignore external requests (bolt.new analytics, etc.)
+  if (url.origin !== location.origin) {
+    return;
+  }
+
+  // Ignore bolt.new tracking scripts
+  if (url.pathname.includes('messo') ||
+      url.pathname.includes('bolt.new') ||
+      url.hostname.includes('bolt.new')) {
+    return;
+  }
+
   // Never cache HTML files
   if (url.pathname.endsWith('.html') || url.pathname === '/') {
     event.respondWith(

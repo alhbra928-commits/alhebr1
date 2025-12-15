@@ -76,13 +76,21 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
 
-  // Ignore external requests
+  // Ignore external requests (including bolt.new scripts)
   if (url.origin !== location.origin) {
+    // Silently ignore external requests without logging errors
     return;
   }
 
   // Ignore extensions
   if (url.protocol === 'chrome-extension:' || url.protocol === 'moz-extension:') {
+    return;
+  }
+
+  // Ignore bolt.new analytics and tracking scripts
+  if (url.pathname.includes('messo') ||
+      url.pathname.includes('bolt.new') ||
+      url.hostname.includes('bolt.new')) {
     return;
   }
 

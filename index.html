@@ -14,7 +14,7 @@
     <meta name="pragma" content="no-cache" />
     <meta name="last-modified" content="__BUILD_VERSION__" />
     <meta name="version" content="__BUILD_VERSION__" />
-    <meta name="cache-buster" content="v20251215_1765790947051" />
+    <meta name="cache-buster" content="v20251215_1765791490087" />
 
     <!-- iPhone/Safari specific headers -->
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -46,6 +46,20 @@
     <!-- 🔄 AGGRESSIVE CACHE BUSTING FOR IPHONE -->
     <script>
       (function() {
+        // ✅ Ignore external script errors (bolt.new analytics, etc.)
+        window.addEventListener('error', function(event) {
+          // Silently ignore errors from external sources
+          if (event.target && event.target.src) {
+            const src = event.target.src;
+            if (src.includes('bolt.new') ||
+                src.includes('messo') ||
+                !src.startsWith(window.location.origin)) {
+              event.preventDefault();
+              return false;
+            }
+          }
+        }, true);
+
         const BUILD_VERSION = '__BUILD_VERSION__';
         const FORCE_UPDATE_VERSION = 'v20251209_GLOBAL_DOCK_OUTSIDE_BODY';
 
