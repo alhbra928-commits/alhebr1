@@ -12,11 +12,13 @@ export class PublicFarmService {
   }
 
   static async getAllFarms(limit: number = 20): Promise<PublicFarm[]> {
-    // Check cache
-    if (this.farmsCache && Date.now() - this.farmsCache.timestamp < this.CACHE_DURATION) {
-      console.log('[PublicFarmService] Returning cached farms');
-      return this.farmsCache.data;
-    }
+    // ❌ تعطيل الـ Cache مؤقتاً لعرض البيانات المحدثة
+    // if (this.farmsCache && Date.now() - this.farmsCache.timestamp < this.CACHE_DURATION) {
+    //   console.log('[PublicFarmService] Returning cached farms');
+    //   return this.farmsCache.data;
+    // }
+
+    console.log('[PublicFarmService] Fetching fresh farm data with bookings...');
 
     const { data: farms, error: farmsError } = await supabase
       .from('farms')
@@ -38,11 +40,14 @@ export class PublicFarmService {
 
     const farmIds = farms.map(f => f.id);
 
+    // ✅ جلب بيانات الأصناف مع available_quantity المحدثة
     const { data: allVarieties } = await supabase
       .from('farm_tree_varieties')
       .select('farm_id, available_quantity, total_trees')
       .in('farm_id', farmIds)
       .is('deleted_at', null);
+
+    console.log('[PublicFarmService] Varieties data:', allVarieties?.length || 0);
 
     const varietiesByFarm = new Map<string, Array<{available_quantity: number, total_trees: number}>>();
 
@@ -63,6 +68,9 @@ export class PublicFarmService {
 
       const totalAvailable = varieties.reduce((sum, v) => sum + v.available_quantity, 0);
       const totalTreesFromVarieties = varieties.reduce((sum, v) => sum + v.total_trees, 0);
+      const totalBooked = totalTreesFromVarieties - totalAvailable;
+
+      console.log(`[PublicFarmService] Farm: ${farm.name_ar} | Total: ${totalTreesFromVarieties} | Available: ${totalAvailable} | Booked: ${totalBooked}`);
 
       return {
         ...farm,
@@ -73,7 +81,7 @@ export class PublicFarmService {
 
     const result = farmsWithCalculations.map((farm: any) => this.mapToPublicFarm(farm));
 
-    // Cache the result
+    // Cache the result (لمدة قصيرة فقط)
     this.farmsCache = {
       data: result,
       timestamp: Date.now()
