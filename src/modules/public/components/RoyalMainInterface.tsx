@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Crown, Sparkles, ArrowRight, TreePine, Users, Shield, Award } from 'lucide-react';
 import { PublicFarm } from '../types/farm.types';
 import { PublicFarmService } from '../services/publicFarmService';
@@ -13,6 +13,7 @@ import { EnhancedConceptCard } from './EnhancedConceptCard';
 import { LiveActivityBar } from '../../../components/common/LiveActivityBar';
 import { AdaptiveSmartButton } from '../../../components/common/AdaptiveSmartButton';
 import { CompanyInfoFooter } from '../../../components/common/CompanyInfoFooter';
+import { FloatingFiltersButton } from './FloatingFiltersButton';
 
 type ViewMode = 'home' | 'farmDetail' | 'booking' | 'investor' | 'verification' | 'concept';
 
@@ -33,6 +34,7 @@ export function RoyalMainInterface({
   const [loading, setLoading] = useState(true);
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
   const [activeBottomTab, setActiveBottomTab] = useState<string>('home');
+  const [activeFilter, setActiveFilter] = useState<'all' | 'open' | 'almost_full' | 'full'>('all');
 
   useEffect(() => {
     loadData();
@@ -59,6 +61,22 @@ export function RoyalMainInterface({
     setCurrentView('home');
     setSelectedFarm(null);
   };
+
+  // Filter logic
+  const filteredFarms = useMemo(() => {
+    if (activeFilter === 'all') return farms;
+    return farms.filter(farm => farm.status === activeFilter);
+  }, [farms, activeFilter]);
+
+  // Count farms by status
+  const filterCounts = useMemo(() => {
+    return {
+      all: farms.length,
+      open: farms.filter(f => f.status === 'open').length,
+      almost_full: farms.filter(f => f.status === 'almost_full').length,
+      full: farms.filter(f => f.status === 'full').length,
+    };
+  }, [farms]);
 
   if (currentView === 'concept') {
     return (
@@ -232,7 +250,7 @@ export function RoyalMainInterface({
 
             {/* Farms Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
-              {farms.map((farm, index) => (
+              {filteredFarms.map((farm, index) => (
                 <div
                   key={farm.id}
                   className="group relative"
@@ -320,22 +338,35 @@ export function RoyalMainInterface({
             </div>
 
             {/* Empty State */}
-            {farms.length === 0 && !loading && (
+            {filteredFarms.length === 0 && !loading && (
               <div className="text-center py-20">
                 <div className="inline-flex items-center justify-center w-24 h-24 bg-amber-100 rounded-full mb-6">
                   <TreePine className="w-12 h-12 text-amber-600" />
                 </div>
                 <h3 className="text-2xl font-bold text-amber-900 mb-2">
-                  لا توجد مزارع متاحة حالياً
+                  {activeFilter === 'all'
+                    ? 'لا توجد مزارع متاحة حالياً'
+                    : 'لا توجد مزارع تطابق الفلتر المحدد'}
                 </h3>
                 <p className="text-amber-600">
-                  يرجى العودة لاحقاً للاطلاع على الفرص الاستثمارية الجديدة
+                  {activeFilter === 'all'
+                    ? 'يرجى العودة لاحقاً للاطلاع على الفرص الاستثمارية الجديدة'
+                    : 'جرب اختيار فلتر آخر'}
                 </p>
               </div>
             )}
           </>
         )}
       </main>
+
+      {/* زر الفلاتر العائم */}
+      {currentView === 'home' && !loading && farms.length > 0 && (
+        <FloatingFiltersButton
+          activeFilter={activeFilter}
+          onFilterChange={setActiveFilter}
+          counts={filterCounts}
+        />
+      )}
     </div>
 
     {/* الزر العائم الذكي للواتساب */}
