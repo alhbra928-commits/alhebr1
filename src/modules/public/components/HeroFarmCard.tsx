@@ -110,15 +110,16 @@ export function HeroFarmCard({
             <div
               className="mb-6 p-4 rounded-xl text-center"
               style={{
-                background: brandGradients.gold,
-                boxShadow: '0 4px 20px rgba(212, 175, 55, 0.3)',
+                background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
+                boxShadow: '0 4px 20px rgba(16, 185, 129, 0.3)',
               }}
             >
-              <div className="text-sm font-bold text-white mb-1 opacity-90">
-                سعر الشجرة
+              <div className="text-sm font-bold text-white mb-1 opacity-90 flex items-center justify-center gap-2">
+                <Sprout className="w-5 h-5" />
+                <span>مزرعة نموذجية</span>
               </div>
-              <div className="text-4xl font-black text-white">
-                {pricePerTree.toLocaleString('ar-SA')} ر.س
+              <div className="text-2xl font-black text-white">
+                فرصة استثمارية فريدة
               </div>
             </div>
 

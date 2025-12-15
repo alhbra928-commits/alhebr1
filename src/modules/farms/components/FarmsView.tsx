@@ -19,7 +19,6 @@ import {
 } from 'lucide-react';
 import { Card3D } from '../../../components/ui/Card3D';
 import { BackButton } from '../../../components/common/BackButton';
-import { SmartPriceDisplay } from '../../../components/common/SmartPriceDisplay';
 import { FarmsService, Farm } from '../farmsService';
 import { FarmFormModal } from './FarmFormModal';
 import { useRealtimeTables } from '../../../lib/realtimeSync';
@@ -372,16 +371,16 @@ export function FarmsView({ onBack }: FarmsViewProps) {
           </Card3D>
 
           <Card3D interactive={false}>
-            <div className="p-6 bg-gradient-to-br from-[#C9A962]/10 to-[#D4B574]/10">
+            <div className="p-6 bg-gradient-to-br from-emerald-50 to-teal-50">
               <div className="flex items-center justify-between mb-3">
-                <div className="w-12 h-12 bg-gradient-to-br from-[#C9A962] to-[#D4B574] rounded-xl flex items-center justify-center shadow-lg">
-                  <DollarSign className="h-6 w-6 text-white" />
+                <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center shadow-lg">
+                  <Sprout className="h-6 w-6 text-white" />
                 </div>
               </div>
-              <p className="text-2xl font-black text-[#C9A962] mb-1">
-                {(stats?.avg_marketing_price || 0).toLocaleString('ar-SA')} ر.س
+              <p className="text-2xl font-black text-emerald-600 mb-1">
+                {((stats?.total_trees || 0) - (stats?.reserved_trees || 0)).toLocaleString('ar-SA')}
               </p>
-              <p className="text-sm text-[#2C2C2C]/70">متوسط السعر</p>
+              <p className="text-sm text-[#2C2C2C]/70">أشجار متاحة</p>
             </div>
           </Card3D>
         </div>
@@ -549,13 +548,27 @@ export function FarmsView({ onBack }: FarmsViewProps) {
                       </div>
                     </div>
 
-                    {/* Smart Price Display */}
-                    <div className="bg-gradient-to-br from-[#C9A962]/10 to-[#D4B574]/10 rounded-xl p-4 mb-4">
-                      <SmartPriceDisplay
-                        farmType={farm.farm_type}
-                        unitPrice={farm.unit_marketing_price || 0}
-                        size="medium"
-                      />
+                    {/* Trees Availability Display */}
+                    <div className="bg-gradient-to-br from-emerald-50 to-green-50 rounded-xl p-4 mb-4 border-2 border-emerald-200">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-green-600 rounded-xl flex items-center justify-center shadow-lg">
+                            <Sprout className="h-6 w-6 text-white" />
+                          </div>
+                          <div>
+                            <p className="text-xs text-gray-600 font-semibold mb-1">الأشجار المتاحة</p>
+                            <p className="text-2xl font-black text-emerald-600">
+                              {((farm.total_trees || 0) - (farm.reserved_trees || 0)).toLocaleString('ar-SA')}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="text-left">
+                          <p className="text-xs text-gray-600 font-semibold mb-1">المحجوز</p>
+                          <p className="text-lg font-bold text-amber-600">
+                            {(farm.reserved_trees || 0).toLocaleString('ar-SA')}
+                          </p>
+                        </div>
+                      </div>
                     </div>
 
                     {/* Action Buttons */}

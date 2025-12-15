@@ -163,18 +163,18 @@ export const InnovativeFarmCard: React.FC<InnovativeFarmCardProps> = ({ farm, on
               </div>
             </div>
 
-            {/* Price Card */}
+            {/* Total Trees Card */}
             <div className="group/card relative overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-br from-teal-400/10 to-emerald-500/10 rounded-2xl transform transition-transform group-hover/card:scale-105"></div>
-              <div className="relative flex flex-col items-center justify-center p-4 bg-white/80 backdrop-blur-sm rounded-2xl border-2 border-teal-100 hover:border-teal-300 transition-all duration-300 shadow-lg hover:shadow-xl h-full">
-                <div className="p-2.5 bg-gradient-to-br from-teal-500 to-emerald-600 rounded-xl shadow-lg mb-2">
-                  <TrendingUp className="w-5 h-5 text-white" />
+              <div className="absolute inset-0 bg-gradient-to-br from-amber-400/10 to-orange-500/10 rounded-2xl transform transition-transform group-hover/card:scale-105"></div>
+              <div className="relative flex flex-col items-center justify-center p-4 bg-white/80 backdrop-blur-sm rounded-2xl border-2 border-amber-100 hover:border-amber-300 transition-all duration-300 shadow-lg hover:shadow-xl h-full">
+                <div className="p-2.5 bg-gradient-to-br from-amber-500 to-orange-600 rounded-xl shadow-lg mb-2">
+                  <TreePine className="w-5 h-5 text-white" />
                 </div>
-                <p className="text-xs text-teal-600 font-semibold mb-1">السعر</p>
-                <p className="text-xl font-bold bg-gradient-to-r from-teal-700 to-emerald-600 bg-clip-text text-transparent">
-                  {farm.base_price?.toLocaleString('ar-SA')}
+                <p className="text-xs text-amber-600 font-semibold mb-1">إجمالي</p>
+                <p className="text-2xl font-bold bg-gradient-to-r from-amber-700 to-orange-600 bg-clip-text text-transparent">
+                  {farm.total_trees || 0}
                 </p>
-                <p className="text-xs text-gray-600">ريال</p>
+                <p className="text-xs text-gray-600">شجرة</p>
               </div>
             </div>
           </div>

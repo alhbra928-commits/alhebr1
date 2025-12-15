@@ -170,26 +170,26 @@ export function ModernMobileFarmCard({ farm, onOwn, onClick }: ModernMobileFarmC
             </div>
           </div>
 
-          {/* Price */}
+          {/* Total Trees */}
           <div
             className="relative rounded-2xl p-4 overflow-hidden"
             style={{
-              background: 'rgba(212, 175, 55, 0.1)',
-              border: '1.5px solid rgba(212, 175, 55, 0.3)',
+              background: 'rgba(245, 158, 11, 0.1)',
+              border: '1.5px solid rgba(245, 158, 11, 0.3)',
             }}
           >
             <div className="absolute top-0 right-0 w-20 h-20 rounded-full blur-3xl opacity-20"
-              style={{ background: '#D4AF37' }}
+              style={{ background: '#F59E0B' }}
             />
             <div className="relative z-10">
               <div className="flex items-center gap-2 mb-2">
-                <TrendingUp className="h-4 w-4 text-[#D4AF37]" />
-                <span className="text-[10px] font-bold text-gray-600">السعر</span>
+                <Sprout className="h-4 w-4 text-[#F59E0B]" />
+                <span className="text-[10px] font-bold text-gray-600">الإجمالي</span>
               </div>
-              <div className="text-3xl font-black text-[#D4AF37]">
-                {farm.base_price.toLocaleString('ar-SA')}
+              <div className="text-3xl font-black text-[#F59E0B]">
+                {(farm.total_trees || 0).toLocaleString('ar-SA')}
               </div>
-              <div className="text-[10px] text-gray-500 font-medium mt-1">ريال</div>
+              <div className="text-[10px] text-gray-500 font-medium mt-1">شجرة</div>
             </div>
           </div>
         </div>
