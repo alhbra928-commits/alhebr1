@@ -237,18 +237,9 @@ export class DocumentationService {
   }
 
   static async getMigrationLog() {
-    const { data, error } = await supabase
-      .from('migration_log')
-      .select('*')
-      .order('created_at', { ascending: false })
-      .limit(50);
-
-    if (error) {
-      console.error('Error fetching migration log:', error);
-      return { data: [], count: 0 };
-    }
-
-    return data || [];
+    // تم إيقاف استخدام migration_log - النظام يستخدم الآن audit_log
+    console.info('Migration log is deprecated, use audit_log instead');
+    return [];
   }
 
   static formatPrice(price: number): string {

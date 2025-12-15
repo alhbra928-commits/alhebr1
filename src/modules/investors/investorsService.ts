@@ -117,21 +117,7 @@ export class InvestorsService {
     const investor = await this.getById(id);
     if (!investor) throw new Error('Investor not found');
 
-    const backupData = {
-      ...investor,
-      deleted_at: new Date().toISOString(),
-      backup_reason: 'Admin deletion'
-    };
-
-    await supabase.from('migration_log').insert({
-      migration_type: 'investor_deletion',
-      source_table: 'investors',
-      source_id: id,
-      backup_data: backupData,
-      status: 'completed'
-    });
-
-    // استخدام soft delete بدلاً من hard delete لتفعيل الـ trigger
+    // استخدام soft delete لتفعيل الـ trigger والنسخ الاحتياطي التلقائي
     const { error } = await supabase
       .from('investors')
       .update({
@@ -140,7 +126,10 @@ export class InvestorsService {
       })
       .eq('id', id);
 
-    if (error) return { data: [], count: 0 };
+    if (error) {
+      console.error('Error deleting investor:', error);
+      throw error;
+    }
   }
 
   static async getStatistics() {
