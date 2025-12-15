@@ -12,9 +12,7 @@ import { InvestorRouter } from '../../investor/components/InvestorRouter';
 import { CertificateVerificationPage } from './CertificateVerificationPage';
 import { SimpleLoader } from '../../../components/common/SimpleLoader';
 import { AdminCrownButton } from './AdminCrownButton';
-import { GlowingConceptButton } from './GlowingConceptButton';
 import { ConceptIntroductionPage } from './ConceptIntroductionPage';
-import { IdeaOverviewSection } from './IdeaOverviewSection';
 
 type ViewMode = 'home' | 'farmDetail' | 'booking' | 'investor' | 'verification' | 'concept';
 
@@ -35,7 +33,6 @@ export function MainPlatformInterface({
 }: MainPlatformInterfaceProps) {
   const [farms, setFarms] = useState<PublicFarm[]>([]);
   const [showConceptModal, setShowConceptModal] = useState(false);
-  const [showIdeaOverview, setShowIdeaOverview] = useState(false);
   const [currentView, setCurrentView] = useState<ViewMode>('home');
   const [selectedFarm, setSelectedFarm] = useState<PublicFarm | null>(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -171,13 +168,8 @@ export function MainPlatformInterface({
         </div>
       )}
 
-
-      {/* الزر الذهبي */}
-      <div style={{ paddingTop: '64px' }}>
-        <div className="pt-8 md:pt-12">
-          <GlowingConceptButton onClick={() => setShowIdeaOverview(true)} />
-        </div>
-      </div>
+      {/* مساحة فارغة للتنسيق */}
+      <div style={{ paddingTop: '80px' }}></div>
 
       {/* قسم المزارع المتاحة */}
       <div className="max-w-[1400px] mx-auto px-3 sm:px-6 pt-2 sm:pt-4" style={{ paddingBottom: 'calc(80px + env(safe-area-inset-bottom))' }}>
@@ -223,31 +215,6 @@ export function MainPlatformInterface({
         isOpen={showConceptModal}
         onClose={() => setShowConceptModal(false)}
       />
-
-      {/* Modal فكرة تملك الأشجار */}
-      {showIdeaOverview && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setShowIdeaOverview(false)}>
-          <div className="relative w-full max-w-7xl max-h-[90vh] overflow-y-auto bg-white rounded-3xl shadow-2xl" onClick={(e) => e.stopPropagation()}>
-            {/* زر الإغلاق */}
-            <button
-              onClick={() => setShowIdeaOverview(false)}
-              className="sticky top-4 left-4 z-10 w-12 h-12 rounded-full bg-gray-900/80 hover:bg-gray-900 text-white flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-lg float-left ml-4 mt-4"
-            >
-              <span className="text-2xl">×</span>
-            </button>
-
-            {/* المحتوى */}
-            <IdeaOverviewSection
-              onNavigateToFarms={() => {
-                setShowIdeaOverview(false);
-                setTimeout(() => {
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }, 100);
-              }}
-            />
-          </div>
-        </div>
-      )}
     </div>
   );
 }
