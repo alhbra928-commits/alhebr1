@@ -9,7 +9,7 @@ import { EnhancedConceptCard } from './EnhancedConceptCard';
 import { BackToAdminButton } from './BackToAdminButton';
 import { SmartFloatingButton } from '../../../components/common/SmartFloatingButton';
 import { InnovativeFarmCard } from './InnovativeFarmCard';
-import { getPlatformTextsBySection } from '../../../services/platformTextsService';
+import { getPlatformTextsBySection, platformTextsService } from '../../../services/platformTextsService';
 import { VerticalSideTabs } from '../../../components/common/VerticalSideTabs';
 import { SmartAssistantSidebar } from './SmartAssistantSidebar';
 import { LiveActivityBar } from '../../../components/common/LiveActivityBar';
@@ -89,6 +89,18 @@ export function ModernRoyalPlatform({
     loadEverything();
   }, []);
 
+  // ✅ الاشتراك في تحديثات النصوص في الوقت الفعلي
+  useEffect(() => {
+    const unsubscribe = platformTextsService.subscribeToChanges(() => {
+      console.log('🔄 Platform texts changed, reloading...');
+      loadPlatformTexts();
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
   // Mouse move - تأخير التفعيل
   useEffect(() => {
     let isActive = false;
@@ -123,12 +135,12 @@ export function ModernRoyalPlatform({
 
   const loadPlatformTexts = async () => {
     try {
-      const heroTexts = await getPlatformTextsBySection('hero');
-      if (heroTexts.hero_title?.ar) {
-        setPlatformName(heroTexts.hero_title.ar);
+      const headerTexts = await getPlatformTextsBySection('header');
+      if (headerTexts.platform_title?.ar) {
+        setPlatformName(headerTexts.platform_title.ar);
       }
-      if (heroTexts.hero_subtitle?.ar) {
-        setPlatformDescription(heroTexts.hero_subtitle.ar);
+      if (headerTexts.platform_subtitle?.ar) {
+        setPlatformDescription(headerTexts.platform_subtitle.ar);
       }
     } catch (error) {
       console.error('Error loading platform texts:', error);

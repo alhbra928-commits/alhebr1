@@ -51,7 +51,17 @@ export function RoyalMainInterface({
 
     calculateHeaderHeight();
     window.addEventListener('resize', calculateHeaderHeight);
-    return () => window.removeEventListener('resize', calculateHeaderHeight);
+
+    // ✅ الاشتراك في تحديثات النصوص في الوقت الفعلي
+    const unsubscribe = platformTextsService.subscribeToChanges(() => {
+      console.log('🔄 Platform texts changed, reloading...');
+      loadTexts();
+    });
+
+    return () => {
+      window.removeEventListener('resize', calculateHeaderHeight);
+      unsubscribe();
+    };
   }, []);
 
   const loadTexts = async () => {
