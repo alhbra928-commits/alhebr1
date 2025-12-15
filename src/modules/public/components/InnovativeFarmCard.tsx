@@ -174,7 +174,12 @@ export const InnovativeFarmCard: React.FC<InnovativeFarmCardProps> = ({ farm, on
                 <p className="text-xl font-bold bg-gradient-to-r from-teal-700 to-emerald-600 bg-clip-text text-transparent">
                   {(farm.total_trees - (farm.available_trees || 0)).toLocaleString('ar-SA')}
                 </p>
-                <p className="text-xs text-gray-600">شجرة</p>
+                <p className="text-xs text-gray-600 mb-1">شجرة</p>
+                <div className="mt-1 px-2 py-1 bg-teal-50 rounded-lg">
+                  <p className="text-xs font-bold text-teal-700">
+                    {farm.booking_percentage}%
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -185,33 +190,6 @@ export const InnovativeFarmCard: React.FC<InnovativeFarmCardProps> = ({ farm, on
               <p className="text-sm text-emerald-800 line-clamp-2 leading-relaxed">
                 {farm.description}
               </p>
-            </div>
-          )}
-
-          {/* Enhanced Progress Bar */}
-          {farm.booking_percentage > 0 && (
-            <div className="mb-5 p-4 bg-white rounded-xl border-2 border-emerald-100 shadow-sm">
-              <div className="flex items-center justify-between text-sm text-emerald-700 font-semibold mb-2">
-                <span className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
-                  نسبة الحجز
-                </span>
-                <span className="text-lg font-bold bg-gradient-to-r from-emerald-600 to-green-600 bg-clip-text text-transparent">
-                  {farm.booking_percentage}%
-                </span>
-              </div>
-              <div className="relative h-3 bg-gray-200 rounded-full overflow-hidden shadow-inner">
-                <div
-                  className={`absolute inset-y-0 left-0 bg-gradient-to-r ${
-                    farm.booking_percentage >= 80
-                      ? 'from-orange-500 to-red-500'
-                      : 'from-emerald-500 to-green-500'
-                  } rounded-full transition-all duration-1000 shadow-lg`}
-                  style={{ width: `${farm.booking_percentage}%` }}
-                >
-                  <div className="absolute inset-0 bg-white/30 animate-pulse"></div>
-                </div>
-              </div>
             </div>
           )}
 
