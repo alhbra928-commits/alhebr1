@@ -30,26 +30,30 @@ export function InvestorRouter({ onBack, onGoToPublic, autoLoginPhone, autoLogin
       if (autoLoginPhone && autoLoginName) {
         console.log('🎯 Auto-login from booking confirmation:', autoLoginPhone, autoLoginName);
 
+        // تطبيع رقم الهاتف
+        const normalizedPhone = InvestorService.normalizePhone(autoLoginPhone);
+        console.log('🎯 Auto-login normalized phone:', normalizedPhone);
+
         // التحقق من الحالة
-        const loginStatus = await InvestorService.checkLoginStatus(autoLoginPhone);
+        const loginStatus = await InvestorService.checkLoginStatus(normalizedPhone);
 
         // إنشاء جلسة للدخول الأول
         if (loginStatus.isFirstLogin) {
-          const token = await InvestorService.createSession(autoLoginPhone, true);
+          const token = await InvestorService.createSession(normalizedPhone, true);
 
           await InvestorService.logLoginAttempt({
-            phone: autoLoginPhone,
+            phone: normalizedPhone,
             login_type: 'auto_first_time',
             success: true
           });
 
-          setInvestorPhone(autoLoginPhone);
+          setInvestorPhone(normalizedPhone);
           setSessionToken(token);
           setIsLoggedIn(true);
           setIsFirstTimeLogin(true);
 
           SessionManager.saveSession({
-            phone: autoLoginPhone,
+            phone: normalizedPhone,
             sessionToken: token,
             investorName: autoLoginName,
             expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
@@ -80,21 +84,25 @@ export function InvestorRouter({ onBack, onGoToPublic, autoLoginPhone, autoLogin
   const handleLoginSuccess = useCallback(async (phone: string, token: string, investorName?: string) => {
     console.log('🎯 [handleLoginSuccess] Called with:', { phone, token, investorName });
 
+    // تطبيع رقم الهاتف قبل الحفظ والاستخدام
+    const normalizedPhone = InvestorService.normalizePhone(phone);
+    console.log('🎯 [handleLoginSuccess] Normalized phone:', normalizedPhone);
+
     // فحص إذا كان هذا أول دخول
-    const { data: previousSessions } = await InvestorService.checkPreviousSessions(phone);
+    const { data: previousSessions } = await InvestorService.checkPreviousSessions(normalizedPhone);
     const isFirst = !previousSessions || previousSessions.length <= 1;
 
     console.log('🎯 [handleLoginSuccess] isFirstTimeLogin:', isFirst);
 
     SessionManager.saveSession({
-      phone,
+      phone: normalizedPhone,
       sessionToken: token,
       investorName: investorName || 'المستثمر',
       expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
       createdAt: new Date().toISOString()
     });
 
-    setInvestorPhone(phone);
+    setInvestorPhone(normalizedPhone);
     setSessionToken(token);
     setIsLoggedIn(true);
     setIsFirstTimeLogin(isFirst);

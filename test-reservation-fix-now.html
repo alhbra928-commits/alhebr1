@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>✅ اختبار إصلاح الحجوزات</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      direction: rtl;
+    }
+
+    .container {
+      background: white;
+      border-radius: 24px;
+      padding: 40px;
+      max-width: 600px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .success-icon {
+      font-size: 64px;
+      margin-bottom: 16px;
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    h1 {
+      color: #2d3748;
+      font-size: 28px;
+      margin-bottom: 12px;
+    }
+
+    .subtitle {
+      color: #718096;
+      font-size: 16px;
+    }
+
+    .info-box {
+      background: linear-gradient(135deg, #e0e7ff 0%, #f0e7ff 100%);
+      border: 2px solid #667eea;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .info-title {
+      font-size: 20px;
+      font-weight: bold;
+      color: #5a67d8;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .info-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .info-list li {
+      padding: 12px 16px;
+      margin-bottom: 8px;
+      background: white;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 15px;
+      color: #2d3748;
+      box-shadow: 0 2px 8px rgba(102, 126, 234, 0.1);
+    }
+
+    .info-list li::before {
+      content: '✓';
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: white;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      flex-shrink: 0;
+    }
+
+    .test-section {
+      background: #f7fafc;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .test-title {
+      font-size: 18px;
+      font-weight: bold;
+      color: #2d3748;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .step {
+      padding: 16px;
+      margin-bottom: 12px;
+      background: white;
+      border-right: 4px solid #667eea;
+      border-radius: 8px;
+      font-size: 15px;
+      line-height: 1.8;
+    }
+
+    .step strong {
+      color: #5a67d8;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .phone-examples {
+      background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+      border: 2px solid #10b981;
+      border-radius: 12px;
+      padding: 16px;
+      margin-top: 16px;
+    }
+
+    .phone-examples-title {
+      font-weight: bold;
+      color: #047857;
+      margin-bottom: 12px;
+      font-size: 16px;
+    }
+
+    .phone-examples code {
+      display: block;
+      background: white;
+      padding: 8px 12px;
+      margin: 6px 0;
+      border-radius: 8px;
+      font-family: 'Courier New', monospace;
+      color: #047857;
+      direction: ltr;
+      text-align: left;
+    }
+
+    .before-after {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 16px;
+      align-items: center;
+      margin: 20px 0;
+    }
+
+    .before, .after {
+      padding: 16px;
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .before {
+      background: #fee;
+      border: 2px solid #f87171;
+    }
+
+    .after {
+      background: #d1fae5;
+      border: 2px solid #10b981;
+    }
+
+    .arrow {
+      font-size: 32px;
+      color: #667eea;
+    }
+
+    .highlight {
+      background: linear-gradient(120deg, #fef3c7 0%, #fde68a 100%);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: bold;
+    }
+
+    @media (max-width: 640px) {
+      .container {
+        padding: 24px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      .before-after {
+        grid-template-columns: 1fr;
+      }
+
+      .arrow {
+        transform: rotate(90deg);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="success-icon">✅</div>
+      <h1>تم إصلاح مشكلة الحجوزات!</h1>
+      <p class="subtitle">الآن يمكن للمستثمرين رؤية حجوزاتهم بأي صيغة رقم</p>
+    </div>
+
+    <div class="info-box">
+      <div class="info-title">
+        🎯 ما تم إصلاحه
+      </div>
+      <ul class="info-list">
+        <li>تطبيع رقم الهاتف قبل تسجيل الدخول</li>
+        <li>توحيد صيغة الأرقام في جميع الاستعلامات</li>
+        <li>إصلاح مشكلة عدم التطابق بين الأرقام</li>
+        <li>دعم جميع صيغ الأرقام السعودية</li>
+      </ul>
+    </div>
+
+    <div class="test-section">
+      <div class="test-title">
+        🧪 كيفية الاختبار
+      </div>
+
+      <div class="step">
+        <strong>الخطوة 1: افتح صفحة تسجيل دخول المستثمر</strong>
+        انتقل إلى لوحة تحكم المستثمر من المنصة
+      </div>
+
+      <div class="step">
+        <strong>الخطوة 2: أدخل رقم الهاتف بأي صيغة</strong>
+        جرّب أي من الصيغ التالية:
+        <div class="phone-examples">
+          <div class="phone-examples-title">✨ جميع هذه الصيغ تعمل الآن:</div>
+          <code>+966500000001</code>
+          <code>0966500000001</code>
+          <code>00966500000001</code>
+          <code>0500000001</code>
+          <code>500000001</code>
+        </div>
+      </div>
+
+      <div class="step">
+        <strong>الخطوة 3: سجل الدخول</strong>
+        أكمل عملية تسجيل الدخول (OTP أو دخول أول)
+      </div>
+
+      <div class="step">
+        <strong>الخطوة 4: تحقق من الحجوزات</strong>
+        اذهب إلى تبويب "حجوزاتي" وستجد جميع حجوزاتك! 🎉
+      </div>
+    </div>
+
+    <div class="before-after">
+      <div class="before">
+        <div style="font-size: 32px; margin-bottom: 8px;">❌</div>
+        <strong style="color: #dc2626;">قبل الإصلاح</strong>
+        <p style="margin-top: 8px; font-size: 14px; color: #991b1b;">
+          رقم تسجيل الدخول: <span class="highlight">+966500000001</span><br>
+          رقم في قاعدة البيانات: <span class="highlight">500000001</span><br>
+          النتيجة: لا توجد حجوزات
+        </p>
+      </div>
+
+      <div class="arrow">→</div>
+
+      <div class="after">
+        <div style="font-size: 32px; margin-bottom: 8px;">✅</div>
+        <strong style="color: #059669;">بعد الإصلاح</strong>
+        <p style="margin-top: 8px; font-size: 14px; color: #065f46;">
+          رقم تسجيل الدخول: <span class="highlight">+966500000001</span><br>
+          يُطبّع إلى: <span class="highlight">500000001</span><br>
+          النتيجة: تظهر جميع الحجوزات! 🎉
+        </p>
+      </div>
+    </div>
+
+    <div class="info-box" style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-color: #f59e0b;">
+      <div class="info-title" style="color: #d97706;">
+        💡 ملاحظة مهمة
+      </div>
+      <p style="color: #92400e; line-height: 1.8; font-size: 15px;">
+        إذا كنت قد سجلت دخولاً مؤخراً، قد تحتاج إلى <strong>تسجيل خروج ثم دخول مرة أخرى</strong>
+        لتطبيق التحديث على جلستك الحالية.
+      </p>
+    </div>
+
+    <div style="text-align: center; margin-top: 32px; padding-top: 24px; border-top: 2px solid #e2e8f0;">
+      <p style="color: #718096; font-size: 14px;">
+        ✅ تم الإصلاح والبناء بنجاح
+      </p>
+      <p style="color: #a0aec0; font-size: 12px; margin-top: 8px;">
+        15 ديسمبر 2025
+      </p>
+    </div>
+  </div>
+</body>
+</html>
