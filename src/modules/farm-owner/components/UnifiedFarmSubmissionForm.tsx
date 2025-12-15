@@ -297,26 +297,9 @@ export const UnifiedFarmSubmissionForm: React.FC<UnifiedFarmSubmissionFormProps>
               >
                 <option value="نخيل">🌴 نخيل</option>
                 <option value="زيتون">🌳 زيتون</option>
-                <option value="مختلط">🌾 مختلط</option>
-                <option value="أخرى">📋 أخرى (حدد)</option>
+                <option value="نخيل وزيتون">🌾 نخيل وزيتون</option>
               </select>
             </div>
-
-            {/* نوع آخر (إذا اختار "أخرى") */}
-            {formData.farm_type === 'أخرى' && (
-              <div>
-                <label className="block text-sm font-bold text-gray-700 mb-2">
-                  حدد النوع
-                </label>
-                <input
-                  type="text"
-                  value={formData.farm_type_other}
-                  onChange={(e) => setFormData({ ...formData, farm_type_other: e.target.value })}
-                  className="w-full px-4 py-3 bg-white border-2 border-emerald-200 rounded-xl focus:outline-none focus:border-emerald-500 transition-colors"
-                  placeholder="اكتب نوع المزرعة"
-                />
-              </div>
-            )}
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
