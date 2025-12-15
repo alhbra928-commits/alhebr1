@@ -278,11 +278,11 @@ export function RoyalMainInterface({
                           </p>
                         </div>
                         <div className="text-right">
-                          <p className="text-xs text-amber-600 mb-1">سعر الشجرة</p>
+                          <p className="text-xs text-amber-600 mb-1">محجوز</p>
                           <p className="text-2xl font-bold text-amber-700">
-                            {farm.price_per_tree?.toLocaleString('ar-SA')}
+                            {(farm.total_trees - farm.available_trees).toLocaleString('ar-SA')}
                           </p>
-                          <p className="text-xs text-amber-600">ريال</p>
+                          <p className="text-xs text-amber-600">شجرة</p>
                         </div>
                       </div>
 
