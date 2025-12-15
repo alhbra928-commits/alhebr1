@@ -487,6 +487,20 @@ export class InvestorService {
       const normalizedPhone = this.normalizePhone(phone);
       console.log('[InvestorService] createSession - Original:', phone, 'Normalized:', normalizedPhone);
 
+      // تحقق من وجود جلسة نشطة حديثة (خلال آخر 5 ثواني) لمنع التكرار
+      const { data: recentSessions } = await supabase
+        .from('investor_sessions')
+        .select('session_token')
+        .eq('phone', normalizedPhone)
+        .eq('is_active', true)
+        .gt('started_at', new Date(Date.now() - 5000).toISOString())
+        .limit(1);
+
+      if (recentSessions && recentSessions.length > 0) {
+        console.log('[InvestorService] ⚠️ Recent active session exists, reusing it');
+        return recentSessions[0].session_token;
+      }
+
       const sessionToken = this.generateSessionToken();
       const deviceType = this.detectDeviceType();
 

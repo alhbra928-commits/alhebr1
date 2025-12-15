@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>✅ اختبار رسالة الترحيب</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      direction: rtl;
+    }
+
+    .container {
+      background: white;
+      border-radius: 24px;
+      padding: 40px;
+      max-width: 700px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .icon {
+      font-size: 72px;
+      margin-bottom: 16px;
+      animation: wave 2s ease-in-out infinite;
+    }
+
+    @keyframes wave {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(10deg); }
+      75% { transform: rotate(-10deg); }
+    }
+
+    h1 {
+      color: #047857;
+      font-size: 32px;
+      margin-bottom: 12px;
+    }
+
+    .subtitle {
+      color: #6b7280;
+      font-size: 17px;
+      line-height: 1.6;
+    }
+
+    .problem-box {
+      background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+      border: 2px solid #f87171;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .solution-box {
+      background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+      border: 2px solid #10b981;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .box-title {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .problem-title {
+      color: #dc2626;
+    }
+
+    .solution-title {
+      color: #047857;
+    }
+
+    .box-content {
+      color: #374151;
+      line-height: 1.8;
+      font-size: 15px;
+    }
+
+    .code-block {
+      background: #1f2937;
+      color: #e5e7eb;
+      padding: 16px;
+      border-radius: 12px;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      margin: 12px 0;
+      overflow-x: auto;
+      direction: ltr;
+      text-align: left;
+    }
+
+    .highlight {
+      background: #fef3c7;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: bold;
+    }
+
+    .test-steps {
+      background: #f3f4f6;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .step {
+      padding: 16px;
+      margin-bottom: 12px;
+      background: white;
+      border-right: 4px solid #10b981;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .step-number {
+      display: inline-block;
+      background: #10b981;
+      color: white;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 28px;
+      font-weight: bold;
+      margin-left: 12px;
+    }
+
+    .step-content {
+      display: inline;
+      color: #374151;
+      font-size: 15px;
+    }
+
+    .comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 24px 0;
+    }
+
+    .before, .after {
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .before {
+      background: #fee2e2;
+      border: 2px solid #f87171;
+    }
+
+    .after {
+      background: #d1fae5;
+      border: 2px solid #10b981;
+    }
+
+    .before h3 {
+      color: #dc2626;
+      margin-bottom: 12px;
+    }
+
+    .after h3 {
+      color: #047857;
+      margin-bottom: 12px;
+    }
+
+    .session-icon {
+      font-size: 48px;
+      margin: 16px 0;
+    }
+
+    .note-box {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      border: 2px solid #f59e0b;
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 24px;
+    }
+
+    .note-title {
+      font-weight: bold;
+      color: #d97706;
+      margin-bottom: 12px;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    @media (max-width: 640px) {
+      .container {
+        padding: 24px;
+      }
+
+      h1 {
+        font-size: 26px;
+      }
+
+      .comparison {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="icon">👋</div>
+      <h1>تم إصلاح رسالة الترحيب!</h1>
+      <p class="subtitle">الآن المستثمرون الجدد سيرون رسالة ترحيب مخصصة عند أول دخول</p>
+    </div>
+
+    <div class="problem-box">
+      <div class="box-title problem-title">
+        ❌ المشكلة السابقة
+      </div>
+      <div class="box-content">
+        كان يتم إنشاء <span class="highlight">جلستين مُكررتين</span> عند دخول المستثمر لأول مرة:
+        <div class="code-block">
+phone: "500000008"
+session 1: 20:33:37.573385 ✓
+session 2: 20:33:37.289370 ✓ (مُكررة!)
+→ checkPreviousSessions: يجد 2 جلسات
+→ isFirst = false ❌
+→ رسالة الترحيب: لا تظهر ❌
+        </div>
+      </div>
+    </div>
+
+    <div class="solution-box">
+      <div class="box-title solution-title">
+        ✅ الحل المُطبّق
+      </div>
+      <div class="box-content">
+        <strong>فحص الجلسات الحديثة قبل الإنشاء:</strong>
+        <div class="code-block">
+// تحقق من وجود جلسة نشطة حديثة (خلال آخر 5 ثواني)
+const { data: recentSessions } = await supabase
+  .from('investor_sessions')
+  .select('session_token')
+  .eq('phone', normalizedPhone)
+  .eq('is_active', true)
+  .gt('started_at', new Date(Date.now() - 5000).toISOString())
+  .limit(1);
+
+if (recentSessions && recentSessions.length > 0) {
+  // إعادة استخدام الجلسة الموجودة ✅
+  return recentSessions[0].session_token;
+}
+        </div>
+      </div>
+    </div>
+
+    <div class="comparison">
+      <div class="before">
+        <h3>❌ قبل الإصلاح</h3>
+        <div class="session-icon">🔄🔄</div>
+        <p><strong>جلستان مُكررتان</strong></p>
+        <p style="font-size: 14px; color: #991b1b; margin-top: 8px;">
+          لا تظهر رسالة الترحيب
+        </p>
+      </div>
+
+      <div class="after">
+        <h3>✅ بعد الإصلاح</h3>
+        <div class="session-icon">✓</div>
+        <p><strong>جلسة واحدة فقط</strong></p>
+        <p style="font-size: 14px; color: #065f46; margin-top: 8px;">
+          تظهر رسالة الترحيب! 🎉
+        </p>
+      </div>
+    </div>
+
+    <div class="test-steps">
+      <h2 style="color: #047857; margin-bottom: 20px; font-size: 22px;">
+        🧪 كيفية الاختبار
+      </h2>
+
+      <div class="step">
+        <span class="step-number">1</span>
+        <span class="step-content">
+          افتح المنصة في <strong>وضع التصفح الخفي</strong> (Incognito/Private Mode)
+        </span>
+      </div>
+
+      <div class="step">
+        <span class="step-number">2</span>
+        <span class="step-content">
+          اذهب إلى صفحة حجز مزرعة واختر مزرعة متاحة
+        </span>
+      </div>
+
+      <div class="step">
+        <span class="step-number">3</span>
+        <span class="step-content">
+          قم بإنشاء حجز جديد باستخدام <strong>رقم جديد لم يُستخدم من قبل</strong>
+        </span>
+      </div>
+
+      <div class="step">
+        <span class="step-number">4</span>
+        <span class="step-content">
+          بعد الحجز، سيتم توجيهك تلقائياً لتسجيل الدخول
+        </span>
+      </div>
+
+      <div class="step">
+        <span class="step-number">5</span>
+        <span class="step-content">
+          <strong style="color: #10b981;">النتيجة:</strong> ستظهر رسالة ترحيب مُخصصة تحتوي على اسمك ومعلومات حجزك! 🎊
+        </span>
+      </div>
+    </div>
+
+    <div class="note-box">
+      <div class="note-title">
+        💡 ما الذي ستراه في رسالة الترحيب؟
+      </div>
+      <ul style="color: #92400e; line-height: 2; margin-right: 20px;">
+        <li>ترحيب شخصي باسمك</li>
+        <li>معلومات عن حجزك الأول</li>
+        <li>إرشادات سريعة لاستخدام المنصة</li>
+        <li>زر "ابدأ الآن" للبدء</li>
+      </ul>
+    </div>
+
+    <div style="text-align: center; margin-top: 32px; padding-top: 24px; border-top: 2px solid #e5e7eb;">
+      <p style="color: #047857; font-weight: bold; font-size: 18px;">
+        ✅ تم الإصلاح والبناء بنجاح
+      </p>
+      <p style="color: #6b7280; font-size: 14px; margin-top: 8px;">
+        15 ديسمبر 2025
+      </p>
+    </div>
+  </div>
+</body>
+</html>
