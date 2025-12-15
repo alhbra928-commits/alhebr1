@@ -61,6 +61,16 @@ export function InvestorDashboard({ phone, onLogout, isFirstTimeLogin = false, o
     investorName
   });
 
+  // ✅ منطق إضافي: عرض رسالة الترحيب إذا لم يكن لديه certificates (مستثمر جديد)
+  useEffect(() => {
+    const hasSeenWelcome = localStorage.getItem(`welcome_shown_${phone}`);
+
+    if (!hasSeenWelcome && certificates.length === 0 && !loading) {
+      console.log('🎉🎉🎉 [Smart Logic] No certificates found, showing welcome for new investor!');
+      setShowWelcome(true);
+    }
+  }, [certificates, loading, phone]);
+
   useEffect(() => {
     loadAllData();
 
@@ -256,6 +266,8 @@ export function InvestorDashboard({ phone, onLogout, isFirstTimeLogin = false, o
           <SmartWelcomeModal
             onClose={() => {
               console.log('👋 [SmartWelcomeModal] User closed the modal');
+              // حفظ أنه شاهد رسالة الترحيب
+              localStorage.setItem(`welcome_shown_${phone}`, 'true');
               setShowWelcome(false);
             }}
             investorName={investorName || 'عزيزنا المستثمر'}
