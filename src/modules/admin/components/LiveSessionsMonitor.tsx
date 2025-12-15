@@ -9,8 +9,9 @@ export function LiveSessionsMonitor() {
 
   useEffect(() => {
     loadSessions();
-    const interval = setInterval(loadSessions, 10000);
-    return () => clearInterval(interval);
+    // ❌ تم تعطيل التحديث التلقائي لتجنب الإشعارات المزعجة
+    // const interval = setInterval(loadSessions, 10000);
+    // return () => clearInterval(interval);
   }, []);
 
   const loadSessions = async () => {

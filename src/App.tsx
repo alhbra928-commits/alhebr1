@@ -81,6 +81,8 @@ function App() {
 
   useEffect(() => {
     if (adminSession && activeModule !== 'public') {
+      // ❌ تم تعطيل فحص الخمول التلقائي لتجنب الإشعارات المزعجة
+      /*
       const idleCheckInterval = setInterval(() => {
         const idleTime = Date.now() - lastActivity;
         const twentyMinutes = 20 * 60 * 1000;
@@ -89,6 +91,7 @@ function App() {
           setShowIdleWarning(true);
         }
       }, 60000);
+      */
 
       const activityHandler = () => {
         setLastActivity(Date.now());
@@ -99,7 +102,7 @@ function App() {
       window.addEventListener('click', activityHandler);
 
       return () => {
-        clearInterval(idleCheckInterval);
+        // clearInterval(idleCheckInterval);
         window.removeEventListener('mousemove', activityHandler);
         window.removeEventListener('keydown', activityHandler);
         window.removeEventListener('click', activityHandler);
