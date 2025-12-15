@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>🔍 تشخيص مشكلة الحجوزات</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      max-width: 900px;
+      margin: 50px auto;
+      padding: 30px;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      direction: rtl;
+    }
+    .container {
+      background: white;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+    }
+    h1 {
+      color: #2c3e50;
+      text-align: center;
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+    .subtitle {
+      text-align: center;
+      color: #7f8c8d;
+      margin-bottom: 30px;
+      font-size: 16px;
+    }
+    .input-group {
+      margin-bottom: 25px;
+    }
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 8px;
+      color: #2c3e50;
+    }
+    input {
+      width: 100%;
+      padding: 15px;
+      font-size: 18px;
+      border: 2px solid #ddd;
+      border-radius: 10px;
+      box-sizing: border-box;
+      font-family: 'Courier New', monospace;
+      direction: ltr;
+      text-align: left;
+    }
+    input:focus {
+      outline: none;
+      border-color: #3498db;
+    }
+    button {
+      width: 100%;
+      padding: 18px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+    }
+    button:disabled {
+      background: #95a5a6;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .result {
+      margin-top: 30px;
+      padding: 25px;
+      border-radius: 12px;
+      font-size: 15px;
+      line-height: 1.8;
+    }
+    .success {
+      background: #d4edda;
+      border: 2px solid #28a745;
+      color: #155724;
+    }
+    .error {
+      background: #f8d7da;
+      border: 2px solid #dc3545;
+      color: #721c24;
+    }
+    .info {
+      background: #d1ecf1;
+      border: 2px solid #17a2b8;
+      color: #0c5460;
+    }
+    .warning {
+      background: #fff3cd;
+      border: 2px solid #ffc107;
+      color: #856404;
+    }
+    pre {
+      background: #f4f4f4;
+      padding: 15px;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-size: 13px;
+      direction: ltr;
+      text-align: left;
+    }
+    .step {
+      padding: 15px;
+      margin: 10px 0;
+      background: #f8f9fa;
+      border-right: 4px solid #667eea;
+      border-radius: 8px;
+    }
+    .step-title {
+      font-weight: bold;
+      color: #667eea;
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔍 تشخيص مشكلة عرض الحجوزات</h1>
+    <p class="subtitle">اختبر لماذا لا تظهر الحجوزات في لوحة تحكم المستثمر</p>
+
+    <div class="input-group">
+      <label>أدخل رقم هاتف المستثمر:</label>
+      <input
+        type="text"
+        id="phoneInput"
+        placeholder="مثال: 500000001 أو 0500000001 أو +966500000001"
+        dir="ltr"
+      >
+      <small style="display:block;margin-top:5px;color:#7f8c8d;">
+        💡 يمكنك إدخال الرقم بأي صيغة (مع أو بدون رمز الدولة)
+      </small>
+    </div>
+
+    <button onclick="diagnoseReservations()" id="diagnoseBtn">
+      🔬 بدء التشخيص
+    </button>
+
+    <div id="result"></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = 'https://sggycwpbbcvqpjbvwhni.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNnZ3ljd3BiYmN2cXBqYnZ3aG5pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjk0MDU1MDQsImV4cCI6MjA0NDk4MTUwNH0.6u75f6jJqQUu1eHNlcmXUOUZJGVVGNFhbfgx7SXoNmc';
+
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    function normalizePhone(phone) {
+      if (!phone) return phone;
+      let normalized = phone.trim();
+
+      if (normalized.startsWith('+966')) {
+        normalized = normalized.substring(4);
+      } else if (normalized.startsWith('966')) {
+        normalized = normalized.substring(3);
+      } else if (normalized.startsWith('00966')) {
+        normalized = normalized.substring(5);
+      }
+
+      if (normalized.startsWith('0')) {
+        normalized = normalized.substring(1);
+      }
+
+      normalized = normalized.replace(/\s/g, '');
+      return normalized;
+    }
+
+    async function diagnoseReservations() {
+      const phone = document.getElementById('phoneInput').value.trim();
+      const resultDiv = document.getElementById('result');
+      const btn = document.getElementById('diagnoseBtn');
+
+      if (!phone) {
+        resultDiv.innerHTML = '<div class="result error"><strong>⚠️ خطأ:</strong> يرجى إدخال رقم الهاتف</div>';
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = '⏳ جاري التشخيص...';
+      resultDiv.innerHTML = '<div class="result info">🔄 جاري فحص البيانات...</div>';
+
+      try {
+        const normalizedPhone = normalizePhone(phone);
+
+        let html = '<div class="result info">';
+        html += '<h3>📞 معلومات الهاتف</h3>';
+        html += `<div class="step">`;
+        html += `<div class="step-title">الرقم الأصلي:</div>`;
+        html += `<pre>${phone}</pre>`;
+        html += `</div>`;
+        html += `<div class="step">`;
+        html += `<div class="step-title">الرقم المعالج (Normalized):</div>`;
+        html += `<pre>${normalizedPhone}</pre>`;
+        html += `</div>`;
+        html += '</div>';
+
+        // 1. فحص المستثمر
+        html += '<div class="result info">';
+        html += '<h3>👤 الخطوة 1: فحص المستثمر</h3>';
+        const { data: investor, error: investorError } = await supabase
+          .from('investors')
+          .select('*')
+          .eq('phone', normalizedPhone)
+          .is('deleted_at', null)
+          .maybeSingle();
+
+        if (investorError) {
+          html += `<div class="step" style="border-color:#dc3545;">`;
+          html += `<div class="step-title" style="color:#dc3545;">❌ خطأ في جلب المستثمر:</div>`;
+          html += `<pre>${JSON.stringify(investorError, null, 2)}</pre>`;
+          html += `</div>`;
+        } else if (investor) {
+          html += `<div class="step" style="border-color:#28a745;">`;
+          html += `<div class="step-title" style="color:#28a745;">✅ تم العثور على المستثمر:</div>`;
+          html += `<pre>${JSON.stringify(investor, null, 2)}</pre>`;
+          html += `</div>`;
+        } else {
+          html += `<div class="step" style="border-color:#ffc107;">`;
+          html += `<div class="step-title" style="color:#856404;">⚠️ لم يتم العثور على المستثمر:</div>`;
+          html += `<p>لا يوجد مستثمر بهذا الرقم في جدول investors</p>`;
+          html += `</div>`;
+        }
+        html += '</div>';
+
+        // 2. فحص الحجوزات
+        html += '<div class="result info">';
+        html += '<h3>📋 الخطوة 2: فحص الحجوزات</h3>';
+
+        let query = supabase
+          .from('reservations')
+          .select(`
+            id,
+            farm_id,
+            customer_name,
+            customer_phone,
+            investor_id,
+            number_of_trees,
+            total_amount,
+            status,
+            booking_status,
+            payment_status,
+            reservation_date,
+            created_at,
+            deleted_at,
+            farms(name_ar, farm_type)
+          `)
+          .is('deleted_at', null);
+
+        if (investor) {
+          query = query.or(`customer_phone.eq.${normalizedPhone},investor_id.eq.${investor.id}`);
+        } else {
+          query = query.eq('customer_phone', normalizedPhone);
+        }
+
+        const { data: reservations, error: reservationsError } = await query
+          .order('created_at', { ascending: false });
+
+        if (reservationsError) {
+          html += `<div class="step" style="border-color:#dc3545;">`;
+          html += `<div class="step-title" style="color:#dc3545;">❌ خطأ في جلب الحجوزات:</div>`;
+          html += `<pre>${JSON.stringify(reservationsError, null, 2)}</pre>`;
+          html += `</div>`;
+        } else {
+          html += `<div class="step" style="border-color:#28a745;">`;
+          html += `<div class="step-title" style="color:#28a745;">✅ عدد الحجوزات المُسترجعة: ${reservations?.length || 0}</div>`;
+          if (reservations && reservations.length > 0) {
+            html += `<pre>${JSON.stringify(reservations, null, 2)}</pre>`;
+          } else {
+            html += `<p><strong>⚠️ لا توجد حجوزات نشطة لهذا المستثمر!</strong></p>`;
+          }
+          html += `</div>`;
+        }
+        html += '</div>';
+
+        // 3. فحص جميع الحجوزات (حتى المحذوفة)
+        html += '<div class="result warning">';
+        html += '<h3>🗑️ الخطوة 3: فحص الحجوزات المحذوفة</h3>';
+
+        const { data: allReservations } = await supabase
+          .from('reservations')
+          .select('id, customer_name, customer_phone, deleted_at, created_at')
+          .eq('customer_phone', normalizedPhone)
+          .order('created_at', { ascending: false });
+
+        if (allReservations && allReservations.length > 0) {
+          const deletedCount = allReservations.filter(r => r.deleted_at !== null).length;
+          const activeCount = allReservations.filter(r => r.deleted_at === null).length;
+          html += `<div class="step">`;
+          html += `<div class="step-title">📊 ملخص الحجوزات:</div>`;
+          html += `<p>• <strong>إجمالي الحجوزات:</strong> ${allReservations.length}</p>`;
+          html += `<p>• <strong>الحجوزات النشطة:</strong> ${activeCount}</p>`;
+          html += `<p>• <strong>الحجوزات المحذوفة:</strong> ${deletedCount}</p>`;
+          html += `</div>`;
+          if (deletedCount > 0) {
+            html += `<div class="step" style="border-color:#ffc107;">`;
+            html += `<div class="step-title" style="color:#856404;">⚠️ هناك ${deletedCount} حجز محذوف:</div>`;
+            html += `<pre>${JSON.stringify(allReservations.filter(r => r.deleted_at !== null), null, 2)}</pre>`;
+            html += `</div>`;
+          }
+        } else {
+          html += `<div class="step">`;
+          html += `<p><strong>لا توجد أي حجوزات على الإطلاق (حتى المحذوفة)</strong></p>`;
+          html += `</div>`;
+        }
+        html += '</div>';
+
+        // 4. التشخيص النهائي
+        html += '<div class="result success">';
+        html += '<h3>🎯 التشخيص النهائي</h3>';
+
+        if (!investor && (!reservations || reservations.length === 0)) {
+          html += `<div class="step" style="border-color:#dc3545;">`;
+          html += `<div class="step-title" style="color:#dc3545;">❌ المشكلة: المستثمر غير موجود</div>`;
+          html += `<p><strong>الحل:</strong></p>`;
+          html += `<ol>`;
+          html += `<li>تأكد من أن رقم الهاتف صحيح</li>`;
+          html += `<li>تأكد من أن المستثمر قام بإنشاء حجز أولاً</li>`;
+          html += `<li>تحقق من أن الحجز لم يتم حذفه</li>`;
+          html += `</ol>`;
+          html += `</div>`;
+        } else if (reservations && reservations.length === 0) {
+          html += `<div class="step" style="border-color:#ffc107;">`;
+          html += `<div class="step-title" style="color:#856404;">⚠️ المستثمر موجود لكن لا توجد حجوزات نشطة</div>`;
+          html += `<p><strong>أسباب محتملة:</strong></p>`;
+          html += `<ol>`;
+          html += `<li>الحجوزات تم حذفها (soft delete)</li>`;
+          html += `<li>المستثمر لم يقم بحجز بعد</li>`;
+          html += `<li>رقم الهاتف في الحجز مختلف عن رقم المستثمر</li>`;
+          html += `</ol>`;
+          html += `</div>`;
+        } else {
+          html += `<div class="step" style="border-color:#28a745;">`;
+          html += `<div class="step-title" style="color:#28a745;">✅ كل شيء يعمل بشكل صحيح!</div>`;
+          html += `<p>تم العثور على ${reservations.length} حجز نشط</p>`;
+          html += `<p><strong>إذا كانت الحجوزات لا تزال لا تظهر في لوحة التحكم:</strong></p>`;
+          html += `<ol>`;
+          html += `<li>امسح ذاكرة التخزين المؤقت للمتصفح (Cache)</li>`;
+          html += `<li>سجل خروج ثم سجل دخول مرة أخرى</li>`;
+          html += `<li>تحقق من Console في المتصفح للأخطاء</li>`;
+          html += `</ol>`;
+          html += `</div>`;
+        }
+        html += '</div>';
+
+        resultDiv.innerHTML = html;
+
+      } catch (error) {
+        resultDiv.innerHTML = `
+          <div class="result error">
+            <strong>❌ خطأ غير متوقع:</strong>
+            <pre>${error.message}</pre>
+            <pre>${error.stack}</pre>
+          </div>
+        `;
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '🔬 إعادة التشخيص';
+      }
+    }
+
+    // Auto-focus on input
+    document.getElementById('phoneInput').focus();
+
+    // Enter key to submit
+    document.getElementById('phoneInput').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        diagnoseReservations();
+      }
+    });
+  </script>
+</body>
+</html>
