@@ -54,6 +54,13 @@ export function InvestorDashboard({ phone, onLogout, isFirstTimeLogin = false, o
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [realtimeNotifications, setRealtimeNotifications] = useState<Notification[]>([]);
 
+  console.log('🎊🎊🎊 [InvestorDashboard] RENDERED WITH:', {
+    phone,
+    isFirstTimeLogin,
+    showWelcome,
+    investorName
+  });
+
   useEffect(() => {
     loadAllData();
 
@@ -244,10 +251,16 @@ export function InvestorDashboard({ phone, onLogout, isFirstTimeLogin = false, o
       dir="rtl"
     >
       {showWelcome && (
-        <SmartWelcomeModal
-          onClose={() => setShowWelcome(false)}
-          investorName={investorName}
-        />
+        <>
+          {console.log('🎉🎉🎉 [SmartWelcomeModal] SHOWING NOW! investorName:', investorName)}
+          <SmartWelcomeModal
+            onClose={() => {
+              console.log('👋 [SmartWelcomeModal] User closed the modal');
+              setShowWelcome(false);
+            }}
+            investorName={investorName || 'عزيزنا المستثمر'}
+          />
+        </>
       )}
 
       <div

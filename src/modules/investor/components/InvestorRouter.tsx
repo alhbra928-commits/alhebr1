@@ -5,6 +5,7 @@ import { InvestorService } from '../services/investorService';
 import { SessionManager } from '../services/sessionManager';
 import { Loader } from 'lucide-react';
 import { brandColors, brandGradients } from '../../finance/styles/brandColors';
+import { supabase } from '../../../lib/supabase';
 
 interface InvestorRouterProps {
   onBack: () => void;
@@ -88,11 +89,32 @@ export function InvestorRouter({ onBack, onGoToPublic, autoLoginPhone, autoLogin
     const normalizedPhone = InvestorService.normalizePhone(phone);
     console.log('🎯 [handleLoginSuccess] Normalized phone:', normalizedPhone);
 
-    // فحص إذا كان هذا أول دخول
-    const { data: previousSessions } = await InvestorService.checkPreviousSessions(normalizedPhone);
-    const isFirst = !previousSessions || previousSessions.length <= 1;
+    // فحص حقل is_first_login من الجلسة الحالية بدلاً من حساب عدد الجلسات
+    let isFirst = false;
+    try {
+      const { data: currentSession } = await supabase
+        .from('investor_sessions')
+        .select('is_first_login, started_at')
+        .eq('phone', normalizedPhone)
+        .eq('session_token', token)
+        .maybeSingle();
 
-    console.log('🎯 [handleLoginSuccess] isFirstTimeLogin:', isFirst);
+      if (currentSession) {
+        isFirst = currentSession.is_first_login === true;
+        console.log('🎯🎯🎯 [handleLoginSuccess] Found current session:', currentSession);
+      } else {
+        // fallback: فحص إذا كان هذا أول دخول بناءً على عدد الجلسات السابقة
+        const { data: previousSessions } = await InvestorService.checkPreviousSessions(normalizedPhone);
+        isFirst = !previousSessions || previousSessions.length === 0;
+        console.log('🎯🎯🎯 [handleLoginSuccess] Fallback check - previousSessions count:', previousSessions?.length);
+      }
+    } catch (error) {
+      console.error('Error checking first login status:', error);
+      // في حالة الخطأ، نعتبره ليس أول دخول لتجنب إزعاج المستخدمين القدامى
+      isFirst = false;
+    }
+
+    console.log('🎯🎯🎯 [handleLoginSuccess] Final isFirstTimeLogin:', isFirst);
 
     SessionManager.saveSession({
       phone: normalizedPhone,
@@ -106,6 +128,11 @@ export function InvestorRouter({ onBack, onGoToPublic, autoLoginPhone, autoLogin
     setSessionToken(token);
     setIsLoggedIn(true);
     setIsFirstTimeLogin(isFirst);
+
+    console.log('✅✅✅ [handleLoginSuccess] State updated:', {
+      investorPhone: normalizedPhone,
+      isFirstTimeLogin: isFirst
+    });
   }, []);
 
   const handleLogout = async () => {
