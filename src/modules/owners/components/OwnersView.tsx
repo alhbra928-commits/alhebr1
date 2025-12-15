@@ -12,6 +12,7 @@ import {
 import { BackButton } from '../../../components/common/BackButton';
 import { FarmOwnerFormModal } from './FarmOwnerFormModal';
 import { FarmOwner3DCard } from './FarmOwner3DCard';
+import { OwnerDashboardModal } from './OwnerDashboardModal';
 import { OwnersService, FarmOwnerData } from '../ownersService';
 import { usePermissions } from '../../../contexts/PermissionsContext';
 
@@ -29,6 +30,8 @@ export function OwnersView({ onBack }: OwnersViewProps) {
   const [modalMode, setModalMode] = useState<'create' | 'edit'>('create');
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState<string>('all');
+  const [showDashboard, setShowDashboard] = useState(false);
+  const [dashboardOwner, setDashboardOwner] = useState<FarmOwnerData | null>(null);
 
   const { isAdmin, canCreate, canEdit, canDelete } = usePermissions();
 
@@ -157,8 +160,8 @@ export function OwnersView({ onBack }: OwnersViewProps) {
   };
 
   const handleOpenDashboard = (owner: FarmOwnerData) => {
-    console.log('Open dashboard for:', owner);
-    alert(`فتح لوحة المزرعة لـ ${owner.owner_full_name}\n\nهذه الميزة قيد التطوير...`);
+    setDashboardOwner(owner);
+    setShowDashboard(true);
   };
 
   if (loading) {
@@ -320,6 +323,17 @@ export function OwnersView({ onBack }: OwnersViewProps) {
         initialData={selectedOwner || undefined}
         mode={modalMode}
       />
+
+      {/* Owner Dashboard Modal */}
+      {showDashboard && dashboardOwner && (
+        <OwnerDashboardModal
+          owner={dashboardOwner}
+          onClose={() => {
+            setShowDashboard(false);
+            setDashboardOwner(null);
+          }}
+        />
+      )}
     </div>
   );
 }
