@@ -15,6 +15,7 @@ import { ConnectionStatus } from './ConnectionStatus';
 import { EnhancedNotificationService, Notification, ConnectionStatus as ConnStatus } from '../services/enhancedNotificationService';
 import { CertificateModal } from './CertificateModal';
 import { SmartWelcomeModal } from './SmartWelcomeModal';
+import { WelcomeService } from '../services/welcomeService';
 // BottomNavBar removed - ready for new development
 
 interface InvestorDashboardProps {
@@ -38,7 +39,8 @@ export function InvestorDashboard({ phone, onLogout, isFirstTimeLogin = false, o
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
   const [selectedReservation, setSelectedReservation] = useState<InvestorReservation | null>(null);
   const [receiptsMap, setReceiptsMap] = useState<{ [key: string]: any[] }>({});
-  const [showWelcome, setShowWelcome] = useState(isFirstTimeLogin);
+  const [showWelcome, setShowWelcome] = useState(false);
+  const [welcomeChecking, setWelcomeChecking] = useState(true);
   const [certificateModalOpen, setCertificateModalOpen] = useState(false);
   const [selectedCertificate, setSelectedCertificate] = useState<any>(null);
   const [badgeCounts, setBadgeCounts] = useState<BadgeNotifications>({
@@ -53,6 +55,80 @@ export function InvestorDashboard({ phone, onLogout, isFirstTimeLogin = false, o
   });
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [realtimeNotifications, setRealtimeNotifications] = useState<Notification[]>([]);
+
+  // التحقق من الترحيب عند التحميل
+  useEffect(() => {
+    // تأخير بسيط لضمان تحميل البيانات أولاً
+    const timer = setTimeout(() => {
+      checkWelcomeStatus();
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [phone]);
+
+  const checkWelcomeStatus = async () => {
+    try {
+      console.log('🎯 [InvestorDashboard] Checking welcome status for:', phone);
+      setWelcomeChecking(true);
+
+      // محاولة 1: استخدام الدالة المباشرة
+      let shouldShow = await WelcomeService.shouldShowWelcomeDirect(phone);
+
+      // محاولة 2: استخدام RPC في حالة فشل المحاولة الأولى
+      if (shouldShow === null || shouldShow === undefined) {
+        console.log('🎯 [InvestorDashboard] Trying RPC method...');
+        const status = await WelcomeService.getWelcomeStatus(phone);
+        shouldShow = status.shouldShow;
+      }
+
+      console.log('🎯 [InvestorDashboard] Final decision - should show:', shouldShow);
+
+      // ضمان عرض الترحيب للمستثمر الجديد
+      if (shouldShow || (isFirstTimeLogin && shouldShow !== false)) {
+        console.log('✅ [InvestorDashboard] Welcome will be shown!');
+        setShowWelcome(true);
+      } else {
+        console.log('⏭️ [InvestorDashboard] Welcome already shown before');
+        setShowWelcome(false);
+      }
+
+    } catch (error) {
+      console.error('🎯 [InvestorDashboard] Error checking welcome:', error);
+      // في حالة خطأ، نعرض الترحيب للمستثمر الجديد
+      if (isFirstTimeLogin) {
+        console.log('⚠️ [InvestorDashboard] Error, but showing welcome for first time login');
+        setShowWelcome(true);
+      } else {
+        setShowWelcome(false);
+      }
+    } finally {
+      setWelcomeChecking(false);
+    }
+  };
+
+  const handleWelcomeClose = async () => {
+    console.log('🎯 [InvestorDashboard] User closed welcome modal');
+
+    // إخفاء الـ modal فوراً للاستجابة السريعة
+    setShowWelcome(false);
+
+    // تسجيل أن المستثمر رأى الترحيب في الخلفية
+    try {
+      const success = await WelcomeService.markWelcomeShown(phone);
+
+      if (success) {
+        console.log('✅ [InvestorDashboard] Welcome marked as shown successfully');
+      } else {
+        console.error('❌ [InvestorDashboard] Failed to mark welcome, retrying...');
+        // محاولة ثانية
+        setTimeout(async () => {
+          await WelcomeService.markWelcomeShown(phone);
+        }, 1000);
+      }
+    } catch (error) {
+      console.error('❌ [InvestorDashboard] Exception marking welcome:', error);
+    }
+  };
 
   useEffect(() => {
     loadAllData();
@@ -243,9 +319,9 @@ export function InvestorDashboard({ phone, onLogout, isFirstTimeLogin = false, o
       style={{ background: brandGradients.beige }}
       dir="rtl"
     >
-      {showWelcome && (
+      {!welcomeChecking && showWelcome && (
         <SmartWelcomeModal
-          onClose={() => setShowWelcome(false)}
+          onClose={handleWelcomeClose}
           investorName={investorName}
         />
       )}
