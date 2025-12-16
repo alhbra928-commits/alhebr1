@@ -15,6 +15,7 @@ export interface Investor {
   updated_at: string;
   bookings_count?: number;
   certificates_count?: number;
+  farms_count?: number;
   wallet_balance?: number;
 }
 
@@ -35,16 +36,59 @@ export class InvestorsService {
       .order('created_at', { ascending: false })
       .range(offset, offset + limit - 1);
 
-    if (error) return { data: [], count: 0 };
+    if (error) {
+      console.error('Error fetching investors:', error);
+      throw new Error(error.message || 'فشل جلب المستثمرين');
+    }
 
-    const investors = (data || []).map(investor => ({
-      ...investor,
-      bookings_count: 0,
-      certificates_count: 0,
-      mobile_number: investor.phone
-    }));
+    // جلب الإحصائيات لكل مستثمر
+    const investorsWithStats = await Promise.all(
+      (data || []).map(async (investor) => {
+        try {
+          // جلب عدد الحجوزات
+          const { count: bookingsCount } = await supabase
+            .from('bookings')
+            .select('*', { count: 'exact', head: true })
+            .eq('investor_id', investor.id)
+            .is('deleted_at', null);
 
-    return { data: investors, count: count || 0 };
+          // جلب عدد الشهادات
+          const { count: certificatesCount } = await supabase
+            .from('documentation')
+            .select('*', { count: 'exact', head: true })
+            .eq('investor_id', investor.id)
+            .is('deleted_at', null);
+
+          // جلب عدد المزارع الفريدة
+          const { data: farmsData } = await supabase
+            .from('documentation')
+            .select('farm_id')
+            .eq('investor_id', investor.id)
+            .is('deleted_at', null);
+
+          const uniqueFarmsCount = new Set(farmsData?.map(d => d.farm_id) || []).size;
+
+          return {
+            ...investor,
+            bookings_count: bookingsCount || 0,
+            certificates_count: certificatesCount || 0,
+            farms_count: uniqueFarmsCount,
+            mobile_number: investor.phone
+          };
+        } catch (err) {
+          console.error('Error fetching investor stats:', err);
+          return {
+            ...investor,
+            bookings_count: 0,
+            certificates_count: 0,
+            farms_count: 0,
+            mobile_number: investor.phone
+          };
+        }
+      })
+    );
+
+    return { data: investorsWithStats, count: count || 0 };
   }
 
   static async getById(id: string): Promise<Investor | null> {

@@ -136,7 +136,7 @@ export function InvestorCard3D({
                 </span>
               </div>
               <p className="text-xl font-black text-green-600">
-                {Math.ceil((investor.certificates_count || 0) / 2)}
+                {investor.farms_count || 0}
               </p>
             </div>
 
@@ -158,7 +158,7 @@ export function InvestorCard3D({
                 </span>
               </div>
               <p className="text-sm font-black text-emerald-600">
-                {((investor.total_invested || 0) / 1000).toFixed(0)}k
+                {(investor.total_invested || 0).toLocaleString('ar-SA')} ريال
               </p>
             </div>
           </div>
