@@ -376,15 +376,13 @@ export function RoyalMainInterface({
     />
 
     {/* الفوتر الثابت في الأسفل */}
-    {currentView === 'home' && (
-      <GlassGreenFooter
-        activeTab={activeBottomTab}
-        onTabChange={setActiveBottomTab}
-        onWhatsAppClick={() => {
-          // يفتح الواتساب
-        }}
-      />
-    )}
+    <GlassGreenFooter
+      activeTab={activeBottomTab}
+      onTabChange={setActiveBottomTab}
+      onWhatsAppClick={() => {
+        // يفتح الواتساب
+      }}
+    />
     </>
   );
 }
