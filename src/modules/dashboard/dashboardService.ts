@@ -19,7 +19,7 @@ export class DashboardService {
         supabase.from('admin_users').select('*', { count: 'exact', head: true }).is('deleted_at', null),
         supabase.from('whatsapp_messages').select('*', { count: 'exact', head: true }),
         supabase.from('farms').select('tree_type, total_trees').is('deleted_at', null),
-        supabase.from('smart_farm_finances').select('*').is('deleted_at', null)
+        supabase.from('farm_finance').select('*').is('deleted_at', null).eq('is_archived', false)
       ]);
 
       const farmsCount = results[0].status === 'fulfilled' ? results[0].value.count || 0 : 0;
@@ -46,16 +46,16 @@ export class DashboardService {
       const oliveFarms = farmsData.filter((f: any) => f.tree_type === 'زيتون' || f.tree_type === 'olive').length;
       const totalTrees = farmsData.reduce((sum: number, f: any) => sum + (Number(f.total_trees) || 0), 0);
 
-      // جلب البيانات المالية من smart_farm_finances
+      // جلب البيانات المالية من farm_finance فقط
       const financesData = results[10].status === 'fulfilled' ? results[10].value.data || [] : [];
       const financialStats = financesData.reduce((acc: any, finance: any) => ({
-        totalRevenue: acc.totalRevenue + (Number(finance.total_revenue_collected) || 0),
-        platformProfit: acc.platformProfit + (Number(finance.platform_profit) || 0),
-        charityAmount: acc.charityAmount + (Number(finance.charity_amount) || 0),
-        netProfit: acc.netProfit + (Number(finance.net_platform_profit) || 0),
+        totalRevenue: acc.totalRevenue + (Number(finance.collected_from_investors) || 0),
+        platformProfit: acc.platformProfit + (Number(finance.platform_amount_received) || 0),
+        charityAmount: acc.charityAmount + (Number(finance.charity_amount_deducted) || 0),
+        netProfit: acc.netProfit + ((Number(finance.platform_amount_received) || 0) - (Number(finance.charity_amount_deducted) || 0)),
       }), { totalRevenue: 0, platformProfit: 0, charityAmount: 0, netProfit: 0 });
 
-      // استخدام totalRevenue من الحجوزات إذا كانت أعلى من smart_farm_finances
+      // استخدام totalRevenue من الحجوزات إذا كانت أعلى من farm_finance
       const actualTotalRevenue = Math.max(totalRevenue, financialStats.totalRevenue);
 
       return {
