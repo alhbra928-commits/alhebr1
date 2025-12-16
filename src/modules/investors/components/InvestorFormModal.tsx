@@ -57,15 +57,13 @@ export function InvestorFormModal({
       newErrors.phone = 'رقم الجوال غير صحيح (يجب أن يبدأ بـ 05 ويتكون من 10 أرقام)';
     }
 
-    if (!formData.email.trim()) {
-      newErrors.email = 'البريد الإلكتروني مطلوب';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+    // البريد الإلكتروني اختياري - التحقق فقط من الصيغة إذا تم إدخاله
+    if (formData.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = 'البريد الإلكتروني غير صحيح';
     }
 
-    if (!formData.national_id.trim()) {
-      newErrors.national_id = 'رقم الهوية مطلوب';
-    } else if (!/^\d{10}$/.test(formData.national_id)) {
+    // الهوية الوطنية اختيارية - التحقق فقط من الطول إذا تم إدخالها
+    if (formData.national_id.trim() && !/^\d{10}$/.test(formData.national_id)) {
       newErrors.national_id = 'رقم الهوية يجب أن يتكون من 10 أرقام';
     }
 
@@ -168,7 +166,8 @@ export function InvestorFormModal({
             <div>
               <label className="block text-sm font-bold text-[#2C2C2C] mb-2 flex items-center gap-2">
                 <Mail className="h-4 w-4 text-[#C89B3C]" />
-                البريد الإلكتروني *
+                البريد الإلكتروني
+                <span className="text-xs text-gray-500 font-normal">(اختياري)</span>
               </label>
               <input
                 type="email"
@@ -177,7 +176,7 @@ export function InvestorFormModal({
                 className={`w-full px-4 py-3 border-2 ${
                   errors.email ? 'border-red-500' : 'border-gray-200'
                 } rounded-lg focus:border-[#C89B3C] focus:ring-2 focus:ring-[#C89B3C]/20 outline-none font-mono`}
-                placeholder="example@domain.com"
+                placeholder="example@domain.com (اختياري)"
                 dir="ltr"
               />
               {errors.email && (
@@ -188,7 +187,8 @@ export function InvestorFormModal({
             <div>
               <label className="block text-sm font-bold text-[#2C2C2C] mb-2 flex items-center gap-2">
                 <CreditCard className="h-4 w-4 text-[#C89B3C]" />
-                رقم الهوية الوطنية *
+                رقم الهوية الوطنية
+                <span className="text-xs text-gray-500 font-normal">(اختياري)</span>
               </label>
               <input
                 type="text"
@@ -197,7 +197,7 @@ export function InvestorFormModal({
                 className={`w-full px-4 py-3 border-2 ${
                   errors.national_id ? 'border-red-500' : 'border-gray-200'
                 } rounded-lg focus:border-[#C89B3C] focus:ring-2 focus:ring-[#C89B3C]/20 outline-none font-mono font-bold`}
-                placeholder="1234567890"
+                placeholder="1234567890 (اختياري)"
                 maxLength={10}
                 dir="ltr"
               />
