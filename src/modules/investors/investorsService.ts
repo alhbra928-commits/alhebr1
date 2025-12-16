@@ -225,12 +225,15 @@ export class InvestorsService {
       .from('bookings')
       .select(`
         *,
-        farms:farm_id(id, farm_code, name_ar)
+        farm:farm_id(id, farm_code, name_ar)
       `)
       .eq('investor_id', investorId)
       .order('created_at', { ascending: false });
 
-    if (error) return { data: [], count: 0 };
+    if (error) {
+      console.error('Error fetching investor bookings:', error);
+      throw new Error(error.message || 'فشل جلب حجوزات المستثمر');
+    }
     return data || [];
   }
 
@@ -239,12 +242,15 @@ export class InvestorsService {
       .from('documentation')
       .select(`
         *,
-        farms:farm_id(id, farm_code, name_ar)
+        farm:farm_id(id, farm_code, name_ar)
       `)
       .eq('investor_id', investorId)
       .order('created_at', { ascending: false });
 
-    if (error) return { data: [], count: 0 };
+    if (error) {
+      console.error('Error fetching investor certificates:', error);
+      throw new Error(error.message || 'فشل جلب شهادات المستثمر');
+    }
     return data || [];
   }
 
@@ -253,14 +259,17 @@ export class InvestorsService {
       .from('documentation')
       .select(`
         farm_id,
-        farms:farm_id(id, farm_code, name_ar, farm_type, region, city)
+        farm:farm_id(id, farm_code, name_ar, farm_type, region, city)
       `)
       .eq('investor_id', investorId);
 
-    if (error) return { data: [], count: 0 };
+    if (error) {
+      console.error('Error fetching investor farms:', error);
+      throw new Error(error.message || 'فشل جلب مزارع المستثمر');
+    }
 
     const uniqueFarms = Array.from(
-      new Map((data || []).map(item => [item.farm_id, item.farms])).values()
+      new Map((data || []).map(item => [item.farm_id, item.farm])).values()
     );
 
     return uniqueFarms;

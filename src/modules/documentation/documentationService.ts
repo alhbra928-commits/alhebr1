@@ -41,8 +41,8 @@ export class DocumentationService {
       .from('documentation')
       .select(`
         *,
-        farms:farm_id(id, farm_code, name_ar, farm_type, region, city),
-        investors:investor_id(id, full_name, phone, email)
+        farm:farm_id(id, farm_code, name_ar, farm_type, region, city),
+        investor:investor_id(id, full_name, phone, email)
       `)
       .order('created_at', { ascending: false });
 
@@ -54,7 +54,7 @@ export class DocumentationService {
 
     if (error) {
       console.error('Error fetching documentation:', error);
-      return { data: [], count: 0 };
+      throw new Error(error.message || 'فشل جلب التوثيقات');
     }
 
     return data || [];
@@ -65,15 +65,15 @@ export class DocumentationService {
       .from('documentation')
       .select(`
         *,
-        farms:farm_id(*),
-        investors:investor_id(*)
+        farm:farm_id(*),
+        investor:investor_id(*)
       `)
       .eq('id', id)
       .maybeSingle();
 
     if (error) {
       console.error('Error fetching documentation:', error);
-      return { data: [], count: 0 };
+      throw new Error(error.message || 'فشل جلب التوثيق');
     }
 
     return data;
@@ -82,13 +82,17 @@ export class DocumentationService {
   static async getByCertificateCode(code: string): Promise<Documentation | null> {
     const { data, error } = await supabase
       .from('documentation')
-      .select('*')
+      .select(`
+        *,
+        farm:farm_id(*),
+        investor:investor_id(*)
+      `)
       .eq('certificate_code', code)
       .maybeSingle();
 
     if (error) {
       console.error('Error fetching documentation by code:', error);
-      return { data: [], count: 0 };
+      throw new Error(error.message || 'فشل جلب التوثيق');
     }
 
     return data;
@@ -99,15 +103,15 @@ export class DocumentationService {
       .from('documentation')
       .select(`
         *,
-        farms:farm_id(*),
-        investors:investor_id(*)
+        farm:farm_id(*),
+        investor:investor_id(*)
       `)
       .eq('verification_token', token)
       .maybeSingle();
 
     if (error) {
       console.error('Error fetching documentation by token:', error);
-      return { data: [], count: 0 };
+      throw new Error(error.message || 'فشل جلب التوثيق');
     }
 
     return data;

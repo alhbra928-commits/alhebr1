@@ -249,7 +249,7 @@ export function InvestorDetailsPanel({
                     <div className="flex items-start justify-between mb-3">
                       <div>
                         <p className="font-mono font-bold text-[#C89B3C]">{booking.booking_code}</p>
-                        <p className="text-sm text-gray-600">{booking.farms?.name_ar || 'مزرعة غير معروفة'}</p>
+                        <p className="text-sm text-gray-600">{booking.farm?.name_ar || 'مزرعة غير معروفة'}</p>
                       </div>
                       <span className={`px-3 py-1 rounded-lg text-xs font-bold ${getBookingStatusColor(booking.booking_status)}`}>
                         {booking.booking_status === 'pending' && 'بانتظار'}
@@ -289,7 +289,7 @@ export function InvestorDetailsPanel({
                     <div className="flex items-start justify-between mb-3">
                       <div>
                         <p className="font-mono font-bold text-[#C89B3C] text-lg">{cert.certificate_code}</p>
-                        <p className="text-sm text-gray-600">{cert.farms?.name_ar || 'مزرعة غير معروفة'}</p>
+                        <p className="text-sm text-gray-600">{cert.farm?.name_ar || 'مزرعة غير معروفة'}</p>
                       </div>
                       <Award className="h-8 w-8 text-[#C89B3C]" />
                     </div>
