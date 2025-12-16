@@ -645,28 +645,33 @@ ${this.generateSecurityCheck(error)}
   static async getStatistics() {
     console.log('📊 BookingsService.getStatistics() called');
 
+    // احتساب فقط الحجوزات القائمة (غير الموثقة)
     const { count: total } = await supabase
       .from('reservations')
       .select('*', { count: 'exact', head: true })
-      .is('deleted_at', null);
+      .is('deleted_at', null)
+      .neq('booking_status', 'documented');
 
     const { count: pending } = await supabase
       .from('reservations')
       .select('*', { count: 'exact', head: true })
       .eq('status', 'pending')
-      .is('deleted_at', null);
+      .is('deleted_at', null)
+      .neq('booking_status', 'documented');
 
     const { count: approved } = await supabase
       .from('reservations')
       .select('*', { count: 'exact', head: true })
       .eq('status', 'confirmed')
-      .is('deleted_at', null);
+      .is('deleted_at', null)
+      .neq('booking_status', 'documented');
 
     const { count: rejected } = await supabase
       .from('reservations')
       .select('*', { count: 'exact', head: true })
       .eq('status', 'cancelled')
-      .is('deleted_at', null);
+      .is('deleted_at', null)
+      .neq('booking_status', 'documented');
 
     const { count: documented } = await supabase
       .from('reservations')

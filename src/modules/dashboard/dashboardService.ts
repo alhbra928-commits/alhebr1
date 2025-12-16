@@ -9,7 +9,8 @@ export class DashboardService {
     try {
       const results = await Promise.allSettled([
         supabase.from('farms').select('*', { count: 'exact', head: true }).is('deleted_at', null),
-        supabase.from('reservations').select('*', { count: 'exact', head: true }).is('deleted_at', null),
+        // احتساب فقط الحجوزات القائمة (غير الموثقة)
+        supabase.from('reservations').select('*', { count: 'exact', head: true }).is('deleted_at', null).neq('booking_status', 'documented'),
         supabase.from('investors').select('*', { count: 'exact', head: true }).is('deleted_at', null),
         supabase.from('farm_owners').select('*', { count: 'exact', head: true }).is('deleted_at', null),
         supabase.from('documentation').select('*', { count: 'exact', head: true }), // documentation doesn't have deleted_at
