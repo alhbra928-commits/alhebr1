@@ -174,13 +174,36 @@ export const InnovativeFarmCard: React.FC<InnovativeFarmCardProps> = ({ farm, on
                 <p className="text-xl font-bold bg-gradient-to-r from-teal-700 to-emerald-600 bg-clip-text text-transparent">
                   {(farm.total_trees - (farm.available_trees || 0)).toLocaleString('ar-SA')}
                 </p>
-                <p className="text-xs text-gray-600 mb-1">شجرة</p>
-                <div className="mt-1 px-2 py-1 bg-teal-50 rounded-lg">
-                  <p className="text-xs font-bold text-teal-700">
-                    {farm.booking_percentage}%
-                  </p>
-                </div>
+                <p className="text-xs text-gray-600">شجرة</p>
               </div>
+            </div>
+          </div>
+
+          {/* نسبة الحجز - تصميم محسّن */}
+          <div className="mb-5 p-4 bg-white/80 backdrop-blur-sm rounded-2xl border-2 border-emerald-100 shadow-lg">
+            <div className="flex justify-between items-center mb-3">
+              <div>
+                <span className="text-xs text-gray-600 block mb-1">نسبة الحجز</span>
+                <span className="text-2xl font-bold text-emerald-600">{farm.booking_percentage}%</span>
+              </div>
+              <div className="text-left">
+                <span className="text-xs text-gray-600 block mb-1">المتبقي</span>
+                <span className="text-2xl font-bold text-gray-900">{100 - farm.booking_percentage}%</span>
+              </div>
+            </div>
+
+            <div className="relative h-3 bg-gray-100 rounded-full overflow-hidden mb-2">
+              <div
+                className="absolute inset-y-0 right-0 bg-gradient-to-l from-emerald-500 via-green-500 to-emerald-600 rounded-full transition-all duration-1000 shadow-md"
+                style={{ width: `${farm.booking_percentage}%` }}
+              >
+                <div className="absolute inset-0 bg-white/20 animate-pulse" />
+              </div>
+            </div>
+
+            <div className="flex justify-between text-xs text-gray-600">
+              <span>{(farm.total_trees - (farm.available_trees || 0)).toLocaleString('ar-SA')} شجرة محجوزة</span>
+              <span>{(farm.available_trees || 0).toLocaleString('ar-SA')} شجرة متاحة</span>
             </div>
           </div>
 
