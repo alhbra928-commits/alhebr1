@@ -67,14 +67,13 @@ export function FarmsView({ onBack }: FarmsViewProps) {
         total: 0,
         active: 0,
         frozen: 0,
-        total_trees: 0,
-        avg_marketing_price: 0
+        total_trees: 0
       });
     } catch (err: any) {
       console.error('Load data error:', err);
       setFarms([]);
       setOwners([]);
-      setStats({ total: 0, active: 0, frozen: 0, total_trees: 0, avg_marketing_price: 0 });
+      setStats({ total: 0, active: 0, frozen: 0, total_trees: 0 });
     } finally {
       setLoading(false);
     }
@@ -322,7 +321,7 @@ export function FarmsView({ onBack }: FarmsViewProps) {
         </div>
 
         {/* Statistics Bar */}
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
           <Card3D interactive={false}>
             <div className="p-6 bg-gradient-to-br from-[#3D5B4B]/10 to-[#4A6F5C]/10">
               <div className="flex items-center justify-between mb-3">
@@ -368,20 +367,6 @@ export function FarmsView({ onBack }: FarmsViewProps) {
               </div>
               <p className="text-3xl font-black text-amber-600 mb-1">{stats?.total_trees || 0}</p>
               <p className="text-sm text-[#2C2C2C]/70">إجمالي الأشجار</p>
-            </div>
-          </Card3D>
-
-          <Card3D interactive={false}>
-            <div className="p-6 bg-gradient-to-br from-[#C9A962]/10 to-[#D4B574]/10">
-              <div className="flex items-center justify-between mb-3">
-                <div className="w-12 h-12 bg-gradient-to-br from-[#C9A962] to-[#D4B574] rounded-xl flex items-center justify-center shadow-lg">
-                  <DollarSign className="h-6 w-6 text-white" />
-                </div>
-              </div>
-              <p className="text-2xl font-black text-[#C9A962] mb-1">
-                {(stats?.avg_marketing_price || 0).toLocaleString('ar-SA')} ر.س
-              </p>
-              <p className="text-sm text-[#2C2C2C]/70">متوسط السعر</p>
             </div>
           </Card3D>
         </div>

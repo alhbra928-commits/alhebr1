@@ -350,8 +350,7 @@ export class FarmsService {
         under_review: 0,
         total_trees: 0,
         available_trees: 0,
-        total_area: 0,
-        avg_marketing_price: 0
+        total_area: 0
       };
     }
     return data;
