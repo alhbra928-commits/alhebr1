@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Menu, X, User, Shield, ArrowRight } from 'lucide-react';
 import { brandColors, brandGradients } from '../../finance/styles/brandColors';
 import { AdminSessionService } from '../../admin/services/adminSessionService';
-import { getPlatformTextsBySection, subscribeToPlatformTextsChanges } from '../../../services/platformTextsService';
+import { getPlatformTextsBySection } from '../../../services/platformTextsService';
 
 interface PremiumHeaderProps {
   onAdminLogin?: () => void;
@@ -60,22 +60,6 @@ export function PremiumHeader({ onAdminLogin, onInvestorLogin, onVerifyCertifica
     };
 
     loadTexts();
-
-    // Subscribe to real-time changes
-    const unsubscribe = subscribeToPlatformTextsChanges('header', (texts) => {
-      if (texts && Object.keys(texts).length > 0) {
-        setHeaderTexts({
-          platform_name: texts.platform_name?.ar || '🌴 النخلة والزيتون',
-          nav_home: texts.nav_home?.ar || 'الرئيسية',
-          nav_about: texts.nav_about?.ar || 'عن المنصة',
-          nav_contact: texts.nav_contact?.ar || 'تواصل معنا',
-          btn_login: texts.btn_login?.ar || 'تسجيل الدخول'
-        });
-        console.log('✅ Header texts updated:', texts);
-      }
-    });
-
-    return () => unsubscribe();
   }, []);
 
   const menuItems = [

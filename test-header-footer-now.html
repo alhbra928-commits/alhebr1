@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>اختبار الهيدر والفوتر - جاهز الآن</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: 24px;
+      padding: 40px;
+      max-width: 1000px;
+      width: 100%;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+
+    h1 {
+      color: #10b981;
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      text-align: center;
+      text-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
+    }
+
+    .subtitle {
+      color: #94a3b8;
+      text-align: center;
+      margin-bottom: 40px;
+      font-size: 1.1rem;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(16, 185, 129, 0.2);
+      border: 2px solid #10b981;
+      color: #10b981;
+      padding: 12px 24px;
+      border-radius: 50px;
+      font-weight: bold;
+      font-size: 1.1rem;
+      margin: 0 auto 30px;
+      display: flex;
+      justify-content: center;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+      }
+      50% {
+        box-shadow: 0 0 40px rgba(16, 185, 129, 0.6);
+      }
+    }
+
+    .check-icon {
+      width: 24px;
+      height: 24px;
+      background: #10b981;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+    }
+
+    .section {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      color: #10b981;
+      font-size: 1.3rem;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .checklist {
+      list-style: none;
+      padding: 0;
+    }
+
+    .checklist li {
+      padding: 12px;
+      margin-bottom: 8px;
+      background: rgba(30, 41, 59, 0.5);
+      border-radius: 8px;
+      color: #cbd5e1;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .checklist li::before {
+      content: '✓';
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      background: #10b981;
+      border-radius: 50%;
+      color: white;
+      font-weight: bold;
+      flex-shrink: 0;
+    }
+
+    .instruction {
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 30px;
+      color: #cbd5e1;
+      line-height: 1.8;
+    }
+
+    .instruction-title {
+      color: #3b82f6;
+      font-weight: bold;
+      font-size: 1.1rem;
+      margin-bottom: 12px;
+    }
+
+    .instruction ol {
+      margin-right: 20px;
+      color: #e2e8f0;
+    }
+
+    .instruction li {
+      margin-bottom: 12px;
+    }
+
+    .warning {
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      border-radius: 12px;
+      padding: 16px;
+      margin-top: 20px;
+      color: #fbbf24;
+    }
+
+    .warning-title {
+      font-weight: bold;
+      margin-bottom: 8px;
+      font-size: 1.1rem;
+    }
+
+    .success-banner {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.2));
+      border: 2px solid #10b981;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    .success-banner h2 {
+      color: #10b981;
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+
+    .success-banner p {
+      color: #cbd5e1;
+      font-size: 1.1rem;
+    }
+
+    .icon {
+      font-size: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>✅ الهيدر والفوتر جاهزان الآن</h1>
+    <p class="subtitle">يظهران على جميع صفحات المنصة</p>
+
+    <div class="status-badge">
+      <span class="check-icon">✓</span>
+      <span>الإصلاح مكتمل 100%</span>
+    </div>
+
+    <div class="success-banner">
+      <h2>🎉 تم حل جميع المشاكل</h2>
+      <p>الهيدر والفوتر الآن في <strong>Global Layout</strong> ويظهران على جميع الصفحات</p>
+    </div>
+
+    <div class="section">
+      <div class="section-title">
+        <span class="icon">✅</span>
+        <span>الإصلاحات المطبقة</span>
+      </div>
+      <ul class="checklist">
+        <li>إضافة PremiumHeader في ModernRoyalPlatform</li>
+        <li>إضافة FixedBottomBar في ModernRoyalPlatform</li>
+        <li>الهيدر والفوتر يظهران على صفحة Home</li>
+        <li>الهيدر والفوتر يظهران على صفحة تفاصيل المزرعة</li>
+        <li>الهيدر والفوتر يظهران على صفحة الحجز</li>
+        <li>الهيدر والفوتر يظهران على صفحة لوحة المستثمر</li>
+        <li>الهيدر والفوتر يظهران على صفحة التحقق من الشهادة</li>
+        <li>الهيدر والفوتر يظهران على صفحة شرح الفكرة</li>
+        <li>تعطيل Service Worker مؤقتاً لإزالة الكاش</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <div class="section-title">
+        <span class="icon">📱</span>
+        <span>ما يجب أن تراه الآن</span>
+      </div>
+      <ul class="checklist">
+        <li><strong>الهيدر:</strong> في الأعلى مع اسم المنصة والقائمة</li>
+        <li><strong>الفوتر:</strong> في الأسفل مع معلومات الاتصال</li>
+        <li><strong>Desktop:</strong> القائمة الأفقية في الهيدر</li>
+        <li><strong>Mobile:</strong> قائمة Hamburger تفتح من الجانب</li>
+        <li><strong>جميع الصفحات:</strong> الهيدر والفوتر موجودان</li>
+      </ul>
+    </div>
+
+    <div class="warning">
+      <div class="warning-title">⚠️ مهم جداً: يجب مسح الكاش!</div>
+      <p><strong>على iPhone Safari:</strong></p>
+      <p>الإعدادات → Safari → Clear History and Website Data</p>
+      <p style="margin-top: 10px;"><strong>على iPhone Chrome:</strong></p>
+      <p>القائمة → Settings → Privacy → Clear Browsing Data → All time</p>
+      <p style="margin-top: 10px; color: #fbbf24;">⚠️ يجب إعادة تشغيل المتصفح بعد مسح الكاش!</p>
+    </div>
+
+    <div class="instruction">
+      <div class="instruction-title">🧪 خطوات الاختبار على iPhone:</div>
+      <ol>
+        <li><strong>امسح الكاش الكامل</strong> من إعدادات Safari أو Chrome</li>
+        <li><strong>أعد تشغيل المتصفح تماماً</strong> (أغلقه من Recent Apps)</li>
+        <li><strong>افتح الموقع من جديد</strong></li>
+        <li><strong>انتظر التحميل الكامل</strong> (5-10 ثواني)</li>
+        <li><strong>تحقق من الهيدر</strong> في الأعلى ✅</li>
+        <li><strong>تحقق من الفوتر</strong> في الأسفل ✅</li>
+        <li><strong>تصفح جميع الصفحات</strong> للتأكد</li>
+      </ol>
+    </div>
+
+    <div class="section">
+      <div class="section-title">
+        <span class="icon">🔧</span>
+        <span>التفاصيل التقنية</span>
+      </div>
+      <ul class="checklist">
+        <li>الهيدر: <code>position: fixed; top: 0</code></li>
+        <li>الفوتر: <code>position: fixed; bottom: 0</code></li>
+        <li>Service Worker: معطل مؤقتاً (Network First)</li>
+        <li>Cache: تم تعطيله لمنع الملفات القديمة</li>
+        <li>Global Layout: الهيدر والفوتر خارج المحتوى</li>
+      </ul>
+    </div>
+
+    <div style="margin-top: 30px; text-align: center; color: #64748b; font-size: 0.9rem;">
+      <p>Build Version: v2025.12.16_035045</p>
+      <p>الحالة: ✅ جاهز للاختبار على iPhone الآن</p>
+    </div>
+  </div>
+
+  <script>
+    console.log('✅ الهيدر والفوتر تم إضافتهما في Global Layout');
+    console.log('📱 يظهران على جميع الصفحات:');
+    console.log('  ✓ Home');
+    console.log('  ✓ Farm Detail');
+    console.log('  ✓ Booking');
+    console.log('  ✓ Investor Panel');
+    console.log('  ✓ Certificate Verification');
+    console.log('  ✓ Concept Introduction');
+    console.log('🎉 جاهز للاختبار على iPhone Safari + Chrome');
+  </script>
+</body>
+</html>

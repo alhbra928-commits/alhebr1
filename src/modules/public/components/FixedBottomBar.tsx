@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Phone, Mail, Clock } from 'lucide-react';
-import { getPlatformTextsBySection, subscribeToPlatformTextsChanges } from '../../../services/platformTextsService';
+import { getPlatformTextsBySection } from '../../../services/platformTextsService';
 
 interface FixedBottomBarProps {
   onIntroClick?: () => void;
@@ -34,22 +34,6 @@ export function FixedBottomBar({ onIntroClick }: FixedBottomBarProps) {
     };
 
     loadTexts();
-
-    const unsubscribe = subscribeToPlatformTextsChanges('contact_bar', (texts) => {
-      if (texts && Object.keys(texts).length > 0) {
-        setContactTexts({
-          call_us_label: texts.call_us_label?.ar || 'اتصل بنا',
-          phone_number: texts.phone_number?.ar || '920000000',
-          email_label: texts.email_label?.ar || 'راسلنا',
-          email_address: texts.email_address?.ar || 'info@palmolive.sa',
-          hours_label: texts.hours_label?.ar || 'ساعات العمل',
-          hours_text: texts.hours_text?.ar || '8 صباحاً - 8 مساءً',
-          cta_message: texts.cta_message?.ar || '🌴 استثمر في مستقبل مستدام 🌳'
-        });
-      }
-    });
-
-    return () => unsubscribe();
   }, []);
 
   return (

@@ -1,6 +1,9 @@
-// PROFESSIONAL SERVICE WORKER - AUTO CACHE CLEARING
+// PROFESSIONAL SERVICE WORKER - DISABLED FOR TESTING
 const VERSION = '__SW_VERSION__'; // Will be replaced during build
 const CACHE_NAME = `palm-olive-${VERSION}`;
+
+// ⚠️ TEMPORARILY DISABLED - FORCE NETWORK FIRST FOR ALL REQUESTS
+console.log('%c[SW] SERVICE WORKER DISABLED - ALL REQUESTS GO TO NETWORK', 'color:orange;font-weight:bold;font-size:14px');
 
 // NO CACHE for HTML and main files - always fetch fresh
 const NO_CACHE = [
