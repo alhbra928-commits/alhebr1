@@ -13,6 +13,7 @@ import { EnhancedConceptCard } from './EnhancedConceptCard';
 import { LiveActivityBar } from '../../../components/common/LiveActivityBar';
 import { AdaptiveSmartButton } from '../../../components/common/AdaptiveSmartButton';
 import { FloatingFiltersButton } from './FloatingFiltersButton';
+import { GlassGreenFooter } from '../../../components/common/GlassGreenFooter';
 
 type ViewMode = 'home' | 'farmDetail' | 'booking' | 'investor' | 'verification' | 'concept';
 
@@ -373,6 +374,17 @@ export function RoyalMainInterface({
       phoneNumber="966500000000"
       defaultMessage="مرحباً! أود الاستفسار عن فرص الاستثمار الزراعي"
     />
+
+    {/* الفوتر الثابت في الأسفل */}
+    {currentView === 'home' && (
+      <GlassGreenFooter
+        activeTab={activeBottomTab}
+        onTabChange={setActiveBottomTab}
+        onWhatsAppClick={() => {
+          // يفتح الواتساب
+        }}
+      />
+    )}
     </>
   );
 }
