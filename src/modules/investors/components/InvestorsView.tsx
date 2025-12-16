@@ -50,11 +50,11 @@ export function InvestorsView({ onBack }: InvestorsViewProps) {
   const loadInvestors = async () => {
     try {
       setLoading(true);
-      const [investorsData, statsData] = await Promise.all([
-        InvestorsService.getAll(),
+      const [investorsResult, statsData] = await Promise.all([
+        InvestorsService.getAll(100, 0),
         InvestorsService.getStatistics()
       ]);
-      setInvestors(investorsData);
+      setInvestors(investorsResult?.data || []);
       setStats(statsData);
     } catch (err) {
       console.error(err);
