@@ -113,39 +113,48 @@ EXECUTE FUNCTION trigger_cleanup_finances_on_farm_delete();
 -- ==========================================
 
 -- تفعيل realtime publication على الجداول
-ALTER PUBLICATION supabase_realtime ADD TABLE farms;
-ALTER PUBLICATION supabase_realtime ADD TABLE investors;
-ALTER PUBLICATION supabase_realtime ADD TABLE reservations;
-ALTER PUBLICATION supabase_realtime ADD TABLE documentation;
-ALTER PUBLICATION supabase_realtime ADD TABLE smart_farm_finances;
-ALTER PUBLICATION supabase_realtime ADD TABLE farm_owners;
-ALTER PUBLICATION supabase_realtime ADD TABLE farm_wallets;
-
--- ==========================================
--- 5️⃣ تسجيل في سجل التحديثات
--- ==========================================
-
-INSERT INTO migration_log (
-  migration_type,
-  source_table,
-  backup_data,
-  status,
-  notes
-) VALUES (
-  'realtime_financial_sync_setup',
-  'multiple_tables',
-  jsonb_build_object(
-    'triggers_created', ARRAY[
-      'trigger_update_finances_on_documentation_delete',
-      'trigger_update_finances_on_reservation_delete', 
-      'trigger_cleanup_finances_on_farm_delete'
-    ],
-    'realtime_enabled_tables', ARRAY[
-      'farms', 'investors', 'reservations', 
-      'documentation', 'smart_farm_finances',
-      'farm_owners', 'farm_wallets'
-    ]
-  ),
-  'completed',
-  'نظام التحديثات الفورية الشامل للبطاقات المالية'
-);
+DO $$ 
+BEGIN
+  -- التحقق من وجود الجداول في publication قبل إضافتها
+  BEGIN
+    ALTER PUBLICATION supabase_realtime ADD TABLE farms;
+  EXCEPTION WHEN duplicate_object THEN
+    RAISE NOTICE 'Table farms already in publication';
+  END;
+  
+  BEGIN
+    ALTER PUBLICATION supabase_realtime ADD TABLE investors;
+  EXCEPTION WHEN duplicate_object THEN
+    RAISE NOTICE 'Table investors already in publication';
+  END;
+  
+  BEGIN
+    ALTER PUBLICATION supabase_realtime ADD TABLE reservations;
+  EXCEPTION WHEN duplicate_object THEN
+    RAISE NOTICE 'Table reservations already in publication';
+  END;
+  
+  BEGIN
+    ALTER PUBLICATION supabase_realtime ADD TABLE documentation;
+  EXCEPTION WHEN duplicate_object THEN
+    RAISE NOTICE 'Table documentation already in publication';
+  END;
+  
+  BEGIN
+    ALTER PUBLICATION supabase_realtime ADD TABLE smart_farm_finances;
+  EXCEPTION WHEN duplicate_object THEN
+    RAISE NOTICE 'Table smart_farm_finances already in publication';
+  END;
+  
+  BEGIN
+    ALTER PUBLICATION supabase_realtime ADD TABLE farm_owners;
+  EXCEPTION WHEN duplicate_object THEN
+    RAISE NOTICE 'Table farm_owners already in publication';
+  END;
+  
+  BEGIN
+    ALTER PUBLICATION supabase_realtime ADD TABLE farm_wallets;
+  EXCEPTION WHEN duplicate_object THEN
+    RAISE NOTICE 'Table farm_wallets already in publication';
+  END;
+END $$;

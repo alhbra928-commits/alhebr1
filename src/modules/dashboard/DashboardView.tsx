@@ -14,6 +14,7 @@ import { StatCard } from '../../components/common/StatCard';
 import { LiveFinancialSystem } from '../../services/liveFinancialSystem';
 import { CompactLiveStatusIndicator } from '../../components/common/LiveStatusIndicator';
 import { VisitorsSummaryCard } from './components/VisitorsSummaryCard';
+import { RealtimeDashboardService } from './realtimeDashboardService';
 
 export function DashboardView() {
   const [stats, setStats] = useState<any>(null);
@@ -28,19 +29,38 @@ export function DashboardView() {
       loadDashboardData();
     }, 50);
 
-    // تهيئة النظام المالي في الخلفية
+    // تهيئة نظام التحديثات الفورية
     setTimeout(() => {
       LiveFinancialSystem.initialize();
+      RealtimeDashboardService.initialize(() => {
+        console.log('🔔 Dashboard data changed, reloading...');
+        loadDashboardData();
+      });
     }, 1000);
 
+    // الاشتراك في التحديثات المالية
     const unsubscribe = LiveFinancialSystem.subscribe((state) => {
       setIsLiveConnected(state.isConnected);
       setLastLiveUpdate(state.lastUpdate);
     });
 
+    // تحديث حالة الاتصال الفوري
+    const connectionCheckInterval = setInterval(() => {
+      const connected = RealtimeDashboardService.isConnected();
+      const lastUpdate = RealtimeDashboardService.getLastUpdate();
+      if (connected) {
+        setIsLiveConnected(true);
+        if (lastUpdate) {
+          setLastLiveUpdate(lastUpdate);
+        }
+      }
+    }, 2000);
+
     return () => {
       clearTimeout(timer);
       unsubscribe();
+      clearInterval(connectionCheckInterval);
+      RealtimeDashboardService.cleanup();
     };
   }, []);
 
