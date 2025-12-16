@@ -54,7 +54,11 @@ export class InvestorsService {
       .eq('id', id)
       .maybeSingle();
 
-    if (error) return { data: [], count: 0 };
+    if (error) {
+      console.error('Error getting investor:', error);
+      throw new Error(error.message || 'فشل جلب بيانات المستثمر');
+    }
+
     return data;
   }
 
@@ -64,8 +68,8 @@ export class InvestorsService {
       .insert({
         full_name: investorData.full_name,
         phone: investorData.phone || investorData.mobile_number,
-        email: investorData.email,
-        national_id: investorData.national_id,
+        email: investorData.email || '',
+        national_id: investorData.national_id || '',
         status: 'active',
         total_invested: 0,
         total_trees_owned: 0
@@ -73,17 +77,37 @@ export class InvestorsService {
       .select()
       .single();
 
-    if (error) return { data: [], count: 0 };
+    if (error) {
+      console.error('Error creating investor:', error);
+      throw new Error(error.message || 'فشل إضافة المستثمر');
+    }
+
+    if (!data) {
+      throw new Error('لم يتم إنشاء المستثمر');
+    }
+
     return data;
   }
 
   static async update(id: string, investorData: Partial<InvestorFormData>): Promise<Investor> {
     const updates: any = {
-      ...investorData,
       updated_at: new Date().toISOString()
     };
 
-    if (investorData.mobile_number) {
+    // إضافة الحقول المعدّلة فقط
+    if (investorData.full_name !== undefined) {
+      updates.full_name = investorData.full_name;
+    }
+    if (investorData.email !== undefined) {
+      updates.email = investorData.email || '';
+    }
+    if (investorData.national_id !== undefined) {
+      updates.national_id = investorData.national_id || '';
+    }
+    if (investorData.phone !== undefined) {
+      updates.phone = investorData.phone;
+    }
+    if (investorData.mobile_number !== undefined) {
       updates.phone = investorData.mobile_number;
     }
 
@@ -94,7 +118,15 @@ export class InvestorsService {
       .select()
       .single();
 
-    if (error) return { data: [], count: 0 };
+    if (error) {
+      console.error('Error updating investor:', error);
+      throw new Error(error.message || 'فشل تحديث بيانات المستثمر');
+    }
+
+    if (!data) {
+      throw new Error('لم يتم العثور على المستثمر');
+    }
+
     return data;
   }
 
@@ -109,7 +141,15 @@ export class InvestorsService {
       .select()
       .single();
 
-    if (error) return { data: [], count: 0 };
+    if (error) {
+      console.error('Error updating investor status:', error);
+      throw new Error(error.message || 'فشل تحديث حالة المستثمر');
+    }
+
+    if (!data) {
+      throw new Error('لم يتم العثور على المستثمر');
+    }
+
     return data;
   }
 
@@ -140,7 +180,10 @@ export class InvestorsService {
       })
       .eq('id', id);
 
-    if (error) return { data: [], count: 0 };
+    if (error) {
+      console.error('Error deleting investor:', error);
+      throw new Error(error.message || 'فشل حذف المستثمر');
+    }
   }
 
   static async getStatistics() {
