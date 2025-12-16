@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Users, Mail, Phone, Wallet, TrendingUp, Edit, Ban, CheckCircle, Clock, Wifi } from 'lucide-react';
+import { Users, Mail, Phone, Wallet, TrendingUp, Edit, Ban, CheckCircle, Clock, Wifi, DollarSign } from 'lucide-react';
 import { Card3D } from '../../../components/ui/Card3D';
 import { BackButton } from '../../../components/common/BackButton';
 import { InvestorsService } from '../investorsService';
@@ -156,8 +156,10 @@ export function InvestorsView({ onBack }: InvestorsViewProps) {
           {investors.map((investor) => {
             const statusInfo = getStatusInfo(investor.status);
             const StatusIcon = statusInfo.icon;
-            const reservationsCount = investor.reservations?.[0]?.count || 0;
-            const balance = investor.wallet?.[0]?.balance || 0;
+            const bookingsCount = investor.bookings_count || 0;
+            const farmsCount = investor.farms_count || 0;
+            const certificatesCount = investor.certificates_count || 0;
+            const totalInvested = investor.total_invested || 0;
 
             return (
               <Card3D key={investor.id} interactive={false}>
@@ -189,20 +191,37 @@ export function InvestorsView({ onBack }: InvestorsViewProps) {
                       <Phone className="h-4 w-4 text-purple-600" />
                       <span>{investor.phone}</span>
                     </div>
-                    <div className="flex items-center gap-2 text-sm text-gray-600">
-                      <TrendingUp className="h-4 w-4 text-purple-600" />
-                      <span>{reservationsCount} حجز</span>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2 mb-4">
+                    <div className="p-2 bg-blue-50 rounded-lg border border-blue-200">
+                      <div className="flex items-center gap-1 mb-1">
+                        <TrendingUp className="h-3 w-3 text-blue-600" />
+                        <span className="text-xs text-gray-600">الحجوزات</span>
+                      </div>
+                      <span className="text-lg font-bold text-blue-700">
+                        {bookingsCount}
+                      </span>
+                    </div>
+                    <div className="p-2 bg-purple-50 rounded-lg border border-purple-200">
+                      <div className="flex items-center gap-1 mb-1">
+                        <Users className="h-3 w-3 text-purple-600" />
+                        <span className="text-xs text-gray-600">المزارع</span>
+                      </div>
+                      <span className="text-lg font-bold text-purple-700">
+                        {farmsCount}
+                      </span>
                     </div>
                   </div>
 
                   <div className="mb-4 p-3 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-200">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <Wallet className="h-4 w-4 text-green-600" />
-                        <span className="text-xs text-gray-600">الرصيد</span>
+                        <DollarSign className="h-4 w-4 text-green-600" />
+                        <span className="text-xs text-gray-600">إجمالي الاستثمار</span>
                       </div>
                       <span className="text-lg font-bold text-green-700">
-                        {balance.toLocaleString('ar-SA')} ريال
+                        {totalInvested.toLocaleString('ar-SA')} ريال
                       </span>
                     </div>
                   </div>
