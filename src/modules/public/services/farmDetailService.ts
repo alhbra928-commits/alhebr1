@@ -54,9 +54,15 @@ export class FarmDetailService {
         .eq('farm_id', farmId)
         .is('deleted_at', null);
 
+      // Calculate total available trees and total trees from varieties
+      const totalAvailable = varieties?.reduce((sum, v) => sum + (v.available_quantity || 0), 0) || 0;
+      const totalTreesFromVarieties = varieties?.reduce((sum, v) => sum + (v.total_trees || 0), 0) || 0;
+
       const result = {
         ...farm,
-        varieties: varieties || []
+        varieties: varieties || [],
+        available_trees: totalAvailable,
+        total_trees: totalTreesFromVarieties > 0 ? totalTreesFromVarieties : (farm.total_trees || 0)
       };
 
       // Cache the result
@@ -136,7 +142,7 @@ export class FarmDetailService {
           reservation_id: reservation.id,
           farm_id: data.farm_id,
           variety_id: v.variety_id,
-          tree_count: v.tree_count,
+          quantity: v.tree_count,
           price_per_tree: v.price_per_tree,
           subtotal: v.tree_count * v.price_per_tree
         }));
