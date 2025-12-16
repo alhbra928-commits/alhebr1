@@ -156,6 +156,10 @@ export class FarmDetailService {
         }
       }
 
+      // Clear cache for this farm to reflect updated availability
+      this.cache.delete(data.farm_id);
+      console.log('[FarmDetailService] Cache cleared after booking for farm:', data.farm_id);
+
       return reservation;
     } catch (error) {
       console.error('Error in createReservation:', error);
