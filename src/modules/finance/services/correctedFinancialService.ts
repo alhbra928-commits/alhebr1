@@ -250,8 +250,9 @@ export class CorrectedFinancialService {
    * الاشتراك في التحديثات المباشرة
    */
   static subscribeToFinancialUpdates(callback: (data: CorrectedFarmFinance[]) => void) {
+    // إنشاء قناة واحدة تراقب جميع الجداول المؤثرة
     const channel = supabase
-      .channel('farm_finance_updates_corrected')
+      .channel('complete_financial_updates_corrected')
       .on(
         'postgres_changes',
         {
@@ -260,6 +261,59 @@ export class CorrectedFinancialService {
           table: 'farm_finance'
         },
         async () => {
+          console.log('🔔 farm_finance updated');
+          const farms = await this.getAllFarmFinances();
+          callback(farms);
+        }
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'investors'
+        },
+        async () => {
+          console.log('🔔 investors updated - refreshing finances');
+          const farms = await this.getAllFarmFinances();
+          callback(farms);
+        }
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'documentation'
+        },
+        async () => {
+          console.log('🔔 documentation updated - refreshing finances');
+          const farms = await this.getAllFarmFinances();
+          callback(farms);
+        }
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'reservations'
+        },
+        async () => {
+          console.log('🔔 reservations updated - refreshing finances');
+          const farms = await this.getAllFarmFinances();
+          callback(farms);
+        }
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'farms'
+        },
+        async () => {
+          console.log('🔔 farms updated - refreshing finances');
           const farms = await this.getAllFarmFinances();
           callback(farms);
         }
