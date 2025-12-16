@@ -116,21 +116,21 @@ export function LiveActivityBar() {
   return (
     <>
       <style>{`
-        /* 🎯 STANDALONE WRAPPER LAYER - خارج Flow الصفحة تماماً */
+        /* 🎯 STANDALONE WRAPPER LAYER - تحت الهيدر مباشرة */
         .live-activity-bar-wrapper {
           position: fixed;
-          top: 0;
+          top: 80px;
           left: 0;
           width: 100vw;
           height: 48px;
-          z-index: 10000;
+          z-index: 40;
           pointer-events: none;
         }
 
         /* 🎨 MAIN ACTIVITY BAR - الشريط الرئيسي */
         .live-activity-bar {
           position: fixed;
-          top: 0;
+          top: 80px;
           left: 0;
           right: 0;
           width: 100%;
@@ -139,7 +139,7 @@ export function LiveActivityBar() {
           box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
           border-bottom: 2px solid rgba(212, 175, 55, 0.3);
           height: 48px;
-          z-index: 10000;
+          z-index: 40;
           -webkit-backdrop-filter: blur(10px);
           backdrop-filter: blur(10px);
           pointer-events: auto;
@@ -174,14 +174,14 @@ export function LiveActivityBar() {
           }
 
           .live-activity-bar-wrapper {
-            top: env(safe-area-inset-top, 0px);
-            height: calc(48px + env(safe-area-inset-top, 0px));
+            top: calc(80px + env(safe-area-inset-top, 0px));
+            height: 48px;
           }
 
           .live-activity-bar {
-            top: env(safe-area-inset-top, 0px);
-            padding-top: env(safe-area-inset-top, 0px);
-            height: calc(48px + env(safe-area-inset-top, 0px));
+            top: calc(80px + env(safe-area-inset-top, 0px));
+            padding-top: 0;
+            height: 48px;
           }
 
           .live-activity-bar-inner,
