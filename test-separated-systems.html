@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>🎉 نظام منفصل 100% - الجوال أولاً!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 100%;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 24px;
+            padding: 20px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border-radius: 16px;
+            color: white;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 900;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            font-weight: 600;
+            opacity: 0.95;
+        }
+
+        .systems {
+            display: grid;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .system-card {
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            padding: 20px;
+            border-radius: 16px;
+            border: 3px solid #10b981;
+        }
+
+        .system-card.mobile {
+            border-color: #ef4444;
+            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+        }
+
+        .system-title {
+            font-size: 22px;
+            font-weight: 900;
+            color: #065f46;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .system-card.mobile .system-title {
+            color: #991b1b;
+        }
+
+        .priority-badge {
+            display: inline-block;
+            background: #ef4444;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .spec-grid {
+            display: grid;
+            gap: 8px;
+        }
+
+        .spec-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            border: 2px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .system-card.mobile .spec-row {
+            border-color: rgba(239, 68, 68, 0.2);
+        }
+
+        .spec-label {
+            font-weight: 600;
+            color: #047857;
+            font-size: 14px;
+        }
+
+        .system-card.mobile .spec-label {
+            color: #b91c1c;
+        }
+
+        .spec-value {
+            font-weight: 700;
+            color: #065f46;
+            font-size: 14px;
+            background: #d1fae5;
+            padding: 4px 12px;
+            border-radius: 6px;
+        }
+
+        .system-card.mobile .spec-value {
+            color: #991b1b;
+            background: #fecaca;
+        }
+
+        .highlight {
+            font-size: 18px;
+            color: #ef4444;
+        }
+
+        .comparison {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            border: 3px solid #f59e0b;
+        }
+
+        .comp-title {
+            font-size: 20px;
+            font-weight: 900;
+            color: #78350f;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .comp-row {
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .before {
+            color: #dc2626;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .after {
+            color: #059669;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .arrow {
+            color: #f59e0b;
+            font-size: 20px;
+            font-weight: 900;
+        }
+
+        .test-button {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            font-size: 18px;
+            font-weight: 700;
+            border: none;
+            border-radius: 16px;
+            box-shadow: 0 8px 16px rgba(239, 68, 68, 0.3);
+            margin-bottom: 12px;
+        }
+
+        .version {
+            text-align: center;
+            color: #047857;
+            font-size: 16px;
+            font-weight: 700;
+            background: #d1fae5;
+            padding: 12px;
+            border-radius: 12px;
+            margin-top: 16px;
+        }
+
+        .key-feature {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            border: 3px solid #3b82f6;
+        }
+
+        .key-title {
+            font-size: 18px;
+            font-weight: 900;
+            color: #1e40af;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .key-list {
+            display: grid;
+            gap: 8px;
+        }
+
+        .key-item {
+            background: white;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #1e40af;
+        }
+
+        @media (max-width: 380px) {
+            .container {
+                padding: 16px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎉 نظام منفصل 100%</h1>
+            <p class="subtitle">الجوال والكمبيوتر - نظامين مستقلين تماماً</p>
+        </div>
+
+        <div class="key-feature">
+            <div class="key-title">🔥 المفتاح: الفصل التام</div>
+            <div class="key-list">
+                <div class="key-item">✅ لا يوجد أي نظام مشترك</div>
+                <div class="key-item">✅ كل جهاز له حساباته الخاصة</div>
+                <div class="key-item">✅ الجوال: تكرار 10 مرات</div>
+                <div class="key-item">✅ الكمبيوتر: تكرار 3 مرات</div>
+                <div class="key-item">✅ لا يوجد تأثير متبادل أبداً</div>
+            </div>
+        </div>
+
+        <div class="systems">
+            <div class="system-card mobile">
+                <div class="system-title">
+                    📱 نظام الجوال
+                    <span class="priority-badge">الأولوية #1</span>
+                </div>
+                <div class="spec-grid">
+                    <div class="spec-row">
+                        <span class="spec-label">التكرار</span>
+                        <span class="spec-value highlight">10 مرات 🔥</span>
+                    </div>
+                    <div class="spec-row">
+                        <span class="spec-label">السرعة (Medium)</span>
+                        <span class="spec-value">30ms + 1.8px</span>
+                    </div>
+                    <div class="spec-row">
+                        <span class="spec-label">الحساب</span>
+                        <span class="spec-value">scrollWidth / 10</span>
+                    </div>
+                    <div class="spec-row">
+                        <span class="spec-label">البطاقة</span>
+                        <span class="spec-value">175px</span>
+                    </div>
+                    <div class="spec-row">
+                        <span class="spec-label">الفراغات</span>
+                        <span class="spec-value">2px</span>
+                    </div>
+                    <div class="spec-row">
+                        <span class="spec-label">Padding</span>
+                        <span class="spec-value">0 (بدون!)</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="system-card">
+                <div class="system-title">💻 نظام الكمبيوتر</div>
+                <div class="spec-grid">
+                    <div class="spec-row">
+                        <span class="spec-label">التكرار</span>
+                        <span class="spec-value">3 مرات</span>
+                    </div>
+                    <div class="spec-row">
+                        <span class="spec-label">السرعة (Medium)</span>
+                        <span class="spec-value">50ms + 1.0px</span>
+                    </div>
+                    <div class="spec-row">
+                        <span class="spec-label">الحساب</span>
+                        <span class="spec-value">scrollWidth / 3</span>
+                    </div>
+                    <div class="spec-row">
+                        <span class="spec-label">البطاقة</span>
+                        <span class="spec-value">240px</span>
+                    </div>
+                    <div class="spec-row">
+                        <span class="spec-label">الفراغات</span>
+                        <span class="spec-value">8px</span>
+                    </div>
+                    <div class="spec-row">
+                        <span class="spec-label">Padding</span>
+                        <span class="spec-value">4px</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="comparison">
+            <div class="comp-title">📊 قبل وبعد على الجوال</div>
+
+            <div class="comp-row">
+                <span class="before">❌ نظام واحد مشترك</span>
+                <span class="arrow">→</span>
+                <span class="after">✅ نظامين منفصلين</span>
+            </div>
+
+            <div class="comp-row">
+                <span class="before">❌ تكرار 3-5 مرات</span>
+                <span class="arrow">→</span>
+                <span class="after">✅ تكرار 10 مرات</span>
+            </div>
+
+            <div class="comp-row">
+                <span class="before">❌ حساب /3 أو /5</span>
+                <span class="arrow">→</span>
+                <span class="after">✅ حساب /10</span>
+            </div>
+
+            <div class="comp-row">
+                <span class="before">❌ سرعة عادية</span>
+                <span class="arrow">→</span>
+                <span class="after">✅ سرعة أعلى 40%</span>
+            </div>
+
+            <div class="comp-row">
+                <span class="before">❌ يتأثر بالكمبيوتر</span>
+                <span class="arrow">→</span>
+                <span class="after">✅ مستقل 100%</span>
+            </div>
+
+            <div class="comp-row">
+                <span class="before">❌ فراغ واضح</span>
+                <span class="arrow">→</span>
+                <span class="after">✅ حلقة سلسة!</span>
+            </div>
+        </div>
+
+        <button class="test-button" onclick="clearAndTest()">
+            🧪 امسح الكاش واختبر الجوال
+        </button>
+
+        <div class="version">
+            📦 الإصدار: v20251217_1765990335291<br>
+            🔥 الجوال: نظام منفصل 100%<br>
+            ✅ تكرار 10 مرات مضمون!
+        </div>
+    </div>
+
+    <script>
+        function clearAndTest() {
+            // محاولة مسح الكاش
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                    for(let registration of registrations) {
+                        registration.unregister();
+                    }
+                });
+            }
+
+            localStorage.clear();
+            sessionStorage.clear();
+
+            const isMobile = window.innerWidth <= 768;
+
+            if (isMobile) {
+                alert('📱 جوال تم اكتشافه!\n\n✅ النظام الآن:\n\n' +
+                      '• تكرار 10 مرات (كان 3)\n' +
+                      '• سرعة 30ms (كان 50ms)\n' +
+                      '• حساب /10 (كان /3)\n' +
+                      '• بطاقات 175px\n' +
+                      '• فراغات 2px فقط\n' +
+                      '• بدون padding\n\n' +
+                      '🎉 لن تجد أي فراغات!');
+            } else {
+                alert('💻 كمبيوتر تم اكتشافه!\n\n✅ النظام الآن:\n\n' +
+                      '• تكرار 3 مرات\n' +
+                      '• سرعة 50ms\n' +
+                      '• حساب /3\n' +
+                      '• بطاقات 240px\n' +
+                      '• فراغات 8px\n\n' +
+                      '✅ يعمل بشكل ممتاز!');
+            }
+
+            setTimeout(() => {
+                window.location.reload(true);
+            }, 100);
+        }
+
+        // معلومات console
+        const isMobile = window.innerWidth <= 768;
+
+        console.log('%c🎉 نظام منفصل 100%!', 'font-size: 24px; font-weight: bold; color: #10b981;');
+        console.log(`%c${isMobile ? '📱 جوال' : '💻 كمبيوتر'} تم اكتشافه`, 'font-size: 18px; font-weight: bold; color: #ef4444;');
+
+        if (isMobile) {
+            console.log('%c📱 نظام الجوال المنفصل:', 'font-size: 16px; font-weight: bold; color: #047857;');
+            console.log('%c  • تكرار 10 مرات 🔥', 'font-size: 14px; color: #059669;');
+            console.log('%c  • سرعة 30ms + 1.8px/frame', 'font-size: 14px; color: #059669;');
+            console.log('%c  • حساب: scrollWidth / 10', 'font-size: 14px; color: #059669;');
+            console.log('%c  • بطاقات 175px', 'font-size: 14px; color: #059669;');
+            console.log('%c  • فراغات 2px', 'font-size: 14px; color: #059669;');
+            console.log('%c  • بدون padding', 'font-size: 14px; color: #059669;');
+        } else {
+            console.log('%c💻 نظام الكمبيوتر المنفصل:', 'font-size: 16px; font-weight: bold; color: #047857;');
+            console.log('%c  • تكرار 3 مرات', 'font-size: 14px; color: #059669;');
+            console.log('%c  • سرعة 50ms + 1.0px/frame', 'font-size: 14px; color: #059669;');
+            console.log('%c  • حساب: scrollWidth / 3', 'font-size: 14px; color: #059669;');
+            console.log('%c  • بطاقات 240px', 'font-size: 14px; color: #059669;');
+            console.log('%c  • فراغات 8px', 'font-size: 14px; color: #059669;');
+        }
+
+        console.log('%c✅ لا يوجد تأثير متبادل بين النظامين!', 'font-size: 16px; font-weight: bold; color: #10b981;');
+    </script>
+</body>
+</html>

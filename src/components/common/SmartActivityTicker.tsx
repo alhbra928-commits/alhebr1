@@ -84,25 +84,57 @@ export function SmartActivityTicker() {
     const scrollContainer = scrollContainerRef.current;
     if (!scrollContainer || activities.length === 0) return;
 
-    const speeds = {
-      slow: 80,
-      medium: 50,
-      fast: 30
-    };
-    const speed = speeds[settings.scrollSpeed] || 50;
+    const isMobile = window.innerWidth <= 768;
 
-    const pixelsPerFrame = settings.scrollSpeed === 'fast' ? 1.5 : settings.scrollSpeed === 'medium' ? 1.0 : 0.5;
+    // ═══════════════════════════════════════════════════════════
+    // 📱 نظام الجوال - منفصل تماماً ومستقل - الأولوية #1
+    // ═══════════════════════════════════════════════════════════
+    if (isMobile) {
+      const mobileSpeed = settings.scrollSpeed === 'fast' ? 20 :
+                         settings.scrollSpeed === 'medium' ? 30 : 50;
 
-    const animate = () => {
-      setScrollPosition((prev) => {
-        const contentWidth = scrollContainer.scrollWidth / 3;
-        const newPosition = prev + pixelsPerFrame;
-        return newPosition >= contentWidth ? newPosition - contentWidth : newPosition;
-      });
-    };
+      const mobilePixelsPerFrame = settings.scrollSpeed === 'fast' ? 2.5 :
+                                   settings.scrollSpeed === 'medium' ? 1.8 : 1.0;
 
-    const animationId = setInterval(animate, speed);
-    return () => clearInterval(animationId);
+      const animate = () => {
+        setScrollPosition((prev) => {
+          // الجوال: المحتوى مكرر 10 مرات
+          const contentWidth = scrollContainer.scrollWidth / 10;
+          const newPosition = prev + mobilePixelsPerFrame;
+
+          // reset سلس بدون فراغات
+          return newPosition >= contentWidth ? 0 : newPosition;
+        });
+      };
+
+      const animationId = setInterval(animate, mobileSpeed);
+      return () => clearInterval(animationId);
+    }
+
+    // ═══════════════════════════════════════════════════════════
+    // 💻 نظام الكمبيوتر - منفصل تماماً ومستقل
+    // ═══════════════════════════════════════════════════════════
+    else {
+      const desktopSpeed = settings.scrollSpeed === 'fast' ? 30 :
+                          settings.scrollSpeed === 'medium' ? 50 : 80;
+
+      const desktopPixelsPerFrame = settings.scrollSpeed === 'fast' ? 1.5 :
+                                    settings.scrollSpeed === 'medium' ? 1.0 : 0.5;
+
+      const animate = () => {
+        setScrollPosition((prev) => {
+          // الكمبيوتر: المحتوى مكرر 3 مرات فقط
+          const contentWidth = scrollContainer.scrollWidth / 3;
+          const newPosition = prev + desktopPixelsPerFrame;
+
+          // reset سلس
+          return newPosition >= contentWidth ? 0 : newPosition;
+        });
+      };
+
+      const animationId = setInterval(animate, desktopSpeed);
+      return () => clearInterval(animationId);
+    }
   }, [activities.length, settings.scrollSpeed]);
 
   const loadSettings = async () => {
@@ -179,8 +211,22 @@ export function SmartActivityTicker() {
       }
 
       const shuffled = items.sort(() => Math.random() - 0.5);
-      const tripled = [...shuffled, ...shuffled, ...shuffled];
-      setActivities(tripled);
+
+      // فصل تام بين الجوال والكمبيوتر - الجوال أولاً!
+      const isMobile = window.innerWidth <= 768;
+
+      if (isMobile) {
+        // الجوال: تكرار 10 مرات لضمان عدم وجود أي فراغات
+        const mobileRepeated = [
+          ...shuffled, ...shuffled, ...shuffled, ...shuffled, ...shuffled,
+          ...shuffled, ...shuffled, ...shuffled, ...shuffled, ...shuffled
+        ];
+        setActivities(mobileRepeated);
+      } else {
+        // الكمبيوتر: تكرار 3 مرات كافي
+        const desktopRepeated = [...shuffled, ...shuffled, ...shuffled];
+        setActivities(desktopRepeated);
+      }
     } catch (error) {
       console.error('[Ticker] Error loading activities:', error);
     }
@@ -318,7 +364,7 @@ export function SmartActivityTicker() {
           50% { background-position: 100% 50%; }
         }
 
-        /* Mobile Optimizations */
+        /* Mobile Optimizations - الجوال أولاً! */
         @media (max-width: 768px) {
           .ticker-modern {
             border-radius: 0 !important;
@@ -330,10 +376,18 @@ export function SmartActivityTicker() {
             height: 58px !important;
           }
 
+          .scroll-container {
+            gap: 2px !important;
+            padding: 0 !important;
+          }
+
           .modern-card {
-            min-width: 200px !important;
-            padding: 8px 10px !important;
-            border-radius: 12px !important;
+            min-width: 175px !important;
+            max-width: 175px !important;
+            padding: 7px 9px !important;
+            border-radius: 10px !important;
+            margin: 0 !important;
+            flex-shrink: 0 !important;
           }
 
           .card-icon-wrapper {
@@ -389,7 +443,7 @@ export function SmartActivityTicker() {
         <div className="relative h-full overflow-hidden">
           <div
             ref={scrollContainerRef}
-            className="scroll-container flex items-center h-full gap-2 px-1"
+            className="scroll-container flex items-center h-full gap-1 px-0"
             style={{
               transform: `translateX(-${scrollPosition}px)`,
             }}
