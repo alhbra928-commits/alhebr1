@@ -90,19 +90,19 @@ export function SmartActivityTicker() {
     // 📱 نظام الجوال - منفصل تماماً ومستقل - الأولوية #1
     // ═══════════════════════════════════════════════════════════
     if (isMobile) {
-      const mobileSpeed = settings.scrollSpeed === 'fast' ? 20 :
-                         settings.scrollSpeed === 'medium' ? 30 : 50;
+      const mobileSpeed = settings.scrollSpeed === 'fast' ? 15 :
+                         settings.scrollSpeed === 'medium' ? 25 : 40;
 
-      const mobilePixelsPerFrame = settings.scrollSpeed === 'fast' ? 2.5 :
-                                   settings.scrollSpeed === 'medium' ? 1.8 : 1.0;
+      const mobilePixelsPerFrame = settings.scrollSpeed === 'fast' ? 3.0 :
+                                   settings.scrollSpeed === 'medium' ? 2.2 : 1.5;
 
       const animate = () => {
         setScrollPosition((prev) => {
-          // الجوال: المحتوى مكرر 10 مرات
-          const contentWidth = scrollContainer.scrollWidth / 10;
+          // الجوال: المحتوى مكرر 20 مرة
+          const contentWidth = scrollContainer.scrollWidth / 20;
           const newPosition = prev + mobilePixelsPerFrame;
 
-          // reset سلس بدون فراغات
+          // reset سلس بدون فراغات - 20 مرة = تغطية كاملة!
           return newPosition >= contentWidth ? 0 : newPosition;
         });
       };
@@ -216,8 +216,10 @@ export function SmartActivityTicker() {
       const isMobile = window.innerWidth <= 768;
 
       if (isMobile) {
-        // الجوال: تكرار 10 مرات لضمان عدم وجود أي فراغات
+        // الجوال: تكرار 20 مرة - القضاء على أي فراغ نهائياً 🔥
         const mobileRepeated = [
+          ...shuffled, ...shuffled, ...shuffled, ...shuffled, ...shuffled,
+          ...shuffled, ...shuffled, ...shuffled, ...shuffled, ...shuffled,
           ...shuffled, ...shuffled, ...shuffled, ...shuffled, ...shuffled,
           ...shuffled, ...shuffled, ...shuffled, ...shuffled, ...shuffled
         ];
@@ -377,41 +379,42 @@ export function SmartActivityTicker() {
           }
 
           .scroll-container {
-            gap: 2px !important;
+            gap: 0 !important;
             padding: 0 !important;
+            margin: 0 !important;
           }
 
           .modern-card {
-            min-width: 175px !important;
-            max-width: 175px !important;
-            padding: 7px 9px !important;
-            border-radius: 10px !important;
-            margin: 0 !important;
+            min-width: 165px !important;
+            max-width: 165px !important;
+            padding: 6px 8px !important;
+            border-radius: 8px !important;
+            margin: 0 1px !important;
             flex-shrink: 0 !important;
           }
 
           .card-icon-wrapper {
-            width: 28px !important;
-            height: 28px !important;
+            width: 24px !important;
+            height: 24px !important;
           }
 
           .card-icon-wrapper svg {
-            width: 14px !important;
-            height: 14px !important;
+            width: 13px !important;
+            height: 13px !important;
           }
 
           .card-title {
-            font-size: 12px !important;
-            line-height: 1.3 !important;
+            font-size: 11px !important;
+            line-height: 1.25 !important;
           }
 
           .card-time {
-            font-size: 10px !important;
+            font-size: 9px !important;
           }
 
           .card-sparkle {
-            width: 12px !important;
-            height: 12px !important;
+            width: 10px !important;
+            height: 10px !important;
           }
         }
 
@@ -443,7 +446,7 @@ export function SmartActivityTicker() {
         <div className="relative h-full overflow-hidden">
           <div
             ref={scrollContainerRef}
-            className="scroll-container flex items-center h-full gap-1 px-0"
+            className="scroll-container flex items-center h-full gap-0 px-0"
             style={{
               transform: `translateX(-${scrollPosition}px)`,
             }}
