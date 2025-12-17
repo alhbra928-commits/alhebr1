@@ -12,9 +12,7 @@ interface Activity {
   titleEn: string;
   timestamp?: Date;
   priority: number;
-  color: string;
-  bgGradient: string;
-  textColor: string;
+  activityType: string;
 }
 
 interface TickerSettings {
@@ -22,9 +20,6 @@ interface TickerSettings {
   scrollSpeed: 'slow' | 'medium' | 'fast';
   itemsPerCycle: number;
   showTimestamps: boolean;
-  backgroundColor: string;
-  textColor: string;
-  iconColor: string;
 }
 
 const iconMap: Record<string, any> = {
@@ -50,9 +45,6 @@ export function SmartActivityTicker() {
     scrollSpeed: 'medium',
     itemsPerCycle: 10,
     showTimestamps: true,
-    backgroundColor: '#1a4d2e',
-    textColor: '#f4e5c2',
-    iconColor: '#d4af37',
   });
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [scrollPosition, setScrollPosition] = useState(0);
@@ -62,11 +54,14 @@ export function SmartActivityTicker() {
     loadActivities();
 
     const channel = supabase
-      .channel('ticker_updates')
+      .channel('ticker_realtime_updates')
       .on(
         'postgres_changes',
         { event: '*', schema: 'public', table: 'platform_activities' },
-        () => loadActivities()
+        (payload) => {
+          console.log('[Ticker] Real-time event:', payload.eventType);
+          loadActivities();
+        }
       )
       .on(
         'postgres_changes',
@@ -81,53 +76,41 @@ export function SmartActivityTicker() {
   }, []);
 
   useEffect(() => {
+    loadActivities();
+  }, [settings.mode, settings.itemsPerCycle]);
+
+  useEffect(() => {
     const scrollContainer = scrollContainerRef.current;
     if (!scrollContainer || activities.length === 0) return;
 
     const isMobile = window.innerWidth <= 768;
 
-    // ═══════════════════════════════════════════════════════════
-    // 📱 نظام الجوال - منفصل تماماً ومستقل - الأولوية #1
-    // ═══════════════════════════════════════════════════════════
     if (isMobile) {
       const mobileSpeed = settings.scrollSpeed === 'fast' ? 15 :
                          settings.scrollSpeed === 'medium' ? 25 : 40;
-
       const mobilePixelsPerFrame = settings.scrollSpeed === 'fast' ? 3.0 :
                                    settings.scrollSpeed === 'medium' ? 2.2 : 1.5;
 
       const animate = () => {
         setScrollPosition((prev) => {
-          // الجوال: المحتوى مكرر 20 مرة
           const contentWidth = scrollContainer.scrollWidth / 20;
           const newPosition = prev + mobilePixelsPerFrame;
-
-          // reset سلس بدون فراغات - 20 مرة = تغطية كاملة!
           return newPosition >= contentWidth ? 0 : newPosition;
         });
       };
 
       const animationId = setInterval(animate, mobileSpeed);
       return () => clearInterval(animationId);
-    }
-
-    // ═══════════════════════════════════════════════════════════
-    // 💻 نظام الكمبيوتر - منفصل تماماً ومستقل
-    // ═══════════════════════════════════════════════════════════
-    else {
+    } else {
       const desktopSpeed = settings.scrollSpeed === 'fast' ? 30 :
                           settings.scrollSpeed === 'medium' ? 50 : 80;
-
       const desktopPixelsPerFrame = settings.scrollSpeed === 'fast' ? 1.5 :
                                     settings.scrollSpeed === 'medium' ? 1.0 : 0.5;
 
       const animate = () => {
         setScrollPosition((prev) => {
-          // الكمبيوتر: المحتوى مكرر 3 مرات فقط
           const contentWidth = scrollContainer.scrollWidth / 3;
           const newPosition = prev + desktopPixelsPerFrame;
-
-          // reset سلس
           return newPosition >= contentWidth ? 0 : newPosition;
         });
       };
@@ -150,9 +133,6 @@ export function SmartActivityTicker() {
           scrollSpeed: data.scroll_speed,
           itemsPerCycle: data.items_per_cycle,
           showTimestamps: data.show_timestamps,
-          backgroundColor: data.background_color,
-          textColor: data.text_color,
-          iconColor: data.icon_color,
         });
       }
     } catch (error) {
@@ -165,24 +145,28 @@ export function SmartActivityTicker() {
       const items: Activity[] = [];
 
       if (settings.mode === 'real' || settings.mode === 'hybrid') {
-        const { data: realActivities } = await supabase
+        const { data: realActivities, error } = await supabase
           .from('platform_activities')
           .select('*')
-          .eq('is_visible', true)
+          .eq('is_active', true)
+          .is('deleted_at', null)
           .order('priority', { ascending: false })
-          .order('timestamp', { ascending: false })
+          .order('created_at', { ascending: false })
           .limit(settings.itemsPerCycle);
 
-        if (realActivities) {
+        if (error) {
+          console.error('[Ticker] Error loading activities:', error);
+        } else if (realActivities && realActivities.length > 0) {
+          console.log('[Ticker] Loaded activities:', realActivities.length);
           items.push(
             ...realActivities.map((act) => ({
               id: act.id,
-              icon: act.icon,
-              titleAr: act.activity_title_ar,
-              titleEn: act.activity_title_en,
-              timestamp: new Date(act.timestamp),
-              priority: act.priority,
-              ...getStylesForType(act.activity_type),
+              icon: act.activity_data?.icon || '✨',
+              titleAr: act.activity_data?.title_ar || act.activity_data?.farm_name || 'نشاط',
+              titleEn: act.activity_data?.title_en || 'Activity',
+              timestamp: act.created_at ? new Date(act.created_at) : undefined,
+              priority: act.priority || 5,
+              activityType: act.activity_type,
             }))
           );
         }
@@ -204,28 +188,31 @@ export function SmartActivityTicker() {
               titleAr: act.template_ar,
               titleEn: act.template_en,
               priority: act.weight / 10,
-              ...getStylesForCategory(act.activity_category),
+              activityType: act.activity_category,
+              timestamp: undefined,
             }))
           );
         }
       }
 
-      const shuffled = items.sort(() => Math.random() - 0.5);
+      if (items.length === 0) {
+        items.push({
+          id: 'default-1',
+          icon: '🌴',
+          titleAr: 'أهلاً بكم في منصة الحبر الزراعية',
+          titleEn: 'Welcome to Al-Hubr Platform',
+          priority: 10,
+          activityType: 'welcome',
+        });
+      }
 
-      // فصل تام بين الجوال والكمبيوتر - الجوال أولاً!
+      const shuffled = items.sort(() => Math.random() - 0.5);
       const isMobile = window.innerWidth <= 768;
 
       if (isMobile) {
-        // الجوال: تكرار 20 مرة - القضاء على أي فراغ نهائياً 🔥
-        const mobileRepeated = [
-          ...shuffled, ...shuffled, ...shuffled, ...shuffled, ...shuffled,
-          ...shuffled, ...shuffled, ...shuffled, ...shuffled, ...shuffled,
-          ...shuffled, ...shuffled, ...shuffled, ...shuffled, ...shuffled,
-          ...shuffled, ...shuffled, ...shuffled, ...shuffled, ...shuffled
-        ];
+        const mobileRepeated = Array(20).fill(shuffled).flat();
         setActivities(mobileRepeated);
       } else {
-        // الكمبيوتر: تكرار 3 مرات كافي
         const desktopRepeated = [...shuffled, ...shuffled, ...shuffled];
         setActivities(desktopRepeated);
       }
@@ -234,58 +221,20 @@ export function SmartActivityTicker() {
     }
   };
 
-  const getStylesForType = (type: string) => {
-    const styles: Record<string, any> = {
-      booking: {
-        color: 'from-emerald-500 to-teal-600',
-        bgGradient: 'bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-950/40 dark:to-teal-950/40',
-        textColor: 'text-emerald-900 dark:text-emerald-100',
-      },
-      investor_join: {
-        color: 'from-blue-500 to-cyan-600',
-        bgGradient: 'bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-950/40 dark:to-cyan-950/40',
-        textColor: 'text-blue-900 dark:text-blue-100',
-      },
-      farm_added: {
-        color: 'from-green-500 to-lime-600',
-        bgGradient: 'bg-gradient-to-br from-green-50 to-lime-50 dark:from-green-950/40 dark:to-lime-950/40',
-        textColor: 'text-green-900 dark:text-green-100',
-      },
-      certificate: {
-        color: 'from-amber-500 to-orange-600',
-        bgGradient: 'bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/40 dark:to-orange-950/40',
-        textColor: 'text-amber-900 dark:text-amber-100',
-      },
-      payment: {
-        color: 'from-rose-500 to-pink-600',
-        bgGradient: 'bg-gradient-to-br from-rose-50 to-pink-50 dark:from-rose-950/40 dark:to-pink-950/40',
-        textColor: 'text-rose-900 dark:text-rose-100',
-      },
-      trending: {
-        color: 'from-red-500 to-rose-600',
-        bgGradient: 'bg-gradient-to-br from-red-50 to-rose-50 dark:from-red-950/40 dark:to-rose-950/40',
-        textColor: 'text-red-900 dark:text-red-100',
-      },
-      milestone: {
-        color: 'from-yellow-500 to-amber-600',
-        bgGradient: 'bg-gradient-to-br from-yellow-50 to-amber-50 dark:from-yellow-950/40 dark:to-amber-950/40',
-        textColor: 'text-yellow-900 dark:text-yellow-100',
-      },
-      stats: {
-        color: 'from-violet-500 to-purple-600',
-        bgGradient: 'bg-gradient-to-br from-violet-50 to-purple-50 dark:from-violet-950/40 dark:to-purple-950/40',
-        textColor: 'text-violet-900 dark:text-violet-100',
-      },
+  const getColorForType = (type: string): string => {
+    const colors: Record<string, string> = {
+      booking: '#16a34a',
+      new_booking: '#16a34a',
+      investor_join: '#0891b2',
+      farm_added: '#22c55e',
+      certificate: '#f59e0b',
+      payment: '#dc2626',
+      trending: '#ef4444',
+      milestone: '#eab308',
+      stats: '#8b5cf6',
+      welcome: '#D4AF37',
     };
-    return styles[type] || {
-      color: 'from-gray-500 to-slate-600',
-      bgGradient: 'bg-gradient-to-br from-gray-50 to-slate-50 dark:from-gray-950/40 dark:to-slate-950/40',
-      textColor: 'text-gray-900 dark:text-gray-100',
-    };
-  };
-
-  const getStylesForCategory = (category: string) => {
-    return getStylesForType(category);
+    return colors[type] || '#16a34a';
   };
 
   const formatTimeAgo = (date: Date) => {
@@ -301,90 +250,63 @@ export function SmartActivityTicker() {
   return (
     <>
       <style>{`
-        @keyframes slide-in {
-          from { opacity: 0; transform: translateY(20px); }
+        @keyframes slide-in-ticker {
+          from { opacity: 0; transform: translateY(10px); }
           to { opacity: 1; transform: translateY(0); }
         }
 
-        @keyframes bounce-subtle {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-2px); }
+        @keyframes pulse-glow {
+          0%, 100% { box-shadow: 0 0 15px rgba(212, 175, 55, 0.4); }
+          50% { box-shadow: 0 0 25px rgba(212, 175, 55, 0.6); }
         }
 
-        .ticker-modern {
-          background: linear-gradient(
-            180deg,
-            rgba(16, 185, 129, 0.08) 0%,
-            rgba(5, 150, 105, 0.12) 100%
-          );
-          backdrop-filter: blur(16px) saturate(180%);
-          -webkit-backdrop-filter: blur(16px) saturate(180%);
-          border-top: 2px solid rgba(16, 185, 129, 0.3);
-          box-shadow:
-            0 -8px 32px rgba(0, 0, 0, 0.12),
-            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        .ticker-agricultural {
+          background: linear-gradient(135deg, rgba(44, 95, 45, 0.95) 0%, rgba(30, 70, 32, 0.98) 50%, rgba(44, 95, 45, 0.95) 100%);
+          backdrop-filter: blur(20px) saturate(180%);
+          -webkit-backdrop-filter: blur(20px) saturate(180%);
+          border-top: 3px solid rgba(212, 175, 55, 0.5);
+          border-bottom: 3px solid rgba(212, 175, 55, 0.5);
+          box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(212, 175, 55, 0.2), inset 0 -1px 0 rgba(212, 175, 55, 0.2);
         }
 
-        .modern-card {
-          animation: slide-in 0.5s ease-out backwards;
+        .activity-card-agricultural {
+          animation: slide-in-ticker 0.5s ease-out backwards;
           border-radius: 16px;
-          border: 2px solid;
-          box-shadow:
-            0 8px 24px -4px rgba(0, 0, 0, 0.15),
-            0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+          border: 2px solid rgba(212, 175, 55, 0.5);
+          background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.08) 100%);
+          box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.1) inset, 0 0 20px rgba(212, 175, 55, 0.15);
           transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .modern-card:hover {
-          transform: translateY(-2px) scale(1.02);
-          box-shadow:
-            0 12px 32px -4px rgba(0, 0, 0, 0.2),
-            0 0 0 2px rgba(255, 255, 255, 0.2) inset;
+        .activity-card-agricultural:hover {
+          transform: translateY(-3px) scale(1.03);
+          box-shadow: 0 15px 35px -4px rgba(0, 0, 0, 0.3), 0 0 0 2px rgba(212, 175, 55, 0.6) inset, 0 0 30px rgba(212, 175, 55, 0.3);
+          border-color: rgba(212, 175, 55, 0.8);
         }
 
-        .pulse-ring {
-          animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        .golden-accent {
+          background: linear-gradient(135deg, #D4AF37 0%, #C49423 100%);
+          box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
         }
 
-        @keyframes pulse-ring {
-          0%, 100% {
-            opacity: 1;
-            transform: scale(1);
-          }
-          50% {
-            opacity: 0.5;
-            transform: scale(1.1);
-          }
+        .golden-text {
+          color: #D4AF37;
+          text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
         }
 
-        .glow-text {
-          text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        .beige-text {
+          color: #F5F5DC;
+          text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
         }
 
-        @keyframes gradient-shift {
-          0%, 100% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-        }
-
-        /* Mobile Optimizations - الجوال أولاً! */
         @media (max-width: 768px) {
-          .ticker-modern {
+          .ticker-agricultural {
             border-radius: 0 !important;
             height: 58px !important;
             border-top-width: 3px !important;
           }
 
-          .ticker-spacer {
-            height: 58px !important;
-          }
-
-          .scroll-container {
-            gap: 0 !important;
-            padding: 0 !important;
-            margin: 0 !important;
-          }
-
-          .modern-card {
+          .activity-card-agricultural {
             min-width: 165px !important;
             max-width: 165px !important;
             padding: 6px 8px !important;
@@ -411,45 +333,40 @@ export function SmartActivityTicker() {
           .card-time {
             font-size: 9px !important;
           }
-
-          .card-sparkle {
-            width: 10px !important;
-            height: 10px !important;
-          }
         }
 
-        /* Smooth Scroll Performance */
         .scroll-container {
           will-change: transform;
           transform: translateZ(0);
           backface-visibility: hidden;
         }
 
-        /* iOS Safe Area */
         @supports (padding: max(0px)) {
-          .ticker-modern {
+          .ticker-agricultural {
             padding-bottom: max(12px, env(safe-area-inset-bottom));
           }
         }
+
+        @keyframes golden-wave {
+          0%, 100% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+        }
+
+        .golden-wave {
+          background: linear-gradient(90deg, rgba(212, 175, 55, 0.3), rgba(196, 148, 31, 0.5), rgba(212, 175, 55, 0.3));
+          background-size: 200% 100%;
+          animation: golden-wave 3s ease infinite;
+        }
       `}</style>
 
-      {/* Modern Ticker Bar */}
-      <div
-        className="fixed bottom-0 left-0 right-0 ticker-modern z-40"
-        style={{ height: '66px' }}
-        dir="rtl"
-      >
-        {/* Animated Top Border */}
-        <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-500 bg-[length:200%_100%] animate-[gradient-shift_3s_ease_infinite]" />
+      <div className="fixed bottom-0 left-0 right-0 ticker-agricultural z-40" style={{ height: '66px' }} dir="rtl">
+        <div className="absolute top-0 left-0 right-0 h-[3px] golden-wave" />
 
-        {/* Scrolling Content */}
         <div className="relative h-full overflow-hidden">
           <div
             ref={scrollContainerRef}
             className="scroll-container flex items-center h-full gap-0 px-0"
-            style={{
-              transform: `translateX(-${scrollPosition}px)`,
-            }}
+            style={{ transform: `translateX(-${scrollPosition}px)` }}
           >
             {activities.map((activity, index) => {
               const IconComponent = iconMap[activity.icon] || Sparkles;
@@ -457,73 +374,42 @@ export function SmartActivityTicker() {
               return (
                 <div
                   key={`${activity.id}-${index}`}
-                  className={`modern-card ${activity.bgGradient} relative overflow-hidden flex-shrink-0`}
+                  className="activity-card-agricultural relative overflow-hidden flex-shrink-0"
                   style={{
                     animationDelay: `${index * 0.05}s`,
                     minWidth: '240px',
                     padding: '10px 12px',
-                    borderColor: activity.color.includes('emerald') ? 'rgba(16, 185, 129, 0.4)' :
-                                activity.color.includes('blue') ? 'rgba(59, 130, 246, 0.4)' :
-                                activity.color.includes('green') ? 'rgba(34, 197, 94, 0.4)' :
-                                activity.color.includes('amber') ? 'rgba(245, 158, 11, 0.4)' :
-                                activity.color.includes('rose') ? 'rgba(244, 63, 94, 0.4)' :
-                                activity.color.includes('red') ? 'rgba(239, 68, 68, 0.4)' :
-                                activity.color.includes('yellow') ? 'rgba(234, 179, 8, 0.4)' :
-                                'rgba(139, 92, 246, 0.4)',
                   }}
                 >
-                  {/* Glow Effect */}
-                  <div className="absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity duration-300">
-                    <div className={`absolute inset-0 bg-gradient-to-br ${activity.color} blur-xl`} />
+                  <div className="absolute inset-0 opacity-0 hover:opacity-20 transition-opacity duration-300">
+                    <div className="absolute inset-0 bg-gradient-to-br from-green-400 to-emerald-600 blur-xl" />
                   </div>
 
                   <div className="relative flex items-center gap-2.5">
-                    {/* Modern Icon */}
                     <div className="relative card-icon-wrapper flex-shrink-0" style={{ width: '32px', height: '32px' }}>
-                      <div className={`absolute inset-0 bg-gradient-to-br ${activity.color} rounded-lg blur-md opacity-60 pulse-ring`} />
-                      <div className={`relative p-1.5 rounded-lg bg-gradient-to-br ${activity.color} shadow-lg flex items-center justify-center`} style={{ width: '32px', height: '32px' }}>
+                      <div className="absolute inset-0 golden-accent rounded-lg blur-md opacity-60 animate-pulse" />
+                      <div className="relative p-1.5 rounded-lg golden-accent shadow-lg flex items-center justify-center" style={{ width: '32px', height: '32px' }}>
                         <IconComponent className="w-4 h-4 text-white" strokeWidth={2.5} />
                       </div>
                     </div>
 
-                    {/* Content */}
                     <div className="flex-1 min-w-0 text-right">
-                      <div className="card-title font-black text-sm leading-tight mb-1 glow-text" style={{
-                        color: activity.color.includes('emerald') ? '#065f46' :
-                               activity.color.includes('blue') ? '#1e3a8a' :
-                               activity.color.includes('green') ? '#14532d' :
-                               activity.color.includes('amber') ? '#78350f' :
-                               activity.color.includes('rose') ? '#881337' :
-                               activity.color.includes('red') ? '#7f1d1d' :
-                               activity.color.includes('yellow') ? '#713f12' :
-                               '#4c1d95',
-                      }}>
+                      <div className="card-title font-black text-sm leading-tight mb-1 beige-text">
                         {activity.titleAr}
                       </div>
                       {settings.showTimestamps && activity.timestamp && (
-                        <div className="card-time text-xs font-bold opacity-70" style={{
-                          color: activity.color.includes('emerald') ? '#059669' :
-                                 activity.color.includes('blue') ? '#2563eb' :
-                                 activity.color.includes('green') ? '#16a34a' :
-                                 activity.color.includes('amber') ? '#d97706' :
-                                 activity.color.includes('rose') ? '#e11d48' :
-                                 activity.color.includes('red') ? '#dc2626' :
-                                 activity.color.includes('yellow') ? '#ca8a04' :
-                                 '#7c3aed',
-                        }}>
+                        <div className="card-time text-xs font-bold golden-text">
                           {formatTimeAgo(activity.timestamp)}
                         </div>
                       )}
                     </div>
 
-                    {/* Sparkle */}
                     <div className="flex-shrink-0 card-sparkle">
-                      <Zap className="w-3.5 h-3.5 text-yellow-500 animate-pulse" fill="currentColor" />
+                      <Zap className="w-3.5 h-3.5 text-yellow-400 animate-pulse" fill="currentColor" />
                     </div>
                   </div>
 
-                  {/* Bottom Accent */}
-                  <div className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r ${activity.color} opacity-60`} />
+                  <div className="absolute bottom-0 left-0 right-0 h-1 golden-accent opacity-80" />
                 </div>
               );
             })}
@@ -531,8 +417,7 @@ export function SmartActivityTicker() {
         </div>
       </div>
 
-      {/* Spacer */}
-      <div className="ticker-spacer h-[66px]" style={{ flexShrink: 0 }} />
+      <div className="h-[66px]" style={{ flexShrink: 0 }} />
     </>
   );
 }
