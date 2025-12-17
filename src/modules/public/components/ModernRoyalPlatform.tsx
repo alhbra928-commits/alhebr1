@@ -13,7 +13,6 @@ import { getPlatformTextsBySection } from '../../../services/platformTextsServic
 import { VerticalSideTabs } from '../../../components/common/VerticalSideTabs';
 import { SmartAssistantSidebar } from './SmartAssistantSidebar';
 import { PremiumHeader } from './PremiumHeader';
-import { FixedBottomBar } from './FixedBottomBar';
 import { AdvancedStatsFooter } from '../../../components/common/AdvancedStatsFooter';
 
 // Lazy load heavy components
@@ -239,7 +238,6 @@ export function ModernRoyalPlatform({
         <Suspense fallback={<div className="min-h-screen bg-gradient-to-br from-emerald-50 to-green-50" />}>
           <ConceptIntroductionPage onClose={handleGoHome} onStartJourney={handleGoHome} />
         </Suspense>
-        <FixedBottomBar onIntroClick={() => setConceptModalOpen(true)} />
       </>
     );
   }
@@ -257,7 +255,6 @@ export function ModernRoyalPlatform({
         <Suspense fallback={<div className="min-h-screen bg-gradient-to-br from-emerald-50 to-green-50" />}>
           <CertificateVerificationPage onBack={handleGoHome} />
         </Suspense>
-        <FixedBottomBar onIntroClick={() => setConceptModalOpen(true)} />
       </>
     );
   }
@@ -278,7 +275,6 @@ export function ModernRoyalPlatform({
             onGoToPublic={handleGoHome}
           />
         </Suspense>
-        <FixedBottomBar onIntroClick={() => setConceptModalOpen(true)} />
       </>
     );
   }
@@ -318,7 +314,6 @@ export function ModernRoyalPlatform({
             onGoToInvestor={() => setCurrentView('investor')}
           />
         </Suspense>
-        <FixedBottomBar onIntroClick={() => setConceptModalOpen(true)} />
       </>
     );
   }
@@ -433,9 +428,6 @@ export function ModernRoyalPlatform({
         isOpen={smartAssistantOpen}
         onClose={() => setSmartAssistantOpen(false)}
       />
-
-      {/* ✅ GLOBAL FOOTER - يظهر في جميع الصفحات */}
-      <FixedBottomBar onIntroClick={() => setConceptModalOpen(true)} />
 
       {/* تنسيق متجاوب للأيقونات والمحتوى */}
       <style>{`

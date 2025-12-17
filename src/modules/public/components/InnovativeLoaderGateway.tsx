@@ -118,7 +118,7 @@ export function InnovativeLoaderGateway({ onComplete }: InnovativeLoaderGatewayP
 
   if (isLoading || !settings) {
     return (
-      <div className="fixed inset-0 bg-gradient-to-br from-emerald-900 to-green-800 flex items-center justify-center">
+      <div className="fixed inset-0 bg-gradient-to-br from-amber-900 to-orange-800 flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white"></div>
       </div>
     );
