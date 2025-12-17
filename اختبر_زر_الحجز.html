@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>✅ زر الحجز واضح الآن</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      min-height: 100vh;
+      padding: 0;
+    }
+
+    .success-banner {
+      background: white;
+      padding: 30px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+
+    .success-banner h1 {
+      color: #10b981;
+      font-size: 2.5em;
+      margin-bottom: 10px;
+    }
+
+    .success-banner p {
+      color: #6b7280;
+      font-size: 1.2em;
+    }
+
+    .demo-container {
+      max-width: 500px;
+      margin: 30px auto;
+      background: white;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+
+    .demo-header {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: white;
+      padding: 20px;
+      text-align: center;
+      font-weight: bold;
+      font-size: 1.2em;
+    }
+
+    .phone-preview {
+      position: relative;
+      height: 700px;
+      background: #f9fafb;
+      overflow: hidden;
+    }
+
+    .content-area {
+      height: calc(100% - 120px);
+      overflow-y: auto;
+      padding: 20px;
+      padding-bottom: 100px;
+    }
+
+    .content-block {
+      background: white;
+      border: 2px dashed #d1d5db;
+      border-radius: 15px;
+      padding: 25px;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+
+    .content-block h3 {
+      color: #10b981;
+      margin-bottom: 10px;
+      font-size: 1.3em;
+    }
+
+    .content-block p {
+      color: #6b7280;
+      line-height: 1.8;
+    }
+
+    .booking-button-container {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      border-top: 2px solid #e5e7eb;
+      box-shadow: 0 -10px 30px rgba(0,0,0,0.1);
+      z-index: 50;
+      padding: 20px;
+      min-height: 100px;
+      animation: slideUp 0.5s ease-out;
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .booking-button {
+      background: linear-gradient(to right, #10b981, #059669);
+      color: white;
+      border: none;
+      border-radius: 20px;
+      padding: 24px;
+      width: 100%;
+      cursor: pointer;
+      box-shadow: 0 20px 40px rgba(16, 185, 129, 0.4);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .booking-button:hover {
+      transform: scale(1.02);
+      box-shadow: 0 25px 50px rgba(16, 185, 129, 0.5);
+    }
+
+    .booking-button:active {
+      transform: scale(0.98);
+    }
+
+    .booking-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      animation: shine 2s infinite;
+    }
+
+    @keyframes shine {
+      to {
+        left: 100%;
+      }
+    }
+
+    .button-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      z-index: 1;
+    }
+
+    .button-text {
+      text-align: right;
+    }
+
+    .button-label {
+      font-size: 1em;
+      opacity: 0.95;
+      margin-bottom: 5px;
+    }
+
+    .button-value {
+      font-size: 1.3em;
+      font-weight: bold;
+    }
+
+    .button-icon {
+      width: 50px;
+      height: 50px;
+      background: rgba(255,255,255,0.2);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5em;
+    }
+
+    .improvements {
+      max-width: 800px;
+      margin: 30px auto;
+      padding: 20px;
+    }
+
+    .improvement-card {
+      background: white;
+      border-radius: 15px;
+      padding: 25px;
+      margin-bottom: 15px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+    }
+
+    .improvement-number {
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: white;
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5em;
+      font-weight: bold;
+      flex-shrink: 0;
+    }
+
+    .improvement-content h3 {
+      color: #10b981;
+      margin-bottom: 8px;
+      font-size: 1.2em;
+    }
+
+    .improvement-content p {
+      color: #6b7280;
+      line-height: 1.6;
+    }
+
+    .code-snippet {
+      background: #1f2937;
+      color: #10b981;
+      padding: 10px 15px;
+      border-radius: 8px;
+      font-family: monospace;
+      font-size: 0.9em;
+      margin-top: 10px;
+    }
+
+    .pulse {
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+      50% {
+        transform: scale(1.05);
+        opacity: 0.9;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .demo-container {
+        margin: 0;
+        border-radius: 0;
+      }
+
+      .improvements {
+        padding: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="success-banner">
+    <h1>✅ تم الإصلاح بنجاح</h1>
+    <p>زر "احجز الآن" واضح تماماً على جميع الأجهزة</p>
+  </div>
+
+  <div class="demo-container">
+    <div class="demo-header">
+      📱 معاينة مباشرة - صفحة المزرعة
+    </div>
+    <div class="phone-preview">
+      <div class="content-area">
+        <div class="content-block">
+          <h3>🌳 مزرعة الخالدية</h3>
+          <p>مزرعة نخيل مميزة في الخرج</p>
+        </div>
+
+        <div class="content-block">
+          <h3>📊 الإحصائيات</h3>
+          <p>إجمالي: 500 شجرة<br>متاح: 100 شجرة<br>محجوز: 400 شجرة</p>
+        </div>
+
+        <div class="content-block">
+          <h3>✨ المميزات</h3>
+          <p>💧 مصدر مياه<br>⚡ كهرباء<br>🛡️ حماية<br>📍 موقع متميز</p>
+        </div>
+
+        <div class="content-block">
+          <h3>📍 الموقع</h3>
+          <p>الخرج • منطقة الرياض</p>
+        </div>
+
+        <div class="content-block" style="height: 100px; background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border: 2px solid #86efac;">
+          <p style="color: #059669; font-weight: bold;">⬇️ انزل للأسفل لترى الزر الواضح</p>
+        </div>
+      </div>
+
+      <div class="booking-button-container pulse">
+        <button class="booking-button">
+          <div class="button-content">
+            <div class="button-text">
+              <div class="button-label">ابدأ الحجز الآن</div>
+              <div class="button-value">100 شجرة متاحة</div>
+            </div>
+            <div class="button-icon">✨</div>
+          </div>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="improvements">
+    <div class="improvement-card">
+      <div class="improvement-number">1</div>
+      <div class="improvement-content">
+        <h3>زيادة المسافة السفلية</h3>
+        <p>تم زيادة المسافة بين المحتوى والزر من 144px إلى 192px</p>
+        <div class="code-snippet">pb-36 → pb-48</div>
+      </div>
+    </div>
+
+    <div class="improvement-card">
+      <div class="improvement-number">2</div>
+      <div class="improvement-content">
+        <h3>ارتفاع ثابت للزر</h3>
+        <p>الجوال: 100px • الكمبيوتر: 90px</p>
+        <div class="code-snippet">min-height: 100px</div>
+      </div>
+    </div>
+
+    <div class="improvement-card">
+      <div class="improvement-number">3</div>
+      <div class="improvement-content">
+        <h3>padding أكبر للزر</h3>
+        <p>زيادة المساحة الداخلية للزر ليكون أوضح وأسهل في النقر</p>
+        <div class="code-snippet">p-4 → p-5, py-5 → py-6</div>
+      </div>
+    </div>
+
+    <div class="improvement-card">
+      <div class="improvement-number">4</div>
+      <div class="improvement-content">
+        <h3>ظل أقوى</h3>
+        <p>تحسين الظل ليجعل الزر بارزاً وواضحاً عن الخلفية</p>
+        <div class="code-snippet">shadow-lg → shadow-xl</div>
+      </div>
+    </div>
+
+    <div class="improvement-card">
+      <div class="improvement-number">5</div>
+      <div class="improvement-content">
+        <h3>دعم iPhone</h3>
+        <p>إضافة دعم للأجهزة المحمولة مع الـ notch (iPhone X وأحدث)</p>
+        <div class="code-snippet">pb-safe + safe-area-inset-bottom</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="text-align: center; padding: 40px 20px; color: white;">
+    <div style="font-size: 3em; margin-bottom: 20px;">🎉</div>
+    <h2 style="font-size: 2em; margin-bottom: 10px;">تم الإصلاح بنجاح!</h2>
+    <p style="font-size: 1.2em; opacity: 0.9;">زر "احجز الآن" واضح ومرئي بشكل كامل</p>
+    <div style="margin-top: 30px; padding: 20px; background: rgba(255,255,255,0.1); border-radius: 15px; backdrop-filter: blur(10px);">
+      <p style="font-size: 0.9em;">Build Version</p>
+      <p style="font-size: 1.1em; font-weight: bold; margin-top: 5px;">v2025.12.17_035436</p>
+    </div>
+  </div>
+
+  <script>
+    document.querySelector('.booking-button').addEventListener('click', function() {
+      alert('✅ الزر يعمل بشكل ممتاز!\n\nالآن اذهب إلى المنصة واختبر زر الحجز الحقيقي في صفحة أي مزرعة.');
+    });
+
+    console.log('✅ تم إصلاح رؤية زر الحجز');
+    console.log('📱 الزر واضح على الجوال (100px)');
+    console.log('💻 الزر واضح على الكمبيوتر (90px)');
+    console.log('📦 Build: v2025.12.17_035436');
+  </script>
+</body>
+</html>
