@@ -14,9 +14,7 @@
     <meta name="pragma" content="no-cache" />
     <meta name="last-modified" content="__BUILD_VERSION__" />
     <meta name="version" content="__BUILD_VERSION__" />
-    <meta name="cache-buster" content="v20251217_1765975100925" />
-    <meta name="build-time" content="__BUILD_TIME__" />
-    <meta name="cdn-purge" content="__BUILD_TIME__" />
+    <meta name="cache-buster" content="v20251217_1765975842035" />
 
     <!-- iPhone/Safari specific headers -->
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -45,116 +43,52 @@
       }
     </style>
 
-    <!-- 🔥 NUCLEAR CACHE BUSTING - FORCES UPDATE ON ALL BROWSERS -->
+    <!-- 🔄 AGGRESSIVE CACHE BUSTING FOR IPHONE -->
     <script>
       (function() {
         const BUILD_VERSION = '__BUILD_VERSION__';
-        const FORCE_UPDATE_VERSION = 'v20251217_DOMAIN_CACHE_FIX';
+        const FORCE_UPDATE_VERSION = 'v20251209_GLOBAL_DOCK_OUTSIDE_BODY';
 
-        console.log('%c🔥 منصة النخيل والزيتون', 'color:#10b981;font-size:20px;font-weight:bold');
-        console.log('%cVersion: ' + BUILD_VERSION, 'color:#3b82f6;font-size:14px');
-        console.log('%cForce Update: ' + FORCE_UPDATE_VERSION, 'color:#ef4444;font-size:14px;font-weight:bold');
+        console.log('%c✅ منصة النخيل والزيتون', 'color:#10b981;font-size:18px;font-weight:bold');
+        console.log('Version:', BUILD_VERSION);
+        console.log('Force Update:', FORCE_UPDATE_VERSION);
 
-        // ALWAYS check for updates on ALL browsers
-        const lastForceUpdate = localStorage.getItem('force-update-version');
-        const lastAppVersion = localStorage.getItem('app-version');
-        const lastCheckTime = parseInt(localStorage.getItem('last-check-time') || '0');
-        const now = Date.now();
+        // Check if this is iPhone/iPad
+        const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+        const isSafari = /Safari/i.test(navigator.userAgent) && !/Chrome/i.test(navigator.userAgent);
 
-        // Force check every 5 minutes OR if version changed
-        const shouldForceCheck = (now - lastCheckTime > 5 * 60 * 1000) ||
-                                 (lastForceUpdate !== FORCE_UPDATE_VERSION) ||
-                                 (lastAppVersion !== BUILD_VERSION);
+        if (isIOS || isSafari) {
+          console.log('📱 iPhone/iPad detected - Checking for updates...');
 
-        if (shouldForceCheck) {
-          console.log('%c🔄 Checking for updates...', 'color:#f59e0b;font-size:14px;font-weight:bold');
+          const lastForceUpdate = localStorage.getItem('force-update-version');
+          const lastAppVersion = localStorage.getItem('app-version');
 
-          // Check if this is a cached version by fetching version-manifest.json
-          fetch('/version-manifest.json?t=' + Date.now(), {
-            cache: 'no-store',
-            headers: {
-              'Cache-Control': 'no-cache, no-store, must-revalidate',
-              'Pragma': 'no-cache'
+          // Force reload if versions don't match
+          if (lastForceUpdate !== FORCE_UPDATE_VERSION || lastAppVersion !== BUILD_VERSION) {
+            console.log('🔄 New version detected - Force reloading...');
+
+            // Clear all possible caches
+            if ('caches' in window) {
+              caches.keys().then(names => {
+                names.forEach(name => caches.delete(name));
+              });
             }
-          })
-            .then(r => r.json())
-            .then(manifest => {
-              console.log('%cServer version:', 'color:#10b981', manifest.version);
-              console.log('%cLocal version:', 'color:#3b82f6', BUILD_VERSION);
 
-              // If versions don't match OR force update version changed
-              if (manifest.version !== BUILD_VERSION || lastForceUpdate !== FORCE_UPDATE_VERSION) {
-                console.log('%c🔥 NEW VERSION DETECTED - FORCING UPDATE!', 'color:#ef4444;font-size:16px;font-weight:bold');
+            // Store new versions
+            localStorage.setItem('force-update-version', FORCE_UPDATE_VERSION);
+            localStorage.setItem('app-version', BUILD_VERSION);
 
-                // Clear ALL caches aggressively
-                if ('caches' in window) {
-                  caches.keys().then(names => {
-                    console.log('%cClearing ' + names.length + ' cache(s)...', 'color:#f59e0b');
-                    return Promise.all(names.map(name => {
-                      console.log('%c  🗑️ Deleting cache: ' + name, 'color:#ef4444');
-                      return caches.delete(name);
-                    }));
-                  }).then(() => {
-                    console.log('%c✅ All caches cleared!', 'color:#10b981;font-weight:bold');
-                    performForceReload();
-                  });
-                } else {
-                  performForceReload();
-                }
-
-                function performForceReload() {
-                  // Clear localStorage for this check
-                  localStorage.removeItem('force-update-version');
-                  localStorage.removeItem('app-version');
-                  localStorage.removeItem('last-check-time');
-
-                  // Add timestamp to URL to bypass ALL caches
-                  const url = new URL(window.location.href);
-                  url.searchParams.set('_t', Date.now());
-                  url.searchParams.set('_v', manifest.version || FORCE_UPDATE_VERSION);
-
-                  console.log('%c🚀 Reloading with cache bypass...', 'color:#8b5cf6;font-size:14px;font-weight:bold');
-
-                  // Wait a bit then reload
-                  setTimeout(() => {
-                    window.location.href = url.toString();
-                  }, 500);
-                }
-              } else {
-                console.log('%c✅ Already on latest version', 'color:#10b981;font-size:14px;font-weight:bold');
-
-                // Update stored versions
-                localStorage.setItem('force-update-version', FORCE_UPDATE_VERSION);
-                localStorage.setItem('app-version', BUILD_VERSION);
-                localStorage.setItem('last-check-time', now.toString());
-              }
-            })
-            .catch(err => {
-              console.log('%c⚠️ Could not check version (may be offline)', 'color:#f59e0b', err.message);
-
-              // Still update local storage on error
-              localStorage.setItem('force-update-version', FORCE_UPDATE_VERSION);
-              localStorage.setItem('app-version', BUILD_VERSION);
-              localStorage.setItem('last-check-time', now.toString());
-            });
-        } else {
-          console.log('%c✅ Version check skipped (checked recently)', 'color:#10b981;font-size:12px');
-        }
-
-        // Also check on visibility change (when user returns to tab)
-        document.addEventListener('visibilitychange', () => {
-          if (!document.hidden) {
-            const lastCheck = parseInt(localStorage.getItem('last-check-time') || '0');
-            const timeSinceLastCheck = Date.now() - lastCheck;
-
-            // If more than 1 minute since last check, check again
-            if (timeSinceLastCheck > 60 * 1000) {
-              console.log('%c🔄 Tab became visible - checking for updates...', 'color:#f59e0b;font-size:12px');
-              localStorage.removeItem('last-check-time'); // Force next check
-              setTimeout(() => window.location.reload(), 100);
-            }
+            // Force hard reload with cache bypass
+            setTimeout(() => {
+              window.location.reload(true);
+            }, 100);
+          } else {
+            console.log('✅ Already on latest version');
           }
-        });
+        } else {
+          // Non-iOS: just save version
+          localStorage.setItem('app-version', BUILD_VERSION);
+        }
       })();
     </script>
   </head>
