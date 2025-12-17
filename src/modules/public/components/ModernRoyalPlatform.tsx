@@ -461,7 +461,7 @@ export function ModernRoyalPlatform({
       `}</style>
 
       {/* شريط الإحصائيات المتحرك في الأسفل */}
-      <AdvancedStatsFooter />
+      <SmartActivityTicker />
     </div>
   );
 }
