@@ -16,7 +16,6 @@ import { GlowingConceptButton } from './GlowingConceptButton';
 import { ConceptIntroductionPage } from './ConceptIntroductionPage';
 import { IdeaOverviewSection } from './IdeaOverviewSection';
 import { CompanyInfoFooter } from '../../../components/common/CompanyInfoFooter';
-import { LiveActivityBar } from '../../../components/common/LiveActivityBar';
 
 type ViewMode = 'home' | 'farmDetail' | 'booking' | 'investor' | 'verification' | 'concept';
 
@@ -155,21 +154,11 @@ export function MainPlatformInterface({
       dir="rtl"
       style={{
         background: brandGradients.beige,
-        paddingTop: '80px',
-        paddingBottom: '420px',
+        paddingBottom: 'calc(80px + env(safe-area-inset-bottom))',
         minHeight: '100vh',
         minHeight: '-webkit-fill-available'
       }}
     >
-      {/* الهيدر الثابت في الأعلى */}
-      <PremiumHeader
-        onAdminLogin={onAdminLogin}
-        onInvestorLogin={handleGoToInvestorPanel}
-        onVerifyCertificate={() => setCurrentView('verification')}
-        onBackToAdmin={onBackToAdmin}
-        onFarmOwnerLogin={onFarmOwnerLogin}
-      />
-
       {isTransitioning && (
         <div className="fixed inset-0 z-50 flex items-center justify-center" style={{ background: 'rgba(0, 0, 0, 0.4)', backdropFilter: 'blur(4px)' }}>
           <div className="text-center">
@@ -183,15 +172,16 @@ export function MainPlatformInterface({
         </div>
       )}
 
+
       {/* الزر الذهبي */}
-      <div>
+      <div style={{ paddingTop: '64px' }}>
         <div className="pt-8 md:pt-12">
           <GlowingConceptButton onClick={() => setShowIdeaOverview(true)} />
         </div>
       </div>
 
       {/* قسم المزارع المتاحة */}
-      <div className="max-w-[1400px] mx-auto px-3 sm:px-6 pt-2 sm:pt-4 pb-6">
+      <div className="max-w-[1400px] mx-auto px-3 sm:px-6 pt-2 sm:pt-4" style={{ paddingBottom: 'calc(80px + env(safe-area-inset-bottom))' }}>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
           {farms.length === 0 ? (
             <div className="col-span-full text-center py-12">
@@ -260,28 +250,16 @@ export function MainPlatformInterface({
         </div>
       )}
 
-      {/* الشريط المتحرك والفوتر الثابتين في الأسفل */}
-      <div
-        className="fixed bottom-0 left-0 right-0"
-        style={{
-          zIndex: 40,
-          boxShadow: '0 -4px 20px rgba(0, 0, 0, 0.1)'
-        }}
-      >
-        {/* الشريط المتحرك فوق الفوتر مباشرة */}
-        <LiveActivityBar />
-
-        {/* الفوتر */}
-        <CompanyInfoFooter
-          companyName="منصة الاستثمار الزراعي الملكية"
-          commercialRegister="1234567890"
-          phone="+966500000000"
-          whatsapp="+966500000000"
-          email="info@palmolive.sa"
-          city="الرياض، المملكة العربية السعودية"
-          workingHours="الأحد - الخميس: 9 صباحاً - 6 مساءً"
-        />
-      </div>
+      {/* فوتر معلومات المؤسسة */}
+      <CompanyInfoFooter
+        companyName="منصة الاستثمار الزراعي الملكية"
+        commercialRegister="1234567890"
+        phone="+966500000000"
+        whatsapp="+966500000000"
+        email="info@palmolive.sa"
+        city="الرياض، المملكة العربية السعودية"
+        workingHours="الأحد - الخميس: 9 صباحاً - 6 مساءً"
+      />
     </div>
   );
 }

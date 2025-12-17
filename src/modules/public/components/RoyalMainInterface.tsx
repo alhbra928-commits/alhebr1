@@ -130,49 +130,35 @@ export function RoyalMainInterface({
   return (
     <>
       <style>{`
-        /* 🔧 تثبيت الهيدر على iPhone - نفس طريقة الأيقونات الجانبية */
-        .royal-fixed-header {
-          position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          width: 100%;
-          z-index: 50;
-        }
-
-        /* 🍎 iPhone specific fixes - EXACTLY like side dock */
+        /* تثبيت الهيدر على الايفون */
         @supports (-webkit-touch-callout: none) {
-          .royal-fixed-header {
-            position: fixed !important;
-            top: 0 !important;
-            -webkit-transform: translate3d(0, 0, 0);
-            transform: translate3d(0, 0, 0);
-            -webkit-backface-visibility: hidden;
-            backface-visibility: hidden;
-            will-change: transform;
-          }
-
           body {
-            padding-top: calc(180px + env(safe-area-inset-top, 0px)) !important;
+            padding-top: calc(180px + env(safe-area-inset-top, 0px));
           }
         }
 
-        /* للشاشات الكبيرة */
         @media (min-width: 640px) {
           body {
-            padding-top: 200px !important;
+            padding-top: 200px;
           }
-        }
-
-        /* منع أي overflow يؤثر على fixed positioning */
-        html, body {
-          overflow-x: hidden;
-          position: relative;
         }
       `}</style>
 
-      {/* Royal Header - ثابت بنفس طريقة الأيقونات الجانبية */}
-      <header className="royal-fixed-header bg-gradient-to-r from-amber-700 via-yellow-600 to-amber-700 shadow-2xl">
+      {/* Royal Header - ثابت في الأعلى */}
+      <header
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 50,
+          transform: 'translateZ(0)',
+          willChange: 'transform',
+          backfaceVisibility: 'hidden' as const,
+          WebkitBackfaceVisibility: 'hidden' as const,
+        }}
+        className="bg-gradient-to-r from-amber-700 via-yellow-600 to-amber-700 shadow-2xl"
+      >
         {/* شريط الإحصائيات المتحرك - داخل الهيدر */}
         <LiveActivityBar />
 
