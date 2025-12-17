@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>اختبار تثبيت الهيدر والفوتر على iPhone</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* 🔧 تثبيت الهيدر على iPhone - نفس طريقة الأيقونات الجانبية */
+    .royal-fixed-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      z-index: 50;
+      background: linear-gradient(90deg, #b45309 0%, #d97706 50%, #b45309 100%);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    /* 🍎 iPhone specific fixes - EXACTLY like side dock */
+    @supports (-webkit-touch-callout: none) {
+      .royal-fixed-header {
+        position: fixed !important;
+        top: 0 !important;
+        -webkit-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0);
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+        will-change: transform;
+      }
+
+      body {
+        padding-top: calc(120px + env(safe-area-inset-top, 0px)) !important;
+      }
+    }
+
+    /* للشاشات العادية */
+    body {
+      padding-top: 120px;
+    }
+
+    .header-content {
+      padding: 20px;
+      color: white;
+      text-align: center;
+    }
+
+    .header-title {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    .header-subtitle {
+      font-size: 14px;
+      opacity: 0.9;
+    }
+
+    /* 🔧 تثبيت الفوتر على iPhone - نفس طريقة الأيقونات الجانبية */
+    .glass-green-footer-fixed {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      z-index: 9999;
+      background: linear-gradient(180deg, rgba(16, 185, 129, 0.95) 0%, rgba(5, 150, 105, 0.98) 100%);
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    /* 🍎 iPhone specific fixes - EXACTLY like side dock */
+    @supports (-webkit-touch-callout: none) {
+      .glass-green-footer-fixed {
+        position: fixed !important;
+        bottom: 0 !important;
+        -webkit-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0);
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+        will-change: transform;
+      }
+
+      body {
+        padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important;
+      }
+    }
+
+    /* للشاشات العادية */
+    body {
+      padding-bottom: 80px;
+    }
+
+    .footer-content {
+      padding: 20px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+    }
+
+    .footer-button {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      color: white;
+      font-size: 12px;
+    }
+
+    .footer-icon {
+      width: 40px;
+      height: 40px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    /* المحتوى */
+    .content {
+      padding: 20px;
+      min-height: 200vh;
+    }
+
+    .test-card {
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .test-title {
+      font-size: 18px;
+      font-weight: bold;
+      color: #059669;
+      margin-bottom: 12px;
+    }
+
+    .test-description {
+      font-size: 14px;
+      color: #666;
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+
+    .test-status {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .status-success {
+      background: #d1fae5;
+      color: #059669;
+    }
+
+    .status-warning {
+      background: #fef3c7;
+      color: #d97706;
+    }
+
+    .scroll-indicator {
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.8);
+      color: white;
+      padding: 16px 24px;
+      border-radius: 12px;
+      font-size: 14px;
+      text-align: center;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s;
+      z-index: 100000;
+    }
+
+    .scroll-indicator.show {
+      opacity: 1;
+    }
+
+    .test-section {
+      background: #f0fdf4;
+      border: 2px solid #86efac;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .test-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    .test-icon {
+      font-size: 20px;
+    }
+  </style>
+</head>
+<body>
+  <!-- الهيدر الثابت -->
+  <header class="royal-fixed-header">
+    <div class="header-content">
+      <div class="header-title">🔧 اختبار تثبيت الهيدر والفوتر</div>
+      <div class="header-subtitle">نفس طريقة الأيقونات الجانبية</div>
+    </div>
+  </header>
+
+  <!-- المحتوى -->
+  <div class="content">
+    <div class="test-card">
+      <div class="test-title">✅ التأكيد النهائي</div>
+      <div class="test-description">
+        تم تطبيق نفس الطريقة المستخدمة في الأيقونات الجانبية (InnovativeSideDock) على الهيدر والفوتر.
+      </div>
+      <span class="test-status status-success">✅ Build ناجح</span>
+    </div>
+
+    <div class="test-section">
+      <div class="test-title">🧪 اختبارات مطلوبة على iPhone:</div>
+
+      <div class="test-item">
+        <span class="test-icon">📱</span>
+        <span>مرر للأعلى والأسفل - الهيدر والفوتر يجب أن يبقيا ثابتين</span>
+      </div>
+
+      <div class="test-item">
+        <span class="test-icon">⚡</span>
+        <span>مرر بسرعة - لا قفز ولا اهتزاز</span>
+      </div>
+
+      <div class="test-item">
+        <span class="test-icon">⌨️</span>
+        <span>افتح لوحة المفاتيح - العناصر تبقى ثابتة</span>
+      </div>
+
+      <div class="test-item">
+        <span class="test-icon">🔄</span>
+        <span>تحريك شريط Safari - العناصر لا تتحرك معه</span>
+      </div>
+    </div>
+
+    <div class="test-card">
+      <div class="test-title">🎯 التقنيات المستخدمة</div>
+      <div class="test-description">
+        <strong>1. CSS Classes:</strong><br>
+        • .royal-fixed-header للهيدر<br>
+        • .glass-green-footer-fixed للفوتر<br><br>
+
+        <strong>2. iPhone Detection:</strong><br>
+        • @supports (-webkit-touch-callout: none)<br><br>
+
+        <strong>3. Hardware Acceleration:</strong><br>
+        • translate3d(0, 0, 0)<br>
+        • backface-visibility: hidden<br>
+        • will-change: transform<br><br>
+
+        <strong>4. Position Locking:</strong><br>
+        • position: fixed !important<br>
+        • top: 0 !important (header)<br>
+        • bottom: 0 !important (footer)
+      </div>
+    </div>
+
+    <div class="test-card">
+      <div class="test-title">📊 المقارنة مع الأيقونات الجانبية</div>
+      <div class="test-description">
+        <table style="width: 100%; border-collapse: collapse;">
+          <tr style="background: #f0fdf4;">
+            <td style="padding: 8px; border: 1px solid #86efac; font-weight: bold;">التقنية</td>
+            <td style="padding: 8px; border: 1px solid #86efac; font-weight: bold;">الحالة</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px; border: 1px solid #86efac;">CSS Class</td>
+            <td style="padding: 8px; border: 1px solid #86efac;">✅ مطبق</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px; border: 1px solid #86efac;">@supports (-webkit-touch-callout)</td>
+            <td style="padding: 8px; border: 1px solid #86efac;">✅ مطبق</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px; border: 1px solid #86efac;">translate3d(0,0,0)</td>
+            <td style="padding: 8px; border: 1px solid #86efac;">✅ مطبق</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px; border: 1px solid #86efac;">backface-visibility: hidden</td>
+            <td style="padding: 8px; border: 1px solid #86efac;">✅ مطبق</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px; border: 1px solid #86efac;">will-change: transform</td>
+            <td style="padding: 8px; border: 1px solid #86efac;">✅ مطبق</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px; border: 1px solid #86efac;">position: fixed !important</td>
+            <td style="padding: 8px; border: 1px solid #86efac;">✅ مطبق</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- محتوى طويل للتمرير -->
+    <div class="test-card">
+      <div class="test-title">📏 محتوى طويل للاختبار</div>
+      <div class="test-description">
+        مرر للأسفل لاختبار ثبات الهيدر والفوتر...
+      </div>
+    </div>
+
+    <!-- كروت إضافية للتمرير -->
+    <div class="test-card" style="height: 300px; background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);">
+      <div class="test-title">🎨 كارت 1</div>
+      <div class="test-description">استمر في التمرير...</div>
+    </div>
+
+    <div class="test-card" style="height: 300px; background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);">
+      <div class="test-title">🎨 كارت 2</div>
+      <div class="test-description">الهيدر والفوتر يجب أن يبقيا ثابتين...</div>
+    </div>
+
+    <div class="test-card" style="height: 300px; background: linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%);">
+      <div class="test-title">🎨 كارت 3</div>
+      <div class="test-description">تقريباً وصلت للنهاية...</div>
+    </div>
+
+    <div class="test-card" style="height: 300px; background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);">
+      <div class="test-title">🎨 كارت 4</div>
+      <div class="test-description">آخر كارت - ارجع للأعلى الآن!</div>
+    </div>
+
+    <div class="test-card">
+      <div class="test-title">✅ النتيجة المتوقعة</div>
+      <div class="test-description">
+        إذا كانت الأيقونات الجانبية ثابتة على iPhone،<br>
+        فالهيدر والفوتر سيكونان ثابتين أيضاً.<br><br>
+        <strong>السبب:</strong> نفس الكود، نفس التقنيات، نفس النتيجة.
+      </div>
+      <span class="test-status status-success">✅ جاهز للاختبار</span>
+    </div>
+  </div>
+
+  <!-- الفوتر الثابت -->
+  <footer class="glass-green-footer-fixed">
+    <div class="footer-content">
+      <div class="footer-button">
+        <div class="footer-icon">🏠</div>
+        <span>الرئيسية</span>
+      </div>
+      <div class="footer-button">
+        <div class="footer-icon">🌳</div>
+        <span>المزارع</span>
+      </div>
+      <div class="footer-button">
+        <div class="footer-icon">💬</div>
+        <span>تواصل</span>
+      </div>
+      <div class="footer-button">
+        <div class="footer-icon">👤</div>
+        <span>حسابي</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- مؤشر التمرير -->
+  <div class="scroll-indicator" id="scrollIndicator">
+    <div style="font-size: 24px; margin-bottom: 8px;">📱</div>
+    <div id="scrollStatus">جاري التمرير...</div>
+  </div>
+
+  <script>
+    // مراقبة التمرير
+    let scrollTimeout;
+    const indicator = document.getElementById('scrollIndicator');
+    const status = document.getElementById('scrollStatus');
+
+    window.addEventListener('scroll', () => {
+      indicator.classList.add('show');
+
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const scrollPercent = Math.round((scrollTop / scrollHeight) * 100);
+
+      status.textContent = `التمرير: ${scrollPercent}%`;
+
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        indicator.classList.remove('show');
+      }, 1000);
+    });
+
+    // عرض معلومات الجهاز
+    console.log('🔍 معلومات الجهاز:');
+    console.log('User Agent:', navigator.userAgent);
+    console.log('Platform:', navigator.platform);
+    console.log('Viewport:', window.innerWidth + 'x' + window.innerHeight);
+    console.log('Device Pixel Ratio:', window.devicePixelRatio);
+
+    // التحقق من iPhone
+    const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
+    console.log('Is iOS Device:', isIOS);
+
+    if (isIOS) {
+      console.log('✅ تم اكتشاف جهاز iOS');
+      console.log('🔧 iPhone fixes نشطة');
+    }
+
+    // التحقق من Safe Area
+    const hasSafeArea = CSS.supports('padding-top', 'env(safe-area-inset-top)');
+    console.log('Safe Area Support:', hasSafeArea);
+  </script>
+</body>
+</html>
