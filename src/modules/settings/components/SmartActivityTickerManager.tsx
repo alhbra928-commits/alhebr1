@@ -9,14 +9,16 @@ import { supabase } from '../../../lib/supabase';
 interface PlatformActivity {
   id: string;
   activity_type: string;
-  activity_title_ar: string;
-  activity_title_en: string;
-  icon: string;
-  farm_name?: string;
-  location?: string;
-  investor_name?: string;
-  timestamp: string;
-  is_visible: boolean;
+  activity_data?: {
+    title_ar?: string;
+    title_en?: string;
+    icon?: string;
+    farm_name?: string;
+    location?: string;
+    investor_name?: string;
+  };
+  is_visible: boolean; // Local display state (mapped from is_active)
+  is_active?: boolean; // DB field
   priority: number;
   created_at: string;
 }
@@ -81,9 +83,16 @@ export function SmartActivityTickerManager() {
         const { data } = await supabase
           .from('platform_activities')
           .select('*')
-          .order('timestamp', { ascending: false })
+          .order('created_at', { ascending: false })
           .limit(50);
-        if (data) setPlatformActivities(data);
+        if (data) {
+          // Map is_active to is_visible for display
+          const mappedData = data.map(item => ({
+            ...item,
+            is_visible: item.is_active ?? true
+          }));
+          setPlatformActivities(mappedData);
+        }
       } else if (activeTab === 'simulated') {
         const { data } = await supabase
           .from('simulated_activities')
@@ -114,12 +123,13 @@ export function SmartActivityTickerManager() {
     try {
       const { error } = await supabase.from('platform_activities').insert({
         activity_type: 'stats',
-        activity_title_ar: newActivity.titleAr,
-        activity_title_en: newActivity.titleEn,
-        icon: newActivity.icon,
+        activity_data: {
+          title_ar: newActivity.titleAr,
+          title_en: newActivity.titleEn,
+          icon: newActivity.icon,
+        },
         priority: newActivity.priority,
-        is_visible: true,
-        timestamp: new Date().toISOString(),
+        is_active: true,
       });
 
       if (error) throw error;
@@ -188,15 +198,36 @@ export function SmartActivityTickerManager() {
   const toggleActivityVisibility = async (id: string, currentState: boolean) => {
     setLoading(true);
     try {
+      const newState = !currentState;
       const { error } = await supabase
         .from('platform_activities')
-        .update({ is_visible: !currentState })
+        .update({ is_active: newState })
         .eq('id', id);
 
       if (error) throw error;
-      loadData();
+
+      // Update local state immediately for instant feedback
+      setPlatformActivities(prev =>
+        prev.map(activity =>
+          activity.id === id
+            ? { ...activity, is_visible: newState }
+            : activity
+        )
+      );
+
+      setSuccessMessage(
+        newState
+          ? '✅ تم تفعيل النشاط بنجاح'
+          : '⏸️ تم تعطيل النشاط بنجاح'
+      );
+      setTimeout(() => setSuccessMessage(''), 3000);
+
+      // Reload data to ensure consistency
+      setTimeout(() => loadData(), 500);
     } catch (error) {
       console.error('Error toggling visibility:', error);
+      alert('حدث خطأ عند تحديث النشاط');
+      loadData(); // Reload on error to restore correct state
     } finally {
       setLoading(false);
     }
@@ -497,14 +528,14 @@ export function SmartActivityTickerManager() {
                 className="p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow"
               >
                 <div className="flex items-center gap-3">
-                  <span className="text-3xl">{activity.icon}</span>
+                  <span className="text-3xl">{activity.activity_data?.icon || '✨'}</span>
                   <div className="flex-1">
                     <h4 className="font-bold text-gray-900 dark:text-white">
-                      {activity.activity_title_ar}
+                      {activity.activity_data?.title_ar || activity.activity_data?.farm_name || 'نشاط'}
                     </h4>
                     <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400 mt-1">
                       <Clock className="w-3 h-3" />
-                      <span>{new Date(activity.timestamp).toLocaleString('ar-SA')}</span>
+                      <span>{new Date(activity.created_at).toLocaleString('ar-SA')}</span>
                       <span className="mx-1">•</span>
                       <span>الأولوية: {activity.priority}</span>
                     </div>
