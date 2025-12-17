@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>⚡ الحل السريع - 3 خطوات فقط!</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+      direction: rtl;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .header {
+      background: white;
+      padding: 40px;
+      border-radius: 25px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .title {
+      font-size: 48px;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      font-size: 28px;
+      color: #667eea;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    .problem {
+      background: #fff3cd;
+      border: 3px solid #ffc107;
+      border-radius: 20px;
+      padding: 30px;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    .problem-title {
+      font-size: 32px;
+      color: #856404;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+
+    .problem-text {
+      font-size: 20px;
+      color: #333;
+      line-height: 1.8;
+    }
+
+    .domain {
+      font-size: 28px;
+      color: #667eea;
+      font-weight: bold;
+      background: white;
+      padding: 15px 30px;
+      border-radius: 15px;
+      display: inline-block;
+      margin: 15px 0;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .step-box {
+      background: white;
+      padding: 35px;
+      border-radius: 25px;
+      margin-bottom: 25px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .step-number {
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      font-weight: bold;
+      box-shadow: 0 10px 30px rgba(102, 126, 234, 0.5);
+    }
+
+    .step-title {
+      font-size: 32px;
+      color: #667eea;
+      font-weight: bold;
+      margin-bottom: 20px;
+      padding-right: 80px;
+    }
+
+    .step-content {
+      font-size: 20px;
+      line-height: 2;
+      color: #333;
+    }
+
+    .button-box {
+      background: #667eea;
+      color: white;
+      padding: 20px 40px;
+      border-radius: 15px;
+      font-size: 22px;
+      font-weight: bold;
+      margin: 15px 0;
+      display: block;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+    }
+
+    .button-box:hover {
+      background: #764ba2;
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    .highlight {
+      background: #ffeb3b;
+      padding: 3px 10px;
+      border-radius: 6px;
+      font-weight: bold;
+    }
+
+    .success-box {
+      background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+      color: white;
+      padding: 40px;
+      border-radius: 25px;
+      text-align: center;
+      margin-top: 30px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+    }
+
+    .success-title {
+      font-size: 36px;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+
+    .success-text {
+      font-size: 22px;
+      line-height: 1.8;
+    }
+
+    .emoji {
+      font-size: 48px;
+      margin: 10px;
+    }
+
+    @media (max-width: 768px) {
+      .title { font-size: 36px; }
+      .subtitle { font-size: 22px; }
+      .step-title { font-size: 24px; }
+      .step-content { font-size: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <div class="title">⚡ الحل السريع</div>
+      <div class="subtitle">3 خطوات فقط!</div>
+    </div>
+
+    <!-- المشكلة -->
+    <div class="problem">
+      <div class="problem-title">❌ المشكلة</div>
+      <div class="problem-text">
+        الدومين يعرض النسخة القديمة<br>
+        بسبب <span class="highlight">Cache في CDN</span>
+      </div>
+      <div class="domain">hisas1.com</div>
+    </div>
+
+    <!-- الخطوة 1 -->
+    <div class="step-box">
+      <div class="step-number">1</div>
+      <div class="step-title">امسح CDN Cache</div>
+      <div class="step-content">
+        <strong>Netlify:</strong><br>
+        → Site Settings → Build & Deploy<br>
+        → اضغط: <span class="highlight">Clear cache and retry deploy</span><br><br>
+
+        <strong>Vercel:</strong><br>
+        → Project Settings → General<br>
+        → اضغط: <span class="highlight">Clear Cache</span><br><br>
+
+        <strong>Cloudflare:</strong><br>
+        → Caching → Configuration<br>
+        → اضغط: <span class="highlight">Purge Everything</span>
+      </div>
+      <a href="https://app.netlify.com" target="_blank" class="button-box">
+        🚀 افتح Netlify
+      </a>
+      <a href="https://vercel.com/dashboard" target="_blank" class="button-box">
+        🚀 افتح Vercel
+      </a>
+      <a href="https://dash.cloudflare.com" target="_blank" class="button-box">
+        🚀 افتح Cloudflare
+      </a>
+    </div>
+
+    <!-- الخطوة 2 -->
+    <div class="step-box">
+      <div class="step-number">2</div>
+      <div class="step-title">أعد نشر الموقع</div>
+      <div class="step-content">
+        <strong>في Netlify:</strong><br>
+        → اذهب إلى: <span class="highlight">Deploys</span><br>
+        → اضغط: <span class="highlight">Trigger deploy</span><br>
+        → اضغط: <span class="highlight">Deploy site</span><br><br>
+
+        <strong>في Vercel:</strong><br>
+        → اذهب إلى: <span class="highlight">Deployments</span><br>
+        → اضغط على آخر deployment<br>
+        → اضغط: <span class="highlight">Redeploy</span>
+      </div>
+    </div>
+
+    <!-- الخطوة 3 -->
+    <div class="step-box">
+      <div class="step-number">3</div>
+      <div class="step-title">امسح كاش المتصفح</div>
+      <div class="step-content">
+        <strong>Windows/Linux:</strong><br>
+        → اضغط: <span class="highlight">Ctrl + Shift + Delete</span><br><br>
+
+        <strong>Mac:</strong><br>
+        → اضغط: <span class="highlight">Command + Shift + Delete</span><br><br>
+
+        ثم حدد:<br>
+        ✅ Cached images and files<br>
+        ✅ Cookies and site data<br><br>
+
+        <strong>أو افتح في وضع Incognito:</strong><br>
+        → <span class="highlight">Ctrl + Shift + N</span> (Windows)<br>
+        → <span class="highlight">Command + Shift + N</span> (Mac)
+      </div>
+      <a href="https://hisas1.com" target="_blank" class="button-box">
+        🌐 افتح hisas1.com في Incognito
+      </a>
+    </div>
+
+    <!-- النجاح -->
+    <div class="success-box">
+      <div class="emoji">🎉</div>
+      <div class="success-title">تم الحل!</div>
+      <div class="success-text">
+        افتح الموقع الآن في وضع Incognito<br>
+        ستظهر النسخة الجديدة مباشرة ✅
+      </div>
+      <div style="margin-top: 30px;">
+        <a href="https://hisas1.com" target="_blank"
+           style="background: white; color: #667eea; padding: 20px 50px;
+                  border-radius: 50px; font-size: 24px; font-weight: bold;
+                  text-decoration: none; display: inline-block;
+                  box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+          🚀 افتح الموقع الآن
+        </a>
+      </div>
+    </div>
+
+    <!-- ملاحظة -->
+    <div style="background: white; padding: 30px; border-radius: 20px; margin-top: 30px; text-align: center;">
+      <div style="font-size: 24px; color: #667eea; font-weight: bold; margin-bottom: 15px;">
+        💡 ملاحظة مهمة
+      </div>
+      <div style="font-size: 18px; color: #666; line-height: 1.8;">
+        إذا لم يعمل الحل، قد تكون المشكلة في DNS<br>
+        انتشار DNS يستغرق 24-48 ساعة<br><br>
+        <strong>الحل المؤقت:</strong><br>
+        استخدم رابط Netlify/Vercel المباشر:<br>
+        <span style="background: #f0f0f0; padding: 10px 20px; border-radius: 10px; display: inline-block; margin-top: 10px;">
+          your-site.netlify.app
+        </span>
+      </div>
+    </div>
+
+    <!-- الأدوات -->
+    <div style="background: white; padding: 30px; border-radius: 20px; margin-top: 30px;">
+      <div style="font-size: 24px; color: #667eea; font-weight: bold; margin-bottom: 20px; text-align: center;">
+        🛠️ أدوات مفيدة
+      </div>
+      <div style="display: grid; gap: 15px;">
+        <a href="https://dnschecker.org" target="_blank" class="button-box">
+          🌍 تحقق من DNS
+        </a>
+        <a href="https://www.whatsmydns.net" target="_blank" class="button-box">
+          🌐 What's My DNS
+        </a>
+        <a href="https://tools.keycdn.com/curl" target="_blank" class="button-box">
+          📋 Check Headers
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    console.log('⚡ الحل السريع - 3 خطوات');
+    console.log('1. امسح CDN Cache');
+    console.log('2. أعد نشر الموقع');
+    console.log('3. امسح كاش المتصفح');
+  </script>
+</body>
+</html>
