@@ -18,21 +18,47 @@ try {
   console.error('❌ AdminUsersStorage initialization failed:', error);
 }
 
-// Service Worker DISABLED to prevent reload loops
-// if (import.meta.env.PROD) {
-//   window.addEventListener('load', () => {
-//     if ('serviceWorker' in navigator) {
-//       navigator.serviceWorker
-//         .register('/service-worker.js')
-//         .then((registration) => {
-//           console.log('✅ Service Worker registered');
-//         })
-//         .catch((error) => {
-//           console.warn('⚠️ Service Worker registration failed:', error);
-//         });
-//     }
-//   });
-// }
+// 🔥 AGGRESSIVE SERVICE WORKER - Forces fresh content
+if (import.meta.env.PROD && 'serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker
+      .register('/service-worker.js')
+      .then((registration) => {
+        console.log('%c✅ Service Worker registered', 'color:#10b981;font-weight:bold');
+
+        // Check for updates every 30 seconds
+        setInterval(() => {
+          registration.update().catch(() => {});
+        }, 30000);
+
+        // Force update on SW message
+        navigator.serviceWorker.addEventListener('message', (event) => {
+          if (event.data && event.data.type === 'SW_ACTIVATED') {
+            console.log('%c🔥 Service Worker activated - NEW VERSION!', 'color:#ef4444;font-size:16px;font-weight:bold');
+            console.log('%cVersion:', 'color:#3b82f6', event.data.version);
+
+            if (event.data.action === 'FORCE_RELOAD') {
+              console.log('%c🚀 Force reloading to apply updates...', 'color:#8b5cf6;font-weight:bold');
+
+              // Clear caches and reload
+              if ('caches' in window) {
+                caches.keys().then(names => {
+                  return Promise.all(names.map(name => caches.delete(name)));
+                }).then(() => {
+                  setTimeout(() => window.location.reload(), 500);
+                });
+              } else {
+                setTimeout(() => window.location.reload(), 500);
+              }
+            }
+          }
+        });
+      })
+      .catch((error) => {
+        console.warn('⚠️ Service Worker registration failed:', error);
+      });
+  });
+}
 
 // TEMPORARILY DISABLED FOR DEBUGGING
 // if (import.meta.env.PROD) {
