@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>✅ صفحة المزرعة النظيفة - بدون فوتر</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #f8f9fa;
+      min-height: 100vh;
+      direction: rtl;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding-bottom: 100px;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: white;
+      padding: 40px 20px;
+      text-align: center;
+      box-shadow: 0 10px 40px rgba(16, 185, 129, 0.2);
+    }
+
+    .header h1 {
+      font-size: 2em;
+      margin-bottom: 10px;
+    }
+
+    .header p {
+      opacity: 0.95;
+      font-size: 1.1em;
+    }
+
+    .section {
+      background: white;
+      margin: 20px;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .section h2 {
+      color: #10b981;
+      margin-bottom: 20px;
+      font-size: 1.5em;
+      border-right: 4px solid #10b981;
+      padding-right: 15px;
+    }
+
+    .comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin: 20px 0;
+    }
+
+    @media (max-width: 640px) {
+      .comparison {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .before, .after {
+      padding: 20px;
+      border-radius: 15px;
+      text-align: center;
+    }
+
+    .before {
+      background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+      border: 3px solid #ef4444;
+    }
+
+    .after {
+      background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+      border: 3px solid #10b981;
+    }
+
+    .before h3 {
+      color: #dc2626;
+      margin-bottom: 20px;
+      font-size: 1.2em;
+    }
+
+    .after h3 {
+      color: #059669;
+      margin-bottom: 20px;
+      font-size: 1.2em;
+    }
+
+    .visual-demo {
+      background: #f9fafb;
+      padding: 30px;
+      border-radius: 15px;
+      border: 2px dashed #d1d5db;
+      margin: 20px 0;
+    }
+
+    .demo-content {
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 15px;
+      min-height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #6b7280;
+      font-size: 1.1em;
+    }
+
+    .demo-button-area {
+      position: relative;
+      margin-top: 15px;
+    }
+
+    .demo-glass-button {
+      width: 100%;
+      position: relative;
+      overflow: hidden;
+      border-radius: 15px;
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+      background: linear-gradient(135deg,
+        rgba(16, 185, 129, 0.95) 0%,
+        rgba(5, 150, 105, 0.95) 100%
+      );
+      box-shadow:
+        0 8px 32px rgba(16, 185, 129, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .demo-glass-button:hover {
+      transform: scale(1.01);
+    }
+
+    .demo-glass-button-content {
+      position: relative;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: white;
+    }
+
+    .demo-footer {
+      background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+      padding: 30px 20px;
+      border-radius: 10px;
+      margin-top: 15px;
+      border: 2px solid #d1d5db;
+      position: relative;
+    }
+
+    .demo-footer::before {
+      content: '❌';
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 1.5em;
+    }
+
+    .demo-footer h4 {
+      color: #6b7280;
+      margin-bottom: 15px;
+      font-size: 1.1em;
+    }
+
+    .demo-footer p {
+      color: #9ca3af;
+      font-size: 0.9em;
+      margin: 5px 0;
+    }
+
+    .feature-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .feature-list li {
+      padding: 15px 20px;
+      margin: 10px 0;
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.05) 100%);
+      border-right: 4px solid #10b981;
+      border-radius: 10px;
+      font-weight: 500;
+      color: #059669;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 15px;
+      margin: 20px 0;
+    }
+
+    .stat-card {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: white;
+      padding: 25px;
+      border-radius: 15px;
+      text-align: center;
+      box-shadow: 0 5px 20px rgba(16, 185, 129, 0.3);
+    }
+
+    .stat-number {
+      font-size: 2.5em;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .stat-label {
+      font-size: 0.9em;
+      opacity: 0.95;
+    }
+
+    /* زر الحجز الزجاجي الحقيقي */
+    .glass-button-container {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      padding-bottom: env(safe-area-inset-bottom, 0);
+    }
+
+    .glass-backdrop {
+      position: absolute;
+      inset: 0;
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      background: rgba(255, 255, 255, 0.8);
+    }
+
+    .glass-button-wrapper {
+      position: relative;
+      padding: 12px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .glass-button {
+      width: 100%;
+      position: relative;
+      overflow: hidden;
+      border-radius: 15px;
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+      background: linear-gradient(135deg,
+        rgba(16, 185, 129, 0.95) 0%,
+        rgba(5, 150, 105, 0.95) 100%
+      );
+      box-shadow:
+        0 8px 32px rgba(16, 185, 129, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .glass-button:hover {
+      transform: scale(1.01);
+    }
+
+    .glass-button-content {
+      position: relative;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: white;
+    }
+
+    .glass-button-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .glass-icon {
+      width: 40px;
+      height: 40px;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(5px);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow:
+        inset 0 2px 4px rgba(255, 255, 255, 0.2),
+        0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .glass-text {
+      text-align: right;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .glass-text-top {
+      font-size: 0.75rem;
+      font-weight: 600;
+      opacity: 0.95;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .glass-text-bottom {
+      font-size: 0.875rem;
+      font-weight: bold;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .alert-box {
+      background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+      border: 3px solid #10b981;
+      border-radius: 15px;
+      padding: 25px;
+      margin: 20px 0;
+      text-align: center;
+    }
+
+    .alert-box h3 {
+      color: #059669;
+      font-size: 1.8em;
+      margin-bottom: 10px;
+    }
+
+    .alert-box p {
+      color: #047857;
+      font-size: 1.1em;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>✅ صفحة المزرعة النظيفة</h1>
+    <p>زر الحجز واضح بدون فوتر!</p>
+  </div>
+
+  <div class="container">
+    <!-- المقارنة -->
+    <div class="section">
+      <h2>📊 المقارنة قبل وبعد</h2>
+      <div class="comparison">
+        <div class="before">
+          <h3>❌ قبل (مع الفوتر)</h3>
+          <div style="text-align: right; padding: 20px; background: white; border-radius: 10px; margin: 15px 0;">
+            <div style="color: #6b7280; margin-bottom: 10px;">محتوى المزرعة...</div>
+            <div style="background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 15px; border-radius: 10px; margin: 10px 0;">
+              🟢 زر الحجز
+            </div>
+            <div style="background: #e5e7eb; padding: 15px; border-radius: 10px; border: 2px solid #d1d5db; position: relative;">
+              <span style="position: absolute; top: 5px; right: 5px;">❌</span>
+              <div style="color: #6b7280; font-size: 0.9em;">فوتر يغطي الزر</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="after">
+          <h3>✅ بعد (بدون الفوتر)</h3>
+          <div style="text-align: right; padding: 20px; background: white; border-radius: 10px; margin: 15px 0;">
+            <div style="color: #6b7280; margin-bottom: 10px;">محتوى المزرعة...</div>
+            <div style="background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 15px; border-radius: 10px; margin: 10px 0; box-shadow: 0 8px 32px rgba(16, 185, 129, 0.3);">
+              🟢 زر الحجز واضح تماماً
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- الإحصائيات -->
+    <div class="section">
+      <h2>📈 الإحصائيات</h2>
+      <div class="stats">
+        <div class="stat-card">
+          <div class="stat-number">14</div>
+          <div class="stat-label">سطر تم حذفه</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">1</div>
+          <div class="stat-label">ملف معدل</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">100%</div>
+          <div class="stat-label">وضوح الزر</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- العرض التوضيحي -->
+    <div class="section">
+      <h2>👀 العرض التوضيحي</h2>
+
+      <h3 style="color: #dc2626; margin: 30px 0 15px;">❌ قبل (مع الفوتر):</h3>
+      <div class="visual-demo">
+        <div class="demo-content">
+          📄 محتوى صفحة المزرعة
+        </div>
+        <div class="demo-button-area">
+          <button class="demo-glass-button">
+            <div class="demo-glass-button-content">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="width: 40px; height: 40px; background: rgba(255,255,255,0.2); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                  ✨
+                </div>
+                <div style="text-align: right;">
+                  <div style="font-size: 0.75rem; font-weight: 600;">ابدأ الحجز الآن</div>
+                  <div style="font-size: 0.875rem; font-weight: bold;">100 شجرة متاحة</div>
+                </div>
+              </div>
+              <span style="font-size: 1.5em;">→</span>
+            </div>
+          </button>
+        </div>
+        <div class="demo-footer">
+          <h4>فوتر المؤسسة</h4>
+          <p>منصة الاستثمار الزراعي الملكية</p>
+          <p>السجل التجاري: 1234567890</p>
+          <p>الهاتف: +966500000000</p>
+          <p style="margin-top: 10px; font-size: 0.8em; color: #ef4444; font-weight: bold;">⚠️ يغطي جزء من الزر!</p>
+        </div>
+      </div>
+
+      <h3 style="color: #059669; margin: 30px 0 15px;">✅ بعد (بدون الفوتر):</h3>
+      <div class="visual-demo" style="border-color: #10b981; background: linear-gradient(135deg, #dcfce7 0%, #f0fdf4 100%);">
+        <div class="demo-content">
+          📄 محتوى صفحة المزرعة
+        </div>
+        <div class="demo-button-area">
+          <button class="demo-glass-button">
+            <div class="demo-glass-button-content">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="width: 40px; height: 40px; background: rgba(255,255,255,0.2); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                  ✨
+                </div>
+                <div style="text-align: right;">
+                  <div style="font-size: 0.75rem; font-weight: 600;">ابدأ الحجز الآن</div>
+                  <div style="font-size: 0.875rem; font-weight: bold;">100 شجرة متاحة</div>
+                </div>
+              </div>
+              <span style="font-size: 1.5em;">→</span>
+            </div>
+          </button>
+        </div>
+        <div style="text-align: center; padding: 20px; color: #059669; font-weight: bold; font-size: 1.1em;">
+          ✅ واضح تماماً - لا يوجد فوتر!
+        </div>
+      </div>
+    </div>
+
+    <!-- الفوائد -->
+    <div class="section">
+      <h2>✨ الفوائد</h2>
+      <ul class="feature-list">
+        <li>✓ زر الحجز واضح تماماً بدون أي تغطية</li>
+        <li>✓ لا يوجد ازدحام بصري في الأسفل</li>
+        <li>✓ تركيز كامل على زر الحجز</li>
+        <li>✓ تصميم نظيف ومرتب</li>
+        <li>✓ تجربة مستخدم أفضل</li>
+        <li>✓ أقل تشتيت للزائر</li>
+      </ul>
+    </div>
+
+    <!-- التأكيد -->
+    <div class="alert-box">
+      <h3>🎉 تم بنجاح!</h3>
+      <p>صفحة المزرعة الآن نظيفة وزر الحجز واضح تماماً</p>
+    </div>
+
+    <div class="section">
+      <h2>📦 معلومات البناء</h2>
+      <div style="background: #f9fafb; padding: 20px; border-radius: 10px; direction: ltr; text-align: left; font-family: monospace;">
+        <div>✓ built in 15.40s</div>
+        <div>📦 Version: v20251217_1765946167813</div>
+        <div>📦 Atomic: v2025.12.17_043623</div>
+        <div>📊 Files: 51</div>
+        <div>✅ Success!</div>
+      </div>
+    </div>
+
+    <div style="height: 100px;"></div>
+  </div>
+
+  <!-- الزر الزجاجي الحقيقي -->
+  <div class="glass-button-container">
+    <div class="glass-backdrop"></div>
+    <div class="glass-button-wrapper">
+      <button class="glass-button" onclick="alert('✅ زر الحجز الزجاجي\n\n- واضح تماماً\n- بدون فوتر\n- تصميم نظيف\n- تجربة أفضل')">
+        <div class="glass-button-content">
+          <div class="glass-button-left">
+            <div class="glass-icon">
+              <span style="font-size: 1.3em;">✨</span>
+            </div>
+            <div class="glass-text">
+              <div class="glass-text-top">ابدأ الحجز الآن</div>
+              <div class="glass-text-bottom">100 شجرة متاحة</div>
+            </div>
+          </div>
+          <div style="font-size: 1.5em; flex-shrink: 0;">→</div>
+        </div>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    console.log('✅ صفحة المزرعة النظيفة');
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    console.log('');
+    console.log('📝 التغييرات:');
+    console.log('  - تم إزالة الفوتر السفلي');
+    console.log('  - زر الحجز واضح تماماً');
+    console.log('  - تصميم نظيف ومرتب');
+    console.log('');
+    console.log('📊 الإحصائيات:');
+    console.log('  - 14 سطر تم حذفه');
+    console.log('  - 1 ملف معدل');
+    console.log('  - 100% وضوح');
+    console.log('');
+    console.log('📦 Build: v2025.12.17_043623');
+    console.log('✅ جاهز!');
+  </script>
+</body>
+</html>

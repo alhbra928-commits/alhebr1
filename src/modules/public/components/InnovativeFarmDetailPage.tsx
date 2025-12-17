@@ -19,7 +19,6 @@ import { FarmDetailService } from '../services/farmDetailService';
 import { MazadCrownLoader } from '../../../components/common/MazadCrownLoader';
 import { LiveActivityBar } from '../../../components/common/LiveActivityBar';
 import { AdaptiveSmartButton } from '../../../components/common/AdaptiveSmartButton';
-import { CompanyInfoFooter } from '../../../components/common/CompanyInfoFooter';
 
 interface InnovativeFarmDetailPageProps {
   farmId: string;
@@ -183,7 +182,7 @@ export const InnovativeFarmDetailPage: React.FC<InnovativeFarmDetailPageProps> =
       </div>
 
       {/* المحتوى الرئيسي */}
-      <div className="pt-16 pb-72 md:pb-56">
+      <div className="pt-16 pb-32 sm:pb-28 md:pb-24">
         {/* صورة المزرعة */}
         <div className="relative h-80 overflow-hidden">
           {farmImage ? (
@@ -453,32 +452,43 @@ export const InnovativeFarmDetailPage: React.FC<InnovativeFarmDetailPageProps> =
         </div>
       </div>
 
-      {/* شريط الحجز الثابت المحسّن */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t-2 border-gray-200 shadow-2xl z-50 pb-safe">
-        <div className="p-6 md:p-4 max-w-lg mx-auto">
+      {/* شريط الحجز الثابت - تصميم زجاجي ثلاثي الأبعاد */}
+      <div className="fixed bottom-0 left-0 right-0 z-50 pb-safe">
+        {/* خلفية ضبابية */}
+        <div className="absolute inset-0 backdrop-blur-xl bg-white/80"></div>
+
+        <div className="relative p-3 sm:p-4 max-w-2xl mx-auto">
           <button
             onClick={onStartBooking}
             disabled={!farm.available_trees || farm.available_trees === 0}
-            className={`w-full relative overflow-hidden rounded-2xl transition-all min-h-[96px] md:min-h-[80px] ${
+            className={`glass-button-3d w-full relative overflow-hidden rounded-xl sm:rounded-2xl transition-all duration-300 ${
               farm.available_trees > 0
-                ? 'hover:scale-[1.02] active:scale-[0.98] shadow-xl hover:shadow-2xl'
+                ? 'hover:scale-[1.01] active:scale-[0.99]'
                 : 'opacity-50 cursor-not-allowed'
             }`}
+            style={{
+              background: farm.available_trees > 0
+                ? 'linear-gradient(135deg, rgba(16, 185, 129, 0.95) 0%, rgba(5, 150, 105, 0.95) 100%)'
+                : 'linear-gradient(135deg, rgba(156, 163, 175, 0.95) 0%, rgba(107, 114, 128, 0.95) 100%)',
+              boxShadow: '0 8px 32px rgba(16, 185, 129, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2), inset 0 -1px 0 rgba(0, 0, 0, 0.1)',
+              backdropFilter: 'blur(10px)',
+              border: '1px solid rgba(255, 255, 255, 0.2)'
+            }}
           >
-            <div className={`absolute inset-0 ${
-              farm.available_trees > 0
-                ? 'bg-gradient-to-r from-emerald-600 via-green-600 to-emerald-600 bg-[length:200%_100%] animate-gradient'
-                : 'bg-gray-400'
-            }`} />
+            {/* تأثير اللمعان */}
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
 
-            <div className="relative px-6 py-7 md:py-5 flex items-center justify-between text-white">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                  <Sparkles className="w-6 h-6" />
+            <div className="relative px-4 py-3 sm:py-3.5 flex items-center justify-between text-white">
+              <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
+                <div className="w-10 h-10 sm:w-11 sm:h-11 bg-white/20 backdrop-blur-sm rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0"
+                  style={{
+                    boxShadow: 'inset 0 2px 4px rgba(255, 255, 255, 0.2), 0 4px 12px rgba(0, 0, 0, 0.1)'
+                  }}>
+                  <Sparkles className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={2.5} />
                 </div>
-                <div className="text-right">
-                  <div className="text-sm font-medium opacity-90">ابدأ الحجز الآن</div>
-                  <div className="text-lg font-bold">
+                <div className="text-right flex-1 min-w-0">
+                  <div className="text-xs sm:text-sm font-semibold opacity-95 truncate">ابدأ الحجز الآن</div>
+                  <div className="text-sm sm:text-base font-bold truncate" style={{ textShadow: '0 1px 2px rgba(0, 0, 0, 0.2)' }}>
                     {farm.available_trees > 0
                       ? `${farm.available_trees} شجرة متاحة`
                       : 'غير متاح حالياً'
@@ -487,7 +497,7 @@ export const InnovativeFarmDetailPage: React.FC<InnovativeFarmDetailPageProps> =
                 </div>
               </div>
 
-              <ArrowRight className="w-6 h-6" />
+              <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0" strokeWidth={2.5} />
             </div>
           </button>
         </div>
@@ -511,17 +521,6 @@ export const InnovativeFarmDetailPage: React.FC<InnovativeFarmDetailPageProps> =
         }
       `}</style>
       </div>
-
-      {/* فوتر معلومات المؤسسة */}
-      <CompanyInfoFooter
-        companyName="منصة الاستثمار الزراعي الملكية"
-        commercialRegister="1234567890"
-        phone="+966500000000"
-        whatsapp="+966500000000"
-        email="info@palmolive.sa"
-        city="الرياض، المملكة العربية السعودية"
-        workingHours="الأحد - الخميس: 9 صباحاً - 6 مساءً"
-      />
     </>
   );
 };
