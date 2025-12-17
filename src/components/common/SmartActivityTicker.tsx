@@ -59,7 +59,15 @@ export function SmartActivityTicker() {
         'postgres_changes',
         { event: '*', schema: 'public', table: 'platform_activities' },
         (payload) => {
-          console.log('[Ticker] Real-time event:', payload.eventType);
+          console.log('[Ticker] Real-time platform activities event:', payload.eventType);
+          loadActivities();
+        }
+      )
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'simulated_activities' },
+        (payload) => {
+          console.log('[Ticker] Real-time simulated activities event:', payload.eventType);
           loadActivities();
         }
       )

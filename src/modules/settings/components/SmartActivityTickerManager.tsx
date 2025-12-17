@@ -205,15 +205,36 @@ export function SmartActivityTickerManager() {
   const toggleSimulatedActivity = async (id: string, currentState: boolean) => {
     setLoading(true);
     try {
+      const newState = !currentState;
       const { error } = await supabase
         .from('simulated_activities')
-        .update({ is_active: !currentState })
+        .update({ is_active: newState })
         .eq('id', id);
 
       if (error) throw error;
-      loadData();
+
+      // Update local state immediately for instant feedback
+      setSimulatedActivities(prev =>
+        prev.map(activity =>
+          activity.id === id
+            ? { ...activity, is_active: newState }
+            : activity
+        )
+      );
+
+      setSuccessMessage(
+        newState
+          ? '✅ تم تفعيل القالب بنجاح'
+          : '⏸️ تم تعطيل القالب بنجاح'
+      );
+      setTimeout(() => setSuccessMessage(''), 3000);
+
+      // Reload data to ensure consistency
+      setTimeout(() => loadData(), 500);
     } catch (error) {
       console.error('Error toggling activity:', error);
+      alert('حدث خطأ عند تحديث القالب');
+      loadData(); // Reload on error to restore correct state
     } finally {
       setLoading(false);
     }
