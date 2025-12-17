@@ -84,12 +84,12 @@ export function SmartActivityTicker() {
     const scrollContainer = scrollContainerRef.current;
     if (!scrollContainer || activities.length === 0) return;
 
-    const speeds = { slow: 30, medium: 50, fast: 70 };
-    const speed = speeds[settings.scrollSpeed] || 50;
+    const speeds = { slow: 40, medium: 60, fast: 80 };
+    const speed = speeds[settings.scrollSpeed] || 60;
 
     const animate = () => {
       setScrollPosition((prev) => {
-        const newPosition = prev + 1;
+        const newPosition = prev + 0.8;
         const maxScroll = scrollContainer.scrollWidth / 2;
         return newPosition >= maxScroll ? 0 : newPosition;
       });
@@ -176,9 +176,9 @@ export function SmartActivityTicker() {
         }
       }
 
-      // Shuffle and duplicate for continuous scroll
+      // Shuffle and triple for seamless continuous scroll on mobile
       const shuffled = items.sort(() => Math.random() - 0.5);
-      setActivities([...shuffled, ...shuffled]);
+      setActivities([...shuffled, ...shuffled, ...shuffled]);
     } catch (error) {
       console.error('[Ticker] Error loading activities:', error);
     }
@@ -341,10 +341,16 @@ export function SmartActivityTicker() {
             right: 0 !important;
             margin: 0 !important;
             width: 100vw !important;
+            height: 56px !important;
           }
 
           .ticker-spacer {
-            height: 70px !important;
+            height: 56px !important;
+          }
+
+          .activity-card {
+            min-width: 200px !important;
+            padding: 8px 10px !important;
           }
         }
 
@@ -362,6 +368,7 @@ export function SmartActivityTicker() {
         style={{
           height: '70px',
         }}
+        dir="rtl"
       >
         {/* Animated Gradient Border */}
         <div
@@ -375,10 +382,10 @@ export function SmartActivityTicker() {
 
           <div
             ref={scrollContainerRef}
-            className="flex items-center h-full gap-3 px-2"
+            className="flex items-center h-full gap-2 sm:gap-3 px-1 sm:px-2"
             style={{
               transform: `translateX(-${scrollPosition}px)`,
-              transition: 'transform 0.05s linear',
+              willChange: 'transform',
             }}
           >
             {activities.map((activity, index) => {
@@ -410,12 +417,12 @@ export function SmartActivityTicker() {
                     {/* Content */}
                     <div className="flex-1 min-w-0 text-right">
                       <div className="flex items-center gap-1 mb-0.5">
-                        <span className="text-[10px] sm:text-xs font-medium text-gray-700 dark:text-gray-300 truncate">
+                        <span className="text-xs sm:text-sm font-bold text-gray-900 dark:text-white truncate drop-shadow-sm">
                           {activity.titleAr}
                         </span>
                       </div>
                       {settings.showTimestamps && activity.timestamp && (
-                        <div className="text-[9px] sm:text-[10px] text-gray-500 dark:text-gray-400">
+                        <div className="text-[10px] sm:text-xs font-semibold text-gray-700 dark:text-gray-300">
                           {formatTimeAgo(activity.timestamp)}
                         </div>
                       )}
@@ -452,7 +459,7 @@ export function SmartActivityTicker() {
       </div>
 
       {/* Spacer - Responsive */}
-      <div className="ticker-spacer" style={{ height: '70px' }} />
+      <div className="ticker-spacer h-[70px] md:h-[70px]" style={{ flexShrink: 0 }} />
     </>
   );
 }
