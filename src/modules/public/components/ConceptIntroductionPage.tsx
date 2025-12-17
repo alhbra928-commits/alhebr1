@@ -1,6 +1,6 @@
 import React from 'react';
 import { X, Sparkles, TrendingUp, Heart, Leaf } from 'lucide-react';
-import { CompanyInfoFooter } from '../../../components/common/CompanyInfoFooter';
+import { AdvancedStatsFooter } from '../../../components/common/AdvancedStatsFooter';
 
 interface ConceptIntroductionPageProps {
   onClose: () => void;
@@ -242,16 +242,8 @@ export const ConceptIntroductionPage: React.FC<ConceptIntroductionPageProps> = (
         }
       `}</style>
 
-      {/* فوتر معلومات المؤسسة */}
-      <CompanyInfoFooter
-        companyName="منصة الاستثمار الزراعي الملكية"
-        commercialRegister="1234567890"
-        phone="+966500000000"
-        whatsapp="+966500000000"
-        email="info@palmolive.sa"
-        city="الرياض، المملكة العربية السعودية"
-        workingHours="الأحد - الخميس: 9 صباحاً - 6 مساءً"
-      />
+      {/* شريط الإحصائيات المتحرك */}
+      <AdvancedStatsFooter />
     </div>
   );
 };
