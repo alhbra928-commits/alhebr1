@@ -6,12 +6,15 @@ export function ForceThemeUpdate() {
   const [clearing, setClearing] = useState(false);
 
   useEffect(() => {
-    const lastVersion = localStorage.getItem('app-theme-version');
-    const currentVersion = 'royal-green-v2-force';
+    // ❌ معطل مؤقتاً - لا نريد إجبار المستخدمين على تحديث النمط
+    // const lastVersion = localStorage.getItem('app-theme-version');
+    // const currentVersion = 'royal-green-v2-force';
+    // if (lastVersion !== currentVersion) {
+    //   setShow(true);
+    // }
 
-    if (lastVersion !== currentVersion) {
-      setShow(true);
-    }
+    // نضع الإصدار الحالي مباشرة لمنع ظهور النافذة
+    localStorage.setItem('app-theme-version', 'royal-green-v2-force');
   }, []);
 
   const handleForceUpdate = async () => {

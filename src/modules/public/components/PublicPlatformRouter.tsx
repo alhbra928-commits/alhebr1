@@ -39,23 +39,19 @@ export function PublicPlatformRouter({ onAdminLogin, onBackToAdmin, onFarmOwnerL
     return () => clearTimeout(timer);
   }, []);
 
-  // مراقبة تغيير حالة الجلسات
+  // مراقبة تغيير حالة الجلسات - فقط للخروج الصريح
   useEffect(() => {
-    const handleSessionChange = () => {
-      if (!hasActiveSession() && currentView === 'main') {
-        // إذا تم تسجيل الخروج، نعيد تشغيل البوابة
-        console.log('🔄 تم تسجيل الخروج - إعادة تشغيل البوابة...');
-        setCurrentView('loader');
-      }
+    const handleExplicitLogout = () => {
+      // فقط عند تسجيل الخروج الصريح، نعيد تشغيل البوابة
+      console.log('🔄 تم تسجيل الخروج الصريح - إعادة تشغيل البوابة...');
+      setCurrentView('loader');
     };
 
-    // الاستماع لحدث تغيير الجلسة
-    window.addEventListener('storage', handleSessionChange);
-    window.addEventListener('logout', handleSessionChange);
+    // الاستماع فقط لحدث الخروج الصريح
+    window.addEventListener('logout', handleExplicitLogout);
 
     return () => {
-      window.removeEventListener('storage', handleSessionChange);
-      window.removeEventListener('logout', handleSessionChange);
+      window.removeEventListener('logout', handleExplicitLogout);
     };
   }, [currentView]);
 

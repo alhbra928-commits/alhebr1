@@ -146,10 +146,13 @@ export class AdminSessionService {
   }
 
   static clearSession() {
-    // تنظيف كامل لجميع بيانات الجلسة
+    // تنظيف بيانات الجلسة الإدارية فقط - لا نحذف جلسات المستخدمين الآخرين
     localStorage.removeItem('admin_session_token');
     localStorage.removeItem('admin_data');
-    sessionStorage.clear();
+    // ❌ لا نستخدم sessionStorage.clear() لأنه يحذف كل الجلسات
+    // نحذف فقط بيانات Admin المحددة
+    sessionStorage.removeItem('admin_current_module');
+    sessionStorage.removeItem('admin_last_activity');
   }
 
   static async getAllActiveSessions(): Promise<AdminSession[]> {
