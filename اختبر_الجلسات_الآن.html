@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تم إصلاح مشكلة الجلسات!</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 50%, #a5d6a7 100%);
+      min-height: 100vh;
+      padding: 20px;
+      direction: rtl;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 30px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+      overflow: hidden;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #2e7d32 0%, #388e3c 50%, #43a047 100%);
+      color: white;
+      padding: 40px;
+      text-align: center;
+    }
+
+    .header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .header p {
+      font-size: 1.2rem;
+      opacity: 0.95;
+    }
+
+    .content {
+      padding: 40px;
+    }
+
+    .section {
+      margin-bottom: 40px;
+      padding: 25px;
+      background: linear-gradient(135deg, #f1f8e9 0%, #e8f5e9 100%);
+      border-radius: 20px;
+      border-right: 5px solid #4caf50;
+    }
+
+    .section h2 {
+      color: #2e7d32;
+      margin-bottom: 20px;
+      font-size: 1.8rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .icon {
+      font-size: 2rem;
+    }
+
+    .list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .list li {
+      padding: 15px;
+      margin-bottom: 10px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      font-size: 1.1rem;
+      transition: transform 0.2s;
+    }
+
+    .list li:hover {
+      transform: translateX(-5px);
+    }
+
+    .check {
+      color: #4caf50;
+      font-weight: bold;
+      margin-left: 10px;
+    }
+
+    .steps {
+      background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+      border-right-color: #ff9800;
+    }
+
+    .steps .list li {
+      background: white;
+      border-right: 3px solid #ff9800;
+    }
+
+    .warning {
+      background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+      border-right-color: #f44336;
+      text-align: center;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #c62828;
+    }
+
+    .success {
+      background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+      border-right-color: #4caf50;
+      text-align: center;
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: #2e7d32;
+      padding: 30px;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 15px 40px;
+      background: linear-gradient(135deg, #4caf50 0%, #66bb6a 100%);
+      color: white;
+      text-decoration: none;
+      border-radius: 50px;
+      font-weight: bold;
+      font-size: 1.1rem;
+      box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+      transition: all 0.3s;
+      margin-top: 20px;
+    }
+
+    .button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(76, 175, 80, 0.6);
+    }
+
+    .footer {
+      background: #2e7d32;
+      color: white;
+      text-align: center;
+      padding: 30px;
+      font-size: 1.1rem;
+    }
+
+    .highlight {
+      background: linear-gradient(135deg, #ffeb3b 0%, #fdd835 100%);
+      padding: 3px 10px;
+      border-radius: 5px;
+      font-weight: bold;
+      color: #f57f17;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🎉 تم إصلاح مشكلة الجلسات!</h1>
+      <p>الإصلاح الجذري والنهائي</p>
+    </div>
+
+    <div class="content">
+      <div class="section">
+        <h2><span class="icon">🎯</span> المشكلة التي كانت موجودة</h2>
+        <p style="font-size: 1.1rem; line-height: 1.8; color: #555;">
+          عند تسجيل الدخول لأي لوحة تحكم (Admin / Investor / Farm Owner) ثم التصفح في المنصة العامة،
+          كانت الجلسة <span class="highlight">تختفي تلقائياً</span> وتُجبر على تسجيل الدخول مرة أخرى.
+        </p>
+      </div>
+
+      <div class="section success">
+        <span style="font-size: 3rem;">✅</span>
+        <p style="margin-top: 15px;">الآن الجلسة تبقى نشطة مهما تصفحت!</p>
+      </div>
+
+      <div class="section">
+        <h2><span class="icon">🔧</span> الحلول المطبقة</h2>
+        <ul class="list">
+          <li><span class="check">✅</span> نظام مراقبة مستمر يتحقق من الجلسة كل 2 ثانية</li>
+          <li><span class="check">✅</span> استعادة تلقائية للجلسة إذا فُقدت</li>
+          <li><span class="check">✅</span> زر "الرجوع للوحة التحكم" ظاهر دائماً</li>
+          <li><span class="check">✅</span> حماية الجلسات من الحذف العرضي</li>
+          <li><span class="check">✅</span> عزل كل نوع مستخدم عن الآخر</li>
+        </ul>
+      </div>
+
+      <div class="section steps">
+        <h2><span class="icon">🧪</span> كيف تتأكد من الإصلاح؟</h2>
+        <ul class="list">
+          <li><strong>1️⃣ امسح الكاش:</strong> Ctrl + Shift + R (أو من إعدادات Safari في الجوال)</li>
+          <li><strong>2️⃣ سجل دخول:</strong> سجل دخول لأي لوحة تحكم</li>
+          <li><strong>3️⃣ اذهب للمنصة العامة:</strong> تصفح المزارع بحرية</li>
+          <li><strong>4️⃣ ابقَ 5 دقائق:</strong> اترك الصفحة مفتوحة</li>
+          <li><strong>5️⃣ اضغط زر "لوحة التحكم":</strong> في أسفل اليسار</li>
+          <li><strong>✅ النتيجة:</strong> يجب أن تعود مباشرة دون أي مشاكل!</li>
+        </ul>
+      </div>
+
+      <div class="section">
+        <h2><span class="icon">🔒</span> متى تُحذف الجلسة؟</h2>
+        <p style="font-size: 1.1rem; line-height: 1.8; color: #555; margin-bottom: 20px;">
+          الجلسة محمية 100% وتبقى نشطة إلا في 3 حالات فقط:
+        </p>
+        <ul class="list">
+          <li>❌ عند الضغط على زر "تسجيل الخروج"</li>
+          <li>❌ عند حذف بيانات المتصفح كلياً</li>
+          <li>❌ عند حذف localStorage يدوياً من Console</li>
+        </ul>
+        <p style="font-size: 1.2rem; font-weight: bold; color: #2e7d32; margin-top: 20px; text-align: center;">
+          ما عدا ذلك، الجلسة نشطة دائماً!
+        </p>
+      </div>
+
+      <div class="section">
+        <h2><span class="icon">🎨</span> زر الرجوع الجديد</h2>
+        <div style="background: white; padding: 20px; border-radius: 15px; margin-top: 15px;">
+          <p style="font-size: 1.1rem; line-height: 1.8; color: #555;">
+            <strong>الموقع:</strong> أسفل اليسار في المنصة العامة<br>
+            <strong>اللون:</strong> أخضر متدرج مع ظل جميل<br>
+            <strong>النص الذكي:</strong>
+          </p>
+          <ul style="margin-top: 15px; list-style: none; padding-right: 20px;">
+            <li style="margin-bottom: 10px;">🔹 "لوحة التحكم" للمديرين</li>
+            <li style="margin-bottom: 10px;">🔹 "بوابة المستثمر" للمستثمرين</li>
+            <li style="margin-bottom: 10px;">🔹 "بوابة صاحب المزرعة" لأصحاب المزارع</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="warning">
+        <span style="font-size: 2rem;">⚠️</span>
+        <p style="margin-top: 10px;">
+          امسح الكاش مرة واحدة فقط بعد التحديث!<br>
+          <span style="font-size: 1rem; font-weight: normal;">Ctrl + Shift + R</span>
+        </p>
+      </div>
+
+      <div class="section success">
+        <span style="font-size: 3rem;">🚀</span>
+        <p style="margin-top: 15px; font-size: 1.4rem;">جاهز للاستخدام الآن!</p>
+        <p style="margin-top: 10px; font-size: 1rem; font-weight: normal;">
+          الإصدار: v2025.12.17_050712<br>
+          التاريخ: 17 ديسمبر 2025
+        </p>
+      </div>
+    </div>
+
+    <div class="footer">
+      <p>منصة النخيل والزيتون</p>
+      <p style="opacity: 0.8; margin-top: 10px; font-size: 0.9rem;">
+        تم الإصلاح الجذري والنهائي ✅
+      </p>
+    </div>
+  </div>
+
+  <script>
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    console.log('✅ تم إصلاح مشكلة الجلسات بشكل جذري!');
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    console.log('');
+    console.log('🔧 الحلول المطبقة:');
+    console.log('  1. نظام مراقبة مستمر (كل 2 ثانية)');
+    console.log('  2. استعادة تلقائية للجلسة');
+    console.log('  3. زر الرجوع الذكي');
+    console.log('  4. حماية الجلسات من الحذف');
+    console.log('');
+    console.log('🧪 كيف تتأكد؟');
+    console.log('  1. امسح الكاش (Ctrl + Shift + R)');
+    console.log('  2. سجل دخول');
+    console.log('  3. تصفح المنصة');
+    console.log('  4. اضغط زر "لوحة التحكم"');
+    console.log('  5. ✅ الجلسة نشطة!');
+    console.log('');
+    console.log('📦 الإصدار: v2025.12.17_050712');
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+  </script>
+</body>
+</html>

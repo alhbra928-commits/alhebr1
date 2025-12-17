@@ -53,31 +53,48 @@ function App() {
     }
   }, [activeModule]);
 
+  // التحقق من الجلسة المحفوظة - يعمل دائماً
   useEffect(() => {
-    // التحقق من الجلسة المحفوظة عند بداية التطبيق
-    const savedToken = localStorage.getItem('admin_session_token');
-    const savedAdminData = localStorage.getItem('admin_data');
+    const checkAndRestoreSession = () => {
+      const savedToken = localStorage.getItem('admin_session_token');
+      const savedAdminData = localStorage.getItem('admin_data');
 
-    if (savedToken && savedAdminData && !adminSession) {
-      try {
-        const adminData = JSON.parse(savedAdminData);
-        setAdminSession({
-          ...adminData,
-          session: { session_token: savedToken },
-          permissions: adminData.permissions || []
-        });
-        // لا نغير activeModule - نبقى في الصفحة العامة
-        // setActiveModule('dashboard'); // تم الإلغاء
+      if (savedToken && savedAdminData) {
+        try {
+          const adminData = JSON.parse(savedAdminData);
 
-        // إبلاغ PermissionsContext بالتغيير
-        setTimeout(() => {
-          window.dispatchEvent(new Event('admin-session-changed'));
-        }, 100);
-      } catch (error) {
-        console.error('Error restoring session:', error);
+          // إذا لم تكن الجلسة موجودة، أنشئها
+          if (!adminSession) {
+            console.log('[App] 🔄 استعادة الجلسة المحفوظة...');
+            setAdminSession({
+              ...adminData,
+              session: { session_token: savedToken },
+              permissions: adminData.permissions || []
+            });
+
+            // إبلاغ PermissionsContext بالتغيير
+            setTimeout(() => {
+              window.dispatchEvent(new Event('admin-session-changed'));
+            }, 100);
+          }
+        } catch (error) {
+          console.error('[App] ❌ خطأ في استعادة الجلسة:', error);
+        }
+      } else if (adminSession && !savedToken) {
+        // إذا كانت الجلسة موجودة في state لكن محذوفة من localStorage، احذفها
+        console.log('[App] ⚠️ الجلسة محذوفة من localStorage - تنظيف state');
+        setAdminSession(null);
       }
-    }
-  }, []);
+    };
+
+    // تشغيل فوراً
+    checkAndRestoreSession();
+
+    // التحقق كل 2 ثانية للتأكد من عدم فقدان الجلسة
+    const interval = setInterval(checkAndRestoreSession, 2000);
+
+    return () => clearInterval(interval);
+  }, [adminSession]);
 
   useEffect(() => {
     if (adminSession && activeModule !== 'public') {
