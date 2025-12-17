@@ -25,7 +25,7 @@ import { brandColors, brandGradients } from '../../finance/styles/brandColors';
 import { FarmDetailService, FarmVariety, CreateReservationData } from '../services/farmDetailService';
 import { MazadCrownLoader } from '../../../components/common/MazadCrownLoader';
 import { SimpleLoader } from '../../../components/common/SimpleLoader';
-import { AdvancedStatsFooter } from '../../../components/common/AdvancedStatsFooter';
+import { SmartActivityTicker } from '../../../components/common/SmartActivityTicker';
 
 interface TemporaryBookingPageProps {
   farmId: string;

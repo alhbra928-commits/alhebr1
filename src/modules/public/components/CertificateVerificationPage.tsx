@@ -3,7 +3,7 @@ import { Shield, Search, CheckCircle, XCircle, Award, ArrowRight, Loader } from 
 import { brandColors, brandGradients } from '../../finance/styles/brandColors';
 import { CertificateVerificationService, VerifiedCertificate } from '../services/certificateVerificationService';
 import { OwnershipCertificate } from '../../investor/components/OwnershipCertificate';
-import { AdvancedStatsFooter } from '../../../components/common/AdvancedStatsFooter';
+import { SmartActivityTicker } from '../../../components/common/SmartActivityTicker';
 
 interface CertificateVerificationPageProps {
   onBack: () => void;

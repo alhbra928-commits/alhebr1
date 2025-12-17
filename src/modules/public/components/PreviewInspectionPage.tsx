@@ -11,7 +11,7 @@ import { brandColors, brandGradients } from '../../finance/styles/brandColors';
 import { PublicFarm } from '../types/farm.types';
 import { PublicFarmService } from '../services/publicFarmService';
 import { BackButton } from '../../../components/common/BackButton';
-import { AdvancedStatsFooter } from '../../../components/common/AdvancedStatsFooter';
+import { SmartActivityTicker } from '../../../components/common/SmartActivityTicker';
 
 interface PreviewInspectionPageProps {
   barcode: string;

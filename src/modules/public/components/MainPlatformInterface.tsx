@@ -15,7 +15,7 @@ import { AdminCrownButton } from './AdminCrownButton';
 import { GlowingConceptButton } from './GlowingConceptButton';
 import { ConceptIntroductionPage } from './ConceptIntroductionPage';
 import { IdeaOverviewSection } from './IdeaOverviewSection';
-import { AdvancedStatsFooter } from '../../../components/common/AdvancedStatsFooter';
+import { SmartActivityTicker } from '../../../components/common/SmartActivityTicker';
 
 type ViewMode = 'home' | 'farmDetail' | 'booking' | 'investor' | 'verification' | 'concept';
 

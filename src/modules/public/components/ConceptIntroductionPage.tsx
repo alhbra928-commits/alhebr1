@@ -1,6 +1,6 @@
 import React from 'react';
 import { X, Sparkles, TrendingUp, Heart, Leaf } from 'lucide-react';
-import { AdvancedStatsFooter } from '../../../components/common/AdvancedStatsFooter';
+import { SmartActivityTicker } from '../../../components/common/SmartActivityTicker';
 
 interface ConceptIntroductionPageProps {
   onClose: () => void;
