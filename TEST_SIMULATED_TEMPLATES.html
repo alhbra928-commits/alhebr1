@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار القوالب الوهمية - التفعيل والتعطيل</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a4d2e 0%, #2C5F2D 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: white;
+        }
+        .container { max-width: 1100px; margin: 0 auto; }
+        h1 {
+            text-align: center;
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            color: #D4AF37;
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+        }
+        .subtitle {
+            text-align: center;
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            color: #F5F5DC;
+            opacity: 0.9;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        .test-box {
+            background: rgba(44, 95, 45, 0.8);
+            border: 3px solid rgba(212, 175, 55, 0.5);
+            border-radius: 20px;
+            padding: 30px;
+        }
+        .test-box.full {
+            grid-column: 1 / -1;
+        }
+        .test-box h2 {
+            color: #D4AF37;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .button {
+            background: linear-gradient(135deg, #D4AF37, #C49423);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 12px;
+            cursor: pointer;
+            margin: 5px;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.6);
+        }
+        .button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .button.danger { background: linear-gradient(135deg, #ef4444, #dc2626); }
+        .button.success { background: linear-gradient(135deg, #22c55e, #16a34a); }
+        .button.warning { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        .button.secondary { background: linear-gradient(135deg, #6b7280, #4b5563); }
+
+        .template-card {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+        }
+        .template-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(212, 175, 55, 0.6);
+            box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3);
+        }
+        .template-card.inactive {
+            opacity: 0.6;
+            background: rgba(100, 100, 100, 0.2);
+        }
+        .template-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .template-icon {
+            font-size: 2.5rem;
+            flex-shrink: 0;
+        }
+        .template-content {
+            flex: 1;
+            min-width: 0;
+        }
+        .template-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #F5F5DC;
+            margin-bottom: 8px;
+            word-wrap: break-word;
+        }
+        .template-subtitle {
+            font-size: 1rem;
+            color: #D4AF37;
+            opacity: 0.8;
+            word-wrap: break-word;
+        }
+        .template-meta {
+            display: flex;
+            gap: 15px;
+            margin: 10px 0;
+            flex-wrap: wrap;
+        }
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 5px 12px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        .status-badge.active {
+            background: rgba(34, 197, 94, 0.3);
+            color: #22c55e;
+            border: 2px solid rgba(34, 197, 94, 0.5);
+        }
+        .status-badge.inactive {
+            background: rgba(239, 68, 68, 0.3);
+            color: #ef4444;
+            border: 2px solid rgba(239, 68, 68, 0.5);
+        }
+        .template-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .log {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            color: #D4AF37;
+            max-height: 400px;
+            overflow-y: auto;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+        .log-entry {
+            padding: 4px 0;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+        }
+        .success { color: #22c55e; }
+        .error { color: #ef4444; }
+        .info { color: #3b82f6; }
+        .warning { color: #f59e0b; }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .stat-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(212, 175, 55, 0.4);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #D4AF37;
+            margin-bottom: 5px;
+        }
+        .stat-label {
+            font-size: 0.9rem;
+            color: #F5F5DC;
+            opacity: 0.8;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .loading { animation: pulse 1.5s ease-in-out infinite; }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #D4AF37;
+        }
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+        .empty-state-text {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎭 اختبار القوالب الوهمية</h1>
+        <p class="subtitle">اختبار شامل للتفعيل، التعطيل، الحذف، والإضافة</p>
+
+        <div class="grid">
+            <div class="test-box">
+                <h2>📊 الإحصائيات</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalCount">0</div>
+                        <div class="stat-label">إجمالي القوالب</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value success" id="activeCount">0</div>
+                        <div class="stat-label">نشطة</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value error" id="inactiveCount">0</div>
+                        <div class="stat-label">متوقفة</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="test-box">
+                <h2>🎮 الإجراءات السريعة</h2>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <button class="button success" onclick="loadTemplates()">
+                        🔄 تحديث القائمة
+                    </button>
+                    <button class="button" onclick="addTestTemplate()">
+                        ➕ إضافة قالب تجريبي
+                    </button>
+                    <button class="button warning" onclick="toggleAllTemplates(false)">
+                        ⏸️ تعطيل الكل
+                    </button>
+                    <button class="button success" onclick="toggleAllTemplates(true)">
+                        ▶️ تفعيل الكل
+                    </button>
+                    <button class="button danger" onclick="deleteAllInactive()">
+                        🗑️ حذف المعطلة
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="test-box full">
+            <h2>📋 القوالب الوهمية</h2>
+            <div id="templates" class="loading">جاري التحميل...</div>
+        </div>
+
+        <div class="test-box full">
+            <h2>📝 سجل العمليات المباشر</h2>
+            <div id="log" class="log"></div>
+        </div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = 'https://bhtihsrrhlumgpwbgrei.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJodGloc3JyaGx1bWdwd2JncmVpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjkzNDY2NjcsImV4cCI6MjA0NDkyMjY2N30.HUck1hLx32VWzz_5ZqWlhmV_OGGCJgNc5a-CQ7lHoJk';
+
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        let templates = [];
+
+        function log(message, type = 'info') {
+            const logDiv = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString('ar-SA');
+            const icon = type === 'success' ? '✅' : type === 'error' ? '❌' : type === 'warning' ? '⚠️' : 'ℹ️';
+            logDiv.innerHTML = `<div class="log-entry ${type}">${icon} [${timestamp}] ${message}</div>` + logDiv.innerHTML;
+            console.log(`[${type}] ${message}`);
+        }
+
+        async function loadTemplates() {
+            log('🔍 جاري تحميل القوالب الوهمية...', 'info');
+            try {
+                const { data, error } = await supabase
+                    .from('simulated_activities')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                templates = data;
+                log(`✅ تم تحميل ${data.length} قالب بنجاح`, 'success');
+                displayTemplates();
+                updateStats();
+            } catch (err) {
+                log(`❌ خطأ في التحميل: ${err.message}`, 'error');
+            }
+        }
+
+        function updateStats() {
+            const total = templates.length;
+            const active = templates.filter(t => t.is_active).length;
+            const inactive = total - active;
+
+            document.getElementById('totalCount').textContent = total;
+            document.getElementById('activeCount').textContent = active;
+            document.getElementById('inactiveCount').textContent = inactive;
+        }
+
+        function displayTemplates() {
+            const container = document.getElementById('templates');
+
+            if (templates.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🎭</div>
+                        <div class="empty-state-text">لا توجد قوالب وهمية</div>
+                        <button class="button" onclick="addTestTemplate()">إضافة قالب تجريبي</button>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = templates.map(template => `
+                <div class="template-card ${!template.is_active ? 'inactive' : ''}">
+                    <div class="template-header">
+                        <div class="template-icon">${template.icon || '✨'}</div>
+                        <div class="template-content">
+                            <div class="template-title">${template.template_ar}</div>
+                            <div class="template-subtitle">${template.template_en}</div>
+                        </div>
+                    </div>
+                    <div class="template-meta">
+                        <div class="meta-item">
+                            <span>📂</span>
+                            <span>${template.activity_category}</span>
+                        </div>
+                        <div class="meta-item">
+                            <span>⚖️</span>
+                            <span>وزن: ${template.weight}</span>
+                        </div>
+                        <div class="meta-item">
+                            <span>🆔</span>
+                            <span>${template.id.substring(0, 8)}...</span>
+                        </div>
+                        <span class="status-badge ${template.is_active ? 'active' : 'inactive'}">
+                            ${template.is_active ? '✅ نشط' : '⏸️ متوقف'}
+                        </span>
+                    </div>
+                    <div class="template-actions">
+                        <button class="button ${template.is_active ? 'warning' : 'success'}"
+                                onclick="toggleTemplate('${template.id}', ${!template.is_active})">
+                            ${template.is_active ? '⏸️ تعطيل' : '▶️ تفعيل'}
+                        </button>
+                        <button class="button danger" onclick="deleteTemplate('${template.id}')">
+                            🗑️ حذف
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function toggleTemplate(id, newState) {
+            const shortId = id.substring(0, 8);
+            log(`${newState ? '▶️' : '⏸️'} محاولة ${newState ? 'تفعيل' : 'تعطيل'} القالب ${shortId}...`, 'info');
+
+            try {
+                const { data, error } = await supabase
+                    .from('simulated_activities')
+                    .update({ is_active: newState })
+                    .eq('id', id)
+                    .select();
+
+                if (error) throw error;
+
+                log(`✅ تم ${newState ? 'تفعيل' : 'تعطيل'} القالب ${shortId} بنجاح!`, 'success');
+
+                // التحقق من التحديث
+                const { data: checkData } = await supabase
+                    .from('simulated_activities')
+                    .select('is_active')
+                    .eq('id', id)
+                    .single();
+
+                if (checkData.is_active === newState) {
+                    log(`✅ تأكيد: الحالة تم تحديثها فعلياً إلى ${newState ? 'نشط' : 'متوقف'}`, 'success');
+                } else {
+                    log(`⚠️ تحذير: الحالة لم تتحدث! متوقع: ${newState}، الفعلي: ${checkData.is_active}`, 'warning');
+                }
+
+                await loadTemplates();
+            } catch (err) {
+                log(`❌ فشل التحديث: ${err.message}`, 'error');
+            }
+        }
+
+        async function deleteTemplate(id) {
+            const shortId = id.substring(0, 8);
+            if (!confirm(`هل تريد حذف القالب ${shortId}؟`)) return;
+
+            log(`🗑️ محاولة حذف القالب ${shortId}...`, 'info');
+
+            try {
+                const { error } = await supabase
+                    .from('simulated_activities')
+                    .delete()
+                    .eq('id', id);
+
+                if (error) throw error;
+
+                log(`✅ تم حذف القالب ${shortId} بنجاح!`, 'success');
+                await loadTemplates();
+            } catch (err) {
+                log(`❌ فشل الحذف: ${err.message}`, 'error');
+            }
+        }
+
+        async function addTestTemplate() {
+            log('➕ إضافة قالب تجريبي...', 'info');
+            try {
+                const categories = ['booking', 'trending', 'stats', 'milestone', 'interest'];
+                const icons = ['🎯', '🔥', '📊', '🏆', '💡', '✨', '🎉', '🚀'];
+
+                const randomCategory = categories[Math.floor(Math.random() * categories.length)];
+                const randomIcon = icons[Math.floor(Math.random() * icons.length)];
+                const timestamp = new Date().getTime();
+
+                const { data, error } = await supabase
+                    .from('simulated_activities')
+                    .insert({
+                        template_ar: `قالب تجريبي ${timestamp}`,
+                        template_en: `Test Template ${timestamp}`,
+                        icon: randomIcon,
+                        activity_category: randomCategory,
+                        weight: Math.floor(Math.random() * 90) + 10,
+                        is_active: true
+                    })
+                    .select();
+
+                if (error) throw error;
+
+                log(`✅ تم إضافة قالب تجريبي بنجاح`, 'success');
+                await loadTemplates();
+            } catch (err) {
+                log(`❌ فشلت الإضافة: ${err.message}`, 'error');
+            }
+        }
+
+        async function toggleAllTemplates(state) {
+            const action = state ? 'تفعيل' : 'تعطيل';
+            if (!confirm(`هل تريد ${action} جميع القوالب (${templates.length} قالب)؟`)) return;
+
+            log(`⚙️ جاري ${action} ${templates.length} قالب...`, 'info');
+
+            try {
+                const ids = templates.map(t => t.id);
+                const { error } = await supabase
+                    .from('simulated_activities')
+                    .update({ is_active: state })
+                    .in('id', ids);
+
+                if (error) throw error;
+
+                log(`✅ تم ${action} جميع القوالب بنجاح!`, 'success');
+                await loadTemplates();
+            } catch (err) {
+                log(`❌ فشل ${action} الكل: ${err.message}`, 'error');
+            }
+        }
+
+        async function deleteAllInactive() {
+            const inactiveTemplates = templates.filter(t => !t.is_active);
+            if (inactiveTemplates.length === 0) {
+                log('⚠️ لا توجد قوالب معطلة للحذف', 'warning');
+                return;
+            }
+
+            if (!confirm(`هل تريد حذف ${inactiveTemplates.length} قالب معطل؟`)) return;
+
+            log(`🗑️ جاري حذف ${inactiveTemplates.length} قالب معطل...`, 'info');
+
+            try {
+                const ids = inactiveTemplates.map(t => t.id);
+                const { error } = await supabase
+                    .from('simulated_activities')
+                    .delete()
+                    .in('id', ids);
+
+                if (error) throw error;
+
+                log(`✅ تم حذف ${inactiveTemplates.length} قالب معطل بنجاح!`, 'success');
+                await loadTemplates();
+            } catch (err) {
+                log(`❌ فشل الحذف: ${err.message}`, 'error');
+            }
+        }
+
+        // تحميل القوالب عند بدء الصفحة
+        window.onload = () => {
+            log('🚀 تم تحميل صفحة اختبار القوالب الوهمية', 'success');
+            log('🔗 الاتصال بـ Supabase باستخدام anon role...', 'info');
+            loadTemplates();
+        };
+    </script>
+</body>
+</html>
