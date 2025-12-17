@@ -128,30 +128,25 @@ export function LiveActivityBar() {
   return (
     <>
       <style>{`
-        /* 🎯 STANDALONE WRAPPER LAYER - تحت الهيدر مباشرة */
+        /* 🎯 STANDALONE WRAPPER LAYER - داخل الهيدر */
         .live-activity-bar-wrapper {
-          position: fixed;
-          top: 80px;
-          left: 0;
-          width: 100vw;
+          position: relative;
+          width: 100%;
           height: 48px;
-          z-index: 40;
+          z-index: 1;
           pointer-events: none;
         }
 
         /* 🎨 MAIN ACTIVITY BAR - الشريط الرئيسي */
         .live-activity-bar {
-          position: fixed;
-          top: 80px;
-          left: 0;
-          right: 0;
+          position: relative;
           width: 100%;
           overflow: hidden;
           background: linear-gradient(135deg, #2C5F2D 0%, #1E4620 50%, #2C5F2D 100%);
           box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
           border-bottom: 2px solid rgba(212, 175, 55, 0.3);
           height: 48px;
-          z-index: 40;
+          z-index: 1;
           -webkit-backdrop-filter: blur(10px);
           backdrop-filter: blur(10px);
           pointer-events: auto;
@@ -173,27 +168,15 @@ export function LiveActivityBar() {
           will-change: transform;
         }
 
-        /* 🍎 iPhone specific fixes - نفس طريقة الإصلاح للايقونات الجانبية */
+        /* 🍎 iPhone specific fixes */
         @supports (-webkit-touch-callout: none) {
           .live-activity-bar-wrapper,
           .live-activity-bar {
-            position: fixed;
             -webkit-transform: translate3d(0, 0, 0);
             transform: translate3d(0, 0, 0);
             -webkit-backface-visibility: hidden;
             backface-visibility: hidden;
             will-change: transform;
-          }
-
-          .live-activity-bar-wrapper {
-            top: calc(80px + env(safe-area-inset-top, 0px));
-            height: 48px;
-          }
-
-          .live-activity-bar {
-            top: calc(80px + env(safe-area-inset-top, 0px));
-            padding-top: 0;
-            height: 48px;
           }
 
           .live-activity-bar-inner,
@@ -206,22 +189,10 @@ export function LiveActivityBar() {
           }
         }
 
-        /* 📱 Additional iPhone Safari overscroll/bounce fixes */
+        /* 📱 Additional iPhone Safari smooth scrolling */
         @media only screen
           and (max-width: 768px)
           and (-webkit-min-device-pixel-ratio: 2) {
-
-          .live-activity-bar-wrapper {
-            position: fixed !important;
-            will-change: transform;
-            -webkit-overflow-scrolling: touch;
-          }
-
-          .live-activity-bar {
-            position: fixed !important;
-            will-change: transform;
-            -webkit-overflow-scrolling: touch;
-          }
 
           .live-activity-bar-inner,
           .live-activity-bar-track {

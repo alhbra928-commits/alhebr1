@@ -129,20 +129,50 @@ export function RoyalMainInterface({
   // Home View - Royal Design
   return (
     <>
-      {/* شريط الإحصائيات المتحرك العلوي */}
-      <LiveActivityBar />
+      <style>{`
+        /* تثبيت الهيدر على الايفون */
+        @supports (-webkit-touch-callout: none) {
+          body {
+            padding-top: calc(180px + env(safe-area-inset-top, 0px));
+          }
+        }
+
+        @media (min-width: 640px) {
+          body {
+            padding-top: 200px;
+          }
+        }
+      `}</style>
+
+      {/* Royal Header - ثابت في الأعلى */}
+      <header
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 50,
+          transform: 'translateZ(0)',
+          willChange: 'transform',
+          backfaceVisibility: 'hidden' as const,
+          WebkitBackfaceVisibility: 'hidden' as const,
+        }}
+        className="bg-gradient-to-r from-amber-700 via-yellow-600 to-amber-700 shadow-2xl"
+      >
+        {/* شريط الإحصائيات المتحرك - داخل الهيدر */}
+        <LiveActivityBar />
 
       <div className="min-h-screen bg-gradient-to-br from-amber-50 via-yellow-50 to-amber-100">
       {/* Decorative Background Pattern */}
-      <div className="fixed inset-0 opacity-5">
+      <div className="fixed inset-0 opacity-5" style={{ zIndex: 1 }}>
         <div className="absolute inset-0" style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l30 30-30 30L0 30 30 0z' fill='%23D97706' fill-opacity='0.4'/%3E%3C/svg%3E")`,
           backgroundSize: '60px 60px'
         }}></div>
       </div>
 
-      {/* Royal Header */}
-      <header className="relative bg-gradient-to-r from-amber-700 via-yellow-600 to-amber-700 shadow-2xl">
+      {/* Royal Header Content */}
+      <div className="relative">
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JpZCIgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48cGF0aCBkPSJNIDQwIDAgTCAwIDAgMCA0MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLW9wYWNpdHk9IjAuMSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyaWQpIi8+PC9zdmc+')] opacity-20"></div>
 
         <div className="relative container mx-auto px-4 sm:px-6 py-4 sm:py-6 md:py-8">
@@ -221,10 +251,11 @@ export function RoyalMainInterface({
             </div>
           </div>
         </div>
+      </div>
       </header>
 
       {/* Main Content */}
-      <main className="relative container mx-auto px-4 sm:px-6 py-6 sm:py-8 md:py-12">
+      <main className="relative container mx-auto px-4 sm:px-6 py-6 sm:py-8 md:py-12" style={{ zIndex: 2 }}>
         {loading ? (
           <div className="flex justify-center items-center py-20">
             <SimpleLoader />
