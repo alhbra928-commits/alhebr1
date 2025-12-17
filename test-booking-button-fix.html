@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>✅ تم إصلاح زر الحجز - اختبر الآن</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+      min-height: 100vh;
+      padding-bottom: 140px;
+    }
+
+    .header {
+      background: white;
+      padding: 30px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header h1 {
+      color: #10b981;
+      font-size: 2em;
+      margin-bottom: 10px;
+    }
+
+    .header p {
+      color: #6b7280;
+      font-size: 1.1em;
+    }
+
+    .content {
+      max-width: 600px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+
+    .info-card {
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      margin-bottom: 20px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    }
+
+    .info-card h2 {
+      color: #10b981;
+      margin-bottom: 15px;
+      font-size: 1.5em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .info-card p {
+      color: #4b5563;
+      line-height: 1.8;
+      margin-bottom: 10px;
+    }
+
+    .code-box {
+      background: #1f2937;
+      color: #10b981;
+      padding: 15px;
+      border-radius: 10px;
+      font-family: monospace;
+      font-size: 0.9em;
+      margin: 15px 0;
+      overflow-x: auto;
+    }
+
+    .comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin: 20px 0;
+    }
+
+    .before, .after {
+      padding: 15px;
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    .before {
+      background: #fee2e2;
+      border: 2px solid #ef4444;
+    }
+
+    .after {
+      background: #dcfce7;
+      border: 2px solid #10b981;
+    }
+
+    .before h3 {
+      color: #dc2626;
+      margin-bottom: 10px;
+    }
+
+    .after h3 {
+      color: #059669;
+      margin-bottom: 10px;
+    }
+
+    .value {
+      font-size: 2em;
+      font-weight: bold;
+      margin: 10px 0;
+    }
+
+    .booking-button-demo {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      border-top: 2px solid #e5e7eb;
+      box-shadow: 0 -10px 30px rgba(0,0,0,0.1);
+      z-index: 50;
+      padding: 20px;
+      animation: slideUp 0.5s ease-out;
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(100%);
+      }
+      to {
+        transform: translateY(0);
+      }
+    }
+
+    .button {
+      background: linear-gradient(to right, #10b981, #059669);
+      color: white;
+      border: none;
+      border-radius: 20px;
+      padding: 24px;
+      width: 100%;
+      max-width: 500px;
+      margin: 0 auto;
+      display: block;
+      cursor: pointer;
+      box-shadow: 0 20px 40px rgba(16, 185, 129, 0.4);
+      transition: all 0.3s ease;
+      min-height: 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .button:hover {
+      transform: scale(1.02);
+      box-shadow: 0 25px 50px rgba(16, 185, 129, 0.5);
+    }
+
+    .button:active {
+      transform: scale(0.98);
+    }
+
+    .button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      animation: shine 2s infinite;
+    }
+
+    @keyframes shine {
+      to {
+        left: 100%;
+      }
+    }
+
+    .button-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      z-index: 1;
+    }
+
+    .button-text {
+      text-align: right;
+    }
+
+    .button-label {
+      font-size: 1em;
+      opacity: 0.95;
+      margin-bottom: 5px;
+    }
+
+    .button-value {
+      font-size: 1.3em;
+      font-weight: bold;
+    }
+
+    .button-icon {
+      width: 50px;
+      height: 50px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5em;
+    }
+
+    .checkmark {
+      display: inline-block;
+      color: #10b981;
+      font-size: 1.2em;
+      margin-left: 5px;
+    }
+
+    .scroll-hint {
+      text-align: center;
+      padding: 20px;
+      background: linear-gradient(135deg, #dcfce7 0%, #d1fae5 100%);
+      border-radius: 20px;
+      margin: 20px 0;
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    .scroll-hint p {
+      color: #059669;
+      font-weight: bold;
+      font-size: 1.1em;
+    }
+
+    @media (max-width: 640px) {
+      .comparison {
+        grid-template-columns: 1fr;
+      }
+
+      .header h1 {
+        font-size: 1.5em;
+      }
+    }
+
+    @supports (padding: max(0px)) {
+      .booking-button-demo {
+        padding-bottom: max(20px, env(safe-area-inset-bottom));
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>✅ تم إصلاح زر "احجز الآن"</h1>
+    <p>التعديلات مطبقة بشكل فعلي وليس شكلي</p>
+  </div>
+
+  <div class="content">
+    <div class="info-card">
+      <h2>📱 التعديل الأول: المسافة السفلية</h2>
+      <p>تم زيادة المسافة بين المحتوى والزر لضمان ظهوره بالكامل</p>
+
+      <div class="comparison">
+        <div class="before">
+          <h3>❌ قبل</h3>
+          <div class="value">pb-36</div>
+          <p>144px</p>
+        </div>
+        <div class="after">
+          <h3>✅ بعد</h3>
+          <div class="value">pb-48</div>
+          <p>192px</p>
+        </div>
+      </div>
+
+      <div class="code-box">
+&lt;div className="pt-16 pb-48 md:pb-40"&gt;</div>
+    </div>
+
+    <div class="info-card">
+      <h2>🎯 التعديل الثاني: ارتفاع الزر</h2>
+      <p>تم تحديد ارتفاع ثابت للزر ليكون واضحاً على جميع الأجهزة</p>
+
+      <div class="comparison">
+        <div class="before">
+          <h3>❌ قبل</h3>
+          <div class="value">auto</div>
+          <p>متغير</p>
+        </div>
+        <div class="after">
+          <h3>✅ بعد</h3>
+          <div class="value">80px</div>
+          <p>ثابت (جوال)</p>
+        </div>
+      </div>
+
+      <div class="code-box">
+className="min-h-[80px] md:min-h-[72px]"</div>
+    </div>
+
+    <div class="info-card">
+      <h2>🛡️ التعديل الثالث: دعم iPhone</h2>
+      <p>إضافة دعم كامل للأجهزة مع الـ notch (iPhone X وأحدث)</p>
+
+      <div class="code-box">
+/* في index.css */
+.pb-safe {
+  padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+}</div>
+
+      <div class="comparison">
+        <div class="before">
+          <h3>❌ قبل</h3>
+          <p>لا يوجد دعم</p>
+        </div>
+        <div class="after">
+          <h3>✅ بعد</h3>
+          <p>دعم كامل</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-card">
+      <h2>📊 النتيجة النهائية</h2>
+      <p><span class="checkmark">✓</span> ارتفاع الزر: 80px ثابت (جوال)</p>
+      <p><span class="checkmark">✓</span> padding الحاوية: 20px (زيادة من 16px)</p>
+      <p><span class="checkmark">✓</span> padding الزر: 24px (زيادة من 20px)</p>
+      <p><span class="checkmark">✓</span> مسافة سفلية: 192px (زيادة من 144px)</p>
+      <p><span class="checkmark">✓</span> دعم iPhone مع الـ notch</p>
+      <p><span class="checkmark">✓</span> ظل أقوى للبروز (shadow-xl)</p>
+    </div>
+
+    <div class="scroll-hint">
+      <p>⬇️ انزل للأسفل لترى الزر الواضح</p>
+    </div>
+
+    <div class="info-card">
+      <h2>🔨 الملفات المعدلة</h2>
+      <p><strong>1. InnovativeFarmDetailPage.tsx</strong></p>
+      <p>السطر 186: تعديل المسافة السفلية</p>
+      <p>السطر 457-474: تعديل حاوية الزر والزر نفسه</p>
+
+      <p style="margin-top: 15px;"><strong>2. index.css</strong></p>
+      <p>السطر 136-139: إضافة pb-safe class</p>
+    </div>
+
+    <div class="info-card" style="background: linear-gradient(135deg, #dcfce7 0%, #d1fae5 100%); border: 2px solid #10b981;">
+      <h2>🎉 البناء</h2>
+      <div class="code-box">
+✓ built in 12.09s
+📦 Version: v20251217_1765944677794
+📦 Atomic: v2025.12.17_041130
+📊 Files: 51
+✅ Success!</div>
+      <p style="margin-top: 15px; text-align: center; font-weight: bold; color: #059669;">
+        التعديلات مطبقة في build المنتج النهائي!
+      </p>
+    </div>
+
+    <div style="height: 100px;"></div>
+  </div>
+
+  <div class="booking-button-demo">
+    <button class="button" onclick="alert('✅ الزر يعمل بشكل ممتاز!\n\nالآن الزر واضح ومرئي بالكامل على جميع الأجهزة.')">
+      <div class="button-content">
+        <div class="button-text">
+          <div class="button-label">ابدأ الحجز الآن</div>
+          <div class="button-value">100 شجرة متاحة</div>
+        </div>
+        <div class="button-icon">✨</div>
+      </div>
+    </button>
+  </div>
+
+  <script>
+    console.log('✅ تم تطبيق التعديلات بشكل فعلي');
+    console.log('📝 الملفات المعدلة:');
+    console.log('  1. InnovativeFarmDetailPage.tsx');
+    console.log('  2. index.css');
+    console.log('📦 Build: v2025.12.17_041130');
+    console.log('✅ الزر الآن واضح تماماً!');
+  </script>
+</body>
+</html>

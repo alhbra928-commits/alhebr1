@@ -132,6 +132,11 @@ html, body {
   .safe-area-right {
     padding-right: env(safe-area-inset-right);
   }
+
+  /* Additional pb-safe utility */
+  .pb-safe {
+    padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+  }
 }
 
 /* Mobile Touch Optimization */

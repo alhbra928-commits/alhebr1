@@ -183,7 +183,7 @@ export const InnovativeFarmDetailPage: React.FC<InnovativeFarmDetailPageProps> =
       </div>
 
       {/* المحتوى الرئيسي */}
-      <div className="pt-16 pb-36">
+      <div className="pt-16 pb-48 md:pb-40">
         {/* صورة المزرعة */}
         <div className="relative h-80 overflow-hidden">
           {farmImage ? (
@@ -454,14 +454,14 @@ export const InnovativeFarmDetailPage: React.FC<InnovativeFarmDetailPageProps> =
       </div>
 
       {/* شريط الحجز الثابت المحسّن */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t-2 border-gray-200 shadow-2xl z-50">
-        <div className="p-4 max-w-lg mx-auto">
+      <div className="fixed bottom-0 left-0 right-0 bg-white border-t-2 border-gray-200 shadow-2xl z-50 pb-safe">
+        <div className="p-5 md:p-4 max-w-lg mx-auto">
           <button
             onClick={onStartBooking}
             disabled={!farm.available_trees || farm.available_trees === 0}
-            className={`w-full relative overflow-hidden rounded-2xl transition-all ${
+            className={`w-full relative overflow-hidden rounded-2xl transition-all min-h-[80px] md:min-h-[72px] ${
               farm.available_trees > 0
-                ? 'hover:scale-[1.02] active:scale-[0.98] shadow-lg hover:shadow-xl'
+                ? 'hover:scale-[1.02] active:scale-[0.98] shadow-xl hover:shadow-2xl'
                 : 'opacity-50 cursor-not-allowed'
             }`}
           >
@@ -471,7 +471,7 @@ export const InnovativeFarmDetailPage: React.FC<InnovativeFarmDetailPageProps> =
                 : 'bg-gray-400'
             }`} />
 
-            <div className="relative px-6 py-5 flex items-center justify-between text-white">
+            <div className="relative px-6 py-6 md:py-5 flex items-center justify-between text-white">
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
                   <Sparkles className="w-6 h-6" />
