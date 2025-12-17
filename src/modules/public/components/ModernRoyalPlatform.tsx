@@ -14,6 +14,7 @@ import { VerticalSideTabs } from '../../../components/common/VerticalSideTabs';
 import { SmartAssistantSidebar } from './SmartAssistantSidebar';
 import { PremiumHeader } from './PremiumHeader';
 import { FixedBottomBar } from './FixedBottomBar';
+import { AdvancedStatsFooter } from '../../../components/common/AdvancedStatsFooter';
 
 // Lazy load heavy components
 const InnovativeFarmDetailPage = lazy(() => import('./InnovativeFarmDetailPage').then(m => ({ default: m.InnovativeFarmDetailPage })));
@@ -466,6 +467,9 @@ export function ModernRoyalPlatform({
           }
         }
       `}</style>
+
+      {/* شريط الإحصائيات المتحرك في الأسفل */}
+      <AdvancedStatsFooter />
     </div>
   );
 }

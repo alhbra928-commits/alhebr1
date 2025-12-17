@@ -15,7 +15,7 @@ import { AdminCrownButton } from './AdminCrownButton';
 import { GlowingConceptButton } from './GlowingConceptButton';
 import { ConceptIntroductionPage } from './ConceptIntroductionPage';
 import { IdeaOverviewSection } from './IdeaOverviewSection';
-import { CompanyInfoFooter } from '../../../components/common/CompanyInfoFooter';
+import { AdvancedStatsFooter } from '../../../components/common/AdvancedStatsFooter';
 
 type ViewMode = 'home' | 'farmDetail' | 'booking' | 'investor' | 'verification' | 'concept';
 
@@ -267,16 +267,8 @@ export function MainPlatformInterface({
           boxShadow: '0 -4px 20px rgba(0, 0, 0, 0.1)'
         }}
       >
-        {/* الفوتر */}
-        <CompanyInfoFooter
-          companyName="منصة الاستثمار الزراعي الملكية"
-          commercialRegister="1234567890"
-          phone="+966500000000"
-          whatsapp="+966500000000"
-          email="info@palmolive.sa"
-          city="الرياض، المملكة العربية السعودية"
-          workingHours="الأحد - الخميس: 9 صباحاً - 6 مساءً"
-        />
+        {/* شريط الإحصائيات المتحرك */}
+        <AdvancedStatsFooter />
       </div>
     </div>
   );

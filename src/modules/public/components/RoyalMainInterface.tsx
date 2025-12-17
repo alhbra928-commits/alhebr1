@@ -12,7 +12,7 @@ import { ConceptIntroductionPage } from './ConceptIntroductionPage';
 import { EnhancedConceptCard } from './EnhancedConceptCard';
 import { AdaptiveSmartButton } from '../../../components/common/AdaptiveSmartButton';
 import { FloatingFiltersButton } from './FloatingFiltersButton';
-import { GlassGreenFooter } from '../../../components/common/GlassGreenFooter';
+import { AdvancedStatsFooter } from '../../../components/common/AdvancedStatsFooter';
 
 type ViewMode = 'home' | 'farmDetail' | 'booking' | 'investor' | 'verification' | 'concept';
 
@@ -416,14 +416,8 @@ export function RoyalMainInterface({
       defaultMessage="مرحباً! أود الاستفسار عن فرص الاستثمار الزراعي"
     />
 
-    {/* الفوتر الثابت في الأسفل */}
-    <GlassGreenFooter
-      activeTab={activeBottomTab}
-      onTabChange={setActiveBottomTab}
-      onWhatsAppClick={() => {
-        // يفتح الواتساب
-      }}
-    />
+    {/* شريط الإحصائيات المتحرك في الأسفل */}
+    <AdvancedStatsFooter />
     </>
   );
 }
