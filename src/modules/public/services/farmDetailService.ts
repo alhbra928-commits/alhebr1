@@ -80,32 +80,71 @@ export class FarmDetailService {
 
   static async createReservation(data: CreateReservationData) {
     try {
-      // First, create or get investor
+      // First, create or get investor (with duplicate handling)
       let investorId: string;
 
+      // Try to get existing investor first
       const { data: existingInvestor } = await supabase
         .from('investors')
-        .select('id')
+        .select('id, full_name')
         .eq('phone', data.investor_phone)
+        .is('deleted_at', null)
         .maybeSingle();
 
       if (existingInvestor) {
+        console.log('[FarmDetailService] Using existing investor:', existingInvestor.id);
         investorId = existingInvestor.id;
+
+        // Update name if changed
+        if (existingInvestor.full_name !== data.investor_name) {
+          await supabase
+            .from('investors')
+            .update({ full_name: data.investor_name })
+            .eq('id', existingInvestor.id);
+        }
       } else {
+        console.log('[FarmDetailService] Creating new investor');
+
+        // Use upsert to handle race conditions
         const { data: newInvestor, error: investorError } = await supabase
           .from('investors')
-          .insert({
+          .upsert({
             full_name: data.investor_name,
             phone: data.investor_phone,
             email: '',
             national_id: '',
             status: 'active'
+          }, {
+            onConflict: 'phone',
+            ignoreDuplicates: false
           })
           .select('id')
           .single();
 
-        if (investorError) throw investorError;
-        investorId = newInvestor.id;
+        if (investorError) {
+          console.error('[FarmDetailService] Investor creation error:', investorError);
+
+          // If still duplicate error, fetch the existing one
+          if (investorError.code === '23505' || investorError.message?.includes('duplicate')) {
+            console.log('[FarmDetailService] Duplicate detected, fetching existing investor');
+            const { data: retryInvestor } = await supabase
+              .from('investors')
+              .select('id')
+              .eq('phone', data.investor_phone)
+              .is('deleted_at', null)
+              .single();
+
+            if (retryInvestor) {
+              investorId = retryInvestor.id;
+            } else {
+              throw investorError;
+            }
+          } else {
+            throw investorError;
+          }
+        } else {
+          investorId = newInvestor.id;
+        }
       }
 
       // Create reservation for the primary variety (first one)
