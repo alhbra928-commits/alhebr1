@@ -27,14 +27,7 @@ export function LiveActivityBar() {
     { message: 'استثمر في مستقبلك الآن', icon: 'TrendingUp' }
   ]);
   const [isEnabled, setIsEnabled] = useState(true);
-  const [scrollSpeed, setScrollSpeed] = useState<'slow' | 'medium' | 'fast'>('medium');
   const [errorCount, setErrorCount] = useState(0);
-
-  const containerRef = useRef<HTMLDivElement>(null);
-  const trackRef = useRef<HTMLDivElement>(null);
-  const animationFrameRef = useRef<number>();
-  const positionRef = useRef<number>(0);
-  const lastTimeRef = useRef<number>(0);
 
   useEffect(() => {
     loadActivities();
@@ -51,7 +44,6 @@ export function LiveActivityBar() {
       const settings = await ActivityBarService.getSettings();
       if (settings) {
         setIsEnabled(settings.is_enabled);
-        setScrollSpeed(settings.scroll_speed);
       }
 
       const data = await ActivityBarService.getActivitiesToDisplay();
@@ -67,206 +59,53 @@ export function LiveActivityBar() {
     }
   };
 
-  useEffect(() => {
-    if (!isEnabled || activities.length === 0) {
-      if (animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current);
-      }
-      return;
-    }
-
-    const speedInPxPerSecond = {
-      slow: 30,
-      medium: 50,
-      fast: 80
-    }[scrollSpeed];
-
-    const animate = (currentTime: number) => {
-      if (!trackRef.current || !containerRef.current) {
-        animationFrameRef.current = requestAnimationFrame(animate);
-        return;
-      }
-
-      if (lastTimeRef.current === 0) {
-        lastTimeRef.current = currentTime;
-      }
-
-      const deltaTime = (currentTime - lastTimeRef.current) / 1000;
-      lastTimeRef.current = currentTime;
-
-      positionRef.current += speedInPxPerSecond * deltaTime;
-
-      const trackWidth = trackRef.current.offsetWidth / 2;
-
-      if (positionRef.current >= trackWidth) {
-        positionRef.current = positionRef.current - trackWidth;
-      }
-
-      trackRef.current.style.transform = `translateX(-${positionRef.current}px)`;
-
-      animationFrameRef.current = requestAnimationFrame(animate);
-    };
-
-    lastTimeRef.current = 0;
-    positionRef.current = 0;
-    animationFrameRef.current = requestAnimationFrame(animate);
-
-    return () => {
-      if (animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current);
-      }
-    };
-  }, [isEnabled, activities, scrollSpeed]);
-
   if (!isEnabled || activities.length === 0) {
     return null;
   }
 
-  const duplicatedActivities = [...activities, ...activities];
-
-  // 🔧 فصل الشريط كطبقة مستقلة تماماً - Standalone Overlay Layer
+  // شريط ثابت بدون حركة
   return (
-    <>
-      <style>{`
-        /* 🎯 STANDALONE WRAPPER LAYER - داخل الهيدر */
-        .live-activity-bar-wrapper {
-          position: relative;
-          width: 100%;
-          height: 48px;
-          z-index: 1;
-          pointer-events: none;
-        }
-
-        /* 🎨 MAIN ACTIVITY BAR - الشريط الرئيسي */
-        .live-activity-bar {
-          position: relative;
-          width: 100%;
-          overflow: hidden;
-          background: linear-gradient(135deg, #2C5F2D 0%, #1E4620 50%, #2C5F2D 100%);
-          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-          border-bottom: 2px solid rgba(212, 175, 55, 0.3);
-          height: 48px;
-          z-index: 1;
-          -webkit-backdrop-filter: blur(10px);
-          backdrop-filter: blur(10px);
-          pointer-events: auto;
-        }
-
-        .live-activity-bar-inner {
-          height: 100%;
-          display: flex;
-          align-items: center;
-          position: relative;
-          overflow: hidden;
-        }
-
-        .live-activity-bar-track {
-          display: flex;
-          align-items: center;
-          gap: 24px;
-          min-width: max-content;
-          will-change: transform;
-        }
-
-        /* 🍎 iPhone specific fixes */
-        @supports (-webkit-touch-callout: none) {
-          .live-activity-bar-wrapper,
-          .live-activity-bar {
-            -webkit-transform: translate3d(0, 0, 0);
-            transform: translate3d(0, 0, 0);
-            -webkit-backface-visibility: hidden;
-            backface-visibility: hidden;
-            will-change: transform;
-          }
-
-          .live-activity-bar-inner,
-          .live-activity-bar-track {
-            position: relative;
-            -webkit-transform: translate3d(0, 0, 0);
-            transform: translate3d(0, 0, 0);
-            -webkit-backface-visibility: hidden;
-            backface-visibility: hidden;
-          }
-        }
-
-        /* 📱 Additional iPhone Safari smooth scrolling */
-        @media only screen
-          and (max-width: 768px)
-          and (-webkit-min-device-pixel-ratio: 2) {
-
-          .live-activity-bar-inner,
-          .live-activity-bar-track {
-            position: relative !important;
-          }
-
-          /* منع Safari من إعادة حساب الموضع عند التمرير */
-          body {
-            -webkit-overflow-scrolling: touch;
-          }
-        }
-      `}</style>
-
-      {/* 🎯 Standalone Wrapper - خارج Flow الصفحة تماماً */}
-      <div className="live-activity-bar-wrapper">
-        <div
-          ref={containerRef}
-          className="live-activity-bar"
-        >
-          <div className="live-activity-bar-inner">
+    <div
+      className="w-full"
+      style={{
+        background: 'linear-gradient(135deg, #2C5F2D 0%, #1E4620 50%, #2C5F2D 100%)',
+        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
+        borderTop: '2px solid rgba(212, 175, 55, 0.3)',
+        borderBottom: '2px solid rgba(212, 175, 55, 0.3)',
+        height: '48px',
+      }}
+    >
+      <div className="h-full flex items-center justify-center gap-8 px-4">
+        {activities.map((activity, index) => {
+          const IconComponent = iconMap[activity.icon] || Sparkles;
+          return (
             <div
-              ref={trackRef}
-              className="live-activity-bar-track"
+              key={`activity-${index}`}
+              className="flex items-center gap-3"
             >
-              {duplicatedActivities.map((activity, index) => {
-                const IconComponent = iconMap[activity.icon] || Sparkles;
-                return (
-                  <div
-                    key={`activity-${index}`}
-                    className="flex items-center gap-3 whitespace-nowrap px-4"
-                    style={{
-                      minWidth: 'max-content',
-                    }}
-                  >
-                    <div
-                      className="flex-shrink-0 p-2 rounded-lg"
-                      style={{
-                        background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(196, 148, 31, 0.15) 100%)',
-                        border: '1px solid rgba(212, 175, 55, 0.3)',
-                      }}
-                    >
-                      <IconComponent className="h-5 w-5" style={{ color: '#D4AF37' }} />
-                    </div>
-                    <span
-                      className="font-semibold text-base"
-                      style={{
-                        color: '#F5F5DC',
-                        textShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
-                        letterSpacing: '0.3px',
-                      }}
-                    >
-                      {activity.message}
-                    </span>
-                    <div
-                      className="w-1.5 h-1.5 rounded-full mx-3 flex-shrink-0"
-                      style={{
-                        background: 'linear-gradient(135deg, #D4AF37 0%, #C4941F 100%)',
-                        boxShadow: '0 0 8px rgba(212, 175, 55, 0.6)',
-                      }}
-                    />
-                  </div>
-                );
-              })}
+              <div
+                className="flex-shrink-0 p-2 rounded-lg"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(196, 148, 31, 0.15) 100%)',
+                  border: '1px solid rgba(212, 175, 55, 0.3)',
+                }}
+              >
+                <IconComponent className="h-5 w-5" style={{ color: '#D4AF37' }} />
+              </div>
+              <span
+                className="font-semibold text-base whitespace-nowrap"
+                style={{
+                  color: '#F5F5DC',
+                  textShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
+                  letterSpacing: '0.3px',
+                }}
+              >
+                {activity.message}
+              </span>
             </div>
-          </div>
-
-          <div
-            className="absolute bottom-0 left-0 right-0 h-[2px]"
-            style={{
-              background: 'linear-gradient(90deg, transparent 0%, rgba(212, 175, 55, 0.5) 50%, transparent 100%)',
-            }}
-          />
-        </div>
+          );
+        })}
       </div>
-    </>
+    </div>
   );
 }

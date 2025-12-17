@@ -60,31 +60,40 @@ export function GlassGreenFooter({
   return (
     <>
       <style>{`
+        /* 🔧 تثبيت الفوتر على iPhone - نفس طريقة الأيقونات الجانبية */
+        .glass-green-footer-fixed {
+          position: fixed;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          width: 100%;
+          z-index: 9999;
+        }
+
+        /* 🍎 iPhone specific fixes - EXACTLY like side dock */
+        @supports (-webkit-touch-callout: none) {
+          .glass-green-footer-fixed {
+            position: fixed !important;
+            bottom: 0 !important;
+            -webkit-transform: translate3d(0, 0, 0);
+            transform: translate3d(0, 0, 0);
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            will-change: transform;
+          }
+
+          body {
+            padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important;
+          }
+        }
+
+        /* للشاشات العادية */
         body {
           padding-bottom: max(80px, calc(80px + env(safe-area-inset-bottom)));
         }
-
-        @supports (padding-bottom: env(safe-area-inset-bottom)) {
-          body {
-            padding-bottom: calc(80px + env(safe-area-inset-bottom));
-          }
-        }
       `}</style>
 
-      <footer
-        style={{
-          position: 'fixed',
-          bottom: 0,
-          left: 0,
-          right: 0,
-          zIndex: 9999,
-          transform: 'translateZ(0)',
-          willChange: 'transform',
-          backfaceVisibility: 'hidden' as const,
-          WebkitBackfaceVisibility: 'hidden' as const,
-        }}
-        className="bg-gradient-to-b from-emerald-100/95 via-emerald-200/98 to-emerald-300/95"
-      >
+      <footer className="glass-green-footer-fixed bg-gradient-to-b from-emerald-100/95 via-emerald-200/98 to-emerald-300/95">
         <div
           style={{
             backdropFilter: 'blur(20px) saturate(180%)',
