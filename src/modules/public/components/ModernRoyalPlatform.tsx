@@ -287,13 +287,6 @@ export function ModernRoyalPlatform({
   if (currentView === 'farmDetail' && selectedFarm) {
     return (
       <>
-        <PremiumHeader
-          onAdminLogin={onAdminLogin}
-          onInvestorLogin={() => setCurrentView('investor')}
-          onVerifyCertificate={() => setCurrentView('verification')}
-          onBackToAdmin={onBackToAdmin}
-          onFarmOwnerLogin={onFarmOwnerLogin}
-        />
         <Suspense fallback={<div className="min-h-screen bg-gradient-to-br from-emerald-50 to-green-50" />}>
           <InnovativeFarmDetailPage
             farmId={selectedFarm.id}
@@ -301,7 +294,6 @@ export function ModernRoyalPlatform({
             onStartBooking={() => setCurrentView('booking')}
           />
         </Suspense>
-        <FixedBottomBar onIntroClick={() => setConceptModalOpen(true)} />
       </>
     );
   }

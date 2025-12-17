@@ -17,8 +17,6 @@ import {
 } from 'lucide-react';
 import { FarmDetailService } from '../services/farmDetailService';
 import { MazadCrownLoader } from '../../../components/common/MazadCrownLoader';
-import { LiveActivityBar } from '../../../components/common/LiveActivityBar';
-import { AdaptiveSmartButton } from '../../../components/common/AdaptiveSmartButton';
 
 interface InnovativeFarmDetailPageProps {
   farmId: string;
@@ -151,12 +149,9 @@ export const InnovativeFarmDetailPage: React.FC<InnovativeFarmDetailPageProps> =
 
   return (
     <>
-      {/* شريط الإحصائيات المتحرك العلوي */}
-      <LiveActivityBar />
-
       <div className="min-h-screen bg-white" dir="rtl">
         {/* Header الثابت الشفاف */}
-        <div className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-xl border-b border-gray-100 mt-10">
+        <div className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-xl border-b border-gray-100">
         <div className="flex items-center justify-between p-4">
           <button
             onClick={onBack}
