@@ -10,6 +10,7 @@ import { SideDockSettings } from './SideDockSettings';
 import { InnovativeLoaderSettings } from './InnovativeLoaderSettings';
 import { LiveActivityBarSettings } from './LiveActivityBarSettings';
 import { SmartActivityTickerManager } from './SmartActivityTickerManager';
+import { UltraSmartActivityTickerControl } from './UltraSmartActivityTickerControl';
 
 interface SettingsViewProps {
   onBack?: () => void;
@@ -160,7 +161,7 @@ export function SettingsView({ onBack }: SettingsViewProps) {
         ) : activeTab === 'activity-bar' ? (
           <LiveActivityBarSettings />
         ) : activeTab === 'ticker' ? (
-          <SmartActivityTickerManager />
+          <UltraSmartActivityTickerControl />
         ) : (
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
