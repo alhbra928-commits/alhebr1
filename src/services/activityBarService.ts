@@ -47,7 +47,6 @@ export class ActivityBarService {
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error('Error fetching activity bar settings:', error);
       return null;
     }
   }
@@ -81,7 +80,6 @@ export class ActivityBarService {
       if (error) throw error;
       return data || [];
     } catch (error) {
-      console.error('Error fetching mock messages:', error);
       return [];
     }
   }
@@ -192,7 +190,7 @@ export class ActivityBarService {
       }
 
     } catch (error) {
-      console.error('Error fetching real activities:', error);
+      // Silent fail
     }
 
     return activities;
@@ -245,7 +243,6 @@ export class ActivityBarService {
 
       return activities;
     } catch (error) {
-      console.error('Error getting activities to display:', error);
       return [
         { message: 'مرحباً بكم في منصة الحبر', icon: 'Sparkles' }
       ];

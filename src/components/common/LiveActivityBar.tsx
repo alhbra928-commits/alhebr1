@@ -22,9 +22,13 @@ interface Activity {
 }
 
 export function LiveActivityBar() {
-  const [activities, setActivities] = useState<Activity[]>([]);
+  const [activities, setActivities] = useState<Activity[]>([
+    { message: 'مرحباً بكم في منصة الحبر للاستثمار الزراعي', icon: 'Sparkles' },
+    { message: 'استثمر في مستقبلك الآن', icon: 'TrendingUp' }
+  ]);
   const [isEnabled, setIsEnabled] = useState(true);
   const [scrollSpeed, setScrollSpeed] = useState<'slow' | 'medium' | 'fast'>('medium');
+  const [errorCount, setErrorCount] = useState(0);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
@@ -34,11 +38,15 @@ export function LiveActivityBar() {
 
   useEffect(() => {
     loadActivities();
-    const interval = setInterval(loadActivities, 30000);
+    const interval = setInterval(loadActivities, 60000);
     return () => clearInterval(interval);
   }, []);
 
   const loadActivities = async () => {
+    if (errorCount >= 3) {
+      return;
+    }
+
     try {
       const settings = await ActivityBarService.getSettings();
       if (settings) {
@@ -49,9 +57,13 @@ export function LiveActivityBar() {
       const data = await ActivityBarService.getActivitiesToDisplay();
       if (data.length > 0) {
         setActivities(data);
+        setErrorCount(0);
       }
     } catch (error) {
-      console.error('Error loading activities:', error);
+      setErrorCount(prev => prev + 1);
+      if (errorCount === 0) {
+        console.warn('Activity Bar: استخدام البيانات الافتراضية');
+      }
     }
   };
 
