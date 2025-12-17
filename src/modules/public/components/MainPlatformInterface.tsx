@@ -16,7 +16,6 @@ import { GlowingConceptButton } from './GlowingConceptButton';
 import { ConceptIntroductionPage } from './ConceptIntroductionPage';
 import { IdeaOverviewSection } from './IdeaOverviewSection';
 import { CompanyInfoFooter } from '../../../components/common/CompanyInfoFooter';
-import { LiveActivityBar } from '../../../components/common/LiveActivityBar';
 
 type ViewMode = 'home' | 'farmDetail' | 'booking' | 'investor' | 'verification' | 'concept';
 
@@ -268,9 +267,6 @@ export function MainPlatformInterface({
           boxShadow: '0 -4px 20px rgba(0, 0, 0, 0.1)'
         }}
       >
-        {/* الشريط المتحرك فوق الفوتر مباشرة */}
-        <LiveActivityBar />
-
         {/* الفوتر */}
         <CompanyInfoFooter
           companyName="منصة الاستثمار الزراعي الملكية"

@@ -12,7 +12,6 @@ import { InnovativeFarmCard } from './InnovativeFarmCard';
 import { getPlatformTextsBySection } from '../../../services/platformTextsService';
 import { VerticalSideTabs } from '../../../components/common/VerticalSideTabs';
 import { SmartAssistantSidebar } from './SmartAssistantSidebar';
-import { LiveActivityBar } from '../../../components/common/LiveActivityBar';
 import { PremiumHeader } from './PremiumHeader';
 import { FixedBottomBar } from './FixedBottomBar';
 
@@ -407,9 +406,6 @@ export function ModernRoyalPlatform({
       </div>
 
       {/* 🎯 ROOT LEVEL COMPONENTS - خارج Flow الصفحة تماماً */}
-
-      {/* Live Activity Bar - Standalone Layer مثل الأيقونات الجانبية */}
-      <LiveActivityBar />
 
       {/* Admin Crown Button - Green */}
       <AdminCrownButton

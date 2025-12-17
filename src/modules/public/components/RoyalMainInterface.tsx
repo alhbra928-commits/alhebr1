@@ -10,7 +10,6 @@ import { SimpleLoader } from '../../../components/common/SimpleLoader';
 import { AdminCrownButton } from './AdminCrownButton';
 import { ConceptIntroductionPage } from './ConceptIntroductionPage';
 import { EnhancedConceptCard } from './EnhancedConceptCard';
-import { LiveActivityBar } from '../../../components/common/LiveActivityBar';
 import { AdaptiveSmartButton } from '../../../components/common/AdaptiveSmartButton';
 import { FloatingFiltersButton } from './FloatingFiltersButton';
 import { GlassGreenFooter } from '../../../components/common/GlassGreenFooter';
@@ -173,9 +172,6 @@ export function RoyalMainInterface({
 
       {/* Royal Header - ثابت بنفس طريقة الأيقونات الجانبية */}
       <header className="royal-fixed-header bg-gradient-to-r from-amber-700 via-yellow-600 to-amber-700 shadow-2xl">
-        {/* شريط الإحصائيات المتحرك - داخل الهيدر */}
-        <LiveActivityBar />
-
       <div className="min-h-screen bg-gradient-to-br from-amber-50 via-yellow-50 to-amber-100">
       {/* Decorative Background Pattern */}
       <div className="fixed inset-0 opacity-5" style={{ zIndex: 1 }}>
