@@ -7,7 +7,6 @@ import { PublicFarmService } from '../services/publicFarmService';
 import { GreenConceptButton } from './GreenConceptButton';
 import { EnhancedConceptCard } from './EnhancedConceptCard';
 import { AdminCrownButton } from './AdminCrownButton';
-import { BackToAdminButton } from './BackToAdminButton';
 import { SmartFloatingButton } from '../../../components/common/SmartFloatingButton';
 import { InnovativeFarmCard } from './InnovativeFarmCard';
 import { getPlatformTextsBySection } from '../../../services/platformTextsService';
@@ -417,11 +416,6 @@ export function ModernRoyalPlatform({
         onAdminLogin={onAdminLogin}
         onFarmOwnerLogin={onFarmOwnerLogin}
       />
-
-      {/* Back to Admin Button - Shows when logged in */}
-      {onBackToAdmin && (
-        <BackToAdminButton onBackToAdmin={onBackToAdmin} />
-      )}
 
       {/* Vertical Side Tabs - Luxury Navigation */}
       <VerticalSideTabs
