@@ -84,20 +84,26 @@ export function SmartActivityTicker() {
     const scrollContainer = scrollContainerRef.current;
     if (!scrollContainer || activities.length === 0) return;
 
-    const speeds = { slow: 45, medium: 60, fast: 75 };
-    const speed = speeds[settings.scrollSpeed] || 60;
+    const speeds = {
+      slow: 80,
+      medium: 50,
+      fast: 30
+    };
+    const speed = speeds[settings.scrollSpeed] || 50;
+
+    const pixelsPerFrame = settings.scrollSpeed === 'fast' ? 1.5 : settings.scrollSpeed === 'medium' ? 1.0 : 0.5;
 
     const animate = () => {
       setScrollPosition((prev) => {
-        const newPosition = prev + 0.6;
-        const maxScroll = scrollContainer.scrollWidth / 3;
-        return newPosition >= maxScroll ? 0 : newPosition;
+        const contentWidth = scrollContainer.scrollWidth / 3;
+        const newPosition = prev + pixelsPerFrame;
+        return newPosition >= contentWidth ? newPosition - contentWidth : newPosition;
       });
     };
 
     const animationId = setInterval(animate, speed);
     return () => clearInterval(animationId);
-  }, [activities, settings.scrollSpeed]);
+  }, [activities.length, settings.scrollSpeed]);
 
   const loadSettings = async () => {
     try {
@@ -173,7 +179,8 @@ export function SmartActivityTicker() {
       }
 
       const shuffled = items.sort(() => Math.random() - 0.5);
-      setActivities([...shuffled, ...shuffled, ...shuffled]);
+      const tripled = [...shuffled, ...shuffled, ...shuffled];
+      setActivities(tripled);
     } catch (error) {
       console.error('[Ticker] Error loading activities:', error);
     }
@@ -306,36 +313,51 @@ export function SmartActivityTicker() {
           text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
         }
 
+        @keyframes gradient-shift {
+          0%, 100% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+        }
+
         /* Mobile Optimizations */
         @media (max-width: 768px) {
           .ticker-modern {
             border-radius: 0 !important;
-            height: 64px !important;
+            height: 58px !important;
             border-top-width: 3px !important;
           }
 
           .ticker-spacer {
-            height: 64px !important;
+            height: 58px !important;
           }
 
           .modern-card {
-            min-width: 220px !important;
-            padding: 10px 12px !important;
-            border-radius: 14px !important;
+            min-width: 200px !important;
+            padding: 8px 10px !important;
+            border-radius: 12px !important;
           }
 
-          .card-icon {
-            width: 36px !important;
-            height: 36px !important;
+          .card-icon-wrapper {
+            width: 28px !important;
+            height: 28px !important;
+          }
+
+          .card-icon-wrapper svg {
+            width: 14px !important;
+            height: 14px !important;
           }
 
           .card-title {
-            font-size: 13px !important;
-            line-height: 1.4 !important;
+            font-size: 12px !important;
+            line-height: 1.3 !important;
           }
 
           .card-time {
-            font-size: 11px !important;
+            font-size: 10px !important;
+          }
+
+          .card-sparkle {
+            width: 12px !important;
+            height: 12px !important;
           }
         }
 
@@ -357,7 +379,7 @@ export function SmartActivityTicker() {
       {/* Modern Ticker Bar */}
       <div
         className="fixed bottom-0 left-0 right-0 ticker-modern z-40"
-        style={{ height: '72px' }}
+        style={{ height: '66px' }}
         dir="rtl"
       >
         {/* Animated Top Border */}
@@ -367,7 +389,7 @@ export function SmartActivityTicker() {
         <div className="relative h-full overflow-hidden">
           <div
             ref={scrollContainerRef}
-            className="scroll-container flex items-center h-full gap-3 px-2"
+            className="scroll-container flex items-center h-full gap-2 px-1"
             style={{
               transform: `translateX(-${scrollPosition}px)`,
             }}
@@ -381,8 +403,8 @@ export function SmartActivityTicker() {
                   className={`modern-card ${activity.bgGradient} relative overflow-hidden flex-shrink-0`}
                   style={{
                     animationDelay: `${index * 0.05}s`,
-                    minWidth: '260px',
-                    padding: '12px 14px',
+                    minWidth: '240px',
+                    padding: '10px 12px',
                     borderColor: activity.color.includes('emerald') ? 'rgba(16, 185, 129, 0.4)' :
                                 activity.color.includes('blue') ? 'rgba(59, 130, 246, 0.4)' :
                                 activity.color.includes('green') ? 'rgba(34, 197, 94, 0.4)' :
@@ -398,12 +420,12 @@ export function SmartActivityTicker() {
                     <div className={`absolute inset-0 bg-gradient-to-br ${activity.color} blur-xl`} />
                   </div>
 
-                  <div className="relative flex items-center gap-3">
+                  <div className="relative flex items-center gap-2.5">
                     {/* Modern Icon */}
-                    <div className="relative card-icon flex-shrink-0">
-                      <div className={`absolute inset-0 bg-gradient-to-br ${activity.color} rounded-xl blur-md opacity-60 pulse-ring`} />
-                      <div className={`relative p-2.5 rounded-xl bg-gradient-to-br ${activity.color} shadow-lg`}>
-                        <IconComponent className="w-5 h-5 text-white" strokeWidth={2.5} />
+                    <div className="relative card-icon-wrapper flex-shrink-0" style={{ width: '32px', height: '32px' }}>
+                      <div className={`absolute inset-0 bg-gradient-to-br ${activity.color} rounded-lg blur-md opacity-60 pulse-ring`} />
+                      <div className={`relative p-1.5 rounded-lg bg-gradient-to-br ${activity.color} shadow-lg flex items-center justify-center`} style={{ width: '32px', height: '32px' }}>
+                        <IconComponent className="w-4 h-4 text-white" strokeWidth={2.5} />
                       </div>
                     </div>
 
@@ -438,8 +460,8 @@ export function SmartActivityTicker() {
                     </div>
 
                     {/* Sparkle */}
-                    <div className="flex-shrink-0">
-                      <Zap className="w-4 h-4 text-yellow-500 animate-pulse" fill="currentColor" />
+                    <div className="flex-shrink-0 card-sparkle">
+                      <Zap className="w-3.5 h-3.5 text-yellow-500 animate-pulse" fill="currentColor" />
                     </div>
                   </div>
 
@@ -453,7 +475,7 @@ export function SmartActivityTicker() {
       </div>
 
       {/* Spacer */}
-      <div className="ticker-spacer h-[72px]" style={{ flexShrink: 0 }} />
+      <div className="ticker-spacer h-[66px]" style={{ flexShrink: 0 }} />
     </>
   );
 }
