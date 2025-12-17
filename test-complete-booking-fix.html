@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>✅ إصلاح كامل - زر الحجز + واتساب في الفوتر</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+      min-height: 100vh;
+      padding-bottom: 140px;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      padding: 40px 20px;
+      text-align: center;
+      color: white;
+      box-shadow: 0 10px 40px rgba(16, 185, 129, 0.3);
+    }
+
+    .header h1 {
+      font-size: 2em;
+      margin-bottom: 10px;
+    }
+
+    .header p {
+      opacity: 0.95;
+      font-size: 1.1em;
+    }
+
+    .content {
+      max-width: 600px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+
+    .section {
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      margin-bottom: 20px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    }
+
+    .section h2 {
+      color: #10b981;
+      margin-bottom: 20px;
+      font-size: 1.8em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin: 20px 0;
+    }
+
+    .before, .after {
+      padding: 20px;
+      border-radius: 15px;
+      text-align: center;
+    }
+
+    .before {
+      background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+      border: 2px solid #ef4444;
+    }
+
+    .after {
+      background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+      border: 2px solid #10b981;
+    }
+
+    .before h3 {
+      color: #dc2626;
+      margin-bottom: 15px;
+      font-size: 1.2em;
+    }
+
+    .after h3 {
+      color: #059669;
+      margin-bottom: 15px;
+      font-size: 1.2em;
+    }
+
+    .value {
+      font-size: 2.5em;
+      font-weight: bold;
+      margin: 15px 0;
+    }
+
+    .label {
+      font-size: 0.9em;
+      opacity: 0.8;
+    }
+
+    .visual-demo {
+      background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+      border-radius: 15px;
+      padding: 30px;
+      margin: 20px 0;
+      border: 2px dashed #d1d5db;
+    }
+
+    .visual-demo h3 {
+      color: #374151;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .button-demo {
+      background: white;
+      border-radius: 15px;
+      padding: 24px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .demo-button {
+      width: 100%;
+      background: linear-gradient(to right, #10b981, #059669);
+      color: white;
+      border: none;
+      border-radius: 15px;
+      padding: 28px 24px;
+      font-size: 1.1em;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 15px 35px rgba(16, 185, 129, 0.4);
+      transition: all 0.3s ease;
+      min-height: 96px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .demo-button:hover {
+      transform: scale(1.02);
+      box-shadow: 0 20px 45px rgba(16, 185, 129, 0.5);
+    }
+
+    .demo-button:active {
+      transform: scale(0.98);
+    }
+
+    .footer-demo {
+      background: linear-gradient(135deg, #064e3b 0%, #065f46 100%);
+      border-radius: 20px;
+      padding: 30px;
+      margin: 30px 0;
+    }
+
+    .whatsapp-button-large {
+      background: linear-gradient(to right, #16a34a, #15803d);
+      color: white;
+      border: none;
+      border-radius: 15px;
+      padding: 20px;
+      width: 100%;
+      cursor: pointer;
+      box-shadow: 0 10px 30px rgba(22, 163, 74, 0.4);
+      transition: all 0.3s ease;
+      margin-bottom: 15px;
+      font-size: 1em;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .whatsapp-button-large:hover {
+      transform: scale(1.02);
+      box-shadow: 0 15px 40px rgba(22, 163, 74, 0.5);
+    }
+
+    .small-buttons {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .small-button {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: white;
+      padding: 10px 15px;
+      border-radius: 10px;
+      font-size: 0.85em;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .small-button:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+      margin: 20px 0;
+    }
+
+    .stat-box {
+      background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+      border: 2px solid #10b981;
+      border-radius: 15px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .stat-box .number {
+      font-size: 2.5em;
+      font-weight: bold;
+      color: #10b981;
+      margin-bottom: 5px;
+    }
+
+    .stat-box .text {
+      color: #059669;
+      font-size: 0.9em;
+    }
+
+    .success-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.9em;
+      font-weight: bold;
+      margin: 5px;
+    }
+
+    .booking-button-fixed {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      border-top: 2px solid #e5e7eb;
+      box-shadow: 0 -10px 30px rgba(0,0,0,0.1);
+      z-index: 1000;
+      padding: 24px;
+      animation: slideUp 0.5s ease-out;
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(100%);
+      }
+      to {
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .comparison {
+        grid-template-columns: 1fr;
+      }
+
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .header h1 {
+        font-size: 1.5em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>✅ إصلاح كامل لزر الحجز</h1>
+    <p>زيادة المسافة + نقل واتساب للفوتر</p>
+  </div>
+
+  <div class="content">
+    <!-- القسم الأول: المسافة السفلية -->
+    <div class="section">
+      <h2>📏 المسافة السفلية للمحتوى</h2>
+      <div class="comparison">
+        <div class="before">
+          <h3>❌ قبل</h3>
+          <div class="value">192px</div>
+          <div class="label">pb-48</div>
+        </div>
+        <div class="after">
+          <h3>✅ بعد</h3>
+          <div class="value">288px</div>
+          <div class="label">pb-72</div>
+        </div>
+      </div>
+      <p style="text-align: center; color: #059669; font-weight: bold; margin-top: 15px;">
+        زيادة 96px = الزر واضح تماماً!
+      </p>
+    </div>
+
+    <!-- القسم الثاني: ارتفاع الزر -->
+    <div class="section">
+      <h2>📐 ارتفاع زر الحجز</h2>
+      <div class="comparison">
+        <div class="before">
+          <h3>❌ قبل</h3>
+          <div class="value">80px</div>
+          <div class="label">min-h-[80px]</div>
+        </div>
+        <div class="after">
+          <h3>✅ بعد</h3>
+          <div class="value">96px</div>
+          <div class="label">min-h-[96px]</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- القسم الثالث: المقاسات الكاملة -->
+    <div class="section">
+      <h2>📊 الحساب الكامل (جوال)</h2>
+      <div class="stats">
+        <div class="stat-box">
+          <div class="number">24px</div>
+          <div class="text">padding حاوية × 2</div>
+        </div>
+        <div class="stat-box">
+          <div class="number">96px</div>
+          <div class="text">ارتفاع الزر</div>
+        </div>
+        <div class="stat-box">
+          <div class="number">28px</div>
+          <div class="text">padding زر × 2</div>
+        </div>
+        <div class="stat-box">
+          <div class="number">20px</div>
+          <div class="text">safe area</div>
+        </div>
+      </div>
+      <div style="text-align: center; margin-top: 20px; padding: 20px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-radius: 15px; color: white;">
+        <div style="font-size: 3em; font-weight: bold;">~220px</div>
+        <div style="font-size: 1.2em; margin-top: 10px;">المساحة المرئية الكاملة للزر</div>
+      </div>
+    </div>
+
+    <!-- القسم الرابع: عرض مرئي للزر -->
+    <div class="section">
+      <h2>🎨 معاينة زر الحجز</h2>
+      <div class="visual-demo">
+        <h3>الزر الآن بهذا الحجم:</h3>
+        <div class="button-demo">
+          <button class="demo-button" onclick="alert('✅ الزر واضح بالكامل!')">
+            <div style="display: flex; align-items: center; gap: 15px;">
+              <span style="font-size: 1.5em;">✨</span>
+              <div style="text-align: right;">
+                <div style="font-size: 0.9em; opacity: 0.9;">ابدأ الحجز الآن</div>
+                <div style="font-size: 1.2em; font-weight: bold;">100 شجرة متاحة</div>
+              </div>
+            </div>
+            <span style="font-size: 1.5em;">→</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- القسم الخامس: واتساب في الفوتر -->
+    <div class="section">
+      <h2>💬 واتساب في الفوتر</h2>
+      <div style="margin: 20px 0; padding: 20px; background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); border-radius: 15px; border: 2px solid #ef4444;">
+        <h3 style="color: #dc2626; text-align: center; margin-bottom: 10px;">❌ تم الحذف</h3>
+        <p style="text-align: center; color: #7f1d1d;">زر الواتساب العائم (AdaptiveSmartButton)</p>
+      </div>
+
+      <div style="margin: 20px 0; padding: 20px; background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%); border-radius: 15px; border: 2px solid #10b981;">
+        <h3 style="color: #059669; text-align: center; margin-bottom: 10px;">✅ تم الإضافة</h3>
+        <p style="text-align: center; color: #065f46; margin-bottom: 15px;">زر واتساب بارز في الفوتر</p>
+
+        <div class="footer-demo">
+          <button class="whatsapp-button-large" onclick="alert('✅ زر واتساب بارز!')">
+            <span style="font-size: 1.5em;">💬</span>
+            <div>
+              <div style="font-size: 0.9em; opacity: 0.9;">تواصل معنا عبر واتساب</div>
+              <div style="font-size: 1.1em; font-weight: bold;">+966500000000</div>
+            </div>
+          </button>
+
+          <div class="small-buttons">
+            <button class="small-button">📞 +966500000000</button>
+            <button class="small-button">✉️ info@palmolive.sa</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- القسم السادس: النتيجة -->
+    <div class="section" style="background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); border: 3px solid #10b981;">
+      <h2 style="text-align: center;">🎯 النتيجة النهائية</h2>
+      <div style="text-align: center; margin: 20px 0;">
+        <span class="success-badge">✓ زر الحجز واضح تماماً</span>
+        <span class="success-badge">✓ لا يوجد تداخل</span>
+        <span class="success-badge">✓ واتساب في الفوتر</span>
+        <span class="success-badge">✓ تصميم احترافي</span>
+      </div>
+    </div>
+
+    <div style="height: 100px;"></div>
+  </div>
+
+  <!-- زر الحجز الثابت في الأسفل -->
+  <div class="booking-button-fixed">
+    <button class="demo-button" onclick="alert('✅ الزر الآن واضح بالكامل!\n\n- المسافة السفلية: 288px\n- ارتفاع الزر: 96px\n- المجموع المرئي: ~220px\n- واتساب في الفوتر')">
+      <div style="display: flex; align-items: center; gap: 15px;">
+        <span style="font-size: 1.5em;">✨</span>
+        <div style="text-align: right;">
+          <div style="font-size: 0.9em; opacity: 0.9;">ابدأ الحجز الآن</div>
+          <div style="font-size: 1.2em; font-weight: bold;">100 شجرة متاحة</div>
+        </div>
+      </div>
+      <span style="font-size: 1.5em;">→</span>
+    </button>
+  </div>
+
+  <script>
+    console.log('✅ التعديلات الكاملة:');
+    console.log('1. المسافة السفلية: pb-72 (288px)');
+    console.log('2. ارتفاع الزر: min-h-[96px]');
+    console.log('3. padding الحاوية: p-6 (24px)');
+    console.log('4. padding الزر: py-7 (28px)');
+    console.log('5. حذف AdaptiveSmartButton');
+    console.log('6. واتساب بارز في الفوتر');
+    console.log('');
+    console.log('📦 Build: v2025.12.17_041943');
+    console.log('✅ الزر الآن واضح تماماً!');
+  </script>
+</body>
+</html>

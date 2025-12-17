@@ -48,56 +48,50 @@ export function CompanyInfoFooter({
           </div>
         </div>
 
-        {/* أزرار التواصل - بسيطة ونظيفة */}
-        <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 mb-6">
-          <a
-            href={`tel:${phone}`}
-            className="group flex items-center gap-2 px-4 py-2.5 bg-white/10 hover:bg-white/20 rounded-xl transition-all duration-300 border border-white/20"
-            style={{ WebkitTapHighlightColor: 'transparent' }}
-          >
-            <div className="w-8 h-8 bg-emerald-700/50 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
-              <Phone className="w-4 h-4 text-amber-300" />
-            </div>
-            <div className="text-right">
-              <p className="text-emerald-200 text-[10px] leading-none mb-0.5">الهاتف</p>
-              <p className="text-white font-semibold text-xs sm:text-sm" dir="ltr">
-                {phone}
-              </p>
-            </div>
-          </a>
-
+        {/* زر واتساب بارز - التواصل الرئيسي */}
+        <div className="max-w-md mx-auto mb-6">
           <a
             href={`https://wa.me/${whatsapp.replace(/\D/g, '')}?text=مرحباً! أود الاستفسار عن فرص الاستثمار`}
             target="_blank"
             rel="noopener noreferrer"
-            className="group flex items-center gap-2 px-4 py-2.5 bg-green-600/30 hover:bg-green-600/50 rounded-xl transition-all duration-300 border border-green-500/30"
+            className="group relative flex items-center justify-center gap-3 px-6 py-4 bg-gradient-to-r from-green-600 to-green-500 hover:from-green-500 hover:to-green-600 rounded-2xl transition-all duration-300 shadow-xl hover:shadow-2xl hover:scale-[1.02] active:scale-[0.98] overflow-hidden"
             style={{ WebkitTapHighlightColor: 'transparent' }}
           >
-            <div className="w-8 h-8 bg-green-600/50 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
-              <MessageCircle className="w-4 h-4 text-white" />
+            {/* تأثير اللمعان */}
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+
+            <div className="relative flex items-center gap-3">
+              <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
+                <MessageCircle className="w-6 h-6 text-white" strokeWidth={2.5} />
+              </div>
+              <div className="text-right">
+                <p className="text-green-100 text-sm font-medium">تواصل معنا عبر واتساب</p>
+                <p className="text-white font-bold text-base" dir="ltr">
+                  {whatsapp}
+                </p>
+              </div>
             </div>
-            <div className="text-right">
-              <p className="text-green-200 text-[10px] leading-none mb-0.5">واتساب</p>
-              <p className="text-white font-semibold text-xs sm:text-sm" dir="ltr">
-                {whatsapp}
-              </p>
-            </div>
+          </a>
+        </div>
+
+        {/* أزرار التواصل الإضافية - صغيرة */}
+        <div className="flex flex-wrap items-center justify-center gap-3 mb-6">
+          <a
+            href={`tel:${phone}`}
+            className="group flex items-center gap-2 px-3 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition-all duration-300 border border-white/20"
+            style={{ WebkitTapHighlightColor: 'transparent' }}
+          >
+            <Phone className="w-4 h-4 text-amber-300" />
+            <span className="text-white text-xs font-medium" dir="ltr">{phone}</span>
           </a>
 
           <a
             href={`mailto:${email}`}
-            className="group flex items-center gap-2 px-4 py-2.5 bg-white/10 hover:bg-white/20 rounded-xl transition-all duration-300 border border-white/20"
+            className="group flex items-center gap-2 px-3 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition-all duration-300 border border-white/20"
             style={{ WebkitTapHighlightColor: 'transparent' }}
           >
-            <div className="w-8 h-8 bg-emerald-700/50 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
-              <Mail className="w-4 h-4 text-amber-300" />
-            </div>
-            <div className="text-right">
-              <p className="text-emerald-200 text-[10px] leading-none mb-0.5">البريد</p>
-              <p className="text-white font-semibold text-xs sm:text-sm break-all" dir="ltr">
-                {email}
-              </p>
-            </div>
+            <Mail className="w-4 h-4 text-amber-300" />
+            <span className="text-white text-xs font-medium break-all" dir="ltr">{email}</span>
           </a>
         </div>
 
