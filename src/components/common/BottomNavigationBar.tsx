@@ -80,57 +80,14 @@ export function BottomNavigationBar({
             0 -4px 20px rgba(0, 0, 0, 0.08),
             0 -1px 3px rgba(0, 0, 0, 0.05);
 
-          /* ULTIMATE iOS Safari Fix */
-          transform: translate3d(0, 0, 0) !important;
-          -webkit-transform: translate3d(0, 0, 0) !important;
-          -webkit-backface-visibility: hidden !important;
-          backface-visibility: hidden !important;
-
-          /* Lock position completely */
-          will-change: transform, opacity !important;
-          contain: layout style paint !important;
-          isolation: isolate !important;
-
           /* iOS Safe Area Support */
           padding-bottom: env(safe-area-inset-bottom);
-          padding-bottom: max(env(safe-area-inset-bottom), 20px);
         }
 
-        /* Force separate rendering layer */
-        .bottom-nav-bar::before {
-          content: '';
-          position: absolute;
-          inset: 0;
-          z-index: -1;
-          transform: translateZ(-1px);
-          will-change: transform;
-        }
-
-        /* NUCLEAR OPTION: iOS Safari specific fixes */
+        /* iOS Safari specific fixes */
         @supports (-webkit-touch-callout: none) {
           .bottom-nav-bar {
-            position: fixed !important;
-            bottom: 0 !important;
-            left: 0 !important;
-            right: 0 !important;
-            width: 100vw !important;
-            max-width: 100vw !important;
-            transform: translate3d(0, 0, 0) !important;
-            -webkit-transform: translate3d(0, 0, 0) !important;
-
-            /* Force separate layer */
-            -webkit-perspective: 1000px !important;
-            perspective: 1000px !important;
-
-            /* Lock it down - buttons only */
-            pointer-events: none !important;
-            touch-action: none !important;
-          }
-
-          /* Allow clicks on buttons only */
-          .bottom-nav-item {
-            pointer-events: auto !important;
-            touch-action: manipulation !important;
+            bottom: env(safe-area-inset-bottom) !important;
           }
         }
 
