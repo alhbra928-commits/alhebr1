@@ -343,11 +343,6 @@ function App() {
     <div
       className="min-h-screen royal-green-bg"
       dir="rtl"
-      style={{
-        position: 'relative',
-        overflow: 'visible',
-        minHeight: '100vh'
-      }}
     >
       {showAdminLogin && (
         <Suspense fallback={<div className="min-h-screen bg-gradient-to-br from-emerald-50 to-green-50" />}>

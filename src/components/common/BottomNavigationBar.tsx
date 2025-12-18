@@ -122,14 +122,15 @@ export function BottomNavigationBar({
             -webkit-perspective: 1000px !important;
             perspective: 1000px !important;
 
-            /* Lock it down */
-            pointer-events: auto !important;
-            touch-action: manipulation !important;
+            /* Lock it down - buttons only */
+            pointer-events: none !important;
+            touch-action: none !important;
           }
 
-          /* Make sure body doesn't cover it */
-          body {
-            padding-bottom: max(90px, calc(90px + env(safe-area-inset-bottom))) !important;
+          /* Allow clicks on buttons only */
+          .bottom-nav-item {
+            pointer-events: auto !important;
+            touch-action: manipulation !important;
           }
         }
 
