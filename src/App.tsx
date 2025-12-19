@@ -48,14 +48,19 @@ function App() {
     if (activeModule !== 'public' && activeModule !== 'farm-owner') {
       sessionStorage.setItem('last_admin_module', activeModule);
       sessionStorage.setItem('current_admin_module', activeModule);
+      // التأكد من حفظ نوع المستخدم كـ admin
+      sessionStorage.setItem('last_user_type', 'admin');
+      console.log('[App] 💾 حفظ الصفحة الإدارية:', activeModule);
     }
     // حفظ نوع المستخدم الحالي
     if (activeModule === 'farm-owner') {
       sessionStorage.setItem('last_user_type', 'farm-owner');
-    } else if (activeModule !== 'public') {
-      sessionStorage.setItem('last_user_type', 'admin');
+    } else if (activeModule === 'public' && adminSession) {
+      // إذا ذهبنا للمنصة العامة وعندنا جلسة admin، نحفظ ذلك
+      sessionStorage.setItem('came_from_admin', 'true');
+      console.log('[App] 🔄 الانتقال للمنصة العامة من لوحة التحكم');
     }
-  }, [activeModule]);
+  }, [activeModule, adminSession]);
 
   // التحقق من الجلسة المحفوظة - يعمل دائماً
   useEffect(() => {
@@ -143,6 +148,10 @@ function App() {
     localStorage.setItem('admin_session_token', localSession.session_token);
     localStorage.setItem('admin_data', JSON.stringify(adminData));
 
+    // حفظ نوع المستخدم بشكل دائم
+    sessionStorage.setItem('last_user_type', 'admin');
+    sessionStorage.setItem('has_admin_session', 'true');
+
     // عرض لوحة الإدارة فوراً
     setAdminSession({
       ...adminData,
@@ -153,6 +162,12 @@ function App() {
     setActiveModule('dashboard');
     setShowLoginNotification(true);
     setLastActivity(Date.now());
+
+    console.log('[App] ✅ تسجيل دخول إداري ناجح:', {
+      name: adminData.name,
+      phone: adminData.phone,
+      session_token: localSession.session_token
+    });
 
     // إبلاغ PermissionsContext بالتغيير
     window.dispatchEvent(new Event('admin-session-changed'));
@@ -168,17 +183,31 @@ function App() {
   // دالة الانتقال الذكية الموحدة
   const handleSmartNavigation = (destination: 'public' | 'back') => {
     if (destination === 'public') {
+      // حفظ أننا جئنا من لوحة التحكم
+      if (adminSession) {
+        sessionStorage.setItem('came_from_admin', 'true');
+        sessionStorage.setItem('has_admin_session', 'true');
+      }
       setActiveModule('public');
+      console.log('[App] 🌍 الانتقال للمنصة العامة');
     } else {
       // العودة الذكية حسب نوع المستخدم
       const userType = sessionStorage.getItem('last_user_type');
+      console.log('[App] 🔙 العودة - نوع المستخدم:', userType);
+
       if (userType === 'farm-owner') {
         setActiveModule('farm-owner');
-      } else if (userType === 'admin') {
+      } else if (userType === 'admin' || adminSession) {
+        // إذا كان هناك جلسة admin، نرجع للصفحة المحفوظة
         const savedModule = sessionStorage.getItem('last_admin_module') || 'dashboard';
+        console.log('[App] ✅ الرجوع للوحة التحكم:', savedModule);
         setActiveModule(savedModule);
+
+        // إعادة تعيين علامات التتبع
+        sessionStorage.removeItem('came_from_admin');
       } else {
         // Default: admin dashboard
+        console.log('[App] ⚠️ لم يتم العثور على جلسة - الذهاب للوحة الإدارة');
         setActiveModule('dashboard');
       }
     }
