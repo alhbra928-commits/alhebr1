@@ -4,6 +4,7 @@ import { PermissionsProvider } from './contexts/PermissionsContext';
 import FixedChrome from './components/common/FixedChrome';
 import { ModernTopHeader } from './components/common/ModernTopHeader';
 import { SmartActivityTicker } from './components/common/SmartActivityTicker';
+import { UltimatePlatformLoader } from './components/common/UltimatePlatformLoader';
 
 // Lazy load EVERYTHING - including admin components
 const SmartAdminLoginPage = lazy(() => import('./modules/admin/components/SmartAdminLoginPage').then(m => ({ default: m.SmartAdminLoginPage })));
@@ -34,6 +35,7 @@ const ControlOversightView = lazy(() => import('./modules/admin/components/Contr
 const WhatsAppDashboard = lazy(() => import('./modules/whatsapp/components/WhatsAppDashboard').then(m => ({ default: m.WhatsAppDashboard })));
 
 function App() {
+  const [showLoader, setShowLoader] = useState(true);
   const [activeModule, setActiveModule] = useState('public');
   const [showAdminLogin, setShowAdminLogin] = useState(false);
   const [adminSession, setAdminSession] = useState<any>(null);
@@ -42,6 +44,16 @@ function App() {
   const [lastActivity, setLastActivity] = useState(Date.now());
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [publicView, setPublicView] = useState<'home' | 'farmDetail' | 'booking' | 'investor' | 'verification' | 'concept'>('home');
+
+  // Check if loader should be shown (only on first load)
+  useEffect(() => {
+    const hasSeenLoader = sessionStorage.getItem('loader_shown');
+    if (hasSeenLoader) {
+      setShowLoader(false);
+    } else {
+      sessionStorage.setItem('loader_shown', 'true');
+    }
+  }, []);
 
   // حفظ آخر صفحة في لوحة التحكم
   useEffect(() => {
@@ -379,6 +391,11 @@ function App() {
 
   // تحديد ما إذا كان يجب عرض الهيدر والفوتر (فقط للصفحة الرئيسية العامة)
   const showPublicChrome = activeModule === 'public' && !showAdminLogin && publicView === 'home';
+
+  // Show loader first
+  if (showLoader) {
+    return <UltimatePlatformLoader onComplete={() => setShowLoader(false)} />;
+  }
 
   return (
     <div className="appShell" dir="rtl">
