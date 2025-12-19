@@ -94,14 +94,16 @@ export function SmartActivityTicker() {
     const isMobile = window.innerWidth <= 768;
 
     if (isMobile) {
-      const mobileSpeed = settings.scrollSpeed === 'fast' ? 15 :
-                         settings.scrollSpeed === 'medium' ? 25 : 40;
-      const mobilePixelsPerFrame = settings.scrollSpeed === 'fast' ? 3.0 :
-                                   settings.scrollSpeed === 'medium' ? 2.2 : 1.5;
+      // سرعة ثابتة للموبايل - 20ms لحركة سلسة جداً (50 FPS)
+      const mobileSpeed = 20;
+      // بكسلات أكثر لحركة واضحة ومستمرة
+      const mobilePixelsPerFrame = settings.scrollSpeed === 'fast' ? 2.5 :
+                                   settings.scrollSpeed === 'medium' ? 1.8 : 1.2;
 
       const animate = () => {
         setScrollPosition((prev) => {
-          const contentWidth = scrollContainer.scrollWidth / 20;
+          // التقسيم على 30 لأن لدينا 30 تكرار - دورة كاملة طويلة
+          const contentWidth = scrollContainer.scrollWidth / 30;
           const newPosition = prev + mobilePixelsPerFrame;
           return newPosition >= contentWidth ? 0 : newPosition;
         });
@@ -218,7 +220,8 @@ export function SmartActivityTicker() {
       const isMobile = window.innerWidth <= 768;
 
       if (isMobile) {
-        const mobileRepeated = Array(20).fill(shuffled).flat();
+        // تكرار 30 مرة للموبايل لضمان حركة مستمرة طويلة
+        const mobileRepeated = Array(30).fill(shuffled).flat();
         setActivities(mobileRepeated);
       } else {
         const desktopRepeated = [...shuffled, ...shuffled, ...shuffled];
