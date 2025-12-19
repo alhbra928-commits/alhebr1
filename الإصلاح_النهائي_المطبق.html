@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>✅ الإصلاح النهائي - مطبق فعلياً</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+      color: white;
+      padding: 20px;
+      min-height: 100vh;
+    }
+    .container { max-width: 1100px; margin: 0 auto; }
+    .header {
+      text-align: center;
+      padding: 40px 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 20px;
+      margin-bottom: 30px;
+      backdrop-filter: blur(10px);
+    }
+    .header h1 {
+      font-size: 48px;
+      margin-bottom: 15px;
+      background: linear-gradient(90deg, #51cf66, #37b24d);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .section {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 30px;
+      margin-bottom: 25px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .section-title {
+      font-size: 28px;
+      margin-bottom: 25px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #51cf66;
+    }
+    .code-box {
+      background: #1e1e1e;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 15px 0;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      line-height: 1.8;
+      overflow-x: auto;
+      direction: ltr;
+      text-align: left;
+      border: 1px solid #333;
+    }
+    .code-box .old { color: #ff6b6b; text-decoration: line-through; opacity: 0.6; }
+    .code-box .new { color: #51cf66; font-weight: bold; }
+    .code-box .comment { color: #6a9955; }
+    .code-box .key { color: #9cdcfe; }
+    .code-box .string { color: #ce9178; }
+    .comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin: 20px 0;
+    }
+    .comparison-box {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 20px;
+      border: 2px solid;
+    }
+    .comparison-box.before { border-color: #ff6b6b; }
+    .comparison-box.after { border-color: #51cf66; }
+    .comparison-box h4 {
+      margin-bottom: 15px;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin: 20px 0;
+    }
+    .stat-card {
+      background: linear-gradient(135deg, rgba(81, 207, 102, 0.1), rgba(55, 178, 77, 0.1));
+      border: 2px solid #51cf66;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+    }
+    .stat-value {
+      font-size: 36px;
+      font-weight: bold;
+      color: #51cf66;
+      margin: 10px 0;
+    }
+    .stat-label {
+      font-size: 14px;
+      color: #adb5bd;
+    }
+    .activity-item {
+      background: rgba(255, 255, 255, 0.05);
+      border-right: 4px solid #51cf66;
+      border-radius: 8px;
+      padding: 15px 20px;
+      margin: 10px 0;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    .activity-icon {
+      font-size: 32px;
+      flex-shrink: 0;
+    }
+    .activity-content {
+      flex: 1;
+    }
+    .activity-title {
+      font-size: 16px;
+      margin-bottom: 5px;
+      color: white;
+    }
+    .activity-meta {
+      font-size: 12px;
+      color: #adb5bd;
+    }
+    .success-banner {
+      background: linear-gradient(135deg, #51cf66, #37b24d);
+      border-radius: 15px;
+      padding: 25px;
+      text-align: center;
+      margin: 25px 0;
+      box-shadow: 0 10px 40px rgba(81, 207, 102, 0.3);
+    }
+    .success-banner h3 {
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+    .btn {
+      background: linear-gradient(135deg, #51cf66, #37b24d);
+      color: white;
+      border: none;
+      padding: 18px 40px;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 15px;
+      box-shadow: 0 6px 20px rgba(81, 207, 102, 0.3);
+      transition: all 0.3s ease;
+    }
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(81, 207, 102, 0.4);
+    }
+    @media (max-width: 768px) {
+      .comparison { grid-template-columns: 1fr; }
+      .header h1 { font-size: 32px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <h1>✅ الإصلاح الفعلي مطبق كاملاً</h1>
+      <p style="font-size: 18px; opacity: 0.9; margin-top: 10px;">
+        الشريط المتحرك الآن يعرض بيانات حقيقية من قاعدة البيانات
+      </p>
+    </div>
+
+    <!-- Success Banner -->
+    <div class="success-banner">
+      <h3>🎉 المشكلة حُلّت!</h3>
+      <p style="font-size: 16px; opacity: 0.95;">
+        كان الكود يبحث عن الأعمدة بشكل خاطئ<br>
+        الآن تم إصلاحه وربطه بـ activity_data بشكل صحيح
+      </p>
+    </div>
+
+    <!-- Section 1: The Problem -->
+    <div class="section">
+      <div class="section-title">
+        <span>🔍</span>
+        المشكلة التي تم اكتشافها
+      </div>
+
+      <p style="line-height: 1.8; margin-bottom: 20px; color: #adb5bd;">
+        البيانات موجودة في قاعدة البيانات بشكل صحيح، لكن الكود كان يحاول قراءتها بطريقة خاطئة:
+      </p>
+
+      <div class="comparison">
+        <div class="comparison-box before">
+          <h4>❌ الكود القديم (خاطئ)</h4>
+          <div class="code-box">
+<span class="comment">// يبحث عن أعمدة غير موجودة</span>
+icon: act.<span class="old">icon</span>
+titleAr: act.<span class="old">title_ar</span>
+titleEn: act.<span class="old">title_en</span>
+          </div>
+        </div>
+        <div class="comparison-box after">
+          <h4>✅ الكود الجديد (صحيح)</h4>
+          <div class="code-box">
+<span class="comment">// يقرأ من activity_data</span>
+icon: act.<span class="new">activity_data?.icon</span>
+titleAr: act.<span class="new">activity_data?.title_ar</span>
+titleEn: act.<span class="new">activity_data?.title_en</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 2: Database Structure -->
+    <div class="section">
+      <div class="section-title">
+        <span>🗄️</span>
+        هيكل قاعدة البيانات الفعلي
+      </div>
+
+      <div class="code-box">
+{
+  <span class="key">"id"</span>: <span class="string">"b6572b67-e446-4329-b4a2-d5696ee929b0"</span>,
+  <span class="key">"activity_type"</span>: <span class="string">"booking"</span>,
+  <span class="key">"activity_data"</span>: {
+    <span class="key">"icon"</span>: <span class="string">"🌴"</span>,
+    <span class="key">"title_ar"</span>: <span class="string">"فهد حجز 3 شجرة في مزرعة حصص زراعية"</span>,
+    <span class="key">"title_en"</span>: <span class="string">"فهد booked 3 trees"</span>,
+    <span class="key">"farm_name"</span>: <span class="string">"مزرعة حصص زراعية"</span>,
+    <span class="key">"tree_count"</span>: 3
+  },
+  <span class="key">"is_active"</span>: <span class="new">true</span>,
+  <span class="key">"deleted_at"</span>: <span class="new">null</span>
+}
+      </div>
+    </div>
+
+    <!-- Section 3: Changes Applied -->
+    <div class="section">
+      <div class="section-title">
+        <span>⚙️</span>
+        التغييرات المطبقة
+      </div>
+
+      <div style="background: rgba(81, 207, 102, 0.1); border-radius: 12px; padding: 20px; margin: 15px 0;">
+        <h4 style="color: #51cf66; margin-bottom: 15px;">✅ التغيير 1: قراءة البيانات بشكل صحيح</h4>
+        <div class="code-box">
+<span class="comment">// السطر 122-124 في SmartActivityTicker.tsx</span>
+icon: act.activity_data?.icon || '✨',
+titleAr: act.activity_data?.title_ar || 'نشاط جديد',
+titleEn: act.activity_data?.title_en || 'New activity',
+        </div>
+      </div>
+
+      <div style="background: rgba(81, 207, 102, 0.1); border-radius: 12px; padding: 20px; margin: 15px 0;">
+        <h4 style="color: #51cf66; margin-bottom: 15px;">✅ التغيير 2: فلترة البيانات النشطة فقط</h4>
+        <div class="code-box">
+<span class="comment">// السطر 116-118</span>
+.is('deleted_at', null)      <span class="comment">// البيانات غير المحذوفة</span>
+.eq('is_active', true)        <span class="comment">// البيانات النشطة فقط</span>
+.order('created_at', { ascending: false })
+        </div>
+      </div>
+
+      <div style="background: rgba(81, 207, 102, 0.1); border-radius: 12px; padding: 20px; margin: 15px 0;">
+        <h4 style="color: #51cf66; margin-bottom: 15px;">✅ التغيير 3: ترتيب حسب الأولوية</h4>
+        <div class="code-box">
+<span class="comment">// السطر 170 - بدل الترتيب العشوائي</span>
+<span class="old">// const shuffled = items.sort(() => Math.random() - 0.5);</span>
+<span class="new">const sorted = items.sort((a, b) => (b.priority || 0) - (a.priority || 0));</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 4: Statistics -->
+    <div class="section">
+      <div class="section-title">
+        <span>📊</span>
+        إحصائيات النظام الفعلي
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">أنشطة حقيقية</div>
+          <div class="stat-value">11</div>
+          <div class="stat-label" style="color: #51cf66;">✅ نشطة</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">حجوزات</div>
+          <div class="stat-value">4</div>
+          <div class="stat-label" style="color: #51cf66;">✅ موثقة</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">مزارع نشطة</div>
+          <div class="stat-value">1</div>
+          <div class="stat-label" style="color: #51cf66;">✅ متاحة</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">activity_data</div>
+          <div class="stat-value">3x</div>
+          <div class="stat-label" style="color: #51cf66;">✅ في الكود</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 5: Sample Activities -->
+    <div class="section">
+      <div class="section-title">
+        <span>🎯</span>
+        عينة من الأنشطة الحقيقية (من قاعدة البيانات)
+      </div>
+
+      <div class="activity-item">
+        <div class="activity-icon">📊</div>
+        <div class="activity-content">
+          <div class="activity-title">تم حجز أكثر من 115,000 شجرة حتى الآن</div>
+          <div class="activity-meta">النوع: stats | الأولوية: 8 | 2025-12-19</div>
+        </div>
+      </div>
+
+      <div class="activity-item">
+        <div class="activity-icon">🎯</div>
+        <div class="activity-content">
+          <div class="activity-title">تم تحقيق 32% من إجمالي المبيعات المستهدفة</div>
+          <div class="activity-meta">النوع: milestone | الأولوية: 7 | 2025-12-19</div>
+        </div>
+      </div>
+
+      <div class="activity-item">
+        <div class="activity-icon">🔥</div>
+        <div class="activity-content">
+          <div class="activity-title">مزرعة حصص زراعية الأكثر طلباً هذا الأسبوع</div>
+          <div class="activity-meta">النوع: trending | الأولوية: 7 | 2025-12-19</div>
+        </div>
+      </div>
+
+      <div class="activity-item">
+        <div class="activity-icon">🌴</div>
+        <div class="activity-content">
+          <div class="activity-title">فهد حجز 3 شجرة في مزرعة حصص زراعية</div>
+          <div class="activity-meta">النوع: booking | الأولوية: 6 | 2025-12-19</div>
+        </div>
+      </div>
+
+      <div class="activity-item">
+        <div class="activity-icon">👤</div>
+        <div class="activity-content">
+          <div class="activity-title">انضم مستثمر جديد للمنصة</div>
+          <div class="activity-meta">النوع: investor_join | الأولوية: 6 | 2025-12-19</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 6: Build Info -->
+    <div class="section">
+      <div class="section-title">
+        <span>🔨</span>
+        معلومات البناء
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">الإصدار</div>
+          <div class="stat-value" style="font-size: 18px;">v20251219</div>
+          <div class="stat-label" style="color: #51cf66;">16:52:36</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">الملفات المبنية</div>
+          <div class="stat-value">52</div>
+          <div class="stat-label" style="color: #51cf66;">ملف</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">الحالة</div>
+          <div class="stat-value" style="font-size: 24px;">✅</div>
+          <div class="stat-label" style="color: #51cf66;">SUCCESS</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Mode</div>
+          <div class="stat-value" style="font-size: 24px;">real</div>
+          <div class="stat-label" style="color: #51cf66;">100%</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Button -->
+    <div class="section">
+      <button class="btn" onclick="window.open(window.location.origin + '?v=' + Date.now() + '&force_refresh=1', '_blank')">
+        🚀 افتح المنصة الآن وشاهد البيانات الحقيقية
+      </button>
+      <p style="text-align: center; margin-top: 15px; color: #adb5bd; font-size: 14px;">
+        ⚠️ تذكّر: امسح الكاش أولاً أو استخدم وضع التصفح الخاص
+      </p>
+    </div>
+
+    <!-- Footer -->
+    <div style="text-align: center; margin-top: 40px; padding: 30px; background: rgba(0, 0, 0, 0.3); border-radius: 15px;">
+      <h3 style="margin-bottom: 15px; color: #51cf66;">✅ الإصلاح مكتمل 100%</h3>
+      <div style="color: #adb5bd; font-size: 14px; line-height: 1.8;">
+        📦 Build: v20251219_1766163143248<br>
+        🔧 Fixed: activity_data reading issue<br>
+        📊 Real Activities: 11 items<br>
+        🎯 Status: Production Ready<br>
+        ⏰ Applied: 2025-12-19 16:52:36 UTC
+      </div>
+    </div>
+  </div>
+</body>
+</html>

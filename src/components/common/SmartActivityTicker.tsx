@@ -113,17 +113,19 @@ export function SmartActivityTicker() {
         const { data: realActivities } = await supabase
           .from('platform_activities')
           .select('*')
+          .is('deleted_at', null)
+          .eq('is_active', true)
           .order('created_at', { ascending: false })
           .limit(settings.itemsPerCycle);
 
         if (realActivities) {
           items.push(...realActivities.map((act: any) => ({
             id: act.id,
-            icon: act.icon || '✨',
-            titleAr: act.title_ar,
-            titleEn: act.title_en,
+            icon: act.activity_data?.icon || '✨',
+            titleAr: act.activity_data?.title_ar || 'نشاط جديد',
+            titleEn: act.activity_data?.title_en || 'New activity',
             timestamp: new Date(act.created_at),
-            priority: 10,
+            priority: act.priority || 10,
             activityType: 'real',
           })));
         }
@@ -164,8 +166,9 @@ export function SmartActivityTicker() {
         });
       }
 
-      const shuffled = items.sort(() => Math.random() - 0.5);
-      setActivities(shuffled);
+      // ترتيب حسب الأولوية (للبيانات الحقيقية) بدون عشوائية
+      const sorted = items.sort((a, b) => (b.priority || 0) - (a.priority || 0));
+      setActivities(sorted);
     } catch (error) {
       console.error('[Ticker] Error loading activities:', error);
     }
