@@ -12,7 +12,7 @@ import { InnovativeFarmCard } from './InnovativeFarmCard';
 import { getPlatformTextsBySection } from '../../../services/platformTextsService';
 import { VerticalSideTabs } from '../../../components/common/VerticalSideTabs';
 import { SmartAssistantSidebar } from './SmartAssistantSidebar';
-import { PremiumHeader } from './PremiumHeader';
+// PremiumHeader removed - now in Portal (FixedChrome)
 import { SmartActivityTicker } from '../../../components/common/SmartActivityTicker';
 
 // Lazy load heavy components
@@ -295,14 +295,7 @@ export function ModernRoyalPlatform({
         overflowX: 'hidden'
       }}
     >
-      {/* ✅ GLOBAL HEADER - يظهر في جميع الصفحات */}
-      <PremiumHeader
-        onAdminLogin={onAdminLogin}
-        onInvestorLogin={() => setCurrentView('investor')}
-        onVerifyCertificate={() => setCurrentView('verification')}
-        onBackToAdmin={onBackToAdmin}
-        onFarmOwnerLogin={onFarmOwnerLogin}
-      />
+      {/* Header removed - now in Portal (FixedChrome in App.tsx) */}
 
       {/* Glass Overlay - Simple and Clean */}
       <div className="fixed inset-0 bg-white/30 backdrop-blur-[2px] pointer-events-none"></div>
