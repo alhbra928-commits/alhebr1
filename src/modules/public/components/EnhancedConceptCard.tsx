@@ -76,7 +76,7 @@ export const EnhancedConceptCard: React.FC<EnhancedConceptCardProps> = ({ isOpen
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+      className="fixed inset-0 z-[10100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
       onClick={onClose}
     >
       <div
@@ -110,8 +110,12 @@ export const EnhancedConceptCard: React.FC<EnhancedConceptCardProps> = ({ isOpen
 
         {/* Close Button */}
         <button
-          onClick={onClose}
-          className="absolute top-4 left-4 z-20 p-2 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-sm transition-all duration-300 hover:scale-110"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            onClose();
+          }}
+          className="absolute top-4 left-4 z-[100] p-2 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-sm transition-all duration-300 hover:scale-110"
         >
           <X className="h-6 w-6 text-white" />
         </button>
