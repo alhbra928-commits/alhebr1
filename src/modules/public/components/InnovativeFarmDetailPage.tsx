@@ -177,7 +177,7 @@ export const InnovativeFarmDetailPage: React.FC<InnovativeFarmDetailPageProps> =
       </div>
 
       {/* المحتوى الرئيسي */}
-      <div className="pt-16 pb-32 sm:pb-28 md:pb-24">
+      <div className="pt-16 pb-24 sm:pb-24 md:pb-8">
         {/* صورة المزرعة */}
         <div className="relative h-80 overflow-hidden">
           {farmImage ? (
@@ -444,60 +444,51 @@ export const InnovativeFarmDetailPage: React.FC<InnovativeFarmDetailPageProps> =
               </div>
             </div>
           )}
-        </div>
-      </div>
 
-      {/* شريط الحجز الثابت - تصميم زجاجي ثلاثي الأبعاد */}
-      <div className="fixed left-0 right-0 z-[9999]" style={{
-        bottom: '80px',
-        paddingBottom: 'env(safe-area-inset-bottom, 0px)'
-      }}>
-        {/* خلفية ضبابية */}
-        <div className="absolute inset-0 backdrop-blur-xl bg-white/80"></div>
+          {/* زر الحجز في نهاية الصفحة - ضمن المحتوى */}
+          <div className="mt-8 px-5 pb-6">
+            <button
+              onClick={onStartBooking}
+              disabled={!farm.available_trees || farm.available_trees === 0}
+              className={`glass-button-3d w-full relative overflow-hidden rounded-xl sm:rounded-2xl transition-all duration-300 ${
+                farm.available_trees > 0
+                  ? 'hover:scale-[1.01] active:scale-[0.99]'
+                  : 'opacity-50 cursor-not-allowed'
+              }`}
+              style={{
+                background: farm.available_trees > 0
+                  ? 'linear-gradient(135deg, rgba(16, 185, 129, 0.95) 0%, rgba(5, 150, 105, 0.95) 100%)'
+                  : 'linear-gradient(135deg, rgba(156, 163, 175, 0.95) 0%, rgba(107, 114, 128, 0.95) 100%)',
+                boxShadow: '0 8px 32px rgba(16, 185, 129, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2), inset 0 -1px 0 rgba(0, 0, 0, 0.1)',
+                border: '1px solid rgba(255, 255, 255, 0.2)'
+              }}
+            >
+              {/* تأثير اللمعان */}
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
 
-        <div className="relative p-3 sm:p-4 max-w-2xl mx-auto">
-          <button
-            onClick={onStartBooking}
-            disabled={!farm.available_trees || farm.available_trees === 0}
-            className={`glass-button-3d w-full relative overflow-hidden rounded-xl sm:rounded-2xl transition-all duration-300 ${
-              farm.available_trees > 0
-                ? 'hover:scale-[1.01] active:scale-[0.99]'
-                : 'opacity-50 cursor-not-allowed'
-            }`}
-            style={{
-              background: farm.available_trees > 0
-                ? 'linear-gradient(135deg, rgba(16, 185, 129, 0.95) 0%, rgba(5, 150, 105, 0.95) 100%)'
-                : 'linear-gradient(135deg, rgba(156, 163, 175, 0.95) 0%, rgba(107, 114, 128, 0.95) 100%)',
-              boxShadow: '0 8px 32px rgba(16, 185, 129, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2), inset 0 -1px 0 rgba(0, 0, 0, 0.1)',
-              backdropFilter: 'blur(10px)',
-              border: '1px solid rgba(255, 255, 255, 0.2)'
-            }}
-          >
-            {/* تأثير اللمعان */}
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-
-            <div className="relative px-4 py-3 sm:py-3.5 flex items-center justify-between text-white">
-              <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
-                <div className="w-10 h-10 sm:w-11 sm:h-11 bg-white/20 backdrop-blur-sm rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0"
-                  style={{
-                    boxShadow: 'inset 0 2px 4px rgba(255, 255, 255, 0.2), 0 4px 12px rgba(0, 0, 0, 0.1)'
-                  }}>
-                  <Sparkles className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={2.5} />
-                </div>
-                <div className="text-right flex-1 min-w-0">
-                  <div className="text-xs sm:text-sm font-semibold opacity-95 truncate">ابدأ الحجز الآن</div>
-                  <div className="text-sm sm:text-base font-bold truncate" style={{ textShadow: '0 1px 2px rgba(0, 0, 0, 0.2)' }}>
-                    {farm.available_trees > 0
-                      ? `${farm.available_trees} شجرة متاحة`
-                      : 'غير متاح حالياً'
-                    }
+              <div className="relative px-4 py-3.5 sm:py-4 flex items-center justify-between text-white">
+                <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
+                  <div className="w-11 h-11 sm:w-12 sm:h-12 bg-white/20 backdrop-blur-sm rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0"
+                    style={{
+                      boxShadow: 'inset 0 2px 4px rgba(255, 255, 255, 0.2), 0 4px 12px rgba(0, 0, 0, 0.1)'
+                    }}>
+                    <Sparkles className="w-6 h-6 sm:w-7 sm:h-7" strokeWidth={2.5} />
+                  </div>
+                  <div className="text-right flex-1 min-w-0">
+                    <div className="text-sm sm:text-base font-semibold opacity-95 truncate">ابدأ الحجز الآن</div>
+                    <div className="text-base sm:text-lg font-bold truncate" style={{ textShadow: '0 1px 2px rgba(0, 0, 0, 0.2)' }}>
+                      {farm.available_trees > 0
+                        ? `${farm.available_trees} شجرة متاحة`
+                        : 'غير متاح حالياً'
+                      }
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0" strokeWidth={2.5} />
-            </div>
-          </button>
+                <ArrowRight className="w-6 h-6 sm:w-7 sm:h-7 flex-shrink-0" strokeWidth={2.5} />
+              </div>
+            </button>
+          </div>
         </div>
       </div>
 

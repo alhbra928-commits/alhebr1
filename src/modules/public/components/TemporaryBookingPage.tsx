@@ -316,7 +316,7 @@ export function TemporaryBookingPage({
 
   return (
     <div
-      className="min-h-screen pb-32 sm:pb-36 md:pb-8"
+      className="min-h-screen pb-8"
       style={{
         background: `radial-gradient(circle at top left, ${greenTheme.lightest}, ${greenTheme.cream})`
       }}
@@ -707,7 +707,7 @@ export function TemporaryBookingPage({
             </div>
           </div>
 
-          <div className="lg:col-span-1 pb-48 lg:pb-0">
+          <div className="lg:col-span-1">
             <div className="lg:sticky lg:top-24">
               {selections.size > 0 ? (
                 <div
@@ -836,7 +836,7 @@ export function TemporaryBookingPage({
                         )}
                       </div>
 
-                      {/* زر الحجز - للأجهزة الكبيرة فقط */}
+                      {/* زر الحجز - يظهر في الديسكتوب في الكارت */}
                       <button
                         onClick={handleSubmit}
                         disabled={submitting || !isFormValid}
@@ -888,105 +888,96 @@ export function TemporaryBookingPage({
             </div>
           </div>
         </div>
-      </div>
 
-      {/* زر الحجز العائم الذكي - للجوال والتابلت */}
-      {selections.size > 0 && (
-        <div
-          className="lg:hidden fixed left-0 right-0 z-[9999]"
-          style={{
-            bottom: '80px',
-            paddingBottom: 'env(safe-area-inset-bottom, 0px)',
-            pointerEvents: 'none'
-          }}
-        >
-          <div
-            className="mx-4 mb-4 p-3.5 rounded-2xl shadow-2xl"
-            style={{
-              background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(255, 255, 255, 0.95))',
-              backdropFilter: 'blur(20px) saturate(180%)',
-              WebkitBackdropFilter: 'blur(20px) saturate(180%)',
-              border: `2px solid ${greenTheme.lighter}`,
-              boxShadow: `
-                0 -10px 40px rgba(0, 0, 0, 0.15),
-                0 10px 60px rgba(16, 185, 129, 0.3),
-                inset 0 2px 4px rgba(255, 255, 255, 0.8)
-              `,
-              pointerEvents: 'auto'
-            }}
-          >
-            {/* الزر الرئيسي الضخم */}
-            <button
-              onClick={handleSubmit}
-              disabled={submitting || !isFormValid}
-              className="w-full py-4 rounded-xl font-black text-lg text-white transition-all active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2.5 shadow-lg"
+        {/* زر الحجز في نهاية الصفحة - للجوال والتابلت */}
+        {selections.size > 0 && (
+          <div className="lg:hidden mt-6 px-4 pb-8">
+            <div
+              className="p-3.5 rounded-2xl shadow-2xl"
               style={{
-                background: submitting
-                  ? `linear-gradient(135deg, ${greenTheme.primary}, ${greenTheme.dark})`
-                  : `linear-gradient(135deg, ${greenTheme.light}, ${greenTheme.primary})`,
+                background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(255, 255, 255, 0.95))',
+                backdropFilter: 'blur(20px) saturate(180%)',
+                WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+                border: `2px solid ${greenTheme.lighter}`,
                 boxShadow: `
-                  0 8px 32px rgba(16, 185, 129, 0.5),
-                  0 4px 16px rgba(16, 185, 129, 0.4),
-                  inset 0 2px 8px rgba(255, 255, 255, 0.4)
-                `,
-                minHeight: '60px',
-                transform: 'translateZ(0)'
+                  0 -10px 40px rgba(0, 0, 0, 0.15),
+                  0 10px 60px rgba(16, 185, 129, 0.3),
+                  inset 0 2px 4px rgba(255, 255, 255, 0.8)
+                `
               }}
             >
-              {submitting ? (
-                <>
-                  <SimpleLoader size="sm" color="#FFFFFF" />
-                  <span className="text-lg">جاري الحجز...</span>
-                </>
-              ) : (
-                <>
-                  <div className="flex items-center gap-2.5">
-                    <div
-                      className="w-10 h-10 rounded-full flex items-center justify-center"
-                      style={{
-                        background: 'rgba(255, 255, 255, 0.3)',
-                        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)'
-                      }}
-                    >
-                      <CheckCircle2 className="w-6 h-6" />
-                    </div>
-                    <div className="flex flex-col items-start">
-                      <span className="text-base font-black leading-tight">تأكيد الحجز الآن</span>
-                      <span className="text-xs opacity-90 font-bold leading-tight">
-                        {calculateTotalTrees()} شجرة • {calculateTotal().toLocaleString()} ريال
-                      </span>
-                    </div>
-                  </div>
-                </>
-              )}
-            </button>
-
-            {/* تنبيه البيانات الناقصة */}
-            {!isFormValid && (
-              <div
-                className="mt-2.5 px-3 py-2 rounded-lg flex flex-col gap-1.5"
+              {/* الزر الرئيسي الضخم */}
+              <button
+                onClick={handleSubmit}
+                disabled={submitting || !isFormValid}
+                className="w-full py-4 rounded-xl font-black text-lg text-white transition-all active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2.5 shadow-lg"
                 style={{
-                  background: 'rgba(239, 68, 68, 0.1)',
-                  border: '1.5px solid rgba(239, 68, 68, 0.3)'
+                  background: submitting
+                    ? `linear-gradient(135deg, ${greenTheme.primary}, ${greenTheme.dark})`
+                    : `linear-gradient(135deg, ${greenTheme.light}, ${greenTheme.primary})`,
+                  boxShadow: `
+                    0 8px 32px rgba(16, 185, 129, 0.5),
+                    0 4px 16px rgba(16, 185, 129, 0.4),
+                    inset 0 2px 8px rgba(255, 255, 255, 0.4)
+                  `,
+                  minHeight: '60px'
                 }}
               >
-                <div className="flex items-center justify-center gap-2">
-                  <svg className="w-4 h-4 text-red-600" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                  </svg>
-                  <p className="text-xs text-red-700 font-bold">
-                    يرجى إكمال البيانات المطلوبة:
-                  </p>
+                {submitting ? (
+                  <>
+                    <SimpleLoader size="sm" color="#FFFFFF" />
+                    <span className="text-lg">جاري الحجز...</span>
+                  </>
+                ) : (
+                  <>
+                    <div className="flex items-center gap-2.5">
+                      <div
+                        className="w-10 h-10 rounded-full flex items-center justify-center"
+                        style={{
+                          background: 'rgba(255, 255, 255, 0.3)',
+                          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)'
+                        }}
+                      >
+                        <CheckCircle2 className="w-6 h-6" />
+                      </div>
+                      <div className="flex flex-col items-start">
+                        <span className="text-base font-black leading-tight">تأكيد الحجز الآن</span>
+                        <span className="text-xs opacity-90 font-bold leading-tight">
+                          {calculateTotalTrees()} شجرة • {calculateTotal().toLocaleString()} ريال
+                        </span>
+                      </div>
+                    </div>
+                  </>
+                )}
+              </button>
+
+              {/* تنبيه البيانات الناقصة */}
+              {!isFormValid && (
+                <div
+                  className="mt-2.5 px-3 py-2 rounded-lg flex flex-col gap-1.5"
+                  style={{
+                    background: 'rgba(239, 68, 68, 0.1)',
+                    border: '1.5px solid rgba(239, 68, 68, 0.3)'
+                  }}
+                >
+                  <div className="flex items-center justify-center gap-2">
+                    <svg className="w-4 h-4 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                    </svg>
+                    <p className="text-xs text-red-700 font-bold">
+                      يرجى إكمال البيانات المطلوبة:
+                    </p>
+                  </div>
+                  <div className="text-center text-[11px] text-red-600 font-bold space-y-0.5">
+                    {!isValidName && <div>• الاسم (3 أحرف على الأقل)</div>}
+                    {!isValidPhone && <div>• رقم الجوال (10 أرقام تبدأ بـ 05)</div>}
+                  </div>
                 </div>
-                <div className="text-center text-[11px] text-red-600 font-bold space-y-0.5">
-                  {!isValidName && <div>• الاسم (3 أحرف على الأقل)</div>}
-                  {!isValidPhone && <div>• رقم الجوال (10 أرقام تبدأ بـ 05)</div>}
-                </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
       {/* Custom CSS */}
       <style>{`
