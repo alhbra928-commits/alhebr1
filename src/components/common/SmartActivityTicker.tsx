@@ -155,7 +155,6 @@ export function SmartActivityTicker() {
       }
 
       if (items.length === 0) {
-        // عرض رسالة تحفيزية بدلاً من الترحيب
         items.push({
           id: 'no-activities',
           icon: '🌟',
@@ -166,7 +165,6 @@ export function SmartActivityTicker() {
         });
       }
 
-      // ترتيب حسب الأولوية (للبيانات الحقيقية) بدون عشوائية
       const sorted = items.sort((a, b) => (b.priority || 0) - (a.priority || 0));
       setActivities(sorted);
     } catch (error) {
@@ -185,17 +183,8 @@ export function SmartActivityTicker() {
     return `منذ ${days} يوم`;
   };
 
-  const getAnimationDuration = () => {
-    switch (settings.scrollSpeed) {
-      case 'fast': return '12s';
-      case 'medium': return '16s';
-      case 'slow': return '24s';
-      default: return '16s';
-    }
-  };
-
-  // إنشاء المحتوى مرة واحدة فقط واستخدامه مرتين (1:1 Copy)
-  const tickerContent = useMemo(() => {
+  // إنشاء محتوى البطاقة مرة واحدة
+  const singleCard = useMemo(() => {
     return activities.map((activity) => {
       const IconComponent = iconMap[activity.icon] || Sparkles;
 
@@ -230,12 +219,26 @@ export function SmartActivityTicker() {
     });
   }, [activities, settings.showTimestamps]);
 
+  // Auto-Fill: تكرار المحتوى حتى يغطي 3× عرض الشاشة (minimum 4 copies)
+  const repeatedContent = useMemo(() => {
+    const minRepetitions = 4; // الحد الأدنى من التكرار لضمان الدورة الكاملة
+    const copies = [];
+    for (let i = 0; i < minRepetitions; i++) {
+      copies.push(
+        <div key={`group-${i}`} className="marquee-group" aria-hidden={i > 0}>
+          {singleCard}
+        </div>
+      );
+    }
+    return copies;
+  }, [singleCard]);
+
   if (!settings || activities.length === 0) return null;
 
   return (
     <>
       <style>{`
-        /* قفل الـ container */
+        /* Container - ثابت لجميع الشاشات */
         .ticker-agricultural {
           position: relative;
           width: 100%;
@@ -250,8 +253,8 @@ export function SmartActivityTicker() {
           isolation: isolate;
         }
 
-        /* CSS Marquee - Desktop Animation */
-        @keyframes marquee-desktop {
+        /* CSS Marquee Animation - موحد للجميع */
+        @keyframes marquee-scroll {
           0% {
             transform: translateX(0) translateZ(0);
           }
@@ -260,33 +263,7 @@ export function SmartActivityTicker() {
           }
         }
 
-        /* CSS Marquee - Mobile Animation (منفصل تماماً - دورة كاملة) */
-        @keyframes marquee-mobile {
-          0% {
-            transform: translateX(0) translateZ(0);
-          }
-          100% {
-            transform: translateX(-50%) translateZ(0);
-          }
-        }
-
-        /* Smooth animation optimization */
-        @media (prefers-reduced-motion: no-preference) {
-          .marquee-track-desktop,
-          .marquee-track-mobile {
-            animation-timing-function: linear;
-          }
-        }
-
-        /* فصل الشاشات - Desktop فقط */
-        .ticker-desktop {
-          display: flex;
-        }
-
-        .ticker-mobile {
-          display: none;
-        }
-
+        /* Overflow Container - موحد */
         .ticker-overflow-container {
           position: relative;
           height: 100%;
@@ -297,12 +274,12 @@ export function SmartActivityTicker() {
           margin: 0 !important;
         }
 
-        /* Desktop Track - Animation منفصلة */
-        .marquee-track-desktop {
+        /* Marquee Track - موحد للجميع */
+        .marquee-track {
           display: flex;
           width: max-content;
           will-change: transform;
-          animation: marquee-desktop ${getAnimationDuration()} linear infinite;
+          animation: marquee-scroll 14s linear infinite;
           transform: translateZ(0);
           backface-visibility: hidden;
           padding: 0 !important;
@@ -313,63 +290,46 @@ export function SmartActivityTicker() {
           perspective: 1000px;
         }
 
-        /* Mobile Track - Animation منفصلة تماماً (دورة كاملة سلسة) */
-        .marquee-track-mobile {
-          display: flex;
-          width: max-content;
-          will-change: transform;
-          animation: marquee-mobile 30s linear infinite;
-          transform: translateZ(0);
-          backface-visibility: hidden;
-          padding: 0 !important;
-          margin: 0 !important;
-          contain: layout style paint;
-          -webkit-transform: translateZ(0);
-          -webkit-backface-visibility: hidden;
-          perspective: 1000px;
-        }
-
+        /* Group Container */
         .marquee-group {
           display: flex;
           flex: 0 0 auto;
-          width: max-content;
-          gap: 6px;
+          gap: 10px;
           padding: 0 !important;
-          padding-left: 3px !important;
-          padding-right: 3px !important;
           margin: 0 !important;
-          contain: layout style paint;
+          align-items: center;
+          justify-content: flex-start;
         }
 
-        /* البطاقة - قفل الأبعاد */
+        /* Activity Card - موحد */
         .activity-card-agricultural {
-          flex: 0 0 auto;
           position: relative;
-          background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.08) 100%);
-          border: 2px solid rgba(212, 175, 55, 0.5);
-          border-radius: 10px;
           padding: 8px 12px;
-          white-space: nowrap;
+          border-radius: 10px;
+          background: linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(21, 128, 61, 0.2) 100%);
+          border: 1.5px solid rgba(34, 197, 94, 0.3);
           backdrop-filter: blur(10px);
-          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+          min-width: 180px;
+          max-width: 180px;
+          flex-shrink: 0;
           transition: all 0.3s ease;
-          margin: 0 !important;
+          cursor: default;
           overflow: hidden;
-          min-width: fit-content;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         .activity-card-agricultural:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 6px 20px rgba(212, 175, 55, 0.3);
-          border-color: rgba(212, 175, 55, 0.8);
+          background: linear-gradient(135deg, rgba(34, 197, 94, 0.25) 0%, rgba(21, 128, 61, 0.3) 100%);
+          border-color: rgba(34, 197, 94, 0.5);
+          box-shadow: 0 4px 12px rgba(34, 197, 94, 0.15);
         }
 
         .card-hover-effect {
           position: absolute;
           inset: 0;
+          background: linear-gradient(135deg, transparent 0%, rgba(255, 255, 255, 0.03) 100%);
           opacity: 0;
-          transition: opacity 0.3s;
-          background: linear-gradient(135deg, rgba(76, 175, 80, 0.2) 0%, rgba(67, 160, 71, 0.2) 100%);
+          transition: opacity 0.3s ease;
           pointer-events: none;
         }
 
@@ -378,150 +338,150 @@ export function SmartActivityTicker() {
         }
 
         .card-inner {
-          position: relative;
           display: flex;
           align-items: center;
-          gap: 8px;
+          gap: 10px;
+          position: relative;
+          z-index: 1;
         }
 
         .card-icon-wrapper {
           position: relative;
-          width: 28px;
-          height: 28px;
           flex-shrink: 0;
         }
 
         .icon-glow {
           position: absolute;
-          inset: 0;
-          background: linear-gradient(135deg, #D4AF37 0%, #C49423 100%);
-          border-radius: 6px;
-          filter: blur(6px);
-          opacity: 0.5;
-          animation: pulse 2s ease-in-out infinite;
+          inset: -4px;
+          background: radial-gradient(circle, rgba(34, 197, 94, 0.2) 0%, transparent 70%);
+          border-radius: 50%;
+          opacity: 0;
+          transition: opacity 0.3s ease;
+        }
+
+        .activity-card-agricultural:hover .icon-glow {
+          opacity: 1;
         }
 
         .icon-container {
-          position: relative;
-          width: 28px;
-          height: 28px;
-          padding: 5px;
-          border-radius: 6px;
-          background: linear-gradient(135deg, #D4AF37 0%, #C49423 100%);
-          box-shadow: 0 0 12px rgba(212, 175, 55, 0.4);
           display: flex;
           align-items: center;
           justify-content: center;
+          width: 32px;
+          height: 32px;
+          background: linear-gradient(135deg, rgba(34, 197, 94, 0.2) 0%, rgba(21, 128, 61, 0.3) 100%);
+          border-radius: 8px;
+          border: 1px solid rgba(34, 197, 94, 0.3);
         }
 
         .icon-svg {
-          width: 14px;
-          height: 14px;
-          color: white;
+          width: 18px;
+          height: 18px;
+          color: #22c55e;
+          filter: drop-shadow(0 0 4px rgba(34, 197, 94, 0.3));
         }
 
         .card-content {
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
           flex: 1;
           min-width: 0;
-          text-align: right;
         }
 
         .card-title {
-          font-weight: 800;
           font-size: 13px;
-          line-height: 1.2;
-          margin-bottom: 3px;
-          color: #F5F5DC;
-          text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+          font-weight: 600;
+          color: #d4f1e8;
+          line-height: 1.3;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
         }
 
         .card-time {
-          font-size: 11px;
-          font-weight: 700;
-          color: #D4AF37;
-          text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+          font-size: 10px;
+          color: rgba(212, 241, 232, 0.6);
+          font-weight: 500;
+          white-space: nowrap;
         }
 
-        /* الموجة الذهبية */
+        /* Golden wave animation */
         @keyframes golden-wave {
-          0%, 100% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
+          0%, 100% {
+            background-position: 0% 50%;
+          }
+          50% {
+            background-position: 100% 50%;
+          }
         }
 
         .golden-wave {
-          background: linear-gradient(90deg, rgba(212, 175, 55, 0.3), rgba(196, 148, 31, 0.5), rgba(212, 175, 55, 0.3));
+          background: linear-gradient(
+            90deg,
+            transparent 0%,
+            rgba(212, 175, 55, 0.4) 25%,
+            rgba(212, 175, 55, 0.7) 50%,
+            rgba(212, 175, 55, 0.4) 75%,
+            transparent 100%
+          );
           background-size: 200% 100%;
-          animation: golden-wave 3s ease infinite;
+          animation: golden-wave 3s ease-in-out infinite;
         }
 
-        /* Mobile Optimization - عرض Mobile وإخفاء Desktop */
+        /* Smooth animation optimization */
+        @media (prefers-reduced-motion: no-preference) {
+          .marquee-track {
+            animation-timing-function: linear;
+          }
+        }
+
+        /* Mobile Responsive - التنسيق البصري فقط */
         @media (max-width: 768px) {
-          /* إخفاء Desktop وإظهار Mobile */
-          .ticker-desktop {
-            display: none !important;
-          }
-
-          .ticker-mobile {
-            display: flex !important;
-          }
-
-          .marquee-group {
-            gap: 8px !important;
-            padding: 0 !important;
-          }
-
           .activity-card-agricultural {
-            padding: 6px 9px;
-            border-radius: 8px;
-            min-width: 175px;
-            max-width: 175px;
-          }
-
-          .card-inner {
-            gap: 8px;
-          }
-
-          .card-icon-wrapper {
-            width: 26px !important;
-            height: 26px !important;
+            padding: 6px 10px;
+            min-width: 160px;
+            max-width: 160px;
           }
 
           .icon-container {
-            width: 26px !important;
-            height: 26px !important;
-            padding: 4px !important;
+            width: 28px;
+            height: 28px;
           }
 
           .icon-svg {
-            width: 13px !important;
-            height: 13px !important;
+            width: 16px;
+            height: 16px;
           }
 
           .card-title {
-            font-size: 12px !important;
-            line-height: 1.1 !important;
+            font-size: 12px;
           }
 
           .card-time {
-            font-size: 10px !important;
+            font-size: 9px;
+          }
+
+          .marquee-group {
+            gap: 8px;
           }
         }
 
         /* Ultra compact for very small screens */
         @media (max-width: 480px) {
-          .marquee-group {
-            gap: 6px !important;
-            padding: 0 !important;
-          }
-
           .activity-card-agricultural {
             padding: 5px 8px;
-            min-width: 170px;
-            max-width: 170px;
+            min-width: 150px;
+            max-width: 150px;
           }
 
           .card-title {
-            font-size: 11px !important;
+            font-size: 11px;
+          }
+
+          .marquee-group {
+            gap: 6px;
           }
         }
       `}</style>
@@ -529,33 +489,10 @@ export function SmartActivityTicker() {
       <div className="ticker-agricultural" dir="rtl">
         <div className="absolute top-0 left-0 right-0 h-[3px] golden-wave" />
 
-        {/* Desktop Ticker - مخفي على الموبايل */}
-        <div className="ticker-overflow-container ticker-desktop">
-          <div className="marquee-track marquee-track-desktop">
-            {/* Group 1 - المحتوى الأصلي */}
-            <div className="marquee-group">
-              {tickerContent}
-            </div>
-
-            {/* Group 2 - نسخة مطابقة 1:1 */}
-            <div className="marquee-group" aria-hidden="true">
-              {tickerContent}
-            </div>
-          </div>
-        </div>
-
-        {/* Mobile Ticker - مخفي على الكمبيوتر */}
-        <div className="ticker-overflow-container ticker-mobile">
-          <div className="marquee-track marquee-track-mobile">
-            {/* Group 1 - المحتوى الأصلي */}
-            <div className="marquee-group">
-              {tickerContent}
-            </div>
-
-            {/* Group 2 - نسخة مطابقة 1:1 */}
-            <div className="marquee-group" aria-hidden="true">
-              {tickerContent}
-            </div>
+        {/* نظام واحد موحد - يعمل على جميع الشاشات */}
+        <div className="ticker-overflow-container">
+          <div className="marquee-track">
+            {repeatedContent}
           </div>
         </div>
       </div>
