@@ -347,14 +347,6 @@ function App() {
   // تحديد ما إذا كان يجب عرض الهيدر والفوتر (فقط للصفحة الرئيسية العامة)
   const showPublicChrome = activeModule === 'public' && !showAdminLogin && publicView === 'home';
 
-  // دالة فتح المساعد الذكي
-  const handleSmartButtonClick = () => {
-    // فتح نافذة واتساب مع رسالة للمساعد الذكي
-    const whatsappNumber = '966569335257';
-    const message = encodeURIComponent('السلام عليكم، أريد المساعدة من المساعد الذكي 🤖');
-    window.open(`https://wa.me/${whatsappNumber}?text=${message}`, '_blank');
-  };
-
   return (
     <div className="appShell" dir="rtl">
       {/* Header - Grid Shell Mode (فقط للصفحات العامة) */}
@@ -365,7 +357,6 @@ function App() {
             onNavigate={(section) => {
               console.log('Navigate to:', section);
             }}
-            onSmartButtonClick={handleSmartButtonClick}
           />
         </header>
       )}

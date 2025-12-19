@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Home, User, Phone, Menu, X } from 'lucide-react';
+import { Home, Phone, Menu, X } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 
 interface ModernTopHeaderProps {
   onNavigate?: (section: string) => void;
   currentSection?: string;
-  onSmartButtonClick?: () => void;
   phoneNumber?: string;
 }
 
@@ -24,7 +23,6 @@ interface HeaderTexts {
 export function ModernTopHeader({
   onNavigate,
   currentSection = 'home',
-  onSmartButtonClick,
   phoneNumber: customPhoneNumber
 }: ModernTopHeaderProps) {
   const [mounted, setMounted] = useState(false);
@@ -480,18 +478,6 @@ export function ModernTopHeader({
 
           {/* Desktop Navigation */}
           <nav className="header-nav-desktop">
-            {/* Smart Button - Featured */}
-            {onSmartButtonClick && (
-              <button
-                className="header-smart-btn"
-                onClick={onSmartButtonClick}
-                title={texts.smartTooltip}
-              >
-                <span className="robot-icon">🤖</span>
-                <span>{texts.smartButton}</span>
-              </button>
-            )}
-
             {/* Regular Nav Buttons */}
             <button
               className={`header-nav-btn ${currentSection === 'home' ? 'active' : ''}`}
@@ -500,15 +486,6 @@ export function ModernTopHeader({
             >
               <Home size={18} />
               <span>{texts.homeButton}</span>
-            </button>
-
-            <button
-              className={`header-nav-btn ${currentSection === 'account' ? 'active' : ''}`}
-              onClick={() => onNavigate?.('account')}
-              title={texts.accountTooltip}
-            >
-              <User size={18} />
-              <span>{texts.accountButton}</span>
             </button>
           </nav>
 
@@ -525,17 +502,6 @@ export function ModernTopHeader({
 
           {/* Mobile Actions Group */}
           <div className="mobile-actions-group">
-            {/* Mobile Smart Button - Always Visible */}
-            {onSmartButtonClick && (
-              <button
-                className="header-smart-btn-mobile"
-                onClick={onSmartButtonClick}
-                title={texts.smartTooltip}
-              >
-                <span className="robot-icon">🤖</span>
-              </button>
-            )}
-
             {/* Mobile Menu Button */}
             <button
               className="mobile-menu-btn"
@@ -572,19 +538,6 @@ export function ModernTopHeader({
             >
               <Home size={20} />
               <span>{texts.homeButton}</span>
-            </div>
-
-            {/* Account */}
-            <div
-              className={`mobile-menu-item ${currentSection === 'account' ? 'active' : ''}`}
-              onClick={() => {
-                onNavigate?.('account');
-                setMobileMenuOpen(false);
-                document.body.classList.remove('menu-open');
-              }}
-            >
-              <User size={20} />
-              <span>{texts.accountButton}</span>
             </div>
 
             <div className="mobile-menu-divider" />
