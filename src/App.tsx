@@ -1,9 +1,6 @@
 import { useState, lazy, Suspense, useEffect } from 'react';
 import { AdminSessionService } from './modules/admin/services/adminSessionService';
 import { PermissionsProvider } from './contexts/PermissionsContext';
-import FixedChrome from './components/common/FixedChrome';
-import { ModernTopHeader } from './components/common/ModernTopHeader';
-import { BottomNavigationBar } from './components/common/BottomNavigationBar';
 
 // Lazy load EVERYTHING - including admin components
 const SmartAdminLoginPage = lazy(() => import('./modules/admin/components/SmartAdminLoginPage').then(m => ({ default: m.SmartAdminLoginPage })));
@@ -342,108 +339,74 @@ function App() {
     }
   };
 
-  // تحديد ما إذا كان يجب عرض الهيدر والفوتر (فقط للصفحات العامة)
-  const showPublicChrome = activeModule === 'public' && !showAdminLogin;
-
   return (
-    <>
-      {/* Fixed Chrome - Header & Footer using Portal */}
-      <FixedChrome
-        header={showPublicChrome ? (
-          <ModernTopHeader
-            currentSection="home"
-            onNavigate={(section) => {
-              console.log('Navigate to:', section);
-            }}
-            onSmartButtonClick={() => {
-              console.log('Smart button clicked');
-            }}
+    <div
+      className="min-h-screen royal-green-bg"
+      dir="rtl"
+    >
+      {showAdminLogin && (
+        <Suspense fallback={<div className="min-h-screen bg-gradient-to-br from-emerald-50 to-green-50" />}>
+          <SmartAdminLoginPage
+            onLoginSuccess={handleAdminLogin}
+            onCancel={() => setShowAdminLogin(false)}
           />
-        ) : null}
-        footer={showPublicChrome ? (
-          <BottomNavigationBar
-            currentSection="home"
-            onNavigate={(section) => {
-              console.log('Navigate to:', section);
+        </Suspense>
+      )}
+
+      {showIdleWarning && (
+        <Suspense fallback={<div className="min-h-screen bg-gradient-to-br from-emerald-50 to-green-50" />}>
+          <IdleSessionWarning
+            onContinue={() => {
+              setShowIdleWarning(false);
+              setLastActivity(Date.now());
             }}
-            onSmartButtonClick={() => {
-              console.log('Smart button clicked');
-            }}
+            onLogout={handleLogout}
           />
-        ) : null}
-        headerHeight={showPublicChrome ? 72 : 0}
-        footerHeight={showPublicChrome ? 72 : 0}
-      />
+        </Suspense>
+      )}
 
-      <div
-        id="appContent"
-        className="min-h-screen royal-green-bg"
-        dir="rtl"
-      >
-        {showAdminLogin && (
-          <Suspense fallback={<div className="min-h-screen bg-gradient-to-br from-emerald-50 to-green-50" />}>
-            <SmartAdminLoginPage
-              onLoginSuccess={handleAdminLogin}
-              onCancel={() => setShowAdminLogin(false)}
-            />
-          </Suspense>
-        )}
+      {/* Temporarily disabled - UpdateNotificationBanner */}
 
-        {showIdleWarning && (
-          <Suspense fallback={<div className="min-h-screen bg-gradient-to-br from-emerald-50 to-green-50" />}>
-            <IdleSessionWarning
-              onContinue={() => {
-                setShowIdleWarning(false);
-                setLastActivity(Date.now());
-              }}
-              onLogout={handleLogout}
-            />
-          </Suspense>
-        )}
+      {showLoginNotification && adminSession && (
+        <Suspense fallback={null}>
+          <LoginNotification
+            adminName={adminSession.name}
+            adminPhone={adminSession.phone}
+            module="لوحة التحكم"
+            onClose={() => setShowLoginNotification(false)}
+          />
+        </Suspense>
+      )}
 
-        {/* Temporarily disabled - UpdateNotificationBanner */}
+      {/* Mobile Header - Shows on mobile for admin pages */}
+      {adminSession && activeModule !== 'public' && activeModule !== 'farm-owner' && (
+        <Suspense fallback={null}>
+          <MobileHeader
+            onMenuClick={() => setIsMobileSidebarOpen(true)}
+            title={getModuleTitle(activeModule)}
+          />
+        </Suspense>
+      )}
 
-        {showLoginNotification && adminSession && (
-          <Suspense fallback={null}>
-            <LoginNotification
-              adminName={adminSession.name}
-              adminPhone={adminSession.phone}
-              module="لوحة التحكم"
-              onClose={() => setShowLoginNotification(false)}
-            />
-          </Suspense>
-        )}
-
-        {/* Mobile Header - Shows on mobile for admin pages */}
+      <PermissionsProvider>
+        {/* Mobile Sidebar - Shows on mobile for admin pages */}
         {adminSession && activeModule !== 'public' && activeModule !== 'farm-owner' && (
           <Suspense fallback={null}>
-            <MobileHeader
-              onMenuClick={() => setIsMobileSidebarOpen(true)}
-              title={getModuleTitle(activeModule)}
+            <MobileSidebar
+              activeModule={activeModule}
+              onModuleChange={setActiveModule}
+              isOpen={isMobileSidebarOpen}
+              onClose={() => setIsMobileSidebarOpen(false)}
             />
           </Suspense>
         )}
 
-        <PermissionsProvider>
-          {/* Mobile Sidebar - Shows on mobile for admin pages */}
-          {adminSession && activeModule !== 'public' && activeModule !== 'farm-owner' && (
-            <Suspense fallback={null}>
-              <MobileSidebar
-                activeModule={activeModule}
-                onModuleChange={setActiveModule}
-                isOpen={isMobileSidebarOpen}
-                onClose={() => setIsMobileSidebarOpen(false)}
-              />
-            </Suspense>
-          )}
+        <Suspense fallback={<div className="min-h-screen bg-gradient-to-br from-emerald-50 to-green-50" />}>
+          {renderModule()}
+        </Suspense>
+      </PermissionsProvider>
 
-          <Suspense fallback={<div className="min-h-screen bg-gradient-to-br from-emerald-50 to-green-50" />}>
-            {renderModule()}
-          </Suspense>
-        </PermissionsProvider>
-
-      </div>
-    </>
+    </div>
   );
 }
 

@@ -61,8 +61,12 @@ export function BottomNavigationBar({
     <>
       <style>{`
         .bottom-nav-bar {
-          position: relative !important;
+          position: fixed !important;
+          bottom: 0 !important;
+          left: 0 !important;
+          right: 0 !important;
           width: 100% !important;
+          z-index: 999999 !important;
 
           background: linear-gradient(180deg,
             rgba(255, 255, 255, 0.98) 0%,

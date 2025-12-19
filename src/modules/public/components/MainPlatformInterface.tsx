@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { brandColors, brandGradients } from '../../finance/styles/brandColors';
 import { PublicFarm } from '../types/farm.types';
 import { PublicFarmService } from '../services/publicFarmService';
-// PremiumHeader removed - now in Portal (FixedChrome)
+import { PremiumHeader } from './PremiumHeader';
 import { FarmCard3D } from './FarmCard3D';
 import { ModernMobileFarmCard } from './ModernMobileFarmCard';
 import { ConceptIntroModal } from './ConceptIntroModal';
@@ -160,7 +160,14 @@ export function MainPlatformInterface({
         minHeight: '-webkit-fill-available'
       }}
     >
-      {/* Header removed - now in Portal (FixedChrome in App.tsx) */}
+      {/* الهيدر الثابت في الأعلى */}
+      <PremiumHeader
+        onAdminLogin={onAdminLogin}
+        onInvestorLogin={handleGoToInvestorPanel}
+        onVerifyCertificate={() => setCurrentView('verification')}
+        onBackToAdmin={onBackToAdmin}
+        onFarmOwnerLogin={onFarmOwnerLogin}
+      />
 
       {isTransitioning && (
         <div className="fixed inset-0 z-50 flex items-center justify-center" style={{ background: 'rgba(0, 0, 0, 0.4)', backdropFilter: 'blur(4px)' }}>

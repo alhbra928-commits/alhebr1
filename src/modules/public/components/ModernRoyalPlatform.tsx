@@ -12,7 +12,7 @@ import { InnovativeFarmCard } from './InnovativeFarmCard';
 import { getPlatformTextsBySection } from '../../../services/platformTextsService';
 import { VerticalSideTabs } from '../../../components/common/VerticalSideTabs';
 import { SmartAssistantSidebar } from './SmartAssistantSidebar';
-// PremiumHeader removed - now in Portal (FixedChrome)
+import { PremiumHeader } from './PremiumHeader';
 import { SmartActivityTicker } from '../../../components/common/SmartActivityTicker';
 
 // Lazy load heavy components
@@ -227,56 +227,94 @@ export function ModernRoyalPlatform({
   // Handle other views with Suspense + Header & Footer
   if (currentView === 'concept') {
     return (
-      <Suspense fallback={<div className="min-h-screen bg-gradient-to-br from-emerald-50 to-green-50" />}>
-        <ConceptIntroductionPage onClose={handleGoHome} onStartJourney={handleGoHome} />
-      </Suspense>
+      <>
+        <PremiumHeader
+          onAdminLogin={onAdminLogin}
+          onInvestorLogin={() => setCurrentView('investor')}
+          onVerifyCertificate={() => setCurrentView('verification')}
+          onBackToAdmin={onBackToAdmin}
+          onFarmOwnerLogin={onFarmOwnerLogin}
+        />
+        <Suspense fallback={<div className="min-h-screen bg-gradient-to-br from-emerald-50 to-green-50" />}>
+          <ConceptIntroductionPage onClose={handleGoHome} onStartJourney={handleGoHome} />
+        </Suspense>
+      </>
     );
   }
 
   if (currentView === 'verification') {
     return (
-      <Suspense fallback={<div className="min-h-screen bg-gradient-to-br from-emerald-50 to-green-50" />}>
-        <CertificateVerificationPage onBack={handleGoHome} />
-      </Suspense>
+      <>
+        <PremiumHeader
+          onAdminLogin={onAdminLogin}
+          onInvestorLogin={() => setCurrentView('investor')}
+          onVerifyCertificate={() => setCurrentView('verification')}
+          onBackToAdmin={onBackToAdmin}
+          onFarmOwnerLogin={onFarmOwnerLogin}
+        />
+        <Suspense fallback={<div className="min-h-screen bg-gradient-to-br from-emerald-50 to-green-50" />}>
+          <CertificateVerificationPage onBack={handleGoHome} />
+        </Suspense>
+      </>
     );
   }
 
   if (currentView === 'investor') {
     return (
-      <Suspense fallback={<div className="min-h-screen bg-gradient-to-br from-emerald-50 to-green-50" />}>
-        <InvestorRouter
-          onBack={handleGoHome}
-          onGoToPublic={handleGoHome}
+      <>
+        <PremiumHeader
+          onAdminLogin={onAdminLogin}
+          onInvestorLogin={() => setCurrentView('investor')}
+          onVerifyCertificate={() => setCurrentView('verification')}
+          onBackToAdmin={onBackToAdmin}
+          onFarmOwnerLogin={onFarmOwnerLogin}
         />
-      </Suspense>
+        <Suspense fallback={<div className="min-h-screen bg-gradient-to-br from-emerald-50 to-green-50" />}>
+          <InvestorRouter
+            onBack={handleGoHome}
+            onGoToPublic={handleGoHome}
+          />
+        </Suspense>
+      </>
     );
   }
 
   if (currentView === 'farmDetail' && selectedFarm) {
     return (
-      <Suspense fallback={<div className="min-h-screen bg-gradient-to-br from-emerald-50 to-green-50" />}>
-        <InnovativeFarmDetailPage
-          farmId={selectedFarm.id}
-          onBack={handleGoHome}
-          onStartBooking={() => setCurrentView('booking')}
-        />
-      </Suspense>
+      <>
+        <Suspense fallback={<div className="min-h-screen bg-gradient-to-br from-emerald-50 to-green-50" />}>
+          <InnovativeFarmDetailPage
+            farmId={selectedFarm.id}
+            onBack={handleGoHome}
+            onStartBooking={() => setCurrentView('booking')}
+          />
+        </Suspense>
+      </>
     );
   }
 
   if (currentView === 'booking' && selectedFarm) {
     return (
-      <Suspense fallback={<div className="min-h-screen bg-gradient-to-br from-emerald-50 to-green-50" />}>
-        <TemporaryBookingPage
-          farmId={selectedFarm.id}
-          farmName={selectedFarm.farm_name}
-          farmType={selectedFarm.tree_type === 'نخيل' ? 'palm' : 'olive'}
-          onBack={() => setCurrentView('farmDetail')}
-          onSuccess={handleGoHome}
-          onGoHome={handleGoHome}
-          onGoToInvestor={() => setCurrentView('investor')}
+      <>
+        <PremiumHeader
+          onAdminLogin={onAdminLogin}
+          onInvestorLogin={() => setCurrentView('investor')}
+          onVerifyCertificate={() => setCurrentView('verification')}
+          onBackToAdmin={onBackToAdmin}
+          onFarmOwnerLogin={onFarmOwnerLogin}
         />
-      </Suspense>
+        <Suspense fallback={<div className="min-h-screen bg-gradient-to-br from-emerald-50 to-green-50" />}>
+          <TemporaryBookingPage
+            farmId={selectedFarm.id}
+            farmName={selectedFarm.farm_name}
+            farmType={selectedFarm.tree_type === 'نخيل' ? 'palm' : 'olive'}
+            onBack={() => setCurrentView('farmDetail')}
+            onSuccess={handleGoHome}
+            onGoHome={handleGoHome}
+            onGoToInvestor={() => setCurrentView('investor')}
+          />
+        </Suspense>
+      </>
     );
   }
 
@@ -295,7 +333,14 @@ export function ModernRoyalPlatform({
         overflowX: 'hidden'
       }}
     >
-      {/* Header removed - now in Portal (FixedChrome in App.tsx) */}
+      {/* ✅ GLOBAL HEADER - يظهر في جميع الصفحات */}
+      <PremiumHeader
+        onAdminLogin={onAdminLogin}
+        onInvestorLogin={() => setCurrentView('investor')}
+        onVerifyCertificate={() => setCurrentView('verification')}
+        onBackToAdmin={onBackToAdmin}
+        onFarmOwnerLogin={onFarmOwnerLogin}
+      />
 
       {/* Glass Overlay - Simple and Clean */}
       <div className="fixed inset-0 bg-white/30 backdrop-blur-[2px] pointer-events-none"></div>

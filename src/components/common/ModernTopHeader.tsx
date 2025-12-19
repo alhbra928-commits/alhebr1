@@ -126,10 +126,13 @@ export function ModernTopHeader({
   return (
     <>
       <style>{`
-        /* Modern Header - Portal Mode (NO fixed/transform/backdrop) */
+        /* Modern Header - iOS Safari ULTIMATE Fix */
         .modern-header {
-          position: relative;
-          width: 100%;
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          z-index: 10000;
           background: linear-gradient(135deg, rgba(0, 0, 0, 0.98) 0%, rgba(10, 20, 15, 0.98) 100%);
           border-bottom: 1px solid rgba(16, 185, 129, 0.15);
           box-shadow:
@@ -140,6 +143,15 @@ export function ModernTopHeader({
           padding-top: max(env(safe-area-inset-top), 0px);
           padding-left: env(safe-area-inset-left);
           padding-right: env(safe-area-inset-right);
+        }
+
+        /* Prevent iOS Safari URL bar from affecting layout */
+        @supports (-webkit-touch-callout: none) {
+          .modern-header {
+            /* On iOS, use fixed positioning with extra constraints */
+            position: fixed !important;
+            top: 0 !important;
+          }
         }
 
         .header-container {
@@ -346,6 +358,7 @@ export function ModernTopHeader({
           position: fixed;
           inset: 0;
           background: rgba(0, 0, 0, 0.7);
+          backdrop-filter: blur(4px);
           z-index: 9998;
           opacity: 0;
           pointer-events: none;
@@ -364,6 +377,7 @@ export function ModernTopHeader({
           left: 16px;
           right: 16px;
           background: linear-gradient(135deg, rgba(10, 20, 15, 0.98) 0%, rgba(0, 0, 0, 0.98) 100%);
+          backdrop-filter: blur(25px);
           border-radius: 20px;
           border: 1px solid rgba(16, 185, 129, 0.2);
           box-shadow:
