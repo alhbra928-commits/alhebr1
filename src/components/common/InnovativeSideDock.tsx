@@ -39,7 +39,7 @@ export function InnovativeSideDock({
     smartButton: 'المساعد الذكي',
     showTooltip: 'إظهار الشريط',
     hideTooltip: 'إخفاء الشريط',
-    homeTooltip: 'تحدث مع المدير العام على واتساب',
+    homeTooltip: 'تواصل معنا عبر واتساب',
     accountTooltip: 'صفحة الحساب',
     phoneTooltip: 'اتصل بنا الآن',
     smartTooltip: 'افتح المساعد الذكي',
