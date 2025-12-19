@@ -200,7 +200,20 @@ export function AdvancedPlatformLoader({ onComplete }: AdvancedPlatformLoaderPro
 
   // Progress animation
   useEffect(() => {
-    if (isLoading || !settings.enabled) return;
+    console.log('[AdvancedPlatformLoader] Progress effect triggered', { isLoading, enabled: settings.enabled });
+
+    if (isLoading) {
+      console.log('[AdvancedPlatformLoader] Still loading, waiting...');
+      return;
+    }
+
+    if (!settings.enabled) {
+      console.log('[AdvancedPlatformLoader] Loader disabled, calling onComplete immediately');
+      onComplete();
+      return;
+    }
+
+    console.log('[AdvancedPlatformLoader] Starting progress animation...');
 
     const duration = settings.min_display_time;
     const interval = 30;
@@ -210,6 +223,12 @@ export function AdvancedPlatformLoader({ onComplete }: AdvancedPlatformLoaderPro
     // Track analytics
     const sessionId = crypto.randomUUID();
     const startTime = Date.now();
+
+    // CRITICAL: Backup timeout to ensure onComplete is called
+    const backupTimeout = setTimeout(() => {
+      console.log('[AdvancedPlatformLoader] Backup timeout triggered - forcing completion');
+      onComplete();
+    }, duration + 2000);
 
     const timer = setInterval(() => {
       currentStep++;
@@ -226,29 +245,36 @@ export function AdvancedPlatformLoader({ onComplete }: AdvancedPlatformLoaderPro
 
       if (currentStep >= steps) {
         clearInterval(timer);
+        clearTimeout(backupTimeout);
 
-        // Save analytics
+        console.log('[AdvancedPlatformLoader] Progress complete, starting exit animation');
+
+        // Save analytics (non-blocking)
         supabase.from('loader_analytics').insert({
           session_id: sessionId,
           duration_ms: Date.now() - startTime,
           completed_naturally: true,
           device_type: /mobile/i.test(navigator.userAgent) ? 'mobile' : 'desktop',
           browser: navigator.userAgent.split('(')[0].trim(),
-        }).then(() => {
-          console.log('[AdvancedPlatformLoader] Analytics saved');
-        });
+        }).catch(err => console.log('[AdvancedPlatformLoader] Analytics error (ignored):', err));
 
         // Start exit animation
         setIsExiting(true);
         setTimeout(() => {
           setShowContent(false);
-          setTimeout(onComplete, 300);
+          setTimeout(() => {
+            console.log('[AdvancedPlatformLoader] Calling onComplete');
+            onComplete();
+          }, 300);
         }, settings.fade_duration);
       }
     }, interval);
 
-    return () => clearInterval(timer);
-  }, [isLoading, settings, phases, currentPhase, onComplete]);
+    return () => {
+      clearInterval(timer);
+      clearTimeout(backupTimeout);
+    };
+  }, [isLoading, settings.enabled, settings.min_display_time, settings.fade_duration, phases, currentPhase, onComplete]);
 
   if (!showContent || !settings.enabled) return null;
 
