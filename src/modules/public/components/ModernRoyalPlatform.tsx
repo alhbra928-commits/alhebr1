@@ -413,9 +413,6 @@ export function ModernRoyalPlatform({
           }
         }
       `}</style>
-
-      {/* شريط الإحصائيات المتحرك في الأسفل */}
-      <SmartActivityTicker />
     </div>
   );
 }

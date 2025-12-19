@@ -11,7 +11,6 @@ import { brandColors, brandGradients } from '../../finance/styles/brandColors';
 import { PublicFarm } from '../types/farm.types';
 import { PublicFarmService } from '../services/publicFarmService';
 import { BackButton } from '../../../components/common/BackButton';
-import { SmartActivityTicker } from '../../../components/common/SmartActivityTicker';
 
 interface PreviewInspectionPageProps {
   barcode: string;
@@ -349,9 +348,6 @@ export function PreviewInspectionPage({ barcode, onBack, onOwn }: PreviewInspect
           </button>
         </div>
       </div>
-
-      {/* شريط الإحصائيات المتحرك */}
-      <AdvancedStatsFooter />
     </div>
   );
 }

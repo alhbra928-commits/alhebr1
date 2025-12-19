@@ -259,8 +259,6 @@ export function MainPlatformInterface({
           boxShadow: '0 -4px 20px rgba(0, 0, 0, 0.1)'
         }}
       >
-        {/* شريط الإحصائيات المتحرك */}
-        <AdvancedStatsFooter />
       </div>
     </div>
   );

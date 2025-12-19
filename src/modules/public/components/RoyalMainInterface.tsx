@@ -414,9 +414,6 @@ export function RoyalMainInterface({
       phoneNumber="966500000000"
       defaultMessage="مرحباً! أود الاستفسار عن فرص الاستثمار الزراعي"
     />
-
-    {/* شريط الإحصائيات المتحرك في الأسفل */}
-    <AdvancedStatsFooter />
     </>
   );
 }

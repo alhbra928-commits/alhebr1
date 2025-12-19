@@ -1,6 +1,5 @@
 import React from 'react';
 import { X, Sparkles, TrendingUp, Heart, Leaf } from 'lucide-react';
-import { SmartActivityTicker } from '../../../components/common/SmartActivityTicker';
 
 interface ConceptIntroductionPageProps {
   onClose: () => void;
@@ -241,9 +240,6 @@ export const ConceptIntroductionPage: React.FC<ConceptIntroductionPageProps> = (
           }
         }
       `}</style>
-
-      {/* شريط الإحصائيات المتحرك */}
-      <AdvancedStatsFooter />
     </div>
   );
 };
