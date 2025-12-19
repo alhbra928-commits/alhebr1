@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>اختبار تشخيص الفراغات - Zero Gap Ticker</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Cairo', 'Segoe UI', Tahoma, sans-serif;
+      background: linear-gradient(135deg, #1e4620 0%, #2c5f2d 100%);
+      min-height: 100vh;
+      padding: 20px;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    .header {
+      text-align: center;
+      color: white;
+      margin-bottom: 30px;
+    }
+
+    .header h1 {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+
+    .demo-section {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      padding: 25px;
+      margin-bottom: 20px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .demo-title {
+      color: #2c5f2d;
+      font-size: 20px;
+      margin-bottom: 15px;
+      font-weight: bold;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: bold;
+      margin-left: 10px;
+    }
+
+    .badge-success {
+      background: #51cf66;
+      color: white;
+    }
+
+    .badge-diagnostic {
+      background: #ff6b6b;
+      color: white;
+    }
+
+    /* الشريط الأساسي */
+    .ticker-wrapper {
+      background: linear-gradient(135deg, rgba(44, 95, 45, 0.95) 0%, rgba(30, 70, 32, 0.98) 100%);
+      border-radius: 15px;
+      overflow: hidden;
+      height: 80px;
+      position: relative;
+      border: 3px solid rgba(212, 175, 55, 0.5);
+      margin-bottom: 30px;
+    }
+
+    /* CSS Marquee الصحيح */
+    @keyframes marquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    .ticker-overflow-container {
+      position: relative;
+      height: 100%;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+
+    .marquee-track {
+      display: flex;
+      width: max-content;
+      will-change: transform;
+      animation: marquee 14s linear infinite;
+      transform: translateZ(0);
+      backface-visibility: hidden;
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+
+    .marquee-group {
+      display: flex;
+      flex: 0 0 auto;
+      width: max-content;
+      gap: 10px;
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+
+    .activity-card {
+      flex: 0 0 auto;
+      position: relative;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.08) 100%);
+      border: 2px solid rgba(212, 175, 55, 0.5);
+      border-radius: 12px;
+      padding: 10px 14px;
+      color: #F5F5DC;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      white-space: nowrap;
+      transition: all 0.3s ease;
+      margin: 0 !important;
+    }
+
+    .icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #D4AF37 0%, #C49423 100%);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+      box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+    }
+
+    .card-text {
+      font-size: 14px;
+      font-weight: bold;
+      color: #F5F5DC;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    }
+
+    /* وضع التشخيص */
+    .diagnostic-mode .ticker-overflow-container {
+      outline: 3px solid red !important;
+    }
+
+    .diagnostic-mode .marquee-track {
+      outline: 3px solid blue !important;
+    }
+
+    .diagnostic-mode .marquee-group {
+      outline: 3px solid green !important;
+    }
+
+    .diagnostic-labels {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .label-card {
+      padding: 15px;
+      border-radius: 12px;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .label-red {
+      background: rgba(255, 107, 107, 0.2);
+      border: 2px solid #ff6b6b;
+      color: #c92a2a;
+    }
+
+    .label-blue {
+      background: rgba(51, 154, 240, 0.2);
+      border: 2px solid #339af0;
+      color: #1864ab;
+    }
+
+    .label-green {
+      background: rgba(81, 207, 102, 0.2);
+      border: 2px solid #51cf66;
+      color: #2b8a3e;
+    }
+
+    .checklist {
+      margin-top: 20px;
+    }
+
+    .check-item {
+      padding: 12px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      background: rgba(76, 175, 80, 0.1);
+      border-right: 4px solid #51cf66;
+    }
+
+    .check-item strong {
+      color: #2c5f2d;
+    }
+
+    .toggle-btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 15px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-bottom: 15px;
+    }
+
+    .toggle-btn-diagnostic {
+      background: #ff6b6b;
+      color: white;
+    }
+
+    .toggle-btn-diagnostic:hover {
+      background: #fa5252;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+    }
+
+    .toggle-btn-normal {
+      background: #51cf66;
+      color: white;
+    }
+
+    .toggle-btn-normal:hover {
+      background: #40c057;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(81, 207, 102, 0.3);
+    }
+
+    .info-box {
+      background: rgba(51, 154, 240, 0.1);
+      border: 2px solid #339af0;
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 20px;
+    }
+
+    .info-title {
+      color: #1864ab;
+      font-weight: bold;
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .info-content {
+      color: #364fc7;
+      line-height: 1.8;
+    }
+
+    @media (max-width: 768px) {
+      .diagnostic-labels {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>🔍 اختبار تشخيص الفراغات</h1>
+    <p>Zero Gap CSS Marquee Diagnostic Test</p>
+  </div>
+
+  <div class="demo-section">
+    <div class="demo-title">
+      <span class="badge badge-success">✅ الوضع العادي</span>
+      <span>الشريط بدون outlines تشخيصية</span>
+    </div>
+
+    <button id="toggleBtn" class="toggle-btn toggle-btn-diagnostic" onclick="toggleDiagnostic()">
+      🔍 تفعيل وضع التشخيص
+    </button>
+
+    <div id="ticker" class="ticker-wrapper">
+      <div class="ticker-overflow-container">
+        <div class="marquee-track">
+          <div class="marquee-group" id="group1"></div>
+          <div class="marquee-group" id="group2" aria-hidden="true"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="diagnostic-labels">
+      <div class="label-card label-red">
+        <div style="font-size: 24px; margin-bottom: 5px;">🔴</div>
+        <div>Container</div>
+        <div style="font-size: 12px; opacity: 0.8;">ticker-overflow-container</div>
+      </div>
+      <div class="label-card label-blue">
+        <div style="font-size: 24px; margin-bottom: 5px;">🔵</div>
+        <div>Track</div>
+        <div style="font-size: 12px; opacity: 0.8;">marquee-track</div>
+      </div>
+      <div class="label-card label-green">
+        <div style="font-size: 24px; margin-bottom: 5px;">🟢</div>
+        <div>Groups</div>
+        <div style="font-size: 12px; opacity: 0.8;">marquee-group × 2</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="demo-section">
+    <div class="demo-title">📋 قائمة التحقق (Checklist)</div>
+
+    <div class="checklist">
+      <div class="check-item">
+        ✅ <strong>المحتوى متطابق 1:1</strong><br>
+        Group 1 و Group 2 يستخدمان نفس الـ JSX بالضبط
+      </div>
+      <div class="check-item">
+        ✅ <strong>width: max-content</strong><br>
+        track و group يستخدمان max-content للعرض الدقيق
+      </div>
+      <div class="check-item">
+        ✅ <strong>flex: 0 0 auto</strong><br>
+        لا shrink أو grow - عرض ثابت
+      </div>
+      <div class="check-item">
+        ✅ <strong>padding: 0 !important</strong><br>
+        قفل جميع الـ padding
+      </div>
+      <div class="check-item">
+        ✅ <strong>margin: 0 !important</strong><br>
+        قفل جميع الـ margin
+      </div>
+      <div class="check-item">
+        ✅ <strong>transform: translateZ(0)</strong><br>
+        GPU acceleration لحركة سلسة
+      </div>
+      <div class="check-item">
+        ✅ <strong>backface-visibility: hidden</strong><br>
+        منع blur على iPhone/Safari
+      </div>
+      <div class="check-item">
+        ✅ <strong>white-space: nowrap</strong><br>
+        منع wrap للنص
+      </div>
+    </div>
+  </div>
+
+  <div class="demo-section">
+    <div class="info-box">
+      <div class="info-title">📖 كيفية قراءة التشخيص:</div>
+      <div class="info-content">
+        <strong>✅ صحيح:</strong><br>
+        • الخط الأزرق (track) = ضعف الخط الأخضر (group)<br>
+        • لا فراغ بين نهاية أخضر وبداية أخضر التالي<br>
+        • الحركة سلسة بدون قفزة<br><br>
+
+        <strong>❌ خطأ:</strong><br>
+        • فراغ داخل الأخضر = مشكلة من card margin<br>
+        • فراغ بين أخضر ونهاية أزرق = مشكلة من -50%<br>
+        • overlap بين groups = مشكلة من width
+      </div>
+    </div>
+  </div>
+
+  <div style="text-align: center; margin-top: 30px; padding: 20px; background: rgba(212, 175, 55, 0.1); border-radius: 15px; color: white;">
+    <strong>الإصدار:</strong> v20251219_1766158970005<br>
+    <strong>التقنية:</strong> Pure CSS Marquee + max-content + useMemo<br>
+    <strong>الحالة:</strong> ✅ Zero Gap Perfect Implementation
+  </div>
+
+  <script>
+    const activities = [
+      { id: 1, icon: '🌴', text: 'فهد حجز 3 أشجار نخيل' },
+      { id: 2, icon: '👥', text: 'فاطمة حجزت 5,000 شجرة' },
+      { id: 3, icon: '🫒', text: 'تميم حجز 10,100 شجرة زيتون' },
+      { id: 4, icon: '✅', text: 'تمت الموافقة على حجز فاطمة' },
+      { id: 5, icon: '📈', text: 'تم حجز 115,000+ شجرة' },
+      { id: 6, icon: '🏡', text: 'مزرعة حصص الأكثر طلباً' },
+      { id: 7, icon: '⭐', text: 'انضم مستثمر جديد للمنصة' },
+    ];
+
+    // إنشاء المحتوى مرة واحدة (useMemo simulation)
+    let tickerContent = '';
+    activities.forEach((activity) => {
+      tickerContent += `
+        <div class="activity-card">
+          <div class="icon">${activity.icon}</div>
+          <div class="card-text">${activity.text}</div>
+        </div>
+      `;
+    });
+
+    // استخدام نفس المحتوى مرتين (1:1 Copy)
+    document.getElementById('group1').innerHTML = tickerContent;
+    document.getElementById('group2').innerHTML = tickerContent;
+
+    // التبديل بين الوضع العادي والتشخيصي
+    let diagnosticMode = false;
+
+    function toggleDiagnostic() {
+      const ticker = document.getElementById('ticker');
+      const btn = document.getElementById('toggleBtn');
+
+      diagnosticMode = !diagnosticMode;
+
+      if (diagnosticMode) {
+        ticker.classList.add('diagnostic-mode');
+        btn.textContent = '✅ إيقاف وضع التشخيص';
+        btn.className = 'toggle-btn toggle-btn-normal';
+      } else {
+        ticker.classList.remove('diagnostic-mode');
+        btn.textContent = '🔍 تفعيل وضع التشخيص';
+        btn.className = 'toggle-btn toggle-btn-diagnostic';
+      }
+    }
+  </script>
+</body>
+</html>

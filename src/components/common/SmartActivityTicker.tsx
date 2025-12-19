@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   TrendingUp, Users, MapPin, Award, Sparkles,
   TreePine, Leaf, Home, DollarSign, Star
@@ -170,15 +170,6 @@ export function SmartActivityTicker() {
     }
   };
 
-  const getColorForType = (type: string): string => {
-    const colors: Record<string, string> = {
-      real: 'rgba(212, 175, 55, 0.9)',
-      simulation: 'rgba(212, 175, 55, 0.7)',
-      welcome: 'rgba(212, 175, 55, 0.85)',
-    };
-    return colors[type] || colors.welcome;
-  };
-
   const formatTimeAgo = (date: Date): string => {
     const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000);
     if (seconds < 60) return 'الآن';
@@ -190,7 +181,6 @@ export function SmartActivityTicker() {
     return `منذ ${days} يوم`;
   };
 
-  // حساب مدة الأنيميشن بناءً على السرعة
   const getAnimationDuration = () => {
     switch (settings.scrollSpeed) {
       case 'fast': return '10s';
@@ -200,11 +190,48 @@ export function SmartActivityTicker() {
     }
   };
 
+  // إنشاء المحتوى مرة واحدة فقط واستخدامه مرتين (1:1 Copy)
+  const tickerContent = useMemo(() => {
+    return activities.map((activity) => {
+      const IconComponent = iconMap[activity.icon] || Sparkles;
+
+      return (
+        <div
+          key={activity.id}
+          className="activity-card-agricultural"
+        >
+          <div className="card-hover-effect" />
+
+          <div className="card-inner">
+            <div className="card-icon-wrapper">
+              <div className="icon-glow" />
+              <div className="icon-container">
+                <IconComponent className="icon-svg" strokeWidth={2.5} />
+              </div>
+            </div>
+
+            <div className="card-content">
+              <div className="card-title">
+                {activity.titleAr}
+              </div>
+              {settings.showTimestamps && activity.timestamp && (
+                <div className="card-time">
+                  {formatTimeAgo(activity.timestamp)}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      );
+    });
+  }, [activities, settings.showTimestamps]);
+
   if (!settings || activities.length === 0) return null;
 
   return (
     <>
       <style>{`
+        /* قفل الـ container */
         .ticker-agricultural {
           position: relative;
           width: 100%;
@@ -213,29 +240,50 @@ export function SmartActivityTicker() {
           border-top: 3px solid rgba(212, 175, 55, 0.5);
           overflow: hidden;
           -webkit-text-size-adjust: 100%;
+          padding: 0 !important;
+          margin: 0 !important;
         }
 
+        /* CSS Marquee - الصيغة المثالية */
         @keyframes marquee {
           0% { transform: translateX(0); }
           100% { transform: translateX(-50%); }
         }
 
+        .ticker-overflow-container {
+          position: relative;
+          height: 100%;
+          overflow: hidden;
+          display: flex;
+          align-items: center;
+          padding: 0 !important;
+          margin: 0 !important;
+        }
+
         .marquee-track {
           display: flex;
-          width: fit-content;
-          animation: marquee ${getAnimationDuration()} linear infinite;
+          width: max-content;
           will-change: transform;
+          animation: marquee ${getAnimationDuration()} linear infinite;
+          transform: translateZ(0);
+          backface-visibility: hidden;
+          padding: 0 !important;
+          margin: 0 !important;
         }
 
         .marquee-group {
           display: flex;
+          flex: 0 0 auto;
+          width: max-content;
           gap: 10px;
-          flex-shrink: 0;
-          min-width: 100%;
+          padding: 0 !important;
+          margin: 0 !important;
         }
 
+        /* البطاقة - قفل الأبعاد */
         .activity-card-agricultural {
-          flex-shrink: 0;
+          flex: 0 0 auto;
+          position: relative;
           background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.08) 100%);
           border: 2px solid rgba(212, 175, 55, 0.5);
           border-radius: 12px;
@@ -244,6 +292,8 @@ export function SmartActivityTicker() {
           backdrop-filter: blur(10px);
           box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
           transition: all 0.3s ease;
+          margin: 0 !important;
+          overflow: hidden;
         }
 
         .activity-card-agricultural:hover {
@@ -252,21 +302,85 @@ export function SmartActivityTicker() {
           border-color: rgba(212, 175, 55, 0.8);
         }
 
-        .golden-accent {
-          background: linear-gradient(135deg, #D4AF37 0%, #C49423 100%);
-          box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+        .card-hover-effect {
+          position: absolute;
+          inset: 0;
+          opacity: 0;
+          transition: opacity 0.3s;
+          background: linear-gradient(135deg, rgba(76, 175, 80, 0.2) 0%, rgba(67, 160, 71, 0.2) 100%);
+          pointer-events: none;
         }
 
-        .beige-text {
+        .activity-card-agricultural:hover .card-hover-effect {
+          opacity: 1;
+        }
+
+        .card-inner {
+          position: relative;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+
+        .card-icon-wrapper {
+          position: relative;
+          width: 32px;
+          height: 32px;
+          flex-shrink: 0;
+        }
+
+        .icon-glow {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(135deg, #D4AF37 0%, #C49423 100%);
+          border-radius: 8px;
+          filter: blur(8px);
+          opacity: 0.6;
+          animation: pulse 2s ease-in-out infinite;
+        }
+
+        .icon-container {
+          position: relative;
+          width: 32px;
+          height: 32px;
+          padding: 6px;
+          border-radius: 8px;
+          background: linear-gradient(135deg, #D4AF37 0%, #C49423 100%);
+          box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .icon-svg {
+          width: 16px;
+          height: 16px;
+          color: white;
+        }
+
+        .card-content {
+          flex: 1;
+          min-width: 0;
+          text-align: right;
+        }
+
+        .card-title {
+          font-weight: 900;
+          font-size: 14px;
+          line-height: 1.3;
+          margin-bottom: 4px;
           color: #F5F5DC;
           text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
         }
 
-        .golden-text {
+        .card-time {
+          font-size: 12px;
+          font-weight: 700;
           color: #D4AF37;
           text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
         }
 
+        /* الموجة الذهبية */
         @keyframes golden-wave {
           0%, 100% { background-position: 0% 50%; }
           50% { background-position: 100% 50%; }
@@ -278,6 +392,7 @@ export function SmartActivityTicker() {
           animation: golden-wave 3s ease infinite;
         }
 
+        /* Mobile Optimization */
         @media (max-width: 768px) {
           .marquee-group {
             gap: 10px;
@@ -293,7 +408,13 @@ export function SmartActivityTicker() {
             height: 28px !important;
           }
 
-          .card-icon-wrapper svg {
+          .icon-container {
+            width: 28px !important;
+            height: 28px !important;
+            padding: 5px !important;
+          }
+
+          .icon-svg {
             width: 14px !important;
             height: 14px !important;
           }
@@ -308,85 +429,19 @@ export function SmartActivityTicker() {
         }
       `}</style>
 
-      <div className="relative w-full h-full ticker-agricultural" dir="rtl">
+      <div className="ticker-agricultural" dir="rtl">
         <div className="absolute top-0 left-0 right-0 h-[3px] golden-wave" />
 
-        <div className="relative h-full overflow-hidden flex items-center">
+        <div className="ticker-overflow-container">
           <div className="marquee-track">
             {/* Group 1 - المحتوى الأصلي */}
             <div className="marquee-group">
-              {activities.map((activity, index) => {
-                const IconComponent = iconMap[activity.icon] || Sparkles;
-
-                return (
-                  <div
-                    key={`group1-${activity.id}-${index}`}
-                    className="activity-card-agricultural relative overflow-hidden"
-                  >
-                    <div className="absolute inset-0 opacity-0 hover:opacity-20 transition-opacity duration-300">
-                      <div className="absolute inset-0 bg-gradient-to-br from-green-400 to-emerald-600 blur-xl" />
-                    </div>
-
-                    <div className="relative flex items-center gap-2.5">
-                      <div className="relative card-icon-wrapper flex-shrink-0" style={{ width: '32px', height: '32px' }}>
-                        <div className="absolute inset-0 golden-accent rounded-lg blur-md opacity-60 animate-pulse" />
-                        <div className="relative p-1.5 rounded-lg golden-accent shadow-lg flex items-center justify-center" style={{ width: '32px', height: '32px' }}>
-                          <IconComponent className="w-4 h-4 text-white" strokeWidth={2.5} />
-                        </div>
-                      </div>
-
-                      <div className="flex-1 min-w-0 text-right">
-                        <div className="card-title font-black text-sm leading-tight mb-1 beige-text">
-                          {activity.titleAr}
-                        </div>
-                        {settings.showTimestamps && activity.timestamp && (
-                          <div className="card-time text-xs font-bold golden-text">
-                            {formatTimeAgo(activity.timestamp)}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
+              {tickerContent}
             </div>
 
-            {/* Group 2 - تكرار المحتوى */}
-            <div className="marquee-group">
-              {activities.map((activity, index) => {
-                const IconComponent = iconMap[activity.icon] || Sparkles;
-
-                return (
-                  <div
-                    key={`group2-${activity.id}-${index}`}
-                    className="activity-card-agricultural relative overflow-hidden"
-                  >
-                    <div className="absolute inset-0 opacity-0 hover:opacity-20 transition-opacity duration-300">
-                      <div className="absolute inset-0 bg-gradient-to-br from-green-400 to-emerald-600 blur-xl" />
-                    </div>
-
-                    <div className="relative flex items-center gap-2.5">
-                      <div className="relative card-icon-wrapper flex-shrink-0" style={{ width: '32px', height: '32px' }}>
-                        <div className="absolute inset-0 golden-accent rounded-lg blur-md opacity-60 animate-pulse" />
-                        <div className="relative p-1.5 rounded-lg golden-accent shadow-lg flex items-center justify-center" style={{ width: '32px', height: '32px' }}>
-                          <IconComponent className="w-4 h-4 text-white" strokeWidth={2.5} />
-                        </div>
-                      </div>
-
-                      <div className="flex-1 min-w-0 text-right">
-                        <div className="card-title font-black text-sm leading-tight mb-1 beige-text">
-                          {activity.titleAr}
-                        </div>
-                        {settings.showTimestamps && activity.timestamp && (
-                          <div className="card-time text-xs font-bold golden-text">
-                            {formatTimeAgo(activity.timestamp)}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
+            {/* Group 2 - نسخة مطابقة 1:1 */}
+            <div className="marquee-group" aria-hidden="true">
+              {tickerContent}
             </div>
           </div>
         </div>
