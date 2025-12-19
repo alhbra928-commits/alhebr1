@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>✅ اختبار تثبيت الهيدر والفوتر - iPhone</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #ECFDF5 0%, #F0FDF4 100%);
+      padding: 20px;
+      line-height: 1.8;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      color: #059669;
+      font-size: 28px;
+      margin-bottom: 20px;
+      border-bottom: 3px solid #10B981;
+      padding-bottom: 15px;
+    }
+
+    h2 {
+      color: #047857;
+      font-size: 22px;
+      margin: 30px 0 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .step {
+      background: #F0FDF4;
+      border-right: 4px solid #10B981;
+      padding: 20px;
+      margin: 15px 0;
+      border-radius: 12px;
+    }
+
+    .step-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 35px;
+      height: 35px;
+      background: #10B981;
+      color: white;
+      border-radius: 50%;
+      font-weight: bold;
+      margin-left: 15px;
+    }
+
+    .debug-label {
+      display: inline-block;
+      padding: 8px 15px;
+      border-radius: 8px;
+      font-weight: bold;
+      font-family: monospace;
+      margin: 5px;
+      font-size: 14px;
+    }
+
+    .label-header {
+      background: #FEF3C7;
+      border: 2px solid #F59E0B;
+      color: #92400E;
+    }
+
+    .label-red {
+      background: #FEE2E2;
+      border: 2px solid #DC2626;
+      color: #7F1D1D;
+      height: 20px;
+      width: 100px;
+    }
+
+    .label-blue {
+      background: #DBEAFE;
+      border: 2px solid #2563EB;
+      color: #1E3A8A;
+      height: 20px;
+      width: 100px;
+    }
+
+    .label-footer {
+      background: #D1FAE5;
+      border: 2px solid #10B981;
+      color: #065F46;
+    }
+
+    .success {
+      background: #D1FAE5;
+      border: 2px solid #10B981;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 20px 0;
+      color: #065F46;
+    }
+
+    .success h3 {
+      margin: 0 0 10px;
+      color: #047857;
+      font-size: 20px;
+    }
+
+    .warning {
+      background: #FEF3C7;
+      border: 2px solid #F59E0B;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 20px 0;
+      color: #92400E;
+    }
+
+    .checklist {
+      list-style: none;
+      padding: 0;
+    }
+
+    .checklist li {
+      padding: 12px 20px;
+      margin: 8px 0;
+      background: white;
+      border-radius: 10px;
+      border-right: 3px solid #10B981;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .checklist li::before {
+      content: '✅';
+      font-size: 24px;
+    }
+
+    .error-check {
+      list-style: none;
+      padding: 0;
+    }
+
+    .error-check li {
+      padding: 12px 20px;
+      margin: 8px 0;
+      background: white;
+      border-radius: 10px;
+      border-right: 3px solid #DC2626;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .error-check li::before {
+      content: '❌';
+      font-size: 24px;
+    }
+
+    .code {
+      background: #1F2937;
+      color: #10B981;
+      padding: 15px;
+      border-radius: 10px;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      overflow-x: auto;
+      margin: 15px 0;
+    }
+
+    .version {
+      background: #1F2937;
+      color: #10B981;
+      padding: 10px 20px;
+      border-radius: 8px;
+      display: inline-block;
+      font-family: monospace;
+      font-weight: bold;
+      margin: 10px 0;
+    }
+
+    .scroll-test {
+      height: 200px;
+      overflow-y: auto;
+      background: linear-gradient(135deg, #ECFDF5, #F0FDF4);
+      border: 2px solid #10B981;
+      border-radius: 10px;
+      padding: 20px;
+      margin: 15px 0;
+    }
+
+    .scroll-content {
+      height: 800px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>🎯 دليل اختبار تثبيت الهيدر والفوتر على iPhone</h1>
+
+  <div class="version">📦 Version: v20251219_1766120659064</div>
+
+  <div class="warning">
+    <h3>⚠️ مهم جداً</h3>
+    <p><strong>افتح الموقع في Safari Private Mode</strong> على iPhone لتجاوز الـ Cache وضمان رؤية آخر تحديث!</p>
+  </div>
+
+  <!-- الخطوة 1 -->
+  <div class="step">
+    <h2><span class="step-number">1</span>ابحث عن مؤشرات الديبق</h2>
+    <p>يجب أن تظهر العناصر التالية على الشاشة:</p>
+
+    <div style="margin: 20px 0; text-align: center;">
+      <div><span class="debug-label label-header">[PORTAL HEADER]</span></div>
+      <div><span class="debug-label label-red"></span> ← شريط أحمر رفيع</div>
+      <div style="margin: 30px 0; color: #6B7280;">المحتوى هنا</div>
+      <div><span class="debug-label label-blue"></span> ← شريط أزرق رفيع</div>
+      <div><span class="debug-label label-footer">[PORTAL FOOTER]</span></div>
+    </div>
+  </div>
+
+  <!-- الخطوة 2 -->
+  <div class="step">
+    <h2><span class="step-number">2</span>اختبر التمرير</h2>
+    <p>قم بتجربة أنواع مختلفة من التمرير:</p>
+    <ul class="checklist">
+      <li>اسكرول للأسفل <strong>ببطء</strong></li>
+      <li>اسكرول للأسفل <strong>بسرعة/بقوة</strong></li>
+      <li>اسكرول للأعلى <strong>ببطء</strong></li>
+      <li>اسكرول للأعلى <strong>بسرعة/بقوة</strong></li>
+      <li>اسكرول بحركات <strong>متقطعة</strong> (توقف ثم تمرير)</li>
+    </ul>
+
+    <div class="scroll-test">
+      <div class="scroll-content">
+        <div style="text-align: center; padding: 20px; background: white; border-radius: 10px;">
+          🔝 بداية المحتوى
+        </div>
+        <div style="text-align: center; padding: 20px; background: white; border-radius: 10px;">
+          🔽 نهاية المحتوى
+        </div>
+      </div>
+    </div>
+    <p style="font-size: 14px; color: #6B7280; margin-top: 10px;">
+      ↑ جرّب التمرير داخل هذا الصندوق كمثال صغير
+    </p>
+  </div>
+
+  <!-- الخطوة 3 -->
+  <div class="step">
+    <h2><span class="step-number">3</span>معيار النجاح</h2>
+    <div class="success">
+      <h3>✅ يجب أن يحدث التالي:</h3>
+      <ul class="checklist">
+        <li><strong>الهيدر (الأحمر)</strong> يبقى ثابتاً في الأعلى</li>
+        <li><strong>الفوتر (الأزرق)</strong> يبقى ثابتاً في الأسفل</li>
+        <li><strong>معاً في نفس الوقت</strong> - بدون تبادل اختفاء</li>
+        <li>المحتوى فقط يتحرك</li>
+        <li>لا يوجد "قفز" أو "اهتزاز" في الشاشة</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- الخطوة 4 -->
+  <div class="step">
+    <h2><span class="step-number">4</span>علامات الفشل</h2>
+    <div class="warning">
+      <h3>❌ إذا رأيت:</h3>
+      <ul class="error-check">
+        <li>الهيدر يختفي عند التمرير للأسفل</li>
+        <li>الفوتر يختفي عند التمرير للأعلى</li>
+        <li>الهيدر والفوتر يتبادلان الاختفاء/الظهور</li>
+        <li>الشريط الأحمر/الأزرق يختفي ويظهر بشكل عشوائي</li>
+        <li>"white flash" أو قفز في الشاشة أثناء التمرير</li>
+      </ul>
+      <p style="margin-top: 15px;"><strong>→ أبلغ عن المشكلة بالتفصيل</strong></p>
+    </div>
+  </div>
+
+  <!-- التفاصيل التقنية -->
+  <div class="step">
+    <h2>🔧 ما تم تطبيقه؟</h2>
+
+    <h3 style="font-size: 18px; margin: 20px 0 10px;">1. Layer Lock (GPU Layers)</h3>
+    <div class="code">
+#fixed-chrome,<br>
+#fixed-chrome .fc-header,<br>
+#fixed-chrome .fc-footer {<br>
+&nbsp;&nbsp;transform: translate3d(0,0,0);<br>
+&nbsp;&nbsp;backface-visibility: hidden;<br>
+&nbsp;&nbsp;will-change: transform;<br>
+}
+    </div>
+    <p>يجبر Safari على إنشاء طبقات GPU منفصلة لمنع اختفاء/ظهور العناصر</p>
+
+    <h3 style="font-size: 18px; margin: 20px 0 10px;">2. تخفيف Momentum Scroll</h3>
+    <div class="code">
+#appContent {<br>
+&nbsp;&nbsp;-webkit-overflow-scrolling: auto;<br>
+}
+    </div>
+    <p>تقليل التسارع لمنع glitches أثناء التمرير السريع</p>
+  </div>
+
+  <!-- الخطوة التالية -->
+  <div class="step">
+    <h2><span class="step-number">5</span>بعد تأكيد النجاح</h2>
+    <p><strong>يجب إزالة مؤشرات الديبق:</strong></p>
+    <ul style="list-style: none; padding: 0;">
+      <li style="padding: 10px; background: #FEE2E2; margin: 8px 0; border-radius: 8px;">
+        ❌ حذف <code>[PORTAL HEADER]</code>
+      </li>
+      <li style="padding: 10px; background: #FEE2E2; margin: 8px 0; border-radius: 8px;">
+        ❌ حذف <code>[PORTAL FOOTER]</code>
+      </li>
+      <li style="padding: 10px; background: #FEE2E2; margin: 8px 0; border-radius: 8px;">
+        ❌ حذف الشريط الأحمر (4px)
+      </li>
+      <li style="padding: 10px; background: #FEE2E2; margin: 8px 0; border-radius: 8px;">
+        ❌ حذف الشريط الأزرق (4px)
+      </li>
+    </ul>
+    <p style="margin-top: 15px;">ثم إعادة build ونشر النسخة النظيفة</p>
+  </div>
+
+  <!-- معلومات إضافية -->
+  <div style="background: #F3F4F6; padding: 20px; border-radius: 12px; margin-top: 30px;">
+    <h3 style="color: #374151; font-size: 18px; margin-bottom: 10px;">📌 ملاحظات</h3>
+    <ul style="color: #6B7280; line-height: 2;">
+      <li>الاختبار يجب أن يكون على <strong>iPhone حقيقي</strong> (ليس المحاكي)</li>
+      <li>استخدم <strong>Safari</strong> (المتصفح الافتراضي)</li>
+      <li>افتح في <strong>Private Mode</strong> لتجنب Cache</li>
+      <li>إذا نجح الاختبار، الحل يعمل على جميع أنواع iPhone</li>
+    </ul>
+  </div>
+
+  <div style="text-align: center; margin-top: 40px; padding: 30px; background: linear-gradient(135deg, #10B981, #059669); border-radius: 15px; color: white;">
+    <h2 style="color: white; margin: 0 0 15px;">🎉 حظاً موفقاً في الاختبار!</h2>
+    <p style="margin: 0; font-size: 18px; opacity: 0.95;">
+      إذا نجح، سيعمل الهيدر والفوتر بشكل مثالي على جميع الأجهزة
+    </p>
+  </div>
+
+</div>
+
+</body>
+</html>

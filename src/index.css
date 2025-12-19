@@ -48,11 +48,22 @@ body {
   padding-bottom: env(safe-area-inset-bottom);
 }
 
+/* iOS FIX: اجبار Safari على تثبيت الهيدر والفوتر في طبقات منفصلة */
+#fixed-chrome,
+#fixed-chrome .fc-header,
+#fixed-chrome .fc-footer {
+  transform: translate3d(0,0,0);
+  -webkit-transform: translate3d(0,0,0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  will-change: transform;
+}
+
 /* هذا هو مكان التمرير الوحيد */
 #appContent {
   height: 100dvh;
   overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
+  -webkit-overflow-scrolling: auto; /* بدل touch */
   padding-top: var(--header-h);
   padding-bottom: calc(var(--footer-h) + env(safe-area-inset-bottom));
 }
