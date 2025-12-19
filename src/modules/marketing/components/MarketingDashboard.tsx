@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowRight, Activity, Users, Filter, Target, Lightbulb, TrendingUp, Radio } from 'lucide-react';
+import { ArrowRight, Activity, Users, Filter, Target, Lightbulb, TrendingUp, Radio, Zap } from 'lucide-react';
 import { CommandCenterView } from './CommandCenterView';
 import { VisitorsAcquisitionView } from './VisitorsAcquisitionView';
 import { FunnelAnalysisView } from './FunnelAnalysisView';
@@ -7,18 +7,20 @@ import { CampaignsManagerView } from './CampaignsManagerView';
 import { IntentTrustView } from './IntentTrustView';
 import { SignalsView } from './SignalsView';
 import { LiveFeedView } from './LiveFeedView';
+import { LivePingsView } from './LivePingsView';
 
 interface MarketingDashboardProps {
   onBack: () => void;
 }
 
-type Tab = 'command' | 'live' | 'visitors' | 'funnel' | 'campaigns' | 'intent' | 'signals';
+type Tab = 'command' | 'live' | 'pings' | 'visitors' | 'funnel' | 'campaigns' | 'intent' | 'signals';
 
 export function MarketingDashboard({ onBack }: MarketingDashboardProps) {
   const [activeTab, setActiveTab] = useState<Tab>('command');
 
   const tabs = [
     { id: 'command', label: 'مركز القيادة', icon: Activity },
+    { id: 'pings', label: '📊 إثبات الرصد', icon: Zap },
     { id: 'live', label: 'البث الحي', icon: Radio },
     { id: 'visitors', label: 'الزوار والمصادر', icon: Users },
     { id: 'funnel', label: 'رحلة المستثمر', icon: Filter },
@@ -31,6 +33,8 @@ export function MarketingDashboard({ onBack }: MarketingDashboardProps) {
     switch (activeTab) {
       case 'command':
         return <CommandCenterView />;
+      case 'pings':
+        return <LivePingsView />;
       case 'live':
         return <LiveFeedView />;
       case 'visitors':

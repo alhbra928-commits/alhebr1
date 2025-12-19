@@ -5,6 +5,7 @@ import FixedChrome from './components/common/FixedChrome';
 import { ModernTopHeader } from './components/common/ModernTopHeader';
 import { SmartActivityTicker } from './components/common/SmartActivityTicker';
 import { TrackingService } from './services/analytics/trackingService';
+import { realAnalytics } from './services/analytics/realAnalyticsService';
 
 // Lazy load EVERYTHING - including admin components
 const SmartAdminLoginPage = lazy(() => import('./modules/admin/components/SmartAdminLoginPage').then(m => ({ default: m.SmartAdminLoginPage })));
@@ -44,24 +45,33 @@ function App() {
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [publicView, setPublicView] = useState<'home' | 'farmDetail' | 'booking' | 'investor' | 'verification' | 'concept'>('home');
 
-  // ⚠️ TrackingService DISABLED - using Simple PING System instead
-  // تم تعطيل TrackingService مؤقتاً - نستخدم نظام PING البسيط
-  // useEffect(() => {
-  //   const initTracking = async () => {
-  //     try {
-  //       await TrackingService.initialize();
-  //       if (activeModule === 'public') {
-  //         await TrackingService.trackPageView(window.location.pathname);
-  //       }
-  //     } catch (error) {
-  //       console.error('[App] ❌ Failed to initialize tracking:', error);
-  //     }
-  //   };
-  //   initTracking();
-  //   return () => {
-  //     TrackingService.cleanup();
-  //   };
-  // }, []);
+  // 📊 Real Analytics System - Production Ready
+  // تم تفعيل نظام التحليلات الحقيقي (Sessions + Events)
+  useEffect(() => {
+    // بدء الجلسة تلقائياً (يتم استدعاؤها مرة واحدة)
+    console.log('📊 [App] Initializing Real Analytics System...');
+
+    // realAnalytics.startSession() يتم استدعاؤها تلقائياً عند تحميل الملف
+    // لكن نتأكد هنا أيضاً
+    realAnalytics.startSession();
+
+    // تتبع التغييرات في المودول
+    if (activeModule === 'public') {
+      realAnalytics.trackHomeView();
+    }
+
+    return () => {
+      // إنهاء الجلسة عند إغلاق التطبيق
+      realAnalytics.endSession();
+    };
+  }, []);
+
+  // تتبع تغييرات الصفحات
+  useEffect(() => {
+    if (activeModule === 'public') {
+      realAnalytics.trackPageView(window.location.pathname);
+    }
+  }, [activeModule, publicView]);
 
   // حفظ آخر صفحة في لوحة التحكم
   useEffect(() => {
