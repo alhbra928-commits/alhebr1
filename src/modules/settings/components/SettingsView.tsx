@@ -11,13 +11,14 @@ import { InnovativeLoaderSettings } from './InnovativeLoaderSettings';
 import { LiveActivityBarSettings } from './LiveActivityBarSettings';
 import { SmartActivityTickerManager } from './SmartActivityTickerManager';
 import { UltraSmartActivityTickerControl } from './UltraSmartActivityTickerControl';
+import { AdvancedLoaderManagement } from './AdvancedLoaderManagement';
 
 interface SettingsViewProps {
   onBack?: () => void;
 }
 
 export function SettingsView({ onBack }: SettingsViewProps) {
-  const [activeTab, setActiveTab] = useState<'general' | 'backup' | 'versions' | 'diagnostics' | 'texts' | 'side-dock' | 'loader' | 'activity-bar' | 'ticker'>('general');
+  const [activeTab, setActiveTab] = useState<'general' | 'backup' | 'versions' | 'diagnostics' | 'texts' | 'side-dock' | 'loader' | 'advanced-loader' | 'activity-bar' | 'ticker'>('general');
   const [settings, setSettings] = useState({
     mapApiKey: 'AIza*********************',
     videoService: 'youtube',
@@ -123,6 +124,17 @@ export function SettingsView({ onBack }: SettingsViewProps) {
             شاشة التحميل المبتكرة
           </button>
           <button
+            onClick={() => setActiveTab('advanced-loader')}
+            className={`flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all ${
+              activeTab === 'advanced-loader'
+                ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-lg'
+                : 'bg-white text-[#2C2C2C] hover:bg-[#F4EBDD]'
+            }`}
+          >
+            <Zap className="h-5 w-5" />
+            إدارة التحميل المتطورة
+          </button>
+          <button
             onClick={() => setActiveTab('activity-bar')}
             className={`flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all ${
               activeTab === 'activity-bar'
@@ -158,6 +170,8 @@ export function SettingsView({ onBack }: SettingsViewProps) {
           <SideDockSettings />
         ) : activeTab === 'loader' ? (
           <InnovativeLoaderSettings />
+        ) : activeTab === 'advanced-loader' ? (
+          <AdvancedLoaderManagement />
         ) : activeTab === 'activity-bar' ? (
           <LiveActivityBarSettings />
         ) : activeTab === 'ticker' ? (

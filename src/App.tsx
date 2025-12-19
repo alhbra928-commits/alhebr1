@@ -4,7 +4,7 @@ import { PermissionsProvider } from './contexts/PermissionsContext';
 import FixedChrome from './components/common/FixedChrome';
 import { ModernTopHeader } from './components/common/ModernTopHeader';
 import { SmartActivityTicker } from './components/common/SmartActivityTicker';
-import { UltimatePlatformLoader } from './components/common/UltimatePlatformLoader';
+import { AdvancedPlatformLoader } from './components/common/AdvancedPlatformLoader';
 
 // Lazy load EVERYTHING - including admin components
 const SmartAdminLoginPage = lazy(() => import('./modules/admin/components/SmartAdminLoginPage').then(m => ({ default: m.SmartAdminLoginPage })));
@@ -387,7 +387,7 @@ function App() {
 
   // Show loader first
   if (showLoader) {
-    return <UltimatePlatformLoader onComplete={() => setShowLoader(false)} />;
+    return <AdvancedPlatformLoader onComplete={() => setShowLoader(false)} />;
   }
 
   return (
