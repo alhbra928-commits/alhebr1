@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
 import { AdminUsersStorage } from './modules/admin/services/adminUsersStorage';
+import { applyIOSViewportFix } from './lib/iosViewportFix';
 
 // 🔍 DIAGNOSTIC MODE - Show what's happening
 console.log('%c🚀 منصة النخيل والزيتون - Starting...', 'color: #10b981; font-size: 16px; font-weight: bold');
@@ -17,6 +18,9 @@ try {
 } catch (error) {
   console.error('❌ AdminUsersStorage initialization failed:', error);
 }
+
+// تطبيق إصلاح iPhone Viewport للهيدر والفوتر
+applyIOSViewportFix();
 
 // Service Worker DISABLED to prevent reload loops
 // if (import.meta.env.PROD) {
