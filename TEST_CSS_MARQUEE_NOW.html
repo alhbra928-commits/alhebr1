@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>اختبار CSS Marquee الصحيح</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Cairo', 'Segoe UI', Tahoma, sans-serif;
+      background: linear-gradient(135deg, #1e4620 0%, #2c5f2d 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    .header {
+      text-align: center;
+      color: white;
+      margin-bottom: 30px;
+    }
+
+    .header h1 {
+      font-size: 36px;
+      margin-bottom: 10px;
+    }
+
+    .header p {
+      font-size: 18px;
+      opacity: 0.9;
+    }
+
+    .demo-section {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      padding: 25px;
+      margin-bottom: 20px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .demo-title {
+      color: #2c5f2d;
+      font-size: 24px;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .ticker-wrapper {
+      background: linear-gradient(135deg, rgba(44, 95, 45, 0.95) 0%, rgba(30, 70, 32, 0.98) 100%);
+      border-radius: 15px;
+      overflow: hidden;
+      height: 80px;
+      position: relative;
+      border: 3px solid rgba(212, 175, 55, 0.5);
+      border-top-width: 5px;
+    }
+
+    /* ============================================
+       CSS Marquee الصحيح
+    ============================================ */
+    @keyframes marquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    .marquee-track {
+      display: flex;
+      width: fit-content;
+      animation: marquee 14s linear infinite;
+      will-change: transform;
+      height: 100%;
+      align-items: center;
+    }
+
+    .marquee-group {
+      display: flex;
+      gap: 10px;
+      flex-shrink: 0;
+      min-width: 100%;
+    }
+
+    .activity-card {
+      flex-shrink: 0;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.08) 100%);
+      border: 2px solid rgba(212, 175, 55, 0.5);
+      border-radius: 12px;
+      padding: 10px 14px;
+      color: #F5F5DC;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      white-space: nowrap;
+      transition: all 0.3s ease;
+    }
+
+    .activity-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(212, 175, 55, 0.3);
+      border-color: rgba(212, 175, 55, 0.8);
+    }
+
+    .icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #D4AF37 0%, #C49423 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+      box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+    }
+
+    .card-text {
+      font-size: 14px;
+      font-weight: bold;
+      color: #F5F5DC;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    }
+
+    .specs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .spec-card {
+      background: linear-gradient(135deg, #2c5f2d 0%, #1e4620 100%);
+      color: white;
+      padding: 15px;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .spec-label {
+      font-size: 12px;
+      opacity: 0.8;
+      margin-bottom: 5px;
+    }
+
+    .spec-value {
+      font-size: 18px;
+      font-weight: bold;
+      color: #D4AF37;
+    }
+
+    .code-section {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      padding: 20px;
+      border-radius: 12px;
+      margin-top: 20px;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      overflow-x: auto;
+      line-height: 1.6;
+    }
+
+    .code-title {
+      color: #569cd6;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .code-comment {
+      color: #6a9955;
+    }
+
+    .code-property {
+      color: #9cdcfe;
+    }
+
+    .code-value {
+      color: #ce9178;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 15px;
+      font-size: 12px;
+      font-weight: bold;
+      background: #51cf66;
+      color: white;
+    }
+
+    .comparison-table {
+      width: 100%;
+      margin-top: 20px;
+      border-collapse: collapse;
+    }
+
+    .comparison-table th,
+    .comparison-table td {
+      padding: 12px;
+      text-align: center;
+      border: 1px solid rgba(212, 175, 55, 0.3);
+    }
+
+    .comparison-table th {
+      background: rgba(212, 175, 55, 0.2);
+      color: #2c5f2d;
+      font-weight: bold;
+    }
+
+    .comparison-table tr:nth-child(even) {
+      background: rgba(212, 175, 55, 0.05);
+    }
+
+    .old-method {
+      color: #ff6b6b;
+      font-weight: bold;
+    }
+
+    .new-method {
+      color: #51cf66;
+      font-weight: bold;
+    }
+
+    @media (max-width: 768px) {
+      .header h1 {
+        font-size: 24px;
+      }
+
+      .demo-title {
+        font-size: 18px;
+      }
+
+      .marquee-group {
+        gap: 10px;
+      }
+
+      .activity-card {
+        padding: 8px 12px;
+      }
+
+      .icon {
+        width: 28px;
+        height: 28px;
+        font-size: 14px;
+      }
+
+      .card-text {
+        font-size: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>🎯 CSS Marquee الصحيح</h1>
+    <p>تحويل من JavaScript Animation إلى Pure CSS</p>
+  </div>
+
+  <div class="demo-section">
+    <div class="demo-title">
+      <span class="badge">✅ CSS Animation</span>
+      <span>translateX: 0 → -50% | duration: 14s | gap: 10px</span>
+    </div>
+    <div class="ticker-wrapper">
+      <div class="marquee-track">
+        <!-- Group 1 - المحتوى الأصلي -->
+        <div class="marquee-group" id="group1"></div>
+        <!-- Group 2 - تكرار المحتوى -->
+        <div class="marquee-group" id="group2"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="demo-section">
+    <h3 style="color: #2c5f2d; margin-bottom: 15px;">📊 المواصفات التقنية</h3>
+    <div class="specs-grid">
+      <div class="spec-card">
+        <div class="spec-label">التقنية</div>
+        <div class="spec-value">CSS Animation</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-label">الحركة</div>
+        <div class="spec-value">0 → -50%</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-label">المدة</div>
+        <div class="spec-value">14s</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-label">الأسلوب</div>
+        <div class="spec-value">linear infinite</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-label">Gap</div>
+        <div class="spec-value">10px</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-label">التكرار</div>
+        <div class="spec-value">2x Groups</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-label">JavaScript</div>
+        <div class="spec-value">Data Only</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-label">Wrap</div>
+        <div class="spec-value">nowrap ✅</div>
+      </div>
+    </div>
+
+    <div class="code-section">
+      <div class="code-title">CSS Animation:</div>
+      <div><span class="code-comment">/* الأنيميشن الأساسي */</span></div>
+      <div>@keyframes marquee {</div>
+      <div>  <span class="code-property">0%</span> { transform: <span class="code-value">translateX(0)</span>; }</div>
+      <div>  <span class="code-property">100%</span> { transform: <span class="code-value">translateX(-50%)</span>; }</div>
+      <div>}</div>
+      <br>
+      <div><span class="code-comment">/* تطبيق الأنيميشن */</span></div>
+      <div>.marquee-track {</div>
+      <div>  animation: <span class="code-value">marquee 14s linear infinite</span>;</div>
+      <div>  will-change: <span class="code-value">transform</span>;</div>
+      <div>}</div>
+    </div>
+  </div>
+
+  <div class="demo-section">
+    <h3 style="color: #2c5f2d; margin-bottom: 15px;">⚡ المقارنة</h3>
+    <table class="comparison-table">
+      <thead>
+        <tr>
+          <th>الميزة</th>
+          <th>القديم (JS)</th>
+          <th>الجديد (CSS)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>التقنية</td>
+          <td class="old-method">requestAnimationFrame</td>
+          <td class="new-method">CSS Animation ✅</td>
+        </tr>
+        <tr>
+          <td>JavaScript</td>
+          <td class="old-method">animate loop كامل</td>
+          <td class="new-method">تحميل بيانات فقط ✅</td>
+        </tr>
+        <tr>
+          <td>React State</td>
+          <td class="old-method">تحديث كل إطار</td>
+          <td class="new-method">لا توجد ✅</td>
+        </tr>
+        <tr>
+          <td>التكرار</td>
+          <td class="old-method">10x</td>
+          <td class="new-method">2x (Group مكررة) ✅</td>
+        </tr>
+        <tr>
+          <td>الحركة</td>
+          <td class="old-method">حساب معقد</td>
+          <td class="new-method">0 → -50% ✅</td>
+        </tr>
+        <tr>
+          <td>Gap</td>
+          <td class="old-method">متغير</td>
+          <td class="new-method">10px ثابت ✅</td>
+        </tr>
+        <tr>
+          <td>السرعة</td>
+          <td class="old-method">مختلفة</td>
+          <td class="new-method">14s موحدة ✅</td>
+        </tr>
+        <tr>
+          <td>استهلاك CPU</td>
+          <td class="old-method">متوسط</td>
+          <td class="new-method">منخفض جداً ✅</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div style="text-align: center; margin-top: 30px; padding: 20px; background: rgba(212, 175, 55, 0.1); border-radius: 15px; color: white;">
+    <strong>الإصدار:</strong> v20251219_1766158623452<br>
+    <strong>التقنية:</strong> Pure CSS Animation Marquee<br>
+    <strong>التاريخ:</strong> 2025-12-19 15:37
+  </div>
+
+  <script>
+    const activities = [
+      { icon: '🌴', text: 'فهد حجز 3 أشجار نخيل' },
+      { icon: '👥', text: 'فاطمة حجزت 5,000 شجرة' },
+      { icon: '🫒', text: 'تميم حجز 10,100 شجرة زيتون' },
+      { icon: '✅', text: 'تمت الموافقة على حجز فاطمة' },
+      { icon: '📈', text: 'تم حجز 115,000+ شجرة' },
+      { icon: '🏡', text: 'مزرعة حصص الأكثر طلباً' },
+      { icon: '⭐', text: 'انضم مستثمر جديد للمنصة' },
+    ];
+
+    function createCards(groupId) {
+      const group = document.getElementById(groupId);
+
+      activities.forEach((activity) => {
+        const card = document.createElement('div');
+        card.className = 'activity-card';
+        card.innerHTML = `
+          <div class="icon">${activity.icon}</div>
+          <div class="card-text">${activity.text}</div>
+        `;
+        group.appendChild(card);
+      });
+    }
+
+    // إنشاء Group 1 و Group 2
+    createCards('group1');
+    createCards('group2');
+
+    // لا نحتاج JavaScript animation!
+    // CSS يتولى كل شيء ✅
+  </script>
+</body>
+</html>

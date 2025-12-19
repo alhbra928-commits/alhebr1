@@ -1,7 +1,7 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import {
-  TrendingUp, Users, MapPin, Award, Sparkles, Calendar,
-  TreePine, Leaf, Home, CheckCircle, DollarSign, Star, Zap
+  TrendingUp, Users, MapPin, Award, Sparkles,
+  TreePine, Leaf, Home, DollarSign, Star
 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 
@@ -46,8 +46,6 @@ export function SmartActivityTicker() {
     itemsPerCycle: 10,
     showTimestamps: true,
   });
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const [scrollPosition, setScrollPosition] = useState(0);
 
   useEffect(() => {
     loadSettings();
@@ -87,62 +85,6 @@ export function SmartActivityTicker() {
     loadActivities();
   }, [settings.mode, settings.itemsPerCycle]);
 
-  useEffect(() => {
-    const scrollContainer = scrollContainerRef.current;
-    if (!scrollContainer || activities.length === 0) return;
-
-    const isMobile = window.innerWidth <= 768;
-    let animationId: number;
-    let lastTimestamp = 0;
-
-    if (isMobile) {
-      // سرعة البكسلات في الثانية للموبايل
-      const pixelsPerSecond = settings.scrollSpeed === 'fast' ? 120 :
-                              settings.scrollSpeed === 'medium' ? 80 : 50;
-
-      const animate = (timestamp: number) => {
-        if (!lastTimestamp) lastTimestamp = timestamp;
-        const deltaTime = timestamp - lastTimestamp;
-        lastTimestamp = timestamp;
-
-        setScrollPosition((prev) => {
-          // حساب المسافة بناءً على الوقت الفعلي
-          const distance = (pixelsPerSecond * deltaTime) / 1000;
-          // عرض نصف المحتوى للدورة السلسة
-          const contentWidth = scrollContainer.scrollWidth / 2;
-          const newPosition = prev + distance;
-          return newPosition >= contentWidth ? newPosition - contentWidth : newPosition;
-        });
-
-        animationId = requestAnimationFrame(animate);
-      };
-
-      animationId = requestAnimationFrame(animate);
-      return () => cancelAnimationFrame(animationId);
-    } else {
-      const pixelsPerSecond = settings.scrollSpeed === 'fast' ? 80 :
-                              settings.scrollSpeed === 'medium' ? 50 : 30;
-
-      const animate = (timestamp: number) => {
-        if (!lastTimestamp) lastTimestamp = timestamp;
-        const deltaTime = timestamp - lastTimestamp;
-        lastTimestamp = timestamp;
-
-        setScrollPosition((prev) => {
-          const distance = (pixelsPerSecond * deltaTime) / 1000;
-          const contentWidth = scrollContainer.scrollWidth / 3;
-          const newPosition = prev + distance;
-          return newPosition >= contentWidth ? newPosition - contentWidth : newPosition;
-        });
-
-        animationId = requestAnimationFrame(animate);
-      };
-
-      animationId = requestAnimationFrame(animate);
-      return () => cancelAnimationFrame(animationId);
-    }
-  }, [activities.length, settings.scrollSpeed]);
-
   const loadSettings = async () => {
     try {
       const { data } = await supabase
@@ -152,10 +94,10 @@ export function SmartActivityTicker() {
 
       if (data) {
         setSettings({
-          mode: data.mode,
-          scrollSpeed: data.scroll_speed,
-          itemsPerCycle: data.items_per_cycle,
-          showTimestamps: data.show_timestamps,
+          mode: data.mode || 'hybrid',
+          scrollSpeed: data.scroll_speed || 'medium',
+          itemsPerCycle: data.items_per_cycle || 10,
+          showTimestamps: data.show_timestamps ?? true,
         });
       }
     } catch (error) {
@@ -168,78 +110,61 @@ export function SmartActivityTicker() {
       const items: Activity[] = [];
 
       if (settings.mode === 'real' || settings.mode === 'hybrid') {
-        const { data: realActivities, error } = await supabase
+        const { data: realActivities } = await supabase
           .from('platform_activities')
           .select('*')
-          .eq('is_active', true)
-          .is('deleted_at', null)
-          .order('priority', { ascending: false })
           .order('created_at', { ascending: false })
           .limit(settings.itemsPerCycle);
 
-        if (error) {
-          console.error('[Ticker] Error loading activities:', error);
-        } else if (realActivities && realActivities.length > 0) {
-          console.log('[Ticker] Loaded activities:', realActivities.length);
-          items.push(
-            ...realActivities.map((act) => ({
-              id: act.id,
-              icon: act.activity_data?.icon || '✨',
-              titleAr: act.activity_data?.title_ar || act.activity_data?.farm_name || 'نشاط',
-              titleEn: act.activity_data?.title_en || 'Activity',
-              timestamp: act.created_at ? new Date(act.created_at) : undefined,
-              priority: act.priority || 5,
-              activityType: act.activity_type,
-            }))
-          );
+        if (realActivities) {
+          items.push(...realActivities.map((act: any) => ({
+            id: act.id,
+            icon: act.icon || '✨',
+            titleAr: act.title_ar,
+            titleEn: act.title_en,
+            timestamp: new Date(act.created_at),
+            priority: 10,
+            activityType: 'real',
+          })));
         }
       }
 
       if (settings.mode === 'simulation' || settings.mode === 'hybrid') {
-        const { data: simActivities } = await supabase
-          .from('simulated_activities')
-          .select('*')
-          .eq('is_active', true)
-          .order('weight', { ascending: false })
-          .limit(Math.floor(settings.itemsPerCycle / 2));
+        const neededCount = settings.itemsPerCycle - items.length;
+        if (neededCount > 0) {
+          const { data: simActivities } = await supabase
+            .from('simulated_activities')
+            .select('*')
+            .eq('is_active', true)
+            .order('priority', { ascending: false })
+            .limit(neededCount);
 
-        if (simActivities) {
-          items.push(
-            ...simActivities.map((act) => ({
+          if (simActivities) {
+            items.push(...simActivities.map((act: any) => ({
               id: act.id,
-              icon: act.icon,
-              titleAr: act.template_ar,
-              titleEn: act.template_en,
-              priority: act.weight / 10,
-              activityType: act.activity_category,
-              timestamp: undefined,
-            }))
-          );
+              icon: act.icon || '✨',
+              titleAr: act.title_ar,
+              titleEn: act.title_en,
+              priority: act.priority || 1,
+              activityType: 'simulation',
+            })));
+          }
         }
       }
 
       if (items.length === 0) {
         items.push({
-          id: 'default-1',
-          icon: '🌴',
-          titleAr: 'أهلاً بكم في منصة الحبر الزراعية',
-          titleEn: 'Welcome to Al-Hubr Platform',
-          priority: 10,
+          id: 'welcome',
+          icon: '⭐',
+          titleAr: 'مرحباً بك في منصة مزادات',
+          titleEn: 'Welcome to Mazadat Platform',
+          priority: 1,
           activityType: 'welcome',
         });
       }
 
       const shuffled = items.sort(() => Math.random() - 0.5);
-      const isMobile = window.innerWidth <= 768;
-
-      if (isMobile) {
-        // تكرار مرتين فقط للموبايل - سنستخدم حساب الدورة للحركة السلسة
-        const mobileRepeated = [...shuffled, ...shuffled];
-        setActivities(mobileRepeated);
-      } else {
-        const desktopRepeated = [...shuffled, ...shuffled, ...shuffled];
-        setActivities(desktopRepeated);
-      }
+      setActivities(shuffled);
     } catch (error) {
       console.error('[Ticker] Error loading activities:', error);
     }
@@ -247,150 +172,99 @@ export function SmartActivityTicker() {
 
   const getColorForType = (type: string): string => {
     const colors: Record<string, string> = {
-      booking: '#16a34a',
-      new_booking: '#16a34a',
-      investor_join: '#0891b2',
-      farm_added: '#22c55e',
-      certificate: '#f59e0b',
-      payment: '#dc2626',
-      trending: '#ef4444',
-      milestone: '#eab308',
-      stats: '#8b5cf6',
-      welcome: '#D4AF37',
+      real: 'rgba(212, 175, 55, 0.9)',
+      simulation: 'rgba(212, 175, 55, 0.7)',
+      welcome: 'rgba(212, 175, 55, 0.85)',
     };
-    return colors[type] || '#16a34a';
+    return colors[type] || colors.welcome;
   };
 
-  const formatTimeAgo = (date: Date) => {
+  const formatTimeAgo = (date: Date): string => {
     const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000);
     if (seconds < 60) return 'الآن';
-    if (seconds < 3600) return `منذ ${Math.floor(seconds / 60)} د`;
-    if (seconds < 86400) return `منذ ${Math.floor(seconds / 3600)} س`;
-    return `منذ ${Math.floor(seconds / 86400)} يوم`;
+    const minutes = Math.floor(seconds / 60);
+    if (minutes < 60) return `منذ ${minutes} دقيقة`;
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) return `منذ ${hours} ساعة`;
+    const days = Math.floor(hours / 24);
+    return `منذ ${days} يوم`;
   };
 
-  if (activities.length === 0) return null;
+  // حساب مدة الأنيميشن بناءً على السرعة
+  const getAnimationDuration = () => {
+    switch (settings.scrollSpeed) {
+      case 'fast': return '10s';
+      case 'medium': return '14s';
+      case 'slow': return '20s';
+      default: return '14s';
+    }
+  };
+
+  if (!settings || activities.length === 0) return null;
 
   return (
     <>
       <style>{`
-        @keyframes slide-in-ticker {
-          from { opacity: 0; transform: translateY(10px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes pulse-glow {
-          0%, 100% { box-shadow: 0 0 15px rgba(212, 175, 55, 0.4); }
-          50% { box-shadow: 0 0 25px rgba(212, 175, 55, 0.6); }
-        }
-
         .ticker-agricultural {
-          background: linear-gradient(135deg, rgba(44, 95, 45, 0.95) 0%, rgba(30, 70, 32, 0.98) 50%, rgba(44, 95, 45, 0.95) 100%);
-          backdrop-filter: blur(20px) saturate(180%);
-          -webkit-backdrop-filter: blur(20px) saturate(180%);
+          position: relative;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(135deg, rgba(44, 95, 45, 0.95) 0%, rgba(30, 70, 32, 0.98) 100%);
           border-top: 3px solid rgba(212, 175, 55, 0.5);
-          box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(212, 175, 55, 0.2);
+          overflow: hidden;
+          -webkit-text-size-adjust: 100%;
+        }
 
-          /* CRITICAL iOS FIX: تثبيت الارتفاع بشكل جذري */
-          height: var(--footer-h) !important;
-          min-height: var(--footer-h) !important;
-          max-height: var(--footer-h) !important;
-          overflow: hidden !important;
-          display: flex !important;
-          align-items: center !important;
-          line-height: 1 !important;
+        @keyframes marquee {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
 
-          /* منع أي تغيير في الطبقة */
-          transform: translateZ(0);
-          backface-visibility: hidden;
-          -webkit-backface-visibility: hidden;
+        .marquee-track {
+          display: flex;
+          width: fit-content;
+          animation: marquee ${getAnimationDuration()} linear infinite;
+          will-change: transform;
+        }
+
+        .marquee-group {
+          display: flex;
+          gap: 10px;
+          flex-shrink: 0;
+          min-width: 100%;
         }
 
         .activity-card-agricultural {
-          animation: slide-in-ticker 0.5s ease-out backwards;
-          border-radius: 16px;
-          border: 2px solid rgba(212, 175, 55, 0.5);
+          flex-shrink: 0;
           background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.08) 100%);
-          box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.1) inset, 0 0 20px rgba(212, 175, 55, 0.15);
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-          transform: translate3d(0, 0, 0);
-          backface-visibility: hidden;
-          -webkit-backface-visibility: hidden;
+          border: 2px solid rgba(212, 175, 55, 0.5);
+          border-radius: 12px;
+          padding: 10px 14px;
+          white-space: nowrap;
+          backdrop-filter: blur(10px);
+          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+          transition: all 0.3s ease;
         }
 
         .activity-card-agricultural:hover {
-          transform: translate3d(0, -3px, 0) scale(1.03);
-          box-shadow: 0 15px 35px -4px rgba(0, 0, 0, 0.3), 0 0 0 2px rgba(212, 175, 55, 0.6) inset, 0 0 30px rgba(212, 175, 55, 0.3);
+          transform: translateY(-2px);
+          box-shadow: 0 6px 20px rgba(212, 175, 55, 0.3);
           border-color: rgba(212, 175, 55, 0.8);
         }
 
         .golden-accent {
           background: linear-gradient(135deg, #D4AF37 0%, #C49423 100%);
-          box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
-        }
-
-        .golden-text {
-          color: #D4AF37;
-          text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+          box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
         }
 
         .beige-text {
           color: #F5F5DC;
-          text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+          text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
         }
 
-        /* تحسينات الأداء للموبايل */
-        @media (max-width: 768px) {
-          .scroll-container {
-            -webkit-overflow-scrolling: touch;
-            -webkit-transform: translate3d(0, 0, 0);
-            transform: translate3d(0, 0, 0);
-          }
-
-          .activity-card-agricultural {
-            -webkit-transform: translate3d(0, 0, 0);
-            transform: translate3d(0, 0, 0);
-          }
-        }
-
-        @media (max-width: 768px) {
-          .activity-card-agricultural {
-            min-width: 165px !important;
-            max-width: 165px !important;
-            padding: 6px 8px !important;
-            border-radius: 8px !important;
-            margin: 0 1px !important;
-            flex-shrink: 0 !important;
-          }
-
-          .card-icon-wrapper {
-            width: 24px !important;
-            height: 24px !important;
-          }
-
-          .card-icon-wrapper svg {
-            width: 13px !important;
-            height: 13px !important;
-          }
-
-          .card-title {
-            font-size: 11px !important;
-            line-height: 1.25 !important;
-          }
-
-          .card-time {
-            font-size: 9px !important;
-          }
-        }
-
-        .scroll-container {
-          will-change: transform;
-          transform: translate3d(0, 0, 0);
-          backface-visibility: hidden;
-          -webkit-backface-visibility: hidden;
-          -webkit-transform: translate3d(0, 0, 0);
-          perspective: 1000px;
-          -webkit-perspective: 1000px;
+        .golden-text {
+          color: #D4AF37;
+          text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
         }
 
         @keyframes golden-wave {
@@ -403,63 +277,117 @@ export function SmartActivityTicker() {
           background-size: 200% 100%;
           animation: golden-wave 3s ease infinite;
         }
+
+        @media (max-width: 768px) {
+          .marquee-group {
+            gap: 10px;
+          }
+
+          .activity-card-agricultural {
+            padding: 8px 12px;
+            border-radius: 10px;
+          }
+
+          .card-icon-wrapper {
+            width: 28px !important;
+            height: 28px !important;
+          }
+
+          .card-icon-wrapper svg {
+            width: 14px !important;
+            height: 14px !important;
+          }
+
+          .card-title {
+            font-size: 12px !important;
+          }
+
+          .card-time {
+            font-size: 10px !important;
+          }
+        }
       `}</style>
 
-      {/* الشريط المتحرك - يأخذ الثبات من appFooter */}
       <div className="relative w-full h-full ticker-agricultural" dir="rtl">
         <div className="absolute top-0 left-0 right-0 h-[3px] golden-wave" />
 
-        <div className="relative h-full overflow-hidden">
-          <div
-            ref={scrollContainerRef}
-            className="scroll-container flex items-center h-full gap-0 px-0"
-            style={{ transform: `translate3d(-${scrollPosition}px, 0, 0)` }}
-          >
-            {activities.map((activity, index) => {
-              const IconComponent = iconMap[activity.icon] || Sparkles;
+        <div className="relative h-full overflow-hidden flex items-center">
+          <div className="marquee-track">
+            {/* Group 1 - المحتوى الأصلي */}
+            <div className="marquee-group">
+              {activities.map((activity, index) => {
+                const IconComponent = iconMap[activity.icon] || Sparkles;
 
-              return (
-                <div
-                  key={`${activity.id}-${index}`}
-                  className="activity-card-agricultural relative overflow-hidden flex-shrink-0"
-                  style={{
-                    animationDelay: `${index * 0.05}s`,
-                    minWidth: '240px',
-                    padding: '10px 12px',
-                  }}
-                >
-                  <div className="absolute inset-0 opacity-0 hover:opacity-20 transition-opacity duration-300">
-                    <div className="absolute inset-0 bg-gradient-to-br from-green-400 to-emerald-600 blur-xl" />
-                  </div>
-
-                  <div className="relative flex items-center gap-2.5">
-                    <div className="relative card-icon-wrapper flex-shrink-0" style={{ width: '32px', height: '32px' }}>
-                      <div className="absolute inset-0 golden-accent rounded-lg blur-md opacity-60 animate-pulse" />
-                      <div className="relative p-1.5 rounded-lg golden-accent shadow-lg flex items-center justify-center" style={{ width: '32px', height: '32px' }}>
-                        <IconComponent className="w-4 h-4 text-white" strokeWidth={2.5} />
-                      </div>
+                return (
+                  <div
+                    key={`group1-${activity.id}-${index}`}
+                    className="activity-card-agricultural relative overflow-hidden"
+                  >
+                    <div className="absolute inset-0 opacity-0 hover:opacity-20 transition-opacity duration-300">
+                      <div className="absolute inset-0 bg-gradient-to-br from-green-400 to-emerald-600 blur-xl" />
                     </div>
 
-                    <div className="flex-1 min-w-0 text-right">
-                      <div className="card-title font-black text-sm leading-tight mb-1 beige-text">
-                        {activity.titleAr}
-                      </div>
-                      {settings.showTimestamps && activity.timestamp && (
-                        <div className="card-time text-xs font-bold golden-text">
-                          {formatTimeAgo(activity.timestamp)}
+                    <div className="relative flex items-center gap-2.5">
+                      <div className="relative card-icon-wrapper flex-shrink-0" style={{ width: '32px', height: '32px' }}>
+                        <div className="absolute inset-0 golden-accent rounded-lg blur-md opacity-60 animate-pulse" />
+                        <div className="relative p-1.5 rounded-lg golden-accent shadow-lg flex items-center justify-center" style={{ width: '32px', height: '32px' }}>
+                          <IconComponent className="w-4 h-4 text-white" strokeWidth={2.5} />
                         </div>
-                      )}
-                    </div>
+                      </div>
 
-                    <div className="flex-shrink-0 card-sparkle">
-                      <Zap className="w-3.5 h-3.5 text-yellow-400 animate-pulse" fill="currentColor" />
+                      <div className="flex-1 min-w-0 text-right">
+                        <div className="card-title font-black text-sm leading-tight mb-1 beige-text">
+                          {activity.titleAr}
+                        </div>
+                        {settings.showTimestamps && activity.timestamp && (
+                          <div className="card-time text-xs font-bold golden-text">
+                            {formatTimeAgo(activity.timestamp)}
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
+                );
+              })}
+            </div>
 
-                  <div className="absolute bottom-0 left-0 right-0 h-1 golden-accent opacity-80" />
-                </div>
-              );
-            })}
+            {/* Group 2 - تكرار المحتوى */}
+            <div className="marquee-group">
+              {activities.map((activity, index) => {
+                const IconComponent = iconMap[activity.icon] || Sparkles;
+
+                return (
+                  <div
+                    key={`group2-${activity.id}-${index}`}
+                    className="activity-card-agricultural relative overflow-hidden"
+                  >
+                    <div className="absolute inset-0 opacity-0 hover:opacity-20 transition-opacity duration-300">
+                      <div className="absolute inset-0 bg-gradient-to-br from-green-400 to-emerald-600 blur-xl" />
+                    </div>
+
+                    <div className="relative flex items-center gap-2.5">
+                      <div className="relative card-icon-wrapper flex-shrink-0" style={{ width: '32px', height: '32px' }}>
+                        <div className="absolute inset-0 golden-accent rounded-lg blur-md opacity-60 animate-pulse" />
+                        <div className="relative p-1.5 rounded-lg golden-accent shadow-lg flex items-center justify-center" style={{ width: '32px', height: '32px' }}>
+                          <IconComponent className="w-4 h-4 text-white" strokeWidth={2.5} />
+                        </div>
+                      </div>
+
+                      <div className="flex-1 min-w-0 text-right">
+                        <div className="card-title font-black text-sm leading-tight mb-1 beige-text">
+                          {activity.titleAr}
+                        </div>
+                        {settings.showTimestamps && activity.timestamp && (
+                          <div className="card-time text-xs font-bold golden-text">
+                            {formatTimeAgo(activity.timestamp)}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>
