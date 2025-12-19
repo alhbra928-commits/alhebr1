@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎯 اختبر الشريط المُصلح</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+      color: white;
+      padding: 20px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .container {
+      max-width: 600px;
+      width: 100%;
+    }
+    .title {
+      text-align: center;
+      font-size: 32px;
+      margin-bottom: 30px;
+      background: linear-gradient(90deg, #22c55e, #16a34a);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .card {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 30px;
+      margin-bottom: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .step {
+      background: rgba(34, 197, 94, 0.1);
+      border-right: 4px solid #22c55e;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 15px;
+    }
+    .step-number {
+      font-size: 24px;
+      font-weight: bold;
+      color: #22c55e;
+      margin-bottom: 10px;
+    }
+    .step-title {
+      font-size: 18px;
+      margin-bottom: 10px;
+      color: white;
+    }
+    .step-desc {
+      color: #adb5bd;
+      line-height: 1.6;
+      font-size: 14px;
+    }
+    .warning {
+      background: rgba(239, 68, 68, 0.1);
+      border: 2px solid #ef4444;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 20px 0;
+      text-align: center;
+    }
+    .warning h3 {
+      color: #ef4444;
+      margin-bottom: 10px;
+      font-size: 24px;
+    }
+    .btn {
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      color: white;
+      border: none;
+      padding: 18px 40px;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 20px;
+      box-shadow: 0 6px 20px rgba(34, 197, 94, 0.3);
+      transition: all 0.3s ease;
+      display: block;
+      text-align: center;
+      text-decoration: none;
+    }
+    .btn:active {
+      transform: scale(0.98);
+    }
+    .features {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin: 20px 0;
+    }
+    .feature {
+      background: rgba(34, 197, 94, 0.1);
+      border: 2px solid #22c55e;
+      border-radius: 10px;
+      padding: 15px;
+      text-align: center;
+    }
+    .feature-icon {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+    .feature-text {
+      font-size: 14px;
+      color: #adb5bd;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="title">🎯 اختبر الشريط المُصلح</h1>
+
+    <div class="warning">
+      <h3>⚠️ مهم جداً</h3>
+      <p style="line-height: 1.8; margin-top: 10px;">
+        يجب مسح الكاش أولاً حتى ترى التحديثات الجديدة!<br>
+        بدون مسح الكاش، سترى النسخة القديمة
+      </p>
+    </div>
+
+    <div class="card">
+      <h2 style="color: #22c55e; margin-bottom: 20px; text-align: center;">خطوات الاختبار</h2>
+
+      <div class="step">
+        <div class="step-number">1️⃣</div>
+        <div class="step-title">امسح الكاش</div>
+        <div class="step-desc">
+          <strong>iPhone/iPad:</strong><br>
+          الإعدادات → Safari → Clear History and Website Data<br><br>
+          <strong>Android:</strong><br>
+          Chrome → الإعدادات → الخصوصية → Clear browsing data
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-number">2️⃣</div>
+        <div class="step-title">افتح المنصة</div>
+        <div class="step-desc">
+          اضغط على الزر بالأسفل لفتح المنصة في نافذة جديدة
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-number">3️⃣</div>
+        <div class="step-title">راقب الشريط المتحرك</div>
+        <div class="step-desc">
+          الشريط يجب أن يتحرك بشكل سلس ومستمر بدون قطع أو توقف.<br>
+          يجب أن ترى دورة كاملة للمحتوى.
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-number">4️⃣</div>
+        <div class="step-title">تحقق من السلاسة</div>
+        <div class="step-desc">
+          الشريط يجب أن يعيد من البداية بشكل سلس بدون أي قفز مفاجئ
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 style="color: #22c55e; margin-bottom: 20px; text-align: center;">ما تم إصلاحه</h2>
+
+      <div class="features">
+        <div class="feature">
+          <div class="feature-icon">✅</div>
+          <div class="feature-text">دورة كاملة<br>-50%</div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">⏱️</div>
+          <div class="feature-text">سرعة مثالية<br>30s</div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">🔄</div>
+          <div class="feature-text">نسختين<br>Loop مثالي</div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">📏</div>
+          <div class="feature-text">مسافات محسّنة<br>8px</div>
+        </div>
+      </div>
+    </div>
+
+    <a href="javascript:void(0)" class="btn" onclick="openPlatform()">
+      🚀 افتح المنصة الآن
+    </a>
+
+    <div style="text-align: center; margin-top: 30px; padding: 20px; background: rgba(0, 0, 0, 0.3); border-radius: 15px;">
+      <div style="color: #adb5bd; font-size: 12px; line-height: 1.8;">
+        📦 Build: v20251219_1766164837363<br>
+        🔧 File: SmartActivityTicker.tsx<br>
+        ✅ Status: Fixed & Ready<br>
+        ⏰ Time: 2025-12-19 17:20:50 UTC
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function openPlatform() {
+      // فتح المنصة مع timestamp لتجنب الكاش
+      const timestamp = Date.now();
+      const url = window.location.origin + '?v=' + timestamp + '&mobile_test=1&cache_bypass=' + Math.random();
+
+      // محاولة فتح في نافذة جديدة
+      const newWindow = window.open(url, '_blank');
+
+      // إذا فشل، أخبر المستخدم
+      if (!newWindow) {
+        alert('⚠️ تم حظر النافذة الجديدة!\n\nاضغط على "السماح" ثم حاول مرة أخرى، أو انسخ الرابط يدوياً:\n\n' + url);
+      }
+    }
+
+    // تحذير عند المغادرة
+    window.addEventListener('beforeunload', function(e) {
+      // لا نحتاج تحذير هنا
+    });
+
+    // كشف نوع الجهاز
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    if (!isMobile) {
+      document.querySelector('.title').innerHTML += '<br><small style="font-size: 16px; opacity: 0.7;">للحصول على أفضل تجربة، افتح على جهاز جوال</small>';
+    }
+  </script>
+</body>
+</html>

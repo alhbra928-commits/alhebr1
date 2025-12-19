@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🔧 الإصلاح الجذري لشريط الجوال</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      color: white;
+      padding: 20px;
+      min-height: 100vh;
+    }
+    .container { max-width: 1100px; margin: 0 auto; }
+    .header {
+      text-align: center;
+      padding: 40px 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 20px;
+      margin-bottom: 30px;
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(239, 68, 68, 0.3);
+    }
+    .header h1 {
+      font-size: 48px;
+      margin-bottom: 15px;
+      background: linear-gradient(90deg, #ef4444, #dc2626);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .section {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 30px;
+      margin-bottom: 25px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .section-title {
+      font-size: 28px;
+      margin-bottom: 25px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #ef4444;
+    }
+    .problem-box {
+      background: rgba(239, 68, 68, 0.1);
+      border: 2px solid #ef4444;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 20px 0;
+    }
+    .problem-box h4 {
+      color: #ef4444;
+      margin-bottom: 15px;
+      font-size: 20px;
+    }
+    .solution-box {
+      background: rgba(34, 197, 94, 0.1);
+      border: 2px solid #22c55e;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 20px 0;
+    }
+    .solution-box h4 {
+      color: #22c55e;
+      margin-bottom: 15px;
+      font-size: 20px;
+    }
+    .code-comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin: 20px 0;
+    }
+    .code-box {
+      background: #1e1e1e;
+      border-radius: 12px;
+      padding: 20px;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      line-height: 1.8;
+      overflow-x: auto;
+      direction: ltr;
+      text-align: left;
+      border: 2px solid;
+    }
+    .code-box.before {
+      border-color: #ef4444;
+    }
+    .code-box.after {
+      border-color: #22c55e;
+    }
+    .code-box .old { color: #ef4444; text-decoration: line-through; opacity: 0.7; }
+    .code-box .new { color: #22c55e; font-weight: bold; }
+    .code-box .comment { color: #6a9955; }
+    .code-box .key { color: #9cdcfe; }
+    .code-box .number { color: #b5cea8; }
+    .visual-demo {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 15px;
+      padding: 30px;
+      margin: 20px 0;
+      text-align: center;
+    }
+    .ticker-visual {
+      background: linear-gradient(135deg, rgba(44, 95, 45, 0.3), rgba(30, 70, 32, 0.3));
+      border: 2px solid rgba(212, 175, 55, 0.5);
+      border-radius: 10px;
+      padding: 15px;
+      margin: 15px 0;
+      overflow: hidden;
+      position: relative;
+      height: 60px;
+    }
+    .ticker-track {
+      display: flex;
+      gap: 10px;
+      position: absolute;
+      white-space: nowrap;
+    }
+    .ticker-track.broken {
+      animation: broken-scroll 3s linear infinite;
+    }
+    .ticker-track.fixed {
+      animation: smooth-scroll 8s linear infinite;
+    }
+    @keyframes broken-scroll {
+      0% { left: 100%; }
+      30% { left: 50%; }
+      100% { left: 50%; }
+    }
+    @keyframes smooth-scroll {
+      0% { left: 100%; }
+      100% { left: -100%; }
+    }
+    .ticker-item {
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(212, 175, 55, 0.5);
+      border-radius: 8px;
+      padding: 8px 15px;
+      font-size: 14px;
+      white-space: nowrap;
+      display: inline-block;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin: 20px 0;
+    }
+    .stat-card {
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(220, 38, 38, 0.1));
+      border: 2px solid #ef4444;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+    }
+    .stat-card.fixed {
+      background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(22, 163, 74, 0.1));
+      border-color: #22c55e;
+    }
+    .stat-value {
+      font-size: 36px;
+      font-weight: bold;
+      margin: 10px 0;
+    }
+    .stat-value.red { color: #ef4444; }
+    .stat-value.green { color: #22c55e; }
+    .stat-label {
+      font-size: 14px;
+      color: #adb5bd;
+    }
+    .success-banner {
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      border-radius: 15px;
+      padding: 30px;
+      text-align: center;
+      margin: 25px 0;
+      box-shadow: 0 10px 40px rgba(34, 197, 94, 0.3);
+    }
+    .success-banner h3 {
+      font-size: 32px;
+      margin-bottom: 15px;
+    }
+    .btn {
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      color: white;
+      border: none;
+      padding: 18px 40px;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 15px;
+      box-shadow: 0 6px 20px rgba(239, 68, 68, 0.3);
+      transition: all 0.3s ease;
+    }
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4);
+    }
+    .btn.success {
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      box-shadow: 0 6px 20px rgba(34, 197, 94, 0.3);
+    }
+    .btn.success:hover {
+      box-shadow: 0 8px 25px rgba(34, 197, 94, 0.4);
+    }
+    @media (max-width: 768px) {
+      .code-comparison { grid-template-columns: 1fr; }
+      .header h1 { font-size: 32px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <h1>🔧 الإصلاح الجذري لشريط الجوال</h1>
+      <p style="font-size: 18px; opacity: 0.9; margin-top: 10px;">
+        تم حل مشكلة الدورة المقطوعة نهائياً
+      </p>
+    </div>
+
+    <!-- Section 1: The Problems -->
+    <div class="section">
+      <div class="section-title">
+        <span>❌</span>
+        المشاكل التي كانت موجودة
+      </div>
+
+      <div class="problem-box">
+        <h4>❌ المشكلة الأولى: حركة مقطوعة (-10%)</h4>
+        <div class="code-box before">
+<span class="comment">/* الكود القديم الخاطئ */</span>
+@keyframes marquee-mobile {
+  0% { transform: translateX(0); }
+  <span class="old">100% { transform: translateX(-10%); }</span>  <span class="comment">// يتحرك 10% فقط ويتوقف!</span>
+}
+        </div>
+        <p style="margin-top: 15px; line-height: 1.8; color: #adb5bd;">
+          المشكلة: الشريط يتحرك 10% فقط من المسافة ثم يعيد من البداية بشكل مفاجئ، مما يسبب قطع في الدورة.
+        </p>
+      </div>
+
+      <div class="problem-box">
+        <h4>❌ المشكلة الثانية: سرعة زائدة (10s)</h4>
+        <div class="code-box before">
+<span class="comment">/* Animation سريعة جداً */</span>
+.marquee-track-mobile {
+  <span class="old">animation: marquee-mobile 10s linear infinite;</span>  <span class="comment">// سريع جداً!</span>
+}
+        </div>
+        <p style="margin-top: 15px; line-height: 1.8; color: #adb5bd;">
+          المشكلة: الحركة سريعة جداً لدرجة أن المستخدم لا يستطيع قراءة المحتوى بشكل مريح.
+        </p>
+      </div>
+
+      <div class="problem-box">
+        <h4>❌ المشكلة الثالثة: تكرار زائد (10 نسخ)</h4>
+        <div class="code-box before">
+<span class="comment">/* تكرار 10 مرات */</span>
+<span class="old">{Array.from({ length: 10 }).map((_, index) => (</span>
+  &lt;div className="marquee-group"&gt;
+    {tickerContent}
+  &lt;/div&gt;
+<span class="old">))}</span>
+        </div>
+        <p style="margin-top: 15px; line-height: 1.8; color: #adb5bd;">
+          المشكلة: 10 نسخ مع حركة -10% يعني فقط نسخة واحدة تظهر، والباقي مخفي.
+        </p>
+      </div>
+    </div>
+
+    <!-- Visual Demo -->
+    <div class="section">
+      <div class="section-title">
+        <span>👁️</span>
+        مقارنة مرئية
+      </div>
+
+      <div class="visual-demo">
+        <h4 style="color: #ef4444; margin-bottom: 20px;">❌ قبل الإصلاح (مقطوع)</h4>
+        <div class="ticker-visual">
+          <div class="ticker-track broken">
+            <span class="ticker-item">نشاط 1</span>
+            <span class="ticker-item">نشاط 2</span>
+            <span class="ticker-item">يتوقف هنا! 😵</span>
+          </div>
+        </div>
+        <p style="color: #adb5bd; margin-top: 10px; font-size: 14px;">
+          الشريط يتحرك قليلاً ثم يقفز فجأة للبداية
+        </p>
+
+        <div style="height: 40px; display: flex; align-items: center; justify-content: center;">
+          <div style="font-size: 36px;">⬇️</div>
+        </div>
+
+        <h4 style="color: #22c55e; margin-bottom: 20px;">✅ بعد الإصلاح (سلس)</h4>
+        <div class="ticker-visual">
+          <div class="ticker-track fixed">
+            <span class="ticker-item">نشاط 1</span>
+            <span class="ticker-item">نشاط 2</span>
+            <span class="ticker-item">نشاط 3</span>
+            <span class="ticker-item">دورة كاملة! 🎉</span>
+            <span class="ticker-item">نشاط 1</span>
+            <span class="ticker-item">نشاط 2</span>
+          </div>
+        </div>
+        <p style="color: #adb5bd; margin-top: 10px; font-size: 14px;">
+          الشريط يتحرك بشكل سلس ومستمر بدون توقف
+        </p>
+      </div>
+    </div>
+
+    <!-- Section 2: The Solutions -->
+    <div class="section">
+      <div class="section-title">
+        <span>✅</span>
+        الحلول المطبقة
+      </div>
+
+      <div class="solution-box">
+        <h4>✅ الحل 1: دورة كاملة (-50%)</h4>
+        <div class="code-comparison">
+          <div>
+            <p style="text-align: center; margin-bottom: 10px; color: #ef4444;">قبل</p>
+            <div class="code-box before">
+@keyframes marquee-mobile {
+  0% { transform: translateX(0); }
+  <span class="old">100% { transform: translateX(-10%); }</span>
+}
+            </div>
+          </div>
+          <div>
+            <p style="text-align: center; margin-bottom: 10px; color: #22c55e;">بعد</p>
+            <div class="code-box after">
+@keyframes marquee-mobile {
+  0% { transform: translateX(0); }
+  <span class="new">100% { transform: translateX(-50%); }</span>
+}
+            </div>
+          </div>
+        </div>
+        <p style="margin-top: 15px; line-height: 1.8; color: #adb5bd;">
+          ✅ النتيجة: الآن الشريط يتحرك 50% من المسافة، مما يعني دورة كاملة سلسة مع نسختين من المحتوى.
+        </p>
+      </div>
+
+      <div class="solution-box">
+        <h4>✅ الحل 2: سرعة مريحة (30s)</h4>
+        <div class="code-comparison">
+          <div>
+            <p style="text-align: center; margin-bottom: 10px; color: #ef4444;">قبل</p>
+            <div class="code-box before">
+.marquee-track-mobile {
+  animation: marquee-mobile
+    <span class="old">10s</span> linear infinite;
+}
+            </div>
+          </div>
+          <div>
+            <p style="text-align: center; margin-bottom: 10px; color: #22c55e;">بعد</p>
+            <div class="code-box after">
+.marquee-track-mobile {
+  animation: marquee-mobile
+    <span class="new">30s</span> linear infinite;
+}
+            </div>
+          </div>
+        </div>
+        <p style="margin-top: 15px; line-height: 1.8; color: #adb5bd;">
+          ✅ النتيجة: الحركة أصبحت أبطأ 3 مرات، مما يسمح للمستخدم بقراءة المحتوى بشكل مريح.
+        </p>
+      </div>
+
+      <div class="solution-box">
+        <h4>✅ الحل 3: نسختين فقط (Loop مثالي)</h4>
+        <div class="code-comparison">
+          <div>
+            <p style="text-align: center; margin-bottom: 10px; color: #ef4444;">قبل</p>
+            <div class="code-box before">
+<span class="comment">/* 10 نسخ! */</span>
+<span class="old">{Array.from({ length: 10 })
+  .map((_, i) => (</span>
+    &lt;div&gt;{content}&lt;/div&gt;
+<span class="old">))}</span>
+            </div>
+          </div>
+          <div>
+            <p style="text-align: center; margin-bottom: 10px; color: #22c55e;">بعد</p>
+            <div class="code-box after">
+<span class="comment">/* نسختين فقط */</span>
+<span class="new">&lt;div&gt;{content}&lt;/div&gt;</span>
+<span class="new">&lt;div&gt;{content}&lt;/div&gt;</span>
+            </div>
+          </div>
+        </div>
+        <p style="margin-top: 15px; line-height: 1.8; color: #adb5bd;">
+          ✅ النتيجة: مع -50% transform ونسختين، نحصل على loop مثالي بدون تكرار زائد.
+        </p>
+      </div>
+
+      <div class="solution-box">
+        <h4>✅ الحل 4: مسافات محسّنة (gap: 8px)</h4>
+        <div class="code-comparison">
+          <div>
+            <p style="text-align: center; margin-bottom: 10px; color: #ef4444;">قبل</p>
+            <div class="code-box before">
+.marquee-group {
+  <span class="old">gap: 2px !important;</span>
+}
+            </div>
+          </div>
+          <div>
+            <p style="text-align: center; margin-bottom: 10px; color: #22c55e;">بعد</p>
+            <div class="code-box after">
+.marquee-group {
+  <span class="new">gap: 8px !important;</span>
+}
+            </div>
+          </div>
+        </div>
+        <p style="margin-top: 15px; line-height: 1.8; color: #adb5bd;">
+          ✅ النتيجة: مسافات أكبر بين البطاقات، مما يحسن القراءة والمظهر العام.
+        </p>
+      </div>
+    </div>
+
+    <!-- Statistics -->
+    <div class="section">
+      <div class="section-title">
+        <span>📊</span>
+        المقارنة الإحصائية
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">نسبة الحركة</div>
+          <div class="stat-value red">10%</div>
+          <div class="stat-label" style="color: #ef4444;">❌ قبل</div>
+        </div>
+        <div class="stat-card fixed">
+          <div class="stat-label">نسبة الحركة</div>
+          <div class="stat-value green">50%</div>
+          <div class="stat-label" style="color: #22c55e;">✅ بعد</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-label">مدة الدورة</div>
+          <div class="stat-value red">10s</div>
+          <div class="stat-label" style="color: #ef4444;">❌ قبل</div>
+        </div>
+        <div class="stat-card fixed">
+          <div class="stat-label">مدة الدورة</div>
+          <div class="stat-value green">30s</div>
+          <div class="stat-label" style="color: #22c55e;">✅ بعد</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-label">عدد النسخ</div>
+          <div class="stat-value red">10x</div>
+          <div class="stat-label" style="color: #ef4444;">❌ قبل</div>
+        </div>
+        <div class="stat-card fixed">
+          <div class="stat-label">عدد النسخ</div>
+          <div class="stat-value green">2x</div>
+          <div class="stat-label" style="color: #22c55e;">✅ بعد</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-label">المسافة بين البطاقات</div>
+          <div class="stat-value red">2px</div>
+          <div class="stat-label" style="color: #ef4444;">❌ قبل</div>
+        </div>
+        <div class="stat-card fixed">
+          <div class="stat-label">المسافة بين البطاقات</div>
+          <div class="stat-value green">8px</div>
+          <div class="stat-label" style="color: #22c55e;">✅ بعد</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Technical Details -->
+    <div class="section">
+      <div class="section-title">
+        <span>⚙️</span>
+        التفاصيل التقنية
+      </div>
+
+      <div style="background: rgba(0, 0, 0, 0.3); border-radius: 12px; padding: 20px; margin: 20px 0;">
+        <h4 style="color: #22c55e; margin-bottom: 15px;">كيف يعمل الـ Loop المثالي؟</h4>
+        <div style="line-height: 1.8; color: #adb5bd; padding: 0 10px;">
+          <p style="margin-bottom: 15px;">
+            <strong style="color: white;">1. البداية (0%):</strong><br>
+            Group 1 في الموضع 0%، Group 2 في الموضع 50%
+          </p>
+          <p style="margin-bottom: 15px;">
+            <strong style="color: white;">2. منتصف الحركة (50%):</strong><br>
+            Group 1 انتقل إلى -25%، Group 2 في الموضع 25%
+          </p>
+          <p style="margin-bottom: 15px;">
+            <strong style="color: white;">3. النهاية (100% = -50%):</strong><br>
+            Group 1 في الموضع -50%، Group 2 في الموضع 0%<br>
+            <span style="color: #22c55e;">✨ هنا تحدث السحر: Group 2 أصبح في نفس موضع Group 1 في البداية!</span>
+          </p>
+          <p style="margin-bottom: 15px;">
+            <strong style="color: white;">4. الإعادة:</strong><br>
+            تعيد الـ animation من البداية بشكل سلس بدون قفز، لأن المحتوى متطابق تماماً!
+          </p>
+        </div>
+      </div>
+
+      <div style="background: rgba(0, 0, 0, 0.3); border-radius: 12px; padding: 20px; margin: 20px 0;">
+        <h4 style="color: #22c55e; margin-bottom: 15px;">لماذا -50% وليس -100%؟</h4>
+        <div style="line-height: 1.8; color: #adb5bd; padding: 0 10px;">
+          <p style="margin-bottom: 10px;">
+            لأننا نستخدم <strong style="color: white;">نسختين متطابقتين</strong> من المحتوى:
+          </p>
+          <ul style="padding-right: 20px; margin-bottom: 15px;">
+            <li style="margin-bottom: 8px;">مع -50%: نحرك المحتوى حتى تصبح Group 2 في موضع Group 1</li>
+            <li style="margin-bottom: 8px;">عند الإعادة: المستخدم لا يلاحظ الانتقال لأن المحتوى متطابق</li>
+            <li style="margin-bottom: 8px;">النتيجة: loop سلس لا نهائي بدون أي قفز أو توقف</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Success Banner -->
+    <div class="success-banner">
+      <h3>🎉 تم الإصلاح بنجاح!</h3>
+      <p style="font-size: 18px; opacity: 0.95; margin-top: 10px;">
+        الآن شريط الجوال يعمل بشكل سلس ومستمر بدون أي قطع<br>
+        دورة كاملة ✓ سرعة مريحة ✓ تنسيق محسّن ✓
+      </p>
+    </div>
+
+    <!-- Build Info -->
+    <div class="section">
+      <div class="section-title">
+        <span>🔨</span>
+        معلومات البناء
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card fixed">
+          <div class="stat-label">الإصدار</div>
+          <div class="stat-value green" style="font-size: 18px;">v20251219</div>
+          <div class="stat-label" style="color: #22c55e;">17:20:50</div>
+        </div>
+        <div class="stat-card fixed">
+          <div class="stat-label">الملف</div>
+          <div class="stat-value green" style="font-size: 18px;">SmartActivityTicker</div>
+          <div class="stat-label" style="color: #22c55e;">✅ Fixed</div>
+        </div>
+        <div class="stat-card fixed">
+          <div class="stat-label">التحقق</div>
+          <div class="stat-value green" style="font-size: 24px;">✅</div>
+          <div class="stat-label" style="color: #22c55e;">30s & -50%</div>
+        </div>
+        <div class="stat-card fixed">
+          <div class="stat-label">الحالة</div>
+          <div class="stat-value green" style="font-size: 24px;">READY</div>
+          <div class="stat-label" style="color: #22c55e;">للنشر</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="section">
+      <button class="btn" onclick="alert('⚠️ مهم: امسح الكاش أولاً!\n\nعلى الجوال:\n1. افتح الإعدادات\n2. Safari > Clear History and Website Data\n3. أعد تحميل الصفحة\n\nأو:\nاستخدم وضع التصفح الخاص (Private Mode)')">
+        ⚠️ تعليمات مسح الكاش (اقرأ أولاً!)
+      </button>
+      <button class="btn success" onclick="window.open(window.location.origin + '?v=' + Date.now() + '&mobile_test=1', '_blank')" style="margin-top: 15px;">
+        🚀 افتح المنصة الآن وجرب على الجوال
+      </button>
+    </div>
+
+    <!-- Summary -->
+    <div style="text-align: center; margin-top: 40px; padding: 30px; background: rgba(0, 0, 0, 0.3); border-radius: 15px;">
+      <h3 style="margin-bottom: 20px; color: #22c55e; font-size: 28px;">✅ ملخص الإصلاح الجذري</h3>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 20px;">
+        <div style="background: rgba(34, 197, 94, 0.1); border: 2px solid #22c55e; border-radius: 12px; padding: 20px;">
+          <div style="font-size: 36px; margin-bottom: 10px;">-50%</div>
+          <div style="color: #adb5bd; font-size: 14px;">دورة كاملة</div>
+        </div>
+        <div style="background: rgba(34, 197, 94, 0.1); border: 2px solid #22c55e; border-radius: 12px; padding: 20px;">
+          <div style="font-size: 36px; margin-bottom: 10px;">30s</div>
+          <div style="color: #adb5bd; font-size: 14px;">سرعة مثالية</div>
+        </div>
+        <div style="background: rgba(34, 197, 94, 0.1); border: 2px solid #22c55e; border-radius: 12px; padding: 20px;">
+          <div style="font-size: 36px; margin-bottom: 10px;">2x</div>
+          <div style="color: #adb5bd; font-size: 14px;">نسخ محسّنة</div>
+        </div>
+        <div style="background: rgba(34, 197, 94, 0.1); border: 2px solid #22c55e; border-radius: 12px; padding: 20px;">
+          <div style="font-size: 36px; margin-bottom: 10px;">8px</div>
+          <div style="color: #adb5bd; font-size: 14px;">مسافات واضحة</div>
+        </div>
+      </div>
+      <div style="color: #adb5bd; font-size: 14px; line-height: 1.8; margin-top: 30px;">
+        📦 Build: v20251219_1766164837363<br>
+        🔧 File: SmartActivityTicker.tsx<br>
+        ✅ Status: Production Ready<br>
+        ⏰ Time: 2025-12-19 17:20:50 UTC
+      </div>
+    </div>
+  </div>
+</body>
+</html>
