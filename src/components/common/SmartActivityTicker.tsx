@@ -92,41 +92,54 @@ export function SmartActivityTicker() {
     if (!scrollContainer || activities.length === 0) return;
 
     const isMobile = window.innerWidth <= 768;
+    let animationId: number;
+    let lastTimestamp = 0;
 
     if (isMobile) {
-      // سرعة ثابتة للموبايل - 20ms لحركة سلسة جداً (50 FPS)
-      const mobileSpeed = 20;
-      // بكسلات أكثر لحركة واضحة ومستمرة
-      const mobilePixelsPerFrame = settings.scrollSpeed === 'fast' ? 2.5 :
-                                   settings.scrollSpeed === 'medium' ? 1.8 : 1.2;
+      // سرعة البكسلات في الثانية للموبايل
+      const pixelsPerSecond = settings.scrollSpeed === 'fast' ? 120 :
+                              settings.scrollSpeed === 'medium' ? 80 : 50;
 
-      const animate = () => {
+      const animate = (timestamp: number) => {
+        if (!lastTimestamp) lastTimestamp = timestamp;
+        const deltaTime = timestamp - lastTimestamp;
+        lastTimestamp = timestamp;
+
         setScrollPosition((prev) => {
-          // التقسيم على 30 لأن لدينا 30 تكرار - دورة كاملة طويلة
-          const contentWidth = scrollContainer.scrollWidth / 30;
-          const newPosition = prev + mobilePixelsPerFrame;
-          return newPosition >= contentWidth ? 0 : newPosition;
+          // حساب المسافة بناءً على الوقت الفعلي
+          const distance = (pixelsPerSecond * deltaTime) / 1000;
+          // عرض نصف المحتوى للدورة السلسة
+          const contentWidth = scrollContainer.scrollWidth / 2;
+          const newPosition = prev + distance;
+          return newPosition >= contentWidth ? newPosition - contentWidth : newPosition;
         });
+
+        animationId = requestAnimationFrame(animate);
       };
 
-      const animationId = setInterval(animate, mobileSpeed);
-      return () => clearInterval(animationId);
+      animationId = requestAnimationFrame(animate);
+      return () => cancelAnimationFrame(animationId);
     } else {
-      const desktopSpeed = settings.scrollSpeed === 'fast' ? 30 :
-                          settings.scrollSpeed === 'medium' ? 50 : 80;
-      const desktopPixelsPerFrame = settings.scrollSpeed === 'fast' ? 1.5 :
-                                    settings.scrollSpeed === 'medium' ? 1.0 : 0.5;
+      const pixelsPerSecond = settings.scrollSpeed === 'fast' ? 80 :
+                              settings.scrollSpeed === 'medium' ? 50 : 30;
 
-      const animate = () => {
+      const animate = (timestamp: number) => {
+        if (!lastTimestamp) lastTimestamp = timestamp;
+        const deltaTime = timestamp - lastTimestamp;
+        lastTimestamp = timestamp;
+
         setScrollPosition((prev) => {
+          const distance = (pixelsPerSecond * deltaTime) / 1000;
           const contentWidth = scrollContainer.scrollWidth / 3;
-          const newPosition = prev + desktopPixelsPerFrame;
-          return newPosition >= contentWidth ? 0 : newPosition;
+          const newPosition = prev + distance;
+          return newPosition >= contentWidth ? newPosition - contentWidth : newPosition;
         });
+
+        animationId = requestAnimationFrame(animate);
       };
 
-      const animationId = setInterval(animate, desktopSpeed);
-      return () => clearInterval(animationId);
+      animationId = requestAnimationFrame(animate);
+      return () => cancelAnimationFrame(animationId);
     }
   }, [activities.length, settings.scrollSpeed]);
 
@@ -220,8 +233,8 @@ export function SmartActivityTicker() {
       const isMobile = window.innerWidth <= 768;
 
       if (isMobile) {
-        // تكرار 30 مرة للموبايل لضمان حركة مستمرة طويلة
-        const mobileRepeated = Array(30).fill(shuffled).flat();
+        // تكرار مرتين فقط للموبايل - سنستخدم حساب الدورة للحركة السلسة
+        const mobileRepeated = [...shuffled, ...shuffled];
         setActivities(mobileRepeated);
       } else {
         const desktopRepeated = [...shuffled, ...shuffled, ...shuffled];
@@ -300,10 +313,13 @@ export function SmartActivityTicker() {
           background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.08) 100%);
           box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.1) inset, 0 0 20px rgba(212, 175, 55, 0.15);
           transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          transform: translate3d(0, 0, 0);
+          backface-visibility: hidden;
+          -webkit-backface-visibility: hidden;
         }
 
         .activity-card-agricultural:hover {
-          transform: translateY(-3px) scale(1.03);
+          transform: translate3d(0, -3px, 0) scale(1.03);
           box-shadow: 0 15px 35px -4px rgba(0, 0, 0, 0.3), 0 0 0 2px rgba(212, 175, 55, 0.6) inset, 0 0 30px rgba(212, 175, 55, 0.3);
           border-color: rgba(212, 175, 55, 0.8);
         }
@@ -321,6 +337,20 @@ export function SmartActivityTicker() {
         .beige-text {
           color: #F5F5DC;
           text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+        }
+
+        /* تحسينات الأداء للموبايل */
+        @media (max-width: 768px) {
+          .scroll-container {
+            -webkit-overflow-scrolling: touch;
+            -webkit-transform: translate3d(0, 0, 0);
+            transform: translate3d(0, 0, 0);
+          }
+
+          .activity-card-agricultural {
+            -webkit-transform: translate3d(0, 0, 0);
+            transform: translate3d(0, 0, 0);
+          }
         }
 
         @media (max-width: 768px) {
@@ -355,8 +385,12 @@ export function SmartActivityTicker() {
 
         .scroll-container {
           will-change: transform;
-          transform: translateZ(0);
+          transform: translate3d(0, 0, 0);
           backface-visibility: hidden;
+          -webkit-backface-visibility: hidden;
+          -webkit-transform: translate3d(0, 0, 0);
+          perspective: 1000px;
+          -webkit-perspective: 1000px;
         }
 
         @keyframes golden-wave {
@@ -379,7 +413,7 @@ export function SmartActivityTicker() {
           <div
             ref={scrollContainerRef}
             className="scroll-container flex items-center h-full gap-0 px-0"
-            style={{ transform: `translateX(-${scrollPosition}px)` }}
+            style={{ transform: `translate3d(-${scrollPosition}px, 0, 0)` }}
           >
             {activities.map((activity, index) => {
               const IconComponent = iconMap[activity.icon] || Sparkles;

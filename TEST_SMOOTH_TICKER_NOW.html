@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>اختبار الشريط المتحرك السلس</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Cairo', 'Segoe UI', Tahoma, sans-serif;
+      background: linear-gradient(135deg, #1e4620 0%, #2c5f2d 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 900px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    h1 {
+      color: #2c5f2d;
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 32px;
+    }
+
+    .section {
+      margin-bottom: 40px;
+    }
+
+    .section-title {
+      color: #1e4620;
+      font-size: 24px;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 3px solid #D4AF37;
+    }
+
+    .comparison {
+      display: grid;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .ticker-demo {
+      background: linear-gradient(135deg, rgba(44, 95, 45, 0.95) 0%, rgba(30, 70, 32, 0.98) 100%);
+      border-radius: 15px;
+      padding: 15px;
+      overflow: hidden;
+      position: relative;
+      height: 80px;
+      border: 2px solid rgba(212, 175, 55, 0.5);
+    }
+
+    .ticker-label {
+      position: absolute;
+      top: 5px;
+      left: 10px;
+      background: rgba(212, 175, 55, 0.9);
+      color: #1e4620;
+      padding: 3px 10px;
+      border-radius: 5px;
+      font-size: 12px;
+      font-weight: bold;
+      z-index: 10;
+    }
+
+    .scroll-container {
+      display: flex;
+      gap: 15px;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      padding: 0 10px;
+    }
+
+    /* الطريقة القديمة - setInterval */
+    .old-method .scroll-container {
+      will-change: transform;
+    }
+
+    /* الطريقة الجديدة - requestAnimationFrame + GPU */
+    .new-method .scroll-container {
+      will-change: transform;
+      transform: translate3d(0, 0, 0);
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      perspective: 1000px;
+      -webkit-perspective: 1000px;
+    }
+
+    .activity-card {
+      min-width: 180px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.08) 100%);
+      border: 2px solid rgba(212, 175, 55, 0.5);
+      border-radius: 12px;
+      padding: 10px 15px;
+      color: #F5F5DC;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      flex-shrink: 0;
+    }
+
+    .icon {
+      width: 35px;
+      height: 35px;
+      background: linear-gradient(135deg, #D4AF37 0%, #C49423 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .info-box {
+      background: #f0f8ff;
+      border-right: 4px solid #D4AF37;
+      padding: 20px;
+      border-radius: 10px;
+      margin-top: 20px;
+    }
+
+    .info-box h3 {
+      color: #2c5f2d;
+      margin-bottom: 10px;
+      font-size: 20px;
+    }
+
+    .info-box ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .info-box li {
+      color: #1e4620;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+    }
+
+    .info-box li:last-child {
+      border-bottom: none;
+    }
+
+    .check {
+      color: #28a745;
+      font-weight: bold;
+      margin-left: 5px;
+    }
+
+    .version {
+      text-align: center;
+      margin-top: 30px;
+      padding: 15px;
+      background: rgba(212, 175, 55, 0.1);
+      border-radius: 10px;
+      color: #2c5f2d;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 24px;
+      }
+
+      .section-title {
+        font-size: 18px;
+      }
+
+      .activity-card {
+        min-width: 150px;
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎯 اختبار الشريط المتحرك السلس</h1>
+
+    <div class="section">
+      <div class="section-title">1️⃣ الطريقة القديمة - setInterval</div>
+      <div class="ticker-demo old-method">
+        <div class="ticker-label">❌ قديم</div>
+        <div class="scroll-container" id="oldScroll"></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">2️⃣ الطريقة الجديدة - requestAnimationFrame + GPU</div>
+      <div class="ticker-demo new-method">
+        <div class="ticker-label">✅ جديد</div>
+        <div class="scroll-container" id="newScroll"></div>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <h3>⚡ التحسينات المطبقة:</h3>
+      <ul>
+        <li><span class="check">✅</span> استخدام requestAnimationFrame بدلاً من setInterval</li>
+        <li><span class="check">✅</span> حساب المسافة بناءً على الوقت الفعلي (time-based)</li>
+        <li><span class="check">✅</span> GPU Acceleration باستخدام translate3d</li>
+        <li><span class="check">✅</span> دورة لانهائية صحيحة بدون قفزات</li>
+        <li><span class="check">✅</span> backface-visibility و perspective</li>
+        <li><span class="check">✅</span> تكرار ذكي (2x بدلاً من 30x)</li>
+      </ul>
+    </div>
+
+    <div class="info-box">
+      <h3>🎬 لاحظ الفرق:</h3>
+      <ul>
+        <li><span class="check">📊</span> الشريط العلوي: حركة متقطعة قليلاً</li>
+        <li><span class="check">🚀</span> الشريط السفلي: حركة سلسة جداً</li>
+        <li><span class="check">🔄</span> الانتقال من النهاية للبداية سلس تماماً</li>
+        <li><span class="check">⚡</span> أداء أفضل على الموبايل</li>
+      </ul>
+    </div>
+
+    <div class="version">
+      📦 الإصدار: v20251219_1766157899147<br>
+      🔧 التقنية: requestAnimationFrame + GPU Acceleration
+    </div>
+  </div>
+
+  <script>
+    const activities = [
+      { icon: '🌴', text: 'فهد حجز 3 أشجار' },
+      { icon: '👥', text: 'فاطمة حجز 5,000 شجرة' },
+      { icon: '🫒', text: 'تميم حجز 10,100 شجرة' },
+      { icon: '✅', text: 'تمت الموافقة على حجز فاطمة' },
+      { icon: '📈', text: 'تم حجز 115,000+ شجرة' },
+      { icon: '🏡', text: 'مزرعة حصص الأكثر طلباً' },
+      { icon: '⭐', text: 'انضم مستثمر جديد' },
+    ];
+
+    const doubled = [...activities, ...activities];
+
+    function createCards(containerId) {
+      const container = document.getElementById(containerId);
+      doubled.forEach((activity, index) => {
+        const card = document.createElement('div');
+        card.className = 'activity-card';
+        card.innerHTML = `
+          <div class="icon">${activity.icon}</div>
+          <div>${activity.text}</div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    createCards('oldScroll');
+    createCards('newScroll');
+
+    // الطريقة القديمة - setInterval
+    let oldPosition = 0;
+    const oldContainer = document.getElementById('oldScroll');
+
+    setInterval(() => {
+      oldPosition += 1.5;
+      const contentWidth = oldContainer.scrollWidth / 2;
+      if (oldPosition >= contentWidth) {
+        oldPosition = 0;
+      }
+      oldContainer.style.transform = `translateX(-${oldPosition}px)`;
+    }, 20);
+
+    // الطريقة الجديدة - requestAnimationFrame
+    let newPosition = 0;
+    let lastTimestamp = 0;
+    const newContainer = document.getElementById('newScroll');
+    const pixelsPerSecond = 80;
+
+    function animateNew(timestamp) {
+      if (!lastTimestamp) lastTimestamp = timestamp;
+      const deltaTime = timestamp - lastTimestamp;
+      lastTimestamp = timestamp;
+
+      const distance = (pixelsPerSecond * deltaTime) / 1000;
+      const contentWidth = newContainer.scrollWidth / 2;
+
+      newPosition += distance;
+      if (newPosition >= contentWidth) {
+        newPosition = newPosition - contentWidth;
+      }
+
+      newContainer.style.transform = `translate3d(-${newPosition}px, 0, 0)`;
+      requestAnimationFrame(animateNew);
+    }
+
+    requestAnimationFrame(animateNew);
+  </script>
+</body>
+</html>
