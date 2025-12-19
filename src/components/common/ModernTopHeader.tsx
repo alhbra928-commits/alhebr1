@@ -18,6 +18,8 @@ interface HeaderTexts {
   phoneTooltip: string;
   smartTooltip: string;
   phoneNumber: string;
+  logoText: string;
+  logoIcon: string;
 }
 
 export function ModernTopHeader({
@@ -36,7 +38,9 @@ export function ModernTopHeader({
     accountTooltip: 'حسابي',
     phoneTooltip: 'اتصل بنا',
     smartTooltip: 'المساعد الذكي',
-    phoneNumber: '966569335257'
+    phoneNumber: '966569335257',
+    logoText: 'مزادات',
+    logoIcon: '🌿'
   });
 
   useEffect(() => {
@@ -49,7 +53,7 @@ export function ModernTopHeader({
       const { data, error } = await supabase
         .from('platform_texts')
         .select('key, text_ar')
-        .eq('section', 'side_dock');
+        .in('section', ['side_dock', 'header']);
 
       if (error) throw error;
 
@@ -513,8 +517,8 @@ export function ModernTopHeader({
         <div className="header-container">
           {/* Logo */}
           <div className="header-logo" onClick={() => onNavigate?.('home')}>
-            <span className="logo-icon">🌿</span>
-            <span className="logo-text">مزادات</span>
+            <span className="logo-icon">{texts.logoIcon}</span>
+            <span className="logo-text">{texts.logoText}</span>
           </div>
 
           {/* Desktop Phone Button */}
