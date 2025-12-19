@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { ModernRoyalPlatform } from './ModernRoyalPlatform';
 import { PreviewInspectionPage } from './PreviewInspectionPage';
 import { InnovativeLoaderGateway } from './InnovativeLoaderGateway';
-import { marketingAnalyticsService } from '../../../services/marketingAnalyticsService';
 
 type View = 'loader' | 'main' | 'preview';
 
@@ -29,17 +28,6 @@ export function PublicPlatformRouter({ onAdminLogin, onBackToAdmin, onFarmOwnerL
   });
   const [selectedBarcode, setSelectedBarcode] = useState<string>('');
 
-  // تهيئة السكربتات التحليلية عند التحميل الأول - فقط مرة واحدة
-  useEffect(() => {
-    // تأخير التحميل لتحسين الأداء
-    const timer = setTimeout(() => {
-      marketingAnalyticsService.initializePixels()
-        .catch(err => console.warn('Analytics init failed:', err));
-    }, 2000); // تأخير 2 ثانية
-
-    return () => clearTimeout(timer);
-  }, []);
-
   // مراقبة تغيير حالة الجلسات - فقط للخروج الصريح
   useEffect(() => {
     const handleExplicitLogout = () => {
@@ -55,20 +43,6 @@ export function PublicPlatformRouter({ onAdminLogin, onBackToAdmin, onFarmOwnerL
       window.removeEventListener('logout', handleExplicitLogout);
     };
   }, [currentView]);
-
-  // التتبع التلقائي للزوار - تأخير أيضاً
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      try {
-        marketingAnalyticsService.trackCurrentPage();
-      } catch (err) {
-        console.warn('Tracking failed:', err);
-      }
-    }, 1000);
-
-    return () => clearTimeout(timer);
-  }, [currentView]);
-
 
   const handleLoaderComplete = () => {
     setCurrentView('main');
