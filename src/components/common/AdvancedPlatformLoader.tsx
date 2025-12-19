@@ -142,6 +142,12 @@ export function AdvancedPlatformLoader({ onComplete }: AdvancedPlatformLoaderPro
 
   // Load settings from database
   useEffect(() => {
+    // Safety timeout: if loading takes too long, proceed with defaults
+    const safetyTimeout = setTimeout(() => {
+      console.log('[AdvancedPlatformLoader] Using default settings (safety timeout)');
+      setIsLoading(false);
+    }, 1000);
+
     const loadSettings = async () => {
       try {
         // Load main settings
@@ -152,6 +158,9 @@ export function AdvancedPlatformLoader({ onComplete }: AdvancedPlatformLoaderPro
 
         if (!settingsError && settingsData) {
           setSettings(settingsData as LoaderSettings);
+          console.log('[AdvancedPlatformLoader] Settings loaded from database');
+        } else {
+          console.log('[AdvancedPlatformLoader] Using default settings');
         }
 
         // Load phases
@@ -175,14 +184,18 @@ export function AdvancedPlatformLoader({ onComplete }: AdvancedPlatformLoaderPro
           setFloatingElements(elementsData as FloatingElement[]);
         }
 
+        clearTimeout(safetyTimeout);
         setIsLoading(false);
       } catch (error) {
         console.error('[AdvancedPlatformLoader] Error loading settings:', error);
+        clearTimeout(safetyTimeout);
         setIsLoading(false);
       }
     };
 
     loadSettings();
+
+    return () => clearTimeout(safetyTimeout);
   }, []);
 
   // Progress animation
