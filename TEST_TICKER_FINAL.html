@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>🧪 اختبار الشريط النهائي - iPhone</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #D1FAE5 0%, #6EE7B7 100%);
+      padding: 20px;
+      line-height: 1.8;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 24px;
+      padding: 40px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+    }
+
+    h1 {
+      color: #059669;
+      font-size: 32px;
+      margin-bottom: 30px;
+      border-bottom: 5px solid #10B981;
+      padding-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .test-card {
+      background: linear-gradient(135deg, #ECFDF5, #D1FAE5);
+      border-right: 5px solid #10B981;
+      padding: 30px;
+      margin: 25px 0;
+      border-radius: 16px;
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.1);
+    }
+
+    .test-card h2 {
+      color: #065F46;
+      margin-bottom: 20px;
+      font-size: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .test-step {
+      background: white;
+      padding: 20px;
+      margin: 15px 0;
+      border-radius: 12px;
+      border-right: 4px solid #10B981;
+    }
+
+    .test-step strong {
+      color: #059669;
+      display: block;
+      margin-bottom: 10px;
+      font-size: 18px;
+    }
+
+    .test-step p {
+      color: #374151;
+      line-height: 1.7;
+    }
+
+    .checklist {
+      list-style: none;
+      padding: 0;
+      margin: 20px 0;
+    }
+
+    .checklist li {
+      padding: 15px 25px;
+      margin: 10px 0;
+      background: white;
+      border-radius: 12px;
+      border-right: 4px solid #10B981;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .checklist li::before {
+      content: '✅';
+      font-size: 28px;
+      flex-shrink: 0;
+    }
+
+    .warning-box {
+      background: linear-gradient(135deg, #FEF3C7, #FDE68A);
+      border-right: 5px solid #F59E0B;
+      padding: 25px;
+      margin: 25px 0;
+      border-radius: 16px;
+    }
+
+    .warning-box h3 {
+      color: #92400E;
+      margin-bottom: 15px;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .warning-box p {
+      color: #78350F;
+      line-height: 1.7;
+    }
+
+    .success-box {
+      background: linear-gradient(135deg, #D1FAE5, #A7F3D0);
+      border-right: 5px solid #10B981;
+      padding: 30px;
+      margin: 25px 0;
+      border-radius: 16px;
+      text-align: center;
+    }
+
+    .success-box h2 {
+      color: #065F46;
+      margin-bottom: 15px;
+      font-size: 28px;
+    }
+
+    .success-box p {
+      color: #047857;
+      font-size: 18px;
+      line-height: 1.8;
+    }
+
+    .diagram {
+      background: white;
+      padding: 30px;
+      border-radius: 16px;
+      margin: 25px 0;
+      border: 3px solid #10B981;
+    }
+
+    .layer {
+      padding: 20px;
+      margin: 15px 0;
+      border-radius: 12px;
+      font-weight: bold;
+      font-size: 16px;
+      text-align: center;
+    }
+
+    .layer.header {
+      background: linear-gradient(135deg, #3B82F6, #2563EB);
+      color: white;
+    }
+
+    .layer.content {
+      background: linear-gradient(135deg, #F3F4F6, #E5E7EB);
+      color: #374151;
+      border: 2px dashed #9CA3AF;
+      min-height: 100px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .layer.footer {
+      background: linear-gradient(135deg, #059669, #047857);
+      color: white;
+      position: relative;
+    }
+
+    .layer.footer::after {
+      content: '← الشريط يظهر هنا فقط';
+      position: absolute;
+      right: -200px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: #FEF3C7;
+      color: #92400E;
+      padding: 8px 15px;
+      border-radius: 8px;
+      font-size: 14px;
+      white-space: nowrap;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .arrow {
+      font-size: 28px;
+      color: #9CA3AF;
+      margin: 10px 0;
+      text-align: center;
+    }
+
+    @media (max-width: 768px) {
+      body { padding: 15px; }
+      .container { padding: 25px; }
+      h1 { font-size: 26px; }
+      .layer.footer::after {
+        position: static;
+        transform: none;
+        display: block;
+        margin-top: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>🧪 اختبار الشريط النهائي على iPhone</h1>
+
+  <!-- التعليمات الأساسية -->
+  <div class="test-card">
+    <h2>📋 التعليمات</h2>
+
+    <div class="test-step">
+      <strong>1. افتح المنصة العامة</strong>
+      <p>تأكد أنك في المنصة العامة (activeModule === 'public') حيث يظهر الشريط</p>
+    </div>
+
+    <div class="test-step">
+      <strong>2. اسكرول للنهاية</strong>
+      <p>اسحب الشاشة لأسفل ببطء حتى تصل لنهاية المحتوى</p>
+    </div>
+
+    <div class="test-step">
+      <strong>3. راقب الشريط</strong>
+      <p>يجب أن يكون هناك شريط واحد فقط ثابت في أسفل الشاشة</p>
+    </div>
+  </div>
+
+  <!-- معايير النجاح -->
+  <div class="test-card">
+    <h2>✅ معايير النجاح</h2>
+
+    <ul class="checklist">
+      <li>شريط واحد فقط ثابت أسفل الشاشة</li>
+      <li>لا يظهر شريط آخر داخل المحتوى</li>
+      <li>الشريط ملاصق تماماً لأسفل الشاشة</li>
+      <li>لا يوجد فراغ غريب بين الشريط وأسفل الشاشة</li>
+      <li>المحتوى لا يدخل تحت الشريط</li>
+      <li>الشريط يبقى ثابت عند التمرير</li>
+      <li>محتوى الشريط (الأيقونات والنصوص) مرئي بالكامل</li>
+    </ul>
+  </div>
+
+  <!-- الاختبار المتقدم -->
+  <div class="test-card">
+    <h2>🔬 اختبار متقدم</h2>
+
+    <div class="test-step">
+      <strong>تمرير بطيء</strong>
+      <p>اسحب ببطء لأسفل → الشريط يبقى ثابت ✅</p>
+    </div>
+
+    <div class="test-step">
+      <strong>تمرير سريع</strong>
+      <p>اسحب بقوة لأسفل → الشريط يبقى ثابت ✅</p>
+    </div>
+
+    <div class="test-step">
+      <strong>تمرير متقطع</strong>
+      <p>اسحب ثم توقف ثم اسحب → الشريط يبقى ثابت ✅</p>
+    </div>
+
+    <div class="test-step">
+      <strong>تغيير اتجاه</strong>
+      <p>اسحب لأسفل ثم لأعلى بسرعة → الشريط يبقى ثابت ✅</p>
+    </div>
+  </div>
+
+  <!-- الهيكل المرئي -->
+  <div class="diagram">
+    <h3 style="color: #059669; margin-bottom: 20px; font-size: 22px;">📐 الهيكل المرئي</h3>
+
+    <div class="layer header">
+      الهيدر (ثابت أعلى - 72px)
+    </div>
+
+    <div class="arrow">↕</div>
+
+    <div class="layer content">
+      <div>المحتوى (يسكرول)</div>
+      <div style="font-size: 14px; opacity: 0.7;">ModernRoyalPlatform</div>
+      <div style="font-size: 14px; opacity: 0.7;">MainPlatformInterface</div>
+      <div style="font-size: 14px; opacity: 0.7;">RoyalMainInterface</div>
+      <div style="font-size: 12px; color: #DC2626; font-weight: bold; margin-top: 10px;">❌ لا شريط هنا</div>
+    </div>
+
+    <div class="arrow">↕</div>
+
+    <div class="layer footer">
+      الفوتر = الشريط (ثابت أسفل - 56px + safe-area)
+      <div style="font-size: 14px; margin-top: 10px; opacity: 0.9;">SmartActivityTicker</div>
+    </div>
+  </div>
+
+  <!-- التحذيرات -->
+  <div class="warning-box">
+    <h3>⚠️ إذا رأيت شريطين</h3>
+    <p>
+      إذا ظهر شريط إضافي داخل المحتوى:<br>
+      1. افتح Console (F12)<br>
+      2. ابحث عن &lt;SmartActivityTicker /&gt; في الكود<br>
+      3. احذف أي استدعاء خارج App.tsx → footer<br>
+      4. البناء من جديد: npm run build
+    </p>
+  </div>
+
+  <!-- safe-area على iPhone -->
+  <div class="test-card">
+    <h2>📱 اختبار safe-area (iPhone مع notch)</h2>
+
+    <div class="test-step">
+      <strong>تحقق من المنطقة الآمنة</strong>
+      <p>
+        • الشريط يحترم home indicator السفلي<br>
+        • لا يدخل المحتوى تحت home indicator<br>
+        • الأيقونات والنصوص مرئية بالكامل<br>
+        • لا يوجد قص أو اختفاء
+      </p>
+    </div>
+  </div>
+
+  <!-- النجاح -->
+  <div class="success-box">
+    <h2>🎉 معيار النجاح النهائي</h2>
+    <p>
+      شريط واحد فقط، ثابت في الأسفل، ملاصق للشاشة<br>
+      بدون فراغات، بدون تكرار، بدون مشاكل<br>
+      المحتوى يسكرول بينما الشريط ثابت<br><br>
+      <strong style="font-size: 24px; color: #059669;">إذا تحقق كل هذا = ✅ نجح الاختبار</strong>
+    </p>
+  </div>
+
+  <!-- Build Info -->
+  <div style="text-align: center; margin-top: 50px; padding: 30px; background: linear-gradient(135deg, #F3F4F6, #E5E7EB); border-radius: 16px;">
+    <div style="font-family: monospace; color: #059669; font-weight: bold; font-size: 18px; margin-bottom: 15px;">
+      📦 v20251219_1766124220837
+    </div>
+    <div style="color: #6B7280; font-size: 14px;">
+      Build Time: 12.83s<br>
+      Bundle Size: 168.72 kB (public-module)<br>
+      Status: ✅ جاهز للاختبار
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

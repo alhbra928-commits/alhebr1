@@ -13,7 +13,6 @@ import { getPlatformTextsBySection } from '../../../services/platformTextsServic
 import { VerticalSideTabs } from '../../../components/common/VerticalSideTabs';
 import { SmartAssistantSidebar } from './SmartAssistantSidebar';
 // PremiumHeader removed - now in Portal (FixedChrome)
-import { SmartActivityTicker } from '../../../components/common/SmartActivityTicker';
 
 // Lazy load heavy components
 const InnovativeFarmDetailPage = lazy(() => import('./InnovativeFarmDetailPage').then(m => ({ default: m.InnovativeFarmDetailPage })));

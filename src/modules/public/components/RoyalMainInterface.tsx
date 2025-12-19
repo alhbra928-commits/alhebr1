@@ -12,7 +12,6 @@ import { ConceptIntroductionPage } from './ConceptIntroductionPage';
 import { EnhancedConceptCard } from './EnhancedConceptCard';
 import { AdaptiveSmartButton } from '../../../components/common/AdaptiveSmartButton';
 import { FloatingFiltersButton } from './FloatingFiltersButton';
-import { SmartActivityTicker } from '../../../components/common/SmartActivityTicker';
 
 type ViewMode = 'home' | 'farmDetail' | 'booking' | 'investor' | 'verification' | 'concept';
 

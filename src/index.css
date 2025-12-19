@@ -45,7 +45,8 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  height: var(--footer-h);
+  /* ارتفاع فعلي = ارتفاع الشريط + safe area */
+  height: calc(var(--footer-h) + env(safe-area-inset-bottom));
   padding-bottom: env(safe-area-inset-bottom);
   z-index: 1000;
 }
