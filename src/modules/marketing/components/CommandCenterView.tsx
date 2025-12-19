@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Activity, TrendingUp, Users, Calendar, DollarSign, Target, Zap } from 'lucide-react';
+import { Activity, TrendingUp, Users, Calendar, DollarSign, Target, Zap, TestTube } from 'lucide-react';
 import { marketingAnalyticsService } from '../../../services/analytics/marketingAnalyticsService';
+import { TrackingService } from '../../../services/analytics/trackingService';
 
 export function CommandCenterView() {
   const [loading, setLoading] = useState(true);
@@ -8,13 +9,24 @@ export function CommandCenterView() {
   const [pulse, setPulse] = useState<any>(null);
   const [kpis, setKPIs] = useState<any>(null);
   const [bestSource, setBestSource] = useState<any>(null);
+  const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
+  const [isLive, setIsLive] = useState(true);
+  const [isTestMode, setIsTestMode] = useState(TrackingService.isTestMode());
 
   useEffect(() => {
     loadData();
-  }, [period]);
 
-  const loadData = async () => {
-    setLoading(true);
+    const interval = setInterval(() => {
+      if (isLive) {
+        loadData(true);
+      }
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [period, isLive]);
+
+  const loadData = async (silent = false) => {
+    if (!silent) setLoading(true);
     try {
       const [pulseData, kpisData, bestSourceData] = await Promise.all([
         marketingAnalyticsService.getPulseData(period),
@@ -25,10 +37,15 @@ export function CommandCenterView() {
       setPulse(pulseData);
       setKPIs(kpisData);
       setBestSource(bestSourceData);
+      setLastUpdate(new Date());
+
+      if (silent) {
+        console.log('🔄 تم تحديث البيانات تلقائياً');
+      }
     } catch (error) {
       console.error('Failed to load data:', error);
     } finally {
-      setLoading(false);
+      if (!silent) setLoading(false);
     }
   };
 
@@ -67,31 +84,76 @@ export function CommandCenterView() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
-              مركز القيادة
-            </h1>
-            <p className="text-gray-600 mt-2">نبض المنصة والتحليلات الفورية</p>
+            <div className="flex items-center gap-4">
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
+                مركز القيادة
+              </h1>
+              {isLive && (
+                <div className="flex items-center gap-2 px-4 py-2 bg-red-50 rounded-full border-2 border-red-200">
+                  <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+                  <span className="text-red-600 font-bold text-sm">LIVE</span>
+                </div>
+              )}
+            </div>
+            <p className="text-gray-600 mt-2">
+              نبض المنصة والتحليلات الفورية • آخر تحديث: {lastUpdate.toLocaleTimeString('ar-SA')}
+            </p>
           </div>
 
-          {/* Period Selector */}
-          <div className="flex gap-2 bg-white rounded-xl p-2 shadow-lg">
-            {[
-              { id: 'today', label: 'اليوم' },
-              { id: 'week', label: 'الأسبوع' },
-              { id: 'month', label: 'الشهر' },
-            ].map(p => (
-              <button
-                key={p.id}
-                onClick={() => setPeriod(p.id as any)}
-                className={`px-6 py-2 rounded-lg font-bold transition-all ${
-                  period === p.id
-                    ? 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-lg'
-                    : 'text-gray-600 hover:bg-gray-100'
-                }`}
-              >
-                {p.label}
-              </button>
-            ))}
+          <div className="flex items-center gap-4">
+            {/* Test Mode Toggle */}
+            <button
+              onClick={() => {
+                if (isTestMode) {
+                  TrackingService.disableTestMode();
+                  setIsTestMode(false);
+                } else {
+                  TrackingService.enableTestMode();
+                  setIsTestMode(true);
+                }
+              }}
+              className={`px-4 py-2 rounded-lg font-bold transition-all flex items-center gap-2 ${
+                isTestMode
+                  ? 'bg-yellow-500 text-white shadow-lg'
+                  : 'bg-gray-200 text-gray-600'
+              }`}
+            >
+              <TestTube className="w-4 h-4" />
+              {isTestMode ? '🧪 TEST' : 'عادي'}
+            </button>
+
+            {/* Live Toggle */}
+            <button
+              onClick={() => setIsLive(!isLive)}
+              className={`px-4 py-2 rounded-lg font-bold transition-all ${
+                isLive
+                  ? 'bg-red-500 text-white shadow-lg'
+                  : 'bg-gray-200 text-gray-600'
+              }`}
+            >
+              {isLive ? '🔴 مباشر' : '⏸️ متوقف'}
+            </button>
+
+            {/* Period Selector */}
+            <div className="flex gap-2 bg-white rounded-xl p-2 shadow-lg">
+              {[
+                { id: 'today', label: 'اليوم' },
+                { id: 'week', label: 'الأسبوع' },
+                { id: 'month', label: 'الشهر' },
+              ].map(p => (
+                <button
+                  key={p.id}
+                  onClick={() => setPeriod(p.id as any)}
+                  className={`px-6 py-2 rounded-lg font-bold transition-all ${
+                    period === p.id
+                      ? 'bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-lg'
+                      : 'text-gray-600 hover:bg-gray-100'
+                  }`}
+                >
+                  {p.label}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 

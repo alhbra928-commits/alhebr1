@@ -26,10 +26,10 @@ interface UTMParams {
 class AnalyticsTrackingService {
   private sessionId: string | null = null;
   private isInitialized = false;
-  private eventQueue: any[] = [];
-  private flushInterval: number | null = null;
   private SESSION_KEY = 'analytics_session_id';
   private SESSION_START_KEY = 'analytics_session_start';
+  private TEST_MODE_KEY = 'analytics_test_mode';
+  private activityUpdateInterval: number | null = null;
 
   async initialize() {
     if (this.isInitialized) return;
@@ -40,16 +40,24 @@ class AnalyticsTrackingService {
       if (existingSessionId && !this.isSessionExpired()) {
         this.sessionId = existingSessionId;
         await this.updateSessionActivity();
+        console.log('♻️ Analytics: استئناف الجلسة الحالية:', this.sessionId);
       } else {
         await this.createNewSession();
+        console.log('🆕 Analytics: جلسة جديدة تم إنشاؤها:', this.sessionId);
       }
 
       this.isInitialized = true;
-      this.startEventFlush();
+      this.startActivityUpdates();
 
-      console.log('✅ Analytics Tracking Service initialized with session:', this.sessionId);
+      const testMode = this.isTestMode() ? ' [وضع الاختبار]' : '';
+      console.log(`✅ نظام التتبع اللحظي مفعّل${testMode}`);
+      console.log('📊 Session ID:', this.sessionId);
+      console.log('🌐 Landing:', window.location.pathname);
+      console.log('📱 Device:', this.getDeviceInfo().deviceType);
+      console.log('💻 OS:', this.getDeviceInfo().os);
+
     } catch (error) {
-      console.error('❌ Failed to initialize tracking service:', error);
+      console.error('❌ فشل تفعيل نظام التتبع:', error);
     }
   }
 
@@ -59,16 +67,34 @@ class AnalyticsTrackingService {
       const utmParams = this.getUTMParams();
       const referrer = document.referrer || null;
       const landingPath = window.location.pathname + window.location.search;
+      const isTest = this.isTestMode();
+
+      console.log('🚀 إنشاء جلسة جديدة...');
+      console.log('📍 Landing Path:', landingPath);
+      console.log('🔗 Referrer:', referrer || 'مباشر');
+      console.log('📱 Device:', deviceInfo.deviceType);
+      console.log('💻 OS:', deviceInfo.os);
+      if (utmParams.utm_source) {
+        console.log('🎯 UTM Source:', utmParams.utm_source);
+        console.log('📢 UTM Medium:', utmParams.utm_medium);
+        console.log('📊 UTM Campaign:', utmParams.utm_campaign);
+      }
+
+      const sessionData: any = {
+        landing_path: landingPath,
+        referrer,
+        ...utmParams,
+        ...deviceInfo,
+        user_agent: navigator.userAgent,
+      };
+
+      if (isTest) {
+        sessionData.metadata = { is_test: true };
+      }
 
       const { data, error } = await supabase
         .from('analytics_sessions')
-        .insert([{
-          landing_path: landingPath,
-          referrer,
-          ...utmParams,
-          ...deviceInfo,
-          user_agent: navigator.userAgent,
-        }])
+        .insert([sessionData])
         .select('session_id')
         .single();
 
@@ -77,10 +103,11 @@ class AnalyticsTrackingService {
       if (data) {
         this.sessionId = data.session_id;
         this.storeSessionId(data.session_id);
-        console.log('✅ New analytics session created:', data.session_id);
+        console.log('✅ تم تسجيل الجلسة بنجاح');
+        console.log('🆔 Session ID:', data.session_id);
       }
     } catch (error) {
-      console.error('❌ Failed to create session:', error);
+      console.error('❌ فشل إنشاء الجلسة:', error);
     }
   }
 
@@ -176,9 +203,12 @@ class AnalyticsTrackingService {
     metadata?: any
   ) {
     if (!this.sessionId) {
-      console.warn('⚠️ No session ID, queuing event:', eventName);
-      this.eventQueue.push({ eventName, eventValue, metadata });
-      return;
+      console.warn('⚠️ لا توجد جلسة نشطة، جاري إنشاء جلسة...');
+      await this.initialize();
+      if (!this.sessionId) {
+        console.error('❌ فشل إنشاء الجلسة');
+        return;
+      }
     }
 
     try {
@@ -191,42 +221,32 @@ class AnalyticsTrackingService {
         metadata: metadata || {},
       };
 
-      this.eventQueue.push(event);
-
-      if (this.eventQueue.length >= 5) {
-        await this.flushEvents();
-      }
-    } catch (error) {
-      console.error('❌ Failed to track event:', error);
-    }
-  }
-
-  private async flushEvents() {
-    if (this.eventQueue.length === 0) return;
-
-    try {
-      const eventsToSend = [...this.eventQueue];
-      this.eventQueue = [];
+      console.log(`📡 إرسال حدث فوري: ${eventName}`);
+      console.time(`⏱️ ${eventName}`);
 
       const { error } = await supabase
         .from('analytics_events')
-        .insert(eventsToSend);
+        .insert([event]);
+
+      console.timeEnd(`⏱️ ${eventName}`);
 
       if (error) throw error;
 
-      console.log(`✅ Flushed ${eventsToSend.length} events`);
+      console.log(`✅ تم تسجيل الحدث: ${eventName}`);
+      if (Object.keys(eventValue || {}).length > 0) {
+        console.log('📦 البيانات:', eventValue);
+      }
     } catch (error) {
-      console.error('❌ Failed to flush events:', error);
-      this.eventQueue.unshift(...this.eventQueue);
+      console.error(`❌ فشل تسجيل الحدث ${eventName}:`, error);
     }
   }
 
-  private startEventFlush() {
-    if (this.flushInterval) return;
+  private startActivityUpdates() {
+    if (this.activityUpdateInterval) return;
 
-    this.flushInterval = window.setInterval(() => {
-      this.flushEvents();
-    }, 10000);
+    this.activityUpdateInterval = window.setInterval(() => {
+      this.updateSessionActivity();
+    }, 30000);
   }
 
   async trackPageView(path?: string) {
@@ -240,6 +260,14 @@ class AnalyticsTrackingService {
     await this.trackEvent('farm_view', {
       farm_id: farmId,
       farm_name: farmName,
+    });
+  }
+
+  async trackQuantityChange(farmId: string, farmName: string, quantity: number) {
+    await this.trackEvent('qty_change', {
+      farm_id: farmId,
+      farm_name: farmName,
+      quantity,
     });
   }
 
@@ -258,6 +286,13 @@ class AnalyticsTrackingService {
     });
   }
 
+  async trackPaymentUpload(farmId: string, farmName: string) {
+    await this.trackEvent('payment_upload', {
+      farm_id: farmId,
+      farm_name: farmName,
+    });
+  }
+
   async trackWhatsAppClick(source: string) {
     await this.trackEvent('whatsapp_click', {
       source,
@@ -271,13 +306,25 @@ class AnalyticsTrackingService {
     });
   }
 
-  cleanup() {
-    if (this.flushInterval) {
-      clearInterval(this.flushInterval);
-      this.flushInterval = null;
-    }
+  enableTestMode() {
+    localStorage.setItem(this.TEST_MODE_KEY, 'true');
+    console.log('🧪 وضع الاختبار مفعّل - الزيارات ستُوسم بـ [TEST]');
+  }
 
-    this.flushEvents();
+  disableTestMode() {
+    localStorage.removeItem(this.TEST_MODE_KEY);
+    console.log('✅ وضع الاختبار معطّل - الزيارات عادية');
+  }
+
+  isTestMode(): boolean {
+    return localStorage.getItem(this.TEST_MODE_KEY) === 'true';
+  }
+
+  cleanup() {
+    if (this.activityUpdateInterval) {
+      clearInterval(this.activityUpdateInterval);
+      this.activityUpdateInterval = null;
+    }
   }
 }
 
