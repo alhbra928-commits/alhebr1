@@ -44,27 +44,24 @@ function App() {
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [publicView, setPublicView] = useState<'home' | 'farmDetail' | 'booking' | 'investor' | 'verification' | 'concept'>('home');
 
-  // 🎯 CRITICAL: Initialize Tracking Service - تفعيل نظام التتبع اللحظي
-  useEffect(() => {
-    const initTracking = async () => {
-      try {
-        await TrackingService.initialize();
-        // Track home view when app loads (only for public view)
-        if (activeModule === 'public') {
-          await TrackingService.trackPageView(window.location.pathname);
-        }
-      } catch (error) {
-        console.error('[App] ❌ Failed to initialize tracking:', error);
-      }
-    };
-
-    initTracking();
-
-    // Cleanup on unmount
-    return () => {
-      TrackingService.cleanup();
-    };
-  }, []);
+  // ⚠️ TrackingService DISABLED - using Simple PING System instead
+  // تم تعطيل TrackingService مؤقتاً - نستخدم نظام PING البسيط
+  // useEffect(() => {
+  //   const initTracking = async () => {
+  //     try {
+  //       await TrackingService.initialize();
+  //       if (activeModule === 'public') {
+  //         await TrackingService.trackPageView(window.location.pathname);
+  //       }
+  //     } catch (error) {
+  //       console.error('[App] ❌ Failed to initialize tracking:', error);
+  //     }
+  //   };
+  //   initTracking();
+  //   return () => {
+  //     TrackingService.cleanup();
+  //   };
+  // }, []);
 
   // حفظ آخر صفحة في لوحة التحكم
   useEffect(() => {

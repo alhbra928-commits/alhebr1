@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { ModernRoyalPlatform } from './ModernRoyalPlatform';
 import { PreviewInspectionPage } from './PreviewInspectionPage';
 import { InnovativeLoaderGateway } from './InnovativeLoaderGateway';
-import { TrackingDebugBadge } from '../../../components/common/TrackingDebugBadge';
+import { PingDebugBadge } from '../../../components/common/PingDebugBadge';
+import { PingService } from '../../../services/analytics/pingService';
 
 type View = 'loader' | 'main' | 'preview';
 
@@ -28,6 +29,23 @@ export function PublicPlatformRouter({ onAdminLogin, onBackToAdmin, onFarmOwnerL
     return 'main';
   });
   const [selectedBarcode, setSelectedBarcode] = useState<string>('');
+
+  // 🎯 PING SYSTEM - إرسال ping واحد عند تحميل الصفحة
+  useEffect(() => {
+    const sendInitialPing = async () => {
+      console.log('📡 Initializing PING System...');
+      const result = await PingService.sendPing();
+
+      if (result.success) {
+        console.log('✅ PING sent successfully - Code:', result.httpCode);
+      } else {
+        console.error('❌ PING failed - Code:', result.httpCode, 'Error:', result.error);
+      }
+    };
+
+    // إرسال ping فوراً عند تحميل الصفحة
+    sendInitialPing();
+  }, []); // Empty deps = run once only
 
   // مراقبة تغيير حالة الجلسات - فقط للخروج الصريح
   useEffect(() => {
@@ -68,8 +86,8 @@ export function PublicPlatformRouter({ onAdminLogin, onBackToAdmin, onFarmOwnerL
       return (
         <>
           <InnovativeLoaderGateway onComplete={handleLoaderComplete} />
-          {/* Debug Badge for tracking verification */}
-          <TrackingDebugBadge />
+          {/* PING Debug Badge */}
+          <PingDebugBadge />
         </>
       );
 
@@ -81,8 +99,8 @@ export function PublicPlatformRouter({ onAdminLogin, onBackToAdmin, onFarmOwnerL
             onBack={handleBackToMain}
             onOwn={handleOwn}
           />
-          {/* Debug Badge for tracking verification */}
-          <TrackingDebugBadge />
+          {/* PING Debug Badge */}
+          <PingDebugBadge />
         </>
       );
 
@@ -96,8 +114,8 @@ export function PublicPlatformRouter({ onAdminLogin, onBackToAdmin, onFarmOwnerL
             onFarmOwnerLogin={onFarmOwnerLogin}
             onViewChange={onViewChange}
           />
-          {/* Debug Badge for tracking verification */}
-          <TrackingDebugBadge />
+          {/* PING Debug Badge */}
+          <PingDebugBadge />
         </>
       );
   }
