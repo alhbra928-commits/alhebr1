@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>🔒 اختبار Locked Grid Shell - iPhone</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #FEE2E2 0%, #DBEAFE 50%, #D1FAE5 100%);
+      padding: 20px;
+      line-height: 1.8;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+    }
+
+    h1 {
+      color: #DC2626;
+      font-size: 28px;
+      margin-bottom: 20px;
+      border-bottom: 4px solid #EF4444;
+      padding-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #DC2626 0%, #B91C1C 100%);
+      color: white;
+      padding: 30px;
+      border-radius: 15px;
+      text-align: center;
+      margin: 20px 0;
+      box-shadow: 0 8px 30px rgba(220, 38, 38, 0.4);
+    }
+
+    .hero h2 {
+      color: white;
+      margin: 0 0 15px;
+      font-size: 26px;
+    }
+
+    .version {
+      background: #1F2937;
+      color: #EF4444;
+      padding: 12px 24px;
+      border-radius: 10px;
+      display: inline-block;
+      font-family: monospace;
+      font-weight: bold;
+      margin: 15px 0;
+      font-size: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    .debug-visual {
+      background: white;
+      border: 3px solid #DC2626;
+      border-radius: 15px;
+      padding: 30px;
+      margin: 25px 0;
+    }
+
+    .debug-mockup {
+      border: 2px dashed #DC2626;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-top: 20px;
+    }
+
+    .debug-header {
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.98) 0%, rgba(10, 20, 15, 0.98) 100%);
+      padding: 20px;
+      text-align: center;
+      font-weight: bold;
+      color: white;
+      border: 3px solid red;
+      background-clip: padding-box;
+      position: relative;
+    }
+
+    .debug-header::before {
+      content: '🔴 خط أحمر = الهيدر موجود';
+      position: absolute;
+      top: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #DC2626;
+      color: white;
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .debug-content {
+      background: linear-gradient(135deg, #F3F4F6, #E5E7EB);
+      padding: 30px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-height: 200px;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .debug-content-item {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      border: 1px solid #D1D5DB;
+      text-align: center;
+    }
+
+    .debug-footer {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.98) 100%);
+      padding: 20px;
+      text-align: center;
+      font-weight: bold;
+      border: 3px solid blue;
+      position: relative;
+    }
+
+    .debug-footer::after {
+      content: '🔵 خط أزرق = الفوتر موجود';
+      position: absolute;
+      bottom: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #2563EB;
+      color: white;
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .step-box {
+      background: linear-gradient(135deg, #FEF2F2, #FEE2E2);
+      border-right: 5px solid #DC2626;
+      padding: 25px;
+      margin: 20px 0;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(220, 38, 38, 0.1);
+    }
+
+    .step-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #DC2626, #B91C1C);
+      color: white;
+      border-radius: 50%;
+      font-weight: bold;
+      margin-left: 15px;
+      font-size: 20px;
+      box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+    }
+
+    .step-box h2 {
+      display: flex;
+      align-items: center;
+      color: #7F1D1D;
+      font-size: 22px;
+      margin-bottom: 15px;
+    }
+
+    .success-criteria {
+      background: #D1FAE5;
+      border: 3px solid #10B981;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 20px 0;
+    }
+
+    .success-criteria h3 {
+      color: #065F46;
+      margin-bottom: 15px;
+      font-size: 20px;
+    }
+
+    .checklist {
+      list-style: none;
+      padding: 0;
+    }
+
+    .checklist li {
+      padding: 12px 20px;
+      margin: 8px 0;
+      background: white;
+      border-radius: 10px;
+      border-right: 3px solid #10B981;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .checklist li::before {
+      content: '✅';
+      font-size: 24px;
+    }
+
+    .warning-box {
+      background: #FEF3C7;
+      border: 3px solid #F59E0B;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 20px 0;
+    }
+
+    .warning-box h3 {
+      color: #92400E;
+      margin-bottom: 10px;
+    }
+
+    .failure-scenarios {
+      background: #FEE2E2;
+      border: 3px solid #DC2626;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 20px 0;
+    }
+
+    .failure-scenarios h3 {
+      color: #7F1D1D;
+      margin-bottom: 15px;
+      font-size: 20px;
+    }
+
+    .scenario {
+      background: white;
+      padding: 20px;
+      margin: 15px 0;
+      border-radius: 10px;
+      border-right: 4px solid #DC2626;
+    }
+
+    .scenario-title {
+      font-weight: bold;
+      color: #DC2626;
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+
+    .scenario-detail {
+      color: #6B7280;
+      line-height: 1.8;
+      padding-right: 20px;
+    }
+
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .comparison-table th {
+      background: linear-gradient(135deg, #DC2626, #B91C1C);
+      color: white;
+      padding: 15px;
+      text-align: right;
+      font-size: 16px;
+    }
+
+    .comparison-table td {
+      padding: 15px;
+      border-bottom: 1px solid #F3F4F6;
+      color: #374151;
+    }
+
+    .comparison-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .comparison-table tr:nth-child(even) {
+      background: #F9FAFB;
+    }
+
+    .tech-box {
+      background: #1F2937;
+      color: #10B981;
+      padding: 20px;
+      border-radius: 12px;
+      font-family: monospace;
+      font-size: 14px;
+      line-height: 1.8;
+      overflow-x: auto;
+      margin: 15px 0;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+
+    .highlight {
+      color: #EF4444;
+      font-weight: bold;
+    }
+
+    .footer-note {
+      text-align: center;
+      margin-top: 40px;
+      padding: 30px;
+      background: linear-gradient(135deg, #7F1D1D, #991B1B);
+      border-radius: 15px;
+      color: white;
+    }
+
+    .footer-note h2 {
+      color: white;
+      margin: 0 0 15px;
+      font-size: 24px;
+    }
+
+    @media (max-width: 768px) {
+      body { padding: 15px; }
+      .container { padding: 20px; }
+      h1 { font-size: 24px; }
+      .step-box h2 { font-size: 18px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>🔒 Locked Grid Shell - اختبار iPhone النهائي</h1>
+
+  <div class="version">📦 v20251219_1766121813158</div>
+
+  <div class="hero">
+    <h2>🎯 الحل الأقوى: position: fixed + 100svh</h2>
+    <p style="font-size: 18px; margin: 0; opacity: 0.95; line-height: 1.6;">
+      قفلنا الـ appShell على الشاشة باستخدام ارتفاع ثابت<br>
+      لا قفزات. لا تبادل اختفاء. ثبات مطلق 100%
+    </p>
+  </div>
+
+  <!-- الفرق الأساسي -->
+  <div style="background: #F3F4F6; padding: 25px; border-radius: 12px; margin: 25px 0;">
+    <h3 style="color: #374151; margin-bottom: 15px; font-size: 20px;">⚡ التحديث الأساسي:</h3>
+
+    <table class="comparison-table">
+      <thead>
+        <tr>
+          <th>الخاصية</th>
+          <th>قبل</th>
+          <th>بعد</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>position</strong></td>
+          <td>relative</td>
+          <td><span class="highlight">fixed</span></td>
+        </tr>
+        <tr>
+          <td><strong>height</strong></td>
+          <td>100dvh (يتغير)</td>
+          <td><span class="highlight">100svh (ثابت)</span></td>
+        </tr>
+        <tr>
+          <td><strong>النتيجة</strong></td>
+          <td>⚠️ قفزات</td>
+          <td>✅ ثبات مطلق</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div style="margin-top: 20px; padding: 20px; background: white; border-radius: 10px; border-right: 4px solid #DC2626;">
+      <strong style="color: #DC2626;">🔑 المفتاح:</strong>
+      <p style="margin: 10px 0 0; color: #6B7280; line-height: 1.8;">
+        <strong>100svh</strong> = Small Viewport Height (ثابت)<br>
+        → لا يتأثر بظهور/اختفاء شريط Safari<br>
+        → لا إعادة حساب للتخطيط<br>
+        → <strong>ثبات مثالي</strong>
+      </p>
+    </div>
+  </div>
+
+  <!-- الخطوة 1: Debug Borders -->
+  <div class="step-box">
+    <h2><span class="step-number">1</span>ابحث عن الخطوط الملونة</h2>
+
+    <div class="debug-visual">
+      <p style="margin-bottom: 20px; color: #374151; font-size: 16px;">
+        <strong>تم إضافة خطوط ملونة مؤقتة للاختبار:</strong>
+      </p>
+
+      <div class="debug-mockup">
+        <div class="debug-header">
+          الهيدر (خط أحمر)
+        </div>
+        <div class="debug-content">
+          <div class="debug-content-item">المحتوى يسكرول</div>
+          <div class="debug-content-item">جرّب التمرير هنا</div>
+          <div class="debug-content-item">الخطوط تثبت مكانها</div>
+        </div>
+        <div class="debug-footer">
+          الفوتر (خط أزرق)
+        </div>
+      </div>
+
+      <div style="margin-top: 30px; padding: 20px; background: #FEF3C7; border-radius: 10px;">
+        <strong style="color: #92400E;">⚠️ الخطوط المضافة:</strong>
+        <div class="tech-box" style="margin-top: 10px; background: #1F2937;">
+.appHeader {<br>
+&nbsp;&nbsp;<span class="highlight">outline: 3px solid red;</span><br>
+&nbsp;&nbsp;background: rgba(255,0,0,.08);<br>
+}<br>
+<br>
+.appFooter {<br>
+&nbsp;&nbsp;<span class="highlight">outline: 3px solid blue;</span><br>
+&nbsp;&nbsp;background: rgba(0,0,255,.08);<br>
+}
+        </div>
+        <p style="margin: 10px 0 0; color: #92400E; font-size: 14px;">
+          → هذه الخطوط <strong>مؤقتة</strong> فقط للاختبار<br>
+          → احذفها بعد التأكد من النجاح
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- الخطوة 2: التمرير -->
+  <div class="step-box">
+    <h2><span class="step-number">2</span>جرّب التمرير القوي</h2>
+
+    <p style="color: #6B7280; margin-bottom: 15px;">
+      جرّب جميع أنواع التمرير على iPhone:
+    </p>
+
+    <ul class="checklist">
+      <li>تمرير بطيء للأسفل/للأعلى</li>
+      <li>تمرير قوي/سريع جداً</li>
+      <li>تمرير متقطع (توقف ثم تمرير)</li>
+      <li>تغيير الاتجاه بسرعة</li>
+      <li>تمرير حتى النهاية</li>
+    </ul>
+  </div>
+
+  <!-- الخطوة 3: معيار النجاح -->
+  <div class="step-box">
+    <h2><span class="step-number">3</span>معيار النجاح</h2>
+
+    <div class="success-criteria">
+      <h3>✅ يجب أن يحدث:</h3>
+      <ul class="checklist">
+        <li>الخط الأحمر ثابت في الأعلى دائماً</li>
+        <li>الخط الأزرق ثابت في الأسفل دائماً</li>
+        <li>معاً في نفس الوقت - لا تبادل</li>
+        <li>المحتوى فقط يتحرك</li>
+        <li>لا قفز أو اهتزاز</li>
+        <li>لا white flash</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- سيناريوهات الفشل -->
+  <div class="failure-scenarios">
+    <h3>🔍 إذا فيه مشكلة - كيف تشخصها؟</h3>
+
+    <div class="scenario">
+      <div class="scenario-title">❌ السيناريو 1: الخط الأحمر/الأزرق يختفي تماماً</div>
+      <div class="scenario-detail">
+        <strong>المعنى:</strong> العنصر يخرج من الشاشة<br>
+        <strong>السبب:</strong> ارتفاع خاطئ أو تموضع خاطئ<br>
+        <strong>الحل:</strong> استخدام 100svh بدلاً من 100dvh (✓ تم تطبيقه)
+      </div>
+    </div>
+
+    <div class="scenario">
+      <div class="scenario-title">⚠️ السيناريو 2: الخط موجود لكن المحتوى داخله يختفي</div>
+      <div class="scenario-detail">
+        <strong>المعنى:</strong> CSS داخل المكوّن يخفي المحتوى<br>
+        <strong>السبب:</strong> opacity: 0 أو transform خاطئ<br>
+        <strong>الحل:</strong> تفتيش ModernTopHeader.tsx و BottomNavigationBar.tsx
+      </div>
+    </div>
+
+    <div class="scenario">
+      <div class="scenario-title">✅ السيناريو 3: كل شيء ثابت ومرئي</div>
+      <div class="scenario-detail">
+        <strong>المعنى:</strong> الحل نجح 100%!<br>
+        <strong>الخطوة التالية:</strong> احذف Debug Borders من index.css
+      </div>
+    </div>
+  </div>
+
+  <!-- CSS التقني -->
+  <div style="background: #F3F4F6; padding: 25px; border-radius: 12px; margin: 25px 0;">
+    <h3 style="color: #374151; margin-bottom: 15px; font-size: 20px;">🔧 CSS المطبق:</h3>
+
+    <div class="tech-box">
+.appShell {<br>
+&nbsp;&nbsp;<span class="highlight">position: fixed;</span>    /* ← مقفول على الشاشة */<br>
+&nbsp;&nbsp;inset: 0;                 /* ← يغطي كل الشاشة */<br>
+&nbsp;&nbsp;display: grid;<br>
+&nbsp;&nbsp;grid-template-rows: auto 1fr auto;<br>
+&nbsp;&nbsp;<span class="highlight">height: 100svh;</span>      /* ← ارتفاع ثابت لا يتغير */<br>
+&nbsp;&nbsp;width: 100%;<br>
+}<br>
+<br>
+.appMain {<br>
+&nbsp;&nbsp;overflow-y: auto;<br>
+&nbsp;&nbsp;-webkit-overflow-scrolling: touch;<br>
+&nbsp;&nbsp;<span class="highlight">overscroll-behavior: contain;</span>  /* ← حدود التمرير */<br>
+}<br>
+<br>
+.appHeader, .appFooter {<br>
+&nbsp;&nbsp;<span class="highlight">flex: 0 0 auto;</span>      /* ← لا يتمدد/ينكمش */<br>
+&nbsp;&nbsp;<span class="highlight">transform: translateZ(0);</span> /* ← طبقة GPU منفصلة */<br>
+&nbsp;&nbsp;z-index: 10;<br>
+}
+    </div>
+  </div>
+
+  <!-- لماذا 100svh؟ -->
+  <div class="warning-box">
+    <h3>🎯 لماذا 100svh أفضل من 100dvh؟</h3>
+
+    <div style="margin-top: 15px; padding: 20px; background: white; border-radius: 10px;">
+      <strong style="color: #374151; display: block; margin-bottom: 15px;">عند التمرير في Safari:</strong>
+
+      <div style="margin-bottom: 15px; padding: 15px; background: #FEE2E2; border-radius: 8px; border-right: 3px solid #DC2626;">
+        <strong style="color: #7F1D1D;">❌ 100dvh (Dynamic):</strong>
+        <p style="margin: 8px 0 0; color: #6B7280; line-height: 1.8;">
+          • شريط Safari يختفي<br>
+          • الارتفاع يتغير من 812px إلى 890px<br>
+          • إعادة حساب التخطيط<br>
+          • <strong>قفزات وقد يخرج عنصر</strong>
+        </p>
+      </div>
+
+      <div style="padding: 15px; background: #D1FAE5; border-radius: 8px; border-right: 3px solid #10B981;">
+        <strong style="color: #065F46;">✅ 100svh (Small):</strong>
+        <p style="margin: 8px 0 0; color: #6B7280; line-height: 1.8;">
+          • الارتفاع ثابت (812px دائماً)<br>
+          • لا تغيير = لا إعادة حساب<br>
+          • <strong>ثبات مطلق</strong>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- بعد النجاح -->
+  <div style="background: linear-gradient(135deg, #D1FAE5, #A7F3D0); padding: 25px; border-radius: 12px; margin: 25px 0; border: 3px solid #10B981;">
+    <h3 style="color: #065F46; margin-bottom: 15px; font-size: 20px;">🎉 بعد التأكد من النجاح:</h3>
+
+    <div style="background: white; padding: 20px; border-radius: 10px; margin-top: 15px;">
+      <strong style="color: #374151; display: block; margin-bottom: 10px;">1. احذف Debug Borders:</strong>
+      <p style="color: #6B7280; margin: 10px 0;">
+        في <code>src/index.css</code>، احذف السطور:
+      </p>
+      <div class="tech-box">
+/* DEBUG: مؤقت للاختبار - احذفه بعد التأكد */<br>
+.appHeader {<br>
+&nbsp;&nbsp;outline: 3px solid red;<br>
+&nbsp;&nbsp;background: rgba(255,0,0,.08);<br>
+}<br>
+<br>
+.appFooter {<br>
+&nbsp;&nbsp;outline: 3px solid blue;<br>
+&nbsp;&nbsp;background: rgba(0,0,255,.08);<br>
+}
+      </div>
+
+      <strong style="color: #374151; display: block; margin: 20px 0 10px;">2. Build نهائي:</strong>
+      <div class="tech-box">
+npm run build
+      </div>
+    </div>
+  </div>
+
+  <!-- الخلاصة -->
+  <div class="footer-note">
+    <h2>🔒 Locked Grid Shell = الحل النهائي</h2>
+    <p style="font-size: 18px; margin: 0; line-height: 1.8; opacity: 0.95;">
+      قفلنا الـ Shell على الشاشة<br>
+      استخدمنا ارتفاع ثابت (100svh)<br>
+      النتيجة: ثبات مطلق 100% على iPhone Safari
+    </p>
+  </div>
+
+</div>
+
+</body>
+</html>

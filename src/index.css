@@ -3,54 +3,61 @@
 @tailwind utilities;
 
 /* ====================================================
-   GRID SHELL SYSTEM - الحل النهائي لـ iOS Safari
-   استبدال Portal بـ Grid Layout
+   LOCKED GRID SHELL - قفل التخطيط على شاشة iPhone
+   استخدام position: fixed + 100svh لتثبيت نهائي
    ==================================================== */
 
 html, body {
   height: 100%;
   margin: 0;
-  padding: 0;
 }
 
-/* مهم: لا تجعل البودي يسكرول */
 body {
-  overflow: hidden;
+  overflow: hidden; /* لا سكرول على البودي */
 }
 
-/* ===== Grid Shell Layout ===== */
+/* اقفل الشيل على الشاشة (هذا يمنع اختفاء الهيدر/الفوتر نهائيًا) */
 .appShell {
-  height: 100dvh;
+  position: fixed;
+  inset: 0;
   display: grid;
   grid-template-rows: auto 1fr auto;
-  overflow: hidden;
+  height: 100svh;          /* أهم سطر للآيفون - ثابت لا يتغير */
+  width: 100%;
 }
 
-/* Header - ثابت بدون position fixed */
-.appHeader {
-  z-index: 10;
-  /* الثبات يأتي من Grid - لا position fixed */
-}
-
-/* Main Content - مكان التمرير الوحيد */
+/* المحتوى هو اللي يسكرول فقط */
 .appMain {
   overflow-y: auto;
-  overflow-x: hidden;
-  -webkit-overflow-scrolling: touch; /* آمن الآن */
-  position: relative;
-  /* No padding - Grid يتكفل بالمساحة */
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 }
 
-/* Footer - ثابت بدون position fixed */
+/* حماية إضافية للهيدر/الفوتر */
+.appHeader, .appFooter {
+  flex: 0 0 auto;
+  transform: translateZ(0);
+  z-index: 10;
+}
+
 .appFooter {
   padding-bottom: env(safe-area-inset-bottom);
-  z-index: 10;
-  /* الثبات يأتي من Grid - لا position fixed */
+}
+
+/* DEBUG: مؤقت للاختبار - احذفه بعد التأكد */
+.appHeader {
+  outline: 3px solid red;
+  background: rgba(255,0,0,.08);
+}
+
+.appFooter {
+  outline: 3px solid blue;
+  background: rgba(0,0,255,.08);
 }
 
 /* Remove old appContent padding */
 #appContent {
-  /* Grid Shell يتكفل بكل شيء */
+  /* Locked Grid Shell يتكفل بكل شيء */
 }
 
 /* Override any dark backgrounds */
