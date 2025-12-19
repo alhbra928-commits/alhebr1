@@ -22,13 +22,23 @@ export function BackToAdminButton({ onBackToAdmin }: BackToAdminButtonProps) {
       checkSession();
     };
 
+    // الاستماع لحدث الخروج - إخفاء فوري
+    const handleLogout = () => {
+      console.log('[BackToAdmin] 🚪 تسجيل خروج - إخفاء الزر فوراً');
+      setIsVisible(false);
+    };
+
     window.addEventListener('admin-session-changed', handleSessionChange);
     window.addEventListener('storage', handleSessionChange);
+    window.addEventListener('admin-logout', handleLogout);
+    window.addEventListener('logout', handleLogout);
 
     return () => {
       clearInterval(interval);
       window.removeEventListener('admin-session-changed', handleSessionChange);
       window.removeEventListener('storage', handleSessionChange);
+      window.removeEventListener('admin-logout', handleLogout);
+      window.removeEventListener('logout', handleLogout);
     };
   }, []);
 

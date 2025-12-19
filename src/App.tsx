@@ -215,12 +215,14 @@ function App() {
 
   const handleLogout = async () => {
     try {
+      console.log('[App] 🚪 بدء عملية تسجيل الخروج...');
+
       const { token } = AdminSessionService.getCurrentSession();
       if (token) {
         await AdminSessionService.terminateSession(token);
       }
 
-      // تنظيف كامل للجلسة
+      // تنظيف كامل للجلسة (يتضمن إطلاق admin-logout event)
       AdminSessionService.clearSession();
       setAdminSession(null);
       setActiveModule('public');
@@ -228,12 +230,14 @@ function App() {
       // إطلاق حدث الخروج لإعادة تشغيل البوابة
       window.dispatchEvent(new Event('logout'));
 
+      console.log('[App] ✅ تم تسجيل الخروج بنجاح');
+
       // إعادة تحميل الصفحة للتأكد من الخروج الكامل
       setTimeout(() => {
         window.location.reload();
       }, 100);
     } catch (error) {
-      console.error('Logout error:', error);
+      console.error('[App] ❌ خطأ في تسجيل الخروج:', error);
       // حتى لو حدث خطأ، نخرج
       AdminSessionService.clearSession();
       setAdminSession(null);
