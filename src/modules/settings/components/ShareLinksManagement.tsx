@@ -255,61 +255,146 @@ export const ShareLinksManagement: React.FC = () => {
                 <h3 className="font-semibold text-gray-900">قالب النص</h3>
               </div>
 
-              <textarea
-                value={currentSettings.share_text_template}
-                onChange={e => updateField('share_text_template', e.target.value)}
-                rows={8}
-                className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 focus:border-emerald-500 focus:ring-0 font-mono text-sm resize-none"
-                placeholder="استخدم {{emoji_tree}} للرموز و {{farm_name}} للبيانات"
-                dir="ltr"
-              />
+              <div className="bg-gradient-to-br from-slate-50 via-gray-50 to-zinc-50 rounded-2xl p-5 border-2 border-gray-300 shadow-inner">
+                <div className="mb-2 flex items-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                  <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+                  <span>محرر القالب النصي</span>
+                </div>
+                <textarea
+                  value={currentSettings.share_text_template}
+                  onChange={e => updateField('share_text_template', e.target.value)}
+                  rows={14}
+                  className="w-full px-5 py-4 rounded-xl border-2 border-gray-300 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100 font-mono text-base resize-none bg-white shadow-lg transition-all"
+                  placeholder="اكتب القالب هنا... مثال:
+{{emoji_tree}} {{farm_name}}
+{{emoji_location}} {{location}}
 
-              <div className="mt-3 p-3 bg-blue-50 rounded-lg text-sm text-blue-800">
-                <strong>المتغيرات المتاحة:</strong>
-                <div className="mt-2 space-y-1">
-                  <div>• <code>{'{{emoji_tree}}'}</code>, <code>{'{{emoji_location}}'}</code>, <code>{'{{emoji_money}}'}</code>, etc.</div>
-                  <div>• <code>{'{{farm_name}}'}</code>, <code>{'{{location}}'}</code>, <code>{'{{price}}'}</code></div>
-                  <div>• <code>{'{{available_trees}}'}</code>, <code>{'{{availability_text}}'}</code></div>
+{{emoji_money}} السعر: {{price}} ريال
+{{emoji_check}} {{availability_text}}"
+                  dir="ltr"
+                  style={{
+                    lineHeight: '2',
+                    fontFamily: '"Fira Code", Consolas, Monaco, "Courier New", monospace',
+                    letterSpacing: '0.5px'
+                  }}
+                />
+              </div>
+
+              <div className="mt-4 p-5 bg-gradient-to-br from-blue-50 via-indigo-50 to-cyan-50 rounded-2xl text-sm text-blue-900 border-2 border-blue-200 shadow-sm">
+                <div className="flex items-start gap-3">
+                  <div className="text-3xl">💡</div>
+                  <div className="flex-1">
+                    <strong className="block mb-3 text-base font-bold text-blue-800">المتغيرات المتاحة:</strong>
+
+                    <div className="space-y-3">
+                      <div>
+                        <div className="text-xs font-bold text-blue-700 mb-2 uppercase tracking-wide">الرموز التعبيرية:</div>
+                        <div className="grid grid-cols-2 gap-2">
+                          <div className="flex items-center gap-2 bg-white rounded-lg p-2 shadow-sm">
+                            <code className="px-2 py-1 bg-emerald-50 rounded text-xs font-bold text-emerald-700">{'{{emoji_tree}}'}</code>
+                            <span className="text-lg">🌳</span>
+                          </div>
+                          <div className="flex items-center gap-2 bg-white rounded-lg p-2 shadow-sm">
+                            <code className="px-2 py-1 bg-emerald-50 rounded text-xs font-bold text-emerald-700">{'{{emoji_location}}'}</code>
+                            <span className="text-lg">📍</span>
+                          </div>
+                          <div className="flex items-center gap-2 bg-white rounded-lg p-2 shadow-sm">
+                            <code className="px-2 py-1 bg-emerald-50 rounded text-xs font-bold text-emerald-700">{'{{emoji_money}}'}</code>
+                            <span className="text-lg">💰</span>
+                          </div>
+                          <div className="flex items-center gap-2 bg-white rounded-lg p-2 shadow-sm">
+                            <code className="px-2 py-1 bg-emerald-50 rounded text-xs font-bold text-emerald-700">{'{{emoji_check}}'}</code>
+                            <span className="text-lg">✅</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div>
+                        <div className="text-xs font-bold text-blue-700 mb-2 uppercase tracking-wide">البيانات الديناميكية:</div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                          <div className="flex items-center gap-2 bg-white rounded-lg p-2 shadow-sm">
+                            <code className="px-2 py-1 bg-purple-50 rounded text-xs font-bold text-purple-700">{'{{farm_name}}'}</code>
+                            <span className="text-xs text-gray-600">اسم المزرعة</span>
+                          </div>
+                          <div className="flex items-center gap-2 bg-white rounded-lg p-2 shadow-sm">
+                            <code className="px-2 py-1 bg-purple-50 rounded text-xs font-bold text-purple-700">{'{{location}}'}</code>
+                            <span className="text-xs text-gray-600">الموقع</span>
+                          </div>
+                          <div className="flex items-center gap-2 bg-white rounded-lg p-2 shadow-sm">
+                            <code className="px-2 py-1 bg-purple-50 rounded text-xs font-bold text-purple-700">{'{{price}}'}</code>
+                            <span className="text-xs text-gray-600">السعر</span>
+                          </div>
+                          <div className="flex items-center gap-2 bg-white rounded-lg p-2 shadow-sm">
+                            <code className="px-2 py-1 bg-purple-50 rounded text-xs font-bold text-purple-700">{'{{available_trees}}'}</code>
+                            <span className="text-xs text-gray-600">الأشجار المتاحة</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div className="bg-gradient-to-br from-emerald-50 to-green-50 rounded-2xl border-2 border-emerald-200 p-6">
-              <div className="flex items-center gap-2 mb-4">
-                <Eye className="w-5 h-5 text-emerald-600" />
-                <h3 className="font-semibold text-gray-900">معاينة النص</h3>
+            <div className="bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 rounded-2xl border-2 border-emerald-300 p-6 shadow-lg">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                  <Eye className="w-5 h-5 text-emerald-600" />
+                  <h3 className="font-semibold text-gray-900">معاينة النص النهائي</h3>
+                </div>
+                <span className="px-3 py-1 bg-emerald-100 text-emerald-700 text-xs font-bold rounded-full">
+                  مباشرة
+                </span>
               </div>
 
-              <div className="bg-white rounded-lg p-4 whitespace-pre-line text-sm leading-relaxed">
-                {previewText}
+              <div className="bg-white rounded-2xl p-6 whitespace-pre-line text-base leading-loose shadow-inner border-2 border-emerald-100" style={{ direction: 'rtl' }}>
+                {previewText || (
+                  <span className="text-gray-400 italic">ستظهر المعاينة هنا بعد كتابة القالب...</span>
+                )}
+              </div>
+
+              <div className="mt-4 p-3 bg-emerald-100 rounded-xl text-xs text-emerald-800 flex items-center gap-2">
+                <span className="text-base">ℹ️</span>
+                <span>هذه معاينة مع بيانات تجريبية. النص الفعلي يتغير حسب المزرعة المختارة.</span>
               </div>
             </div>
 
-            <div className="flex gap-3">
-              <button
-                onClick={handleSave}
-                disabled={saving}
-                className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-emerald-500 to-green-600 text-white rounded-xl hover:shadow-lg transition-all disabled:opacity-50"
-              >
-                {saving ? (
-                  <>
-                    <RefreshCw className="w-5 h-5 animate-spin" />
-                    جاري الحفظ...
-                  </>
-                ) : (
-                  <>
-                    <Save className="w-5 h-5" />
-                    حفظ التغييرات
-                  </>
-                )}
-              </button>
+            {/* Sticky Save Button */}
+            <div className="sticky bottom-0 left-0 right-0 bg-white border-t-4 border-emerald-200 rounded-2xl shadow-2xl p-6 z-50">
+              <div className="flex gap-3">
+                <button
+                  onClick={handleSave}
+                  disabled={saving}
+                  className="flex-1 flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-emerald-500 via-emerald-600 to-green-600 text-white rounded-2xl hover:shadow-2xl hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 text-lg font-bold"
+                >
+                  {saving ? (
+                    <>
+                      <RefreshCw className="w-6 h-6 animate-spin" />
+                      <span className="text-xl">جاري الحفظ...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Save className="w-6 h-6" />
+                      <span className="text-xl">حفظ التغييرات</span>
+                    </>
+                  )}
+                </button>
 
-              <button
-                onClick={() => loadSettings()}
-                className="px-6 py-3 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-colors"
-              >
-                <RefreshCw className="w-5 h-5" />
-              </button>
+                <button
+                  onClick={() => loadSettings()}
+                  className="px-6 py-4 bg-gradient-to-br from-gray-100 to-gray-200 text-gray-700 rounded-2xl hover:bg-gray-300 transition-all hover:scale-105 active:scale-95 shadow-lg"
+                  title="إعادة التحميل"
+                >
+                  <RefreshCw className="w-6 h-6" />
+                </button>
+              </div>
+
+              <div className="mt-3 text-center text-sm text-gray-600">
+                <span className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-full">
+                  <span className="text-blue-600">💾</span>
+                  <span>تذكر حفظ التغييرات قبل الخروج</span>
+                </span>
+              </div>
             </div>
           </div>
         )}
