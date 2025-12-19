@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Home, Phone, Menu, X } from 'lucide-react';
+import { Phone, Menu, X } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 
 interface ModernTopHeaderProps {
@@ -476,25 +476,11 @@ export function ModernTopHeader({
             <span className="logo-text">مزادات</span>
           </div>
 
-          {/* Desktop Navigation */}
-          <nav className="header-nav-desktop">
-            {/* Regular Nav Buttons */}
-            <button
-              className={`header-nav-btn ${currentSection === 'home' ? 'active' : ''}`}
-              onClick={() => onNavigate?.('home')}
-              title={texts.homeTooltip}
-            >
-              <Home size={18} />
-              <span>{texts.homeButton}</span>
-            </button>
-          </nav>
-
           {/* Desktop Phone Button */}
           <button
             className="header-phone-btn"
-            onClick={() => window.open(`tel:${customPhoneNumber || texts.phoneNumber}`)}
+            onClick={() => window.location.href = `tel:${customPhoneNumber || texts.phoneNumber}`}
             title={texts.phoneTooltip}
-            style={{ display: window.innerWidth > 768 ? 'flex' : 'none' }}
           >
             <Phone size={18} />
             <span>{texts.phoneButton}</span>
@@ -527,26 +513,11 @@ export function ModernTopHeader({
         {/* Mobile Menu */}
         <div className={`mobile-menu ${mobileMenuOpen ? 'open' : ''}`}>
           <div className="mobile-menu-content">
-            {/* Home */}
-            <div
-              className={`mobile-menu-item ${currentSection === 'home' ? 'active' : ''}`}
-              onClick={() => {
-                onNavigate?.('home');
-                setMobileMenuOpen(false);
-                document.body.classList.remove('menu-open');
-              }}
-            >
-              <Home size={20} />
-              <span>{texts.homeButton}</span>
-            </div>
-
-            <div className="mobile-menu-divider" />
-
             {/* Phone */}
             <div
               className="mobile-menu-item"
               onClick={() => {
-                window.open(`tel:${customPhoneNumber || texts.phoneNumber}`);
+                window.location.href = `tel:${customPhoneNumber || texts.phoneNumber}`;
                 setMobileMenuOpen(false);
                 document.body.classList.remove('menu-open');
               }}
