@@ -41,7 +41,7 @@ const iconMap: Record<string, any> = {
 export function SmartActivityTicker() {
   const [activities, setActivities] = useState<Activity[]>([]);
   const [settings, setSettings] = useState<TickerSettings>({
-    mode: 'hybrid',
+    mode: 'real',
     scrollSpeed: 'medium',
     itemsPerCycle: 10,
     showTimestamps: true,
@@ -153,11 +153,12 @@ export function SmartActivityTicker() {
       }
 
       if (items.length === 0) {
+        // عرض رسالة تحفيزية بدلاً من الترحيب
         items.push({
-          id: 'welcome',
-          icon: '⭐',
-          titleAr: 'مرحباً بك في منصة مزادات',
-          titleEn: 'Welcome to Mazadat Platform',
+          id: 'no-activities',
+          icon: '🌟',
+          titleAr: 'ابدأ الآن وكن أول من يحجز في منصة مزادات',
+          titleEn: 'Start now and be the first to book on Mazadat Platform',
           priority: 1,
           activityType: 'welcome',
         });
