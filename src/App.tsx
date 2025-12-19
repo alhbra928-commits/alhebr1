@@ -364,7 +364,7 @@ function App() {
       {/* Main Content */}
       <main
         id="appContent"
-        className="appMain min-h-screen royal-green-bg"
+        className={`appMain min-h-screen royal-green-bg ${activeModule === 'public' ? 'homePage' : ''}`}
       >
         {showAdminLogin && (
           <Suspense fallback={<div className="min-h-screen bg-gradient-to-br from-emerald-50 to-green-50" />}>

@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>اختبار إصلاح قفز الفوتر - iPhone</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(135deg, #ECFDF5 0%, #F0FDF4 50%, #F0FDFA 100%);
+      direction: rtl;
+      overflow: hidden;
+      height: 100vh;
+      height: -webkit-fill-available;
+    }
+
+    .container {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header {
+      padding: 1.5rem;
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.95), rgba(5, 150, 105, 0.95));
+      color: white;
+      text-align: center;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+    }
+
+    .header h1 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+      font-weight: 800;
+    }
+
+    .header p {
+      font-size: 0.875rem;
+      opacity: 0.9;
+    }
+
+    .content {
+      flex: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: none; /* قفل الـ bounce */
+      padding: 1.5rem;
+    }
+
+    .test-card {
+      background: white;
+      border-radius: 1rem;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+
+    .test-card h3 {
+      color: #10b981;
+      font-size: 1.25rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .test-steps {
+      background: rgba(16, 185, 129, 0.05);
+      border-right: 4px solid #10b981;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      margin: 1rem 0;
+    }
+
+    .test-steps li {
+      margin-bottom: 0.75rem;
+      padding-right: 1.5rem;
+      line-height: 1.6;
+    }
+
+    .status-indicator {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      margin-left: 0.5rem;
+    }
+
+    .status-indicator.success { background: #10b981; animation: pulse 2s infinite; }
+    .status-indicator.testing { background: #f59e0b; animation: pulse 1s infinite; }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.2); }
+    }
+
+    /* الفوتر المثبت - نفس التطبيق */
+    .footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+
+      /* CRITICAL iOS FIX */
+      transform: translateZ(0);
+      will-change: transform;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      -webkit-transform: translateZ(0);
+
+      /* قفل الارتفاع */
+      height: 56px;
+      min-height: 56px;
+      max-height: 56px;
+      overflow: hidden;
+      padding-bottom: env(safe-area-inset-bottom);
+
+      background: linear-gradient(135deg, rgba(44, 95, 45, 0.95) 0%, rgba(30, 70, 32, 0.98) 50%, rgba(44, 95, 45, 0.95) 100%);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-top: 3px solid rgba(212, 175, 55, 0.5);
+      box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.2);
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-size: 1.125rem;
+    }
+
+    .footer-text {
+      animation: slideText 15s linear infinite;
+    }
+
+    @keyframes slideText {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
+    }
+
+    .checklist {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1));
+      border-radius: 1rem;
+      padding: 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .checklist h4 {
+      color: #059669;
+      margin-bottom: 1rem;
+      font-size: 1.125rem;
+    }
+
+    .check-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+      padding: 0.75rem;
+      background: white;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .check-item:active {
+      transform: scale(0.98);
+    }
+
+    .checkbox {
+      width: 24px;
+      height: 24px;
+      border: 2px solid #10b981;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+    }
+
+    .check-item.checked .checkbox {
+      background: #10b981;
+      color: white;
+    }
+
+    .filler {
+      height: 200vh;
+      background: linear-gradient(to bottom, transparent, rgba(16, 185, 129, 0.05));
+    }
+
+    .alert {
+      background: rgba(16, 185, 129, 0.15);
+      border: 2px solid #10b981;
+      border-radius: 1rem;
+      padding: 1.5rem;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      animation: fadeIn 0.5s;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .alert h2 {
+      color: #059669;
+      font-size: 1.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .alert p {
+      color: #047857;
+      font-size: 1.125rem;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🎯 اختبار إصلاح قفز الفوتر</h1>
+      <p>iPhone/iOS - Live Test</p>
+    </div>
+
+    <div class="content">
+      <div class="alert">
+        <h2>⚠️ تعليمات مهمة</h2>
+        <p>مرّر الصفحة للأعلى والأسفل بقوة<br>راقب الفوتر في الأسفل - يجب أن يبقى ثابتاً تماماً</p>
+      </div>
+
+      <div class="test-card">
+        <h3>
+          <span class="status-indicator testing"></span>
+          ✅ الخطوات المطبقة
+        </h3>
+        <div class="test-steps">
+          <ol>
+            <li><strong>✅ تثبيت الفوتر:</strong> transform: translateZ(0) + will-change</li>
+            <li><strong>✅ قفل الارتفاع:</strong> min-height = max-height = 56px</li>
+            <li><strong>✅ منع Font Swap:</strong> -webkit-text-size-adjust: 100%</li>
+            <li><strong>✅ قفل Overscroll:</strong> overscroll-behavior: none</li>
+            <li><strong>✅ Visual Viewport:</strong> ربط الارتفاع بـ visualViewport</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="test-card">
+        <h3>
+          <span class="status-indicator success"></span>
+          📝 قائمة التحقق
+        </h3>
+        <div class="checklist">
+          <h4>اختبر كل نقطة:</h4>
+          <div class="check-item" onclick="this.classList.toggle('checked')">
+            <div class="checkbox">✓</div>
+            <span>الفوتر لا يقفز عند التمرير البطيء</span>
+          </div>
+          <div class="check-item" onclick="this.classList.toggle('checked')">
+            <div class="checkbox">✓</div>
+            <span>الفوتر لا يقفز عند التمرير السريع</span>
+          </div>
+          <div class="check-item" onclick="this.classList.toggle('checked')">
+            <div class="checkbox">✓</div>
+            <span>الفوتر لا يتأثر بالسحب القوي (bounce)</span>
+          </div>
+          <div class="check-item" onclick="this.classList.toggle('checked')">
+            <div class="checkbox">✓</div>
+            <span>النص المتحرك يبقى في نفس الارتفاع</span>
+          </div>
+          <div class="check-item" onclick="this.classList.toggle('checked')">
+            <div class="checkbox">✓</div>
+            <span>لا يوجد تغيير في المسافة من الأسفل</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="test-card">
+        <h3>🎯 معيار النجاح</h3>
+        <p style="line-height: 1.8; color: #047857;">
+          <strong>النتيجة المتوقعة:</strong><br>
+          الفوتر الأخضر في الأسفل يجب أن يبقى <strong>ثابتاً تماماً</strong> مهما كانت سرعة التمرير أو قوة السحب.
+          <br><br>
+          إذا كنت ترى الفوتر يقفز أو يرتفع أو ينخفض → <span style="color: #dc2626;">المشكلة ما زالت موجودة</span><br>
+          إذا كان الفوتر ثابت 100% → <span style="color: #10b981;">✅ الإصلاح نجح!</span>
+        </p>
+      </div>
+
+      <!-- محتوى للتمرير -->
+      <div class="filler"></div>
+    </div>
+
+    <!-- الفوتر المثبت -->
+    <div class="footer">
+      <div class="footer-text">
+        🌴 شريط الإحصائيات المتحرك - اختبار قفز الفوتر على iOS 🌴
+      </div>
+    </div>
+  </div>
+
+  <script>
+    console.log('✅ iOS Footer Jump Fix Test Started');
+    console.log('📱 Device:', navigator.userAgent);
+    console.log('📐 Screen:', window.innerWidth, 'x', window.innerHeight);
+    console.log('🔍 Visual Viewport:', window.visualViewport ? 'Supported' : 'Not Supported');
+
+    // مراقبة التغييرات في Viewport
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', () => {
+        console.log('📏 Viewport Resize:', window.visualViewport.height);
+      });
+
+      window.visualViewport.addEventListener('scroll', () => {
+        console.log('📜 Viewport Scroll:', window.visualViewport.pageTop);
+      });
+    }
+
+    // اختبار تلقائي
+    setTimeout(() => {
+      const checkedItems = document.querySelectorAll('.check-item.checked').length;
+      const totalItems = document.querySelectorAll('.check-item').length;
+
+      if (checkedItems === totalItems) {
+        alert('🎉 مبروك! جميع الاختبارات نجحت ✅');
+      }
+    }, 30000); // بعد 30 ثانية
+  </script>
+</body>
+</html>
