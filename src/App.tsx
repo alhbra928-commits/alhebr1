@@ -4,7 +4,6 @@ import { PermissionsProvider } from './contexts/PermissionsContext';
 import FixedChrome from './components/common/FixedChrome';
 import { ModernTopHeader } from './components/common/ModernTopHeader';
 import { SmartActivityTicker } from './components/common/SmartActivityTicker';
-import { AdvancedPlatformLoader } from './components/common/AdvancedPlatformLoader';
 
 // Lazy load EVERYTHING - including admin components
 const SmartAdminLoginPage = lazy(() => import('./modules/admin/components/SmartAdminLoginPage').then(m => ({ default: m.SmartAdminLoginPage })));
@@ -35,7 +34,6 @@ const ControlOversightView = lazy(() => import('./modules/admin/components/Contr
 const WhatsAppDashboard = lazy(() => import('./modules/whatsapp/components/WhatsAppDashboard').then(m => ({ default: m.WhatsAppDashboard })));
 
 function App() {
-  const [showLoader, setShowLoader] = useState(true);
   const [activeModule, setActiveModule] = useState('public');
   const [showAdminLogin, setShowAdminLogin] = useState(false);
   const [adminSession, setAdminSession] = useState<any>(null);
@@ -44,9 +42,6 @@ function App() {
   const [lastActivity, setLastActivity] = useState(Date.now());
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [publicView, setPublicView] = useState<'home' | 'farmDetail' | 'booking' | 'investor' | 'verification' | 'concept'>('home');
-
-  // ✅ Loader يظهر دائماً في كل مرة يفتح المستخدم المنصة!
-  // لا توجد شروط - سيظهر في كل مرة بدون استثناء
 
   // حفظ آخر صفحة في لوحة التحكم
   useEffect(() => {
@@ -384,11 +379,6 @@ function App() {
 
   // تحديد ما إذا كان يجب عرض الهيدر والفوتر (فقط للصفحة الرئيسية العامة)
   const showPublicChrome = activeModule === 'public' && !showAdminLogin && publicView === 'home';
-
-  // Show loader first
-  if (showLoader) {
-    return <AdvancedPlatformLoader onComplete={() => setShowLoader(false)} />;
-  }
 
   return (
     <div className="appShell" dir="rtl">
