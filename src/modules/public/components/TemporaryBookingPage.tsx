@@ -316,9 +316,10 @@ export function TemporaryBookingPage({
 
   return (
     <div
-      className="min-h-screen pb-8"
+      className="min-h-screen pb-safe"
       style={{
-        background: `radial-gradient(circle at top left, ${greenTheme.lightest}, ${greenTheme.cream})`
+        background: `radial-gradient(circle at top left, ${greenTheme.lightest}, ${greenTheme.cream})`,
+        paddingBottom: 'max(120px, env(safe-area-inset-bottom, 32px))'
       }}
       dir="rtl"
     >
@@ -513,6 +514,96 @@ export function TemporaryBookingPage({
           </div>
         </div>
 
+        {/* بيانات المستثمر - تظهر أولاً على الموبايل */}
+        <div className="lg:hidden mb-4 px-3 sm:px-4">
+          <div
+            className="rounded-2xl p-4 sm:p-5"
+            style={{
+              background: 'white',
+              border: `2px solid ${greenTheme.primary}`,
+              boxShadow: `0 8px 24px ${greenTheme.primary}20`
+            }}
+          >
+            <div className="flex items-center gap-2 mb-4">
+              <Edit3 className="w-5 h-5" style={{ color: greenTheme.primary }} />
+              <h3 className="text-lg font-black" style={{ color: greenTheme.darkest }}>
+                أدخل بياناتك
+              </h3>
+            </div>
+
+            <div className="space-y-3">
+              <div>
+                <label className="flex items-center gap-1.5 mb-1.5 font-black text-gray-700 text-xs">
+                  <User className="w-4 h-4" style={{ color: greenTheme.primary }} />
+                  الاسم الكامل *
+                </label>
+                <input
+                  type="text"
+                  value={investorName}
+                  onChange={(e) => setInvestorName(e.target.value)}
+                  placeholder="أدخل اسمك الكامل (3 أحرف على الأقل)"
+                  className="w-full px-3 py-3 rounded-xl border-2 focus:outline-none transition-all font-bold text-sm shadow-inner touch-manipulation"
+                  style={{
+                    borderColor: isValidName ? greenTheme.primary : investorName ? '#f59e0b' : '#d1d5db',
+                    background: isValidName ? greenTheme.cream : 'white'
+                  }}
+                />
+                {investorName && !isValidName && (
+                  <p className="text-xs text-amber-600 font-bold mt-1 flex items-center gap-1">
+                    <AlertCircle className="w-3 h-3" />
+                    يجب إدخال 3 أحرف على الأقل
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <label className="flex items-center gap-1.5 mb-1.5 font-black text-gray-700 text-xs">
+                  <Phone className="w-4 h-4" style={{ color: greenTheme.primary }} />
+                  رقم الجوال *
+                </label>
+                <div className="flex gap-2">
+                  <div
+                    className="px-3 py-3 rounded-xl font-black text-sm flex items-center shadow-inner flex-shrink-0"
+                    style={{
+                      background: greenTheme.lightest,
+                      color: greenTheme.darkest,
+                      border: `2px solid ${greenTheme.lighter}`
+                    }}
+                  >
+                    +966
+                  </div>
+                  <input
+                    type="tel"
+                    value={investorPhone}
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/\D/g, '');
+                      if (value.length <= 10) {
+                        setInvestorPhone(value);
+                      }
+                    }}
+                    placeholder="5xxxxxxxx (10 أرقام)"
+                    maxLength={10}
+                    className="flex-1 min-w-0 px-3 py-3 rounded-xl border-2 focus:outline-none transition-all font-bold text-sm shadow-inner"
+                    style={{
+                      borderColor: isValidPhone ? greenTheme.primary : investorPhone ? '#f59e0b' : '#d1d5db',
+                      background: isValidPhone ? greenTheme.cream : 'white'
+                    }}
+                  />
+                </div>
+                {investorPhone && !isValidPhone && (
+                  <p className="text-xs text-amber-600 font-bold mt-1 flex items-center gap-1">
+                    <AlertCircle className="w-3 h-3" />
+                    {investorPhone.length < 10
+                      ? `أدخل ${10 - investorPhone.length} أرقام إضافية`
+                      : 'يجب أن يبدأ الرقم بـ 05'
+                    }
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div className="grid lg:grid-cols-3 gap-3 sm:gap-3 md:gap-4 lg:gap-6">
           <div className="lg:col-span-2">
             <div
@@ -546,7 +637,7 @@ export function TemporaryBookingPage({
                 </div>
               </div>
 
-              <div className="p-3 sm:p-4 md:p-5 lg:p-6 space-y-2.5 sm:space-y-3 md:space-y-4 max-h-[450px] sm:max-h-[500px] md:max-h-[550px] overflow-y-auto overscroll-contain">
+              <div className="p-3 sm:p-4 md:p-5 lg:p-6 space-y-2.5 sm:space-y-3 md:space-y-4 max-h-[350px] sm:max-h-[400px] md:max-h-[500px] lg:max-h-[550px] overflow-y-auto overscroll-contain">
                 {varieties.map((variety, index) => {
                   const selection = selections.get(variety.id);
                   const quantity = selection?.quantity || 0;
@@ -891,7 +982,7 @@ export function TemporaryBookingPage({
 
         {/* زر الحجز في نهاية الصفحة - للجوال والتابلت */}
         {selections.size > 0 && (
-          <div className="lg:hidden mt-6 px-4 pb-8">
+          <div className="lg:hidden mt-6 px-4 pb-safe-bottom">
             <div
               className="p-3.5 rounded-2xl shadow-2xl"
               style={{
@@ -990,6 +1081,14 @@ export function TemporaryBookingPage({
           padding-top: max(0.75rem, env(safe-area-inset-top));
         }
 
+        .pb-safe {
+          padding-bottom: max(120px, calc(32px + env(safe-area-inset-bottom, 0px)));
+        }
+
+        .pb-safe-bottom {
+          padding-bottom: max(32px, env(safe-area-inset-bottom, 16px));
+        }
+
         .overscroll-contain {
           overscroll-behavior: contain;
           -webkit-overflow-scrolling: touch;
@@ -1003,6 +1102,13 @@ export function TemporaryBookingPage({
         button {
           -webkit-user-select: none;
           user-select: none;
+        }
+
+        /* منع التمرير الزائد في iOS */
+        @supports (-webkit-touch-callout: none) {
+          body {
+            overscroll-behavior-y: none;
+          }
         }
       `}</style>
     </div>
