@@ -2,6 +2,8 @@ import { useState, lazy, Suspense, useEffect } from 'react';
 import { AdminSessionService } from './modules/admin/services/adminSessionService';
 import { PermissionsProvider } from './contexts/PermissionsContext';
 import FixedChrome from './components/common/FixedChrome';
+import { ModernTopHeader } from './components/common/ModernTopHeader';
+import { BottomNavigationBar } from './components/common/BottomNavigationBar';
 
 // Lazy load EVERYTHING - including admin components
 const SmartAdminLoginPage = lazy(() => import('./modules/admin/components/SmartAdminLoginPage').then(m => ({ default: m.SmartAdminLoginPage })));
@@ -340,14 +342,37 @@ function App() {
     }
   };
 
+  // تحديد ما إذا كان يجب عرض الهيدر والفوتر (فقط للصفحات العامة)
+  const showPublicChrome = activeModule === 'public' && !showAdminLogin;
+
   return (
     <>
       {/* Fixed Chrome - Header & Footer using Portal */}
       <FixedChrome
-        header={null}
-        footer={null}
-        headerHeight={activeModule === 'public' || activeModule === 'farm-owner' ? 72 : 0}
-        footerHeight={activeModule === 'public' || activeModule === 'farm-owner' ? 72 : 0}
+        header={showPublicChrome ? (
+          <ModernTopHeader
+            currentSection="home"
+            onNavigate={(section) => {
+              console.log('Navigate to:', section);
+            }}
+            onSmartButtonClick={() => {
+              console.log('Smart button clicked');
+            }}
+          />
+        ) : null}
+        footer={showPublicChrome ? (
+          <BottomNavigationBar
+            currentSection="home"
+            onNavigate={(section) => {
+              console.log('Navigate to:', section);
+            }}
+            onSmartButtonClick={() => {
+              console.log('Smart button clicked');
+            }}
+          />
+        ) : null}
+        headerHeight={showPublicChrome ? 72 : 0}
+        footerHeight={showPublicChrome ? 72 : 0}
       />
 
       <div
