@@ -9,10 +9,9 @@ import { supabase } from '../../../lib/supabase';
 interface PlatformText {
   id: string;
   section: string;
-  text_key: string;
+  key: string;
   text_ar: string;
   text_en: string;
-  location: string;
   description: string;
   display_order: number;
   editable: boolean;
@@ -269,18 +268,12 @@ export function CleanPlatformTextsManager() {
                         <div className="flex-1">
                           <div className="flex items-center gap-3 mb-2">
                             <code className="px-3 py-1.5 bg-gray-100 dark:bg-gray-700 text-blue-600 dark:text-blue-400 rounded-lg text-sm font-mono font-medium">
-                              {text.text_key}
+                              {text.key}
                             </code>
                           </div>
                           <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
                             {text.description}
                           </p>
-                          <div className="flex items-center gap-2 text-xs">
-                            <MapPin className="w-4 h-4 text-gray-400" />
-                            <span className="text-gray-500 dark:text-gray-400">
-                              {text.location}
-                            </span>
-                          </div>
                         </div>
                         {text.editable && editingId !== text.id && (
                           <button

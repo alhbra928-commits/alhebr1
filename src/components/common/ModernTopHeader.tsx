@@ -60,9 +60,25 @@ export function ModernTopHeader({
       if (data) {
         const textsMap: any = {};
         data.forEach(item => {
+          // Convert snake_case to camelCase
           const camelKey = item.key.replace(/_([a-z])/g, (g) => g[1].toUpperCase());
           textsMap[camelKey] = item.text_ar;
         });
+
+        // Map specific keys
+        if (data.find(d => d.key === 'logo_text')) {
+          textsMap.logoText = data.find(d => d.key === 'logo_text')?.text_ar || textsMap.logoText;
+        }
+        if (data.find(d => d.key === 'logo_icon')) {
+          textsMap.logoIcon = data.find(d => d.key === 'logo_icon')?.text_ar || textsMap.logoIcon;
+        }
+        if (data.find(d => d.key === 'phone_button')) {
+          textsMap.phoneButton = data.find(d => d.key === 'phone_button')?.text_ar || textsMap.phoneButton;
+        }
+        if (data.find(d => d.key === 'phone_number')) {
+          textsMap.phoneNumber = data.find(d => d.key === 'phone_number')?.text_ar || textsMap.phoneNumber;
+        }
+
         setTexts(prev => ({ ...prev, ...textsMap }));
       }
     } catch (error) {
