@@ -20,6 +20,7 @@ interface HeaderTexts {
   phoneNumber: string;
   logoText: string;
   logoIcon: string;
+  logoTextShort?: string;
 }
 
 export function ModernTopHeader({
@@ -40,7 +41,8 @@ export function ModernTopHeader({
     smartTooltip: 'المساعد الذكي',
     phoneNumber: '966569335257',
     logoText: 'مزادات',
-    logoIcon: '🌿'
+    logoIcon: '🌿',
+    logoTextShort: 'مزاد'
   });
 
   useEffect(() => {
@@ -131,6 +133,8 @@ export function ModernTopHeader({
           gap: 12px;
           cursor: pointer;
           transition: transform 0.3s ease;
+          flex: 1;
+          min-width: 0;
         }
 
         .header-logo:hover {
@@ -141,6 +145,7 @@ export function ModernTopHeader({
           font-size: 32px;
           filter: drop-shadow(0 2px 8px rgba(16, 185, 129, 0.4));
           animation: float 3s ease-in-out infinite;
+          flex-shrink: 0;
         }
 
         @keyframes float {
@@ -156,6 +161,43 @@ export function ModernTopHeader({
           -webkit-text-fill-color: transparent;
           background-clip: text;
           letter-spacing: -0.5px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          flex: 1;
+          min-width: 0;
+        }
+
+        .logo-text-container {
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+          flex: 1;
+          min-width: 0;
+        }
+
+        .logo-text-main {
+          font-size: 20px;
+          font-weight: 900;
+          background: linear-gradient(135deg, #ffffff 0%, #10b981 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          letter-spacing: -0.5px;
+          line-height: 1.2;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .logo-text-sub {
+          font-size: 11px;
+          font-weight: 600;
+          color: rgba(16, 185, 129, 0.7);
+          letter-spacing: 0.5px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
 
         /* Navigation Desktop */
@@ -451,14 +493,78 @@ export function ModernTopHeader({
         @media (max-width: 768px) {
           .header-container {
             padding: 12px 16px;
+            gap: 12px;
+          }
+
+          .header-logo {
+            flex: 1;
+            min-width: 0;
+            max-width: calc(100% - 140px);
           }
 
           .logo-icon {
-            font-size: 28px;
+            font-size: 26px;
           }
 
           .logo-text {
-            font-size: 20px;
+            font-size: 16px;
+            max-width: 100%;
+          }
+
+          .logo-text-main {
+            font-size: 15px;
+            line-height: 1.3;
+          }
+
+          .logo-text-sub {
+            font-size: 10px;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .header-container {
+            padding: 10px 12px;
+            gap: 8px;
+          }
+
+          .header-logo {
+            gap: 8px;
+            max-width: calc(100% - 120px);
+          }
+
+          .logo-icon {
+            font-size: 24px;
+          }
+
+          .logo-text {
+            font-size: 14px;
+          }
+
+          .logo-text-main {
+            font-size: 13px;
+          }
+
+          .logo-text-sub {
+            font-size: 9px;
+          }
+        }
+
+        @media (max-width: 380px) {
+          .header-logo {
+            gap: 6px;
+            max-width: calc(100% - 110px);
+          }
+
+          .logo-icon {
+            font-size: 22px;
+          }
+
+          .logo-text-main {
+            font-size: 12px;
+          }
+
+          .logo-text-sub {
+            font-size: 8px;
           }
 
           .header-nav-desktop {
@@ -534,7 +640,14 @@ export function ModernTopHeader({
           {/* Logo */}
           <div className="header-logo" onClick={() => onNavigate?.('home')}>
             <span className="logo-icon">{texts.logoIcon}</span>
-            <span className="logo-text">{texts.logoText}</span>
+            {texts.logoText && texts.logoText.length > 25 ? (
+              <div className="logo-text-container">
+                <span className="logo-text-main">{texts.logoText}</span>
+                <span className="logo-text-sub">للاستثمار الزراعي</span>
+              </div>
+            ) : (
+              <span className="logo-text">{texts.logoText}</span>
+            )}
           </div>
 
           {/* Desktop Phone Button */}
