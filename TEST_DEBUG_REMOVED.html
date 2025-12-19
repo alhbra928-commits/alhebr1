@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>اختبار إزالة شريط Debug</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: linear-gradient(135deg, #064e3b 0%, #047857 100%);
+      min-height: 100vh;
+      padding: 30px;
+      color: #fff;
+    }
+    .container { max-width: 900px; margin: 0 auto; }
+    .header {
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(16, 185, 129, 0.4);
+      border-radius: 24px;
+      padding: 40px;
+      text-align: center;
+      margin-bottom: 30px;
+      backdrop-filter: blur(20px);
+    }
+    .header h1 { font-size: 2.5rem; margin-bottom: 15px; }
+    .version {
+      background: rgba(16, 185, 129, 0.3);
+      padding: 10px 20px;
+      border-radius: 12px;
+      display: inline-block;
+      font-family: 'Courier New', monospace;
+      margin-top: 10px;
+    }
+    .section {
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid rgba(16, 185, 129, 0.3);
+      border-radius: 20px;
+      padding: 30px;
+      margin-bottom: 25px;
+    }
+    .section h2 {
+      font-size: 1.8rem;
+      margin-bottom: 20px;
+      color: #10b981;
+    }
+    .test-card {
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 16px;
+      padding: 25px;
+      margin: 15px 0;
+      border-right: 4px solid #10b981;
+    }
+    .test-card h3 {
+      font-size: 1.3rem;
+      margin-bottom: 12px;
+      color: #10b981;
+    }
+    .test-card p {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: #cbd5e1;
+    }
+    .badge {
+      display: inline-block;
+      padding: 5px 12px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin: 5px;
+    }
+    .badge.success { background: rgba(16, 185, 129, 0.3); color: #10b981; }
+    .badge.info { background: rgba(59, 130, 246, 0.3); color: #3b82f6; }
+    .btn-test {
+      display: inline-block;
+      padding: 15px 30px;
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #fff;
+      text-decoration: none;
+      border-radius: 12px;
+      font-weight: 600;
+      margin: 10px;
+      transition: all 0.3s ease;
+    }
+    .btn-test:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4);
+    }
+    .code-box {
+      background: #000;
+      border: 1px solid #10b981;
+      border-radius: 8px;
+      padding: 15px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.95rem;
+      color: #10b981;
+      margin: 15px 0;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🧹 شريط Debug تم إزالته</h1>
+      <div class="version">v20251219_1766170335830</div>
+    </div>
+
+    <div class="section">
+      <h2>✅ ماذا تغيّر؟</h2>
+      
+      <div class="test-card">
+        <h3>الوضع الطبيعي</h3>
+        <p>
+          <span class="badge success">✓ نظيف</span>
+          شريط Debug لا يظهر نهائياً في الاستخدام العادي
+        </p>
+        <div class="code-box">
+          https://hisas1.com/
+          ❌ لا debug شريط
+        </div>
+      </div>
+
+      <div class="test-card">
+        <h3>وضع الاختبار الفني</h3>
+        <p>
+          <span class="badge info">? للمطورين</span>
+          يظهر فقط عند إضافة ?debug=1
+        </p>
+        <div class="code-box">
+          https://hisas1.com/?debug=1
+          ✅ debug شريط يظهر للاختبار
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>🧪 كيف تختبر؟</h2>
+      
+      <div class="test-card">
+        <h3>الاختبار 1: الوضع الطبيعي</h3>
+        <p>
+          1. افتح الموقع بدون أي parameters<br>
+          2. ✅ يجب ألا ترى أي شريط debug<br>
+          3. ✅ الواجهة نظيفة 100%
+        </p>
+        <a href="#" class="btn-test" onclick="alert('افتح موقعك بدون ?debug=1'); return false;">
+          اختبر الوضع العادي
+        </a>
+      </div>
+
+      <div class="test-card">
+        <h3>الاختبار 2: وضع Debug</h3>
+        <p>
+          1. افتح الموقع مع ?debug=1<br>
+          2. ✅ يجب أن يظهر شريط Debug في الزاوية اليسرى العلوية<br>
+          3. ✅ يعرض: items, groupW, maskW, dur
+        </p>
+        <a href="#" class="btn-test" onclick="alert('افتح موقعك مع ?debug=1'); return false;">
+          اختبر وضع Debug
+        </a>
+      </div>
+
+      <div class="test-card">
+        <h3>الاختبار 3: على iPhone</h3>
+        <p>
+          1. افتح على iPhone بدون parameters<br>
+          2. ✅ لا شريط debug<br>
+          3. ✅ شريط الأنشطة يعمل بسلاسة بدون فراغات
+        </p>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>📋 النتائج المتوقعة</h2>
+      
+      <div class="test-card">
+        <h3>على المتصفح العادي:</h3>
+        <div class="code-box">
+          ✅ لا يوجد شريط debug في أي مكان<br>
+          ✅ الواجهة نظيفة تماماً<br>
+          ✅ شريط الأنشطة يعمل بدون مشاكل
+        </div>
+      </div>
+
+      <div class="test-card">
+        <h3>مع ?debug=1 على الكمبيوتر:</h3>
+        <div class="code-box">
+          items=10 groupW=2000px maskW=1920px dur=15.5s
+        </div>
+      </div>
+
+      <div class="test-card">
+        <h3>مع ?debug=1 على iPhone:</h3>
+        <div class="code-box">
+          items=10 groupW=800px maskW=375px dur=10.5s
+        </div>
+      </div>
+    </div>
+
+    <div style="background: rgba(16, 185, 129, 0.2); border: 2px solid #10b981; border-radius: 20px; padding: 30px; text-align: center;">
+      <h3 style="font-size: 2rem; margin-bottom: 15px;">🎉 Build جاهز للنشر</h3>
+      <p style="font-size: 1.2rem; line-height: 1.8;">
+        ✅ Debug مُزال من الإنتاج<br>
+        ✅ متاح للاختبار الفني فقط<br>
+        ✅ Build نظيف وجاهز
+      </p>
+    </div>
+
+    <div style="text-align: center; padding: 30px; color: #94a3b8;">
+      <p>Build: v20251219_1766170335830</p>
+      <p style="margin-top: 10px;">Status: ✅ DEBUG REMOVED</p>
+    </div>
+  </div>
+</body>
+</html>

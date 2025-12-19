@@ -89,13 +89,25 @@ export function SmartActivityTicker() {
     loadActivities();
   }, [settings.mode, settings.itemsPerCycle]);
 
-  // المرحلة 1: Debug إجباري - اكتشف السبب الحقيقي (عرض القيم المحسوبة)
+  // Debug Mode: يظهر فقط عند ?debug=1 (للاختبار الفني فقط)
   useEffect(() => {
+    // ✅ لا يظهر إلا بـ ?debug=1
+    const debugOn = new URLSearchParams(window.location.search).get("debug") === "1";
+    if (!debugOn) {
+      // إزالة Debug إذا كان موجوداً
+      const existingDebug = document.getElementById("ticker-debug");
+      if (existingDebug) existingDebug.remove();
+      return;
+    }
+
+    // للاختبار فقط: إنشاء شريط Debug
     const el = document.getElementById("ticker-debug") || document.createElement("div");
     el.id = "ticker-debug";
     el.style.cssText =
       "position:fixed;left:8px;top:88px;z-index:2147483647;background:#000a;color:#fff;padding:6px 8px;border-radius:8px;font:12px system-ui;";
-    document.body.appendChild(el);
+    if (!document.getElementById("ticker-debug")) {
+      document.body.appendChild(el);
+    }
 
     const group = groupRef.current;
     const track = trackRef.current;
@@ -107,9 +119,12 @@ export function SmartActivityTicker() {
 
     el.textContent = `items=${count} groupW=${gw}px maskW=${mw}px dur=${dur}`;
 
-    // سيتم حذف هذا Debug بعد تأكيد الإصلاح على iPhone
     return () => {
-      // Keep debug for now
+      // Cleanup عند unmount
+      if (debugOn) {
+        const debugEl = document.getElementById("ticker-debug");
+        if (debugEl) debugEl.remove();
+      }
     };
   }, [activities]);
 
