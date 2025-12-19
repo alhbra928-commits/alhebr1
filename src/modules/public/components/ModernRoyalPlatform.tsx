@@ -13,6 +13,7 @@ import { InnovativeFarmCard } from './InnovativeFarmCard';
 import { getPlatformTextsBySection } from '../../../services/platformTextsService';
 import { VerticalSideTabs } from '../../../components/common/VerticalSideTabs';
 import { SmartAssistantSidebar } from './SmartAssistantSidebar';
+import { TrackingService } from '../../../services/analytics/trackingService';
 // PremiumHeader removed - now in Portal (FixedChrome)
 
 // Lazy load heavy components
@@ -89,6 +90,27 @@ export function ModernRoyalPlatform({
 
     loadEverything();
   }, []);
+
+  // Initialize Analytics Tracking
+  useEffect(() => {
+    TrackingService.initialize();
+    TrackingService.trackPageView('/');
+
+    return () => {
+      TrackingService.cleanup();
+    };
+  }, []);
+
+  // Track view changes
+  useEffect(() => {
+    if (currentView === 'home') {
+      TrackingService.trackPageView('/');
+    } else if (currentView === 'farmDetail' && selectedFarm) {
+      TrackingService.trackFarmView(selectedFarm.id, selectedFarm.farm_name_ar);
+    } else if (currentView === 'booking' && selectedFarm) {
+      TrackingService.trackBookingStart(selectedFarm.id, selectedFarm.farm_name_ar);
+    }
+  }, [currentView, selectedFarm]);
 
   // Mouse move - تأخير التفعيل
   useEffect(() => {

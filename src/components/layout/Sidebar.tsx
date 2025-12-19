@@ -42,6 +42,7 @@ const menuItems: MenuItem[] = [
   { id: 'agriculture', label: 'الخدمات الزراعية', icon: Sprout, color: 'text-green-600' },
   { id: 'documentation', label: 'التوثيق', icon: Award, color: 'text-blue-600' },
   { id: 'whatsapp', label: 'إدارة الواتساب', icon: MessageCircle, color: 'text-green-600' },
+  { id: 'marketing', label: 'مركز التسويق والتحليل', icon: TrendingUp, color: 'text-cyan-600' },
   { id: 'wallets', label: 'المحافظ', icon: Wallet, color: 'text-purple-600' },
   { id: 'permissions', label: 'إدارة الصلاحيات', icon: Shield, color: 'text-red-600' },
   { id: 'settings', label: 'الإعدادات', icon: Settings, color: 'text-gray-600' },

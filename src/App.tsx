@@ -24,6 +24,7 @@ const WalletsView = lazy(() => import('./modules/wallets/components/WalletsView'
 const CorrectedFinancialDashboard = lazy(() => import('./modules/finance/components/CorrectedFinancialDashboard').then(m => ({ default: m.CorrectedFinancialDashboard })));
 const AgricultureView = lazy(() => import('./modules/agriculture/components/AgricultureView').then(m => ({ default: m.AgricultureView })));
 const AdvancedDocumentationView = lazy(() => import('./modules/documentation/components/AdvancedDocumentationView').then(m => ({ default: m.AdvancedDocumentationView })));
+const MarketingDashboard = lazy(() => import('./modules/marketing/components/MarketingDashboard').then(m => ({ default: m.MarketingDashboard })));
 const SettingsView = lazy(() => import('./modules/settings/components/SettingsView').then(m => ({ default: m.SettingsView })));
 const PermissionsManagementView = lazy(() => import('./modules/permissions/components/PermissionsManagementView').then(m => ({ default: m.PermissionsManagementView })));
 const ReservationsDebugView = lazy(() => import('./modules/reservations/components/ReservationsDebugView').then(m => ({ default: m.ReservationsDebugView })));
@@ -262,6 +263,7 @@ function App() {
       'agriculture': 'الخدمات الزراعية',
       'documentation': 'التوثيق',
       'whatsapp': 'إدارة الواتساب',
+      'marketing': 'مركز التسويق والتحليل',
       'wallets': 'المحافظ',
       'permissions': 'الصلاحيات',
       'settings': 'الإعدادات',
@@ -316,6 +318,8 @@ function App() {
         return <AdvancedDocumentationView onBack={() => setActiveModule('dashboard')} />;
       case 'whatsapp':
         return <WhatsAppDashboard onBack={() => setActiveModule('dashboard')} />;
+      case 'marketing':
+        return <MarketingDashboard onBack={() => setActiveModule('dashboard')} />;
       case 'settings':
         return <SettingsView onBack={() => setActiveModule('dashboard')} />;
       case 'permissions':
