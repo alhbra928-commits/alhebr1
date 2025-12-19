@@ -183,10 +183,10 @@ export function SmartActivityTicker() {
 
   const getAnimationDuration = () => {
     switch (settings.scrollSpeed) {
-      case 'fast': return '10s';
-      case 'medium': return '14s';
-      case 'slow': return '20s';
-      default: return '14s';
+      case 'fast': return '12s';
+      case 'medium': return '16s';
+      case 'slow': return '24s';
+      default: return '16s';
     }
   };
 
@@ -242,12 +242,25 @@ export function SmartActivityTicker() {
           -webkit-text-size-adjust: 100%;
           padding: 0 !important;
           margin: 0 !important;
+          contain: layout style paint;
+          isolation: isolate;
         }
 
         /* CSS Marquee - الصيغة المثالية */
         @keyframes marquee {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
+          0% {
+            transform: translateX(0) translateZ(0);
+          }
+          100% {
+            transform: translateX(-50%) translateZ(0);
+          }
+        }
+
+        /* Smooth animation optimization */
+        @media (prefers-reduced-motion: no-preference) {
+          .marquee-track {
+            animation-timing-function: linear;
+          }
         }
 
         .ticker-overflow-container {
@@ -269,15 +282,20 @@ export function SmartActivityTicker() {
           backface-visibility: hidden;
           padding: 0 !important;
           margin: 0 !important;
+          contain: layout style paint;
+          -webkit-transform: translateZ(0);
+          -webkit-backface-visibility: hidden;
+          perspective: 1000px;
         }
 
         .marquee-group {
           display: flex;
           flex: 0 0 auto;
           width: max-content;
-          gap: 10px;
+          gap: 6px;
           padding: 0 !important;
           margin: 0 !important;
+          contain: layout style paint;
         }
 
         /* البطاقة - قفل الأبعاد */
@@ -286,14 +304,15 @@ export function SmartActivityTicker() {
           position: relative;
           background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.08) 100%);
           border: 2px solid rgba(212, 175, 55, 0.5);
-          border-radius: 12px;
-          padding: 10px 14px;
+          border-radius: 10px;
+          padding: 8px 12px;
           white-space: nowrap;
           backdrop-filter: blur(10px);
           box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
           transition: all 0.3s ease;
           margin: 0 !important;
           overflow: hidden;
+          min-width: fit-content;
         }
 
         .activity-card-agricultural:hover {
@@ -319,13 +338,13 @@ export function SmartActivityTicker() {
           position: relative;
           display: flex;
           align-items: center;
-          gap: 10px;
+          gap: 8px;
         }
 
         .card-icon-wrapper {
           position: relative;
-          width: 32px;
-          height: 32px;
+          width: 28px;
+          height: 28px;
           flex-shrink: 0;
         }
 
@@ -333,28 +352,28 @@ export function SmartActivityTicker() {
           position: absolute;
           inset: 0;
           background: linear-gradient(135deg, #D4AF37 0%, #C49423 100%);
-          border-radius: 8px;
-          filter: blur(8px);
-          opacity: 0.6;
+          border-radius: 6px;
+          filter: blur(6px);
+          opacity: 0.5;
           animation: pulse 2s ease-in-out infinite;
         }
 
         .icon-container {
           position: relative;
-          width: 32px;
-          height: 32px;
-          padding: 6px;
-          border-radius: 8px;
+          width: 28px;
+          height: 28px;
+          padding: 5px;
+          border-radius: 6px;
           background: linear-gradient(135deg, #D4AF37 0%, #C49423 100%);
-          box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+          box-shadow: 0 0 12px rgba(212, 175, 55, 0.4);
           display: flex;
           align-items: center;
           justify-content: center;
         }
 
         .icon-svg {
-          width: 16px;
-          height: 16px;
+          width: 14px;
+          height: 14px;
           color: white;
         }
 
@@ -365,16 +384,16 @@ export function SmartActivityTicker() {
         }
 
         .card-title {
-          font-weight: 900;
-          font-size: 14px;
-          line-height: 1.3;
-          margin-bottom: 4px;
+          font-weight: 800;
+          font-size: 13px;
+          line-height: 1.2;
+          margin-bottom: 3px;
           color: #F5F5DC;
           text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
         }
 
         .card-time {
-          font-size: 12px;
+          font-size: 11px;
           font-weight: 700;
           color: #D4AF37;
           text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
@@ -395,36 +414,56 @@ export function SmartActivityTicker() {
         /* Mobile Optimization */
         @media (max-width: 768px) {
           .marquee-group {
-            gap: 10px;
+            gap: 5px;
           }
 
           .activity-card-agricultural {
-            padding: 8px 12px;
-            border-radius: 10px;
+            padding: 7px 10px;
+            border-radius: 8px;
+          }
+
+          .card-inner {
+            gap: 8px;
           }
 
           .card-icon-wrapper {
-            width: 28px !important;
-            height: 28px !important;
+            width: 26px !important;
+            height: 26px !important;
           }
 
           .icon-container {
-            width: 28px !important;
-            height: 28px !important;
-            padding: 5px !important;
+            width: 26px !important;
+            height: 26px !important;
+            padding: 4px !important;
           }
 
           .icon-svg {
-            width: 14px !important;
-            height: 14px !important;
+            width: 13px !important;
+            height: 13px !important;
           }
 
           .card-title {
             font-size: 12px !important;
+            line-height: 1.1 !important;
           }
 
           .card-time {
             font-size: 10px !important;
+          }
+        }
+
+        /* Ultra compact for very small screens */
+        @media (max-width: 480px) {
+          .marquee-group {
+            gap: 4px;
+          }
+
+          .activity-card-agricultural {
+            padding: 6px 9px;
+          }
+
+          .card-title {
+            font-size: 11px !important;
           }
         }
       `}</style>
