@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>🚨 خطة الإنقاذ - اختبار مباشر</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+      color: #fff;
+      padding: 20px;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      padding: 20px;
+      background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+      border-radius: 16px;
+      margin-bottom: 30px;
+      box-shadow: 0 8px 32px rgba(220, 38, 38, 0.3);
+    }
+
+    .header h1 {
+      font-size: 28px;
+      margin-bottom: 10px;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+
+    .header p {
+      font-size: 14px;
+      opacity: 0.9;
+    }
+
+    .section {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      backdrop-filter: blur(10px);
+    }
+
+    .section h2 {
+      font-size: 20px;
+      margin-bottom: 15px;
+      color: #22c55e;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .badge {
+      display: inline-block;
+      background: #22c55e;
+      color: #000;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .badge.new {
+      background: #3b82f6;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
+    .code-block {
+      background: #000;
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 15px;
+      margin: 10px 0;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      overflow-x: auto;
+      direction: ltr;
+      text-align: left;
+    }
+
+    .highlight {
+      color: #22c55e;
+      font-weight: 600;
+    }
+
+    .warning {
+      background: rgba(234, 179, 8, 0.1);
+      border: 1px solid rgba(234, 179, 8, 0.3);
+      border-radius: 8px;
+      padding: 12px;
+      margin: 10px 0;
+      color: #fbbf24;
+    }
+
+    .success {
+      background: rgba(34, 197, 94, 0.1);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      border-radius: 8px;
+      padding: 12px;
+      margin: 10px 0;
+      color: #22c55e;
+    }
+
+    .demo {
+      background: #000;
+      border: 2px solid #22c55e;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 20px 0;
+      overflow: hidden;
+    }
+
+    .demo h3 {
+      text-align: center;
+      margin-bottom: 15px;
+      color: #22c55e;
+    }
+
+    /* Demo Ticker */
+    .ticker-demo {
+      position: relative;
+      width: 100%;
+      height: 60px;
+      background: linear-gradient(135deg, rgba(44, 95, 45, 0.95) 0%, rgba(30, 70, 32, 0.98) 100%);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .marquee-mask {
+      overflow: hidden;
+      height: 100%;
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .marquee-track {
+      display: flex;
+      width: max-content;
+      will-change: transform;
+      animation: marquee 14s linear infinite;
+    }
+
+    @keyframes marquee {
+      from { transform: translate3d(0, 0, 0); }
+      to { transform: translate3d(calc(-1 * var(--group-w, -50%)), 0, 0); }
+    }
+
+    .marquee-group {
+      display: flex;
+      flex: 0 0 auto;
+      width: max-content;
+      gap: 10px;
+      padding-inline: 10px;
+      align-items: center;
+    }
+
+    .card {
+      padding: 8px 12px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(21, 128, 61, 0.2) 100%);
+      border: 1.5px solid rgba(34, 197, 94, 0.3);
+      min-width: 150px;
+      flex: 0 0 auto;
+      white-space: nowrap;
+      margin: 0;
+      color: #d4f1e8;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .step {
+      counter-increment: step;
+      position: relative;
+      padding-right: 50px;
+      margin-bottom: 15px;
+    }
+
+    .step::before {
+      content: counter(step);
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 35px;
+      height: 35px;
+      background: #22c55e;
+      color: #000;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 16px;
+    }
+
+    .steps {
+      counter-reset: step;
+    }
+
+    .list {
+      padding-right: 20px;
+      margin: 10px 0;
+    }
+
+    .list li {
+      margin: 8px 0;
+      line-height: 1.6;
+    }
+
+    .debug-display {
+      background: rgba(0, 0, 0, 0.8);
+      border: 2px solid #22c55e;
+      border-radius: 8px;
+      padding: 15px;
+      margin: 15px 0;
+      font-family: 'Courier New', monospace;
+      text-align: center;
+      font-size: 16px;
+    }
+
+    .debug-label {
+      color: #999;
+      font-size: 12px;
+      margin-bottom: 5px;
+    }
+
+    .debug-value {
+      color: #22c55e;
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    @media (max-width: 640px) {
+      .header h1 { font-size: 22px; }
+      .section h2 { font-size: 18px; }
+      body { padding: 10px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🚨 خطة الإنقاذ - اختبار مباشر</h1>
+      <p>إصلاح شريط الأنشطة على الجوال</p>
+      <span class="badge new">NEW</span>
+    </div>
+
+    <div class="section">
+      <h2>
+        <span>📊</span>
+        Debug Live - ماذا ترى الآن؟
+      </h2>
+      <p style="margin-bottom: 15px;">عند تشغيل المنصة، سترى هذا الصندوق أعلى اليسار:</p>
+
+      <div class="debug-display">
+        <div class="debug-label">Debug Info</div>
+        <div class="debug-value">items=10 groupW=2000px maskW=375px</div>
+      </div>
+
+      <div class="success">
+        <strong>✅ المتوقع على الجوال:</strong>
+        <ul class="list">
+          <li><strong>items</strong> = عدد كامل (ليس 2!) - يطابق الكمبيوتر</li>
+          <li><strong>groupW</strong> = أكبر بكثير من maskW (بعد الاستنساخ 3×)</li>
+          <li><strong>maskW</strong> = عرض شاشة iPhone الفعلي</li>
+        </ul>
+      </div>
+
+      <div class="warning">
+        <strong>⚠️ لو شفت items=2:</strong><br>
+        معناها في مشكلة - المحتوى لسه مخفي على الجوال!
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>
+        <span>🎬</span>
+        Demo - كيف يعمل النظام الجديد
+      </h2>
+
+      <div class="demo">
+        <h3>شريط تجريبي (مثال مبسط)</h3>
+        <div class="ticker-demo">
+          <div class="marquee-mask">
+            <div class="marquee-track" id="demo-track">
+              <div class="marquee-group" id="demo-group">
+                <div class="card">🌴 حجز جديد</div>
+                <div class="card">👤 مستثمر انضم</div>
+                <div class="card">✨ مزرعة جديدة</div>
+                <div class="card">📈 ارتفاع الطلب</div>
+                <div class="card">🔥 عرض ساخن</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p style="margin-top: 15px; color: #999; font-size: 13px;">
+        ☝️ لاحظ: الشريط يتحرك بسلاسة، بدون فراغات، ويعيد نفسه تلقائياً
+      </p>
+    </div>
+
+    <div class="section">
+      <h2>
+        <span>🛠️</span>
+        الإصلاحات المُطبقة
+      </h2>
+
+      <div class="success">
+        <strong>✅ المرحلة 1: Debug إجباري</strong>
+        <div class="code-block">useEffect(() => {
+  const el = document.getElementById("ticker-debug");
+  el.textContent = `items=${count} groupW=${gw}px maskW=${mw}px`;
+}, [activities]);</div>
+      </div>
+
+      <div class="success" style="margin-top: 15px;">
+        <strong>✅ المرحلة 2: لا إخفاء للمحتوى</strong>
+        <ul class="list">
+          <li>❌ لا <code>display: none</code> على الجوال</li>
+          <li>❌ لا <code>slice(0, 2)</code></li>
+          <li>❌ لا فلترة للمحتوى</li>
+          <li>✅ نفس العدد على جميع الشاشات</li>
+        </ul>
+      </div>
+
+      <div class="success" style="margin-top: 15px;">
+        <strong>✅ المرحلة 3: Auto-Fill قاطع</strong>
+        <div class="code-block">// تكرار تلقائي حتى نغطي 3× عرض الشاشة
+const needed = Math.ceil((maskWidth * 3) / groupWidth);
+for (let i = 0; i < needed; i++) {
+  const clone = group.cloneNode(true);
+  track.appendChild(clone);
+}</div>
+      </div>
+    </div>
+
+    <div class="section steps">
+      <h2>
+        <span>🔍</span>
+        طريقة الاختبار
+      </h2>
+
+      <div class="step">
+        <strong>امسح الكاش تماماً</strong><br>
+        <code style="color: #999;">Settings → Safari → Clear History and Website Data</code>
+      </div>
+
+      <div class="step">
+        <strong>أغلق Safari تماماً</strong><br>
+        <code style="color: #999;">Double-tap Home → Swipe up Safari</code><br>
+        <span style="color: #999; font-size: 12px;">انتظر 5 ثوان</span>
+      </div>
+
+      <div class="step">
+        <strong>افتح Safari من جديد</strong><br>
+        <code style="color: #999;">افتح المنصة → انتظر التحميل الكامل</code>
+      </div>
+
+      <div class="step">
+        <strong>راقب Debug أعلى اليسار</strong><br>
+        <code style="color: #22c55e;">items=10 groupW=2000px maskW=375px</code>
+      </div>
+
+      <div class="step">
+        <strong>تحقق من الشريط</strong><br>
+        يجب أن يتحرك بسلاسة، بدون فراغات، نفس المحتوى
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>
+        <span>✅</span>
+        معايير النجاح
+      </h2>
+
+      <div class="success">
+        <ul class="list">
+          <li>✅ items = عدد كامل (ليس 2)</li>
+          <li>✅ groupW أكبر من maskW</li>
+          <li>✅ لا فراغ بين آخر وأول عنصر</li>
+          <li>✅ لا يختفي بعد عنصرين</li>
+          <li>✅ حركة سلسة ومستمرة</li>
+          <li>✅ نفس المحتوى كالكمبيوتر</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>
+        <span>🗑️</span>
+        بعد التأكد
+      </h2>
+
+      <div class="warning">
+        <strong>احذف Debug بعد تأكيد النجاح:</strong>
+        <div class="code-block">// احذف كامل useEffect الخاص بـ ticker-debug
+// أو غيّر return إلى:
+return () => {
+  const el = document.getElementById("ticker-debug");
+  if (el) el.remove();
+};</div>
+      </div>
+    </div>
+
+    <div style="text-align: center; padding: 30px; color: #666; font-size: 13px;">
+      <p>Build: v20251219_rescue_plan</p>
+      <p>Status: ✅ Ready for Testing</p>
+      <p style="margin-top: 10px; color: #22c55e; font-weight: 600;">
+        اختبر الآن على جهاز iPhone حقيقي
+      </p>
+    </div>
+  </div>
+
+  <script>
+    // Auto-fill demo ticker
+    window.addEventListener('load', () => {
+      const track = document.getElementById('demo-track');
+      const group = document.getElementById('demo-group');
+
+      if (track && group) {
+        const groupWidth = group.getBoundingClientRect().width;
+        const maskWidth = track.parentElement?.getBoundingClientRect().width ?? 0;
+
+        // Store for CSS
+        document.documentElement.style.setProperty('--group-w', `${groupWidth}px`);
+
+        // Clone 3x
+        const needed = Math.ceil((maskWidth * 3) / groupWidth);
+        for (let i = 0; i < needed; i++) {
+          const clone = group.cloneNode(true);
+          clone.setAttribute('aria-hidden', 'true');
+          track.appendChild(clone);
+        }
+      }
+    });
+  </script>
+</body>
+</html>

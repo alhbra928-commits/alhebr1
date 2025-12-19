@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import {
   TrendingUp, Users, MapPin, Award, Sparkles,
   TreePine, Leaf, Home, DollarSign, Star
@@ -47,6 +47,9 @@ export function SmartActivityTicker() {
     showTimestamps: true,
   });
 
+  const trackRef = useRef<HTMLDivElement>(null);
+  const groupRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     loadSettings();
     loadActivities();
@@ -84,6 +87,56 @@ export function SmartActivityTicker() {
   useEffect(() => {
     loadActivities();
   }, [settings.mode, settings.itemsPerCycle]);
+
+  // المرحلة 1: Debug إجباري - اكتشف السبب الحقيقي
+  useEffect(() => {
+    const el = document.getElementById("ticker-debug") || document.createElement("div");
+    el.id = "ticker-debug";
+    el.style.cssText =
+      "position:fixed;left:8px;top:88px;z-index:2147483647;background:#000a;color:#fff;padding:6px 8px;border-radius:8px;font:12px system-ui;";
+    document.body.appendChild(el);
+
+    const group = groupRef.current;
+    const track = trackRef.current;
+    const mask = track?.parentElement;
+    const count = group ? group.querySelectorAll(".activity-card-agricultural").length : 0;
+    const gw = group ? Math.round(group.getBoundingClientRect().width) : 0;
+    const mw = mask ? Math.round(mask.getBoundingClientRect().width) : 0;
+
+    el.textContent = `items=${count} groupW=${gw}px maskW=${mw}px`;
+
+    // سيتم حذف هذا Debug بعد تأكيد الإصلاح
+    return () => {
+      // Keep debug for now
+    };
+  }, [activities]);
+
+  // المرحلة 3: Auto-Fill قاطع - منع الفراغ نهائياً
+  useEffect(() => {
+    const track = trackRef.current;
+    const group = groupRef.current;
+    if (!track || !group || activities.length === 0) return;
+
+    // احذف أي نسخ قديمة
+    track.querySelectorAll("[data-clone='1']").forEach(n => n.remove());
+
+    const groupWidth = group.getBoundingClientRect().width;
+    const maskWidth = track.parentElement?.getBoundingClientRect().width ?? 0;
+
+    if (groupWidth <= 0 || maskWidth <= 0) return;
+
+    // خزّن عرض المجموعة لـ CSS animation
+    document.documentElement.style.setProperty("--group-w", `${groupWidth}px`);
+
+    // كرر المجموعة حتى لا يوجد فراغ أبداً (3× عرض الشاشة)
+    const needed = Math.ceil((maskWidth * 3) / groupWidth);
+    for (let i = 0; i < needed; i++) {
+      const clone = group.cloneNode(true) as HTMLDivElement;
+      clone.dataset.clone = "1";
+      clone.setAttribute("aria-hidden", "true");
+      track.appendChild(clone);
+    }
+  }, [activities]);
 
   const loadSettings = async () => {
     try {
@@ -183,8 +236,8 @@ export function SmartActivityTicker() {
     return `منذ ${days} يوم`;
   };
 
-  // إنشاء محتوى البطاقة مرة واحدة
-  const singleCard = useMemo(() => {
+  // المرحلة 2: نفس المحتوى على جميع الشاشات (لا إخفاء)
+  const activityCards = useMemo(() => {
     return activities.map((activity) => {
       const IconComponent = iconMap[activity.icon] || Sparkles;
 
@@ -219,20 +272,6 @@ export function SmartActivityTicker() {
     });
   }, [activities, settings.showTimestamps]);
 
-  // Auto-Fill: تكرار المحتوى حتى يغطي 3× عرض الشاشة (minimum 4 copies)
-  const repeatedContent = useMemo(() => {
-    const minRepetitions = 4; // الحد الأدنى من التكرار لضمان الدورة الكاملة
-    const copies = [];
-    for (let i = 0; i < minRepetitions; i++) {
-      copies.push(
-        <div key={`group-${i}`} className="marquee-group" aria-hidden={i > 0}>
-          {singleCard}
-        </div>
-      );
-    }
-    return copies;
-  }, [singleCard]);
-
   if (!settings || activities.length === 0) return null;
 
   return (
@@ -253,33 +292,31 @@ export function SmartActivityTicker() {
           isolation: isolate;
         }
 
-        /* CSS Marquee Animation - موحد للجميع */
-        @keyframes marquee-scroll {
-          0% {
-            transform: translateX(0) translateZ(0);
+        /* المرحلة 3(C): Animation دقيق بمقدار عرض المجموعة */
+        @keyframes marquee {
+          from {
+            transform: translate3d(0, 0, 0);
           }
-          100% {
-            transform: translateX(-50%) translateZ(0);
+          to {
+            transform: translate3d(calc(-1 * var(--group-w, -50%)), 0, 0);
           }
         }
 
-        /* Overflow Container - موحد */
-        .ticker-overflow-container {
-          position: relative;
-          height: 100%;
+        /* Mask Container */
+        .marquee-mask {
           overflow: hidden;
+          height: 100%;
+          position: relative;
           display: flex;
           align-items: center;
-          padding: 0 !important;
-          margin: 0 !important;
         }
 
-        /* Marquee Track - موحد للجميع */
+        /* Track - موحد للجميع */
         .marquee-track {
           display: flex;
           width: max-content;
           will-change: transform;
-          animation: marquee-scroll 14s linear infinite;
+          animation: marquee var(--ticker-speed, 14s) linear infinite;
           transform: translateZ(0);
           backface-visibility: hidden;
           padding: 0 !important;
@@ -287,18 +324,16 @@ export function SmartActivityTicker() {
           contain: layout style paint;
           -webkit-transform: translateZ(0);
           -webkit-backface-visibility: hidden;
-          perspective: 1000px;
         }
 
         /* Group Container */
         .marquee-group {
           display: flex;
           flex: 0 0 auto;
+          width: max-content;
           gap: 10px;
-          padding: 0 !important;
-          margin: 0 !important;
+          padding-inline: 10px;
           align-items: center;
-          justify-content: flex-start;
         }
 
         /* Activity Card - موحد */
@@ -311,7 +346,9 @@ export function SmartActivityTicker() {
           backdrop-filter: blur(10px);
           min-width: 180px;
           max-width: 180px;
-          flex-shrink: 0;
+          flex: 0 0 auto;
+          white-space: nowrap;
+          margin: 0 !important;
           transition: all 0.3s ease;
           cursor: default;
           overflow: hidden;
@@ -489,10 +526,13 @@ export function SmartActivityTicker() {
       <div className="ticker-agricultural" dir="rtl">
         <div className="absolute top-0 left-0 right-0 h-[3px] golden-wave" />
 
-        {/* نظام واحد موحد - يعمل على جميع الشاشات */}
-        <div className="ticker-overflow-container">
-          <div className="marquee-track">
-            {repeatedContent}
+        {/* المرحلة 3(A): Track يحتوي Group واحدة فقط */}
+        <div className="marquee-mask">
+          <div className="marquee-track" ref={trackRef}>
+            <div className="marquee-group" ref={groupRef}>
+              {activityCards}
+            </div>
+            {/* التكرار التلقائي يتم عبر JS في useEffect */}
           </div>
         </div>
       </div>
