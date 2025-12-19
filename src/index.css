@@ -2,31 +2,62 @@
 @tailwind components;
 @tailwind utilities;
 
-/* 🌿 ROYAL GREEN THEME - ALWAYS ACTIVE */
-html {
-  background: linear-gradient(135deg, #ECFDF5 0%, #F0FDF4 50%, #F0FDFA 100%) !important;
+/* ====================================================
+   FIXED CHROME SYSTEM - Portal-based Header & Footer
+   ==================================================== */
+
+:root {
+  --header-h: 72px;
+  --footer-h: 72px;
+}
+
+html, body {
   height: 100%;
-  overflow-y: auto !important;
-  overflow-x: hidden;
-  -webkit-overflow-scrolling: touch;
+  margin: 0;
 }
 
 body {
-  background: linear-gradient(135deg, #ECFDF5 0%, #F0FDF4 50%, #F0FDFA 100%) !important;
-  height: 100%;
-  overflow-y: auto !important;
+  overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
-
-  /* Space for fixed header and footer */
-  padding-top: 72px !important;
-  padding-bottom: calc(90px + env(safe-area-inset-bottom, 0px)) !important;
+  padding-top: var(--header-h);
+  padding-bottom: calc(var(--footer-h) + env(safe-area-inset-bottom));
+  background: linear-gradient(135deg, #ECFDF5 0%, #F0FDF4 50%, #F0FDFA 100%) !important;
 }
 
-/* Mobile padding adjustments */
+/* Portal container - mounted outside main app tree */
+#fixed-chrome {
+  position: fixed;
+  inset: 0;
+  pointer-events: none; /* Don't block page interactions */
+  z-index: 999999;
+}
+
+/* Header fixed at top */
+#fixed-chrome .fc-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--header-h);
+  pointer-events: auto;
+}
+
+/* Footer fixed at bottom */
+#fixed-chrome .fc-footer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: var(--footer-h);
+  padding-bottom: env(safe-area-inset-bottom);
+  pointer-events: auto;
+}
+
+/* Mobile adjustments */
 @media (max-width: 768px) {
-  body {
-    padding-top: 64px !important;
+  :root {
+    --header-h: 64px;
   }
 }
 

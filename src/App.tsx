@@ -1,6 +1,7 @@
 import { useState, lazy, Suspense, useEffect } from 'react';
 import { AdminSessionService } from './modules/admin/services/adminSessionService';
 import { PermissionsProvider } from './contexts/PermissionsContext';
+import FixedChrome from './components/common/FixedChrome';
 
 // Lazy load EVERYTHING - including admin components
 const SmartAdminLoginPage = lazy(() => import('./modules/admin/components/SmartAdminLoginPage').then(m => ({ default: m.SmartAdminLoginPage })));
@@ -340,73 +341,84 @@ function App() {
   };
 
   return (
-    <div
-      className="min-h-screen royal-green-bg"
-      dir="rtl"
-    >
-      {showAdminLogin && (
-        <Suspense fallback={<div className="min-h-screen bg-gradient-to-br from-emerald-50 to-green-50" />}>
-          <SmartAdminLoginPage
-            onLoginSuccess={handleAdminLogin}
-            onCancel={() => setShowAdminLogin(false)}
-          />
-        </Suspense>
-      )}
+    <>
+      {/* Fixed Chrome - Header & Footer using Portal */}
+      <FixedChrome
+        header={null}
+        footer={null}
+        headerHeight={activeModule === 'public' || activeModule === 'farm-owner' ? 72 : 0}
+        footerHeight={activeModule === 'public' || activeModule === 'farm-owner' ? 72 : 0}
+      />
 
-      {showIdleWarning && (
-        <Suspense fallback={<div className="min-h-screen bg-gradient-to-br from-emerald-50 to-green-50" />}>
-          <IdleSessionWarning
-            onContinue={() => {
-              setShowIdleWarning(false);
-              setLastActivity(Date.now());
-            }}
-            onLogout={handleLogout}
-          />
-        </Suspense>
-      )}
-
-      {/* Temporarily disabled - UpdateNotificationBanner */}
-
-      {showLoginNotification && adminSession && (
-        <Suspense fallback={null}>
-          <LoginNotification
-            adminName={adminSession.name}
-            adminPhone={adminSession.phone}
-            module="لوحة التحكم"
-            onClose={() => setShowLoginNotification(false)}
-          />
-        </Suspense>
-      )}
-
-      {/* Mobile Header - Shows on mobile for admin pages */}
-      {adminSession && activeModule !== 'public' && activeModule !== 'farm-owner' && (
-        <Suspense fallback={null}>
-          <MobileHeader
-            onMenuClick={() => setIsMobileSidebarOpen(true)}
-            title={getModuleTitle(activeModule)}
-          />
-        </Suspense>
-      )}
-
-      <PermissionsProvider>
-        {/* Mobile Sidebar - Shows on mobile for admin pages */}
-        {adminSession && activeModule !== 'public' && activeModule !== 'farm-owner' && (
-          <Suspense fallback={null}>
-            <MobileSidebar
-              activeModule={activeModule}
-              onModuleChange={setActiveModule}
-              isOpen={isMobileSidebarOpen}
-              onClose={() => setIsMobileSidebarOpen(false)}
+      <div
+        id="appContent"
+        className="min-h-screen royal-green-bg"
+        dir="rtl"
+      >
+        {showAdminLogin && (
+          <Suspense fallback={<div className="min-h-screen bg-gradient-to-br from-emerald-50 to-green-50" />}>
+            <SmartAdminLoginPage
+              onLoginSuccess={handleAdminLogin}
+              onCancel={() => setShowAdminLogin(false)}
             />
           </Suspense>
         )}
 
-        <Suspense fallback={<div className="min-h-screen bg-gradient-to-br from-emerald-50 to-green-50" />}>
-          {renderModule()}
-        </Suspense>
-      </PermissionsProvider>
+        {showIdleWarning && (
+          <Suspense fallback={<div className="min-h-screen bg-gradient-to-br from-emerald-50 to-green-50" />}>
+            <IdleSessionWarning
+              onContinue={() => {
+                setShowIdleWarning(false);
+                setLastActivity(Date.now());
+              }}
+              onLogout={handleLogout}
+            />
+          </Suspense>
+        )}
 
-    </div>
+        {/* Temporarily disabled - UpdateNotificationBanner */}
+
+        {showLoginNotification && adminSession && (
+          <Suspense fallback={null}>
+            <LoginNotification
+              adminName={adminSession.name}
+              adminPhone={adminSession.phone}
+              module="لوحة التحكم"
+              onClose={() => setShowLoginNotification(false)}
+            />
+          </Suspense>
+        )}
+
+        {/* Mobile Header - Shows on mobile for admin pages */}
+        {adminSession && activeModule !== 'public' && activeModule !== 'farm-owner' && (
+          <Suspense fallback={null}>
+            <MobileHeader
+              onMenuClick={() => setIsMobileSidebarOpen(true)}
+              title={getModuleTitle(activeModule)}
+            />
+          </Suspense>
+        )}
+
+        <PermissionsProvider>
+          {/* Mobile Sidebar - Shows on mobile for admin pages */}
+          {adminSession && activeModule !== 'public' && activeModule !== 'farm-owner' && (
+            <Suspense fallback={null}>
+              <MobileSidebar
+                activeModule={activeModule}
+                onModuleChange={setActiveModule}
+                isOpen={isMobileSidebarOpen}
+                onClose={() => setIsMobileSidebarOpen(false)}
+              />
+            </Suspense>
+          )}
+
+          <Suspense fallback={<div className="min-h-screen bg-gradient-to-br from-emerald-50 to-green-50" />}>
+            {renderModule()}
+          </Suspense>
+        </PermissionsProvider>
+
+      </div>
+    </>
   );
 }
 
