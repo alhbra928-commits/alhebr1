@@ -19,13 +19,14 @@ html, body {
 
 body {
   overflow: hidden; /* لا سكرول على البودي */
+  overscroll-behavior: contain; /* منع scroll bouncing في iOS */
 }
 
-/* قفل التخطيط على شاشة الجوال */
+/* قفل التخطيط على شاشة الجوال - استخدام visualViewport */
 .appShell {
   position: fixed;
   inset: 0;
-  height: var(--vvh, 100svh);
+  height: var(--app-vh, 100svh);
   width: 100%;
 }
 
@@ -60,7 +61,7 @@ body {
   bottom: calc(var(--footer-h) + env(safe-area-inset-bottom));
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  overscroll-behavior: contain;
+  overscroll-behavior: contain; /* منع قفز الهيدر/الفوتر عند السحب في iOS */
 }
 
 /* Remove old appContent padding */
