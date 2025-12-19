@@ -273,8 +273,7 @@ export function SmartActivityTicker() {
           backdrop-filter: blur(20px) saturate(180%);
           -webkit-backdrop-filter: blur(20px) saturate(180%);
           border-top: 3px solid rgba(212, 175, 55, 0.5);
-          border-bottom: 3px solid rgba(212, 175, 55, 0.5);
-          box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(212, 175, 55, 0.2), inset 0 -1px 0 rgba(212, 175, 55, 0.2);
+          box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(212, 175, 55, 0.2);
         }
 
         .activity-card-agricultural {
@@ -308,12 +307,6 @@ export function SmartActivityTicker() {
         }
 
         @media (max-width: 768px) {
-          .ticker-agricultural {
-            border-radius: 0 !important;
-            height: 58px !important;
-            border-top-width: 3px !important;
-          }
-
           .activity-card-agricultural {
             min-width: 165px !important;
             max-width: 165px !important;
@@ -349,12 +342,6 @@ export function SmartActivityTicker() {
           backface-visibility: hidden;
         }
 
-        @supports (padding: max(0px)) {
-          .ticker-agricultural {
-            padding-bottom: max(12px, env(safe-area-inset-bottom));
-          }
-        }
-
         @keyframes golden-wave {
           0%, 100% { background-position: 0% 50%; }
           50% { background-position: 100% 50%; }
@@ -367,7 +354,8 @@ export function SmartActivityTicker() {
         }
       `}</style>
 
-      <div className="fixed bottom-0 left-0 right-0 ticker-agricultural z-40" style={{ height: '66px' }} dir="rtl">
+      {/* الشريط المتحرك - يأخذ الثبات من appFooter */}
+      <div className="relative w-full h-full ticker-agricultural" dir="rtl">
         <div className="absolute top-0 left-0 right-0 h-[3px] golden-wave" />
 
         <div className="relative h-full overflow-hidden">
@@ -424,8 +412,6 @@ export function SmartActivityTicker() {
           </div>
         </div>
       </div>
-
-      <div className="h-[66px]" style={{ flexShrink: 0 }} />
     </>
   );
 }

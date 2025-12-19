@@ -3,9 +3,14 @@
 @tailwind utilities;
 
 /* ====================================================
-   LOCKED GRID SHELL - قفل التخطيط على شاشة iPhone
-   استخدام position: fixed + 100svh لتثبيت نهائي
+   FINAL LAYOUT - الفوتر = شريط الإحصائيات المتحرك
+   هيكل مثالي لـ iPhone Safari بدون مشاكل
    ==================================================== */
+
+:root {
+  --header-h: 72px;
+  --footer-h: 56px; /* ارتفاع شريط الإحصائيات */
+}
 
 html, body {
   height: 100%;
@@ -16,48 +21,49 @@ body {
   overflow: hidden; /* لا سكرول على البودي */
 }
 
-/* اقفل الشيل على الشاشة (هذا يمنع اختفاء الهيدر/الفوتر نهائيًا) */
+/* قفل التخطيط على شاشة الجوال */
 .appShell {
   position: fixed;
   inset: 0;
-  display: grid;
-  grid-template-rows: auto 1fr auto;
-  height: 100svh;          /* أهم سطر للآيفون - ثابت لا يتغير */
+  height: 100svh;
   width: 100%;
 }
 
-/* المحتوى هو اللي يسكرول فقط */
+/* الهيدر ثابت أعلى */
+.appHeader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--header-h);
+  z-index: 1000;
+}
+
+/* الفوتر = شريط الإحصائيات (ثابت أسفل) */
+.appFooter {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: var(--footer-h);
+  padding-bottom: env(safe-area-inset-bottom);
+  z-index: 1000;
+}
+
+/* المحتوى يسكرول بين الهيدر والفوتر */
 .appMain {
+  position: absolute;
+  top: var(--header-h);
+  left: 0;
+  right: 0;
+  bottom: calc(var(--footer-h) + env(safe-area-inset-bottom));
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  overscroll-behavior: contain;
-}
-
-/* حماية إضافية للهيدر/الفوتر */
-.appHeader, .appFooter {
-  flex: 0 0 auto;
-  transform: translateZ(0);
-  z-index: 10;
-}
-
-.appFooter {
-  padding-bottom: env(safe-area-inset-bottom);
-}
-
-/* DEBUG: مؤقت للاختبار - احذفه بعد التأكد */
-.appHeader {
-  outline: 3px solid red;
-  background: rgba(255,0,0,.08);
-}
-
-.appFooter {
-  outline: 3px solid blue;
-  background: rgba(0,0,255,.08);
 }
 
 /* Remove old appContent padding */
 #appContent {
-  /* Locked Grid Shell يتكفل بكل شيء */
+  /* Fixed layout يتكفل بكل شيء */
 }
 
 /* Override any dark backgrounds */

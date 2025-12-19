@@ -3,7 +3,7 @@ import { AdminSessionService } from './modules/admin/services/adminSessionServic
 import { PermissionsProvider } from './contexts/PermissionsContext';
 import FixedChrome from './components/common/FixedChrome';
 import { ModernTopHeader } from './components/common/ModernTopHeader';
-import { BottomNavigationBar } from './components/common/BottomNavigationBar';
+import { SmartActivityTicker } from './components/common/SmartActivityTicker';
 
 // Lazy load EVERYTHING - including admin components
 const SmartAdminLoginPage = lazy(() => import('./modules/admin/components/SmartAdminLoginPage').then(m => ({ default: m.SmartAdminLoginPage })));
@@ -430,18 +430,10 @@ function App() {
         </PermissionsProvider>
       </main>
 
-      {/* Footer - Grid Shell Mode (فقط للصفحات العامة) */}
+      {/* Footer = شريط الإحصائيات المتحرك (فقط للصفحات العامة) */}
       {showPublicChrome && (
         <footer className="appFooter">
-          <BottomNavigationBar
-            currentSection="home"
-            onNavigate={(section) => {
-              console.log('Navigate to:', section);
-            }}
-            onSmartButtonClick={() => {
-              console.log('Smart button clicked');
-            }}
-          />
+          <SmartActivityTicker />
         </footer>
       )}
     </div>
