@@ -34,8 +34,32 @@ export default function FixedChrome({
 
   return createPortal(
     <>
+      {/* DEBUG: Red bar to verify Portal is mounted */}
+      <div style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        height: '4px',
+        background: 'red',
+        zIndex: 2147483647,
+        pointerEvents: 'none'
+      }} />
+
       <div className="fc-header">{header}</div>
       <div className="fc-footer">{footer}</div>
+
+      {/* DEBUG: Blue bar to verify Portal is mounted */}
+      <div style={{
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        height: '4px',
+        background: 'blue',
+        zIndex: 2147483647,
+        pointerEvents: 'none'
+      }} />
     </>,
     mount
   );

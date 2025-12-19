@@ -17,12 +17,18 @@ html, body {
 }
 
 body {
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
   -webkit-overflow-scrolling: touch;
   padding-top: var(--header-h);
   padding-bottom: calc(var(--footer-h) + env(safe-area-inset-bottom));
   background: linear-gradient(135deg, #ECFDF5 0%, #F0FDF4 50%, #F0FDFA 100%) !important;
+}
+
+/* DEBUG: Ensure appContent doesn't create scroll context */
+#appContent {
+  overflow: visible !important;
+  position: relative !important;
 }
 
 /* Portal container - mounted outside main app tree */
@@ -30,7 +36,7 @@ body {
   position: fixed;
   inset: 0;
   pointer-events: none; /* Don't block page interactions */
-  z-index: 999999;
+  z-index: 2147483647; /* Maximum z-index for debugging */
 }
 
 /* Header fixed at top */
@@ -41,6 +47,7 @@ body {
   right: 0;
   height: var(--header-h);
   pointer-events: auto;
+  z-index: 2147483647;
 }
 
 /* Footer fixed at bottom */
@@ -52,6 +59,7 @@ body {
   height: var(--footer-h);
   padding-bottom: env(safe-area-inset-bottom);
   pointer-events: auto;
+  z-index: 2147483647;
 }
 
 /* Mobile adjustments */
