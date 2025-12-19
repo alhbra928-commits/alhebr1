@@ -5,7 +5,7 @@ import { BackButton } from '../../../components/common/BackButton';
 import { BackupCenter } from '../../backups/components/BackupCenter';
 import { VersionHistoryPanel } from './VersionHistoryPanel';
 import { AdvancedCacheSystemDiagnostics } from './AdvancedCacheSystemDiagnostics';
-import { CompletePlatformTextsManager } from './CompletePlatformTextsManager';
+import { AdvancedPlatformTextsManager } from './AdvancedPlatformTextsManager';
 import { SideDockSettings } from './SideDockSettings';
 import { InnovativeLoaderSettings } from './InnovativeLoaderSettings';
 import { LiveActivityBarSettings } from './LiveActivityBarSettings';
@@ -153,7 +153,7 @@ export function SettingsView({ onBack }: SettingsViewProps) {
         ) : activeTab === 'diagnostics' ? (
           <AdvancedCacheSystemDiagnostics />
         ) : activeTab === 'texts' ? (
-          <CompletePlatformTextsManager />
+          <AdvancedPlatformTextsManager />
         ) : activeTab === 'side-dock' ? (
           <SideDockSettings />
         ) : activeTab === 'loader' ? (
