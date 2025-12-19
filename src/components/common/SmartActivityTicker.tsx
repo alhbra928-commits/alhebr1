@@ -49,6 +49,7 @@ export function SmartActivityTicker() {
 
   const trackRef = useRef<HTMLDivElement>(null);
   const groupRef = useRef<HTMLDivElement>(null);
+  const maskRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     loadSettings();
@@ -88,7 +89,7 @@ export function SmartActivityTicker() {
     loadActivities();
   }, [settings.mode, settings.itemsPerCycle]);
 
-  // المرحلة 1: Debug إجباري - اكتشف السبب الحقيقي
+  // المرحلة 1: Debug إجباري - اكتشف السبب الحقيقي (عرض القيم المحسوبة)
   useEffect(() => {
     const el = document.getElementById("ticker-debug") || document.createElement("div");
     el.id = "ticker-debug";
@@ -98,7 +99,7 @@ export function SmartActivityTicker() {
 
     const group = groupRef.current;
     const track = trackRef.current;
-    const mask = track?.parentElement;
+    const mask = maskRef.current;
     const count = group ? group.querySelectorAll(".activity-card-agricultural").length : 0;
     const gw = group ? Math.round(group.getBoundingClientRect().width) : 0;
     const mw = mask ? Math.round(mask.getBoundingClientRect().width) : 0;
@@ -106,36 +107,39 @@ export function SmartActivityTicker() {
 
     el.textContent = `items=${count} groupW=${gw}px maskW=${mw}px dur=${dur}`;
 
-    // سيتم حذف هذا Debug بعد تأكيد الإصلاح
+    // سيتم حذف هذا Debug بعد تأكيد الإصلاح على iPhone
     return () => {
       // Keep debug for now
     };
   }, [activities]);
 
-  // المرحلة 3: Auto-Fill قاطع - منع الفراغ نهائياً
+  // المرحلة 3: Auto-Fill قاطع - منع الفراغ نهائياً (التكرار لملء 3× عرض الشاشة)
   useEffect(() => {
     const track = trackRef.current;
     const group = groupRef.current;
-    if (!track || !group || activities.length === 0) return;
+    const mask = maskRef.current;
+    if (!track || !group || !mask || activities.length === 0) return;
 
     // احذف أي نسخ قديمة
     track.querySelectorAll("[data-clone='1']").forEach(n => n.remove());
 
-    const groupWidth = group.getBoundingClientRect().width;
-    const maskWidth = track.parentElement?.getBoundingClientRect().width ?? 0;
+    const groupW = group.getBoundingClientRect().width;
+    const maskW = mask.getBoundingClientRect().width;
 
-    if (groupWidth <= 0 || maskWidth <= 0) return;
+    if (groupW <= 0 || maskW <= 0) return;
 
-    // ضع المتغيرات على track نفسه (ليس :root)
-    track.style.setProperty("--group-w", `${groupWidth}px`);
+    // ضع المتغيرات على track نفسه (محلية - ليس :root)
+    track.style.setProperty("--group-w", `${groupW}px`);
 
-    // احسب duration مخصص لهذا الجهاز (كلما كان groupWidth أكبر، duration أطول)
+    // احسب duration مخصص لهذا الجهاز (ديناميكي حسب groupW)
     const baseDuration = 14; // ثانية
-    const duration = Math.max(10, Math.min(20, baseDuration * (groupWidth / 1800)));
+    const duration = Math.max(10, Math.min(20, baseDuration * (groupW / 1800)));
     track.style.setProperty("--ticker-speed", `${duration}s`);
 
-    // كرر المجموعة حتى لا يوجد فراغ أبداً (3× عرض الشاشة)
-    const needed = Math.ceil((maskWidth * 3) / groupWidth);
+    // ✅ المطلوب: كرر المجموعة لتغطي 3× عرض الشاشة (منع الفراغ نهائياً)
+    const targetW = maskW * 3;
+    const needed = Math.ceil(targetW / groupW);
+
     for (let i = 0; i < needed; i++) {
       const clone = group.cloneNode(true) as HTMLDivElement;
       clone.dataset.clone = "1";
@@ -537,13 +541,13 @@ export function SmartActivityTicker() {
       <div className="ticker-agricultural" dir="rtl">
         <div className="absolute top-0 left-0 right-0 h-[3px] golden-wave" />
 
-        {/* المرحلة 3(A): Track يحتوي Group واحدة فقط */}
-        <div className="marquee-mask">
+        {/* المرحلة 3(A): Mask > Track > Group (التكرار التلقائي في useEffect) */}
+        <div className="marquee-mask" ref={maskRef}>
           <div className="marquee-track" ref={trackRef}>
             <div className="marquee-group" ref={groupRef}>
               {activityCards}
             </div>
-            {/* التكرار التلقائي يتم عبر JS في useEffect */}
+            {/* التكرار التلقائي يتم عبر JS في useEffect - يملأ 3× عرض الشاشة */}
           </div>
         </div>
       </div>
