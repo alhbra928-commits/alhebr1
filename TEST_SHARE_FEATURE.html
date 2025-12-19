@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>اختبار مشاركة المزرعة</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: linear-gradient(135deg, #064e3b 0%, #047857 100%);
+      min-height: 100vh;
+      padding: 30px;
+      color: #fff;
+    }
+    .container { max-width: 900px; margin: 0 auto; }
+    .header {
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(16, 185, 129, 0.4);
+      border-radius: 24px;
+      padding: 40px;
+      text-align: center;
+      margin-bottom: 30px;
+      backdrop-filter: blur(20px);
+    }
+    .header h1 { font-size: 2.5rem; margin-bottom: 15px; }
+    .version {
+      background: rgba(16, 185, 129, 0.3);
+      padding: 10px 20px;
+      border-radius: 12px;
+      display: inline-block;
+      font-family: 'Courier New', monospace;
+      margin-top: 10px;
+    }
+    .section {
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid rgba(16, 185, 129, 0.3);
+      border-radius: 20px;
+      padding: 30px;
+      margin-bottom: 25px;
+    }
+    .section h2 {
+      font-size: 1.8rem;
+      margin-bottom: 20px;
+      color: #10b981;
+    }
+    .device-card {
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 16px;
+      padding: 25px;
+      margin: 15px 0;
+      border-right: 4px solid #10b981;
+    }
+    .device-card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 15px;
+      color: #10b981;
+    }
+    .step {
+      background: rgba(16, 185, 129, 0.1);
+      padding: 12px 15px;
+      border-radius: 8px;
+      margin: 8px 0;
+      border-right: 3px solid #10b981;
+    }
+    .badge {
+      display: inline-block;
+      padding: 5px 12px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin: 5px;
+    }
+    .badge.success { background: rgba(16, 185, 129, 0.3); color: #10b981; }
+    .badge.info { background: rgba(59, 130, 246, 0.3); color: #3b82f6; }
+    .feature-box {
+      background: rgba(16, 185, 129, 0.15);
+      border: 2px solid #10b981;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 15px 0;
+    }
+    .icon-large {
+      font-size: 4rem;
+      text-align: center;
+      margin: 20px 0;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    ul li {
+      padding: 8px 0;
+      padding-right: 20px;
+      position: relative;
+    }
+    ul li:before {
+      content: "✓";
+      position: absolute;
+      right: 0;
+      color: #10b981;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🔗 مشاركة المزرعة مُفعّلة</h1>
+      <div class="version">v20251219_1766171146484</div>
+      <p style="margin-top: 20px; font-size: 1.2rem;">
+        الآن يمكن للزوار والمستثمرين مشاركة المزارع مع أصدقائهم
+      </p>
+    </div>
+
+    <div class="section">
+      <h2>📱 كيف يعمل؟</h2>
+      
+      <div class="device-card">
+        <div class="icon-large">📱</div>
+        <h3>على الموبايل (iPhone/Android)</h3>
+        <div class="step">
+          <strong>1.</strong> افتح أي مزرعة
+        </div>
+        <div class="step">
+          <strong>2.</strong> ابحث عن زر المشاركة <span class="badge info">📤</span> في الأعلى (الزاوية اليسرى)
+        </div>
+        <div class="step">
+          <strong>3.</strong> اضغط عليه - ستظهر قائمة المشاركة
+        </div>
+        <div class="step">
+          <strong>4.</strong> اختر التطبيق: WhatsApp, Telegram, Email, SMS...
+        </div>
+        <div class="step">
+          <strong>5.</strong> شارك مع أصدقائك!
+        </div>
+        <div class="feature-box">
+          <p><strong>ماذا يُرسل؟</strong></p>
+          <p style="margin-top: 10px; color: #cbd5e1;">
+            "استكشف مزرعة الخالدية - استثمر في مزارع الزيتون"<br>
+            + الرابط المباشر للمزرعة
+          </p>
+        </div>
+      </div>
+
+      <div class="device-card">
+        <div class="icon-large">💻</div>
+        <h3>على الكمبيوتر</h3>
+        <div class="step">
+          <strong>1.</strong> افتح أي مزرعة
+        </div>
+        <div class="step">
+          <strong>2.</strong> اضغط زر المشاركة <span class="badge info">📤</span>
+        </div>
+        <div class="step">
+          <strong>3.</strong> الرابط يُنسخ تلقائياً!
+        </div>
+        <div class="step">
+          <strong>4.</strong> تظهر رسالة: <span class="badge success">✓ تم نسخ الرابط</span>
+        </div>
+        <div class="step">
+          <strong>5.</strong> الصق الرابط في أي مكان
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>🎯 الفوائد</h2>
+      
+      <div class="device-card">
+        <h3>للزائر</h3>
+        <ul>
+          <li>مشاركة المزرعة المفضلة مع الأصدقاء</li>
+          <li>سهولة إرسال الرابط</li>
+          <li>تجربة سلسة على الموبايل</li>
+        </ul>
+      </div>
+
+      <div class="device-card">
+        <h3>للمستثمر</h3>
+        <ul>
+          <li>مشاركة فرصة استثمارية</li>
+          <li>دعوة أصدقاء للاستثمار معاً</li>
+          <li>بناء شبكة استثمارية</li>
+        </ul>
+      </div>
+
+      <div class="device-card">
+        <h3>للمنصة</h3>
+        <ul>
+          <li>تسويق عضوي مجاني</li>
+          <li>انتشار سريع</li>
+          <li>زيادة عدد الزيارات</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>🧪 كيف تختبر؟</h2>
+      
+      <div class="device-card">
+        <h3>الاختبار 1: على iPhone</h3>
+        <div class="step">افتح المنصة على Safari</div>
+        <div class="step">ادخل لأي مزرعة</div>
+        <div class="step">اضغط زر المشاركة (أعلى اليسار)</div>
+        <div class="step">✅ يفتح قائمة iOS للمشاركة</div>
+        <div class="step">اختر WhatsApp أو أي تطبيق</div>
+        <div class="step">✅ الرابط يُرسل بنجاح</div>
+      </div>
+
+      <div class="device-card">
+        <h3>الاختبار 2: على الكمبيوتر</h3>
+        <div class="step">افتح المنصة على Chrome</div>
+        <div class="step">ادخل لأي مزرعة</div>
+        <div class="step">اضغط زر المشاركة</div>
+        <div class="step">✅ يظهر alert: "تم نسخ الرابط!"</div>
+        <div class="step">اذهب لأي مكان واعمل Paste</div>
+        <div class="step">✅ الرابط موجود</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>📍 أين الزر بالضبط؟</h2>
+      <div class="feature-box">
+        <p style="font-size: 1.2rem; margin-bottom: 15px;">
+          <strong>الموقع:</strong>
+        </p>
+        <ul>
+          <li>في صفحة تفاصيل المزرعة</li>
+          <li>في الأعلى - الزاوية اليسرى</li>
+          <li>بجانب زر القلب (❤️)</li>
+          <li>أيقونة المشاركة (📤 Share2)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div style="background: rgba(16, 185, 129, 0.2); border: 2px solid #10b981; border-radius: 20px; padding: 30px; text-align: center;">
+      <h3 style="font-size: 2rem; margin-bottom: 15px;">✅ جاهز للاستخدام</h3>
+      <p style="font-size: 1.2rem; line-height: 1.8;">
+        ميزة المشاركة تعمل الآن<br>
+        على جميع الأجهزة<br>
+        جرّبها الآن!
+      </p>
+    </div>
+
+    <div style="text-align: center; padding: 30px; color: #94a3b8;">
+      <p>Build: v20251219_1766171146484</p>
+      <p style="margin-top: 10px;">Feature: Share Farm Link ✅</p>
+    </div>
+  </div>
+</body>
+</html>

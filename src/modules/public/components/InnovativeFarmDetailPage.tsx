@@ -66,6 +66,38 @@ export const InnovativeFarmDetailPage: React.FC<InnovativeFarmDetailPageProps> =
     }
   };
 
+  const handleShare = async () => {
+    const shareUrl = window.location.href;
+    const shareTitle = farm.name_ar || farm.farm_name || 'مزرعة زيتون';
+    const shareText = `استكشف ${shareTitle} - استثمر في مزارع الزيتون`;
+
+    // Web Share API (للموبايل)
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: shareTitle,
+          text: shareText,
+          url: shareUrl
+        });
+        console.log('تمت المشاركة بنجاح');
+      } catch (error) {
+        if ((error as Error).name !== 'AbortError') {
+          console.error('خطأ في المشاركة:', error);
+        }
+      }
+    } else {
+      // نسخ الرابط للحافظة (للكمبيوتر)
+      try {
+        await navigator.clipboard.writeText(shareUrl);
+        alert('✅ تم نسخ الرابط! يمكنك مشاركته الآن');
+      } catch (error) {
+        console.error('خطأ في نسخ الرابط:', error);
+        // Fallback: عرض الرابط في prompt
+        prompt('انسخ الرابط:', shareUrl);
+      }
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-green-50 flex items-center justify-center">
@@ -169,7 +201,11 @@ export const InnovativeFarmDetailPage: React.FC<InnovativeFarmDetailPageProps> =
             >
               <Heart className={`w-5 h-5 ${isLiked ? 'fill-current' : ''}`} />
             </button>
-            <button className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors active:scale-95">
+            <button
+              onClick={handleShare}
+              className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors active:scale-95"
+              title="مشاركة المزرعة"
+            >
               <Share2 className="w-5 h-5 text-gray-600" />
             </button>
           </div>
