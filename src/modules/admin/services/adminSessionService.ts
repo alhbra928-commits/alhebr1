@@ -146,13 +146,26 @@ export class AdminSessionService {
   }
 
   static clearSession() {
-    // تنظيف بيانات الجلسة الإدارية فقط - لا نحذف جلسات المستخدمين الآخرين
+    console.log('[AdminSessionService] 🧹 تنظيف كامل للجلسة الإدارية...');
+
+    // تنظيف localStorage
     localStorage.removeItem('admin_session_token');
     localStorage.removeItem('admin_data');
-    // ❌ لا نستخدم sessionStorage.clear() لأنه يحذف كل الجلسات
-    // نحذف فقط بيانات Admin المحددة
+
+    // تنظيف sessionStorage - جميع البيانات المتعلقة بالـ admin
     sessionStorage.removeItem('admin_current_module');
     sessionStorage.removeItem('admin_last_activity');
+    sessionStorage.removeItem('last_admin_module');
+    sessionStorage.removeItem('current_admin_module');
+    sessionStorage.removeItem('last_user_type');
+    sessionStorage.removeItem('came_from_admin');
+    sessionStorage.removeItem('has_admin_session');
+
+    // إطلاق حدث لإخفاء زر الرجوع فوراً
+    window.dispatchEvent(new Event('admin-logout'));
+    window.dispatchEvent(new Event('admin-session-changed'));
+
+    console.log('[AdminSessionService] ✅ تم تنظيف الجلسة بنجاح');
   }
 
   static async getAllActiveSessions(): Promise<AdminSession[]> {

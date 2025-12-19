@@ -29,14 +29,41 @@ interface InnovativeLoaderGatewayProps {
   onComplete: () => void;
 }
 
+// ✅ إعدادات افتراضية - أخضر فاتح ومريح للعين
+const DEFAULT_SETTINGS: LoaderSettings = {
+  enabled: true,
+  main_title: '🌾 مزاد',
+  subtitle: 'منصة الاستثمار الزراعي',
+  auto_enter: true,
+  min_display_time: 2000,
+  fade_duration: 800,
+  animation_speed: 'normal',
+  show_progress_bar: true,
+  show_sparkles: true,
+  logo_animation: 'pulse',
+  background_color_from: '#064e3b', // أخضر داكن
+  background_color_to: '#047857',   // أخضر متوسط
+  text_color: '#ffffff',
+  progress_bar_color: '#10b981',    // أخضر فاتح
+  loading_text_1: 'جاري تحميل المنصة...',
+  loading_text_2: 'تحميل المزارع المتاحة...',
+  loading_text_3: 'تجهيز البيانات...',
+  loading_text_4: 'جاري الاتصال بالخادم...',
+  loading_text_5: 'تقريباً جاهز...',
+};
+
 export function InnovativeLoaderGateway({ onComplete }: InnovativeLoaderGatewayProps) {
-  const [settings, setSettings] = useState<LoaderSettings | null>(null);
+  const [settings, setSettings] = useState<LoaderSettings>(DEFAULT_SETTINGS);
   const [progress, setProgress] = useState(0);
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    // بدء اللودر فوراً بالإعدادات الافتراضية
+    startLoader(settings);
+
+    // تحميل الإعدادات من قاعدة البيانات في الخلفية (اختياري)
     loadSettings();
 
     // Prevent body scroll on iOS when loader is visible
@@ -56,22 +83,20 @@ export function InnovativeLoaderGateway({ onComplete }: InnovativeLoaderGatewayP
 
       if (error) throw error;
 
-      console.log('[Loader] Settings loaded:', data);
-      setSettings(data as LoaderSettings);
-      setIsLoading(false);
+      console.log('[Loader] ✅ Settings loaded from DB:', data);
 
-      // بدء اللودر
-      if (data.enabled) {
-        startLoader(data as LoaderSettings);
-      } else {
-        // إذا كان معطلاً، ادخل فوراً
+      // تحديث الإعدادات فقط إذا كانت مختلفة
+      // (اللودر يعمل بالفعل بالإعدادات الافتراضية)
+      if (data && data.enabled !== false) {
+        setSettings(data as LoaderSettings);
+      } else if (data && !data.enabled) {
+        // إذا كان معطلاً في DB، أدخل فوراً
+        console.log('[Loader] ⚠️ Loader disabled in DB - skipping...');
         onComplete();
       }
     } catch (error) {
-      console.error('[Loader] Error loading settings:', error);
-      setIsLoading(false);
-      // في حالة الخطأ، ادخل فوراً
-      setTimeout(onComplete, 500);
+      console.warn('[Loader] ⚠️ Could not load settings from DB, using defaults:', error);
+      // لا مشكلة - نستمر بالإعدادات الافتراضية
     }
   };
 
@@ -116,13 +141,8 @@ export function InnovativeLoaderGateway({ onComplete }: InnovativeLoaderGatewayP
     return () => clearInterval(timer);
   };
 
-  if (isLoading || !settings) {
-    return (
-      <div className="fixed inset-0 bg-gradient-to-br from-amber-900 to-orange-800 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white"></div>
-      </div>
-    );
-  }
+  // ✅ تم إزالة fallback loader البرتقالي/الأحمر!
+  // نستخدم الإعدادات الافتراضية مباشرة
 
   if (!settings.enabled) {
     return null;

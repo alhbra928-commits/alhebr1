@@ -56,7 +56,7 @@ export function ConceptIntroModal({ isOpen, onClose }: ConceptIntroModalProps) {
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center p-2 sm:p-4 bg-black/60 backdrop-blur-sm"
+      className="fixed inset-0 z-[10100] flex items-center justify-center p-2 sm:p-4 bg-black/60 backdrop-blur-sm"
       onClick={onClose}
     >
       <div
@@ -74,8 +74,12 @@ export function ConceptIntroModal({ isOpen, onClose }: ConceptIntroModalProps) {
           }}
         >
           <button
-            onClick={onClose}
-            className="absolute top-3 left-3 sm:top-4 sm:left-4 p-1.5 sm:p-2 rounded-lg bg-white/20 hover:bg-white/30 transition-all duration-300"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onClose();
+            }}
+            className="absolute top-3 left-3 sm:top-4 sm:left-4 p-1.5 sm:p-2 rounded-lg bg-white/20 hover:bg-white/30 transition-all duration-300 z-[50]"
           >
             <X className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
           </button>
