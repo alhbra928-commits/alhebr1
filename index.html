@@ -14,7 +14,7 @@
     <meta name="pragma" content="no-cache" />
     <meta name="last-modified" content="__BUILD_VERSION__" />
     <meta name="version" content="__BUILD_VERSION__" />
-    <meta name="cache-buster" content="v20251219_1766171146484" />
+    <meta name="cache-buster" content="v20251219_1766171565506" />
 
     <!-- iPhone/Safari specific headers -->
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -23,6 +23,26 @@
 
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <title>منصة النخيل والزيتون</title>
+
+    <!-- Open Graph / Social Media Meta Tags -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="منصة النخيل والزيتون" />
+    <meta property="og:title" content="منصة النخيل والزيتون - استثمر في مزارع الزيتون" />
+    <meta property="og:description" content="استثمر في مزارع الزيتون المميزة | عوائد مضمونة | ملكية موثقة | فرصة استثمارية مثالية" />
+    <meta property="og:image" content="https://images.unsplash.com/photo-1474440692490-2e83ae13ba29?q=80&w=1200" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="ar_SA" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="منصة النخيل والزيتون - استثمر في مزارع الزيتون" />
+    <meta name="twitter:description" content="استثمر في مزارع الزيتون المميزة | عوائد مضمونة | ملكية موثقة" />
+    <meta name="twitter:image" content="https://images.unsplash.com/photo-1474440692490-2e83ae13ba29?q=80&w=1200" />
+
+    <!-- WhatsApp specific -->
+    <meta property="og:url" content="https://hisas1.com" />
+    <meta property="og:image:alt" content="مزارع زيتون للاستثمار" />
 
     <!-- Basic Reset Only -->
     <style>
@@ -40,6 +60,29 @@
 
       #root {
         min-height: 100vh;
+      }
+
+      /* Animations for Share Modal */
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translate(-50%, -40%);
+        }
+        to {
+          opacity: 1;
+          transform: translate(-50%, -50%);
+        }
+      }
+
+      @keyframes slideOut {
+        from {
+          opacity: 1;
+          transform: translate(-50%, -50%);
+        }
+        to {
+          opacity: 0;
+          transform: translate(-50%, -60%);
+        }
       }
     </style>
 

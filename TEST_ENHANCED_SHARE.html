@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>معاينة المشاركة المُحسّنة</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: linear-gradient(135deg, #064e3b 0%, #047857 100%);
+      min-height: 100vh;
+      padding: 30px;
+      color: #fff;
+    }
+    .container { max-width: 1200px; margin: 0 auto; }
+    .header {
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(16, 185, 129, 0.4);
+      border-radius: 24px;
+      padding: 40px;
+      text-align: center;
+      margin-bottom: 30px;
+      backdrop-filter: blur(20px);
+    }
+    .header h1 { font-size: 2.5rem; margin-bottom: 15px; }
+    .version {
+      background: rgba(16, 185, 129, 0.3);
+      padding: 10px 20px;
+      border-radius: 12px;
+      display: inline-block;
+      font-family: 'Courier New', monospace;
+      margin-top: 10px;
+    }
+    .comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    @media (max-width: 768px) {
+      .comparison { grid-template-columns: 1fr; }
+    }
+    .preview-box {
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid rgba(16, 185, 129, 0.3);
+      border-radius: 20px;
+      padding: 25px;
+      min-height: 400px;
+    }
+    .preview-box h3 {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      color: #10b981;
+      text-align: center;
+    }
+    .badge {
+      display: inline-block;
+      padding: 5px 12px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 15px;
+    }
+    .badge.old { background: rgba(239, 68, 68, 0.3); color: #ef4444; }
+    .badge.new { background: rgba(16, 185, 129, 0.3); color: #10b981; }
+    .old-share {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 20px;
+      border-radius: 12px;
+      border-right: 4px solid #ef4444;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: #cbd5e1;
+    }
+    .new-share {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 20px;
+      border-radius: 12px;
+      border-right: 4px solid #10b981;
+      font-size: 0.95rem;
+      line-height: 1.8;
+      color: #fff;
+      white-space: pre-line;
+    }
+    .whatsapp-preview {
+      background: #075e54;
+      border-radius: 16px;
+      padding: 20px;
+      margin-top: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+    .whatsapp-bubble {
+      background: #dcf8c6;
+      color: #000;
+      padding: 15px;
+      border-radius: 12px;
+      border-top-right-radius: 2px;
+      margin-bottom: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .whatsapp-image {
+      width: 100%;
+      height: 180px;
+      background: linear-gradient(135deg, #065f46, #047857);
+      border-radius: 8px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+    }
+    .whatsapp-title {
+      font-weight: 600;
+      margin-bottom: 5px;
+      color: #075e54;
+    }
+    .whatsapp-desc {
+      font-size: 0.85rem;
+      color: #666;
+      margin-bottom: 8px;
+    }
+    .whatsapp-link {
+      font-size: 0.8rem;
+      color: #0088cc;
+      text-decoration: underline;
+    }
+    .modal-demo {
+      background: linear-gradient(135deg, #065f46 0%, #047857 100%);
+      color: white;
+      padding: 30px 40px;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+      text-align: center;
+      margin-top: 20px;
+    }
+    .modal-demo .icon { font-size: 3rem; margin-bottom: 15px; }
+    .modal-demo .title { font-size: 1.3rem; font-weight: 600; margin-bottom: 10px; }
+    .modal-demo .desc { font-size: 1rem; opacity: 0.9; }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin-top: 20px;
+    }
+    @media (max-width: 768px) {
+      .stats-grid { grid-template-columns: 1fr; }
+    }
+    .stat-card {
+      background: rgba(0, 0, 0, 0.4);
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
+    }
+    .stat-card .number {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #10b981;
+      margin-bottom: 5px;
+    }
+    .stat-card .label {
+      font-size: 0.9rem;
+      color: #cbd5e1;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🎨 المشاركة المُحسّنة</h1>
+      <div class="version">v20251219_1766171565506</div>
+      <p style="margin-top: 20px; font-size: 1.2rem;">
+        تصميم جذاب يحول المشاركة إلى أداة تسويق قوية
+      </p>
+    </div>
+
+    <div class="preview-box" style="grid-column: 1 / -1; margin-bottom: 30px;">
+      <h3>📊 التأثير المتوقع</h3>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="number">+25%</div>
+          <div class="label">زيادة في النقرات</div>
+        </div>
+        <div class="stat-card">
+          <div class="number">+30%</div>
+          <div class="label">زيادة في الزيارات</div>
+        </div>
+        <div class="stat-card">
+          <div class="number">+15%</div>
+          <div class="label">زيادة في الحجوزات</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="comparison">
+      <div class="preview-box">
+        <h3>❌ قبل التحسين</h3>
+        <span class="badge old">نص بسيط</span>
+        <div class="old-share">
+          استكشف مزرعة الخالدية - استثمر في مزارع الزيتون
+          <br><br>
+          https://hisas1.com/farm/abc123
+        </div>
+        <div style="margin-top: 20px; padding: 15px; background: rgba(239, 68, 68, 0.2); border-radius: 8px; font-size: 0.9rem;">
+          <strong>المشاكل:</strong><br>
+          • نص بسيط وغير جذاب<br>
+          • لا معلومات كافية<br>
+          • لا preview في التطبيقات<br>
+          • منخفض التحويل
+        </div>
+      </div>
+
+      <div class="preview-box">
+        <h3>✅ بعد التحسين</h3>
+        <span class="badge new">نص احترافي</span>
+        <div class="new-share">🌳 مزرعة الخالدية
+📍 الجوف - سكاكا
+
+💰 الاستثمار يبدأ من 2,500 ريال للشجرة
+✅ متوفر 850 شجرة
+
+🎯 عوائد مضمونة | ملكية موثقة | إدارة احترافية
+
+👇 اكتشف التفاصيل الآن
+https://hisas1.com/farm/abc123</div>
+        <div style="margin-top: 20px; padding: 15px; background: rgba(16, 185, 129, 0.2); border-radius: 8px; font-size: 0.9rem;">
+          <strong>المميزات:</strong><br>
+          • نص منظم وجذاب<br>
+          • معلومات كاملة وواضحة<br>
+          • إيموجي محفّزة<br>
+          • معدل تحويل أعلى
+        </div>
+      </div>
+    </div>
+
+    <div class="preview-box" style="grid-column: 1 / -1;">
+      <h3>📱 كيف تظهر في WhatsApp</h3>
+      <div class="whatsapp-preview">
+        <div class="whatsapp-bubble">
+          <div class="whatsapp-image">🌳</div>
+          <div class="whatsapp-title">منصة النخيل والزيتون - استثمر في مزارع الزيتون</div>
+          <div class="whatsapp-desc">استثمر في مزارع الزيتون المميزة | عوائد مضمونة | ملكية موثقة | فرصة استثمارية مثالية</div>
+          <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(0,0,0,0.1); font-size: 0.9rem; line-height: 1.6;">
+            🌳 مزرعة الخالدية<br>
+            📍 الجوف - سكاكا<br><br>
+            💰 الاستثمار يبدأ من ٢٬٥٠٠ ريال للشجرة<br>
+            ✅ متوفر ٨٥٠ شجرة<br><br>
+            🎯 عوائد مضمونة | ملكية موثقة | إدارة احترافية<br><br>
+            👇 اكتشف التفاصيل الآن
+          </div>
+          <div class="whatsapp-link">hisas1.com</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="preview-box" style="grid-column: 1 / -1; margin-top: 30px;">
+      <h3>💻 رسالة النسخ على الكمبيوتر</h3>
+      <div class="modal-demo">
+        <div class="icon">✅</div>
+        <div class="title">تم النسخ بنجاح!</div>
+        <div class="desc">يمكنك الآن مشاركة المزرعة مع أصدقائك</div>
+      </div>
+      <div style="margin-top: 20px; padding: 15px; background: rgba(16, 185, 129, 0.2); border-radius: 8px; text-align: center;">
+        <strong>المميزات:</strong><br>
+        ✅ تصميم عصري وأنيق<br>
+        ✅ Animation سلسة<br>
+        ✅ تختفي تلقائياً بعد 3 ثواني<br>
+        ✅ لا حاجة للضغط OK
+      </div>
+    </div>
+
+    <div style="background: rgba(16, 185, 129, 0.2); border: 2px solid #10b981; border-radius: 20px; padding: 30px; text-align: center; margin-top: 30px;">
+      <h3 style="font-size: 2rem; margin-bottom: 15px;">🎉 النتيجة النهائية</h3>
+      <p style="font-size: 1.2rem; line-height: 1.8; margin-bottom: 20px;">
+        المشاركة أصبحت أداة تسويق قوية<br>
+        تجذب الزيارات وتزيد من التحويلات<br>
+        بشكل طبيعي ومجاني تماماً
+      </p>
+      <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
+        <span class="badge new">✅ جاهز للاستخدام</span>
+        <span class="badge new">✅ احترافي</span>
+        <span class="badge new">✅ جذاب</span>
+        <span class="badge new">✅ فعّال</span>
+      </div>
+    </div>
+
+    <div style="text-align: center; padding: 30px; color: #94a3b8;">
+      <p>Build: v20251219_1766171565506</p>
+      <p style="margin-top: 10px;">Enhanced Share Feature ✅</p>
+      <p style="margin-top: 10px; font-size: 1.2rem; color: #10b981; font-weight: 600;">
+        جرّب الآن وشاهد الفرق!
+      </p>
+    </div>
+  </div>
+</body>
+</html>

@@ -68,15 +68,31 @@ export const InnovativeFarmDetailPage: React.FC<InnovativeFarmDetailPageProps> =
 
   const handleShare = async () => {
     const shareUrl = window.location.href;
-    const shareTitle = farm.name_ar || farm.farm_name || 'مزرعة زيتون';
-    const shareText = `استكشف ${shareTitle} - استثمر في مزارع الزيتون`;
+    const farmName = farm.name_ar || farm.farm_name || 'مزرعة زيتون';
+    const location = farm.location_ar || farm.location || '';
+    const pricePerTree = farm.price_per_tree || 0;
+    const availableTrees = farm.available_trees || 0;
+
+    // نص جذاب ومُحفّز
+    const shareTitle = `🌿 ${farmName} - فرصة استثمارية`;
+    const shareText = `
+🌳 ${farmName}
+${location ? `📍 ${location}` : ''}
+
+💰 الاستثمار يبدأ من ${pricePerTree.toLocaleString('ar-SA')} ريال للشجرة
+${availableTrees > 0 ? `✅ متوفر ${availableTrees.toLocaleString('ar-SA')} شجرة` : '🔥 فرصة محدودة'}
+
+🎯 عوائد مضمونة | ملكية موثقة | إدارة احترافية
+
+👇 اكتشف التفاصيل الآن
+    `.trim();
 
     // Web Share API (للموبايل)
     if (navigator.share) {
       try {
         await navigator.share({
           title: shareTitle,
-          text: shareText,
+          text: shareText + '\n\n' + shareUrl,
           url: shareUrl
         });
         console.log('تمت المشاركة بنجاح');
@@ -88,8 +104,40 @@ export const InnovativeFarmDetailPage: React.FC<InnovativeFarmDetailPageProps> =
     } else {
       // نسخ الرابط للحافظة (للكمبيوتر)
       try {
-        await navigator.clipboard.writeText(shareUrl);
-        alert('✅ تم نسخ الرابط! يمكنك مشاركته الآن');
+        const fullShareText = shareText + '\n\n' + shareUrl;
+        await navigator.clipboard.writeText(fullShareText);
+
+        // رسالة تأكيد أنيقة
+        const modal = document.createElement('div');
+        modal.style.cssText = `
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          background: linear-gradient(135deg, #065f46 0%, #047857 100%);
+          color: white;
+          padding: 30px 40px;
+          border-radius: 20px;
+          box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+          z-index: 100000;
+          text-align: center;
+          font-family: system-ui, -apple-system, sans-serif;
+          animation: slideIn 0.3s ease;
+        `;
+        modal.innerHTML = `
+          <div style="font-size: 3rem; margin-bottom: 15px;">✅</div>
+          <div style="font-size: 1.3rem; font-weight: 600; margin-bottom: 10px;">تم النسخ بنجاح!</div>
+          <div style="font-size: 1rem; opacity: 0.9;">يمكنك الآن مشاركة المزرعة مع أصدقائك</div>
+        `;
+
+        document.body.appendChild(modal);
+
+        // إزالة الرسالة بعد 3 ثواني
+        setTimeout(() => {
+          modal.style.animation = 'slideOut 0.3s ease';
+          setTimeout(() => modal.remove(), 300);
+        }, 3000);
+
       } catch (error) {
         console.error('خطأ في نسخ الرابط:', error);
         // Fallback: عرض الرابط في prompt
