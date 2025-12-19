@@ -70,7 +70,7 @@ export const EnhancedConceptCard: React.FC<EnhancedConceptCardProps> = ({ isOpen
   if (!isOpen) return null;
 
   const handleStartOwnership = () => {
-    onStartOwnership();
+    // ✅ إغلاق الـ modal والعودة مباشرة للواجهة الرئيسية (لا نفتح صفحة ثانية)
     onClose();
   };
 
