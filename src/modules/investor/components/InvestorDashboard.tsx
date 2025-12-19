@@ -346,6 +346,25 @@ export function InvestorDashboard({ phone, onLogout, isFirstTimeLogin = false, o
             </div>
 
             <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+              {/* زر المساعد الذكي */}
+              <button
+                onClick={() => {
+                  const whatsappNumber = '966569335257';
+                  const message = encodeURIComponent('السلام عليكم، أريد المساعدة من المساعد الذكي 🤖');
+                  window.open(`https://wa.me/${whatsappNumber}?text=${message}`, '_blank');
+                }}
+                className="flex items-center gap-1 sm:gap-1.5 md:gap-2 px-2 sm:px-3 md:px-4 lg:px-5 py-1.5 sm:py-2 md:py-2.5 lg:py-3 rounded-lg sm:rounded-xl font-bold sm:font-black text-xs sm:text-sm md:text-base transition-all active:scale-95 sm:hover:scale-105 touch-manipulation relative overflow-hidden"
+                style={{
+                  color: 'white',
+                  background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                  boxShadow: '0 4px 20px rgba(16, 185, 129, 0.4)',
+                }}
+              >
+                <span className="text-lg sm:text-xl md:text-2xl">🤖</span>
+                <span className="hidden md:inline">المساعد الذكي</span>
+                <span className="hidden sm:inline md:hidden">مساعد</span>
+              </button>
+
               {/* زر استكشف المنصة */}
               {onGoToPublic && (
                 <button
