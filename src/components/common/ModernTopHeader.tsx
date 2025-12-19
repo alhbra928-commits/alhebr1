@@ -409,6 +409,11 @@ export function ModernTopHeader({
             display: none;
           }
 
+          /* Hide desktop phone button on mobile */
+          .header-phone-btn {
+            display: none;
+          }
+
           /* Show mobile actions group */
           .mobile-actions-group {
             display: flex;
@@ -479,7 +484,11 @@ export function ModernTopHeader({
           {/* Desktop Phone Button */}
           <button
             className="header-phone-btn"
-            onClick={() => window.location.href = `tel:${customPhoneNumber || texts.phoneNumber}`}
+            onClick={() => {
+              const phoneNum = customPhoneNumber || texts.phoneNumber;
+              console.log('Calling phone:', phoneNum);
+              window.location.href = `tel:${phoneNum}`;
+            }}
             title={texts.phoneTooltip}
           >
             <Phone size={18} />
@@ -517,7 +526,9 @@ export function ModernTopHeader({
             <div
               className="mobile-menu-item"
               onClick={() => {
-                window.location.href = `tel:${customPhoneNumber || texts.phoneNumber}`;
+                const phoneNum = customPhoneNumber || texts.phoneNumber;
+                console.log('Mobile calling phone:', phoneNum);
+                window.location.href = `tel:${phoneNum}`;
                 setMobileMenuOpen(false);
                 document.body.classList.remove('menu-open');
               }}
