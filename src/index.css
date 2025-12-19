@@ -3,76 +3,54 @@
 @tailwind utilities;
 
 /* ====================================================
-   FIXED CHROME SYSTEM - Portal-based Header & Footer
-   الحل النهائي لـ iPhone Safari
+   GRID SHELL SYSTEM - الحل النهائي لـ iOS Safari
+   استبدال Portal بـ Grid Layout
    ==================================================== */
-
-:root {
-  --header-h: 72px;
-  --footer-h: 72px;
-}
 
 html, body {
   height: 100%;
   margin: 0;
+  padding: 0;
 }
 
 /* مهم: لا تجعل البودي يسكرول */
 body {
-  overflow: hidden !important;
+  overflow: hidden;
 }
 
-/* Portal ثابت فوق كل شيء */
-#fixed-chrome {
-  position: fixed;
-  inset: 0;
-  z-index: 2147483647;
-  pointer-events: none;
-}
-
-#fixed-chrome .fc-header,
-#fixed-chrome .fc-footer {
-  position: fixed !important;
-  left: 0;
-  right: 0;
-  z-index: 2147483647;
-  pointer-events: auto;
-}
-
-#fixed-chrome .fc-header {
-  top: 0;
-}
-
-#fixed-chrome .fc-footer {
-  bottom: 0;
-  padding-bottom: env(safe-area-inset-bottom);
-}
-
-/* iOS FIX: اجبار Safari على تثبيت الهيدر والفوتر في طبقات منفصلة */
-#fixed-chrome,
-#fixed-chrome .fc-header,
-#fixed-chrome .fc-footer {
-  transform: translate3d(0,0,0);
-  -webkit-transform: translate3d(0,0,0);
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  will-change: transform;
-}
-
-/* هذا هو مكان التمرير الوحيد */
-#appContent {
+/* ===== Grid Shell Layout ===== */
+.appShell {
   height: 100dvh;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: auto; /* بدل touch */
-  padding-top: var(--header-h);
-  padding-bottom: calc(var(--footer-h) + env(safe-area-inset-bottom));
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  overflow: hidden;
 }
 
-/* Mobile adjustments */
-@media (max-width: 768px) {
-  :root {
-    --header-h: 64px;
-  }
+/* Header - ثابت بدون position fixed */
+.appHeader {
+  z-index: 10;
+  /* الثبات يأتي من Grid - لا position fixed */
+}
+
+/* Main Content - مكان التمرير الوحيد */
+.appMain {
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch; /* آمن الآن */
+  position: relative;
+  /* No padding - Grid يتكفل بالمساحة */
+}
+
+/* Footer - ثابت بدون position fixed */
+.appFooter {
+  padding-bottom: env(safe-area-inset-bottom);
+  z-index: 10;
+  /* الثبات يأتي من Grid - لا position fixed */
+}
+
+/* Remove old appContent padding */
+#appContent {
+  /* Grid Shell يتكفل بكل شيء */
 }
 
 /* Override any dark backgrounds */

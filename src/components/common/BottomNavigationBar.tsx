@@ -61,8 +61,8 @@ export function BottomNavigationBar({
     <>
       <style>{`
         .bottom-nav-bar {
-          position: relative !important;
-          width: 100% !important;
+          position: relative;
+          width: 100%;
 
           background: linear-gradient(180deg,
             rgba(255, 255, 255, 0.98) 0%,
@@ -74,8 +74,8 @@ export function BottomNavigationBar({
             0 -4px 20px rgba(0, 0, 0, 0.08),
             0 -1px 3px rgba(0, 0, 0, 0.05);
 
-          /* iOS Safe Area Support */
-          padding-bottom: env(safe-area-inset-bottom);
+          /* iOS Safe Area Support - managed by parent .appFooter */
+          /* Grid Shell: الثبات يأتي من parent */
         }
 
         .bottom-nav-container {
@@ -203,10 +203,7 @@ export function BottomNavigationBar({
           color: #10b981;
         }
 
-        /* Prevent body scroll issues */
-        body {
-          padding-bottom: calc(76px + env(safe-area-inset-bottom));
-        }
+        /* Grid Shell handles spacing - no body padding needed */
 
         /* Responsive adjustments */
         @media (max-width: 380px) {

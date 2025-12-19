@@ -44,59 +44,6 @@ export function ModernTopHeader({
   useEffect(() => {
     setMounted(true);
     loadTexts();
-
-    // ULTIMATE iOS Safari Header Fix - Continuous Monitoring
-    const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-    if (isIOS) {
-      console.log('🍎 iOS detected - Applying ULTIMATE header fix');
-
-      let headerElement: HTMLElement | null = null;
-      let animationFrameId: number;
-      let isRunning = true;
-
-      // Prevent body overscroll
-      document.body.style.overscrollBehavior = 'none';
-      document.documentElement.style.overscrollBehavior = 'none';
-
-      // Lock header position using requestAnimationFrame
-      const lockHeader = () => {
-        if (!isRunning) return;
-
-        if (!headerElement) {
-          headerElement = document.querySelector('.modern-header');
-        }
-
-        if (headerElement) {
-          const rect = headerElement.getBoundingClientRect();
-
-          // If header moved even 1px, force it back
-          if (rect.top !== 0) {
-            headerElement.style.position = 'fixed';
-            headerElement.style.top = '0px';
-            headerElement.style.left = '0px';
-            headerElement.style.right = '0px';
-            headerElement.style.transform = 'translate3d(0, 0, 0)';
-            headerElement.style.webkitTransform = 'translate3d(0, 0, 0)';
-          }
-        }
-
-        // Continue monitoring
-        animationFrameId = requestAnimationFrame(lockHeader);
-      };
-
-      // Start continuous monitoring
-      lockHeader();
-
-      // Cleanup
-      return () => {
-        isRunning = false;
-        if (animationFrameId) {
-          cancelAnimationFrame(animationFrameId);
-        }
-        document.body.style.overscrollBehavior = '';
-        document.documentElement.style.overscrollBehavior = '';
-      };
-    }
   }, []);
 
   const loadTexts = async () => {
@@ -126,7 +73,7 @@ export function ModernTopHeader({
   return (
     <>
       <style>{`
-        /* Modern Header - Portal Mode (NO fixed/transform/backdrop) */
+        /* Modern Header - Grid Shell Mode (NO position fixed) */
         .modern-header {
           position: relative;
           width: 100%;
@@ -140,6 +87,8 @@ export function ModernTopHeader({
           padding-top: max(env(safe-area-inset-top), 0px);
           padding-left: env(safe-area-inset-left);
           padding-right: env(safe-area-inset-right);
+
+          /* Grid Shell: الثبات يأتي من parent */
         }
 
         .header-container {
@@ -511,16 +460,9 @@ export function ModernTopHeader({
             display: flex;
           }
 
-          body {
-            padding-top: 64px;
-          }
         }
 
-        @media (min-width: 769px) {
-          body {
-            padding-top: 72px;
-          }
-        }
+        /* Grid Shell handles spacing - no body padding needed */
 
         /* Prevent body scroll when menu is open */
         body.menu-open {

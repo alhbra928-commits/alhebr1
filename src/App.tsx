@@ -346,10 +346,10 @@ function App() {
   const showPublicChrome = activeModule === 'public' && !showAdminLogin;
 
   return (
-    <>
-      {/* Fixed Chrome - Header & Footer using Portal */}
-      <FixedChrome
-        header={showPublicChrome ? (
+    <div className="appShell" dir="rtl">
+      {/* Header - Grid Shell Mode (فقط للصفحات العامة) */}
+      {showPublicChrome && (
+        <header className="appHeader">
           <ModernTopHeader
             currentSection="home"
             onNavigate={(section) => {
@@ -359,26 +359,13 @@ function App() {
               console.log('Smart button clicked');
             }}
           />
-        ) : null}
-        footer={showPublicChrome ? (
-          <BottomNavigationBar
-            currentSection="home"
-            onNavigate={(section) => {
-              console.log('Navigate to:', section);
-            }}
-            onSmartButtonClick={() => {
-              console.log('Smart button clicked');
-            }}
-          />
-        ) : null}
-        headerHeight={showPublicChrome ? 72 : 0}
-        footerHeight={showPublicChrome ? 72 : 0}
-      />
+        </header>
+      )}
 
-      <div
+      {/* Main Content */}
+      <main
         id="appContent"
-        className="min-h-screen royal-green-bg"
-        dir="rtl"
+        className="appMain min-h-screen royal-green-bg"
       >
         {showAdminLogin && (
           <Suspense fallback={<div className="min-h-screen bg-gradient-to-br from-emerald-50 to-green-50" />}>
@@ -441,9 +428,23 @@ function App() {
             {renderModule()}
           </Suspense>
         </PermissionsProvider>
+      </main>
 
-      </div>
-    </>
+      {/* Footer - Grid Shell Mode (فقط للصفحات العامة) */}
+      {showPublicChrome && (
+        <footer className="appFooter">
+          <BottomNavigationBar
+            currentSection="home"
+            onNavigate={(section) => {
+              console.log('Navigate to:', section);
+            }}
+            onSmartButtonClick={() => {
+              console.log('Smart button clicked');
+            }}
+          />
+        </footer>
+      )}
+    </div>
   );
 }
 
