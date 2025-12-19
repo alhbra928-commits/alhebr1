@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>اختبار تشخيصي مباشر - قفل Viewport</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #ECFDF5, #F0FDF4, #F0FDFA);
+            overflow: hidden;
+            overscroll-behavior: contain;
+        }
+
+        .appShell {
+            position: fixed;
+            inset: 0;
+            height: var(--app-vh, 100svh) !important;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .appHeader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+            z-index: 1000;
+            transform: translateZ(0);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .appMain {
+            position: absolute;
+            top: 70px;
+            left: 0;
+            right: 0;
+            bottom: 70px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain;
+            padding: 20px;
+        }
+
+        .appFooter {
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 70px;
+            background: linear-gradient(135deg, #059669, #047857);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+            z-index: 1000;
+            transform: translateZ(0);
+            box-shadow: 0 -4px 12px rgba(16, 185, 129, 0.3);
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .card h3 {
+            color: #059669;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .card p {
+            color: #374151;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .value-display {
+            background: #F0FDF4;
+            border: 2px solid #10b981;
+            border-radius: 12px;
+            padding: 15px;
+            margin: 10px 0;
+            font-family: monospace;
+            font-size: 14px;
+            direction: ltr;
+            text-align: left;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            margin: 5px 5px 5px 0;
+        }
+
+        .status-badge.good {
+            background: #D1FAE5;
+            color: #047857;
+        }
+
+        .status-badge.bad {
+            background: #FEE2E2;
+            color: #991B1B;
+        }
+
+        .status-badge.warning {
+            background: #FEF3C7;
+            color: #92400E;
+        }
+
+        .instruction {
+            background: #EFF6FF;
+            border-right: 4px solid #3B82F6;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .emoji {
+            font-size: 24px;
+            margin-left: 10px;
+        }
+
+        /* Debug badge - نفس التصميم الموجود في الكود */
+        #vv-debug {
+            position: fixed;
+            left: 8px;
+            bottom: 8px;
+            z-index: 2147483647;
+            background: rgba(0, 0, 0, 0.75);
+            color: #fff;
+            padding: 6px 8px;
+            font: 12px/1.2 system-ui;
+            border-radius: 8px;
+            pointer-events: none;
+            direction: ltr;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <div class="appShell">
+        <div class="appHeader">
+            <span class="emoji">🔬</span>
+            اختبار تشخيصي مباشر
+        </div>
+
+        <div class="appMain">
+            <div class="card">
+                <h3>🎯 لوحة التشخيص النشطة</h3>
+                <p>انظر للزاوية اليسرى السفلى - ستجد لوحة سوداء صغيرة تعرض القيم مباشرة</p>
+                <div class="instruction">
+                    <strong>📱 التعليمات:</strong>
+                    <p>مرر هذه الصفحة للأعلى والأسفل وراقب الأرقام في اللوحة</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>📊 القيم الحالية</h3>
+                <div class="value-display" id="currentValues">
+                    جاري القياس...
+                </div>
+                <div id="statusBadges"></div>
+            </div>
+
+            <div class="card">
+                <h3>✅ معايير النجاح</h3>
+                <p><strong>1. جميع القيم متطابقة:</strong></p>
+                <p style="direction: ltr; text-align: left;">
+                    vv.height = innerH = --app-vh = shellH
+                </p>
+
+                <p style="margin-top: 10px;"><strong>2. التحديث المتزامن:</strong></p>
+                <p>عند التمرير، كل الأرقام تتغير معاً في نفس الوقت</p>
+
+                <p style="margin-top: 10px;"><strong>3. لا قفز:</strong></p>
+                <p>الهيدر والفوتر يبقيان ثابتين تماماً</p>
+            </div>
+
+            <div class="card">
+                <h3>🔍 تفسير النتائج</h3>
+                <div id="interpretation"></div>
+            </div>
+
+            <div class="instruction">
+                <h3>📋 خطوات الاختبار:</h3>
+                <p>1. افتح هذه الصفحة على iPhone في Safari</p>
+                <p>2. راقب اللوحة السوداء في الزاوية اليسرى السفلى</p>
+                <p>3. مرر الصفحة ببطء للأعلى والأسفل</p>
+                <p>4. تحقق من أن الأرقام تتحدث بشكل متزامن</p>
+                <p>5. تأكد من أن الهيدر والفوتر ثابتين</p>
+            </div>
+
+            <!-- محتوى للتمرير -->
+            <div style="height: 100px;"></div>
+            <div class="card"><h3>📦 محتوى 1</h3><p>مرر لأعلى وأسفل</p></div>
+            <div style="height: 100px;"></div>
+            <div class="card"><h3>🎨 محتوى 2</h3><p>راقب اللوحة التشخيصية</p></div>
+            <div style="height: 100px;"></div>
+            <div class="card"><h3>⚡ محتوى 3</h3><p>تحقق من الأرقام</p></div>
+            <div style="height: 100px;"></div>
+            <div class="card"><h3>✨ محتوى 4</h3><p>الهيدر والفوتر ثابتين؟</p></div>
+            <div style="height: 100px;"></div>
+        </div>
+
+        <div class="appFooter">
+            <span class="emoji">✅</span>
+            الهيدر والفوتر ثابتين!
+        </div>
+    </div>
+
+    <script>
+        // نفس الكود المطبق في المنصة - بالضبط!
+        function lockIOSViewport() {
+            const vv = window.visualViewport;
+
+            const update = () => {
+                const height = vv?.height ?? window.innerHeight;
+                document.documentElement.style.setProperty("--app-vh", `${height}px`);
+
+                const width = vv?.width ?? window.innerWidth;
+                document.documentElement.style.setProperty("--app-vw", `${width}px`);
+
+                // Debug badge - نفس التصميم بالضبط
+                let el = document.getElementById("vv-debug");
+                if (!el) {
+                    el = document.createElement("div");
+                    el.id = "vv-debug";
+                    el.style.cssText =
+                        "position:fixed;left:8px;bottom:8px;z-index:2147483647;" +
+                        "background:rgba(0,0,0,.75);color:#fff;padding:6px 8px;" +
+                        "font:12px/1.2 system-ui;border-radius:8px;pointer-events:none";
+                    document.body.appendChild(el);
+                }
+
+                const appShell = document.querySelector(".appShell");
+                const computedVh = getComputedStyle(document.documentElement).getPropertyValue("--app-vh").trim();
+                const shellHeight = appShell?.getBoundingClientRect().height;
+
+                el.textContent =
+                    `vv.height=${Math.round(vv?.height ?? 0)} ` +
+                    `innerH=${window.innerHeight} ` +
+                    `--app-vh=${computedVh} ` +
+                    `shellH=${shellHeight ? Math.round(shellHeight) : "?"}`;
+
+                // تحديث العرض في الكارد
+                updateDisplay(vv?.height, window.innerHeight, computedVh, shellHeight);
+            };
+
+            update();
+
+            if (vv) {
+                vv.addEventListener("resize", update);
+                vv.addEventListener("scroll", update);
+            }
+
+            window.addEventListener("resize", update);
+            window.addEventListener("orientationchange", update);
+
+            setTimeout(update, 100);
+            setTimeout(update, 300);
+            setTimeout(update, 500);
+
+            return true;
+        }
+
+        function updateDisplay(vvHeight, innerH, appVh, shellH) {
+            const currentValues = document.getElementById('currentValues');
+            const statusBadges = document.getElementById('statusBadges');
+            const interpretation = document.getElementById('interpretation');
+
+            if (!currentValues || !statusBadges || !interpretation) return;
+
+            currentValues.innerHTML = `
+vv.height = ${Math.round(vvHeight || 0)}px
+innerH = ${innerH}px
+--app-vh = ${appVh}
+shellH = ${shellH ? Math.round(shellH) : '?'}px
+            `;
+
+            // تحليل النتائج
+            const vvH = Math.round(vvHeight || 0);
+            const parsedVh = parseInt(appVh);
+            const sH = shellH ? Math.round(shellH) : 0;
+
+            let badges = '';
+            let interp = '';
+
+            // التحقق من التطابق
+            const allMatch = (vvH === innerH) && (vvH === parsedVh) && (vvH === sH);
+
+            if (allMatch) {
+                badges = '<span class="status-badge good">✅ جميع القيم متطابقة</span>';
+                interp = '<p style="color: #047857; font-weight: bold;">✅ النظام يعمل بشكل مثالي!</p><p>جميع القيم متطابقة. القفل نشط وفعّال.</p>';
+            } else {
+                if (!appVh || appVh === '') {
+                    badges += '<span class="status-badge bad">❌ --app-vh فارغ</span>';
+                    interp += '<p style="color: #991B1B; font-weight: bold;">❌ الدالة lockIOSViewport() لم تعمل</p><p>تحقق من main.tsx</p>';
+                }
+
+                if (sH !== parsedVh && parsedVh > 0) {
+                    badges += '<span class="status-badge bad">❌ shellH مختلف</span>';
+                    interp += '<p style="color: #991B1B; font-weight: bold;">❌ .appShell لا يستخدم --app-vh</p><p>تحقق من CSS وأضف !important</p>';
+                }
+
+                if (vvH !== innerH) {
+                    badges += '<span class="status-badge warning">⚠️ قيم مختلفة</span>';
+                }
+            }
+
+            statusBadges.innerHTML = badges;
+            interpretation.innerHTML = interp || '<p>مرر الصفحة لمزيد من التحليل...</p>';
+        }
+
+        // تفعيل القفل
+        const lockActivated = lockIOSViewport();
+
+        console.log('🔬 Diagnostic Test Page');
+        console.log('✅ Lock activated:', lockActivated);
+        console.log('📱 User Agent:', navigator.userAgent);
+        console.log('🌐 Visual Viewport supported:', !!window.visualViewport);
+    </script>
+</body>
+</html>

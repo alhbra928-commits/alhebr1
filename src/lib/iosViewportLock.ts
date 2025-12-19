@@ -3,6 +3,8 @@
  *
  * يقرأ الارتفاع الحقيقي من visualViewport ويثبته في CSS variable
  * مما يمنع القفز عند ظهور/إخفاء شريط Safari
+ *
+ * يتضمن لوحة تشخيص مباشرة لمراقبة القيم في الوقت الفعلي
  */
 
 export function lockIOSViewport() {
@@ -16,6 +18,28 @@ export function lockIOSViewport() {
     // أيضاً نثبت العرض للتأكد
     const width = vv?.width ?? window.innerWidth;
     document.documentElement.style.setProperty("--app-vw", `${width}px`);
+
+    // Debug badge - لوحة تشخيص مباشرة
+    let el = document.getElementById("vv-debug") as HTMLDivElement | null;
+    if (!el) {
+      el = document.createElement("div");
+      el.id = "vv-debug";
+      el.style.cssText =
+        "position:fixed;left:8px;bottom:8px;z-index:2147483647;" +
+        "background:rgba(0,0,0,.75);color:#fff;padding:6px 8px;" +
+        "font:12px/1.2 system-ui;border-radius:8px;pointer-events:none";
+      document.body.appendChild(el);
+    }
+
+    const appShell = document.querySelector(".appShell") as HTMLElement | null;
+    const computedVh = getComputedStyle(document.documentElement).getPropertyValue("--app-vh").trim();
+    const shellHeight = appShell?.getBoundingClientRect().height;
+
+    el.textContent =
+      `vv.height=${Math.round(vv?.height ?? 0)} ` +
+      `innerH=${window.innerHeight} ` +
+      `--app-vh=${computedVh} ` +
+      `shellH=${shellHeight ? Math.round(shellHeight) : "?"}`;
   };
 
   // تحديث فوري عند التحميل

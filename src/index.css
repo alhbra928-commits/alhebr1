@@ -26,18 +26,19 @@ body {
 .appShell {
   position: fixed;
   inset: 0;
-  height: var(--app-vh, 100svh);
+  height: var(--app-vh, 100svh) !important;
   width: 100%;
 }
 
 /* الهيدر ثابت أعلى */
 .appHeader {
   position: fixed;
-  top: var(--vvtop, 0);
+  top: 0;
   left: 0;
   right: 0;
   height: var(--header-h);
   z-index: 1000;
+  transform: translateZ(0);
 }
 
 /* الفوتر = شريط الإحصائيات (ثابت أسفل) */
@@ -50,6 +51,7 @@ body {
   height: calc(var(--footer-h) + env(safe-area-inset-bottom));
   padding-bottom: env(safe-area-inset-bottom);
   z-index: 1000;
+  transform: translateZ(0);
 }
 
 /* المحتوى يسكرول بين الهيدر والفوتر */
