@@ -53,7 +53,7 @@ class AnalyticsTrackingService {
       console.log(`✅ نظام التتبع اللحظي مفعّل${testMode}`);
       console.log('📊 Session ID:', this.sessionId);
       console.log('🌐 Landing:', window.location.pathname);
-      console.log('📱 Device:', this.getDeviceInfo().deviceType);
+      console.log('📱 Device:', this.getDeviceInfo().device_type);
       console.log('💻 OS:', this.getDeviceInfo().os);
 
     } catch (error) {
@@ -72,7 +72,7 @@ class AnalyticsTrackingService {
       console.log('🚀 إنشاء جلسة جديدة...');
       console.log('📍 Landing Path:', landingPath);
       console.log('🔗 Referrer:', referrer || 'مباشر');
-      console.log('📱 Device:', deviceInfo.deviceType);
+      console.log('📱 Device:', deviceInfo.device_type);
       console.log('💻 OS:', deviceInfo.os);
       if (utmParams.utm_source) {
         console.log('🎯 UTM Source:', utmParams.utm_source);
@@ -98,13 +98,34 @@ class AnalyticsTrackingService {
         .select('session_id')
         .single();
 
-      if (error) throw error;
+      if (error) {
+        // Dispatch failure event
+        window.dispatchEvent(new CustomEvent('tracking-status', {
+          detail: {
+            type: 'session',
+            success: false,
+            error: error.message,
+            httpCode: error.code ? parseInt(error.code) : null,
+          }
+        }));
+        throw error;
+      }
 
       if (data) {
         this.sessionId = data.session_id;
         this.storeSessionId(data.session_id);
         console.log('✅ تم تسجيل الجلسة بنجاح');
         console.log('🆔 Session ID:', data.session_id);
+
+        // Dispatch success event
+        window.dispatchEvent(new CustomEvent('tracking-status', {
+          detail: {
+            type: 'session',
+            success: true,
+            sessionId: data.session_id,
+            httpCode: 201,
+          }
+        }));
       }
     } catch (error) {
       console.error('❌ فشل إنشاء الجلسة:', error);
@@ -127,7 +148,7 @@ class AnalyticsTrackingService {
     }
   }
 
-  private getDeviceInfo(): DeviceInfo {
+  private getDeviceInfo(): any {
     const ua = navigator.userAgent.toLowerCase();
 
     let deviceType: 'mobile' | 'desktop' | 'tablet' = 'desktop';
@@ -150,12 +171,13 @@ class AnalyticsTrackingService {
     else if (/firefox/.test(ua)) browser = 'firefox';
     else if (/edg/.test(ua)) browser = 'edge';
 
+    // ✅ تحويل إلى snake_case ليطابق أعمدة قاعدة البيانات
     return {
-      deviceType,
+      device_type: deviceType,
       os,
       browser,
-      screenWidth: window.screen.width,
-      screenHeight: window.screen.height,
+      screen_width: window.screen.width,
+      screen_height: window.screen.height,
       language: navigator.language || 'ar',
     };
   }
@@ -230,12 +252,34 @@ class AnalyticsTrackingService {
 
       console.timeEnd(`⏱️ ${eventName}`);
 
-      if (error) throw error;
+      if (error) {
+        // Dispatch failure event
+        window.dispatchEvent(new CustomEvent('tracking-status', {
+          detail: {
+            type: 'event',
+            success: false,
+            eventName,
+            error: error.message,
+            httpCode: error.code ? parseInt(error.code) : null,
+          }
+        }));
+        throw error;
+      }
 
       console.log(`✅ تم تسجيل الحدث: ${eventName}`);
       if (Object.keys(eventValue || {}).length > 0) {
         console.log('📦 البيانات:', eventValue);
       }
+
+      // Dispatch success event
+      window.dispatchEvent(new CustomEvent('tracking-status', {
+        detail: {
+          type: 'event',
+          success: true,
+          eventName,
+          httpCode: 201,
+        }
+      }));
     } catch (error) {
       console.error(`❌ فشل تسجيل الحدث ${eventName}:`, error);
     }

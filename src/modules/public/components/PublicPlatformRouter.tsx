@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ModernRoyalPlatform } from './ModernRoyalPlatform';
 import { PreviewInspectionPage } from './PreviewInspectionPage';
 import { InnovativeLoaderGateway } from './InnovativeLoaderGateway';
+import { TrackingDebugBadge } from '../../../components/common/TrackingDebugBadge';
 
 type View = 'loader' | 'main' | 'preview';
 
@@ -64,26 +65,40 @@ export function PublicPlatformRouter({ onAdminLogin, onBackToAdmin, onFarmOwnerL
 
   switch (currentView) {
     case 'loader':
-      return <InnovativeLoaderGateway onComplete={handleLoaderComplete} />;
+      return (
+        <>
+          <InnovativeLoaderGateway onComplete={handleLoaderComplete} />
+          {/* Debug Badge for tracking verification */}
+          <TrackingDebugBadge />
+        </>
+      );
 
     case 'preview':
       return (
-        <PreviewInspectionPage
-          barcode={selectedBarcode}
-          onBack={handleBackToMain}
-          onOwn={handleOwn}
-        />
+        <>
+          <PreviewInspectionPage
+            barcode={selectedBarcode}
+            onBack={handleBackToMain}
+            onOwn={handleOwn}
+          />
+          {/* Debug Badge for tracking verification */}
+          <TrackingDebugBadge />
+        </>
       );
 
     case 'main':
     default:
       return (
-        <ModernRoyalPlatform
-          onAdminLogin={onAdminLogin}
-          onBackToAdmin={onBackToAdmin}
-          onFarmOwnerLogin={onFarmOwnerLogin}
-          onViewChange={onViewChange}
-        />
+        <>
+          <ModernRoyalPlatform
+            onAdminLogin={onAdminLogin}
+            onBackToAdmin={onBackToAdmin}
+            onFarmOwnerLogin={onFarmOwnerLogin}
+            onViewChange={onViewChange}
+          />
+          {/* Debug Badge for tracking verification */}
+          <TrackingDebugBadge />
+        </>
       );
   }
 }

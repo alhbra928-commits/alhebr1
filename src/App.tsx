@@ -4,6 +4,7 @@ import { PermissionsProvider } from './contexts/PermissionsContext';
 import FixedChrome from './components/common/FixedChrome';
 import { ModernTopHeader } from './components/common/ModernTopHeader';
 import { SmartActivityTicker } from './components/common/SmartActivityTicker';
+import { TrackingService } from './services/analytics/trackingService';
 
 // Lazy load EVERYTHING - including admin components
 const SmartAdminLoginPage = lazy(() => import('./modules/admin/components/SmartAdminLoginPage').then(m => ({ default: m.SmartAdminLoginPage })));
@@ -42,6 +43,28 @@ function App() {
   const [lastActivity, setLastActivity] = useState(Date.now());
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [publicView, setPublicView] = useState<'home' | 'farmDetail' | 'booking' | 'investor' | 'verification' | 'concept'>('home');
+
+  // 🎯 CRITICAL: Initialize Tracking Service - تفعيل نظام التتبع اللحظي
+  useEffect(() => {
+    const initTracking = async () => {
+      try {
+        await TrackingService.initialize();
+        // Track home view when app loads (only for public view)
+        if (activeModule === 'public') {
+          await TrackingService.trackPageView(window.location.pathname);
+        }
+      } catch (error) {
+        console.error('[App] ❌ Failed to initialize tracking:', error);
+      }
+    };
+
+    initTracking();
+
+    // Cleanup on unmount
+    return () => {
+      TrackingService.cleanup();
+    };
+  }, []);
 
   // حفظ آخر صفحة في لوحة التحكم
   useEffect(() => {
