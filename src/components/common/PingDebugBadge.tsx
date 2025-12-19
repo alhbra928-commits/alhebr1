@@ -22,6 +22,19 @@ export function PingDebugBadge() {
     id: null,
   });
   const [expanded, setExpanded] = useState(false);
+  const [shouldShow, setShouldShow] = useState(false);
+  const [autoHideTimer, setAutoHideTimer] = useState<NodeJS.Timeout | null>(null);
+
+  // تحقق من وجود ?debug=1 في الرابط
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const debugMode = urlParams.get('debug') === '1';
+    setShouldShow(debugMode);
+
+    if (!debugMode) {
+      console.log('💡 للاختبار: أضف ?debug=1 للرابط لرؤية Debug Badge');
+    }
+  }, []);
 
   useEffect(() => {
     const handlePingStatus = (event: Event) => {
@@ -36,6 +49,13 @@ export function PingDebugBadge() {
           elapsed: detail.elapsed,
           id: detail.id,
         });
+
+        // اختفاء تلقائي بعد 3 ثواني عند النجاح
+        if (autoHideTimer) clearTimeout(autoHideTimer);
+        const timer = setTimeout(() => {
+          setShouldShow(false);
+        }, 3000);
+        setAutoHideTimer(timer);
       } else {
         setPingStatus({
           status: 'failed',
@@ -44,6 +64,12 @@ export function PingDebugBadge() {
           elapsed: detail.elapsed || null,
           id: null,
         });
+
+        // عند الفشل، نبقي الشارة ظاهرة
+        if (autoHideTimer) {
+          clearTimeout(autoHideTimer);
+          setAutoHideTimer(null);
+        }
       }
     };
 
@@ -51,8 +77,9 @@ export function PingDebugBadge() {
 
     return () => {
       window.removeEventListener('ping-status', handlePingStatus);
+      if (autoHideTimer) clearTimeout(autoHideTimer);
     };
-  }, []);
+  }, [autoHideTimer]);
 
   const getStatusColor = () => {
     switch (pingStatus.status) {
@@ -75,6 +102,11 @@ export function PingDebugBadge() {
         return 'PENDING';
     }
   };
+
+  // لا تظهر الشارة إلا إذا كان debug=1 في الرابط
+  if (!shouldShow) {
+    return null;
+  }
 
   return (
     <div
