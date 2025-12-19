@@ -24,8 +24,8 @@ export function PublicPlatformRouter({ onAdminLogin, onBackToAdmin, onFarmOwnerL
   };
 
   const [currentView, setCurrentView] = useState<View>(() => {
-    // إذا كانت هناك جلسة نشطة، نبدأ مباشرة في main
-    return hasActiveSession() ? 'main' : 'loader';
+    // ✅ نبدأ دائماً بـ main - الـ Suspense في App.tsx سيتولى التحميل
+    return 'main';
   });
   const [selectedBarcode, setSelectedBarcode] = useState<string>('');
 
@@ -43,9 +43,9 @@ export function PublicPlatformRouter({ onAdminLogin, onBackToAdmin, onFarmOwnerL
   // مراقبة تغيير حالة الجلسات - فقط للخروج الصريح
   useEffect(() => {
     const handleExplicitLogout = () => {
-      // فقط عند تسجيل الخروج الصريح، نعيد تشغيل البوابة
-      console.log('🔄 تم تسجيل الخروج الصريح - إعادة تشغيل البوابة...');
-      setCurrentView('loader');
+      // ✅ عند الخروج، نرجع مباشرة للصفحة الرئيسية (بدون loader إضافي)
+      console.log('🔄 تم تسجيل الخروج الصريح - العودة للصفحة الرئيسية...');
+      setCurrentView('main');
     };
 
     // الاستماع فقط لحدث الخروج الصريح

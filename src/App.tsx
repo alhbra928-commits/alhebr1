@@ -456,7 +456,16 @@ function App() {
             </Suspense>
           )}
 
-          <Suspense fallback={<div className="min-h-screen bg-gradient-to-br from-emerald-50 to-green-50" />}>
+          <Suspense
+            fallback={
+              <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-50 via-green-50 to-emerald-100">
+                <div className="text-center">
+                  <div className="inline-block animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-emerald-600 mb-4"></div>
+                  <p className="text-2xl font-bold text-emerald-700">جاري التحميل...</p>
+                </div>
+              </div>
+            }
+          >
             {renderModule()}
           </Suspense>
         </PermissionsProvider>
