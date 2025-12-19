@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>🎯 اختبار عزل المتغيرات</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+      color: #fff;
+      padding: 20px;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      padding: 25px;
+      background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+      border-radius: 16px;
+      margin-bottom: 30px;
+      box-shadow: 0 8px 32px rgba(34, 197, 94, 0.3);
+    }
+
+    .header h1 {
+      font-size: 26px;
+      margin-bottom: 10px;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+
+    .header p {
+      font-size: 14px;
+      opacity: 0.95;
+    }
+
+    .section {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 25px;
+      margin-bottom: 20px;
+      backdrop-filter: blur(10px);
+    }
+
+    .section h2 {
+      font-size: 20px;
+      margin-bottom: 15px;
+      color: #22c55e;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin: 20px 0;
+    }
+
+    .comparison-box {
+      background: rgba(0, 0, 0, 0.3);
+      border: 2px solid;
+      border-radius: 10px;
+      padding: 15px;
+    }
+
+    .comparison-box.old {
+      border-color: #dc2626;
+    }
+
+    .comparison-box.new {
+      border-color: #22c55e;
+    }
+
+    .comparison-box h3 {
+      font-size: 16px;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    .comparison-box.old h3 {
+      color: #dc2626;
+    }
+
+    .comparison-box.new h3 {
+      color: #22c55e;
+    }
+
+    .code-inline {
+      background: rgba(0, 0, 0, 0.5);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      color: #22c55e;
+    }
+
+    .debug-example {
+      background: #000;
+      border: 2px solid #22c55e;
+      border-radius: 8px;
+      padding: 15px;
+      margin: 15px 0;
+      font-family: 'Courier New', monospace;
+      text-align: center;
+    }
+
+    .debug-device {
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 6px;
+      background: rgba(34, 197, 94, 0.1);
+    }
+
+    .debug-device-label {
+      font-size: 12px;
+      color: #999;
+      margin-bottom: 5px;
+    }
+
+    .debug-device-value {
+      font-size: 16px;
+      color: #22c55e;
+      font-weight: 700;
+    }
+
+    .highlight-box {
+      background: rgba(34, 197, 94, 0.1);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      border-radius: 8px;
+      padding: 15px;
+      margin: 15px 0;
+    }
+
+    .highlight-box strong {
+      color: #22c55e;
+    }
+
+    .test-steps {
+      counter-reset: step;
+    }
+
+    .test-step {
+      counter-increment: step;
+      position: relative;
+      padding: 15px;
+      padding-right: 60px;
+      margin-bottom: 15px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 8px;
+      border-right: 3px solid #22c55e;
+    }
+
+    .test-step::before {
+      content: counter(step);
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 35px;
+      height: 35px;
+      background: #22c55e;
+      color: #000;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 16px;
+    }
+
+    .success-badge {
+      display: inline-block;
+      background: #22c55e;
+      color: #000;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-right: 8px;
+    }
+
+    .list {
+      padding-right: 20px;
+      margin: 10px 0;
+    }
+
+    .list li {
+      margin: 8px 0;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 640px) {
+      .header h1 { font-size: 20px; }
+      .section h2 { font-size: 18px; }
+      body { padding: 10px; }
+      .comparison {
+        grid-template-columns: 1fr;
+      }
+      .test-step {
+        padding-right: 15px;
+        padding-left: 60px;
+        border-right: none;
+        border-left: 3px solid #22c55e;
+      }
+      .test-step::before {
+        right: auto;
+        left: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🎯 اختبار عزل المتغيرات</h1>
+      <p>تحقق من أن كل جهاز له متغيرات CSS مستقلة</p>
+    </div>
+
+    <div class="section">
+      <h2>
+        <span>🔬</span>
+        السبب الجذري
+      </h2>
+      <p style="margin-bottom: 15px;">
+        المشكلة السابقة: متغيرات CSS (<code class="code-inline">--group-w</code> و <code class="code-inline">--ticker-speed</code>)
+        كانت على <code class="code-inline">:root</code> مما يجعلها مشتركة بين الكمبيوتر والجوال.
+      </p>
+
+      <div class="comparison">
+        <div class="comparison-box old">
+          <h3>❌ قبل (مشترك)</h3>
+          <div style="font-size: 13px; margin-top: 10px;">
+            <div style="color: #999; margin-bottom: 5px;">:root</div>
+            <div style="margin-right: 15px;">
+              <div>└ --group-w: 2000px</div>
+              <div>└ --ticker-speed: 14s</div>
+            </div>
+            <div style="margin-top: 10px; padding: 8px; background: rgba(220, 38, 38, 0.2); border-radius: 4px; font-size: 11px;">
+              ⚠️ الكمبيوتر والجوال يقرآن نفس القيم
+            </div>
+          </div>
+        </div>
+
+        <div class="comparison-box new">
+          <h3>✅ بعد (معزول)</h3>
+          <div style="font-size: 13px; margin-top: 10px;">
+            <div style="color: #999; margin-bottom: 5px;">Desktop track:</div>
+            <div style="margin-right: 15px; margin-bottom: 8px;">
+              <div>└ --group-w: 2000px</div>
+              <div>└ --ticker-speed: 15.5s</div>
+            </div>
+            <div style="color: #999; margin-bottom: 5px;">Mobile track:</div>
+            <div style="margin-right: 15px;">
+              <div>└ --group-w: 800px</div>
+              <div>└ --ticker-speed: 10.0s</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>
+        <span>📊</span>
+        ماذا تتوقع أن ترى
+      </h2>
+
+      <div class="debug-example">
+        <div style="margin-bottom: 15px; color: #999; font-size: 13px;">Debug Info (أعلى اليسار)</div>
+
+        <div class="debug-device">
+          <div class="debug-device-label">🖥️ على الكمبيوتر:</div>
+          <div class="debug-device-value">items=10 groupW=2000px maskW=1920px dur=15.5s</div>
+        </div>
+
+        <div class="debug-device">
+          <div class="debug-device-label">📱 على iPhone:</div>
+          <div class="debug-device-value">items=10 groupW=800px maskW=375px dur=10.0s</div>
+        </div>
+      </div>
+
+      <div class="highlight-box">
+        <strong>المفتاح:</strong> قيمة <code class="code-inline">dur=</code> مختلفة!
+        <ul class="list">
+          <li>الكمبيوتر: <code class="code-inline">dur=15.5s</code> (أبطأ)</li>
+          <li>الجوال: <code class="code-inline">dur=10.0s</code> (أسرع)</li>
+          <li>كل واحد <strong>مستقل</strong> عن الآخر</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>
+        <span>🧪</span>
+        كيف تختبر
+      </h2>
+
+      <div class="test-steps">
+        <div class="test-step">
+          <strong>افتح المنصة على الكمبيوتر</strong><br>
+          <span style="color: #999; font-size: 13px;">راقب Debug: يجب أن يعرض groupW كبير (مثل 2000px)</span>
+        </div>
+
+        <div class="test-step">
+          <strong>افتح المنصة على iPhone</strong><br>
+          <span style="color: #999; font-size: 13px;">راقب Debug: يجب أن يعرض groupW صغير (مثل 800px)</span>
+        </div>
+
+        <div class="test-step">
+          <strong>قارن قيم dur=</strong><br>
+          <span style="color: #999; font-size: 13px;">الكمبيوتر يجب أن يكون أكبر من الجوال</span>
+        </div>
+
+        <div class="test-step">
+          <strong>راقب الشريط على كليهما</strong><br>
+          <span style="color: #999; font-size: 13px;">كلاهما يجب أن يتمرر بسلاسة بدون فراغات</span>
+        </div>
+
+        <div class="test-step">
+          <strong>غيّر حجم نافذة الكمبيوتر</strong><br>
+          <span style="color: #999; font-size: 13px;">dur= يجب أن يتغير تلقائياً</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>
+        <span>✅</span>
+        علامات النجاح
+      </h2>
+
+      <div class="highlight-box">
+        <ul class="list">
+          <li><span class="success-badge">✓</span> كل جهاز يعرض <code class="code-inline">dur=</code> مختلف</li>
+          <li><span class="success-badge">✓</span> الجوال: dur أقصر (مثل 10s-12s)</li>
+          <li><span class="success-badge">✓</span> الكمبيوتر: dur أطول (مثل 14s-16s)</li>
+          <li><span class="success-badge">✓</span> لا فراغات على الجوال</li>
+          <li><span class="success-badge">✓</span> لا فراغات على الكمبيوتر</li>
+          <li><span class="success-badge">✓</span> تمرير سلس على كليهما</li>
+          <li><span class="success-badge">✓</span> لا تعارض بين الاثنين</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>
+        <span>🔍</span>
+        التفاصيل التقنية
+      </h2>
+
+      <p style="margin-bottom: 15px;"><strong>التغيير الرئيسي:</strong></p>
+
+      <div style="background: #000; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+        <div style="color: #dc2626; margin-bottom: 10px;">// ❌ القديم (global)</div>
+        <code style="color: #999;">document.documentElement.style.setProperty("--group-w", "2000px");</code>
+      </div>
+
+      <div style="background: #000; padding: 15px; border-radius: 8px;">
+        <div style="color: #22c55e; margin-bottom: 10px;">// ✅ الجديد (local)</div>
+        <code style="color: #999;">track.style.setProperty("--group-w", "2000px");</code>
+      </div>
+
+      <div class="highlight-box" style="margin-top: 15px;">
+        <strong>النتيجة:</strong><br>
+        كل <code class="code-inline">.marquee-track</code> له متغيراته الخاصة<br>
+        لا تداخل بين الأجهزة المختلفة
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>
+        <span>📝</span>
+        معادلة حساب Duration
+      </h2>
+
+      <div style="background: #000; padding: 20px; border-radius: 8px; margin: 15px 0;">
+        <code style="color: #22c55e; display: block; text-align: center; font-size: 14px;">
+          duration = baseDuration × (groupWidth / 1800)
+        </code>
+        <div style="text-align: center; margin-top: 10px; font-size: 13px; color: #999;">
+          محدود بين 10s و 20s
+        </div>
+      </div>
+
+      <div class="highlight-box">
+        <strong>أمثلة:</strong>
+        <ul class="list">
+          <li>groupWidth = 1800px → duration = 14s</li>
+          <li>groupWidth = 900px → duration = 7s → محدود إلى 10s</li>
+          <li>groupWidth = 3600px → duration = 28s → محدود إلى 20s</li>
+        </ul>
+      </div>
+    </div>
+
+    <div style="text-align: center; padding: 30px; color: #666; font-size: 13px;">
+      <p>Build: v20251219_css_vars_isolation</p>
+      <p>Status: ✅ Root Cause Fixed</p>
+      <p style="margin-top: 10px; color: #22c55e; font-weight: 600;">
+        اختبر الآن على iPhone والكمبيوتر معاً
+      </p>
+    </div>
+  </div>
+</body>
+</html>

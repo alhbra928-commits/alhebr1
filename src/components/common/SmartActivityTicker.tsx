@@ -102,8 +102,9 @@ export function SmartActivityTicker() {
     const count = group ? group.querySelectorAll(".activity-card-agricultural").length : 0;
     const gw = group ? Math.round(group.getBoundingClientRect().width) : 0;
     const mw = mask ? Math.round(mask.getBoundingClientRect().width) : 0;
+    const dur = track ? track.style.getPropertyValue("--ticker-speed") : "N/A";
 
-    el.textContent = `items=${count} groupW=${gw}px maskW=${mw}px`;
+    el.textContent = `items=${count} groupW=${gw}px maskW=${mw}px dur=${dur}`;
 
     // سيتم حذف هذا Debug بعد تأكيد الإصلاح
     return () => {
@@ -125,8 +126,13 @@ export function SmartActivityTicker() {
 
     if (groupWidth <= 0 || maskWidth <= 0) return;
 
-    // خزّن عرض المجموعة لـ CSS animation
-    document.documentElement.style.setProperty("--group-w", `${groupWidth}px`);
+    // ضع المتغيرات على track نفسه (ليس :root)
+    track.style.setProperty("--group-w", `${groupWidth}px`);
+
+    // احسب duration مخصص لهذا الجهاز (كلما كان groupWidth أكبر، duration أطول)
+    const baseDuration = 14; // ثانية
+    const duration = Math.max(10, Math.min(20, baseDuration * (groupWidth / 1800)));
+    track.style.setProperty("--ticker-speed", `${duration}s`);
 
     // كرر المجموعة حتى لا يوجد فراغ أبداً (3× عرض الشاشة)
     const needed = Math.ceil((maskWidth * 3) / groupWidth);
@@ -292,7 +298,10 @@ export function SmartActivityTicker() {
           isolation: isolate;
         }
 
-        /* المرحلة 3(C): Animation دقيق بمقدار عرض المجموعة */
+        /* المرحلة 3(C): Animation دقيق بمقدار عرض المجموعة
+         * المتغيرات --group-w و --ticker-speed محلية على .marquee-track
+         * تُحسب في JS لكل جهاز منفصل (لا تعارض بين desktop/mobile)
+         */
         @keyframes marquee {
           from {
             transform: translate3d(0, 0, 0);
@@ -317,6 +326,8 @@ export function SmartActivityTicker() {
           width: max-content;
           will-change: transform;
           animation: marquee var(--ticker-speed, 14s) linear infinite;
+          animation-delay: 0s;
+          animation-play-state: running;
           transform: translateZ(0);
           backface-visibility: hidden;
           padding: 0 !important;
