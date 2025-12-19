@@ -94,10 +94,13 @@ export function TemporaryBookingPage({
       setLoading(true);
       const farmDetail = await FarmDetailService.getFarmById(farmId);
       if (farmDetail) {
-        setVarieties(farmDetail.varieties);
+        setVarieties(farmDetail.varieties || []);
+      } else {
+        setVarieties([]);
       }
     } catch (error) {
       console.error('Error loading varieties:', error);
+      setVarieties([]);
     } finally {
       setLoading(false);
       console.log(`[PERF] TemporaryBookingPage: TOTAL ${(performance.now() - startTime).toFixed(0)}ms`);
@@ -313,7 +316,7 @@ export function TemporaryBookingPage({
 
   return (
     <div
-      className="min-h-screen pb-16 sm:pb-20 md:pb-8"
+      className="min-h-screen pb-32 sm:pb-36 md:pb-8"
       style={{
         background: `radial-gradient(circle at top left, ${greenTheme.lightest}, ${greenTheme.cream})`
       }}
@@ -890,8 +893,9 @@ export function TemporaryBookingPage({
       {/* زر الحجز العائم الذكي - للجوال والتابلت */}
       {selections.size > 0 && (
         <div
-          className="lg:hidden fixed bottom-0 left-0 right-0 z-[9999]"
+          className="lg:hidden fixed left-0 right-0 z-[9999]"
           style={{
+            bottom: '80px',
             paddingBottom: 'env(safe-area-inset-bottom, 0px)',
             pointerEvents: 'none'
           }}

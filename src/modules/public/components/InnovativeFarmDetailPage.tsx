@@ -448,7 +448,10 @@ export const InnovativeFarmDetailPage: React.FC<InnovativeFarmDetailPageProps> =
       </div>
 
       {/* شريط الحجز الثابت - تصميم زجاجي ثلاثي الأبعاد */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 pb-safe">
+      <div className="fixed left-0 right-0 z-[9999]" style={{
+        bottom: '80px',
+        paddingBottom: 'env(safe-area-inset-bottom, 0px)'
+      }}>
         {/* خلفية ضبابية */}
         <div className="absolute inset-0 backdrop-blur-xl bg-white/80"></div>
 
