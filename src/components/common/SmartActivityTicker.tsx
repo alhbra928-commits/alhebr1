@@ -246,8 +246,18 @@ export function SmartActivityTicker() {
           isolation: isolate;
         }
 
-        /* CSS Marquee - الصيغة المثالية */
-        @keyframes marquee {
+        /* CSS Marquee - Desktop Animation */
+        @keyframes marquee-desktop {
+          0% {
+            transform: translateX(0) translateZ(0);
+          }
+          100% {
+            transform: translateX(-50%) translateZ(0);
+          }
+        }
+
+        /* CSS Marquee - Mobile Animation (منفصل تماماً) */
+        @keyframes marquee-mobile {
           0% {
             transform: translateX(0) translateZ(0);
           }
@@ -258,9 +268,19 @@ export function SmartActivityTicker() {
 
         /* Smooth animation optimization */
         @media (prefers-reduced-motion: no-preference) {
-          .marquee-track {
+          .marquee-track-desktop,
+          .marquee-track-mobile {
             animation-timing-function: linear;
           }
+        }
+
+        /* فصل الشاشات - Desktop فقط */
+        .ticker-desktop {
+          display: flex;
+        }
+
+        .ticker-mobile {
+          display: none;
         }
 
         .ticker-overflow-container {
@@ -273,11 +293,28 @@ export function SmartActivityTicker() {
           margin: 0 !important;
         }
 
-        .marquee-track {
+        /* Desktop Track - Animation منفصلة */
+        .marquee-track-desktop {
           display: flex;
           width: max-content;
           will-change: transform;
-          animation: marquee ${getAnimationDuration()} linear infinite;
+          animation: marquee-desktop ${getAnimationDuration()} linear infinite;
+          transform: translateZ(0);
+          backface-visibility: hidden;
+          padding: 0 !important;
+          margin: 0 !important;
+          contain: layout style paint;
+          -webkit-transform: translateZ(0);
+          -webkit-backface-visibility: hidden;
+          perspective: 1000px;
+        }
+
+        /* Mobile Track - Animation منفصلة تماماً */
+        .marquee-track-mobile {
+          display: flex;
+          width: max-content;
+          will-change: transform;
+          animation: marquee-mobile ${getAnimationDuration()} linear infinite;
           transform: translateZ(0);
           backface-visibility: hidden;
           padding: 0 !important;
@@ -411,8 +448,17 @@ export function SmartActivityTicker() {
           animation: golden-wave 3s ease infinite;
         }
 
-        /* Mobile Optimization */
+        /* Mobile Optimization - عرض Mobile وإخفاء Desktop */
         @media (max-width: 768px) {
+          /* إخفاء Desktop وإظهار Mobile */
+          .ticker-desktop {
+            display: none !important;
+          }
+
+          .ticker-mobile {
+            display: flex !important;
+          }
+
           .marquee-group {
             gap: 5px;
           }
@@ -471,8 +517,24 @@ export function SmartActivityTicker() {
       <div className="ticker-agricultural" dir="rtl">
         <div className="absolute top-0 left-0 right-0 h-[3px] golden-wave" />
 
-        <div className="ticker-overflow-container">
-          <div className="marquee-track">
+        {/* Desktop Ticker - مخفي على الموبايل */}
+        <div className="ticker-overflow-container ticker-desktop">
+          <div className="marquee-track marquee-track-desktop">
+            {/* Group 1 - المحتوى الأصلي */}
+            <div className="marquee-group">
+              {tickerContent}
+            </div>
+
+            {/* Group 2 - نسخة مطابقة 1:1 */}
+            <div className="marquee-group" aria-hidden="true">
+              {tickerContent}
+            </div>
+          </div>
+        </div>
+
+        {/* Mobile Ticker - مخفي على الكمبيوتر */}
+        <div className="ticker-overflow-container ticker-mobile">
+          <div className="marquee-track marquee-track-mobile">
             {/* Group 1 - المحتوى الأصلي */}
             <div className="marquee-group">
               {tickerContent}

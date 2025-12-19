@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>اختبار الفصل بين الموبايل والكمبيوتر</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Cairo', 'Segoe UI', Tahoma, sans-serif;
+      background: linear-gradient(135deg, #1e4620 0%, #2c5f2d 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .header {
+      text-align: center;
+      color: white;
+      margin-bottom: 30px;
+    }
+
+    .header h1 {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+
+    .demo-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .info-box {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 15px;
+      padding: 25px;
+      margin-bottom: 30px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .info-title {
+      color: #2c5f2d;
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .info-card {
+      padding: 15px;
+      border-radius: 10px;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .desktop-card {
+      background: linear-gradient(135deg, #339af0 0%, #1864ab 100%);
+      color: white;
+    }
+
+    .mobile-card {
+      background: linear-gradient(135deg, #51cf66 0%, #2b8a3e 100%);
+      color: white;
+    }
+
+    .status-active {
+      background: #51cf66;
+      color: white;
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-size: 13px;
+      display: inline-block;
+      margin-top: 10px;
+    }
+
+    .status-hidden {
+      background: #ff6b6b;
+      color: white;
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-size: 13px;
+      display: inline-block;
+      margin-top: 10px;
+    }
+
+    /* Ticker System */
+    .ticker-wrapper {
+      background: linear-gradient(135deg, rgba(44, 95, 45, 0.95) 0%, rgba(30, 70, 32, 0.98) 100%);
+      border-radius: 15px;
+      overflow: hidden;
+      height: 80px;
+      position: relative;
+      border: 3px solid rgba(212, 175, 55, 0.5);
+      margin: 20px 0;
+    }
+
+    /* Desktop Animation */
+    @keyframes marquee-desktop {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* Mobile Animation (منفصلة) */
+    @keyframes marquee-mobile {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* Default: Desktop visible */
+    .ticker-desktop {
+      display: flex;
+      position: relative;
+      height: 100%;
+      overflow: hidden;
+      align-items: center;
+    }
+
+    .ticker-mobile {
+      display: none;
+      position: relative;
+      height: 100%;
+      overflow: hidden;
+      align-items: center;
+    }
+
+    /* Desktop Track */
+    .marquee-track-desktop {
+      display: flex;
+      width: max-content;
+      animation: marquee-desktop 16s linear infinite;
+    }
+
+    /* Mobile Track */
+    .marquee-track-mobile {
+      display: flex;
+      width: max-content;
+      animation: marquee-mobile 16s linear infinite;
+    }
+
+    .marquee-group {
+      display: flex;
+      gap: 6px;
+      padding: 0 10px;
+    }
+
+    .activity-card {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.08) 100%);
+      border: 2px solid rgba(212, 175, 55, 0.5);
+      border-radius: 10px;
+      padding: 8px 12px;
+      color: #F5F5DC;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+
+    .card-icon {
+      width: 28px;
+      height: 28px;
+      background: linear-gradient(135deg, #D4AF37 0%, #C49423 100%);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+
+    .card-text {
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    /* Switch to Mobile */
+    @media (max-width: 768px) {
+      .ticker-desktop {
+        display: none !important;
+      }
+
+      .ticker-mobile {
+        display: flex !important;
+      }
+
+      .desktop-card {
+        opacity: 0.5;
+      }
+
+      .mobile-card {
+        opacity: 1;
+      }
+    }
+
+    /* Desktop highlight */
+    @media (min-width: 769px) {
+      .desktop-card {
+        opacity: 1;
+      }
+
+      .mobile-card {
+        opacity: 0.5;
+      }
+    }
+
+    .animation-indicator {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(212, 175, 55, 0.9);
+      color: #1e4620;
+      padding: 5px 12px;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 12px;
+      z-index: 10;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
+    .screen-size {
+      background: rgba(81, 207, 102, 0.2);
+      border: 2px solid #51cf66;
+      border-radius: 10px;
+      padding: 15px;
+      text-align: center;
+      margin: 20px 0;
+      font-weight: bold;
+    }
+
+    .current-width {
+      font-size: 24px;
+      color: #2b8a3e;
+      margin: 10px 0;
+    }
+
+    .instructions {
+      background: rgba(51, 154, 240, 0.1);
+      border: 2px solid #339af0;
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 20px;
+    }
+
+    .instructions h3 {
+      color: #1864ab;
+      margin-bottom: 15px;
+    }
+
+    .instructions ol {
+      margin-right: 20px;
+      line-height: 1.8;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>🔀 اختبار الفصل بين الموبايل والكمبيوتر</h1>
+    <p>Dual Independent Marquee System</p>
+  </div>
+
+  <div class="demo-container">
+    <!-- معلومات الشاشة الحالية -->
+    <div class="screen-size">
+      <div>📐 عرض الشاشة الحالي:</div>
+      <div class="current-width" id="screenWidth">loading...</div>
+      <div id="activeSystem">loading...</div>
+    </div>
+
+    <!-- معلومات النظام -->
+    <div class="info-box">
+      <div class="info-title">📊 معلومات النظام</div>
+
+      <div class="info-grid">
+        <div class="info-card desktop-card">
+          <div style="font-size: 32px; margin-bottom: 10px;">💻</div>
+          <div>Desktop Ticker</div>
+          <div style="font-size: 12px; margin-top: 5px;">marquee-desktop animation</div>
+          <div class="status-active" id="desktopStatus">جاري التحميل...</div>
+        </div>
+
+        <div class="info-card mobile-card">
+          <div style="font-size: 32px; margin-bottom: 10px;">📱</div>
+          <div>Mobile Ticker</div>
+          <div style="font-size: 12px; margin-top: 5px;">marquee-mobile animation</div>
+          <div class="status-hidden" id="mobileStatus">جاري التحميل...</div>
+        </div>
+      </div>
+
+      <div style="margin-top: 20px; padding: 15px; background: rgba(212, 175, 55, 0.1); border-radius: 10px;">
+        <strong>🎯 الفصل التام:</strong>
+        <ul style="margin-right: 20px; margin-top: 10px; line-height: 1.8;">
+          <li>✅ كل شريط له DOM منفصل</li>
+          <li>✅ كل شريط له animation منفصلة</li>
+          <li>✅ صفر ربط بين الاثنين</li>
+          <li>✅ واحد فقط active في كل مرة</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- الشريط المباشر -->
+    <div class="info-box">
+      <div class="info-title">🎬 الشريط المباشر</div>
+
+      <div class="ticker-wrapper">
+        <div class="animation-indicator" id="animationIndicator">...</div>
+
+        <!-- Desktop Ticker -->
+        <div class="ticker-desktop" id="tickerDesktop">
+          <div class="marquee-track-desktop">
+            <div class="marquee-group" id="desktopGroup1"></div>
+            <div class="marquee-group" id="desktopGroup2"></div>
+          </div>
+        </div>
+
+        <!-- Mobile Ticker -->
+        <div class="ticker-mobile" id="tickerMobile">
+          <div class="marquee-track-mobile">
+            <div class="marquee-group" id="mobileGroup1"></div>
+            <div class="marquee-group" id="mobileGroup2"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- التعليمات -->
+    <div class="instructions">
+      <h3>🧪 كيف تختبر الفصل؟</h3>
+      <ol>
+        <li><strong>على الكمبيوتر:</strong> افتح الصفحة على شاشة عادية</li>
+        <li><strong>راقب:</strong> "Desktop Ticker" سيكون نشط و "Mobile Ticker" مخفي</li>
+        <li><strong>صغّر الشاشة:</strong> قلل عرض المتصفح لأقل من 768px</li>
+        <li><strong>راقب:</strong> "Desktop Ticker" سيختفي و "Mobile Ticker" سيظهر</li>
+        <li><strong>النتيجة:</strong> كل شريط يعمل بشكل مستقل تماماً!</li>
+      </ol>
+
+      <div style="margin-top: 15px; padding-top: 15px; border-top: 2px solid rgba(51, 154, 240, 0.3);">
+        <strong>💡 ملاحظة:</strong> الحركة في كل شريط مستقلة تماماً ولا تؤثر على الآخر
+      </div>
+    </div>
+
+    <!-- النتيجة النهائية -->
+    <div style="text-align: center; margin-top: 30px; padding: 25px; background: rgba(212, 175, 55, 0.15); border-radius: 15px; color: white;">
+      <strong style="font-size: 18px; display: block; margin-bottom: 10px;">✅ النتيجة النهائية</strong>
+      <div style="line-height: 1.8;">
+        ✅ فصل تام بين الموبايل والكمبيوتر<br>
+        ✅ صفر ربط في الحركة<br>
+        ✅ استقلالية 100% لكل شاشة<br>
+        ✅ أداء محسّن لكل منصة<br>
+        ✅ DOM نظيف - واحد فقط active
+      </div>
+      <div style="margin-top: 15px; padding-top: 15px; border-top: 2px solid rgba(255,255,255,0.2);">
+        <strong>الإصدار:</strong> v20251219_1766159990091<br>
+        <strong>الحالة:</strong> ✅ Fully Separated Mobile + Desktop
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const activities = [
+      { icon: '🌴', text: 'فهد حجز 3 أشجار نخيل' },
+      { icon: '👥', text: 'فاطمة حجزت 5,000 شجرة' },
+      { icon: '🫒', text: 'تميم حجز 10,100 شجرة زيتون' },
+      { icon: '✅', text: 'تمت الموافقة على حجز فاطمة' },
+      { icon: '📈', text: 'تم حجز 115,000+ شجرة' },
+      { icon: '🏡', text: 'مزرعة حصص الأكثر طلباً' },
+    ];
+
+    // إنشاء المحتوى
+    let content = '';
+    activities.forEach(activity => {
+      content += `
+        <div class="activity-card">
+          <div class="card-icon">${activity.icon}</div>
+          <div class="card-text">${activity.text}</div>
+        </div>
+      `;
+    });
+
+    // ملء Desktop Ticker
+    document.getElementById('desktopGroup1').innerHTML = content;
+    document.getElementById('desktopGroup2').innerHTML = content;
+
+    // ملء Mobile Ticker
+    document.getElementById('mobileGroup1').innerHTML = content;
+    document.getElementById('mobileGroup2').innerHTML = content;
+
+    // Update screen info
+    function updateScreenInfo() {
+      const width = window.innerWidth;
+      document.getElementById('screenWidth').textContent = width + 'px';
+
+      const desktopTicker = document.getElementById('tickerDesktop');
+      const mobileTicker = document.getElementById('tickerMobile');
+
+      const isDesktopVisible = window.getComputedStyle(desktopTicker).display !== 'none';
+      const isMobileVisible = window.getComputedStyle(mobileTicker).display !== 'none';
+
+      if (isDesktopVisible) {
+        document.getElementById('activeSystem').innerHTML = '💻 <strong>Desktop Ticker نشط</strong>';
+        document.getElementById('desktopStatus').textContent = '✅ نشط';
+        document.getElementById('desktopStatus').className = 'status-active';
+        document.getElementById('mobileStatus').textContent = '❌ مخفي';
+        document.getElementById('mobileStatus').className = 'status-hidden';
+        document.getElementById('animationIndicator').textContent = '💻 Desktop';
+      } else if (isMobileVisible) {
+        document.getElementById('activeSystem').innerHTML = '📱 <strong>Mobile Ticker نشط</strong>';
+        document.getElementById('desktopStatus').textContent = '❌ مخفي';
+        document.getElementById('desktopStatus').className = 'status-hidden';
+        document.getElementById('mobileStatus').textContent = '✅ نشط';
+        document.getElementById('mobileStatus').className = 'status-active';
+        document.getElementById('animationIndicator').textContent = '📱 Mobile';
+      }
+    }
+
+    // Initial update
+    updateScreenInfo();
+
+    // Update on resize
+    window.addEventListener('resize', updateScreenInfo);
+
+    // Update every second
+    setInterval(updateScreenInfo, 1000);
+  </script>
+</body>
+</html>
