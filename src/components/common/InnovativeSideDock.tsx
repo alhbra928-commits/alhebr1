@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Home, User, Phone, Brain, ChevronRight, ChevronLeft } from 'lucide-react';
+import { MessageCircle, User, Phone, Brain, ChevronRight, ChevronLeft } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 
 interface InnovativeSideDockProps {
@@ -21,6 +21,7 @@ interface SideDockTexts {
   phoneTooltip: string;
   smartTooltip: string;
   phoneNumber: string;
+  managerWhatsapp: string;
   defaultState: string;
 }
 
@@ -32,17 +33,18 @@ export function InnovativeSideDock({
 }: InnovativeSideDockProps) {
   const [mounted, setMounted] = useState(false);
   const [texts, setTexts] = useState<SideDockTexts>({
-    homeButton: 'الرئيسية',
+    homeButton: 'واتساب',
     accountButton: 'الحساب',
     phoneButton: 'اتصل بنا',
     smartButton: 'المساعد الذكي',
     showTooltip: 'إظهار الشريط',
     hideTooltip: 'إخفاء الشريط',
-    homeTooltip: 'الانتقال للصفحة الرئيسية',
+    homeTooltip: 'تحدث مع المدير العام على واتساب',
     accountTooltip: 'صفحة الحساب',
     phoneTooltip: 'اتصل بنا الآن',
     smartTooltip: 'افتح المساعد الذكي',
     phoneNumber: '966569335257',
+    managerWhatsapp: '966569335257',
     defaultState: 'visible'
   });
   const [isVisible, setIsVisible] = useState(true);
@@ -372,11 +374,18 @@ export function InnovativeSideDock({
             )}
 
             <button
-              className={`side-dock-button ${currentSection === 'home' ? 'active' : ''}`}
-              onClick={() => onNavigate?.('home')}
+              className="side-dock-button"
+              onClick={() => {
+                const whatsappNumber = texts.managerWhatsapp.replace(/\D/g, '');
+                const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent('السلام عليكم، أريد التواصل مع المدير العام')}`;
+                window.open(whatsappUrl, '_blank');
+              }}
               title={texts.homeTooltip}
+              style={{
+                background: 'linear-gradient(135deg, #25D366 0%, #128C7E 100%)',
+              }}
             >
-              <Home size={22} />
+              <MessageCircle size={22} />
             </button>
 
             <button
