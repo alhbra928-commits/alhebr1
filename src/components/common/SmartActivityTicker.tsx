@@ -256,13 +256,13 @@ export function SmartActivityTicker() {
           }
         }
 
-        /* CSS Marquee - Mobile Animation (منفصل تماماً) */
+        /* CSS Marquee - Mobile Animation (منفصل تماماً - أسرع) */
         @keyframes marquee-mobile {
           0% {
             transform: translateX(0) translateZ(0);
           }
           100% {
-            transform: translateX(-50%) translateZ(0);
+            transform: translateX(-10%) translateZ(0);
           }
         }
 
@@ -309,12 +309,12 @@ export function SmartActivityTicker() {
           perspective: 1000px;
         }
 
-        /* Mobile Track - Animation منفصلة تماماً */
+        /* Mobile Track - Animation منفصلة تماماً (أسرع 40%) */
         .marquee-track-mobile {
           display: flex;
           width: max-content;
           will-change: transform;
-          animation: marquee-mobile ${getAnimationDuration()} linear infinite;
+          animation: marquee-mobile 10s linear infinite;
           transform: translateZ(0);
           backface-visibility: hidden;
           padding: 0 !important;
@@ -460,12 +460,15 @@ export function SmartActivityTicker() {
           }
 
           .marquee-group {
-            gap: 5px;
+            gap: 2px !important;
+            padding: 0 !important;
           }
 
           .activity-card-agricultural {
-            padding: 7px 10px;
+            padding: 6px 9px;
             border-radius: 8px;
+            min-width: 175px;
+            max-width: 175px;
           }
 
           .card-inner {
@@ -501,11 +504,14 @@ export function SmartActivityTicker() {
         /* Ultra compact for very small screens */
         @media (max-width: 480px) {
           .marquee-group {
-            gap: 4px;
+            gap: 1px !important;
+            padding: 0 !important;
           }
 
           .activity-card-agricultural {
-            padding: 6px 9px;
+            padding: 5px 8px;
+            min-width: 170px;
+            max-width: 170px;
           }
 
           .card-title {
@@ -535,15 +541,12 @@ export function SmartActivityTicker() {
         {/* Mobile Ticker - مخفي على الكمبيوتر */}
         <div className="ticker-overflow-container ticker-mobile">
           <div className="marquee-track marquee-track-mobile">
-            {/* Group 1 - المحتوى الأصلي */}
-            <div className="marquee-group">
-              {tickerContent}
-            </div>
-
-            {/* Group 2 - نسخة مطابقة 1:1 */}
-            <div className="marquee-group" aria-hidden="true">
-              {tickerContent}
-            </div>
+            {/* تكرار 10 مرات للموبايل - حلقة سلسة 100% */}
+            {Array.from({ length: 10 }).map((_, index) => (
+              <div key={index} className="marquee-group" aria-hidden={index > 0}>
+                {tickerContent}
+              </div>
+            ))}
           </div>
         </div>
       </div>

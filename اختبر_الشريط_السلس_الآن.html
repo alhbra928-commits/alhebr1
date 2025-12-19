@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>اختبار الشريط السلس - 10 مرات تكرار</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Cairo', 'Segoe UI', Tahoma, sans-serif;
+      background: linear-gradient(135deg, #1e4620 0%, #2c5f2d 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .header {
+      text-align: center;
+      color: white;
+      margin-bottom: 30px;
+    }
+
+    .header h1 {
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    .comparison {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      gap: 30px;
+    }
+
+    .section {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .section-title {
+      color: #2c5f2d;
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .badge-old {
+      background: #ff6b6b;
+      color: white;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+    }
+
+    .badge-new {
+      background: #51cf66;
+      color: white;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+    }
+
+    .ticker-demo {
+      height: 80px;
+      background: linear-gradient(135deg, rgba(44, 95, 45, 0.95) 0%, rgba(30, 70, 32, 0.98) 100%);
+      border: 3px solid rgba(212, 175, 55, 0.5);
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+      margin: 15px 0;
+    }
+
+    /* OLD System - 2 repetitions */
+    @keyframes marquee-old {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    .ticker-old .track {
+      display: flex;
+      animation: marquee-old 16s linear infinite;
+      gap: 5px;
+    }
+
+    /* NEW System - 10 repetitions */
+    @keyframes marquee-new {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-10%); }
+    }
+
+    .ticker-new .track {
+      display: flex;
+      animation: marquee-new 10s linear infinite;
+      gap: 2px;
+    }
+
+    .card {
+      min-width: 175px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.08) 100%);
+      border: 2px solid rgba(212, 175, 55, 0.5);
+      border-radius: 10px;
+      padding: 8px 12px;
+      color: #F5F5DC;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .card-icon {
+      width: 28px;
+      height: 28px;
+      background: linear-gradient(135deg, #D4AF37 0%, #C49423 100%);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+
+    .card-text {
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 15px;
+      margin: 15px 0;
+    }
+
+    .stat-card {
+      padding: 15px;
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    .stat-old {
+      background: rgba(255, 107, 107, 0.1);
+      border: 2px solid #ff6b6b;
+    }
+
+    .stat-new {
+      background: rgba(81, 207, 102, 0.1);
+      border: 2px solid #51cf66;
+    }
+
+    .stat-value {
+      font-size: 24px;
+      font-weight: bold;
+      margin: 5px 0;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      opacity: 0.8;
+    }
+
+    .instructions {
+      background: rgba(51, 154, 240, 0.1);
+      border: 2px solid #339af0;
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 20px;
+    }
+
+    .instructions h3 {
+      color: #1864ab;
+      margin-bottom: 15px;
+    }
+
+    .instructions ol {
+      margin-right: 20px;
+      line-height: 2;
+    }
+
+    .instructions li {
+      margin-bottom: 10px;
+    }
+
+    .highlight {
+      background: rgba(212, 175, 55, 0.2);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: bold;
+    }
+
+    @media (max-width: 768px) {
+      .ticker-old .track {
+        gap: 2px;
+      }
+
+      .ticker-new .track {
+        gap: 1px;
+      }
+
+      .card {
+        min-width: 175px;
+        padding: 6px 9px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>🎯 اختبار الشريط السلس</h1>
+    <p>مقارنة النظام القديم (2x) vs الجديد (10x)</p>
+  </div>
+
+  <div class="comparison">
+    <!-- OLD System -->
+    <div class="section">
+      <div class="section-title">
+        ❌ النظام القديم
+        <span class="badge-old">2 مرات تكرار</span>
+      </div>
+
+      <div class="stats">
+        <div class="stat-card stat-old">
+          <div class="stat-label">التكرار</div>
+          <div class="stat-value">2x</div>
+        </div>
+        <div class="stat-card stat-old">
+          <div class="stat-label">السرعة</div>
+          <div class="stat-value">16s</div>
+        </div>
+        <div class="stat-card stat-old">
+          <div class="stat-label">Animation</div>
+          <div class="stat-value">-50%</div>
+        </div>
+        <div class="stat-card stat-old">
+          <div class="stat-label">Gap</div>
+          <div class="stat-value">5px</div>
+        </div>
+      </div>
+
+      <div class="ticker-demo ticker-old">
+        <div class="track" id="oldTrack"></div>
+      </div>
+
+      <div style="text-align: center; color: #e03131; font-weight: bold; margin-top: 10px;">
+        ⚠️ قد تلاحظ فراغات عند الدوران
+      </div>
+    </div>
+
+    <!-- NEW System -->
+    <div class="section">
+      <div class="section-title">
+        ✅ النظام الجديد
+        <span class="badge-new">10 مرات تكرار</span>
+      </div>
+
+      <div class="stats">
+        <div class="stat-card stat-new">
+          <div class="stat-label">التكرار</div>
+          <div class="stat-value">10x</div>
+        </div>
+        <div class="stat-card stat-new">
+          <div class="stat-label">السرعة</div>
+          <div class="stat-value">10s</div>
+        </div>
+        <div class="stat-card stat-new">
+          <div class="stat-label">Animation</div>
+          <div class="stat-value">-10%</div>
+        </div>
+        <div class="stat-card stat-new">
+          <div class="stat-label">Gap</div>
+          <div class="stat-value">2px</div>
+        </div>
+      </div>
+
+      <div class="ticker-demo ticker-new">
+        <div class="track" id="newTrack"></div>
+      </div>
+
+      <div style="text-align: center; color: #2b8a3e; font-weight: bold; margin-top: 10px;">
+        ✨ حلقة سلسة 100% بدون فراغات
+      </div>
+    </div>
+
+    <!-- Instructions -->
+    <div class="instructions">
+      <h3>📱 كيف تختبر على الموبايل؟</h3>
+      <ol>
+        <li>افتح هذه الصفحة على <span class="highlight">موبايلك</span></li>
+        <li>راقب الشريط <span class="highlight">القديم</span> (الأول) - قد ترى فراغات</li>
+        <li>راقب الشريط <span class="highlight">الجديد</span> (الثاني) - سلس تماماً!</li>
+        <li>لاحظ الفرق في <span class="highlight">السرعة والتغطية</span></li>
+      </ol>
+
+      <div style="margin-top: 20px; padding-top: 20px; border-top: 2px solid rgba(51, 154, 240, 0.3);">
+        <strong>💡 ملاحظة:</strong> الشريط الجديد أسرع بـ <span class="highlight">40%</span> ويكرر المحتوى <span class="highlight">10 مرات</span> بدلاً من مرتين!
+      </div>
+    </div>
+
+    <!-- Results -->
+    <div style="background: rgba(212, 175, 55, 0.15); border-radius: 15px; padding: 25px; color: white; text-align: center;">
+      <h3 style="margin-bottom: 15px;">🎉 النتيجة النهائية</h3>
+      <div style="line-height: 2;">
+        ✅ تكرار <strong>10 مرات</strong> بدلاً من 2<br>
+        ✅ سرعة <strong>10 ثوانٍ</strong> بدلاً من 16<br>
+        ✅ animation <strong>-10%</strong> بدلاً من -50%<br>
+        ✅ فراغات <strong>2px</strong> بدلاً من 5px<br>
+        ✅ حلقة <strong>سلسة 100%</strong> مضمونة!
+      </div>
+      <div style="margin-top: 20px; padding-top: 20px; border-top: 2px solid rgba(255,255,255,0.3);">
+        <strong>الإصدار:</strong> v20251219_1766160500374<br>
+        <strong>الحالة:</strong> ✅ Zero Gaps Mobile Ticker
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const activities = [
+      { icon: '🌴', text: 'فهد حجز 3 أشجار نخيل' },
+      { icon: '👥', text: 'فاطمة حجزت 5,000 شجرة' },
+      { icon: '🫒', text: 'تميم حجز 10,100 شجرة زيتون' },
+      { icon: '✅', text: 'تمت الموافقة على حجز فاطمة' },
+      { icon: '📈', text: 'تم حجز 115,000+ شجرة' },
+      { icon: '🏡', text: 'مزرعة حصص الأكثر طلباً' },
+    ];
+
+    function createCard(activity) {
+      return `
+        <div class="card">
+          <div class="card-icon">${activity.icon}</div>
+          <div class="card-text">${activity.text}</div>
+        </div>
+      `;
+    }
+
+    // OLD System - 2 repetitions
+    let oldContent = '';
+    for (let i = 0; i < 2; i++) {
+      activities.forEach(activity => {
+        oldContent += createCard(activity);
+      });
+    }
+    document.getElementById('oldTrack').innerHTML = oldContent;
+
+    // NEW System - 10 repetitions
+    let newContent = '';
+    for (let i = 0; i < 10; i++) {
+      activities.forEach(activity => {
+        newContent += createCard(activity);
+      });
+    }
+    document.getElementById('newTrack').innerHTML = newContent;
+  </script>
+</body>
+</html>
