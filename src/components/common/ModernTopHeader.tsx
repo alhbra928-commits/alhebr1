@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Phone, Menu, X } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
+import { ShareButton } from './ShareButton';
+import { shareSettingsService } from '../../services/shareSettingsService';
 
 interface ModernTopHeaderProps {
   onNavigate?: (section: string) => void;
@@ -650,6 +652,14 @@ export function ModernTopHeader({
             )}
           </div>
 
+          {/* Share Button */}
+          <ShareButton
+            pageType="home"
+            variant="icon"
+            size="md"
+            className="header-nav-desktop"
+          />
+
           {/* Desktop Phone Button */}
           <button
             className="header-phone-btn"
@@ -702,6 +712,27 @@ export function ModernTopHeader({
         {/* Mobile Menu */}
         <div className={`mobile-menu ${mobileMenuOpen ? 'open' : ''}`}>
           <div className="mobile-menu-content">
+            {/* Share */}
+            <div
+              className="mobile-menu-item"
+              onClick={async (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                await shareSettingsService.share('home');
+                setMobileMenuOpen(false);
+                document.body.classList.remove('menu-open');
+              }}
+              role="button"
+              tabIndex={0}
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+              </svg>
+              <span>مشاركة</span>
+            </div>
+
+            <div className="mobile-menu-divider" />
+
             {/* Phone */}
             <div
               className="mobile-menu-item"
