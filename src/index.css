@@ -51,19 +51,7 @@ body {
   height: calc(var(--footer-h) + env(safe-area-inset-bottom));
   padding-bottom: env(safe-area-inset-bottom);
   z-index: 1000;
-
-  /* CRITICAL iOS FIX: Force own layer */
   transform: translateZ(0);
-  will-change: transform;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  -webkit-transform: translateZ(0);
-  -webkit-perspective: 1000px;
-
-  /* منع أي تمدد أو تغيير في الارتفاع */
-  min-height: calc(var(--footer-h) + env(safe-area-inset-bottom));
-  max-height: calc(var(--footer-h) + env(safe-area-inset-bottom));
-  overflow: hidden;
 }
 
 /* المحتوى يسكرول بين الهيدر والفوتر */
@@ -76,11 +64,6 @@ body {
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain; /* منع قفز الهيدر/الفوتر عند السحب في iOS */
-}
-
-/* قفل overscroll للصفحة الرئيسية فقط */
-.appMain.homePage {
-  overscroll-behavior: none;
 }
 
 /* Remove old appContent padding */
@@ -105,7 +88,7 @@ body {
 
   html {
     font-size: 16px;
-    -webkit-text-size-adjust: 100%; /* منع قفزة الخط في iOS */
+    -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
     background: linear-gradient(135deg, #ECFDF5 0%, #F0FDF4 50%, #F0FDFA 100%) !important;
   }

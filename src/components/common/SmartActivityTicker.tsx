@@ -274,20 +274,6 @@ export function SmartActivityTicker() {
           -webkit-backdrop-filter: blur(20px) saturate(180%);
           border-top: 3px solid rgba(212, 175, 55, 0.5);
           box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(212, 175, 55, 0.2);
-
-          /* CRITICAL iOS FIX: تثبيت الارتفاع بشكل جذري */
-          height: var(--footer-h) !important;
-          min-height: var(--footer-h) !important;
-          max-height: var(--footer-h) !important;
-          overflow: hidden !important;
-          display: flex !important;
-          align-items: center !important;
-          line-height: 1 !important;
-
-          /* منع أي تغيير في الطبقة */
-          transform: translateZ(0);
-          backface-visibility: hidden;
-          -webkit-backface-visibility: hidden;
         }
 
         .activity-card-agricultural {

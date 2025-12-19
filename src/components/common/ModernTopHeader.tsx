@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Phone, Menu, X } from 'lucide-react';
+import { Home, User, Phone, Menu, X } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 
 interface ModernTopHeaderProps {
   onNavigate?: (section: string) => void;
   currentSection?: string;
+  onSmartButtonClick?: () => void;
   phoneNumber?: string;
 }
 
@@ -23,6 +24,7 @@ interface HeaderTexts {
 export function ModernTopHeader({
   onNavigate,
   currentSection = 'home',
+  onSmartButtonClick,
   phoneNumber: customPhoneNumber
 }: ModernTopHeaderProps) {
   const [mounted, setMounted] = useState(false);
@@ -87,8 +89,6 @@ export function ModernTopHeader({
           padding-right: env(safe-area-inset-right);
 
           /* Grid Shell: الثبات يأتي من parent */
-          z-index: 1000 !important;
-          pointer-events: auto !important;
         }
 
         .header-container {
@@ -99,9 +99,6 @@ export function ModernTopHeader({
           align-items: center;
           justify-content: space-between;
           gap: 20px;
-          pointer-events: auto !important;
-          position: relative;
-          z-index: 1001 !important;
         }
 
         /* Logo Section */
@@ -254,49 +251,24 @@ export function ModernTopHeader({
           gap: 8px;
           padding: 10px 20px;
           border-radius: 12px;
-          border: 2px solid rgba(16, 185, 129, 0.8);
-          background: rgba(16, 185, 129, 0.2);
+          border: 2px solid rgba(16, 185, 129, 0.4);
+          background: rgba(16, 185, 129, 0.1);
           color: #10b981;
           font-weight: 700;
-          font-size: 15px;
-          cursor: pointer !important;
-          transition: all 0.2s ease;
-          position: relative;
-          z-index: 10000 !important;
-          pointer-events: auto !important;
-          user-select: none;
-          -webkit-tap-highlight-color: rgba(16, 185, 129, 0.3);
-          box-shadow:
-            0 2px 12px rgba(16, 185, 129, 0.3),
-            inset 0 1px 2px rgba(255, 255, 255, 0.1);
-          animation: pulse-phone 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse-phone {
-          0%, 100% {
-            box-shadow:
-              0 2px 12px rgba(16, 185, 129, 0.3),
-              inset 0 1px 2px rgba(255, 255, 255, 0.1);
-          }
-          50% {
-            box-shadow:
-              0 4px 20px rgba(16, 185, 129, 0.5),
-              inset 0 1px 2px rgba(255, 255, 255, 0.2);
-          }
+          font-size: 14px;
+          cursor: pointer;
+          transition: all 0.3s ease;
         }
 
         .header-phone-btn:hover {
-          background: rgba(16, 185, 129, 0.3);
-          border-color: #10b981;
-          transform: scale(1.08);
-          box-shadow: 0 6px 24px rgba(16, 185, 129, 0.5);
-          animation: none;
+          background: rgba(16, 185, 129, 0.2);
+          border-color: rgba(16, 185, 129, 0.6);
+          transform: scale(1.05);
+          box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
         }
 
         .header-phone-btn:active {
-          transform: scale(0.92);
-          background: rgba(16, 185, 129, 0.4) !important;
-          box-shadow: 0 1px 8px rgba(16, 185, 129, 0.6) !important;
+          transform: scale(0.95);
         }
 
         /* Mobile Menu Button */
@@ -382,19 +354,13 @@ export function ModernTopHeader({
           color: white;
           font-weight: 600;
           font-size: 16px;
-          cursor: pointer !important;
+          cursor: pointer;
           transition: all 0.2s ease;
           border: 1px solid transparent;
-          pointer-events: auto !important;
-          user-select: none;
-          -webkit-tap-highlight-color: rgba(16, 185, 129, 0.3);
-          position: relative;
-          z-index: 10000;
         }
 
         .mobile-menu-item:active {
           transform: scale(0.98);
-          background: rgba(255, 255, 255, 0.15) !important;
         }
 
         .mobile-menu-item.active {
@@ -442,11 +408,6 @@ export function ModernTopHeader({
           }
 
           .header-nav-desktop {
-            display: none;
-          }
-
-          /* Hide desktop phone button on mobile */
-          .header-phone-btn {
             display: none;
           }
 
@@ -517,26 +478,46 @@ export function ModernTopHeader({
             <span className="logo-text">مزادات</span>
           </div>
 
+          {/* Desktop Navigation */}
+          <nav className="header-nav-desktop">
+            {/* Smart Button - Featured */}
+            {onSmartButtonClick && (
+              <button
+                className="header-smart-btn"
+                onClick={onSmartButtonClick}
+                title={texts.smartTooltip}
+              >
+                <span className="robot-icon">🤖</span>
+                <span>{texts.smartButton}</span>
+              </button>
+            )}
+
+            {/* Regular Nav Buttons */}
+            <button
+              className={`header-nav-btn ${currentSection === 'home' ? 'active' : ''}`}
+              onClick={() => onNavigate?.('home')}
+              title={texts.homeTooltip}
+            >
+              <Home size={18} />
+              <span>{texts.homeButton}</span>
+            </button>
+
+            <button
+              className={`header-nav-btn ${currentSection === 'account' ? 'active' : ''}`}
+              onClick={() => onNavigate?.('account')}
+              title={texts.accountTooltip}
+            >
+              <User size={18} />
+              <span>{texts.accountButton}</span>
+            </button>
+          </nav>
+
           {/* Desktop Phone Button */}
           <button
             className="header-phone-btn"
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              const phoneNum = customPhoneNumber || texts.phoneNumber;
-              console.log('🔥 PHONE BUTTON CLICKED! 🔥');
-              console.log('Phone number:', phoneNum);
-              alert(`اتصال بالرقم: ${phoneNum}`);
-              window.location.href = `tel:${phoneNum}`;
-            }}
-            onTouchStart={(e) => {
-              e.currentTarget.style.background = 'rgba(16, 185, 129, 0.3)';
-            }}
-            onTouchEnd={(e) => {
-              e.currentTarget.style.background = 'rgba(16, 185, 129, 0.1)';
-            }}
+            onClick={() => window.open(`tel:${customPhoneNumber || texts.phoneNumber}`)}
             title={texts.phoneTooltip}
-            type="button"
+            style={{ display: window.innerWidth > 768 ? 'flex' : 'none' }}
           >
             <Phone size={18} />
             <span>{texts.phoneButton}</span>
@@ -544,6 +525,17 @@ export function ModernTopHeader({
 
           {/* Mobile Actions Group */}
           <div className="mobile-actions-group">
+            {/* Mobile Smart Button - Always Visible */}
+            {onSmartButtonClick && (
+              <button
+                className="header-smart-btn-mobile"
+                onClick={onSmartButtonClick}
+                title={texts.smartTooltip}
+              >
+                <span className="robot-icon">🤖</span>
+              </button>
+            )}
+
             {/* Mobile Menu Button */}
             <button
               className="mobile-menu-btn"
@@ -569,29 +561,42 @@ export function ModernTopHeader({
         {/* Mobile Menu */}
         <div className={`mobile-menu ${mobileMenuOpen ? 'open' : ''}`}>
           <div className="mobile-menu-content">
-            {/* Phone */}
+            {/* Home */}
             <div
-              className="mobile-menu-item"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                const phoneNum = customPhoneNumber || texts.phoneNumber;
-                console.log('🔥 MOBILE PHONE CLICKED! 🔥');
-                console.log('Phone number:', phoneNum);
-                alert(`اتصال بالرقم: ${phoneNum}`);
-                window.location.href = `tel:${phoneNum}`;
+              className={`mobile-menu-item ${currentSection === 'home' ? 'active' : ''}`}
+              onClick={() => {
+                onNavigate?.('home');
                 setMobileMenuOpen(false);
                 document.body.classList.remove('menu-open');
               }}
-              onTouchStart={(e) => {
-                console.log('Touch started on phone button');
-                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.15)';
+            >
+              <Home size={20} />
+              <span>{texts.homeButton}</span>
+            </div>
+
+            {/* Account */}
+            <div
+              className={`mobile-menu-item ${currentSection === 'account' ? 'active' : ''}`}
+              onClick={() => {
+                onNavigate?.('account');
+                setMobileMenuOpen(false);
+                document.body.classList.remove('menu-open');
               }}
-              onTouchEnd={(e) => {
-                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
+            >
+              <User size={20} />
+              <span>{texts.accountButton}</span>
+            </div>
+
+            <div className="mobile-menu-divider" />
+
+            {/* Phone */}
+            <div
+              className="mobile-menu-item"
+              onClick={() => {
+                window.open(`tel:${customPhoneNumber || texts.phoneNumber}`);
+                setMobileMenuOpen(false);
+                document.body.classList.remove('menu-open');
               }}
-              role="button"
-              tabIndex={0}
             >
               <Phone size={20} />
               <span>{texts.phoneButton}</span>

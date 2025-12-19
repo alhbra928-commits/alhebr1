@@ -3,8 +3,6 @@
  *
  * يقرأ الارتفاع الحقيقي من visualViewport ويثبته في CSS variable
  * مما يمنع القفز عند ظهور/إخفاء شريط Safari
- *
- * CLEAN VERSION - بدون أي debug rectangles
  */
 
 export function lockIOSViewport() {
@@ -12,25 +10,27 @@ export function lockIOSViewport() {
 
   const update = () => {
     const height = vv?.height ?? window.innerHeight;
+    // نثبت ارتفاع التطبيق على ارتفاع الـ visual viewport الحقيقي
     document.documentElement.style.setProperty("--app-vh", `${height}px`);
 
+    // أيضاً نثبت العرض للتأكد
     const width = vv?.width ?? window.innerWidth;
     document.documentElement.style.setProperty("--app-vw", `${width}px`);
   };
 
-  // تحديث فوري
+  // تحديث فوري عند التحميل
   update();
 
-  // الاستماع لجميع التغييرات
+  // الاستماع لجميع التغييرات في iOS
   if (vv) {
     vv.addEventListener("resize", update);
-    vv.addEventListener("scroll", update);
+    vv.addEventListener("scroll", update); // مهم في iOS لأن شريط المتصفح يتغير مع السحب
   }
 
   window.addEventListener("resize", update);
   window.addEventListener("orientationchange", update);
 
-  // تحديثات تأكيدية
+  // تحديث إضافي بعد قليل للتأكد
   setTimeout(update, 100);
   setTimeout(update, 300);
   setTimeout(update, 500);
