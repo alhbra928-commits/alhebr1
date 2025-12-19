@@ -45,15 +45,8 @@ function App() {
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [publicView, setPublicView] = useState<'home' | 'farmDetail' | 'booking' | 'investor' | 'verification' | 'concept'>('home');
 
-  // Check if loader should be shown (only on first load)
-  useEffect(() => {
-    const hasSeenLoader = sessionStorage.getItem('loader_shown');
-    if (hasSeenLoader) {
-      setShowLoader(false);
-    } else {
-      sessionStorage.setItem('loader_shown', 'true');
-    }
-  }, []);
+  // ✅ Loader يظهر دائماً في كل مرة يفتح المستخدم المنصة!
+  // لا توجد شروط - سيظهر في كل مرة بدون استثناء
 
   // حفظ آخر صفحة في لوحة التحكم
   useEffect(() => {
