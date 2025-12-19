@@ -402,10 +402,7 @@ function App() {
         )}
 
         <Suspense fallback={<div className="min-h-screen bg-gradient-to-br from-emerald-50 to-green-50" />}>
-          {/* iOS Scroll wrapper - Makes content scrollable while header stays fixed */}
-          <div className="ios-scroll-content">
-            {renderModule()}
-          </div>
+          {renderModule()}
         </Suspense>
       </PermissionsProvider>
 

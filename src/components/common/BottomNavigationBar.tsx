@@ -72,8 +72,6 @@ export function BottomNavigationBar({
             rgba(255, 255, 255, 0.98) 0%,
             rgba(255, 255, 255, 0.98) 100%
           );
-          backdrop-filter: blur(20px);
-          -webkit-backdrop-filter: blur(20px);
 
           border-top: 1px solid rgba(16, 185, 129, 0.1);
           box-shadow:
@@ -82,13 +80,6 @@ export function BottomNavigationBar({
 
           /* iOS Safe Area Support */
           padding-bottom: env(safe-area-inset-bottom);
-        }
-
-        /* iOS Safari specific fixes */
-        @supports (-webkit-touch-callout: none) {
-          .bottom-nav-bar {
-            bottom: env(safe-area-inset-bottom) !important;
-          }
         }
 
         .bottom-nav-container {
@@ -169,20 +160,6 @@ export function BottomNavigationBar({
         .bottom-nav-item.smart .nav-icon-wrapper {
           background: linear-gradient(135deg, #10b981 0%, #059669 100%);
           box-shadow: 0 4px 16px rgba(16, 185, 129, 0.4);
-        }
-
-        .bottom-nav-item.smart .nav-icon-wrapper::before {
-          content: '';
-          position: absolute;
-          inset: 0;
-          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-          transform: translateX(-100%);
-          animation: shimmer 3s infinite;
-        }
-
-        @keyframes shimmer {
-          0% { transform: translateX(-100%); }
-          100% { transform: translateX(200%); }
         }
 
         .bottom-nav-item.smart .nav-icon-wrapper svg {

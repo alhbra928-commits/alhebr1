@@ -5,7 +5,7 @@
 /* 🌿 ROYAL GREEN THEME - ALWAYS ACTIVE */
 html {
   background: linear-gradient(135deg, #ECFDF5 0%, #F0FDF4 50%, #F0FDFA 100%) !important;
-  height: auto;
+  height: 100%;
   overflow-y: auto !important;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
@@ -13,13 +13,21 @@ html {
 
 body {
   background: linear-gradient(135deg, #ECFDF5 0%, #F0FDF4 50%, #F0FDFA 100%) !important;
-  height: auto;
+  height: 100%;
   overflow-y: auto !important;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
 
-  /* Space for fixed footer - iPhone safe-area compatible */
+  /* Space for fixed header and footer */
+  padding-top: 72px !important;
   padding-bottom: calc(90px + env(safe-area-inset-bottom, 0px)) !important;
+}
+
+/* Mobile padding adjustments */
+@media (max-width: 768px) {
+  body {
+    padding-top: 64px !important;
+  }
 }
 
 /* Override any dark backgrounds */
@@ -53,7 +61,7 @@ body {
   /* iOS Safari - Fixed Footer Compatible */
   @supports (-webkit-touch-callout: none) {
     html {
-      height: auto;
+      height: 100%;
       overflow-x: hidden;
       overflow-y: auto;
       width: 100%;
@@ -61,11 +69,17 @@ body {
     }
 
     body {
-      height: auto;
+      height: 100%;
       overflow-x: hidden;
       overflow-y: auto;
       width: 100%;
       -webkit-overflow-scrolling: touch;
+    }
+
+    /* Ensure no transforms on root elements */
+    #root {
+      position: relative;
+      min-height: 100%;
     }
   }
 
@@ -2144,21 +2158,18 @@ body.royal-green-theme {
    ======================================== */
 
 /* CRITICAL: iOS Safari URL bar causes viewport resize */
-/* Solution: Lock viewport and prevent resize effects */
+/* Solution: Clean fixed positioning without transforms */
 
 @supports (-webkit-touch-callout: none) {
   /* iOS-specific fixes - Target only iOS Safari */
 
-  /* Lock HTML and Body to prevent viewport jumps */
   html {
     height: 100%;
-    height: -webkit-fill-available;
     position: relative;
   }
 
   body {
     height: 100%;
-    height: -webkit-fill-available;
     position: relative;
     overflow-x: hidden;
     overflow-y: auto;
@@ -2166,94 +2177,10 @@ body.royal-green-theme {
     overscroll-behavior-y: none;
   }
 
-  /* Force all fixed headers to use GPU rendering */
-  header[class*="fixed"],
-  .fixed.top-0,
-  [class*="fixed"][class*="top-"],
-  header {
-    /* CRITICAL: Use 3D transform to force GPU layer */
-    -webkit-transform: translate3d(0, 0, 0) !important;
-    transform: translate3d(0, 0, 0) !important;
-
-    /* Lock rendering completely */
-    -webkit-backface-visibility: hidden !important;
-    backface-visibility: hidden !important;
-    -webkit-perspective: 1000px !important;
-    perspective: 1000px !important;
-
-    /* Optimize rendering */
-    will-change: transform !important;
-    contain: layout style paint !important;
-
-    /* Prevent touch events from interfering */
-    touch-action: none !important;
-    -webkit-touch-callout: none !important;
-
-    /* Ensure fixed positioning */
-    position: fixed !important;
-    top: 0 !important;
-
-    /* Safe Area */
-    padding-top: max(env(safe-area-inset-top), 0px);
-    padding-left: env(safe-area-inset-left);
-    padding-right: env(safe-area-inset-right);
-  }
-
-  /* Force separate rendering layer */
-  header[class*="fixed"]::before,
-  .fixed.top-0::before,
-  header::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    transform: translateZ(-1px);
-    will-change: transform;
-  }
-}
-
-/* Mobile-specific iOS fixes */
-@media screen and (max-width: 768px) {
-  @supports (-webkit-touch-callout: none) {
-    /* Prevent iOS Safari URL bar from affecting layout */
-
-    html {
-      /* Lock viewport completely */
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-    }
-
-    body {
-      /* Make body scrollable instead */
-      position: relative;
-      width: 100%;
-      height: 100%;
-      overflow-x: hidden;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    /* Root element must be scrollable */
-    #root {
-      height: 100%;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    /* Lock viewport height */
-    .viewport-lock {
-      height: 100vh;
-      height: -webkit-fill-available;
-    }
-
-    /* Ensure header stays fixed */
-    header {
-      position: fixed !important;
-      top: 0 !important;
-      -webkit-transform: translate3d(0, 0, 0) !important;
-      transform: translate3d(0, 0, 0) !important;
-    }
+  /* Ensure no transforms break fixed positioning */
+  #root {
+    position: relative;
+    min-height: 100%;
   }
 }
 
