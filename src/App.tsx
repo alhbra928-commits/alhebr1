@@ -41,6 +41,7 @@ function App() {
   const [showLoginNotification, setShowLoginNotification] = useState(false);
   const [lastActivity, setLastActivity] = useState(Date.now());
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+  const [publicView, setPublicView] = useState<'home' | 'farmDetail' | 'booking' | 'investor' | 'verification' | 'concept'>('home');
 
   // حفظ آخر صفحة في لوحة التحكم
   useEffect(() => {
@@ -248,6 +249,7 @@ function App() {
               onAdminLogin={() => setShowAdminLogin(true)}
               onBackToAdmin={() => handleSmartNavigation('back')}
               onFarmOwnerLogin={() => setActiveModule('farm-owner')}
+              onViewChange={(view) => setPublicView(view)}
             />
           );
       case 'farm-owner':
@@ -342,8 +344,8 @@ function App() {
     }
   };
 
-  // تحديد ما إذا كان يجب عرض الهيدر والفوتر (فقط للصفحات العامة)
-  const showPublicChrome = activeModule === 'public' && !showAdminLogin;
+  // تحديد ما إذا كان يجب عرض الهيدر والفوتر (فقط للصفحة الرئيسية العامة)
+  const showPublicChrome = activeModule === 'public' && !showAdminLogin && publicView === 'home';
 
   return (
     <div className="appShell" dir="rtl">

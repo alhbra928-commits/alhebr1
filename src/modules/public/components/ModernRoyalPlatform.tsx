@@ -27,12 +27,14 @@ interface ModernRoyalPlatformProps {
   onAdminLogin?: () => void;
   onBackToAdmin?: () => void;
   onFarmOwnerLogin?: () => void;
+  onViewChange?: (view: ViewMode) => void;
 }
 
 export function ModernRoyalPlatform({
   onAdminLogin,
   onBackToAdmin,
   onFarmOwnerLogin,
+  onViewChange,
 }: ModernRoyalPlatformProps) {
   const [farms, setFarms] = useState<PublicFarm[]>([]);
   const [currentView, setCurrentView] = useState<ViewMode>('home');
@@ -133,11 +135,13 @@ export function ModernRoyalPlatform({
   const handleFarmClick = (farm: PublicFarm) => {
     setSelectedFarm(farm);
     setCurrentView('farmDetail');
+    onViewChange?.('farmDetail');
   };
 
   const handleGoHome = () => {
     setCurrentView('home');
     setSelectedFarm(null);
+    onViewChange?.('home');
   };
 
   // شاشة تحميل مبتكرة ورسمية
@@ -257,7 +261,10 @@ export function ModernRoyalPlatform({
         <InnovativeFarmDetailPage
           farmId={selectedFarm.id}
           onBack={handleGoHome}
-          onStartBooking={() => setCurrentView('booking')}
+          onStartBooking={() => {
+            setCurrentView('booking');
+            onViewChange?.('booking');
+          }}
         />
       </Suspense>
     );

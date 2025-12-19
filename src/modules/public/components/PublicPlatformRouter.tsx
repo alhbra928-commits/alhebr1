@@ -10,9 +10,10 @@ interface PublicPlatformRouterProps {
   onAdminLogin?: () => void;
   onBackToAdmin?: () => void;
   onFarmOwnerLogin?: () => void;
+  onViewChange?: (view: 'home' | 'farmDetail' | 'booking' | 'investor' | 'verification' | 'concept') => void;
 }
 
-export function PublicPlatformRouter({ onAdminLogin, onBackToAdmin, onFarmOwnerLogin }: PublicPlatformRouterProps) {
+export function PublicPlatformRouter({ onAdminLogin, onBackToAdmin, onFarmOwnerLogin, onViewChange }: PublicPlatformRouterProps) {
   // التحقق من حالة الجلسة - إذا كان هناك جلسة نشطة، نتخطى البوابة
   const hasActiveSession = () => {
     const adminToken = localStorage.getItem('admin_session_token');
@@ -107,6 +108,7 @@ export function PublicPlatformRouter({ onAdminLogin, onBackToAdmin, onFarmOwnerL
           onAdminLogin={onAdminLogin}
           onBackToAdmin={onBackToAdmin}
           onFarmOwnerLogin={onFarmOwnerLogin}
+          onViewChange={onViewChange}
         />
       );
   }
