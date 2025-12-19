@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>📱 كيف تمسح الكاش؟</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Cairo', 'Segoe UI', Tahoma, sans-serif;
+      background: linear-gradient(135deg, #1e4620 0%, #2c5f2d 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      color: white;
+      margin-bottom: 30px;
+    }
+
+    .header h1 {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+
+    .header p {
+      font-size: 16px;
+      opacity: 0.9;
+      line-height: 1.6;
+    }
+
+    .card {
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      margin-bottom: 20px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .platform-title {
+      text-align: center;
+      font-size: 20px;
+      font-weight: bold;
+      color: #2c5f2d;
+      margin-bottom: 25px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .step {
+      background: linear-gradient(135deg, rgba(212, 175, 55, 0.08) 0%, rgba(212, 175, 55, 0.03) 100%);
+      border-right: 4px solid #D4AF37;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .step-number {
+      background: linear-gradient(135deg, #2c5f2d 0%, #1e4620 100%);
+      color: white;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: bold;
+      margin-left: 15px;
+      box-shadow: 0 4px 12px rgba(44, 95, 45, 0.3);
+    }
+
+    .step-title {
+      font-size: 18px;
+      font-weight: bold;
+      color: #2c5f2d;
+      margin-bottom: 15px;
+    }
+
+    .step-content {
+      color: #495057;
+      font-size: 15px;
+      line-height: 1.8;
+    }
+
+    .step-content strong {
+      color: #2c5f2d;
+      font-weight: bold;
+    }
+
+    .icon-box {
+      text-align: center;
+      font-size: 60px;
+      margin: 20px 0;
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .warning {
+      background: rgba(255, 107, 107, 0.1);
+      border: 3px solid #ff6b6b;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 20px 0;
+      text-align: center;
+    }
+
+    .warning-icon {
+      font-size: 40px;
+      margin-bottom: 10px;
+    }
+
+    .warning-text {
+      color: #e03131;
+      font-weight: bold;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .success {
+      background: rgba(81, 207, 102, 0.1);
+      border: 3px solid #51cf66;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 20px 0;
+      text-align: center;
+    }
+
+    .success-icon {
+      font-size: 40px;
+      margin-bottom: 10px;
+    }
+
+    .success-text {
+      color: #2b8a3e;
+      font-weight: bold;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .button {
+      background: linear-gradient(135deg, #2c5f2d 0%, #1e4620 100%);
+      color: white;
+      border: none;
+      padding: 18px 40px;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 20px;
+      box-shadow: 0 4px 15px rgba(44, 95, 45, 0.3);
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: block;
+      text-align: center;
+    }
+
+    .button:active {
+      transform: scale(0.98);
+    }
+
+    .tips {
+      background: rgba(51, 154, 240, 0.1);
+      border: 2px solid #339af0;
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 20px;
+    }
+
+    .tips h3 {
+      color: #1864ab;
+      margin-bottom: 15px;
+      font-size: 18px;
+    }
+
+    .tips ul {
+      margin-right: 25px;
+      line-height: 2;
+      color: #495057;
+    }
+
+    .divider {
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #D4AF37, transparent);
+      margin: 30px 0;
+    }
+
+    @media (max-width: 768px) {
+      .header h1 {
+        font-size: 26px;
+      }
+
+      .card {
+        padding: 20px;
+      }
+
+      .step {
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>📱 كيف تمسح الكاش؟</h1>
+      <p>اتبع هذه الخطوات لرؤية التحديثات الجديدة</p>
+    </div>
+
+    <!-- iPhone Steps -->
+    <div class="card">
+      <div class="platform-title">
+        🍎 لأجهزة iPhone (سفاري)
+      </div>
+
+      <div class="icon-box">📱</div>
+
+      <div class="step">
+        <div class="step-title">
+          <span class="step-number">1</span>
+          افتح تطبيق الإعدادات
+        </div>
+        <div class="step-content">
+          اذهب إلى <strong>الشاشة الرئيسية</strong> ← افتح تطبيق <strong>الإعدادات</strong> (⚙️)
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-title">
+          <span class="step-number">2</span>
+          اذهب إلى Safari
+        </div>
+        <div class="step-content">
+          ابحث عن <strong>Safari</strong> في القائمة واضغط عليه
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-title">
+          <span class="step-number">3</span>
+          امسح السجل والبيانات
+        </div>
+        <div class="step-content">
+          اضغط على <strong>"مسح السجل وبيانات الموقع"</strong><br>
+          ← ثم اضغط <strong>"مسح السجل والبيانات"</strong> للتأكيد
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-title">
+          <span class="step-number">4</span>
+          أغلق Safari تماماً
+        </div>
+        <div class="step-content">
+          اسحب من الأسفل → ابحث عن <strong>Safari</strong> ← اسحبه للأعلى لإغلاقه تماماً
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-title">
+          <span class="step-number">5</span>
+          افتح المنصة من جديد
+        </div>
+        <div class="step-content">
+          افتح Safari وادخل على المنصة من جديد
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Android Steps -->
+    <div class="card">
+      <div class="platform-title">
+        🤖 لأجهزة Android (كروم)
+      </div>
+
+      <div class="icon-box">📱</div>
+
+      <div class="step">
+        <div class="step-title">
+          <span class="step-number">1</span>
+          افتح متصفح Chrome
+        </div>
+        <div class="step-content">
+          افتح تطبيق <strong>Google Chrome</strong>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-title">
+          <span class="step-number">2</span>
+          افتح القائمة
+        </div>
+        <div class="step-content">
+          اضغط على <strong>النقاط الثلاث</strong> (⋮) في الأعلى
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-title">
+          <span class="step-number">3</span>
+          اذهب إلى الإعدادات
+        </div>
+        <div class="step-content">
+          اختر <strong>"الإعدادات"</strong> من القائمة
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-title">
+          <span class="step-number">4</span>
+          امسح بيانات التصفح
+        </div>
+        <div class="step-content">
+          اذهب إلى <strong>"الخصوصية والأمان"</strong><br>
+          ← اضغط <strong>"محو بيانات التصفح"</strong>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-title">
+          <span class="step-number">5</span>
+          اختر البيانات المخزنة
+        </div>
+        <div class="step-content">
+          حدد <strong>"الصور والملفات المخزنة مؤقتاً"</strong><br>
+          ← اضغط <strong>"محو البيانات"</strong>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-title">
+          <span class="step-number">6</span>
+          أغلق Chrome تماماً
+        </div>
+        <div class="step-content">
+          اضغط على زر <strong>المربعات</strong> ← اسحب Chrome للأعلى لإغلاقه
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-title">
+          <span class="step-number">7</span>
+          افتح المنصة من جديد
+        </div>
+        <div class="step-content">
+          افتح Chrome وادخل على المنصة من جديد
+        </div>
+      </div>
+    </div>
+
+    <!-- Warning -->
+    <div class="warning">
+      <div class="warning-icon">⚠️</div>
+      <div class="warning-text">
+        <strong>مهم جداً!</strong><br>
+        يجب إغلاق المتصفح <strong>تماماً</strong> من الخلفية<br>
+        وليس فقط الخروج من التطبيق!
+      </div>
+    </div>
+
+    <!-- Success -->
+    <div class="success">
+      <div class="success-icon">✅</div>
+      <div class="success-text">
+        <strong>بعد مسح الكاش ستشاهد:</strong><br>
+        • شريط متحرك <strong>بدون فراغات</strong><br>
+        • حركة <strong>سلسة 100%</strong><br>
+        • تغطية <strong>كاملة للشاشة</strong>
+      </div>
+    </div>
+
+    <!-- Tips -->
+    <div class="tips">
+      <h3>💡 نصائح إضافية:</h3>
+      <ul>
+        <li>إذا لم يعمل، جرب <strong>إعادة تشغيل الجهاز</strong></li>
+        <li>يمكنك استخدام <strong>وضع التصفح الخاص</strong> للتجربة</li>
+        <li>تأكد من <strong>إغلاق كل علامات التبويب</strong> قبل المسح</li>
+        <li>إذا استمرت المشكلة، استخدم <strong>صفحة التشخيص</strong></li>
+      </ul>
+    </div>
+
+    <!-- Diagnostic Button -->
+    <a href="/تشخيص_الكاش_والإصدار.html" class="button">
+      🔍 صفحة التشخيص المتقدم
+    </a>
+
+    <div style="text-align: center; margin-top: 30px; color: white; opacity: 0.8; font-size: 13px;">
+      الإصدار: v20251219_1766160865329<br>
+      التحديث: شريط 10x بدون فراغات
+    </div>
+  </div>
+</body>
+</html>
