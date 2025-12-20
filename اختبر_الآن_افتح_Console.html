@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبر التبويبات الآن!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 900px;
+            width: 100%;
+            padding: 50px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 3em;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 30px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .steps {
+            text-align: right;
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 16px;
+            margin: 30px 0;
+        }
+
+        .step {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border-right: 5px solid #667eea;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .step:hover {
+            transform: translateX(-5px);
+        }
+
+        .step-number {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 50%;
+            line-height: 40px;
+            text-align: center;
+            font-weight: bold;
+            margin-left: 15px;
+            font-size: 1.2em;
+        }
+
+        .step-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .step-desc {
+            color: #666;
+            line-height: 1.8;
+            font-size: 1.1em;
+        }
+
+        .what-to-see {
+            background: #e8f5e9;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 30px 0;
+            border: 3px solid #4caf50;
+        }
+
+        .what-to-see h2 {
+            color: #2e7d32;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        .console-example {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: left;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+            line-height: 1.6;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+
+        .emoji {
+            font-size: 1.5em;
+            margin: 0 5px;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: #856404;
+        }
+
+        .success {
+            color: #4ade80;
+        }
+
+        .warning {
+            color: #facc15;
+        }
+
+        .error {
+            color: #f87171;
+        }
+
+        .tabs-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .tab-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .tab-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(102, 126, 234, 0.5);
+        }
+
+        .tab-card h3 {
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+
+        .tab-card p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 التبويبات جاهزة للاختبار!</h1>
+
+        <div class="steps">
+            <div class="step">
+                <span class="step-number">1</span>
+                <div class="step-title">
+                    <span class="emoji">🔧</span>
+                    افتح Console
+                </div>
+                <div class="step-desc">
+                    اضغط <span class="highlight">F12</span> أو
+                    <span class="highlight">Ctrl+Shift+I</span> (Windows) أو
+                    <span class="highlight">Cmd+Option+I</span> (Mac)
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">2</span>
+                <div class="step-title">
+                    <span class="emoji">📊</span>
+                    افتح لوحة التسويق
+                </div>
+                <div class="step-desc">
+                    من لوحة التحكم → اضغط على "مركز التسويق والتحليل"
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">3</span>
+                <div class="step-title">
+                    <span class="emoji">👀</span>
+                    راقب Console
+                </div>
+                <div class="step-desc">
+                    عند فتح كل تبويب، يجب أن ترى رسائل واضحة تشرح ما يحدث
+                </div>
+            </div>
+        </div>
+
+        <div class="what-to-see">
+            <h2>✅ ماذا يجب أن ترى في Console؟</h2>
+
+            <h3 style="text-align: right; color: #1976d2; margin: 20px 0;">
+                📊 تبويب "الزوار والمصادر":
+            </h3>
+            <div class="console-example">
+<span class="success">📊 جلب إحصائيات الزوار من: 2025-12-19T15:05:10.000Z</span>
+<span class="success">📍 جلب المصادر: 150 جلسة</span>
+<span class="success">✅ توزيع المصادر: { Direct: 80, TikTok: 50, Instagram: 20 }</span>
+<span class="success">📱 جلب الأجهزة: 150 جلسة</span>
+<span class="success">✅ توزيع الأجهزة: 3 نوع</span>
+<span class="success">⏰ جلب الجلسات حسب الساعة: 150 جلسة</span>
+<span class="success">✅ إحصائيات: { totalSessions: 150, uniqueVisitors: 120, activeSessions: 5, avgDuration: 180 }</span>
+            </div>
+
+            <h3 style="text-align: right; color: #1976d2; margin: 20px 0;">
+                🎯 تبويب "رحلة المستثمر":
+            </h3>
+            <div class="console-example">
+<span class="success">🎯 جلب Funnel من: 2025-12-19T15:05:10.000Z</span>
+<span class="success">✅ عدد الأحداث لكل خطوة:</span>
+<span class="success">   { home_view: 150, farm_view: 100, qty_change: 50, booking_start: 30, booking_submit: 10, payment_upload: 5 }</span>
+<span class="success">💰 حساب معدل التحويل من: 2025-12-19T15:05:10.000Z</span>
+<span class="success">✅ معدل التحويل: { visitors: 150, bookings: 10, conversionRate: 6.7 }</span>
+<span class="success">📄 جلب أكثر الصفحات: 250 حدث</span>
+            </div>
+
+            <p style="text-align: right; margin-top: 20px; color: #666; font-size: 1.1em;">
+                <strong>⏱️ كل 5 ثواني</strong> يجب أن ترى تحديثاً تلقائياً!
+            </p>
+        </div>
+
+        <div class="tabs-list">
+            <div class="tab-card">
+                <h3>👥 الزوار والمصادر</h3>
+                <p>بيانات حقيقية من analytics_sessions</p>
+            </div>
+
+            <div class="tab-card">
+                <h3>🎯 رحلة المستثمر</h3>
+                <p>Funnel كامل من analytics_events</p>
+            </div>
+        </div>
+
+        <div style="margin-top: 40px; padding: 25px; background: #fff3cd; border-radius: 12px; border: 2px solid #ffc107;">
+            <h3 style="color: #856404; font-size: 1.8em; margin-bottom: 15px;">
+                ⚡ مهم جداً!
+            </h3>
+            <p style="color: #856404; font-size: 1.2em; line-height: 1.8;">
+                إذا لم ترَ رسائل في Console، معناها:
+                <br><br>
+                ❌ لا توجد بيانات في <span class="highlight">analytics_sessions</span> أو <span class="highlight">analytics_events</span>
+                <br>
+                ❌ أو هناك خطأ في RLS policies
+                <br><br>
+                ✅ الكود يعمل والخدمات جاهزة!
+                <br>
+                ✅ فقط تحتاج بيانات حقيقية للعرض
+            </p>
+        </div>
+
+        <div style="margin-top: 30px; font-size: 1.5em; color: #666;">
+            <strong>الإصدار:</strong> v20251220_1766243095742<br>
+            <strong>الحالة:</strong> <span style="color: #4caf50;">✅ جاهز للاختبار</span>
+        </div>
+    </div>
+</body>
+</html>

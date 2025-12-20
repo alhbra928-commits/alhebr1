@@ -19,30 +19,40 @@ interface EventCount {
   count: number;
 }
 
+function getTimeRangeDate(timeRange: '1h' | '24h' | '7d' | '30d'): Date {
+  const now = new Date();
+  switch (timeRange) {
+    case '1h':
+      return new Date(now.getTime() - 60 * 60 * 1000);
+    case '24h':
+      return new Date(now.getTime() - 24 * 60 * 60 * 1000);
+    case '7d':
+      return new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+    case '30d':
+      return new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+    default:
+      return new Date(now.getTime() - 24 * 60 * 60 * 1000);
+  }
+}
+
 export class FunnelAnalyticsService {
   /**
    * جلب Funnel كامل (رحلة المستثمر)
    */
   static async getFunnelData(timeRange: '1h' | '24h' | '7d' | '30d' = '24h'): Promise<FunnelStep[]> {
     try {
-      const timeRanges: Record<string, string> = {
-        '1h': '1 hour',
-        '24h': '24 hours',
-        '7d': '7 days',
-        '30d': '30 days',
-      };
+      const startTime = getTimeRangeDate(timeRange).toISOString();
 
-      const interval = timeRanges[timeRange];
+      console.log('🎯 جلب Funnel من:', startTime);
 
       // الخطوات بالترتيب
       const steps = [
         { key: 'home_view', label: 'زيارة الموقع', stepNumber: 1 },
         { key: 'farm_view', label: 'عرض مزرعة', stepNumber: 2 },
-        { key: 'farm_detail_view', label: 'تفاصيل المزرعة', stepNumber: 3 },
+        { key: 'qty_change', label: 'تغيير الكمية', stepNumber: 3 },
         { key: 'booking_start', label: 'بدء الحجز', stepNumber: 4 },
         { key: 'booking_submit', label: 'إرسال الحجز', stepNumber: 5 },
         { key: 'payment_upload', label: 'رفع الإيصال', stepNumber: 6 },
-        { key: 'booking_complete', label: 'إكمال الحجز', stepNumber: 7 },
       ];
 
       // جلب عدد كل event
@@ -51,19 +61,25 @@ export class FunnelAnalyticsService {
       for (const step of steps) {
         const { data, error } = await supabase
           .from('analytics_events')
-          .select('session_id')
-          .eq('event_type', step.key)
-          .gte('created_at', `now() - interval '${interval}'`);
+          .select('session_id, event_name')
+          .eq('event_name', step.key)
+          .gte('created_at', startTime);
 
-        if (error) throw error;
+        if (error) {
+          console.error(`خطأ في جلب ${step.key}:`, error);
+          eventCounts[step.key] = 0;
+          continue;
+        }
 
         // عدد الجلسات الفريدة لكل خطوة
         const uniqueSessions = new Set(data?.map(e => e.session_id) || []);
         eventCounts[step.key] = uniqueSessions.size;
       }
 
+      console.log('✅ عدد الأحداث لكل خطوة:', eventCounts);
+
       // حساب النسب والـ drop-off
-      const totalVisitors = eventCounts['home_view'] || 1; // لتجنب القسمة على صفر
+      const totalVisitors = Math.max(eventCounts['home_view'] || 0, 1); // لتجنب القسمة على صفر
 
       const funnelData: FunnelStep[] = steps.map((step, index) => {
         const count = eventCounts[step.key] || 0;
@@ -73,7 +89,9 @@ export class FunnelAnalyticsService {
         let dropOff = 0;
         if (index > 0) {
           const prevCount = eventCounts[steps[index - 1].key] || 0;
-          dropOff = Math.round(((prevCount - count) / prevCount) * 100);
+          if (prevCount > 0) {
+            dropOff = Math.round(((prevCount - count) / prevCount) * 100);
+          }
         }
 
         return {
@@ -101,35 +119,32 @@ export class FunnelAnalyticsService {
     conversionRate: number;
   }> {
     try {
-      const timeRanges: Record<string, string> = {
-        '1h': '1 hour',
-        '24h': '24 hours',
-        '7d': '7 days',
-        '30d': '30 days',
-      };
+      const startTime = getTimeRangeDate(timeRange).toISOString();
 
-      const interval = timeRanges[timeRange];
+      console.log('💰 حساب معدل التحويل من:', startTime);
 
       // عدد الزوار (home_view)
       const { data: visitorsData } = await supabase
         .from('analytics_events')
         .select('session_id')
-        .eq('event_type', 'home_view')
-        .gte('created_at', `now() - interval '${interval}'`);
+        .eq('event_name', 'home_view')
+        .gte('created_at', startTime);
 
       const visitors = new Set(visitorsData?.map(e => e.session_id) || []).size;
 
-      // عدد الحجوزات (booking_complete)
+      // عدد الحجوزات (booking_submit)
       const { data: bookingsData } = await supabase
         .from('analytics_events')
         .select('session_id')
-        .eq('event_type', 'booking_complete')
-        .gte('created_at', `now() - interval '${interval}'`);
+        .eq('event_name', 'booking_submit')
+        .gte('created_at', startTime);
 
       const bookings = new Set(bookingsData?.map(e => e.session_id) || []).size;
 
       // معدل التحويل
       const conversionRate = visitors > 0 ? Math.round((bookings / visitors) * 100 * 10) / 10 : 0;
+
+      console.log('✅ معدل التحويل:', { visitors, bookings, conversionRate });
 
       return {
         visitors,
@@ -155,27 +170,20 @@ export class FunnelAnalyticsService {
     timeRange: '1h' | '24h' | '7d' | '30d' = '24h'
   ): Promise<number> {
     try {
-      const timeRanges: Record<string, string> = {
-        '1h': '1 hour',
-        '24h': '24 hours',
-        '7d': '7 days',
-        '30d': '30 days',
-      };
-
-      const interval = timeRanges[timeRange];
+      const startTime = getTimeRangeDate(timeRange).toISOString();
 
       // جلب الأحداث
       const { data: fromEvents } = await supabase
         .from('analytics_events')
         .select('session_id, created_at')
-        .eq('event_type', fromEvent)
-        .gte('created_at', `now() - interval '${interval}'`);
+        .eq('event_name', fromEvent)
+        .gte('created_at', startTime);
 
       const { data: toEvents } = await supabase
         .from('analytics_events')
         .select('session_id, created_at')
-        .eq('event_type', toEvent)
-        .gte('created_at', `now() - interval '${interval}'`);
+        .eq('event_name', toEvent)
+        .gte('created_at', startTime);
 
       if (!fromEvents || !toEvents) return 0;
 
@@ -208,37 +216,41 @@ export class FunnelAnalyticsService {
     uniqueVisitors: number;
   }[]> {
     try {
-      const timeRanges: Record<string, string> = {
-        '1h': '1 hour',
-        '24h': '24 hours',
-        '7d': '7 days',
-        '30d': '30 days',
-      };
+      const startTime = getTimeRangeDate(timeRange).toISOString();
 
-      const interval = timeRanges[timeRange];
-
+      // جلب جميع الأحداث
       const { data, error } = await supabase
         .from('analytics_events')
-        .select('page_path, session_id')
-        .eq('event_type', 'page_view')
-        .gte('created_at', `now() - interval '${interval}'`);
+        .select('event_value, session_id')
+        .in('event_name', ['home_view', 'farm_view'])
+        .gte('created_at', startTime);
 
       if (error) throw error;
+
+      console.log('📄 جلب أكثر الصفحات:', data?.length, 'حدث');
 
       // تجميع حسب الصفحة
       const pageStats: Record<string, { views: number; sessions: Set<string> }> = {};
 
       data?.forEach(event => {
-        if (event.page_path) {
-          if (!pageStats[event.page_path]) {
-            pageStats[event.page_path] = {
-              views: 0,
-              sessions: new Set(),
-            };
+        let pagePath = '/';
+
+        if (event.event_value) {
+          if (typeof event.event_value === 'string') {
+            pagePath = event.event_value;
+          } else if (typeof event.event_value === 'object' && event.event_value.farm_name) {
+            pagePath = `/farm/${event.event_value.farm_name}`;
           }
-          pageStats[event.page_path].views++;
-          pageStats[event.page_path].sessions.add(event.session_id);
         }
+
+        if (!pageStats[pagePath]) {
+          pageStats[pagePath] = {
+            views: 0,
+            sessions: new Set(),
+          };
+        }
+        pageStats[pagePath].views++;
+        pageStats[pagePath].sessions.add(event.session_id);
       });
 
       // تحويل إلى array مرتب
@@ -261,19 +273,12 @@ export class FunnelAnalyticsService {
    */
   static async getEventDistribution(timeRange: '1h' | '24h' | '7d' | '30d' = '24h'): Promise<EventCount[]> {
     try {
-      const timeRanges: Record<string, string> = {
-        '1h': '1 hour',
-        '24h': '24 hours',
-        '7d': '7 days',
-        '30d': '30 days',
-      };
-
-      const interval = timeRanges[timeRange];
+      const startTime = getTimeRangeDate(timeRange).toISOString();
 
       const { data, error } = await supabase
         .from('analytics_events')
-        .select('event_type')
-        .gte('created_at', `now() - interval '${interval}'`);
+        .select('event_name')
+        .gte('created_at', startTime);
 
       if (error) throw error;
 
@@ -281,7 +286,7 @@ export class FunnelAnalyticsService {
       const eventCount: Record<string, number> = {};
 
       data?.forEach(event => {
-        eventCount[event.event_type] = (eventCount[event.event_type] || 0) + 1;
+        eventCount[event.event_name] = (eventCount[event.event_name] || 0) + 1;
       });
 
       // تحويل إلى array مرتب

@@ -31,57 +31,66 @@ interface ReferrerData {
   sessions: number;
 }
 
+function getTimeRangeDate(timeRange: '1h' | '24h' | '7d' | '30d'): Date {
+  const now = new Date();
+  switch (timeRange) {
+    case '1h':
+      return new Date(now.getTime() - 60 * 60 * 1000);
+    case '24h':
+      return new Date(now.getTime() - 24 * 60 * 60 * 1000);
+    case '7d':
+      return new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+    case '30d':
+      return new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+    default:
+      return new Date(now.getTime() - 24 * 60 * 60 * 1000);
+  }
+}
+
 export class VisitorsAnalyticsService {
   /**
    * جلب إحصائيات الزوار العامة
    */
   static async getVisitorStats(timeRange: '1h' | '24h' | '7d' | '30d' = '24h'): Promise<VisitorStats> {
     try {
-      const timeRanges: Record<string, string> = {
-        '1h': '1 hour',
-        '24h': '24 hours',
-        '7d': '7 days',
-        '30d': '30 days',
-      };
+      const startTime = getTimeRangeDate(timeRange).toISOString();
+      const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString();
 
-      const interval = timeRanges[timeRange];
+      console.log('📊 جلب إحصائيات الزوار من:', startTime);
 
       // إجمالي الجلسات
-      const { count: totalSessions } = await supabase
+      const { data: allSessions, error: sessionsError } = await supabase
         .from('analytics_sessions')
-        .select('*', { count: 'exact', head: true })
-        .gte('created_at', `now() - interval '${interval}'`);
+        .select('session_id, duration_seconds, last_activity_at')
+        .gte('created_at', startTime);
 
-      // الزوار الفريدون (session_id مختلف)
-      const { data: uniqueData } = await supabase
-        .from('analytics_sessions')
-        .select('session_id')
-        .gte('created_at', `now() - interval '${interval}'`);
+      if (sessionsError) {
+        console.error('خطأ في جلب الجلسات:', sessionsError);
+        throw sessionsError;
+      }
 
-      const uniqueVisitors = new Set(uniqueData?.map(s => s.session_id) || []).size;
+      const totalSessions = allSessions?.length || 0;
+
+      // الزوار الفريدون
+      const uniqueVisitors = new Set(allSessions?.map(s => s.session_id) || []).size;
 
       // الجلسات النشطة (آخر 5 دقائق)
-      const { count: activeSessions } = await supabase
-        .from('analytics_sessions')
-        .select('*', { count: 'exact', head: true })
-        .eq('is_active', true)
-        .gte('updated_at', `now() - interval '5 minutes'`);
+      const activeSessions = allSessions?.filter(s =>
+        s.last_activity_at && new Date(s.last_activity_at) > new Date(fiveMinutesAgo)
+      ).length || 0;
 
       // متوسط المدة
-      const { data: durationData } = await supabase
-        .from('analytics_sessions')
-        .select('duration_seconds')
-        .gte('created_at', `now() - interval '${interval}'`)
-        .not('duration_seconds', 'is', null);
-
-      const avgDuration = durationData && durationData.length > 0
-        ? Math.round(durationData.reduce((acc, s) => acc + (s.duration_seconds || 0), 0) / durationData.length)
+      const validDurations = allSessions?.filter(s => s.duration_seconds && s.duration_seconds > 0) || [];
+      const avgDuration = validDurations.length > 0
+        ? Math.round(validDurations.reduce((acc, s) => acc + (s.duration_seconds || 0), 0) / validDurations.length)
         : 0;
 
+      console.log('✅ إحصائيات:', { totalSessions, uniqueVisitors, activeSessions, avgDuration });
+
       return {
-        totalSessions: totalSessions || 0,
+        totalSessions,
         uniqueVisitors,
-        activeSessions: activeSessions || 0,
+        activeSessions,
         avgDuration,
       };
     } catch (error) {
@@ -96,35 +105,46 @@ export class VisitorsAnalyticsService {
   }
 
   /**
-   * توزيع المصادر (UTM Source)
+   * توزيع المصادر (UTM Source + Referrer)
    */
   static async getSourceBreakdown(timeRange: '1h' | '24h' | '7d' | '30d' = '24h'): Promise<SourceBreakdown[]> {
     try {
-      const timeRanges: Record<string, string> = {
-        '1h': '1 hour',
-        '24h': '24 hours',
-        '7d': '7 days',
-        '30d': '30 days',
-      };
-
-      const interval = timeRanges[timeRange];
+      const startTime = getTimeRangeDate(timeRange).toISOString();
 
       const { data, error } = await supabase
         .from('analytics_sessions')
-        .select('utm_source')
-        .gte('created_at', `now() - interval '${interval}'`);
+        .select('utm_source, referrer')
+        .gte('created_at', startTime);
 
       if (error) throw error;
+
+      console.log('📍 جلب المصادر:', data?.length, 'جلسة');
 
       // تجميع حسب المصدر
       const sourceCount: Record<string, number> = {};
       let total = 0;
 
       data?.forEach(session => {
-        const source = session.utm_source || 'Direct';
+        let source = 'Direct';
+
+        if (session.utm_source) {
+          source = session.utm_source;
+        } else if (session.referrer) {
+          const ref = session.referrer.toLowerCase();
+          if (ref.includes('tiktok')) source = 'TikTok';
+          else if (ref.includes('instagram')) source = 'Instagram';
+          else if (ref.includes('facebook')) source = 'Facebook';
+          else if (ref.includes('whatsapp')) source = 'WhatsApp';
+          else if (ref.includes('google')) source = 'Google';
+          else if (ref.includes('twitter') || ref.includes('x.com')) source = 'Twitter';
+          else source = 'Referral';
+        }
+
         sourceCount[source] = (sourceCount[source] || 0) + 1;
         total++;
       });
+
+      console.log('✅ توزيع المصادر:', sourceCount);
 
       // تحويل إلى array مرتب
       return Object.entries(sourceCount)
@@ -145,38 +165,38 @@ export class VisitorsAnalyticsService {
    */
   static async getDeviceBreakdown(timeRange: '1h' | '24h' | '7d' | '30d' = '24h'): Promise<DeviceBreakdown[]> {
     try {
-      const timeRanges: Record<string, string> = {
-        '1h': '1 hour',
-        '24h': '24 hours',
-        '7d': '7 days',
-        '30d': '30 days',
-      };
-
-      const interval = timeRanges[timeRange];
+      const startTime = getTimeRangeDate(timeRange).toISOString();
 
       const { data, error } = await supabase
         .from('analytics_sessions')
         .select('device_type, os')
-        .gte('created_at', `now() - interval '${interval}'`);
+        .gte('created_at', startTime);
 
       if (error) throw error;
+
+      console.log('📱 جلب الأجهزة:', data?.length, 'جلسة');
 
       // تجميع حسب الجهاز + OS
       const deviceCount: Record<string, { deviceType: string; os: string; count: number }> = {};
       let total = 0;
 
       data?.forEach(session => {
-        const key = `${session.device_type || 'unknown'}_${session.os || 'unknown'}`;
+        const deviceType = session.device_type || 'unknown';
+        const os = session.os || 'unknown';
+        const key = `${deviceType}_${os}`;
+
         if (!deviceCount[key]) {
           deviceCount[key] = {
-            deviceType: session.device_type || 'unknown',
-            os: session.os || 'unknown',
+            deviceType,
+            os,
             count: 0,
           };
         }
         deviceCount[key].count++;
         total++;
       });
+
+      console.log('✅ توزيع الأجهزة:', Object.keys(deviceCount).length, 'نوع');
 
       // تحويل إلى array مرتب
       return Object.values(deviceCount)
@@ -198,19 +218,12 @@ export class VisitorsAnalyticsService {
    */
   static async getTopReferrers(timeRange: '1h' | '24h' | '7d' | '30d' = '24h', limit = 10): Promise<ReferrerData[]> {
     try {
-      const timeRanges: Record<string, string> = {
-        '1h': '1 hour',
-        '24h': '24 hours',
-        '7d': '7 days',
-        '30d': '30 days',
-      };
-
-      const interval = timeRanges[timeRange];
+      const startTime = getTimeRangeDate(timeRange).toISOString();
 
       const { data, error } = await supabase
         .from('analytics_sessions')
         .select('referrer')
-        .gte('created_at', `now() - interval '${interval}'`)
+        .gte('created_at', startTime)
         .not('referrer', 'is', null)
         .not('referrer', 'eq', '');
 
@@ -244,19 +257,12 @@ export class VisitorsAnalyticsService {
    */
   static async getCampaignBreakdown(timeRange: '1h' | '24h' | '7d' | '30d' = '24h'): Promise<{ campaign: string; sessions: number }[]> {
     try {
-      const timeRanges: Record<string, string> = {
-        '1h': '1 hour',
-        '24h': '24 hours',
-        '7d': '7 days',
-        '30d': '30 days',
-      };
-
-      const interval = timeRanges[timeRange];
+      const startTime = getTimeRangeDate(timeRange).toISOString();
 
       const { data, error } = await supabase
         .from('analytics_sessions')
         .select('utm_campaign')
-        .gte('created_at', `now() - interval '${interval}'`)
+        .gte('created_at', startTime)
         .not('utm_campaign', 'is', null);
 
       if (error) throw error;
@@ -288,12 +294,16 @@ export class VisitorsAnalyticsService {
    */
   static async getSessionsByHour(): Promise<{ hour: number; sessions: number }[]> {
     try {
+      const startTime = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+
       const { data, error } = await supabase
         .from('analytics_sessions')
         .select('created_at')
-        .gte('created_at', `now() - interval '24 hours'`);
+        .gte('created_at', startTime);
 
       if (error) throw error;
+
+      console.log('⏰ جلب الجلسات حسب الساعة:', data?.length, 'جلسة');
 
       // تجميع حسب الساعة
       const hourCount: Record<number, number> = {};
@@ -315,7 +325,7 @@ export class VisitorsAnalyticsService {
         .sort((a, b) => a.hour - b.hour);
     } catch (error) {
       console.error('Error getting sessions by hour:', error);
-      return [];
+      return Array.from({ length: 24 }, (_, i) => ({ hour: i, sessions: 0 }));
     }
   }
 }
