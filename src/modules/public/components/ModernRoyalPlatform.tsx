@@ -156,6 +156,12 @@ export function ModernRoyalPlatform({
   };
 
   const handleFarmClick = (farm: PublicFarm) => {
+    TrackingService.trackEvent('farm_view', 'User viewed farm detail', {
+      farmId: farm.id,
+      farmName: farm.farm_name,
+      farmType: farm.tree_type,
+      farmLocation: `${farm.location_city} - ${farm.location_region || ''}`,
+    });
     setSelectedFarm(farm);
     setCurrentView('farmDetail');
     onViewChange?.('farmDetail');
