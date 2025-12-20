@@ -48,6 +48,14 @@ interface EventData {
   load_time_ms?: number;
 }
 
+// Helper type for quantity change tracking
+interface QuantityChangeData {
+  farm_id: string;
+  farm_name: string;
+  old_quantity: number;
+  new_quantity: number;
+}
+
 class RealAnalyticsService {
   private sessionId: string | null = null;
   private SESSION_KEY = 'analytics_session_id';

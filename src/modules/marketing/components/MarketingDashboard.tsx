@@ -8,6 +8,8 @@ import { IntentTrustView } from './IntentTrustView';
 import { SignalsView } from './SignalsView';
 import { LiveFeedView } from './LiveFeedView';
 import { LivePingsView } from './LivePingsView';
+import { RealVisitorsView } from './RealVisitorsView';
+import { RealFunnelView } from './RealFunnelView';
 
 interface MarketingDashboardProps {
   onBack: () => void;
@@ -38,9 +40,9 @@ export function MarketingDashboard({ onBack }: MarketingDashboardProps) {
       case 'live':
         return <LiveFeedView />;
       case 'visitors':
-        return <VisitorsAcquisitionView />;
+        return <RealVisitorsView />;
       case 'funnel':
-        return <FunnelAnalysisView />;
+        return <RealFunnelView />;
       case 'campaigns':
         return <CampaignsManagerView />;
       case 'intent':
