@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مسح الكاش - حذف 0500000001</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2E2A26 0%, #3D5B4B 50%, #2E2A26 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: white;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            background: linear-gradient(135deg, #D4AF37 0%, #FFD700 50%, #D4AF37 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 2.5em;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: rgba(212, 175, 55, 0.8);
+            font-size: 1.2em;
+            margin-bottom: 30px;
+        }
+
+        .warning {
+            background: rgba(239, 68, 68, 0.2);
+            border: 2px solid rgba(239, 68, 68, 0.5);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 1.1em;
+            color: #FCA5A5;
+        }
+
+        .info {
+            background: rgba(59, 130, 246, 0.2);
+            border: 2px solid rgba(59, 130, 246, 0.5);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 30px;
+            line-height: 1.8;
+        }
+
+        .button {
+            background: linear-gradient(135deg, #D4AF37 0%, #FFD700 50%, #D4AF37 100%);
+            border: none;
+            border-radius: 16px;
+            padding: 20px 40px;
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #2E2A26;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.5);
+        }
+
+        .button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(212, 175, 55, 0.7);
+        }
+
+        .button:active {
+            transform: translateY(0);
+        }
+
+        .success {
+            background: rgba(16, 185, 129, 0.2);
+            border: 2px solid rgba(16, 185, 129, 0.5);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            font-size: 1.2em;
+            color: #10B981;
+            display: none;
+            margin-top: 20px;
+        }
+
+        .status {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔥 مسح الكاش</h1>
+        <div class="subtitle">حذف الرقم 0500000001 نهائياً</div>
+
+        <div class="warning">
+            ⚠️ الرقم 0500000001 محذوف من النظام بالكامل<br>
+            يجب مسح الكاش من المتصفح لإتمام الحذف
+        </div>
+
+        <div class="info">
+            <strong>📋 ما سيتم مسحه:</strong><br>
+            ✓ جميع بيانات المستخدمين المخزنة محلياً<br>
+            ✓ جميع الجلسات النشطة<br>
+            ✓ جميع البيانات المؤقتة<br>
+            ✓ ذاكرة التخزين المحلية بالكامل
+        </div>
+
+        <button class="button" onclick="clearAllCache()">
+            🧹 مسح الكاش الآن
+        </button>
+
+        <button class="button" onclick="hardReload()">
+            🔄 إعادة تحميل قوية
+        </button>
+
+        <div class="success" id="success">
+            ✅ تم مسح الكاش بنجاح!<br>
+            جاري إعادة تحميل الصفحة...
+        </div>
+
+        <div class="status" id="status">
+            <strong>📊 الحالة:</strong><br>
+            جاهز للمسح...
+        </div>
+    </div>
+
+    <script>
+        function log(message) {
+            const status = document.getElementById('status');
+            status.innerHTML += message + '<br>';
+            status.scrollTop = status.scrollHeight;
+        }
+
+        function clearAllCache() {
+            log('🚀 بدء عملية المسح...');
+
+            // مسح localStorage
+            log('📦 مسح localStorage...');
+            localStorage.clear();
+            log('✅ تم مسح localStorage');
+
+            // مسح sessionStorage
+            log('📦 مسح sessionStorage...');
+            sessionStorage.clear();
+            log('✅ تم مسح sessionStorage');
+
+            // مسح الكوكيز
+            log('🍪 مسح الكوكيز...');
+            document.cookie.split(";").forEach(function(c) {
+                document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+            });
+            log('✅ تم مسح الكوكيز');
+
+            // مسح IndexedDB
+            log('💾 مسح IndexedDB...');
+            if (window.indexedDB) {
+                indexedDB.databases().then(databases => {
+                    databases.forEach(db => {
+                        indexedDB.deleteDatabase(db.name);
+                    });
+                    log('✅ تم مسح IndexedDB');
+                }).catch(() => {
+                    log('⚠️ تعذر مسح IndexedDB');
+                });
+            }
+
+            // مسح Cache API
+            log('🗄️ مسح Cache API...');
+            if ('caches' in window) {
+                caches.keys().then(names => {
+                    names.forEach(name => {
+                        caches.delete(name);
+                    });
+                    log('✅ تم مسح Cache API');
+                });
+            }
+
+            // إظهار رسالة النجاح
+            log('');
+            log('✅✅✅ تم مسح جميع البيانات بنجاح!');
+            log('🔄 سيتم إعادة تحميل الصفحة خلال 3 ثواني...');
+
+            document.getElementById('success').style.display = 'block';
+
+            // إعادة تحميل الصفحة بعد 3 ثواني
+            setTimeout(() => {
+                window.location.reload(true);
+            }, 3000);
+        }
+
+        function hardReload() {
+            log('🔄 إعادة تحميل قوية...');
+
+            // مسح الكاش أولاً
+            localStorage.clear();
+            sessionStorage.clear();
+
+            // إعادة تحميل قوية
+            if (window.location.reload) {
+                window.location.reload(true);
+            } else {
+                window.location.href = window.location.href;
+            }
+        }
+
+        // عرض البيانات الحالية
+        window.addEventListener('load', () => {
+            log('📊 فحص البيانات المخزنة...');
+            log('');
+
+            // فحص localStorage
+            const localStorageCount = Object.keys(localStorage).length;
+            log(`📦 localStorage: ${localStorageCount} عنصر`);
+
+            // فحص المستخدمين المخزنين
+            const users = localStorage.getItem('palm_olive_local_users');
+            if (users) {
+                try {
+                    const parsed = JSON.parse(users);
+                    log(`👥 المستخدمين المخزنين: ${parsed.length}`);
+
+                    // البحث عن 0500000001
+                    const found = parsed.find(u => u.phone === '0500000001');
+                    if (found) {
+                        log('⚠️ تم العثور على 0500000001 في localStorage!');
+                        log('🔥 يجب مسح الكاش فوراً!');
+                    } else {
+                        log('✅ لم يتم العثور على 0500000001 في localStorage');
+                    }
+                } catch (e) {
+                    log('⚠️ تعذر قراءة بيانات المستخدمين');
+                }
+            } else {
+                log('✅ لا توجد بيانات مستخدمين محفوظة');
+            }
+
+            log('');
+            log('جاهز للمسح...');
+        });
+    </script>
+</body>
+</html>

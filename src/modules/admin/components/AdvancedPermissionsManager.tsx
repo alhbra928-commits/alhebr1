@@ -134,8 +134,8 @@ export function AdvancedPermissionsManager() {
     const permission = permissions.find(p => p.id === permId);
     if (!permission) return;
 
-    // حماية خاصة للمدير العام (0500000001)
-    const isSuperAdmin = permission.admin_phone === '0500000001';
+    // حماية خاصة للمدير العام
+    const isSuperAdmin = permission.admin_phone === '0544433244';
 
     if (isSuperAdmin) {
       // التحذير الأول
@@ -213,8 +213,8 @@ export function AdvancedPermissionsManager() {
 
   const handleDeleteUser = (user: AdminUser) => {
     // التحقق من أن المستخدم ليس صاحب المنصة أو المدير العام
-    if (user.phone === '0569335257' || user.phone === '0500000001') {
-      alert('⛔ لا يمكن حذف صاحب المنصة أو المدير العام!');
+    if (user.phone === '0544433244') {
+      alert('⛔ لا يمكن حذف المدير العام!');
       return;
     }
 
@@ -510,8 +510,8 @@ export function AdvancedPermissionsManager() {
                         <span>تفعيل</span>
                       </button>
                     )}
-                    {/* زر حذف المستخدم - محمي للمدير العام وصاحب المنصة */}
-                    {selectedUser.phone !== '0569335257' && selectedUser.phone !== '0500000001' && (
+                    {/* زر حذف المستخدم - محمي للمدير العام */}
+                    {selectedUser.phone !== '0544433244' && (
                       <button
                         type="button"
                         onClick={(e) => {

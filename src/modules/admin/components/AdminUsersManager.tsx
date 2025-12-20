@@ -113,8 +113,8 @@ export function AdminUsersManager() {
   };
 
   const handleDeleteUser = async (user: AdminUser) => {
-    // حماية خاصة للمدير العام (0500000001)
-    const isSuperAdmin = user.phone === '0500000001' || user.role === 'super_admin';
+    // حماية خاصة للمدير العام
+    const isSuperAdmin = user.phone === '0544433244' || user.role === 'super_admin';
 
     if (isSuperAdmin) {
       // التحذير الأول - خاص بالمدير العام

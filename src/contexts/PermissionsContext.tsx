@@ -55,7 +55,7 @@ export function PermissionsProvider({ children }: { children: ReactNode }) {
       setCurrentAdminPhone(admin.phone);
       setCurrentAdminRole(admin.role);
 
-      const SUPER_ADMIN_PHONES = ['0500000000', '0500000001', '0569335257'];
+      const SUPER_ADMIN_PHONES = ['0544433244'];
       const isSuperAdmin = SUPER_ADMIN_PHONES.includes(admin.phone) || admin.role === 'super_admin';
 
       if (isSuperAdmin) {
