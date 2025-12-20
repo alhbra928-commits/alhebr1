@@ -8,6 +8,7 @@ import { IntentTrustView } from './IntentTrustView';
 import { SignalsView } from './SignalsView';
 import { LiveFeedView } from './LiveFeedView';
 import { LivePingsView } from './LivePingsView';
+import { ErrorBoundary } from './ErrorBoundary';
 
 interface MarketingDashboardProps {
   onBack: () => void;
@@ -36,7 +37,11 @@ export function MarketingDashboard({ onBack }: MarketingDashboardProps) {
       case 'pings':
         return <LivePingsView />;
       case 'live':
-        return <LiveFeedView />;
+        return (
+          <ErrorBoundary>
+            <LiveFeedView />
+          </ErrorBoundary>
+        );
       case 'visitors':
         return <VisitorsAcquisitionView />;
       case 'funnel':

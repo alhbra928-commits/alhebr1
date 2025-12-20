@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Activity, MapPin, Smartphone, Monitor, Users, TrendingUp } from 'lucide-react';
 import { supabase } from '../../../lib/supabase';
 
@@ -21,41 +21,76 @@ export function LiveFeedView() {
     todayVisitors: 0,
     liveEvents: 0,
   });
+  const [error, setError] = useState<string | null>(null);
+
+  const isMountedRef = useRef(true);
+  const abortControllerRef = useRef<AbortController | null>(null);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const channelRef = useRef<any>(null);
 
   useEffect(() => {
+    isMountedRef.current = true;
+    abortControllerRef.current = new AbortController();
+
     loadRecentActivities();
     loadStats();
 
-    const interval = setInterval(() => {
-      loadRecentActivities(true);
-      loadStats();
-    }, 3000);
+    intervalRef.current = setInterval(() => {
+      if (isMountedRef.current) {
+        loadRecentActivities(true);
+        loadStats();
+      }
+    }, 5000);
 
     setupRealtimeSubscription();
 
     return () => {
-      clearInterval(interval);
+      isMountedRef.current = false;
+
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+
+      if (channelRef.current) {
+        supabase.removeChannel(channelRef.current);
+        channelRef.current = null;
+      }
     };
   }, []);
 
   const loadRecentActivities = async (silent = false) => {
+    if (!isMountedRef.current) return;
+
     try {
       const now = new Date();
       const fiveMinutesAgo = new Date(now.getTime() - 5 * 60 * 1000);
 
-      const { data: recentSessions } = await supabase
+      const { data: recentSessions, error: sessionsError } = await supabase
         .from('analytics_sessions')
         .select('*')
         .gte('created_at', fiveMinutesAgo.toISOString())
         .order('created_at', { ascending: false })
-        .limit(10);
+        .limit(10)
+        .abortSignal(abortControllerRef.current?.signal);
 
-      const { data: recentEvents } = await supabase
+      if (sessionsError) throw sessionsError;
+
+      const { data: recentEvents, error: eventsError } = await supabase
         .from('analytics_events')
         .select('*')
         .gte('created_at', fiveMinutesAgo.toISOString())
         .order('created_at', { ascending: false })
-        .limit(20);
+        .limit(20)
+        .abortSignal(abortControllerRef.current?.signal);
+
+      if (eventsError) throw eventsError;
+
+      if (!isMountedRef.current) return;
 
       const combined: LiveActivity[] = [];
 
@@ -92,72 +127,115 @@ export function LiveFeedView() {
 
       combined.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
 
-      setActivities(combined.slice(0, 30));
+      if (isMountedRef.current) {
+        setActivities(combined.slice(0, 30));
+        setError(null);
+      }
 
       if (silent) {
         console.log('🔄 تحديث البث الحي:', combined.length, 'نشاط');
       }
-    } catch (error) {
+    } catch (error: any) {
+      if (error.name === 'AbortError') {
+        console.log('⏹️ تم إلغاء الطلب (الصفحة تم إغلاقها)');
+        return;
+      }
       console.error('Failed to load activities:', error);
+      if (isMountedRef.current) {
+        setError('فشل تحميل البيانات');
+      }
     }
   };
 
   const loadStats = async () => {
+    if (!isMountedRef.current) return;
+
     try {
       const now = new Date();
       const todayStart = new Date(now);
       todayStart.setHours(0, 0, 0, 0);
       const fiveMinutesAgo = new Date(now.getTime() - 5 * 60 * 1000);
 
-      const { data: todaySessions } = await supabase
+      const { data: todaySessions, error: todayError } = await supabase
         .from('analytics_sessions')
         .select('session_id', { count: 'exact' })
-        .gte('created_at', todayStart.toISOString());
+        .gte('created_at', todayStart.toISOString())
+        .abortSignal(abortControllerRef.current?.signal);
 
-      const { data: activeSessions } = await supabase
+      if (todayError) throw todayError;
+
+      const { data: activeSessions, error: activeError } = await supabase
         .from('analytics_sessions')
         .select('session_id', { count: 'exact' })
-        .gte('last_activity_at', fiveMinutesAgo.toISOString());
+        .gte('last_activity_at', fiveMinutesAgo.toISOString())
+        .abortSignal(abortControllerRef.current?.signal);
 
-      const { data: liveEvents } = await supabase
+      if (activeError) throw activeError;
+
+      const { data: liveEvents, error: eventsError } = await supabase
         .from('analytics_events')
         .select('id', { count: 'exact' })
-        .gte('created_at', fiveMinutesAgo.toISOString());
+        .gte('created_at', fiveMinutesAgo.toISOString())
+        .abortSignal(abortControllerRef.current?.signal);
+
+      if (eventsError) throw eventsError;
+
+      if (!isMountedRef.current) return;
 
       setStats({
         activeSessions: activeSessions?.length || 0,
         todayVisitors: todaySessions?.length || 0,
         liveEvents: liveEvents?.length || 0,
       });
-    } catch (error) {
+    } catch (error: any) {
+      if (error.name === 'AbortError') {
+        return;
+      }
       console.error('Failed to load stats:', error);
     }
   };
 
   const setupRealtimeSubscription = () => {
-    const channel = supabase
-      .channel('live-analytics')
-      .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'analytics_sessions' },
-        (payload) => {
-          console.log('🔔 جلسة جديدة:', payload.new);
-          loadRecentActivities(true);
-        }
-      )
-      .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'analytics_events' },
-        (payload) => {
-          console.log('🔔 حدث جديد:', payload.new);
-          loadRecentActivities(true);
-        }
-      )
-      .subscribe();
+    if (channelRef.current) {
+      supabase.removeChannel(channelRef.current);
+    }
 
-    return () => {
-      supabase.removeChannel(channel);
-    };
+    try {
+      const channel = supabase
+        .channel('live-analytics-feed')
+        .on(
+          'postgres_changes',
+          { event: 'INSERT', schema: 'public', table: 'analytics_sessions' },
+          (payload) => {
+            if (isMountedRef.current) {
+              console.log('🔔 جلسة جديدة:', payload.new);
+              loadRecentActivities(true);
+            }
+          }
+        )
+        .on(
+          'postgres_changes',
+          { event: 'INSERT', schema: 'public', table: 'analytics_events' },
+          (payload) => {
+            if (isMountedRef.current) {
+              console.log('🔔 حدث جديد:', payload.new);
+              loadRecentActivities(true);
+            }
+          }
+        )
+        .subscribe((status) => {
+          if (status === 'SUBSCRIBED') {
+            console.log('✅ اشتراك البث الحي نشط');
+          }
+          if (status === 'CHANNEL_ERROR') {
+            console.error('❌ خطأ في قناة البث الحي');
+          }
+        });
+
+      channelRef.current = channel;
+    } catch (error) {
+      console.error('Failed to setup realtime:', error);
+    }
   };
 
   const getSource = (session: any): string => {
@@ -224,7 +302,12 @@ export function LiveFeedView() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 p-8" dir="rtl">
       <div className="max-w-7xl mx-auto space-y-8">
-        {/* Header */}
+        {error && (
+          <div className="bg-red-50 border-2 border-red-200 rounded-xl p-4 text-red-600 text-center">
+            ⚠️ {error}
+          </div>
+        )}
+
         <div className="flex items-center justify-between">
           <div>
             <div className="flex items-center gap-4">
@@ -240,7 +323,6 @@ export function LiveFeedView() {
           </div>
         </div>
 
-        {/* Live Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="bg-gradient-to-br from-red-500 to-red-600 rounded-2xl p-6 text-white shadow-xl">
             <div className="flex items-center justify-between mb-4">
@@ -276,11 +358,10 @@ export function LiveFeedView() {
           </div>
         </div>
 
-        {/* Live Feed */}
         <div className="bg-white rounded-2xl shadow-xl border border-gray-100">
           <div className="p-6 border-b border-gray-100">
             <h2 className="text-2xl font-bold text-gray-800">النشاط اللحظي</h2>
-            <p className="text-gray-500 text-sm mt-1">آخر 5 دقائق • يتحديث كل 3 ثواني</p>
+            <p className="text-gray-500 text-sm mt-1">آخر 5 دقائق • يتحديث كل 5 ثواني</p>
           </div>
 
           <div className="divide-y divide-gray-100 max-h-[600px] overflow-y-auto">

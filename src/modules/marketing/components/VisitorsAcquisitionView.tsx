@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Users, Globe, Smartphone, TrendingUp, Clock, Activity } from 'lucide-react';
 import { VisitorsAnalyticsService } from '../../../services/analytics/visitorsAnalyticsService';
 
@@ -20,7 +20,12 @@ export function VisitorsAcquisitionView() {
   const [devices, setDevices] = useState<{ deviceType: string; os: string; sessions: number; percentage: number }[]>([]);
   const [hourlyData, setHourlyData] = useState<{ hour: number; sessions: number }[]>([]);
 
+  const isMountedRef = useRef(true);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
   const fetchData = async () => {
+    if (!isMountedRef.current) return;
+
     try {
       const [statsData, sourcesData, devicesData, hourlyDataResult] = await Promise.all([
         VisitorsAnalyticsService.getVisitorStats(timeRange),
@@ -28,6 +33,8 @@ export function VisitorsAcquisitionView() {
         VisitorsAnalyticsService.getDeviceBreakdown(timeRange),
         VisitorsAnalyticsService.getSessionsByHour(),
       ]);
+
+      if (!isMountedRef.current) return;
 
       setStats(statsData);
       setSources(sourcesData);
@@ -37,14 +44,25 @@ export function VisitorsAcquisitionView() {
       setLoading(false);
     } catch (error) {
       console.error('Error fetching visitors data:', error);
-      setLoading(false);
+      if (isMountedRef.current) {
+        setLoading(false);
+      }
     }
   };
 
   useEffect(() => {
+    isMountedRef.current = true;
+
     fetchData();
-    const interval = setInterval(fetchData, 5000);
-    return () => clearInterval(interval);
+    intervalRef.current = setInterval(fetchData, 5000);
+
+    return () => {
+      isMountedRef.current = false;
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    };
   }, [timeRange]);
 
   const getSourceColor = (source: string) => {

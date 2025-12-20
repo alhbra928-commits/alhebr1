@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { TrendingDown, TrendingUp, Activity, Clock, Target } from 'lucide-react';
 import { FunnelAnalyticsService } from '../../../services/analytics/funnelAnalyticsService';
 
@@ -21,13 +21,20 @@ export function FunnelAnalysisView() {
   const [conversionRate, setConversionRate] = useState({ visitors: 0, bookings: 0, conversionRate: 0 });
   const [topPages, setTopPages] = useState<{ pagePath: string; views: number; uniqueVisitors: number }[]>([]);
 
+  const isMountedRef = useRef(true);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
   const fetchData = async () => {
+    if (!isMountedRef.current) return;
+
     try {
       const [funnel, conversion, pages] = await Promise.all([
         FunnelAnalyticsService.getFunnelData(timeRange),
         FunnelAnalyticsService.getConversionRate(timeRange),
         FunnelAnalyticsService.getTopPages(timeRange, 5),
       ]);
+
+      if (!isMountedRef.current) return;
 
       setFunnelData(funnel);
       setConversionRate(conversion);
@@ -36,14 +43,25 @@ export function FunnelAnalysisView() {
       setLoading(false);
     } catch (error) {
       console.error('Error fetching funnel data:', error);
-      setLoading(false);
+      if (isMountedRef.current) {
+        setLoading(false);
+      }
     }
   };
 
   useEffect(() => {
+    isMountedRef.current = true;
+
     fetchData();
-    const interval = setInterval(fetchData, 5000);
-    return () => clearInterval(interval);
+    intervalRef.current = setInterval(fetchData, 5000);
+
+    return () => {
+      isMountedRef.current = false;
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    };
   }, [timeRange]);
 
   if (loading) {
