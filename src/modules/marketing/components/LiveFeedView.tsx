@@ -24,13 +24,11 @@ export function LiveFeedView() {
   const [error, setError] = useState<string | null>(null);
 
   const isMountedRef = useRef(true);
-  const abortControllerRef = useRef<AbortController | null>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const channelRef = useRef<any>(null);
 
   useEffect(() => {
     isMountedRef.current = true;
-    abortControllerRef.current = new AbortController();
 
     loadRecentActivities();
     loadStats();
@@ -46,10 +44,6 @@ export function LiveFeedView() {
 
     return () => {
       isMountedRef.current = false;
-
-      if (abortControllerRef.current) {
-        abortControllerRef.current.abort();
-      }
 
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
@@ -75,8 +69,7 @@ export function LiveFeedView() {
         .select('*')
         .gte('created_at', fiveMinutesAgo.toISOString())
         .order('created_at', { ascending: false })
-        .limit(10)
-        .abortSignal(abortControllerRef.current?.signal);
+        .limit(10);
 
       if (sessionsError) throw sessionsError;
 
@@ -85,8 +78,7 @@ export function LiveFeedView() {
         .select('*')
         .gte('created_at', fiveMinutesAgo.toISOString())
         .order('created_at', { ascending: false })
-        .limit(20)
-        .abortSignal(abortControllerRef.current?.signal);
+        .limit(20);
 
       if (eventsError) throw eventsError;
 
@@ -136,14 +128,9 @@ export function LiveFeedView() {
         console.log('🔄 تحديث البث الحي:', combined.length, 'نشاط');
       }
     } catch (error: any) {
-      if (error.name === 'AbortError') {
-        console.log('⏹️ تم إلغاء الطلب (الصفحة تم إغلاقها)');
-        return;
-      }
+      if (!isMountedRef.current) return;
       console.error('Failed to load activities:', error);
-      if (isMountedRef.current) {
-        setError('فشل تحميل البيانات');
-      }
+      setError('فشل تحميل البيانات');
     }
   };
 
@@ -159,24 +146,21 @@ export function LiveFeedView() {
       const { data: todaySessions, error: todayError } = await supabase
         .from('analytics_sessions')
         .select('session_id', { count: 'exact' })
-        .gte('created_at', todayStart.toISOString())
-        .abortSignal(abortControllerRef.current?.signal);
+        .gte('created_at', todayStart.toISOString());
 
       if (todayError) throw todayError;
 
       const { data: activeSessions, error: activeError } = await supabase
         .from('analytics_sessions')
         .select('session_id, is_active, updated_at', { count: 'exact' })
-        .or(`is_active.eq.true,updated_at.gte.${fiveMinutesAgo.toISOString()}`)
-        .abortSignal(abortControllerRef.current?.signal);
+        .or(`is_active.eq.true,updated_at.gte.${fiveMinutesAgo.toISOString()}`);
 
       if (activeError) throw activeError;
 
       const { data: liveEvents, error: eventsError } = await supabase
         .from('analytics_events')
         .select('id', { count: 'exact' })
-        .gte('created_at', fiveMinutesAgo.toISOString())
-        .abortSignal(abortControllerRef.current?.signal);
+        .gte('created_at', fiveMinutesAgo.toISOString());
 
       if (eventsError) throw eventsError;
 
@@ -188,9 +172,7 @@ export function LiveFeedView() {
         liveEvents: liveEvents?.length || 0,
       });
     } catch (error: any) {
-      if (error.name === 'AbortError') {
-        return;
-      }
+      if (!isMountedRef.current) return;
       console.error('Failed to load stats:', error);
     }
   };
