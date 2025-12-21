@@ -235,6 +235,7 @@ export function LiveFeedView() {
   };
 
   const getEventLabel = (eventName: string): string => {
+    if (!eventName) return 'نشاط غير معروف';
     const labels: Record<string, string> = {
       home_view: 'مشاهدة الرئيسية',
       farm_view: 'مشاهدة مزرعة',
@@ -248,6 +249,7 @@ export function LiveFeedView() {
   };
 
   const getSourceIcon = (source: string) => {
+    if (!source) return '🔗';
     if (source === 'TikTok') return '🎵';
     if (source === 'Instagram') return '📷';
     if (source === 'Facebook') return '📘';
@@ -258,12 +260,14 @@ export function LiveFeedView() {
   };
 
   const getDeviceIcon = (device: string) => {
+    if (!device) return <Activity className="w-4 h-4" />;
     if (device === 'mobile') return <Smartphone className="w-4 h-4" />;
     if (device === 'desktop') return <Monitor className="w-4 h-4" />;
     return <Activity className="w-4 h-4" />;
   };
 
   const getActionColor = (action: string) => {
+    if (!action) return 'text-gray-600 bg-gray-50';
     if (action.includes('دخول')) return 'text-blue-600 bg-blue-50';
     if (action.includes('مزرعة')) return 'text-purple-600 bg-purple-50';
     if (action.includes('حجز')) return 'text-green-600 bg-green-50';
