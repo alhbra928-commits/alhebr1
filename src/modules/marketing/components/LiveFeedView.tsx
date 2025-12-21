@@ -166,8 +166,8 @@ export function LiveFeedView() {
 
       const { data: activeSessions, error: activeError } = await supabase
         .from('analytics_sessions')
-        .select('session_id', { count: 'exact' })
-        .gte('last_activity_at', fiveMinutesAgo.toISOString())
+        .select('session_id, is_active, updated_at', { count: 'exact' })
+        .or(`is_active.eq.true,updated_at.gte.${fiveMinutesAgo.toISOString()}`)
         .abortSignal(abortControllerRef.current?.signal);
 
       if (activeError) throw activeError;

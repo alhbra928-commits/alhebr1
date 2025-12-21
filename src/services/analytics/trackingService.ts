@@ -139,8 +139,9 @@ class AnalyticsTrackingService {
       await supabase
         .from('analytics_sessions')
         .update({
-          last_activity_at: new Date().toISOString(),
-          session_duration_seconds: this.getSessionDuration(),
+          updated_at: new Date().toISOString(),
+          duration_seconds: this.getSessionDuration(),
+          is_active: true,
         })
         .eq('session_id', this.sessionId);
     } catch (error) {

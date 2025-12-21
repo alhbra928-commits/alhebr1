@@ -61,7 +61,7 @@ export class VisitorsAnalyticsService {
       // إجمالي الجلسات
       const { data: allSessions, error: sessionsError } = await supabase
         .from('analytics_sessions')
-        .select('session_id, duration_seconds, last_activity_at')
+        .select('session_id, duration_seconds, updated_at, is_active')
         .gte('created_at', startTime);
 
       if (sessionsError) {
@@ -74,9 +74,9 @@ export class VisitorsAnalyticsService {
       // الزوار الفريدون
       const uniqueVisitors = new Set(allSessions?.map(s => s.session_id) || []).size;
 
-      // الجلسات النشطة (آخر 5 دقائق)
+      // الجلسات النشطة (is_active = true أو updated_at خلال آخر 5 دقائق)
       const activeSessions = allSessions?.filter(s =>
-        s.last_activity_at && new Date(s.last_activity_at) > new Date(fiveMinutesAgo)
+        s.is_active || (s.updated_at && new Date(s.updated_at) > new Date(fiveMinutesAgo))
       ).length || 0;
 
       // متوسط المدة
