@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✅ رسالة الواتساب التلقائية عند الحجز - جاهز!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .hero {
+            background: white;
+            border-radius: 24px;
+            padding: 60px 40px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            margin-bottom: 40px;
+        }
+
+        .hero h1 {
+            font-size: 3em;
+            color: #25D366;
+            margin-bottom: 20px;
+        }
+
+        .hero .subtitle {
+            font-size: 1.5em;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+            color: white;
+            padding: 20px 50px;
+            border-radius: 50px;
+            font-size: 1.8em;
+            font-weight: bold;
+            box-shadow: 0 10px 30px rgba(37, 211, 102, 0.4);
+        }
+
+        .flow-section {
+            background: white;
+            border-radius: 24px;
+            padding: 50px 40px;
+            margin: 40px 0;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .flow-section h2 {
+            font-size: 2.5em;
+            text-align: center;
+            color: #128C7E;
+            margin-bottom: 50px;
+        }
+
+        .flow-steps {
+            display: grid;
+            gap: 30px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .flow-step {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border: 3px solid #25D366;
+            border-radius: 20px;
+            padding: 40px;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .flow-step:hover {
+            transform: translateX(-10px);
+            box-shadow: 0 10px 30px rgba(37, 211, 102, 0.2);
+        }
+
+        .flow-step::before {
+            content: attr(data-step);
+            position: absolute;
+            top: -20px;
+            right: 30px;
+            background: #25D366;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(37, 211, 102, 0.4);
+        }
+
+        .flow-step h3 {
+            color: #128C7E;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            margin-top: 20px;
+        }
+
+        .flow-step p {
+            font-size: 1.2em;
+            color: #555;
+            line-height: 1.8;
+        }
+
+        .flow-step .code {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+
+        .flow-step .code.whatsapp {
+            background: #ECE5DD;
+            color: #000;
+            border-right: 5px solid #25D366;
+            position: relative;
+        }
+
+        .flow-step .code.whatsapp::before {
+            content: '📱 WhatsApp';
+            position: absolute;
+            top: -15px;
+            right: 20px;
+            background: #25D366;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85em;
+        }
+
+        .arrow {
+            text-align: center;
+            font-size: 4em;
+            color: #25D366;
+            margin: 20px 0;
+        }
+
+        .test-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 24px;
+            padding: 60px 40px;
+            margin: 40px 0;
+            color: white;
+            box-shadow: 0 20px 60px rgba(102, 126, 234, 0.3);
+        }
+
+        .test-section h2 {
+            font-size: 3em;
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .test-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            transition: all 0.3s;
+        }
+
+        .test-card:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-10px);
+        }
+
+        .test-card .icon {
+            font-size: 5em;
+            display: block;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .test-card h3 {
+            font-size: 1.8em;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .test-card p {
+            font-size: 1.2em;
+            line-height: 1.8;
+            text-align: center;
+        }
+
+        .inbox-preview {
+            background: white;
+            border-radius: 24px;
+            padding: 50px 40px;
+            margin: 40px 0;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .inbox-preview h2 {
+            font-size: 2.5em;
+            text-align: center;
+            color: #128C7E;
+            margin-bottom: 40px;
+        }
+
+        .inbox-mockup {
+            background: #f5f5f5;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 800px;
+            margin: 0 auto;
+            box-shadow: inset 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .inbox-header {
+            background: #25D366;
+            color: white;
+            padding: 25px;
+            border-radius: 12px 12px 0 0;
+            font-size: 1.8em;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .inbox-message {
+            background: white;
+            border-right: 5px solid #25D366;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .inbox-message .phone {
+            font-size: 1.4em;
+            color: #25D366;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .inbox-message .name {
+            font-size: 1.2em;
+            color: #555;
+            margin-bottom: 15px;
+        }
+
+        .inbox-message .message {
+            font-size: 1.3em;
+            background: #ECE5DD;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            color: #000;
+        }
+
+        .inbox-message .meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1em;
+            color: #999;
+            margin-top: 15px;
+        }
+
+        .inbox-message .status {
+            background: #25D366;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        .triggers-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .triggers-table th {
+            background: #128C7E;
+            color: white;
+            padding: 20px;
+            text-align: right;
+            font-size: 1.3em;
+        }
+
+        .triggers-table td {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            font-size: 1.1em;
+        }
+
+        .triggers-table tr:hover {
+            background: #f0f9ff;
+        }
+
+        .triggers-table .emoji {
+            font-size: 2em;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2em;
+            }
+
+            .test-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="hero">
+            <h1>📱 رسالة واتساب تلقائية عند الحجز</h1>
+            <p class="subtitle">الآن عند كل حجز جديد، يتلقى المستثمر رسالة واتساب تلقائياً!</p>
+            <div class="status-badge">✅ مُفعّل ويعمل!</div>
+        </div>
+
+        <div class="flow-section">
+            <h2>🔄 كيف يعمل النظام؟</h2>
+
+            <div class="flow-steps">
+                <div class="flow-step" data-step="1">
+                    <h3>المستثمر يملأ نموذج الحجز</h3>
+                    <p>يدخل المستثمر بياناته في صفحة الحجز:</p>
+                    <div class="code">
+الاسم الكامل: محمد أحمد
+رقم الجوال: 966501234567
+البريد: mohamed@example.com
+عدد الأشجار: 10
+                    </div>
+                </div>
+
+                <div class="arrow">⬇️</div>
+
+                <div class="flow-step" data-step="2">
+                    <h3>يضغط "تأكيد الحجز"</h3>
+                    <p>يتم حفظ البيانات في قاعدة البيانات:</p>
+                    <div class="code">
+INSERT INTO reservations (
+  investor_id,
+  farm_id,
+  number_of_trees,
+  ...
+) VALUES (...);
+                    </div>
+                </div>
+
+                <div class="arrow">⬇️</div>
+
+                <div class="flow-step" data-step="3">
+                    <h3>تُنفّذ الـ Trigger تلقائياً!</h3>
+                    <p>الـ trigger يلتقط الحجز الجديد ويُنفّذ الدالة:</p>
+                    <div class="code">
+TRIGGER: trigger_whatsapp_booking_created
+FUNCTION: notify_whatsapp_booking_created()
+                    </div>
+                </div>
+
+                <div class="arrow">⬇️</div>
+
+                <div class="flow-step" data-step="4">
+                    <h3>تُرسل رسالة الواتساب</h3>
+                    <p>يتم إنشاء رسالة في صندوق الرسائل:</p>
+                    <div class="code whatsapp">
+📱 966501234567
+👤 محمد أحمد
+💬 حجز جديد: مزرعة الخالدية - 10 أشجار
+🟢 open
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="inbox-preview">
+            <h2>📬 كيف تظهر الرسائل في صندوق الرسائل؟</h2>
+
+            <div class="inbox-mockup">
+                <div class="inbox-header">
+                    <span>📱</span>
+                    <span>WhatsApp - صندوق الرسائل</span>
+                </div>
+
+                <div class="inbox-message">
+                    <div class="phone">📱 966501234567</div>
+                    <div class="name">👤 محمد أحمد</div>
+                    <div class="message">
+                        💬 حجز جديد: مزرعة الخالدية - 10 أشجار
+                    </div>
+                    <div class="meta">
+                        <span>🕐 منذ دقيقتين</span>
+                        <span class="status">🟢 مفتوح</span>
+                    </div>
+                </div>
+
+                <div class="inbox-message">
+                    <div class="phone">📱 966507654321</div>
+                    <div class="name">👤 فاطمة خالد</div>
+                    <div class="message">
+                        💬 🏆 شهادة ملكيتك جاهزة! - مزرعة الوادي
+                    </div>
+                    <div class="meta">
+                        <span>🕐 منذ 5 دقائق</span>
+                        <span class="status">🟢 مفتوح</span>
+                    </div>
+                </div>
+
+                <div class="inbox-message">
+                    <div class="phone">📱 966509876543</div>
+                    <div class="name">👤 عبدالله سعيد</div>
+                    <div class="message">
+                        💬 ✅ تم التحقق من سدادك - مزرعة النخيل
+                    </div>
+                    <div class="meta">
+                        <span>🕐 منذ 10 دقائق</span>
+                        <span class="status">🟢 مفتوح</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flow-section">
+            <h2>🔔 جميع الإشعارات التلقائية</h2>
+
+            <table class="triggers-table">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>الحدث</th>
+                        <th>متى يُرسل</th>
+                        <th>محتوى الرسالة</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="emoji">📝</td>
+                        <td><strong>حجز جديد</strong></td>
+                        <td>عند إنشاء الحجز</td>
+                        <td>حجز جديد: [المزرعة] - [عدد] أشجار</td>
+                    </tr>
+                    <tr>
+                        <td class="emoji">🏆</td>
+                        <td><strong>إصدار شهادة</strong></td>
+                        <td>عند إصدار الشهادة</td>
+                        <td>🏆 شهادة ملكيتك جاهزة! - [المزرعة]</td>
+                    </tr>
+                    <tr>
+                        <td class="emoji">✅</td>
+                        <td><strong>قبول السداد</strong></td>
+                        <td>عند قبول الإيصال</td>
+                        <td>✅ تم التحقق من سدادك - [المزرعة]</td>
+                    </tr>
+                    <tr>
+                        <td class="emoji">⚠️</td>
+                        <td><strong>رفض السداد</strong></td>
+                        <td>عند رفض الإيصال</td>
+                        <td>⚠️ يرجى إعادة رفع إيصال السداد - [المزرعة]</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="test-section">
+            <h2>🧪 كيف تختبر النظام؟</h2>
+
+            <div class="test-grid">
+                <div class="test-card">
+                    <span class="icon">1️⃣</span>
+                    <h3>افتح صفحة الحجز</h3>
+                    <p>اذهب لصفحة مزرعة واضغط "احجز الآن"</p>
+                </div>
+
+                <div class="test-card">
+                    <span class="icon">2️⃣</span>
+                    <h3>املأ البيانات</h3>
+                    <p>أدخل اسم واتصال وعدد الأشجار</p>
+                </div>
+
+                <div class="test-card">
+                    <span class="icon">3️⃣</span>
+                    <h3>اضغط تأكيد</h3>
+                    <p>سيتم إنشاء الحجز تلقائياً</p>
+                </div>
+
+                <div class="test-card">
+                    <span class="icon">4️⃣</span>
+                    <h3>افتح الـ Inbox</h3>
+                    <p>WhatsApp → Inbox → ستجد الرسالة!</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="hero" style="background: linear-gradient(135deg, #25D366 0%, #128C7E 100%); color: white;">
+            <h1 style="color: white;">🎉 كل شيء جاهز!</h1>
+            <p class="subtitle" style="color: rgba(255,255,255,0.9);">
+                الآن عند كل حجز جديد، سيتلقى المستثمر رسالة واتساب تلقائياً في صندوق الرسائل
+            </p>
+            <div style="font-size: 5em; margin-top: 30px;">
+                📱 ✅ 🎊 🚀
+            </div>
+        </div>
+    </div>
+</body>
+</html>
