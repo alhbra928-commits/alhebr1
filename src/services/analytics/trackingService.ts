@@ -81,7 +81,7 @@ class AnalyticsTrackingService {
       }
 
       const sessionData: any = {
-        landing_path: landingPath,
+        landing_page: landingPath,
         referrer,
         ...utmParams,
         ...deviceInfo,
