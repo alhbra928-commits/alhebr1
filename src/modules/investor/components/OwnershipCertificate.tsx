@@ -378,7 +378,7 @@ export function OwnershipCertificate({ certificate }: OwnershipCertificateProps)
             color: '#333',
             lineHeight: '1.4'
           }}>
-            تشهد <strong style={{ color: '#d4af37' }}>منصة النخيل والزيتون</strong> بأن السيد / السيدة
+            تشهد <strong style={{ color: '#d4af37' }}>منصة مزاد للمزارع</strong> بأن السيد / السيدة
           </p>
 
           <div className="cert-name" style={{
@@ -542,7 +542,7 @@ export function OwnershipCertificate({ certificate }: OwnershipCertificateProps)
           color: '#666',
           lineHeight: '1.5'
         }}>
-          هذه الشهادة صادرة من منصة النخيل والزيتون وتعتبر وثيقة رسمية تثبت حق الانتفاع الموسمي من الأشجار المذكورة.
+          هذه الشهادة صادرة من منصة مزاد للمزارع وتعتبر وثيقة رسمية تثبت حق الانتفاع الموسمي من الأشجار المذكورة.
           للتحقق من صحتها، يرجى زيارة موقعنا الإلكتروني.
         </div>
       </div>

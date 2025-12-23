@@ -28,7 +28,7 @@ export const ConceptIntroductionPage: React.FC<ConceptIntroductionPageProps> = (
               className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-black text-white text-center px-2"
               style={{ fontFamily: 'Tajawal, sans-serif' }}
             >
-              💎 فكرة تأجير النخيل وأشجار الزيتون
+              💎 فكرة التأجير الموسمي للمزارع
             </h1>
             <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 text-yellow-400 animate-pulse" />
           </div>
@@ -45,7 +45,7 @@ export const ConceptIntroductionPage: React.FC<ConceptIntroductionPageProps> = (
                 className="text-xl sm:text-xl md:text-2xl font-bold text-white"
                 style={{ fontFamily: 'Tajawal, sans-serif' }}
               >
-                تأجير النخيل
+                مثال: مزارع النخيل
               </h2>
             </div>
             <p
@@ -53,7 +53,7 @@ export const ConceptIntroductionPage: React.FC<ConceptIntroductionPageProps> = (
               style={{ fontFamily: 'Tajawal, sans-serif' }}
             >
               استأجر نخيل حقيقي مُسجل لك، واحصل على نصيبك من الإنتاج الموسمي.
-              النخيل يمثل تراثنا الأصيل وثروة طبيعية مستدامة تنمو قيمتها مع الزمن.
+              النخيل يمثل تراثنا الأصيل وثروة طبيعية مستدامة.
             </p>
           </div>
 
@@ -66,14 +66,14 @@ export const ConceptIntroductionPage: React.FC<ConceptIntroductionPageProps> = (
                 className="text-xl sm:text-xl md:text-2xl font-bold text-white"
                 style={{ fontFamily: 'Tajawal, sans-serif' }}
               >
-                تأجير أشجار الزيتون
+                مثال: مزارع الزيتون
               </h2>
             </div>
             <p
               className="text-amber-100 leading-relaxed text-sm sm:text-base md:text-lg"
               style={{ fontFamily: 'Tajawal, sans-serif' }}
             >
-              استأجر أشجار زيتون منتجة لأجود أنواع زيت الزيتون البكر الممتاز.
+              استأجر أشجار زيتون منتجة لأجود أنواع الزيت الطبيعي.
               استثمار صحي ومربح يجمع بين العائد المالي والقيمة الغذائية العالية.
             </p>
           </div>

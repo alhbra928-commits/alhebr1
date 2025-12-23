@@ -19,7 +19,7 @@ export const EnhancedConceptCard: React.FC<EnhancedConceptCardProps> = ({ isOpen
   const conceptPoints: ConceptPoint[] = [
     {
       icon: '🌴',
-      text: 'تأجيرك للنخلة أو شجرة الزيتون هو تأجير حقيقي من أرض المزرعة نفسها.'
+      text: 'تأجيرك للأشجار والمحاصيل هو تأجير حقيقي من أرض المزرعة نفسها.'
     },
     {
       icon: '📜',
@@ -35,15 +35,15 @@ export const EnhancedConceptCard: React.FC<EnhancedConceptCardProps> = ({ isOpen
     },
     {
       icon: '🧑‍🌾',
-      text: 'فرق مختصة بالري والصيانة والتصوير تتابع كل نخلة باستمرار.'
+      text: 'فرق مختصة بالري والصيانة والتصوير تتابع كل شجرة باستمرار.'
     },
     {
       icon: '⚙️',
-      text: 'كل ذلك مقابل رسوم رمزية بسيطة عن كل نخلة أو شجرة.'
+      text: 'كل ذلك مقابل رسوم رمزية بسيطة عن كل شجرة محجوزة.'
     },
     {
       icon: '✨',
-      text: 'ابدأ رحلتك الآن واستأجر نخلة أو شجرة زيتون باسمك للموسم القادم.'
+      text: 'ابدأ رحلتك الآن واستأجر من المزارع المتاحة للموسم القادم.'
     }
   ];
 
@@ -131,7 +131,7 @@ export const EnhancedConceptCard: React.FC<EnhancedConceptCardProps> = ({ isOpen
                   fontFamily: 'Tajawal, sans-serif'
                 }}
               >
-                اكتشف فكرة تأجير النخيل وأشجار الزيتون
+                اكتشف فكرة التأجير الموسمي للمزارع
               </h2>
               <span className="text-4xl sm:text-5xl animate-bounce" style={{ animationDelay: '0.2s' }}>🌳</span>
             </div>
