@@ -82,7 +82,7 @@ export function FarmCard3D({ farm, onOwn, onClick }: FarmCard3DProps) {
         }}>
           <span className="flex items-center gap-1.5 sm:gap-2">
             <span className="text-base sm:text-lg">✨</span>
-            <span className="whitespace-nowrap">اكتمل البيع</span>
+            <span className="whitespace-nowrap">اكتمل الحجز</span>
           </span>
         </div>
       )}

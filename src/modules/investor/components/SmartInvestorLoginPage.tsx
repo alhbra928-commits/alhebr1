@@ -313,7 +313,7 @@ export function SmartInvestorLoginPage({ onLoginSuccess, onBack }: SmartInvestor
                   WebkitTextFillColor: 'transparent',
                 }}
               >
-                منصة تملك النخيل والزيتون
+                منصة تأجير المزارع الموسمية
               </h1>
 
               <p className="text-gray-400 text-xs sm:text-sm">
@@ -359,7 +359,7 @@ export function SmartInvestorLoginPage({ onLoginSuccess, onBack }: SmartInvestor
                     autoFocus
                   />
                   <p className="mt-2 text-xs sm:text-sm text-gray-400">
-                    سيظهر هذا الاسم في شهادات التملك والمستندات الرسمية
+                    سيظهر هذا الاسم في شهادات الانتفاع والمستندات الرسمية
                   </p>
                 </div>
               )}

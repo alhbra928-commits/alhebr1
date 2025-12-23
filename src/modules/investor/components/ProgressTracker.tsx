@@ -52,7 +52,7 @@ export function ProgressTracker({ bookingStatus, className = '' }: ProgressTrack
       },
       {
         id: 'ownership_completed',
-        label: 'اكتمال التملك',
+        label: 'اكتمال الحجز',
         icon: Award,
         status: 'pending' as const,
         color: 'from-amber-500 to-amber-700',

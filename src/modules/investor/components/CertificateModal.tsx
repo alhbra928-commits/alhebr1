@@ -35,8 +35,8 @@ export function CertificateModal({ certificate, isOpen, onClose }: CertificateMo
   const handleShare = () => {
     if (navigator.share) {
       navigator.share({
-        title: `شهادة تملك - ${certificate.certificate_code}`,
-        text: `شهادة تملك ${certificate.reserved_trees} شجرة في ${certificate.farm_name}`,
+        title: `شهادة انتفاع - ${certificate.certificate_code}`,
+        text: `شهادة انتفاع موسمية - ${certificate.reserved_trees} شجرة في ${certificate.farm_name}`,
         url: window.location.href
       });
     }
@@ -208,7 +208,7 @@ export function CertificateModal({ certificate, isOpen, onClose }: CertificateMo
                         textShadow: '0 2px 10px rgba(212,175,55,0.3)'
                       }}
                     >
-                      شهادة التملك الرسمية
+                      شهادة الانتفاع الموسمية
                     </h2>
                     <p className="text-xs sm:text-sm" style={{ color: brandColors.text.secondary }}>
                       منصة النخيل والزيتون للاستثمار الزراعي

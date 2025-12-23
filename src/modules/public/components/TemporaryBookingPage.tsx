@@ -927,6 +927,13 @@ export function TemporaryBookingPage({
                         )}
                       </div>
 
+                      {/* التنويه القانوني */}
+                      <div className="mt-4 px-2">
+                        <p className="text-[10px] text-gray-500 text-center leading-relaxed font-medium">
+                          المنصة لا تنقل ملكية أصول زراعية، وتقدم خدمة تنظيم حجوزات وتأجير/انتفاع موسمي من إنتاج المزارع وفق الشروط.
+                        </p>
+                      </div>
+
                       {/* زر الحجز - يظهر في الديسكتوب في الكارت */}
                       <button
                         onClick={handleSubmit}
@@ -997,6 +1004,13 @@ export function TemporaryBookingPage({
                 `
               }}
             >
+              {/* التنويه القانوني */}
+              <div className="mb-3 px-2">
+                <p className="text-[10px] text-gray-500 text-center leading-relaxed font-medium">
+                  المنصة لا تنقل ملكية أصول زراعية، وتقدم خدمة تنظيم حجوزات وتأجير/انتفاع موسمي من إنتاج المزارع وفق الشروط.
+                </p>
+              </div>
+
               {/* الزر الرئيسي الضخم */}
               <button
                 onClick={handleSubmit}

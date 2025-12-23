@@ -23,14 +23,14 @@ export function SmartWelcomeModal({ onClose, investorName }: SmartWelcomeModalPr
   const features = [
     {
       icon: TrendingUp,
-      title: 'تملك فعلي مدى الحياة',
-      desc: 'في موقع المزرعة تحت إشرافك',
+      title: 'حجز موسمي مرن',
+      desc: 'في مزارع مختارة بعناية',
       delay: 0
     },
     {
       icon: Shield,
-      title: 'حرية كاملة',
-      desc: 'بيع أو استثمار أو إهداء أو وقف',
+      title: 'مرونة كاملة',
+      desc: 'حجز موسمي بشروط واضحة',
       delay: 200
     },
     {
@@ -189,11 +189,11 @@ export function SmartWelcomeModal({ onClose, investorName }: SmartWelcomeModalPr
                 }}
               >
                 <p className="text-sm md:text-base lg:text-lg text-gray-300 leading-relaxed text-right">
-                  المنصة تتيح لك تملك{' '}
-                  <span className="text-yellow-500 font-bold">النخيل أو أشجار الزيتون</span>{' '}
-                  <span className="text-yellow-500 font-bold">تملك فعلي</span> في موقع المزرعة{' '}
-                  <span className="text-yellow-500 font-bold">مدى الحياة</span>،
-                  تستطيع بيعها أو استثمارها أو إهدائها أو وقف خيري تحت إدارة وإشراف المنصة
+                  المنصة تتيح لك حجز{' '}
+                  <span className="text-yellow-500 font-bold">أشجار النخيل أو الزيتون</span>{' '}
+                  <span className="text-yellow-500 font-bold">بشكل موسمي</span> في مزارع مختارة{' '}
+                  <span className="text-yellow-500 font-bold">تحت الإشراف</span>،
+                  والاستفادة من الإنتاج خلال الموسم بشروط واضحة ومرنة تحت إدارة المنصة
                   بكل أريحية لك ومتابعة منك في الموقع أو عن بُعد.
                 </p>
               </div>

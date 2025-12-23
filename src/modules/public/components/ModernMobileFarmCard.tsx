@@ -76,7 +76,7 @@ export function ModernMobileFarmCard({ farm, onOwn, onClick }: ModernMobileFarmC
           }}>
             <div className="flex items-center gap-2">
               <span className="text-base">✨</span>
-              <span className="text-white text-xs font-black">اكتمل البيع</span>
+              <span className="text-white text-xs font-black">اكتمل الحجز</span>
             </div>
           </div>
         ) : farm.booking_percentage >= 60 ? (
