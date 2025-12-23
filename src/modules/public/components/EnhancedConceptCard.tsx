@@ -27,7 +27,7 @@ export const EnhancedConceptCard: React.FC<EnhancedConceptCardProps> = ({ isOpen
     },
     {
       icon: '💰',
-      text: 'يمكنك التنازل، الإهداء، أو تخصيصها كوقف خيري باسمك خلال فترة الانتفاع.'
+      text: 'يمكنك توجيه منفعة التأجير كإهداء أو تخصيص العائد الموسمي كوقف خيري خلال فترة الحجز.'
     },
     {
       icon: '🌾',
