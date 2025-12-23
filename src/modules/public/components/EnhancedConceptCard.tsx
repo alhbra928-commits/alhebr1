@@ -27,7 +27,11 @@ export const EnhancedConceptCard: React.FC<EnhancedConceptCardProps> = ({ isOpen
     },
     {
       icon: '💰',
-      text: 'يمكنك توجيه منفعة التأجير كإهداء أو تخصيص العائد الموسمي كوقف خيري خلال فترة الحجز.'
+      text: 'يمكنك توجيه منفعة التأجير الموسمي كوقف خيري، أو إهداء منفعة التأجير الموسمي لشخص آخر.'
+    },
+    {
+      icon: '📋',
+      text: 'ملاحظة: الوقف والإهداء يخصان منفعة التأجير الموسمي التي تديرها المنصة، ولا يشملان ملكية الأصول الزراعية.'
     },
     {
       icon: '🌾',
@@ -249,7 +253,7 @@ export const EnhancedConceptCard: React.FC<EnhancedConceptCardProps> = ({ isOpen
                   fontFamily: 'Tajawal, sans-serif'
                 }}
               >
-                اجعل استثمارك في الزراعة المستدامة يبدأ اليوم ✨
+                ابدأ تأجيرك الموسمي من المزارع المتاحة الآن ✨
               </p>
             </div>
           )}
