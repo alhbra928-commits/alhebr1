@@ -274,7 +274,7 @@ export function InvestorDashboard({ phone, onLogout, isFirstTimeLogin = false, o
       case 'verified':
         return { label: '💳 تم التحقق من السداد', color: '#10b981', icon: CheckCircle2 };
       case 'ownership_completed':
-        return { label: '🏆 اكتمال التملك', color: '#d4af37', icon: Award };
+        return { label: '🏆 اكتمال الحجز', color: '#d4af37', icon: Award };
       case 'documented':
         return { label: '📜 موثق', color: '#3b82f6', icon: FileCheck };
       case 'cancelled':
@@ -550,7 +550,7 @@ export function InvestorDashboard({ phone, onLogout, isFirstTimeLogin = false, o
 
                   <div className="text-right p-2.5 sm:p-3 md:p-4 rounded-lg sm:rounded-xl" style={{ background: 'rgba(255,255,255,0.5)' }}>
                     <p className="font-bold mb-1 sm:mb-1.5 md:mb-2 text-xs sm:text-sm md:text-base" style={{ color: brandColors.text.primary }}>
-                      🏆 احصل على شهادات الملكية
+                      🏆 احصل على شهادات الانتفاع
                     </p>
                     <p className="text-[10px] sm:text-xs md:text-sm" style={{ color: brandColors.text.secondary }}>
                       وثّق استثماراتك بشهادات رسمية
@@ -949,7 +949,7 @@ export function InvestorDashboard({ phone, onLogout, isFirstTimeLogin = false, o
                               }}
                             >
                               <p className="text-base font-bold text-white leading-relaxed">
-                                🎉 مبروك! اكتملت رحلة التملك وتم إصدار الشهادة بنجاح.
+                                🎉 مبروك! اكتملت رحلة الحجز وتم إصدار الشهادة بنجاح.
                               </p>
                             </div>
                             <button
@@ -1083,7 +1083,7 @@ export function InvestorDashboard({ phone, onLogout, isFirstTimeLogin = false, o
                                       fontFamily: 'Cairo, Noto Sans Arabic, sans-serif'
                                     }}
                                   >
-                                    🌟 مبروك! تمت الموافقة على حجزك رسميًا — يمكنك الآن استكمال التملك برفع إيصال السداد.
+                                    🌟 مبروك! تمت الموافقة على حجزك رسميًا — يمكنك الآن استكمال الحجز برفع إيصال السداد.
                                   </p>
                                 </div>
 
@@ -1174,7 +1174,7 @@ export function InvestorDashboard({ phone, onLogout, isFirstTimeLogin = false, o
         {activeTab === 'certificates' && (
           <div>
             <h2 className="text-3xl font-black mb-6" style={{ color: brandColors.text.primary }}>
-              شهادات التملك
+              شهادات الانتفاع
             </h2>
 
             {certificates.length === 0 ? (

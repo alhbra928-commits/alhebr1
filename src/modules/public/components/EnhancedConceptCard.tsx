@@ -19,15 +19,15 @@ export const EnhancedConceptCard: React.FC<EnhancedConceptCardProps> = ({ isOpen
   const conceptPoints: ConceptPoint[] = [
     {
       icon: '🌴',
-      text: 'تملكك للنخلة أو شجرة الزيتون هو تملك حقيقي من أرض المزرعة نفسها.'
+      text: 'تأجيرك للنخلة أو شجرة الزيتون هو تأجير حقيقي من أرض المزرعة نفسها.'
     },
     {
       icon: '📜',
-      text: 'ملكيتك موثقة رسميًا داخل المنصة وتحمل اسمك مدى الحياة.'
+      text: 'حجزك موثق رسميًا داخل المنصة ويحمل اسمك للفترة المحددة.'
     },
     {
       icon: '💰',
-      text: 'يمكنك البيع، الإهداء، أو تحويلها إلى وقف خيري باسمك متى شئت.'
+      text: 'يمكنك التنازل، الإهداء، أو تخصيصها كوقف خيري باسمك خلال فترة الانتفاع.'
     },
     {
       icon: '🌾',
@@ -43,7 +43,7 @@ export const EnhancedConceptCard: React.FC<EnhancedConceptCardProps> = ({ isOpen
     },
     {
       icon: '✨',
-      text: 'ابدأ رحلتك الآن وامتلك نخلة أو شجرة زيتون باسمك مدى الحياة.'
+      text: 'ابدأ رحلتك الآن واستأجر نخلة أو شجرة زيتون باسمك للموسم القادم.'
     }
   ];
 
@@ -131,7 +131,7 @@ export const EnhancedConceptCard: React.FC<EnhancedConceptCardProps> = ({ isOpen
                   fontFamily: 'Tajawal, sans-serif'
                 }}
               >
-                اكتشف فكرة تملك النخيل وأشجار الزيتون
+                اكتشف فكرة تأجير النخيل وأشجار الزيتون
               </h2>
               <span className="text-4xl sm:text-5xl animate-bounce" style={{ animationDelay: '0.2s' }}>🌳</span>
             </div>
@@ -221,7 +221,7 @@ export const EnhancedConceptCard: React.FC<EnhancedConceptCardProps> = ({ isOpen
               >
                 <span className="relative z-10 flex items-center gap-3 justify-center">
                   <span className="text-3xl">🚀</span>
-                  ابدأ التملك الآن
+                  ابدأ التأجير الآن
                   <span className="text-3xl">🌟</span>
                 </span>
 

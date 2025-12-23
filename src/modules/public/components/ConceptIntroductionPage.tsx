@@ -28,7 +28,7 @@ export const ConceptIntroductionPage: React.FC<ConceptIntroductionPageProps> = (
               className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-black text-white text-center px-2"
               style={{ fontFamily: 'Tajawal, sans-serif' }}
             >
-              💎 فكرة تملك النخيل وأشجار الزيتون
+              💎 فكرة تأجير النخيل وأشجار الزيتون
             </h1>
             <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 text-yellow-400 animate-pulse" />
           </div>
@@ -45,14 +45,14 @@ export const ConceptIntroductionPage: React.FC<ConceptIntroductionPageProps> = (
                 className="text-xl sm:text-xl md:text-2xl font-bold text-white"
                 style={{ fontFamily: 'Tajawal, sans-serif' }}
               >
-                تملك النخيل
+                تأجير النخيل
               </h2>
             </div>
             <p
               className="text-green-100 leading-relaxed text-sm sm:text-base md:text-lg"
               style={{ fontFamily: 'Tajawal, sans-serif' }}
             >
-              استثمر في نخيل حقيقي مُسجل باسمك، واحصل على نصيبك من الإنتاج السنوي.
+              استأجر نخيل حقيقي مُسجل لك، واحصل على نصيبك من الإنتاج الموسمي.
               النخيل يمثل تراثنا الأصيل وثروة طبيعية مستدامة تنمو قيمتها مع الزمن.
             </p>
           </div>
@@ -66,14 +66,14 @@ export const ConceptIntroductionPage: React.FC<ConceptIntroductionPageProps> = (
                 className="text-xl sm:text-xl md:text-2xl font-bold text-white"
                 style={{ fontFamily: 'Tajawal, sans-serif' }}
               >
-                تملك أشجار الزيتون
+                تأجير أشجار الزيتون
               </h2>
             </div>
             <p
               className="text-amber-100 leading-relaxed text-sm sm:text-base md:text-lg"
               style={{ fontFamily: 'Tajawal, sans-serif' }}
             >
-              امتلك أشجار زيتون منتجة لأجود أنواع زيت الزيتون البكر الممتاز.
+              استأجر أشجار زيتون منتجة لأجود أنواع زيت الزيتون البكر الممتاز.
               استثمار صحي ومربح يجمع بين العائد المالي والقيمة الغذائية العالية.
             </p>
           </div>
@@ -145,7 +145,7 @@ export const ConceptIntroductionPage: React.FC<ConceptIntroductionPageProps> = (
             style={{ fontFamily: 'Tajawal, sans-serif' }}
           >
             <Sparkles className="w-5 h-5 sm:w-6 sm:h-6" />
-            <span className="whitespace-nowrap">ابدأ رحلتك بالتملك الآن</span>
+            <span className="whitespace-nowrap">ابدأ رحلتك بالتأجير الآن</span>
             <span className="text-xl sm:text-2xl">🌱</span>
           </button>
         </div>

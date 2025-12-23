@@ -351,7 +351,7 @@ export function OwnershipCertificate({ certificate }: OwnershipCertificateProps)
             color: '#d4af37',
             letterSpacing: '1px'
           }}>
-            شهادة تملك
+            شهادة انتفاع موسمي
           </h1>
 
           <div style={{
@@ -542,7 +542,7 @@ export function OwnershipCertificate({ certificate }: OwnershipCertificateProps)
           color: '#666',
           lineHeight: '1.5'
         }}>
-          هذه الشهادة صادرة من منصة النخيل والزيتون وتعتبر وثيقة رسمية تثبت ملكية الأشجار المذكورة.
+          هذه الشهادة صادرة من منصة النخيل والزيتون وتعتبر وثيقة رسمية تثبت حق الانتفاع الموسمي من الأشجار المذكورة.
           للتحقق من صحتها، يرجى زيارة موقعنا الإلكتروني.
         </div>
       </div>
