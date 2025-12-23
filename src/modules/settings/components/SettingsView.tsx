@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Settings, Map, Video, Mail, Key, Globe, Bell, Shield, Database, BarChart3, Package, Activity, Type, PanelLeftClose, Loader2, TrendingUp, Zap, Link2 } from 'lucide-react';
+import { Settings, Map, Video, Mail, Key, Globe, Bell, Shield, Database, BarChart3, Package, Activity, Type, PanelLeftClose, Loader2, TrendingUp, Zap, Link2, Radio } from 'lucide-react';
 import { Card3D } from '../../../components/ui/Card3D';
 import { BackButton } from '../../../components/common/BackButton';
 import { BackupCenter } from '../../backups/components/BackupCenter';
@@ -13,13 +13,14 @@ import { SmartActivityTickerManager } from './SmartActivityTickerManager';
 import { UltraSmartActivityTickerControl } from './UltraSmartActivityTickerControl';
 import { AdvancedLoaderManagement } from './AdvancedLoaderManagement';
 import { ShareLinksManagement } from './ShareLinksManagement';
+import { LiveTickerManagement } from './LiveTickerManagement';
 
 interface SettingsViewProps {
   onBack?: () => void;
 }
 
 export function SettingsView({ onBack }: SettingsViewProps) {
-  const [activeTab, setActiveTab] = useState<'general' | 'backup' | 'versions' | 'diagnostics' | 'texts' | 'side-dock' | 'loader' | 'advanced-loader' | 'activity-bar' | 'ticker' | 'share-links'>('general');
+  const [activeTab, setActiveTab] = useState<'general' | 'backup' | 'versions' | 'diagnostics' | 'texts' | 'side-dock' | 'loader' | 'advanced-loader' | 'activity-bar' | 'ticker' | 'share-links' | 'live-ticker'>('general');
   const [settings, setSettings] = useState({
     mapApiKey: 'AIza*********************',
     videoService: 'youtube',
@@ -168,6 +169,17 @@ export function SettingsView({ onBack }: SettingsViewProps) {
             <Link2 className="h-5 w-5" />
             إدارة الروابط المشاركة
           </button>
+          <button
+            onClick={() => setActiveTab('live-ticker')}
+            className={`flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all ${
+              activeTab === 'live-ticker'
+                ? 'bg-gradient-to-r from-red-500 to-pink-600 text-white shadow-lg'
+                : 'bg-white text-[#2C2C2C] hover:bg-[#F4EBDD]'
+            }`}
+          >
+            <Radio className="h-5 w-5" />
+            إدارة الشريط المتحرك
+          </button>
         </div>
 
         {activeTab === 'backup' ? (
@@ -190,6 +202,8 @@ export function SettingsView({ onBack }: SettingsViewProps) {
           <UltraSmartActivityTickerControl />
         ) : activeTab === 'share-links' ? (
           <ShareLinksManagement />
+        ) : activeTab === 'live-ticker' ? (
+          <LiveTickerManagement />
         ) : (
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
