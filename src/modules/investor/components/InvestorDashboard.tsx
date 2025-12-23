@@ -961,7 +961,7 @@ export function InvestorDashboard({ phone, onLogout, isFirstTimeLogin = false, o
                               }}
                             >
                               <Award className="w-5 h-5" />
-                              📜 عرض الشهادة الذهبية
+                              📜 عرض شهادة الانتفاع
                             </button>
                           </div>
                         )}

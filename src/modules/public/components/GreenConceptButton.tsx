@@ -14,8 +14,8 @@ export const GreenConceptButton: React.FC<GreenConceptButtonProps> = ({ onClick 
   const [isPulsing, setIsPulsing] = useState(false);
 
   const texts: TextRotation[] = [
-    { icon: '🌴', text: 'اكتشف فكرة تملك النخيل' },
-    { icon: '🌳', text: 'تعرف على تملك أشجار الزيتون' }
+    { icon: '🌴', text: 'اكتشف فكرة الحجز الموسمي' },
+    { icon: '🌳', text: 'تعرف على التأجير الموسمي للمزارع' }
   ];
 
   useEffect(() => {

@@ -62,9 +62,9 @@ export function AdvancedHeroCard({ farm, onReserve }: AdvancedHeroCardProps) {
 
   const getButtonText = () => {
     if (farm.status === 'full') return 'مكتمل';
-    if (farm.type === 'نخيل') return 'تملك نخلتك الآن';
-    if (farm.type === 'زيتون') return 'تملك شجرة الزيتون';
-    return 'تملك شجرتك الآن';
+    if (farm.type === 'نخيل') return 'احجز نخلتك الآن';
+    if (farm.type === 'زيتون') return 'احجز شجرة الزيتون';
+    return 'احجز شجرتك الآن';
   };
 
   return (

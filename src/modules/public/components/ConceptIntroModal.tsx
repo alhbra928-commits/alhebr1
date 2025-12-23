@@ -12,8 +12,8 @@ export function ConceptIntroModal({ isOpen, onClose }: ConceptIntroModalProps) {
   const concepts = [
     {
       icon: TreePine,
-      title: 'ملكية حقيقية',
-      description: 'تملك شجرة نخيل أو زيتون بعقد ملكية موثق ومسجل باسمك',
+      title: 'حجز موسمي حقيقي',
+      description: 'استأجر أشجار من المزارع بعقد انتفاع موثق ومسجل باسمك',
       color: '#8BA574',
       emoji: '🌴'
     },
@@ -96,7 +96,7 @@ export function ConceptIntroModal({ isOpen, onClose }: ConceptIntroModalProps) {
                   backgroundClip: 'text',
                 }}
               >
-                فكرة تملك شجرة
+                فكرة الحجز الموسمي
               </h2>
               <span className="text-2xl sm:text-4xl">🌳</span>
             </div>

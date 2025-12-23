@@ -195,9 +195,9 @@ export function RoyalMainInterface({
               </div>
               <div className="min-w-0 flex-1">
                 <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold text-white tracking-wide break-words leading-tight">
-                  منصة الاستثمار الزراعي الملكية
+                  منصة تأجير المزارع الموسمي
                 </h1>
-                <p className="text-amber-100 mt-0.5 sm:mt-1 text-xs sm:text-sm md:text-base lg:text-lg break-words">استثمار فاخر في عالم النخيل والزيتون</p>
+                <p className="text-amber-100 mt-0.5 sm:mt-1 text-xs sm:text-sm md:text-base lg:text-lg break-words">استثمار فاخر في عالم المزارع والمحاصيل</p>
               </div>
             </div>
 

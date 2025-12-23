@@ -181,7 +181,7 @@ export class ActivityBarService {
           docs.forEach(doc => {
             activities.push({
               id: doc.id,
-              message_ar: `تم إصدار شهادة تملك جديدة`,
+              message_ar: `تم إصدار شهادة انتفاع جديدة`,
               icon: 'Award',
               category: 'ownership'
             });

@@ -119,7 +119,7 @@ export function Interactive3DButton() {
 
               <div className="grid md:grid-cols-3 gap-6">
                 {[
-                  { icon: '🌴', title: 'تملك حقيقي', desc: 'ملكية موثقة لأشجارك' },
+                  { icon: '🌴', title: 'حجز حقيقي', desc: 'عقد انتفاع موثق لأشجارك' },
                   { icon: '💰', title: 'عائد مستدام', desc: 'دخل سنوي من المحاصيل' },
                   { icon: '📊', title: 'شفافية كاملة', desc: 'تتبع استثمارك مباشرة' },
                 ].map((item, index) => (

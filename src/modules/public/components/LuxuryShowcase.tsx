@@ -104,7 +104,7 @@ export function LuxuryShowcase({ onViewDetails }: LuxuryShowcaseProps) {
               className="text-sm md:text-base font-medium"
               style={{ color: '#999999' }}
             >
-              منصة تملك النخيل والزيتون – استثمار راقٍ يثمر خيرًا
+              منصة تأجير المزارع – استثمار راقٍ يثمر خيرًا
             </p>
           </div>
         </div>

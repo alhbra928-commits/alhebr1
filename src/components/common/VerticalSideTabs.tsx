@@ -154,8 +154,8 @@ export function VerticalSideTabs({
               <div className="flex items-start gap-3">
                 <div className="text-3xl">📜</div>
                 <div className="flex-1">
-                  <h3 className="font-bold text-blue-900 mb-1 text-lg">شهادات الملكية</h3>
-                  <p className="text-blue-800 text-sm leading-relaxed">تحقق من شهادات الملكية الخاصة بك</p>
+                  <h3 className="font-bold text-blue-900 mb-1 text-lg">شهادات الانتفاع</h3>
+                  <p className="text-blue-800 text-sm leading-relaxed">تحقق من شهادات الانتفاع الموسمية الخاصة بك</p>
                 </div>
               </div>
             </div>
@@ -248,8 +248,8 @@ export function VerticalSideTabs({
               <div className="flex items-center gap-3">
                 <span className="text-2xl">📜</span>
                 <div className="flex-1">
-                  <div className="font-bold">شهادات الملكية</div>
-                  <div className="text-sm text-amber-700">عرض وتحميل الشهادات</div>
+                  <div className="font-bold">شهادات الانتفاع</div>
+                  <div className="text-sm text-amber-700">عرض وتحميل شهادات الانتفاع</div>
                 </div>
               </div>
             </button>
