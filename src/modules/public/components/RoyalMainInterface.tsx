@@ -197,7 +197,12 @@ export function RoyalMainInterface({
                 <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold text-white tracking-wide break-words leading-tight">
                   منصة تأجير المزارع الموسمي
                 </h1>
-                <p className="text-amber-100 mt-0.5 sm:mt-1 text-xs sm:text-sm md:text-base lg:text-lg break-words">استثمار فاخر في عالم المزارع والمحاصيل</p>
+                <p className="text-amber-100 mt-0.5 sm:mt-1 text-xs sm:text-sm md:text-base lg:text-lg break-words leading-relaxed">
+                  منصة تأجير وانتفاع موسمي للمزارع والأشجار والمحاصيل
+                </p>
+                <p className="text-amber-50/90 mt-1 sm:mt-2 text-[10px] sm:text-xs md:text-sm leading-relaxed break-words max-w-2xl">
+                  تقوم المنصة بإدارة وتنظيم التأجير الموسمي وتشغيله بالكامل وفق ضوابطها، دون نقل ملكية الأصول
+                </p>
               </div>
             </div>
 
@@ -229,7 +234,7 @@ export function RoyalMainInterface({
                   <Users className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-white" />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-amber-100 text-xs sm:text-sm truncate">المستثمرون</p>
+                  <p className="text-amber-100 text-xs sm:text-sm truncate">المستأجرون</p>
                   <p className="text-white text-lg sm:text-xl md:text-2xl font-bold">500+</p>
                 </div>
               </div>
@@ -278,13 +283,13 @@ export function RoyalMainInterface({
             <div className="text-center mb-6 sm:mb-8 md:mb-12 mt-8 sm:mt-12">
               <div className="inline-flex items-center gap-1.5 sm:gap-2 bg-gradient-to-r from-amber-500 to-yellow-500 text-white px-4 py-1.5 sm:px-6 sm:py-2 rounded-full text-xs sm:text-sm font-semibold mb-3 sm:mb-4 shadow-lg">
                 <Crown className="w-3 h-3 sm:w-4 sm:h-4" />
-                <span>المزارع المتاحة للاستثمار</span>
+                <span>المزارع المتاحة للتأجير</span>
               </div>
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-amber-900 mb-2 sm:mb-3 px-4 break-words">
                 اختر مزرعتك الفاخرة
               </h2>
               <p className="text-amber-700 text-sm sm:text-base md:text-lg max-w-2xl mx-auto px-4 break-words">
-                استثمر في أرقى المزارع مع ضمان الجودة والعائد المميز
+                استأجر من أرقى المزارع مع ضمان الجودة والعائد المميز
               </p>
             </div>
 
@@ -317,7 +322,7 @@ export function RoyalMainInterface({
                       <div className={`absolute inset-0 bg-gradient-to-t from-black/60 to-transparent transition-opacity duration-300 ${hoveredCard === index ? 'opacity-100' : 'opacity-0'}`}>
                         <div className="absolute bottom-4 left-0 right-0 text-center">
                           <div className="inline-flex items-center gap-2 bg-white text-amber-700 px-6 py-2 rounded-full font-bold shadow-lg">
-                            <span>استثمر الآن</span>
+                            <span>استأجر الآن</span>
                             <ArrowRight className="w-4 h-4" />
                           </div>
                         </div>
