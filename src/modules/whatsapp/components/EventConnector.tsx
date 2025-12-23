@@ -22,7 +22,7 @@ interface Template {
 const eventTypes = [
   { value: 'booking_created', label: 'إنشاء حجز جديد', icon: '📅', description: 'يُرسل عند قيام مستثمر بحجز جديد' },
   { value: 'booking_confirmed', label: 'تأكيد الحجز', icon: '✅', description: 'يُرسل عند اكتمال الدفع وتأكيد الحجز' },
-  { value: 'certificate_issued', label: 'إصدار شهادة ملكية', icon: '🏆', description: 'يُرسل عند إصدار شهادة الملكية' },
+  { value: 'certificate_issued', label: 'إصدار شهادة انتفاع', icon: '🏆', description: 'يُرسل عند إصدار شهادة الانتفاع الموسمية' },
   { value: 'payment_received', label: 'استلام دفعة', icon: '💰', description: 'يُرسل عند اعتماد دفعة من المستثمر' },
   { value: 'payment_rejected', label: 'رفض دفعة', icon: '❌', description: 'يُرسل عند رفض إيصال الدفع' },
   { value: 'settlement_completed', label: 'اكتمال التسوية', icon: '💳', description: 'يُرسل عند تحويل الأرباح للمستثمرين' },

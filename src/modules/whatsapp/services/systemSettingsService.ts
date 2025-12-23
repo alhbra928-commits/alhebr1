@@ -150,7 +150,7 @@ export const systemSettingsService = {
   async getBusinessWhatsAppMessage(): Promise<string> {
     const message = await this.getSetting('business_whatsapp_message');
     return message || `مرحبًا 👋
-تم تحويلك من منصة تملك النخيل والزيتون 🌴
+تم تحويلك من منصة تأجير المزارع الموسمية 🌴
 سعداء بخدمتك، يرجى توضيح استفسارك أدناه 👇`;
   },
 

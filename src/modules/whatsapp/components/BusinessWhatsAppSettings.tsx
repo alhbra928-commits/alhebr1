@@ -165,7 +165,7 @@ export const BusinessWhatsAppSettings: React.FC = () => {
           <textarea
             value={businessMessage}
             onChange={(e) => setBusinessMessage(e.target.value)}
-            placeholder="مرحبًا 👋&#10;تم تحويلك من منصة تملك النخيل والزيتون 🌴&#10;سعداء بخدمتك، يرجى توضيح استفسارك أدناه 👇"
+            placeholder="مرحبًا 👋&#10;تم تحويلك من منصة تأجير المزارع الموسمية 🌴&#10;سعداء بخدمتك، يرجى توضيح استفسارك أدناه 👇"
             className="w-full px-4 py-3 bg-gray-700/50 border border-blue-500/30 rounded-lg text-white focus:outline-none focus:border-blue-500 min-h-[120px] resize-y"
             dir="rtl"
           />

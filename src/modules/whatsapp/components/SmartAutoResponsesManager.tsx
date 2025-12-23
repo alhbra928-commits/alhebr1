@@ -327,7 +327,7 @@ export const SmartAutoResponsesManager: React.FC = () => {
       // تحليل بسيط للنية
       if (aiInput.includes('حجز') || aiInput.includes('شراء')) {
         intent = 'request';
-        suggestedResponse = `للحجز، يرجى اختيار المزرعة المناسبة وتحديد عدد الأشجار. ستحصل على شهادة ملكية فوراً بعد الدفع 📜✨`;
+        suggestedResponse = `للحجز، يرجى اختيار المزرعة المناسبة وتحديد عدد الأشجار. ستحصل على شهادة انتفاع موسمية فوراً بعد الدفع 📜✨`;
       } else if (aiInput.includes('تحويل') || aiInput.includes('دفع') || aiInput.includes('سعر')) {
         intent = 'financial';
         suggestedResponse = `التحويل المالي يتم خلال 24 ساعة عمل. ستصلك رسالة تأكيد فور اكتمال العملية 💰`;

@@ -180,7 +180,7 @@ export const whatsappLinkGenerator = {
 
     // صفحة الشهادات
     if (path.includes('/certificate') || hash.includes('certificate')) {
-      return 'صفحة شهادة الملكية';
+      return 'صفحة شهادة الانتفاع';
     }
 
     // المنصة العامة
@@ -189,7 +189,7 @@ export const whatsappLinkGenerator = {
     }
 
     // افتراضي
-    return 'منصة تملك النخيل والزيتون';
+    return 'منصة تأجير المزارع الموسمية';
   },
 
   /**

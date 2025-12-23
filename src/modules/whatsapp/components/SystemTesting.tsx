@@ -38,7 +38,7 @@ export const SystemTesting: React.FC = () => {
     {
       event_type: 'certificate_issued',
       label: 'إصدار شهادة',
-      description: 'اختبار إرسال شهادة الملكية مع رمز التحقق'
+      description: 'اختبار إرسال شهادة الانتفاع الموسمية مع رمز التحقق'
     },
     {
       event_type: 'payment_received',
