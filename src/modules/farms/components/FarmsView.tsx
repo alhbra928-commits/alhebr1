@@ -148,15 +148,20 @@ export function FarmsView({ onBack }: FarmsViewProps) {
 
   const handleDeleteFarm = async (farm: Farm, e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!confirm(`هل أنت متأكد من حذف المزرعة "${farm.name_ar}"؟`)) return;
+
+    const confirmMessage = `هل أنت متأكد من حذف المزرعة "${farm.name_ar}"؟\n\n` +
+      `⚠️ تحذير: سيتم نقل المزرعة إلى الأرشيف ويمكن استرجاعها لاحقاً.`;
+
+    if (!confirm(confirmMessage)) return;
 
     try {
       await FarmsService.deletePermanently(farm.id, 'حذف من لوحة التحكم');
       await loadData();
-      alert('تم حذف المزرعة بنجاح');
-    } catch (error) {
+      alert('✅ تم حذف المزرعة بنجاح ونقلها إلى الأرشيف');
+    } catch (error: any) {
       console.error('Delete error:', error);
-      alert('حدث خطأ أثناء حذف المزرعة');
+      const errorMessage = error?.message || 'حدث خطأ أثناء حذف المزرعة';
+      alert(`❌ خطأ: ${errorMessage}`);
     }
   };
 

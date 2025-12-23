@@ -329,13 +329,28 @@ export class FarmsService {
   }
 
   static async deletePermanently(id: string, reason?: string) {
+    // الحصول على معرف المسؤول الحالي من الجلسة
+    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+
+    if (sessionError || !session) {
+      throw new Error('يجب تسجيل الدخول أولاً لحذف المزرعة');
+    }
+
+    const adminId = session.user?.id;
+
+    // استدعاء دالة الحذف في قاعدة البيانات
     const { error } = await supabase.rpc('delete_farm_permanently', {
       p_farm_id: id,
-      p_deleted_by: null,
-      p_reason: reason
+      p_deleted_by: adminId,
+      p_reason: reason || 'حذف من لوحة التحكم'
     });
 
-    if (error) return { data: [], count: 0 };
+    if (error) {
+      console.error('Delete farm error:', error);
+      throw new Error(error.message || 'فشل في حذف المزرعة');
+    }
+
+    return { success: true };
   }
 
   static async getStatistics() {
