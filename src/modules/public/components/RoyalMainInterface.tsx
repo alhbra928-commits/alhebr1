@@ -33,6 +33,7 @@ export function RoyalMainInterface({
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
   const [activeBottomTab, setActiveBottomTab] = useState<string>('home');
   const [activeFilter, setActiveFilter] = useState<'all' | 'open' | 'almost_full' | 'full'>('all');
+  const [conceptModalOpen, setConceptModalOpen] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -264,6 +265,56 @@ export function RoyalMainInterface({
               </div>
             </div>
           </div>
+
+          {/* زر اكتشف فكرة المنصة - Golden Button */}
+          <div className="flex justify-center mt-6 sm:mt-8">
+            <button
+              onClick={() => setConceptModalOpen(true)}
+              className="
+                relative overflow-hidden
+                px-6 py-3 sm:px-8 sm:py-4
+                rounded-2xl
+                font-bold text-base sm:text-lg
+                transition-all duration-500
+                hover:scale-105 hover:shadow-2xl
+                active:scale-95
+                group
+              "
+              style={{
+                background: 'linear-gradient(135deg, #FBBF24 0%, #F59E0B 50%, #D97706 100%)',
+                color: '#1F2937',
+                boxShadow: `
+                  0 10px 30px rgba(251, 191, 36, 0.4),
+                  0 5px 15px rgba(251, 191, 36, 0.3),
+                  inset 0 2px 4px rgba(255, 255, 255, 0.4),
+                  inset 0 -2px 4px rgba(0, 0, 0, 0.2)
+                `,
+                border: '2px solid rgba(251, 191, 36, 0.6)'
+              }}
+            >
+              <span className="relative z-10 flex items-center gap-2 justify-center">
+                <Sparkles className="w-5 h-5" />
+                <span>اكتشف فكرة التأجير الموسمي</span>
+                <Sparkles className="w-5 h-5" />
+              </span>
+
+              <div
+                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                style={{
+                  background: 'linear-gradient(135deg, #F59E0B 0%, #FBBF24 50%, #F59E0B 100%)',
+                }}
+              />
+
+              <div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  background: 'linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.4) 50%, transparent 100%)',
+                  backgroundSize: '200% 100%',
+                  animation: 'shimmer 3s linear infinite'
+                }}
+              />
+            </button>
+          </div>
         </div>
       </div>
       </header>
@@ -277,7 +328,11 @@ export function RoyalMainInterface({
         ) : (
           <>
             {/* Enhanced Concept Card */}
-            <EnhancedConceptCard onStartOwnership={() => setCurrentView('concept')} />
+            <EnhancedConceptCard
+              isOpen={conceptModalOpen}
+              onClose={() => setConceptModalOpen(false)}
+              onStartOwnership={() => setConceptModalOpen(false)}
+            />
 
             {/* Section Header */}
             <div className="text-center mb-6 sm:mb-8 md:mb-12 mt-8 sm:mt-12">
