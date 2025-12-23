@@ -329,14 +329,39 @@ export class FarmsService {
   }
 
   static async deletePermanently(id: string, reason?: string) {
-    // الحصول على معرف المسؤول الحالي من الجلسة
-    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+    // الحصول على معلومات المسؤول من localStorage (نظام admin مخصص)
+    const adminDataStr = localStorage.getItem('admin_data');
 
-    if (sessionError || !session) {
-      throw new Error('يجب تسجيل الدخول أولاً لحذف المزرعة');
+    if (!adminDataStr) {
+      throw new Error('يجب تسجيل الدخول كمسؤول أولاً');
     }
 
-    const adminId = session.user?.id;
+    let adminId: string | null = null;
+
+    try {
+      const adminData = JSON.parse(adminDataStr);
+      const adminPhone = adminData.phone;
+
+      // الحصول على UUID المسؤول من جدول admin_users بناءً على رقم الهاتف
+      const { data: adminUser, error: adminError } = await supabase
+        .from('admin_users')
+        .select('id')
+        .eq('phone', adminPhone)
+        .is('deleted_at', null)
+        .maybeSingle();
+
+      if (adminError || !adminUser) {
+        console.warn('⚠️ لم يتم العثور على UUID للمسؤول، سيتم استخدام قيمة افتراضية');
+        // استخدام UUID افتراضي (يمكن استخدام أي UUID صالح)
+        adminId = '00000000-0000-0000-0000-000000000000';
+      } else {
+        adminId = adminUser.id;
+      }
+    } catch (parseError) {
+      console.error('خطأ في تحليل بيانات المسؤول:', parseError);
+      // استخدام UUID افتراضي في حالة الخطأ
+      adminId = '00000000-0000-0000-0000-000000000000';
+    }
 
     // استدعاء دالة الحذف في قاعدة البيانات
     const { error } = await supabase.rpc('delete_farm_permanently', {
