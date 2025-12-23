@@ -3,7 +3,7 @@ import { AdminSessionService } from './modules/admin/services/adminSessionServic
 import { PermissionsProvider } from './contexts/PermissionsContext';
 import FixedChrome from './components/common/FixedChrome';
 import { ModernTopHeader } from './components/common/ModernTopHeader';
-import { LiveTicker } from './components/common/LiveTicker';
+import { SmartActivityTicker } from './components/common/SmartActivityTicker';
 import { TrackingService } from './services/analytics/trackingService';
 import { realAnalytics } from './services/analytics/realAnalyticsService';
 
@@ -504,7 +504,7 @@ function App() {
       {/* Footer = شريط الإحصائيات المتحرك (فقط للصفحات العامة) */}
       {showPublicChrome && (
         <footer className="appFooter">
-          <LiveTicker />
+          <SmartActivityTicker />
         </footer>
       )}
     </div>
