@@ -424,6 +424,9 @@ function App() {
         </header>
       )}
 
+      {/* الشريط المتحرك - يظهر مباشرة بعد الهيدر */}
+      {showPublicChrome && <SmartActivityTicker />}
+
       {/* Main Content */}
       <main
         id="appContent"
@@ -500,13 +503,6 @@ function App() {
           </Suspense>
         </PermissionsProvider>
       </main>
-
-      {/* Footer = شريط الإحصائيات المتحرك (فقط للصفحات العامة) */}
-      {showPublicChrome && (
-        <footer className="appFooter">
-          <SmartActivityTicker />
-        </footer>
-      )}
     </div>
   );
 }
