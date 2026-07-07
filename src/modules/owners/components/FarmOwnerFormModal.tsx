@@ -1,20 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  X,
-  Save,
-  User,
-  Phone,
-  MapPin,
-  Ruler,
-  DollarSign,
-  CreditCard,
-  Calendar,
-  Upload,
-  TreePine,
-  Droplets,
-  Edit3,
-  Map
-} from 'lucide-react';
+import { X, Save, User, Phone, MapPin, Ruler, DollarSign, CreditCard, Calendar, Upload, TreePine, Droplets, CreditCard as Edit3, Map } from 'lucide-react';
 
 interface FarmOwnerFormData {
   owner_full_name: string;
@@ -153,9 +138,7 @@ export function FarmOwnerFormModal({
       newErrors.farm_price = 'السعر المطلوب مطلوب';
     }
 
-    if (!formData.bank_iban || formData.bank_iban === 'SA') {
-      newErrors.bank_iban = 'رقم الآيبان مطلوب';
-    } else if (formData.bank_iban.length !== 24) {
+    if (formData.bank_iban && formData.bank_iban !== 'SA' && formData.bank_iban.length !== 24) {
       newErrors.bank_iban = 'رقم الآيبان غير صحيح (يجب أن يكون 24 حرف)';
     }
 
@@ -395,7 +378,7 @@ export function FarmOwnerFormModal({
           <div>
             <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-2">
               <CreditCard className="h-4 w-4 text-emerald-600" />
-              رقم الحساب البنكي (IBAN) *
+              رقم الحساب البنكي (IBAN)
             </label>
             <input
               type="text"
