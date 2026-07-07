@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { Crown, Sparkles, ArrowRight, TreePine, Users } from 'lucide-react';
+import { Crown, Sparkles, TreePine, Users } from 'lucide-react';
 import { PublicFarm } from '../types/farm.types';
 import { PublicFarmService } from '../services/publicFarmService';
 import { InnovativeFarmDetailPage } from './InnovativeFarmDetailPage';
@@ -349,7 +349,7 @@ export function RoyalMainInterface({
             </div>
 
             {/* Farms Grid */}
-            <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+            <div className="grid grid-cols-3 lg:grid-cols-4 gap-2">
               {filteredFarms.map((farm, index) => {
                 const bookedTrees = farm.total_trees - farm.available_trees;
                 const bookedPct = farm.total_trees > 0 ? Math.round((bookedTrees / farm.total_trees) * 100) : 0;
@@ -363,11 +363,11 @@ export function RoyalMainInterface({
                     onMouseLeave={() => setHoveredCard(null)}
                     onClick={() => handleFarmClick(farm)}
                   >
-                    <div className="relative bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer border border-amber-100 hover:border-amber-300 active:scale-[0.98]"
-                      style={{ transform: hoveredCard === index ? 'translateY(-3px)' : 'none', transition: 'all 0.3s ease' }}
+                    <div className="relative bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer border border-amber-100 hover:border-amber-300 active:scale-[0.97]"
+                      style={{ transform: hoveredCard === index ? 'translateY(-2px)' : 'none', transition: 'all 0.3s ease' }}
                     >
                       {/* Image Area */}
-                      <div className="relative h-28 sm:h-32 bg-gradient-to-br from-amber-100 via-yellow-50 to-amber-100 overflow-hidden">
+                      <div className="relative h-14 sm:h-20 bg-gradient-to-br from-amber-100 via-yellow-50 to-amber-100 overflow-hidden">
                         {farm.aerial_map_url ? (
                           <img
                             src={farm.aerial_map_url}
@@ -376,93 +376,62 @@ export function RoyalMainInterface({
                           />
                         ) : (
                           <div className="absolute inset-0 flex items-center justify-center">
-                            <TreePine className="w-12 h-12 text-amber-400/50" />
+                            <TreePine className="w-6 h-6 text-amber-400/50" />
                           </div>
                         )}
-                        {/* Gradient overlay */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
 
                         {/* Status badge */}
-                        <div className="absolute top-2 right-2">
+                        <div className="absolute top-1 right-1">
                           {isFull ? (
-                            <span className="bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">مكتمل</span>
+                            <span className="bg-red-500 text-white text-[8px] font-bold px-1 py-0.5 rounded-full leading-none">مكتمل</span>
                           ) : isAlmostFull ? (
-                            <span className="bg-orange-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full animate-pulse">يقترب</span>
+                            <span className="bg-orange-500 text-white text-[8px] font-bold px-1 py-0.5 rounded-full leading-none animate-pulse">يقترب</span>
                           ) : (
-                            <span className="bg-emerald-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">متاح</span>
+                            <span className="bg-emerald-500 text-white text-[8px] font-bold px-1 py-0.5 rounded-full leading-none">متاح</span>
                           )}
                         </div>
 
-                        {/* Crown badge */}
-                        <div className="absolute top-2 left-2">
-                          <div className="bg-gradient-to-r from-amber-500 to-yellow-400 text-white p-1 rounded-full shadow-md">
-                            <Crown className="w-3 h-3" />
-                          </div>
-                        </div>
-
                         {/* Bottom label */}
-                        <div className="absolute bottom-2 right-2 left-2">
-                          <p className="text-white font-bold text-xs sm:text-sm leading-tight drop-shadow-md line-clamp-1">
+                        <div className="absolute bottom-1 right-1 left-1">
+                          <p className="text-white font-bold text-[9px] sm:text-[11px] leading-tight drop-shadow-md line-clamp-1">
                             {farm.farm_name}
                           </p>
                         </div>
                       </div>
 
                       {/* Content */}
-                      <div className="p-2.5 sm:p-3">
-                        {/* Type */}
-                        <p className="text-amber-600 text-[11px] mb-2 font-medium">
-                          {farm.tree_type === 'palm' || farm.tree_type === 'نخيل' ? '🌴 نخيل' : farm.tree_type === 'mixed' ? '🌿 مختلط' : '🌳 زيتون'}
+                      <div className="p-1.5">
+                        {/* Type & city */}
+                        <p className="text-amber-600 text-[9px] font-medium leading-tight mb-1 line-clamp-1">
+                          {farm.tree_type === 'palm' || farm.tree_type === 'نخيل' ? 'نخيل' : farm.tree_type === 'mixed' ? 'مختلط' : 'زيتون'}
                           {farm.location_city ? ` • ${farm.location_city}` : ''}
                         </p>
 
-                        {/* Stats row */}
-                        <div className="flex items-center justify-between mb-2">
-                          <div className="text-center">
-                            <p className="text-[10px] text-gray-400">متاح</p>
-                            <p className="text-sm font-bold text-emerald-600">{farm.available_trees.toLocaleString('ar-SA')}</p>
-                          </div>
-                          <div className="h-6 w-px bg-amber-100" />
-                          <div className="text-center">
-                            <p className="text-[10px] text-gray-400">محجوز</p>
-                            <p className="text-sm font-bold text-amber-700">{bookedTrees.toLocaleString('ar-SA')}</p>
-                          </div>
-                          <div className="h-6 w-px bg-amber-100" />
-                          <div className="text-center">
-                            <p className="text-[10px] text-gray-400">الكل</p>
-                            <p className="text-sm font-bold text-gray-600">{farm.total_trees.toLocaleString('ar-SA')}</p>
-                          </div>
+                        {/* Available trees */}
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-[9px] text-gray-400">متاح</span>
+                          <span className="text-[10px] font-bold text-emerald-600">{farm.available_trees.toLocaleString('ar-SA')}</span>
                         </div>
 
                         {/* Progress */}
-                        <div className="mb-2.5">
-                          <div className="flex justify-between text-[10px] text-amber-600 mb-1">
-                            <span>{bookedPct}% محجوز</span>
-                            <span>{100 - bookedPct}% متاح</span>
-                          </div>
-                          <div className="h-1.5 bg-amber-100 rounded-full overflow-hidden">
-                            <div
-                              className={`h-full rounded-full transition-all duration-500 ${isFull ? 'bg-red-500' : isAlmostFull ? 'bg-orange-400' : 'bg-gradient-to-r from-amber-400 to-yellow-400'}`}
-                              style={{ width: `${bookedPct}%` }}
-                            />
-                          </div>
+                        <div className="h-1 bg-amber-100 rounded-full overflow-hidden mb-1.5">
+                          <div
+                            className={`h-full rounded-full transition-all duration-500 ${isFull ? 'bg-red-500' : isAlmostFull ? 'bg-orange-400' : 'bg-gradient-to-r from-amber-400 to-yellow-400'}`}
+                            style={{ width: `${bookedPct}%` }}
+                          />
                         </div>
 
                         {/* CTA */}
                         <button
-                          className={`w-full py-1.5 rounded-xl text-xs font-bold transition-all duration-200 flex items-center justify-center gap-1 ${
+                          className={`w-full py-1 rounded-lg text-[9px] sm:text-[10px] font-bold transition-all duration-200 ${
                             isFull
                               ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                              : 'bg-gradient-to-r from-amber-500 to-yellow-500 text-white hover:from-amber-600 hover:to-yellow-600 shadow-sm hover:shadow-md active:scale-95'
+                              : 'bg-gradient-to-r from-amber-500 to-yellow-500 text-white hover:from-amber-600 hover:to-yellow-600 active:scale-95'
                           }`}
                           disabled={isFull}
                         >
-                          {isFull ? 'مكتمل الحجز' : (
-                            <>
-                              <span>استأجر الآن</span>
-                              <ArrowRight className="w-3 h-3" />
-                            </>
-                          )}
+                          {isFull ? 'مكتمل' : 'استأجر'}
                         </button>
                       </div>
                     </div>
