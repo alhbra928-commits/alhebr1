@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { Crown, Sparkles, ArrowRight, TreePine, Users, Shield, Award } from 'lucide-react';
+import { Crown, Sparkles, ArrowRight, TreePine, Users } from 'lucide-react';
 import { PublicFarm } from '../types/farm.types';
 import { PublicFarmService } from '../services/publicFarmService';
 import { InnovativeFarmDetailPage } from './InnovativeFarmDetailPage';
@@ -349,92 +349,126 @@ export function RoyalMainInterface({
             </div>
 
             {/* Farms Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
-              {filteredFarms.map((farm, index) => (
-                <div
-                  key={farm.id}
-                  className="group relative"
-                  onMouseEnter={() => setHoveredCard(index)}
-                  onMouseLeave={() => setHoveredCard(null)}
-                  onClick={() => handleFarmClick(farm)}
-                >
-                  {/* Card */}
-                  <div className="relative bg-white rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 cursor-pointer transform hover:-translate-y-2">
-                    {/* Premium Badge */}
-                    <div className="absolute top-4 right-4 z-10">
-                      <div className="bg-gradient-to-r from-amber-500 to-yellow-500 text-white px-4 py-1.5 rounded-full text-xs font-bold shadow-lg flex items-center gap-1">
-                        <Crown className="w-3.5 h-3.5" />
-                        <span>مميز</span>
-                      </div>
-                    </div>
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+              {filteredFarms.map((farm, index) => {
+                const bookedTrees = farm.total_trees - farm.available_trees;
+                const bookedPct = farm.total_trees > 0 ? Math.round((bookedTrees / farm.total_trees) * 100) : 0;
+                const isFull = farm.status === 'full' || farm.available_trees === 0;
+                const isAlmostFull = !isFull && (farm.status === 'almost_full' || bookedPct >= 70);
+                return (
+                  <div
+                    key={farm.id}
+                    className="group relative"
+                    onMouseEnter={() => setHoveredCard(index)}
+                    onMouseLeave={() => setHoveredCard(null)}
+                    onClick={() => handleFarmClick(farm)}
+                  >
+                    <div className="relative bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer border border-amber-100 hover:border-amber-300 active:scale-[0.98]"
+                      style={{ transform: hoveredCard === index ? 'translateY(-3px)' : 'none', transition: 'all 0.3s ease' }}
+                    >
+                      {/* Image Area */}
+                      <div className="relative h-28 sm:h-32 bg-gradient-to-br from-amber-100 via-yellow-50 to-amber-100 overflow-hidden">
+                        {farm.aerial_map_url ? (
+                          <img
+                            src={farm.aerial_map_url}
+                            alt={farm.farm_name}
+                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                          />
+                        ) : (
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <TreePine className="w-12 h-12 text-amber-400/50" />
+                          </div>
+                        )}
+                        {/* Gradient overlay */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
 
-                    {/* Image */}
-                    <div className="relative h-56 bg-gradient-to-br from-amber-100 to-yellow-100 overflow-hidden">
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <TreePine className="w-24 h-24 text-amber-600/30" />
-                      </div>
-                      {/* Overlay on hover */}
-                      <div className={`absolute inset-0 bg-gradient-to-t from-black/60 to-transparent transition-opacity duration-300 ${hoveredCard === index ? 'opacity-100' : 'opacity-0'}`}>
-                        <div className="absolute bottom-4 left-0 right-0 text-center">
-                          <div className="inline-flex items-center gap-2 bg-white text-amber-700 px-6 py-2 rounded-full font-bold shadow-lg">
-                            <span>استأجر الآن</span>
-                            <ArrowRight className="w-4 h-4" />
+                        {/* Status badge */}
+                        <div className="absolute top-2 right-2">
+                          {isFull ? (
+                            <span className="bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">مكتمل</span>
+                          ) : isAlmostFull ? (
+                            <span className="bg-orange-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full animate-pulse">يقترب</span>
+                          ) : (
+                            <span className="bg-emerald-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">متاح</span>
+                          )}
+                        </div>
+
+                        {/* Crown badge */}
+                        <div className="absolute top-2 left-2">
+                          <div className="bg-gradient-to-r from-amber-500 to-yellow-400 text-white p-1 rounded-full shadow-md">
+                            <Crown className="w-3 h-3" />
                           </div>
                         </div>
-                      </div>
-                    </div>
 
-                    {/* Content */}
-                    <div className="p-6">
-                      <div className="flex items-start justify-between mb-4">
-                        <div>
-                          <h3 className="text-xl font-bold text-amber-900 mb-1">
+                        {/* Bottom label */}
+                        <div className="absolute bottom-2 right-2 left-2">
+                          <p className="text-white font-bold text-xs sm:text-sm leading-tight drop-shadow-md line-clamp-1">
                             {farm.farm_name}
-                          </h3>
-                          <p className="text-amber-600 text-sm">
-                            {farm.tree_type === 'نخيل' ? '🌴 مزرعة نخيل' : '🌳 مزرعة زيتون'}
                           </p>
-                        </div>
-                        <div className="text-right">
-                          <p className="text-xs text-amber-600 mb-1">محجوز</p>
-                          <p className="text-2xl font-bold text-amber-700">
-                            {(farm.total_trees - farm.available_trees).toLocaleString('ar-SA')}
-                          </p>
-                          <p className="text-xs text-amber-600">شجرة</p>
                         </div>
                       </div>
 
-                      {/* Progress Bar */}
-                      <div className="mb-4">
-                        <div className="flex justify-between text-sm text-amber-600 mb-2">
-                          <span>متاح للحجز</span>
-                          <span>{farm.available_trees} / {farm.total_trees}</span>
-                        </div>
-                        <div className="h-2 bg-amber-100 rounded-full overflow-hidden">
-                          <div
-                            className="h-full bg-gradient-to-r from-amber-500 to-yellow-500 rounded-full transition-all duration-500"
-                            style={{
-                              width: `${((farm.total_trees - farm.available_trees) / farm.total_trees) * 100}%`
-                            }}
-                          ></div>
-                        </div>
-                      </div>
+                      {/* Content */}
+                      <div className="p-2.5 sm:p-3">
+                        {/* Type */}
+                        <p className="text-amber-600 text-[11px] mb-2 font-medium">
+                          {farm.tree_type === 'palm' || farm.tree_type === 'نخيل' ? '🌴 نخيل' : farm.tree_type === 'mixed' ? '🌿 مختلط' : '🌳 زيتون'}
+                          {farm.location_city ? ` • ${farm.location_city}` : ''}
+                        </p>
 
-                      {/* Features */}
-                      <div className="grid grid-cols-2 gap-3 pt-4 border-t border-amber-100">
-                        <div className="flex items-center gap-2 text-amber-700">
-                          <Shield className="w-4 h-4" />
-                          <span className="text-sm">مضمون</span>
+                        {/* Stats row */}
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="text-center">
+                            <p className="text-[10px] text-gray-400">متاح</p>
+                            <p className="text-sm font-bold text-emerald-600">{farm.available_trees.toLocaleString('ar-SA')}</p>
+                          </div>
+                          <div className="h-6 w-px bg-amber-100" />
+                          <div className="text-center">
+                            <p className="text-[10px] text-gray-400">محجوز</p>
+                            <p className="text-sm font-bold text-amber-700">{bookedTrees.toLocaleString('ar-SA')}</p>
+                          </div>
+                          <div className="h-6 w-px bg-amber-100" />
+                          <div className="text-center">
+                            <p className="text-[10px] text-gray-400">الكل</p>
+                            <p className="text-sm font-bold text-gray-600">{farm.total_trees.toLocaleString('ar-SA')}</p>
+                          </div>
                         </div>
-                        <div className="flex items-center gap-2 text-amber-700">
-                          <Award className="w-4 h-4" />
-                          <span className="text-sm">عائد مرتفع</span>
+
+                        {/* Progress */}
+                        <div className="mb-2.5">
+                          <div className="flex justify-between text-[10px] text-amber-600 mb-1">
+                            <span>{bookedPct}% محجوز</span>
+                            <span>{100 - bookedPct}% متاح</span>
+                          </div>
+                          <div className="h-1.5 bg-amber-100 rounded-full overflow-hidden">
+                            <div
+                              className={`h-full rounded-full transition-all duration-500 ${isFull ? 'bg-red-500' : isAlmostFull ? 'bg-orange-400' : 'bg-gradient-to-r from-amber-400 to-yellow-400'}`}
+                              style={{ width: `${bookedPct}%` }}
+                            />
+                          </div>
                         </div>
+
+                        {/* CTA */}
+                        <button
+                          className={`w-full py-1.5 rounded-xl text-xs font-bold transition-all duration-200 flex items-center justify-center gap-1 ${
+                            isFull
+                              ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                              : 'bg-gradient-to-r from-amber-500 to-yellow-500 text-white hover:from-amber-600 hover:to-yellow-600 shadow-sm hover:shadow-md active:scale-95'
+                          }`}
+                          disabled={isFull}
+                        >
+                          {isFull ? 'مكتمل الحجز' : (
+                            <>
+                              <span>استأجر الآن</span>
+                              <ArrowRight className="w-3 h-3" />
+                            </>
+                          )}
+                        </button>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
 
             {/* Empty State */}
