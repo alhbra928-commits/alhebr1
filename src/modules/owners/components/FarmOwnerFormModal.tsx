@@ -6,7 +6,7 @@ interface FarmOwnerFormData {
   owner_phone: string;
   farm_location: string;
   farm_area: number;
-  farm_area_unit: 'هكتار' | 'متر مربع';
+  farm_area_unit: 'هكتار' | 'متر';
   farm_type: 'نخيل' | 'زيتون' | 'أخرى';
   farm_type_other?: string;
   farm_price: number;
@@ -294,7 +294,7 @@ export function FarmOwnerFormModal({
                 className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 outline-none transition-all"
               >
                 <option value="هكتار">هكتار</option>
-                <option value="متر مربع">متر مربع</option>
+                <option value="متر">متر</option>
               </select>
             </div>
           </div>
